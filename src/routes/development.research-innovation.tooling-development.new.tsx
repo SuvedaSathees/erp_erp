@@ -50,7 +50,7 @@ import type {
   ToolingAuditEntry,
   ToolingMilestone,
 } from "@/services/types";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ToolingDevelopmentTabBar, type ToolingTabId } from "@/components/erp/ToolingDevelopmentTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -72,7 +72,7 @@ export const Route = createFileRoute(
 });
 
 export function ToolingDevelopmentNewPage({
-  breadcrumb = "Development > Manufacturing Development",
+  breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
@@ -137,8 +137,8 @@ export function ToolingDevelopmentNewPage({
     return (
       <AppShell
         title="Tooling Development"
-        breadcrumb={breadcrumb}
-        tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<ToolingDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Tooling Development Master Record...
@@ -255,9 +255,9 @@ export function ToolingDevelopmentNewPage({
   return (
     <AppShell
       title="Tooling Development"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Design molds, dies, cutting tools, stamping tooling, and tool maintenance schedules."
-      tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+      tabs={tabs ?? <InnovationAreaTabs sub={<ToolingDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="min-h-screen bg-slate-50/60 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased pb-16">
         

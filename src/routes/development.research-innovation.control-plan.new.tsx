@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ControlPlanHeader } from "@/components/erp/controlPlan/ControlPlanHeader";
 import { ControlPlanTabBar, type ControlPlanTabType } from "@/components/erp/controlPlan/ControlPlanTabBar";
 import { AddCharacteristicModal } from "@/components/erp/controlPlan/AddCharacteristicModal";
@@ -32,7 +33,7 @@ export const Route = createFileRoute(
 });
 
 export function ControlPlanDevelopmentPage({
-  breadcrumb = "Development > Manufacturing Development",
+  breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
@@ -78,8 +79,8 @@ export function ControlPlanDevelopmentPage({
     return (
       <AppShell
         title="Control Plan Development"
-        breadcrumb={breadcrumb}
-        tabs={tabs}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<ControlPlanTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Manufacturing Process Control Plan Record...
@@ -91,9 +92,9 @@ export function ControlPlanDevelopmentPage({
   return (
     <AppShell
       title="Control Plan Development"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Establish process control points, inspection criteria, sampling frequencies, and reaction plans."
-      tabs={tabs}
+      tabs={tabs ?? <InnovationAreaTabs sub={<ControlPlanTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="space-y-0 min-h-screen bg-background text-foreground">
         {/* Top Header Bar */}

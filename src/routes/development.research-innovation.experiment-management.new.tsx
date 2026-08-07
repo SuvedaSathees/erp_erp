@@ -969,7 +969,7 @@ function ExperimentFormPage() {
     return (
       <AppShell
         title="Experiment Management"
-        breadcrumb="Development > Research & Innovation Development > Experiment Management > Experiment Management Form"
+        breadcrumb="Research & Innovation Development"
         description="Design, run, and validate structured experiments."
         tabs={<InnovationAreaTabs sub={<ExperimentMgmtPageTabBar />} />}
       >
@@ -984,7 +984,7 @@ function ExperimentFormPage() {
   return (
     <AppShell
       title="Experiment Management"
-      breadcrumb="Development > Research & Innovation Development > Experiment Management > Experiment Management Form"
+      breadcrumb="Research & Innovation Development"
       description="Design, run, and validate structured experiments."
       tabs={<InnovationAreaTabs sub={<ExperimentMgmtPageTabBar />} />}
     >

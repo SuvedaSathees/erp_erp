@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { PfmeaHeader } from "@/components/erp/pfmea/PfmeaHeader";
 import { PfmeaTabBar, type PfmeaTabType } from "@/components/erp/pfmea/PfmeaTabBar";
 import { AddFailureModeModal } from "@/components/erp/pfmea/AddFailureModeModal";
@@ -32,7 +33,7 @@ export const Route = createFileRoute(
 });
 
 export function PfmeaDevelopmentPage({
-  breadcrumb = "Development > Manufacturing Development",
+  breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
@@ -78,8 +79,8 @@ export function PfmeaDevelopmentPage({
     return (
       <AppShell
         title="PFMEA Development"
-        breadcrumb={breadcrumb}
-        tabs={tabs}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<PfmeaTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Process Failure Mode and Effects Analysis Record...
@@ -91,9 +92,9 @@ export function PfmeaDevelopmentPage({
   return (
     <AppShell
       title="PFMEA Development"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Identify process failure modes, severity/occurrence/detection scoring, and risk mitigation actions."
-      tabs={tabs}
+      tabs={tabs ?? <InnovationAreaTabs sub={<PfmeaTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="space-y-0 min-h-screen bg-background text-foreground">
         {/* Top Header Bar */}

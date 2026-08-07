@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProductStrategyTabBar } from "@/components/erp/ProductStrategyTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { ErpButton } from "@/components/erp/Button";
 import { productStrategyService } from "@/services";
@@ -66,9 +67,9 @@ function ProductStrategyRoadmapsPage() {
   return (
     <AppShell
       title="Product Roadmaps"
-      breadcrumb="Development > Product Strategy"
+      breadcrumb="Research & Innovation Development"
       description="Execution roadmaps auto-generated upon Executive Committee approval of Product Strategy records."
-      tabs={<ProductStrategyTabBar />}
+      tabs={<InnovationAreaTabs sub={<ProductStrategyTabBar />} />}
       topbarActions={
         <ErpButton
           variant="primary"

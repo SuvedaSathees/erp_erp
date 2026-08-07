@@ -188,7 +188,11 @@ export function ResearchInnovationTabBar() {
         className="no-scrollbar flex items-center gap-1 overflow-x-auto px-2 pt-2 scroll-smooth"
       >
         {RESEARCH_INNOVATION_TABS.map((tab) => {
-          const active = pathname === tab.to || (tab.to !== "/development/research-innovation/overview" && pathname.startsWith(tab.to));
+          const cleanTabTo = tab.to.replace(/\/$/, "");
+          const cleanPathname = pathname.replace(/\/$/, "");
+          const active =
+            cleanPathname === cleanTabTo ||
+            (tab.to !== "/development/research-innovation/overview" && cleanPathname.startsWith(cleanTabTo));
           return (
             <Link
               key={tab.to}
@@ -219,5 +223,10 @@ export function ResearchInnovationTabBar() {
 }
 
 export function InnovationAreaTabs({ sub }: { sub?: ReactNode }) {
-  return <ResearchInnovationTabBar />;
+  return (
+    <div className="space-y-0">
+      <ResearchInnovationTabBar />
+      {sub && <div className="no-scrollbar overflow-x-auto border-b border-border/80 bg-background">{sub}</div>}
+    </div>
+  );
 }

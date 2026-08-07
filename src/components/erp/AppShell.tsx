@@ -1158,7 +1158,11 @@ function Topbar({
         <div className="min-w-0 flex-1">
           {breadcrumb && (
             <div className="mb-1 flex items-center gap-1.5 text-[13px]">
-              <span className="font-medium text-primary">{breadcrumb}</span>
+              <span className="font-medium text-primary">
+                {breadcrumb.endsWith(title)
+                  ? breadcrumb.slice(0, -title.length).replace(/\s*[>·›]\s*$/, "")
+                  : breadcrumb}
+              </span>
               <span className="text-muted-foreground">›</span>
               <span className="text-muted-foreground">{title}</span>
             </div>

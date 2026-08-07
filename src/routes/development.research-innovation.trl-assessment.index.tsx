@@ -70,7 +70,7 @@ function TrlRegisterPage() {
 
   return (
     <AppShell
-      breadcrumb="Development > Research & Innovation Development > Technology Readiness Level (TRL) Assessment"
+      breadcrumb="Research & Innovation Development"
       title="Technology Readiness Level"
       description="Assess and advance technology readiness levels."
       topbarActions={

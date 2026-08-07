@@ -7,7 +7,7 @@ import { RefreshCw, Sparkles, Gauge } from "lucide-react";
 import { manufacturingExcellenceService } from "@/services";
 import type { ManufacturingExcellenceRecord } from "@/services/types";
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 import { ManufacturingExcellenceTabBar, type ExcellenceTabId } from "@/components/erp/ManufacturingExcellenceTabBar";
 import { ExcellenceHeader } from "@/components/erp/manufacturingExcellence/ExcellenceHeader";
@@ -212,8 +212,8 @@ export function ManufacturingExcellencePage({
     return (
       <AppShell
         title="Manufacturing Excellence"
-        breadcrumb={breadcrumb ?? "Development > Manufacturing Development"}
-        tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<ManufacturingExcellenceTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Manufacturing Excellence Master Record...
@@ -312,9 +312,9 @@ export function ManufacturingExcellencePage({
   return (
     <AppShell
       title="Manufacturing Excellence"
-      breadcrumb={breadcrumb ?? "Development > Manufacturing Development"}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Govern continuous improvement, operational excellence, productivity, quality optimization, cost reduction, sustainability, and AI performance benchmarking."
-      tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+      tabs={tabs ?? <InnovationAreaTabs sub={<ManufacturingExcellenceTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="flex flex-col gap-5 p-4 sm:p-6">
         {/* Header Bar */}

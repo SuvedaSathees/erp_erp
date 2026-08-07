@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProductStrategyTabBar } from "@/components/erp/ProductStrategyTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { ErpButton } from "@/components/erp/Button";
 import { StarRating } from "@/components/erp/StarRating";
@@ -306,7 +307,8 @@ export function ProductStrategyFormPage({
     return (
       <AppShell
         title="Product Strategy"
-        breadcrumb="Development > Research & Innovation Development > Product Strategy > Product Strategy Form"
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<ProductStrategyTabBar />} />}
       >
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -331,9 +333,9 @@ export function ProductStrategyFormPage({
   return (
     <AppShell
       title="Product Strategy"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Formulate executive product strategy, market positioning, financial ROI, and strategic investment roadmap."
-      tabs={tabs}
+      tabs={tabs ?? <InnovationAreaTabs sub={<ProductStrategyTabBar />} />}
     >
       <div className="space-y-6 pb-12">
         {/* ========================================================================= */}

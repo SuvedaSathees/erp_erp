@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ApqpHeader } from "@/components/erp/apqp/ApqpHeader";
 import { ApqpTabBar, type ApqpTabType } from "@/components/erp/apqp/ApqpTabBar";
 import { AddApqpProjectModal } from "@/components/erp/apqp/AddApqpProjectModal";
@@ -32,7 +33,7 @@ export const Route = createFileRoute(
 });
 
 export function ApqpQualityPlanningPage({
-  breadcrumb = "Development > Manufacturing Development",
+  breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
@@ -69,8 +70,8 @@ export function ApqpQualityPlanningPage({
     return (
       <AppShell
         title="Quality Planning (APQP)"
-        breadcrumb={breadcrumb}
-        tabs={tabs}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<ApqpTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Quality Planning (APQP) Master Record...
@@ -82,9 +83,9 @@ export function ApqpQualityPlanningPage({
   return (
     <AppShell
       title="Quality Planning (APQP)"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Advanced Product Quality Planning gates, feasibility commits, and product quality timing plans."
-      tabs={tabs}
+      tabs={tabs ?? <InnovationAreaTabs sub={<ApqpTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="space-y-0 min-h-screen bg-background text-foreground">
         {/* Top Header Bar */}

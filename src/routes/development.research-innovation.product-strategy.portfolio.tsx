@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProductStrategyTabBar } from "@/components/erp/ProductStrategyTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { ErpButton } from "@/components/erp/Button";
 import { productStrategyService } from "@/services";
@@ -38,7 +39,7 @@ function formatCurrency(val: number): string {
 function ProductStrategyPortfolioPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [stageFilter, setStageFilter] = useState("all");
+  const [stageFilter, setStageFilter] = useState<string>("all");
 
   const { data: record } = useQuery({
     queryKey: ["productStrategyRecord"],
@@ -47,12 +48,12 @@ function ProductStrategyPortfolioPage() {
 
   const recordsList = [
     {
-      id: record?.id ?? "ps-record-0017",
+      id: "ps-record-0017",
       strategyId: record?.strategyId ?? "PS-2024-0017",
       formCode: record?.formCode ?? "PS-2024-08",
-      strategyName: record?.strategyName ?? "Smart EV Charger Pro Strategy 2024-2027",
-      productName: record?.linkedProductName ?? "Smart EV Charger Pro",
-      businessUnit: record?.businessUnit ?? "Smart EV Infrastructure",
+      strategyName: record?.strategyName ?? "Next-Gen EV Powertrain Architecture 800V",
+      productName: record?.linkedProductName ?? "EV Powertrain Gen-3",
+      businessUnit: record?.businessUnit ?? "EV Powertrain",
       pmName: record?.productManagerName ?? "Vikram Sharma",
       avatar: record?.productManagerAvatar ?? "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
       period: `${record?.strategyPeriodStart ?? "2024-04-01"} – ${record?.strategyPeriodEnd ?? "2027-03-31"}`,
@@ -127,9 +128,9 @@ function ProductStrategyPortfolioPage() {
   return (
     <AppShell
       title="Strategy Portfolio Register"
-      breadcrumb="Development > Product Strategy"
+      breadcrumb="Research & Innovation Development"
       description="Central register of strategic product plans, market opportunity sizing, and stage status."
-      tabs={<ProductStrategyTabBar />}
+      tabs={<InnovationAreaTabs sub={<ProductStrategyTabBar />} />}
       topbarActions={
         <ErpButton
           variant="primary"

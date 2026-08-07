@@ -518,7 +518,7 @@ function TrlAssessmentFormPage() {
   if (recordQuery.isLoading) {
     return (
       <AppShell
-        breadcrumb="Development > Research & Innovation Development > Technology Readiness Level (TRL) Assessment"
+        breadcrumb="Research & Innovation Development"
         title="Technology Readiness Level"
       description="Assess and advance technology readiness levels."
       tabs={<InnovationAreaTabs sub={<TrlAssessmentPageTabBar />} />}
@@ -532,7 +532,7 @@ function TrlAssessmentFormPage() {
 
   return (
     <AppShell
-      breadcrumb="Development > Research & Innovation Development > Technology Readiness Level (TRL) Assessment > TRL Assessment Form"
+      breadcrumb="Research & Innovation Development"
       title="Technology Readiness Level"
       description="Assess and advance technology readiness levels."
       tabs={<InnovationAreaTabs sub={<TrlAssessmentPageTabBar />} />}

@@ -7,7 +7,7 @@ import { RefreshCw, Sparkles, X, CheckCircle2 } from "lucide-react";
 import { smartFactoryDevelopmentService } from "@/services";
 import type { SmartFactoryDevelopmentRecord } from "@/services/types";
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 import { SmartFactoryTabBar, type SmartFactoryTabId } from "@/components/erp/SmartFactoryTabBar";
 import { SmartFactoryHeader } from "@/components/erp/smartFactory/SmartFactoryHeader";
@@ -39,7 +39,7 @@ export const Route = createFileRoute(
 });
 
 export function SmartFactoryDevelopmentPage({
-  breadcrumb = "Development > Manufacturing Development",
+  breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
@@ -99,8 +99,8 @@ export function SmartFactoryDevelopmentPage({
     return (
       <AppShell
         title="Smart Factory Development"
-        breadcrumb={breadcrumb}
-        tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<SmartFactoryTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Smart Factory Development Master Record...
@@ -182,9 +182,9 @@ export function SmartFactoryDevelopmentPage({
   return (
     <AppShell
       title="Smart Factory Development"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Govern Industry 4.0 transformation through IIoT, Cyber-Physical Systems, Digital Twins, AI, and MES."
-      tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+      tabs={tabs ?? <InnovationAreaTabs sub={<SmartFactoryTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="flex flex-col gap-5 p-4 sm:p-6">
         {/* Header Bar */}

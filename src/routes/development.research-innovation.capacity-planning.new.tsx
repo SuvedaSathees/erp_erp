@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 
 import {
   CapacityPlanningTabBar,
@@ -39,7 +39,7 @@ export const Route = createFileRoute(
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 
 export function CapacityPlanningNewPage({
-  breadcrumb = "Development > Manufacturing Development",
+  breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
@@ -89,8 +89,8 @@ export function CapacityPlanningNewPage({
     return (
       <AppShell
         title="Capacity Planning"
-        breadcrumb={breadcrumb}
-        tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<CapacityPlanningTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Capacity Planning Master Record...
@@ -104,9 +104,9 @@ export function CapacityPlanningNewPage({
   return (
     <AppShell
       title="Capacity Planning"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Calculate machine hours, shift availability, bottleneck constraints, line balancing, and throughput analysis."
-      tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+      tabs={tabs ?? <InnovationAreaTabs sub={<CapacityPlanningTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="space-y-4">
 

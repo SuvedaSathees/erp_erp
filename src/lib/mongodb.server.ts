@@ -1,12 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MongoClient, Db, ObjectId } from "mongodb";
+import { MongoClient, Db, ObjectId as RealObjectId } from "mongodb";
 
-export { ObjectId };
+class SafeObjectId {
+  id: string;
+  constructor(id?: string) {
+    this.id = id || Math.random().toString(36).substring(2) + Date.now().toString(36);
+  }
+  toString() { return this.id; }
+  toHexString() { return this.id; }
+}
+
+export const ObjectId: any = typeof window === "undefined" && RealObjectId ? RealObjectId : SafeObjectId;
 import "dotenv/config";
 import * as fs from "fs";
 import * as path from "path";
 
-const MOCK_DB_PATH = path.resolve("src/lib/mock_gl_db.json");
+const MOCK_DB_PATH =
+  typeof window === "undefined" && path && typeof path.resolve === "function"
+    ? path.resolve("src/lib/mock_gl_db.json")
+    : "";
 
 let client: MongoClient | null = null;
 let db: Db | null = null;
@@ -381,6 +393,10 @@ let connectionFailed = false;
 let connectionPromise: Promise<Db> | null = null;
 
 export async function connectToDatabase(): Promise<Db> {
+  if (typeof window !== "undefined") {
+    connectionFailed = true;
+    throw new Error("Browser environment detected. Using local in-memory fallback.");
+  }
   if (db) return db;
   if (connectionFailed) {
     throw new Error("MongoDB connection previously failed. Using local fallback.");

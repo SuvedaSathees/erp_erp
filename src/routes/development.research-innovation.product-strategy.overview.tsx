@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProductStrategyTabBar } from "@/components/erp/ProductStrategyTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { ErpButton } from "@/components/erp/Button";
@@ -53,9 +54,9 @@ function ProductStrategyOverviewPage() {
   return (
     <AppShell
       title="Product Strategy Overview"
-      breadcrumb="Development > Product Strategy"
+      breadcrumb="Research & Innovation Development"
       description="Strategic product planning, portfolio alignment, 4-stage workflow governance, and AI-driven market feasibility."
-      tabs={<ProductStrategyTabBar />}
+      tabs={<InnovationAreaTabs sub={<ProductStrategyTabBar />} />}
       topbarActions={
         <ErpButton
           variant="primary"

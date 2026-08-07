@@ -81,7 +81,7 @@ import type {
   FixtureAuditEntry,
   FixtureMilestone,
 } from "@/services/types";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { FixtureDevelopmentTabBar, type FixtureTabId } from "@/components/erp/FixtureDevelopmentTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -175,8 +175,8 @@ export function FixtureDevelopmentNewPage({
     return (
       <AppShell
         title="Fixture Development"
-        breadcrumb={breadcrumb}
-        tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<FixtureDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Fixture Development Master Record...
@@ -299,9 +299,9 @@ export function FixtureDevelopmentNewPage({
   return (
     <AppShell
       title="Fixture Development"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Engineer custom clamping fixtures, locating pins, welding jigs, and holding apparatus."
-      tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+      tabs={tabs ?? <InnovationAreaTabs sub={<FixtureDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="min-h-screen bg-slate-50/60 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased pb-16">
         

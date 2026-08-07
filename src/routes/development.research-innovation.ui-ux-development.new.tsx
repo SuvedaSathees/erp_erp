@@ -93,7 +93,7 @@ import type {
   UiUxReviewer,
   UiUxAuditEntry,
 } from "@/services/types";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { UiUxDevelopmentTabBar, UI_UX_TABS, type UiUxDevelopmentTabId } from "@/components/erp/UiUxDevelopmentTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -194,9 +194,9 @@ export function UiUxDevelopmentNewPage({
     return (
       <AppShell
         title="UI/UX Development"
-        breadcrumb="Development"
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
         description="Design, validate, and hand off enterprise UI/UX design systems and wireframes."
-        tabs={<ResearchInnovationTabBar />}
+        tabs={tabs ?? <InnovationAreaTabs sub={<UiUxDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="flex h-[70vh] w-full flex-col items-center justify-center gap-4">
           <RefreshCw className="h-8 w-8 animate-spin text-primary" />
@@ -234,9 +234,9 @@ export function UiUxDevelopmentNewPage({
   return (
     <AppShell
       title="UI/UX Development"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Design Figma wireframes, interactive prototypes, design system tokens, and usability testing."
-      tabs={tabs}
+      tabs={tabs ?? <InnovationAreaTabs sub={<UiUxDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="min-h-screen bg-slate-50/60 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased pb-16">
         <div className="mx-auto max-w-[1720px] px-4 sm:px-6 lg:px-8 pt-3 space-y-4">

@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 
 import {
   FactoryLayoutTabBar,
@@ -50,7 +50,7 @@ export const Route = createFileRoute(
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 
 export function FactoryLayoutDesignNewPage({
-  breadcrumb = "Development > Manufacturing Development",
+  breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
@@ -100,8 +100,8 @@ export function FactoryLayoutDesignNewPage({
     return (
       <AppShell
         title="Factory Layout Design"
-        breadcrumb={breadcrumb}
-        tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<FactoryLayoutTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Factory Layout Design module data...
@@ -115,9 +115,9 @@ export function FactoryLayoutDesignNewPage({
   return (
     <AppShell
       title="Factory Layout Design"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="CAD layout blueprints, material logistics flow, utility planning, digital twin simulation & EHS compliance."
-      tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+      tabs={tabs ?? <InnovationAreaTabs sub={<FactoryLayoutTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="space-y-4">
 

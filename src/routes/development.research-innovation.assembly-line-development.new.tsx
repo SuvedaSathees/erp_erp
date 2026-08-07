@@ -81,7 +81,7 @@ import type {
   AssemblyLineAuditEntry,
   AssemblyLineMilestone,
 } from "@/services/types";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { AssemblyLineDevelopmentTabBar, type AssemblyLineTabId } from "@/components/erp/AssemblyLineDevelopmentTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -166,9 +166,9 @@ export function AssemblyLineDevelopmentNewPage({
     return (
       <AppShell
         title="Assembly Line Development"
-        breadcrumb="Development"
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
         description="Govern assembly line layout design, workstations planning, takt time line balancing, automation level, OEE targets, and AI quality checks."
-        tabs={<ResearchInnovationTabBar />}
+        tabs={tabs ?? <InnovationAreaTabs sub={<AssemblyLineDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="flex h-[70vh] w-full flex-col items-center justify-center gap-4">
           <RefreshCw className="h-8 w-8 animate-spin text-primary" />
@@ -278,9 +278,9 @@ export function AssemblyLineDevelopmentNewPage({
   return (
     <AppShell
       title="Assembly Line Development"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Balance assembly lines, takt time distribution, ergonomic workstations, and automated line feeds."
-      tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+      tabs={tabs ?? <InnovationAreaTabs sub={<AssemblyLineDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="min-h-screen bg-slate-50/60 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased pb-16">
         

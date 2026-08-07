@@ -82,7 +82,7 @@ import type {
   ProductionEngineeringAuditEntry,
   ProductionEngineeringMilestone,
 } from "@/services/types";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ProductionEngineeringTabBar, type ProductionEngineeringTabId } from "@/components/erp/ProductionEngineeringTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -165,9 +165,9 @@ export function ProductionEngineeringNewPage({
     return (
       <AppShell
         title="Production Engineering"
-        breadcrumb="Development"
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
         description="Govern mass production process design, workstation allocation, pilot runs, PFMEA, OEE Targets, and AI optimization."
-        tabs={<ResearchInnovationTabBar />}
+        tabs={tabs ?? <InnovationAreaTabs sub={<ProductionEngineeringTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="flex h-[70vh] w-full flex-col items-center justify-center gap-4">
           <RefreshCw className="h-8 w-8 animate-spin text-primary" />
@@ -296,9 +296,9 @@ export function ProductionEngineeringNewPage({
   return (
     <AppShell
       title="Process Engineering & Validation"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Govern mass production process design, workstation allocation, pilot runs, PFMEA, OEE Targets, and AI optimization."
-      tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+      tabs={tabs ?? <InnovationAreaTabs sub={<ProductionEngineeringTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="min-h-screen bg-slate-50/60 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased pb-16">
         

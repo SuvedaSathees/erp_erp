@@ -83,7 +83,7 @@ function PatentRegisterPage() {
   return (
     <AppShell
       title="Patent Management"
-      breadcrumb="Development · IP Development"
+      breadcrumb="Research & Innovation Development"
       description="Manage patent filing, prosecution, grant, and portfolio."
       tabs={<InnovationAreaTabs sub={<PatentMgmtPageTabBar />} />}
       topbarActions={newButton}

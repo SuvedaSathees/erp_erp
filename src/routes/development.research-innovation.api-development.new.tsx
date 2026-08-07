@@ -80,7 +80,7 @@ import type {
   ApiAttachment,
 } from "@/services/types";
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ApiDevelopmentTabBar, API_DEVELOPMENT_TABS, type ApiDevelopmentTabId } from "@/components/erp/ApiDevelopmentTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -182,9 +182,9 @@ export function ApiDevelopmentNewPage({
     return (
       <AppShell
         title="API Development"
-        breadcrumb="Development"
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
         description="Design, secure, test, deploy and monitor enterprise APIs."
-        tabs={<ResearchInnovationTabBar />}
+        tabs={tabs ?? <InnovationAreaTabs sub={<ApiDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="flex h-[70vh] w-full flex-col items-center justify-center gap-4">
           <RefreshCw className="h-8 w-8 animate-spin text-primary" />
@@ -226,9 +226,9 @@ export function ApiDevelopmentNewPage({
   return (
     <AppShell
       title="API Development"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Design RESTful & GraphQL endpoints, OpenAPI specs, rate-limiting policies, and gateway routes."
-      tabs={tabs}
+      tabs={tabs ?? <InnovationAreaTabs sub={<ApiDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="min-h-screen bg-slate-50/60 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased pb-16">
         <div className="mx-auto max-w-[1720px] px-4 sm:px-6 lg:px-8 pt-3 space-y-4">

@@ -27,7 +27,7 @@ export type ModuleSubTab = {
 export function ModuleSubTabBar({ tabs }: { tabs: ModuleSubTab[] }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
-    <div className="flex items-center gap-4 border-b border-border bg-white px-3 shadow-sm">
+    <div className="no-scrollbar flex items-center gap-1 overflow-x-auto border-b border-border/80 bg-background px-3 scroll-smooth">
       {tabs.map((tab) => {
         const active =
           typeof tab.activeMatch === "function"

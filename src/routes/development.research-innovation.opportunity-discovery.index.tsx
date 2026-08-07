@@ -95,7 +95,7 @@ function OpportunityRegisterPage() {
       title="Opportunity Discovery"
       breadcrumb="Research & Innovation Development"
       description="Discover and qualify innovation opportunities from validated ideas."
-      tabs={<InnovationAreaTabs sub={<OpportunityTabBar />} />}
+      tabs={<InnovationAreaTabs />}
       topbarActions={newButton}
     >
       {listQuery.isLoading ? (

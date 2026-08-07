@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProductStrategyTabBar } from "@/components/erp/ProductStrategyTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { ErpButton } from "@/components/erp/Button";
 import { productStrategyService } from "@/services";
@@ -45,9 +46,9 @@ function ProductStrategyReportsPage() {
   return (
     <AppShell
       title="Strategy Reports & Analytics"
-      breadcrumb="Development > Product Strategy"
+      breadcrumb="Research & Innovation Development"
       description="Financial projections, capex/opex breakdown, and AI executive briefs for Product Strategy governance."
-      tabs={<ProductStrategyTabBar />}
+      tabs={<InnovationAreaTabs sub={<ProductStrategyTabBar />} />}
       topbarActions={
         <div className="flex items-center gap-2">
           <ErpButton variant="outline" size="sm" className="gap-1.5 text-xs">

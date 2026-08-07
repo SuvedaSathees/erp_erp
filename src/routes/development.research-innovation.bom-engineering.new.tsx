@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 import { BomEngineeringHeader } from "@/components/erp/bom-engineering/BomEngineeringHeader";
 import { BomScoresHeader } from "@/components/erp/bom-engineering/BomScoresHeader";
@@ -36,7 +36,7 @@ export const Route = createFileRoute(
 });
 
 export function BomEngineeringPage({
-  breadcrumb = "Development > Manufacturing Development",
+  breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
@@ -82,8 +82,8 @@ export function BomEngineeringPage({
     return (
       <AppShell
         title="BOM Engineering"
-        breadcrumb={breadcrumb}
-        tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<BomEngineeringTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading BOM Engineering Master Record...
@@ -95,9 +95,9 @@ export function BomEngineeringPage({
   return (
     <AppShell
       title="BOM Engineering"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Manage manufacturing bill of materials (MBOM), Phantom BOMs, component structures, effectivity dates, and alternate parts."
-      tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+      tabs={tabs ?? <InnovationAreaTabs sub={<BomEngineeringTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="space-y-0 min-h-screen bg-background text-foreground">
         {/* Top Header Bar */}

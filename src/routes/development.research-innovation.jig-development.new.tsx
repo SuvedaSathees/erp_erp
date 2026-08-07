@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 
 import {
@@ -61,7 +61,7 @@ export const Route = createFileRoute(
 });
 
 export function JigDevelopmentNewPage({
-  breadcrumb = "Development > Manufacturing Development",
+  breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
@@ -115,8 +115,8 @@ export function JigDevelopmentNewPage({
     return (
       <AppShell
         title="Jig Development"
-        breadcrumb={breadcrumb}
-        tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<JigDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Jig Development Master Record...
@@ -130,14 +130,11 @@ export function JigDevelopmentNewPage({
   return (
     <AppShell
       title="Jig Development"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Fabricate precision drilling, alignment, soldering, and testing jigs for shop floor operations."
-      tabs={tabs ?? <ManufacturingDevelopmentTabBar />}
+      tabs={tabs ?? <InnovationAreaTabs sub={<JigDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="space-y-4">
-
-        {/* Module Level Navigation Tab Bar */}
-        <ResearchInnovationTabBar />
 
         {/* Executive Header Card */}
         <JigDevelopmentHeader

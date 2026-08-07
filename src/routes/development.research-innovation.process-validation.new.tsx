@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ProcessValidationHeader } from "@/components/erp/processValidation/ProcessValidationHeader";
 import { ProcessValidationTabBar, type ProcessValidationTabType } from "@/components/erp/processValidation/ProcessValidationTabBar";
 import { AddValidationTrialModal } from "@/components/erp/processValidation/AddValidationTrialModal";
@@ -33,7 +34,7 @@ export const Route = createFileRoute(
 });
 
 export function ProcessValidationPage({
-  breadcrumb = "Development > Manufacturing Development",
+  breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
@@ -79,8 +80,8 @@ export function ProcessValidationPage({
     return (
       <AppShell
         title="Process Validation & PPAP"
-        breadcrumb={breadcrumb}
-        tabs={tabs}
+        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        tabs={tabs ?? <InnovationAreaTabs sub={<ProcessValidationTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Manufacturing Process Validation Record...
@@ -92,9 +93,9 @@ export function ProcessValidationPage({
   return (
     <AppShell
       title="Process Validation & PPAP"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
       description="Execute Production Part Approval Process (PPAP) submissions, dimensional reports, and customer approvals."
-      tabs={tabs}
+      tabs={tabs ?? <InnovationAreaTabs sub={<ProcessValidationTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
       <div className="space-y-0 min-h-screen bg-background text-foreground">
         {/* Top Header Bar */}

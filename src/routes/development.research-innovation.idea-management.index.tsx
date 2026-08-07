@@ -105,7 +105,7 @@ function IdeaDashboardPage() {
       title="Idea Management"
       breadcrumb="Research & Innovation Development"
       description="Capture, evaluate, and track ideas through the innovation pipeline."
-      tabs={<InnovationAreaTabs sub={<IdeaTabBar />} />}
+      tabs={<InnovationAreaTabs />}
       topbarActions={newIdeaButton}
     >
       {isLoading || !data ? (

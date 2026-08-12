@@ -83,6 +83,32 @@ export function IotDevelopmentTabBar({
     };
   }, []);
 
+  // Smoothly scroll active tab to center whenever activeTab changes
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) {
+      const activeEl = el.querySelector('[data-active="true"]');
+      if (activeEl) {
+        activeEl.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+      setTimeout(checkScroll, 350);
+    }
+  }, [activeTab]);
+
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    const el = scrollRef.current;
+    if (el) {
+      const { scrollWidth, clientWidth } = el;
+      if (scrollWidth > clientWidth) {
+        el.scrollLeft += e.deltaY;
+      }
+    }
+  };
+
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
     const distance = 240;
@@ -117,7 +143,7 @@ export function IotDevelopmentTabBar({
           type="button"
           onClick={() => scroll("left")}
           aria-label="Scroll tabs left"
-          className="absolute left-1 z-30 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-white shadow-sm hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 text-slate-600 dark:text-slate-200 transition-all"
+          className="absolute left-1 z-30 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-white shadow-sm hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 text-slate-600 dark:text-slate-200 transition-all cursor-pointer"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -125,7 +151,8 @@ export function IotDevelopmentTabBar({
 
       <div
         ref={scrollRef}
-        className="flex items-center gap-1.5 px-4 overflow-x-auto scrollbar-none py-1.5 w-full transition-all"
+        onWheel={handleWheel}
+        className="flex items-center gap-1.5 px-4 overflow-x-auto scrollbar-none py-1.5 w-full transition-all scroll-smooth"
       >
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
@@ -133,6 +160,7 @@ export function IotDevelopmentTabBar({
             <button
               key={tab.id}
               type="button"
+              data-active={isActive ? "true" : "false"}
               onClick={() => onTabChange?.(tab.id)}
               className={cn(
                 "relative group flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer select-none",

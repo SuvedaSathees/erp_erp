@@ -166,7 +166,7 @@ export function ProductDevelopmentTabBar() {
         <button
           type="button"
           onClick={scrollRight}
-          className="absolute right-0 top-0 z-10 flex h-full w-8 items-center justify-center bg-gradient-to-l from-background via-background/90 to-transparent text-muted-foreground transition-colors hover:text-foreground"
+          className="absolute right-0 top-0 z-10 flex h-full w-8 items-center justify-center bg-gradient-to-l from-background via-background/90 to-transparent text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
           aria-label="Scroll tabs right"
         >
           <ChevronRight className="h-4 w-4" />

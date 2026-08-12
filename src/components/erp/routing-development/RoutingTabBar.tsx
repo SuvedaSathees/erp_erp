@@ -12,6 +12,8 @@ import {
   Paperclip,
   History,
 } from "lucide-react";
+import { ScrollableTabBarContainer } from "../ScrollableTabBarContainer";
+import { cn } from "@/lib/utils";
 
 export type RoutingTabType =
   | "overview"
@@ -50,27 +52,28 @@ export const RoutingTabBar: React.FC<RoutingTabBarProps> = ({
   ];
 
   return (
-    <div className="sticky top-[56px] z-20 bg-background/95 backdrop-blur-md border-b border-border/80 px-4 overflow-x-auto scrollbar-none shadow-xs transition-colors">
-      <div className="flex items-center gap-1 min-w-max">
-        {tabs.map((t) => {
-          const Icon = t.icon;
-          const isActive = activeTab === t.id;
-          return (
-            <button
-              key={t.id}
-              onClick={() => onTabChange(t.id)}
-              className={`flex items-center gap-2 px-3.5 py-3 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
-                isActive
-                  ? "border-primary text-primary bg-primary/5"
-                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/40"
-              }`}
-            >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-              <span>{t.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
+    <ScrollableTabBarContainer activeKey={activeTab} className="sticky top-[56px] z-20 bg-background/95 backdrop-blur-md border-b border-border/80">
+      {tabs.map((t) => {
+        const Icon = t.icon;
+        const isActive = activeTab === t.id;
+        return (
+          <button
+            key={t.id}
+            type="button"
+            data-active={isActive ? "true" : "false"}
+            onClick={() => onTabChange(t.id)}
+            className={cn(
+              "flex items-center gap-2 px-3.5 py-3 text-xs font-semibold border-b-2 transition-all cursor-pointer shrink-0 whitespace-nowrap",
+              isActive
+                ? "border-primary text-primary bg-primary/5 font-bold"
+                : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/40"
+            )}
+          >
+            <Icon className={cn("w-3.5 h-3.5", isActive ? "text-primary" : "text-muted-foreground")} />
+            <span>{t.label}</span>
+          </button>
+        );
+      })}
+    </ScrollableTabBarContainer>
   );
 };

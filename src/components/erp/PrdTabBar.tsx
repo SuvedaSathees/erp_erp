@@ -39,11 +39,10 @@ export function PrdTabBar({
             key={tab.id}
             type="button"
             onClick={() => onTabChange?.(tab.id)}
-            className={`shrink-0 whitespace-nowrap border-b-2 px-3 pb-3 pt-2 text-[13px] font-semibold transition-all focus:outline-none ${
-              isActive
+            className={`shrink-0 whitespace-nowrap border-b-2 px-3 pb-3 pt-2 text-[13px] font-semibold transition-all focus:outline-none ${isActive
                 ? "border-primary text-primary font-bold"
                 : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
+              }`}
           >
             {tab.label}
           </button>

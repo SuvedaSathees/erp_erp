@@ -18,11 +18,13 @@ import { Route as OverviewRouteImport } from './routes/overview'
 import { Route as LedgerRouteImport } from './routes/ledger'
 import { Route as ExpensesRouteImport } from './routes/expenses'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DevelopmentBusinessDevelopmentRouteImport } from './routes/development.business-development'
 import { Route as ManufacturingDevelopmentRoboticsIntegrationIndexRouteImport } from './routes/manufacturing-development.robotics-integration.index'
 import { Route as ManufacturingDevelopmentPilotProductionIndexRouteImport } from './routes/manufacturing-development.pilot-production.index'
 import { Route as ManufacturingDevelopmentMassProductionReadinessIndexRouteImport } from './routes/manufacturing-development.mass-production-readiness.index'
 import { Route as ManufacturingDevelopmentLeanManufacturingIndexRouteImport } from './routes/manufacturing-development.lean-manufacturing.index'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentIndexRouteImport } from './routes/manufacturing-development.automation-development.index'
+import { Route as DevelopmentBusinessDevelopmentIndexRouteImport } from './routes/development.business-development.index'
 import { Route as ManufacturingDevelopmentRoboticsIntegrationNewRouteImport } from './routes/manufacturing-development.robotics-integration.new'
 import { Route as ManufacturingDevelopmentRoboticsIntegrationIdRouteImport } from './routes/manufacturing-development.robotics-integration.$id'
 import { Route as ManufacturingDevelopmentPilotProductionNewRouteImport } from './routes/manufacturing-development.pilot-production.new'
@@ -47,12 +49,43 @@ import { Route as ManagementFinanceCashBankRouteImport } from './routes/manageme
 import { Route as ManagementFinanceBudgetingRouteImport } from './routes/management.finance.budgeting'
 import { Route as ManagementFinanceAuditRouteImport } from './routes/management.finance.audit'
 import { Route as ManagementFinanceAssetsRouteImport } from './routes/management.finance.assets'
+import { Route as ManagementAdministrationManagementUserRoleManagementRouteImport } from './routes/management.administration-management.user-role-management'
+import { Route as ManagementAdministrationManagementPolicyManagementRouteImport } from './routes/management.administration-management.policy-management'
+import { Route as ManagementAdministrationManagementOrganizationStructureRouteImport } from './routes/management.administration-management.organization-structure'
+import { Route as ManagementAdministrationManagementNotificationsManagementRouteImport } from './routes/management.administration-management.notifications-management'
+import { Route as ManagementAdministrationManagementMasterDataManagementRouteImport } from './routes/management.administration-management.master-data-management'
+import { Route as ManagementAdministrationManagementDocumentControlManagementRouteImport } from './routes/management.administration-management.document-control-management'
+import { Route as ManagementAdministrationManagementDepartmentManagementRouteImport } from './routes/management.administration-management.department-management'
+import { Route as ManagementAdministrationManagementBranchManagementRouteImport } from './routes/management.administration-management.branch-management'
+import { Route as ManagementAdministrationManagementAuditManagementRouteImport } from './routes/management.administration-management.audit-management'
+import { Route as ManagementAdministrationManagementApprovalMatrixManagementRouteImport } from './routes/management.administration-management.approval-matrix-management'
 import { Route as DevelopmentResearchInnovationReportsRouteImport } from './routes/development.research-innovation.reports'
 import { Route as DevelopmentResearchInnovationProductReleaseManagementRouteImport } from './routes/development.research-innovation.product-release-management'
 import { Route as DevelopmentResearchInnovationOverviewRouteImport } from './routes/development.research-innovation.overview'
 import { Route as DevelopmentProductDevelopmentOverviewRouteImport } from './routes/development.product-development.overview'
 import { Route as DevelopmentProductDevelopmentCertificationReadinessRouteImport } from './routes/development.product-development.certification-readiness'
 import { Route as DevelopmentManufacturingDevelopmentOverviewRouteImport } from './routes/development.manufacturing-development.overview'
+import { Route as DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRouteImport } from './routes/development.business-development.vendor-ecosystem-development'
+import { Route as DevelopmentBusinessDevelopmentSalesChannelDevelopmentRouteImport } from './routes/development.business-development.sales-channel-development'
+import { Route as DevelopmentBusinessDevelopmentRevenueModelDevelopmentRouteImport } from './routes/development.business-development.revenue-model-development'
+import { Route as DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRouteImport } from './routes/development.business-development.pricing-strategy-development'
+import { Route as DevelopmentBusinessDevelopmentPartnershipDevelopmentRouteImport } from './routes/development.business-development.partnership-development'
+import { Route as DevelopmentBusinessDevelopmentOverviewRouteImport } from './routes/development.business-development.overview'
+import { Route as DevelopmentBusinessDevelopmentMarketResearchRouteImport } from './routes/development.business-development.market-research'
+import { Route as DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRouteImport } from './routes/development.business-development.investor-relations-development'
+import { Route as DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRouteImport } from './routes/development.business-development.international-expansion-development'
+import { Route as DevelopmentBusinessDevelopmentGoToMarketDevelopmentRouteImport } from './routes/development.business-development.go-to-market-development'
+import { Route as DevelopmentBusinessDevelopmentFundraisingDevelopmentRouteImport } from './routes/development.business-development.fundraising-development'
+import { Route as DevelopmentBusinessDevelopmentFranchiseDevelopmentRouteImport } from './routes/development.business-development.franchise-development'
+import { Route as DevelopmentBusinessDevelopmentExportDevelopmentRouteImport } from './routes/development.business-development.export-development'
+import { Route as DevelopmentBusinessDevelopmentDistributorDevelopmentRouteImport } from './routes/development.business-development.distributor-development'
+import { Route as DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRouteImport } from './routes/development.business-development.dealer-network-development'
+import { Route as DevelopmentBusinessDevelopmentCustomerValidationRouteImport } from './routes/development.business-development.customer-validation'
+import { Route as DevelopmentBusinessDevelopmentCustomerDiscoveryRouteImport } from './routes/development.business-development.customer-discovery'
+import { Route as DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRouteImport } from './routes/development.business-development.corporate-strategy-development'
+import { Route as DevelopmentBusinessDevelopmentCompetitiveAnalysisRouteImport } from './routes/development.business-development.competitive-analysis'
+import { Route as DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRouteImport } from './routes/development.business-development.business-transformation-development'
+import { Route as DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRouteImport } from './routes/development.business-development.business-scaling-development'
 import { Route as AdministrationHomeUsersRouteImport } from './routes/administration.home.users'
 import { Route as AdministrationHomeRolesRouteImport } from './routes/administration.home.roles'
 import { Route as AdministrationHomeOverviewRouteImport } from './routes/administration.home.overview'
@@ -163,6 +196,8 @@ import { Route as DevelopmentManufacturingDevelopmentBomEngineeringIndexRouteImp
 import { Route as DevelopmentManufacturingDevelopmentAutomationDevelopmentIndexRouteImport } from './routes/development.manufacturing-development.automation-development.index'
 import { Route as DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRouteImport } from './routes/development.manufacturing-development.assembly-line-development.index'
 import { Route as DevelopmentIpDevelopmentPatentManagementIndexRouteImport } from './routes/development.ip-development.patent-management.index'
+import { Route as DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRouteImport } from './routes/development.business-development.value-proposition-development.index'
+import { Route as DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport } from './routes/development.business-development.business-model-development.index'
 import { Route as DevelopmentResearchInnovationWorkInstructionDevelopmentNewRouteImport } from './routes/development.research-innovation.work-instruction-development.new'
 import { Route as DevelopmentResearchInnovationUiUxDevelopmentNewRouteImport } from './routes/development.research-innovation.ui-ux-development.new'
 import { Route as DevelopmentResearchInnovationTrlAssessmentNewRouteImport } from './routes/development.research-innovation.trl-assessment.new'
@@ -271,6 +306,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevelopmentBusinessDevelopmentRoute =
+  DevelopmentBusinessDevelopmentRouteImport.update({
+    id: '/development/business-development',
+    path: '/development/business-development',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManufacturingDevelopmentRoboticsIntegrationIndexRoute =
   ManufacturingDevelopmentRoboticsIntegrationIndexRouteImport.update({
     id: '/manufacturing-development/robotics-integration/',
@@ -300,6 +341,12 @@ const ManufacturingDevelopmentAutomationDevelopmentIndexRoute =
     id: '/manufacturing-development/automation-development/',
     path: '/manufacturing-development/automation-development/',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const DevelopmentBusinessDevelopmentIndexRoute =
+  DevelopmentBusinessDevelopmentIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
   } as any)
 const ManufacturingDevelopmentRoboticsIntegrationNewRoute =
   ManufacturingDevelopmentRoboticsIntegrationNewRouteImport.update({
@@ -440,6 +487,68 @@ const ManagementFinanceAssetsRoute = ManagementFinanceAssetsRouteImport.update({
   path: '/management/finance/assets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ManagementAdministrationManagementUserRoleManagementRoute =
+  ManagementAdministrationManagementUserRoleManagementRouteImport.update({
+    id: '/management/administration-management/user-role-management',
+    path: '/management/administration-management/user-role-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAdministrationManagementPolicyManagementRoute =
+  ManagementAdministrationManagementPolicyManagementRouteImport.update({
+    id: '/management/administration-management/policy-management',
+    path: '/management/administration-management/policy-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAdministrationManagementOrganizationStructureRoute =
+  ManagementAdministrationManagementOrganizationStructureRouteImport.update({
+    id: '/management/administration-management/organization-structure',
+    path: '/management/administration-management/organization-structure',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAdministrationManagementNotificationsManagementRoute =
+  ManagementAdministrationManagementNotificationsManagementRouteImport.update({
+    id: '/management/administration-management/notifications-management',
+    path: '/management/administration-management/notifications-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAdministrationManagementMasterDataManagementRoute =
+  ManagementAdministrationManagementMasterDataManagementRouteImport.update({
+    id: '/management/administration-management/master-data-management',
+    path: '/management/administration-management/master-data-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAdministrationManagementDocumentControlManagementRoute =
+  ManagementAdministrationManagementDocumentControlManagementRouteImport.update(
+    {
+      id: '/management/administration-management/document-control-management',
+      path: '/management/administration-management/document-control-management',
+      getParentRoute: () => rootRouteImport,
+    } as any,
+  )
+const ManagementAdministrationManagementDepartmentManagementRoute =
+  ManagementAdministrationManagementDepartmentManagementRouteImport.update({
+    id: '/management/administration-management/department-management',
+    path: '/management/administration-management/department-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAdministrationManagementBranchManagementRoute =
+  ManagementAdministrationManagementBranchManagementRouteImport.update({
+    id: '/management/administration-management/branch-management',
+    path: '/management/administration-management/branch-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAdministrationManagementAuditManagementRoute =
+  ManagementAdministrationManagementAuditManagementRouteImport.update({
+    id: '/management/administration-management/audit-management',
+    path: '/management/administration-management/audit-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAdministrationManagementApprovalMatrixManagementRoute =
+  ManagementAdministrationManagementApprovalMatrixManagementRouteImport.update({
+    id: '/management/administration-management/approval-matrix-management',
+    path: '/management/administration-management/approval-matrix-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DevelopmentResearchInnovationReportsRoute =
   DevelopmentResearchInnovationReportsRouteImport.update({
     id: '/development/research-innovation/reports',
@@ -475,6 +584,136 @@ const DevelopmentManufacturingDevelopmentOverviewRoute =
     id: '/development/manufacturing-development/overview',
     path: '/development/manufacturing-development/overview',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute =
+  DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRouteImport.update({
+    id: '/vendor-ecosystem-development',
+    path: '/vendor-ecosystem-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute =
+  DevelopmentBusinessDevelopmentSalesChannelDevelopmentRouteImport.update({
+    id: '/sales-channel-development',
+    path: '/sales-channel-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute =
+  DevelopmentBusinessDevelopmentRevenueModelDevelopmentRouteImport.update({
+    id: '/revenue-model-development',
+    path: '/revenue-model-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute =
+  DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRouteImport.update({
+    id: '/pricing-strategy-development',
+    path: '/pricing-strategy-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute =
+  DevelopmentBusinessDevelopmentPartnershipDevelopmentRouteImport.update({
+    id: '/partnership-development',
+    path: '/partnership-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentOverviewRoute =
+  DevelopmentBusinessDevelopmentOverviewRouteImport.update({
+    id: '/overview',
+    path: '/overview',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentMarketResearchRoute =
+  DevelopmentBusinessDevelopmentMarketResearchRouteImport.update({
+    id: '/market-research',
+    path: '/market-research',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRoute =
+  DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRouteImport.update({
+    id: '/investor-relations-development',
+    path: '/investor-relations-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRoute =
+  DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRouteImport.update(
+    {
+      id: '/international-expansion-development',
+      path: '/international-expansion-development',
+      getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+    } as any,
+  )
+const DevelopmentBusinessDevelopmentGoToMarketDevelopmentRoute =
+  DevelopmentBusinessDevelopmentGoToMarketDevelopmentRouteImport.update({
+    id: '/go-to-market-development',
+    path: '/go-to-market-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentFundraisingDevelopmentRoute =
+  DevelopmentBusinessDevelopmentFundraisingDevelopmentRouteImport.update({
+    id: '/fundraising-development',
+    path: '/fundraising-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentFranchiseDevelopmentRoute =
+  DevelopmentBusinessDevelopmentFranchiseDevelopmentRouteImport.update({
+    id: '/franchise-development',
+    path: '/franchise-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentExportDevelopmentRoute =
+  DevelopmentBusinessDevelopmentExportDevelopmentRouteImport.update({
+    id: '/export-development',
+    path: '/export-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentDistributorDevelopmentRoute =
+  DevelopmentBusinessDevelopmentDistributorDevelopmentRouteImport.update({
+    id: '/distributor-development',
+    path: '/distributor-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRoute =
+  DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRouteImport.update({
+    id: '/dealer-network-development',
+    path: '/dealer-network-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentCustomerValidationRoute =
+  DevelopmentBusinessDevelopmentCustomerValidationRouteImport.update({
+    id: '/customer-validation',
+    path: '/customer-validation',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentCustomerDiscoveryRoute =
+  DevelopmentBusinessDevelopmentCustomerDiscoveryRouteImport.update({
+    id: '/customer-discovery',
+    path: '/customer-discovery',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRoute =
+  DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRouteImport.update({
+    id: '/corporate-strategy-development',
+    path: '/corporate-strategy-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute =
+  DevelopmentBusinessDevelopmentCompetitiveAnalysisRouteImport.update({
+    id: '/competitive-analysis',
+    path: '/competitive-analysis',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute =
+  DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRouteImport.update(
+    {
+      id: '/business-transformation-development',
+      path: '/business-transformation-development',
+      getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+    } as any,
+  )
+const DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute =
+  DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRouteImport.update({
+    id: '/business-scaling-development',
+    path: '/business-scaling-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
   } as any)
 const AdministrationHomeUsersRoute = AdministrationHomeUsersRouteImport.update({
   id: '/administration/home/users',
@@ -1168,6 +1407,22 @@ const DevelopmentIpDevelopmentPatentManagementIndexRoute =
     path: '/development/ip-development/patent-management/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute =
+  DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRouteImport.update(
+    {
+      id: '/value-proposition-development/',
+      path: '/value-proposition-development/',
+      getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+    } as any,
+  )
+const DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute =
+  DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport.update(
+    {
+      id: '/business-model-development/',
+      path: '/business-model-development/',
+      getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+    } as any,
+  )
 const DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute =
   DevelopmentResearchInnovationWorkInstructionDevelopmentNewRouteImport.update({
     id: '/development/research-innovation/work-instruction-development/new',
@@ -1552,18 +1807,50 @@ export interface FileRoutesByFullPath {
   '/transactions': typeof TransactionsRoute
   '/users': typeof UsersRoute
   '/vendors': typeof VendorsRoute
+  '/development/business-development': typeof DevelopmentBusinessDevelopmentRouteWithChildren
   '/administration/home/branches': typeof AdministrationHomeBranchesRoute
   '/administration/home/companies': typeof AdministrationHomeCompaniesRoute
   '/administration/home/departments': typeof AdministrationHomeDepartmentsRoute
   '/administration/home/overview': typeof AdministrationHomeOverviewRoute
   '/administration/home/roles': typeof AdministrationHomeRolesRoute
   '/administration/home/users': typeof AdministrationHomeUsersRoute
+  '/development/business-development/business-scaling-development': typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
+  '/development/business-development/business-transformation-development': typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
+  '/development/business-development/competitive-analysis': typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
+  '/development/business-development/corporate-strategy-development': typeof DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRoute
+  '/development/business-development/customer-discovery': typeof DevelopmentBusinessDevelopmentCustomerDiscoveryRoute
+  '/development/business-development/customer-validation': typeof DevelopmentBusinessDevelopmentCustomerValidationRoute
+  '/development/business-development/dealer-network-development': typeof DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRoute
+  '/development/business-development/distributor-development': typeof DevelopmentBusinessDevelopmentDistributorDevelopmentRoute
+  '/development/business-development/export-development': typeof DevelopmentBusinessDevelopmentExportDevelopmentRoute
+  '/development/business-development/franchise-development': typeof DevelopmentBusinessDevelopmentFranchiseDevelopmentRoute
+  '/development/business-development/fundraising-development': typeof DevelopmentBusinessDevelopmentFundraisingDevelopmentRoute
+  '/development/business-development/go-to-market-development': typeof DevelopmentBusinessDevelopmentGoToMarketDevelopmentRoute
+  '/development/business-development/international-expansion-development': typeof DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRoute
+  '/development/business-development/investor-relations-development': typeof DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRoute
+  '/development/business-development/market-research': typeof DevelopmentBusinessDevelopmentMarketResearchRoute
+  '/development/business-development/overview': typeof DevelopmentBusinessDevelopmentOverviewRoute
+  '/development/business-development/partnership-development': typeof DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute
+  '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
+  '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
+  '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
+  '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/product-development/certification-readiness': typeof DevelopmentProductDevelopmentCertificationReadinessRouteWithChildren
   '/development/product-development/overview': typeof DevelopmentProductDevelopmentOverviewRoute
   '/development/research-innovation/overview': typeof DevelopmentResearchInnovationOverviewRoute
   '/development/research-innovation/product-release-management': typeof DevelopmentResearchInnovationProductReleaseManagementRouteWithChildren
   '/development/research-innovation/reports': typeof DevelopmentResearchInnovationReportsRoute
+  '/management/administration-management/approval-matrix-management': typeof ManagementAdministrationManagementApprovalMatrixManagementRoute
+  '/management/administration-management/audit-management': typeof ManagementAdministrationManagementAuditManagementRoute
+  '/management/administration-management/branch-management': typeof ManagementAdministrationManagementBranchManagementRoute
+  '/management/administration-management/department-management': typeof ManagementAdministrationManagementDepartmentManagementRoute
+  '/management/administration-management/document-control-management': typeof ManagementAdministrationManagementDocumentControlManagementRoute
+  '/management/administration-management/master-data-management': typeof ManagementAdministrationManagementMasterDataManagementRoute
+  '/management/administration-management/notifications-management': typeof ManagementAdministrationManagementNotificationsManagementRoute
+  '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
+  '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
+  '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
   '/management/finance/budgeting': typeof ManagementFinanceBudgetingRoute
@@ -1588,6 +1875,7 @@ export interface FileRoutesByFullPath {
   '/manufacturing-development/pilot-production/new': typeof ManufacturingDevelopmentPilotProductionNewRoute
   '/manufacturing-development/robotics-integration/$id': typeof ManufacturingDevelopmentRoboticsIntegrationIdRoute
   '/manufacturing-development/robotics-integration/new': typeof ManufacturingDevelopmentRoboticsIntegrationNewRoute
+  '/development/business-development/': typeof DevelopmentBusinessDevelopmentIndexRoute
   '/manufacturing-development/automation-development/': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing/': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   '/manufacturing-development/mass-production-readiness/': typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -1655,6 +1943,8 @@ export interface FileRoutesByFullPath {
   '/development/research-innovation/trl-assessment/new': typeof DevelopmentResearchInnovationTrlAssessmentNewRoute
   '/development/research-innovation/ui-ux-development/new': typeof DevelopmentResearchInnovationUiUxDevelopmentNewRoute
   '/development/research-innovation/work-instruction-development/new': typeof DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute
+  '/development/business-development/business-model-development/': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
+  '/development/business-development/value-proposition-development/': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management/': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
   '/development/manufacturing-development/assembly-line-development/': typeof DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRoute
   '/development/manufacturing-development/automation-development/': typeof DevelopmentManufacturingDevelopmentAutomationDevelopmentIndexRoute
@@ -1776,10 +2066,41 @@ export interface FileRoutesByTo {
   '/administration/home/overview': typeof AdministrationHomeOverviewRoute
   '/administration/home/roles': typeof AdministrationHomeRolesRoute
   '/administration/home/users': typeof AdministrationHomeUsersRoute
+  '/development/business-development/business-scaling-development': typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
+  '/development/business-development/business-transformation-development': typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
+  '/development/business-development/competitive-analysis': typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
+  '/development/business-development/corporate-strategy-development': typeof DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRoute
+  '/development/business-development/customer-discovery': typeof DevelopmentBusinessDevelopmentCustomerDiscoveryRoute
+  '/development/business-development/customer-validation': typeof DevelopmentBusinessDevelopmentCustomerValidationRoute
+  '/development/business-development/dealer-network-development': typeof DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRoute
+  '/development/business-development/distributor-development': typeof DevelopmentBusinessDevelopmentDistributorDevelopmentRoute
+  '/development/business-development/export-development': typeof DevelopmentBusinessDevelopmentExportDevelopmentRoute
+  '/development/business-development/franchise-development': typeof DevelopmentBusinessDevelopmentFranchiseDevelopmentRoute
+  '/development/business-development/fundraising-development': typeof DevelopmentBusinessDevelopmentFundraisingDevelopmentRoute
+  '/development/business-development/go-to-market-development': typeof DevelopmentBusinessDevelopmentGoToMarketDevelopmentRoute
+  '/development/business-development/international-expansion-development': typeof DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRoute
+  '/development/business-development/investor-relations-development': typeof DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRoute
+  '/development/business-development/market-research': typeof DevelopmentBusinessDevelopmentMarketResearchRoute
+  '/development/business-development/overview': typeof DevelopmentBusinessDevelopmentOverviewRoute
+  '/development/business-development/partnership-development': typeof DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute
+  '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
+  '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
+  '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
+  '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/product-development/overview': typeof DevelopmentProductDevelopmentOverviewRoute
   '/development/research-innovation/overview': typeof DevelopmentResearchInnovationOverviewRoute
   '/development/research-innovation/reports': typeof DevelopmentResearchInnovationReportsRoute
+  '/management/administration-management/approval-matrix-management': typeof ManagementAdministrationManagementApprovalMatrixManagementRoute
+  '/management/administration-management/audit-management': typeof ManagementAdministrationManagementAuditManagementRoute
+  '/management/administration-management/branch-management': typeof ManagementAdministrationManagementBranchManagementRoute
+  '/management/administration-management/department-management': typeof ManagementAdministrationManagementDepartmentManagementRoute
+  '/management/administration-management/document-control-management': typeof ManagementAdministrationManagementDocumentControlManagementRoute
+  '/management/administration-management/master-data-management': typeof ManagementAdministrationManagementMasterDataManagementRoute
+  '/management/administration-management/notifications-management': typeof ManagementAdministrationManagementNotificationsManagementRoute
+  '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
+  '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
+  '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
   '/management/finance/budgeting': typeof ManagementFinanceBudgetingRoute
@@ -1804,6 +2125,7 @@ export interface FileRoutesByTo {
   '/manufacturing-development/pilot-production/new': typeof ManufacturingDevelopmentPilotProductionNewRoute
   '/manufacturing-development/robotics-integration/$id': typeof ManufacturingDevelopmentRoboticsIntegrationIdRoute
   '/manufacturing-development/robotics-integration/new': typeof ManufacturingDevelopmentRoboticsIntegrationNewRoute
+  '/development/business-development': typeof DevelopmentBusinessDevelopmentIndexRoute
   '/manufacturing-development/automation-development': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   '/manufacturing-development/mass-production-readiness': typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -1871,6 +2193,8 @@ export interface FileRoutesByTo {
   '/development/research-innovation/trl-assessment/new': typeof DevelopmentResearchInnovationTrlAssessmentNewRoute
   '/development/research-innovation/ui-ux-development/new': typeof DevelopmentResearchInnovationUiUxDevelopmentNewRoute
   '/development/research-innovation/work-instruction-development/new': typeof DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute
+  '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
+  '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
   '/development/manufacturing-development/assembly-line-development': typeof DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRoute
   '/development/manufacturing-development/automation-development': typeof DevelopmentManufacturingDevelopmentAutomationDevelopmentIndexRoute
@@ -1987,18 +2311,50 @@ export interface FileRoutesById {
   '/transactions': typeof TransactionsRoute
   '/users': typeof UsersRoute
   '/vendors': typeof VendorsRoute
+  '/development/business-development': typeof DevelopmentBusinessDevelopmentRouteWithChildren
   '/administration/home/branches': typeof AdministrationHomeBranchesRoute
   '/administration/home/companies': typeof AdministrationHomeCompaniesRoute
   '/administration/home/departments': typeof AdministrationHomeDepartmentsRoute
   '/administration/home/overview': typeof AdministrationHomeOverviewRoute
   '/administration/home/roles': typeof AdministrationHomeRolesRoute
   '/administration/home/users': typeof AdministrationHomeUsersRoute
+  '/development/business-development/business-scaling-development': typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
+  '/development/business-development/business-transformation-development': typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
+  '/development/business-development/competitive-analysis': typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
+  '/development/business-development/corporate-strategy-development': typeof DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRoute
+  '/development/business-development/customer-discovery': typeof DevelopmentBusinessDevelopmentCustomerDiscoveryRoute
+  '/development/business-development/customer-validation': typeof DevelopmentBusinessDevelopmentCustomerValidationRoute
+  '/development/business-development/dealer-network-development': typeof DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRoute
+  '/development/business-development/distributor-development': typeof DevelopmentBusinessDevelopmentDistributorDevelopmentRoute
+  '/development/business-development/export-development': typeof DevelopmentBusinessDevelopmentExportDevelopmentRoute
+  '/development/business-development/franchise-development': typeof DevelopmentBusinessDevelopmentFranchiseDevelopmentRoute
+  '/development/business-development/fundraising-development': typeof DevelopmentBusinessDevelopmentFundraisingDevelopmentRoute
+  '/development/business-development/go-to-market-development': typeof DevelopmentBusinessDevelopmentGoToMarketDevelopmentRoute
+  '/development/business-development/international-expansion-development': typeof DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRoute
+  '/development/business-development/investor-relations-development': typeof DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRoute
+  '/development/business-development/market-research': typeof DevelopmentBusinessDevelopmentMarketResearchRoute
+  '/development/business-development/overview': typeof DevelopmentBusinessDevelopmentOverviewRoute
+  '/development/business-development/partnership-development': typeof DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute
+  '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
+  '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
+  '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
+  '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/product-development/certification-readiness': typeof DevelopmentProductDevelopmentCertificationReadinessRouteWithChildren
   '/development/product-development/overview': typeof DevelopmentProductDevelopmentOverviewRoute
   '/development/research-innovation/overview': typeof DevelopmentResearchInnovationOverviewRoute
   '/development/research-innovation/product-release-management': typeof DevelopmentResearchInnovationProductReleaseManagementRouteWithChildren
   '/development/research-innovation/reports': typeof DevelopmentResearchInnovationReportsRoute
+  '/management/administration-management/approval-matrix-management': typeof ManagementAdministrationManagementApprovalMatrixManagementRoute
+  '/management/administration-management/audit-management': typeof ManagementAdministrationManagementAuditManagementRoute
+  '/management/administration-management/branch-management': typeof ManagementAdministrationManagementBranchManagementRoute
+  '/management/administration-management/department-management': typeof ManagementAdministrationManagementDepartmentManagementRoute
+  '/management/administration-management/document-control-management': typeof ManagementAdministrationManagementDocumentControlManagementRoute
+  '/management/administration-management/master-data-management': typeof ManagementAdministrationManagementMasterDataManagementRoute
+  '/management/administration-management/notifications-management': typeof ManagementAdministrationManagementNotificationsManagementRoute
+  '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
+  '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
+  '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
   '/management/finance/budgeting': typeof ManagementFinanceBudgetingRoute
@@ -2023,6 +2379,7 @@ export interface FileRoutesById {
   '/manufacturing-development/pilot-production/new': typeof ManufacturingDevelopmentPilotProductionNewRoute
   '/manufacturing-development/robotics-integration/$id': typeof ManufacturingDevelopmentRoboticsIntegrationIdRoute
   '/manufacturing-development/robotics-integration/new': typeof ManufacturingDevelopmentRoboticsIntegrationNewRoute
+  '/development/business-development/': typeof DevelopmentBusinessDevelopmentIndexRoute
   '/manufacturing-development/automation-development/': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing/': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   '/manufacturing-development/mass-production-readiness/': typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -2090,6 +2447,8 @@ export interface FileRoutesById {
   '/development/research-innovation/trl-assessment/new': typeof DevelopmentResearchInnovationTrlAssessmentNewRoute
   '/development/research-innovation/ui-ux-development/new': typeof DevelopmentResearchInnovationUiUxDevelopmentNewRoute
   '/development/research-innovation/work-instruction-development/new': typeof DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute
+  '/development/business-development/business-model-development/': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
+  '/development/business-development/value-proposition-development/': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management/': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
   '/development/manufacturing-development/assembly-line-development/': typeof DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRoute
   '/development/manufacturing-development/automation-development/': typeof DevelopmentManufacturingDevelopmentAutomationDevelopmentIndexRoute
@@ -2207,18 +2566,50 @@ export interface FileRouteTypes {
     | '/transactions'
     | '/users'
     | '/vendors'
+    | '/development/business-development'
     | '/administration/home/branches'
     | '/administration/home/companies'
     | '/administration/home/departments'
     | '/administration/home/overview'
     | '/administration/home/roles'
     | '/administration/home/users'
+    | '/development/business-development/business-scaling-development'
+    | '/development/business-development/business-transformation-development'
+    | '/development/business-development/competitive-analysis'
+    | '/development/business-development/corporate-strategy-development'
+    | '/development/business-development/customer-discovery'
+    | '/development/business-development/customer-validation'
+    | '/development/business-development/dealer-network-development'
+    | '/development/business-development/distributor-development'
+    | '/development/business-development/export-development'
+    | '/development/business-development/franchise-development'
+    | '/development/business-development/fundraising-development'
+    | '/development/business-development/go-to-market-development'
+    | '/development/business-development/international-expansion-development'
+    | '/development/business-development/investor-relations-development'
+    | '/development/business-development/market-research'
+    | '/development/business-development/overview'
+    | '/development/business-development/partnership-development'
+    | '/development/business-development/pricing-strategy-development'
+    | '/development/business-development/revenue-model-development'
+    | '/development/business-development/sales-channel-development'
+    | '/development/business-development/vendor-ecosystem-development'
     | '/development/manufacturing-development/overview'
     | '/development/product-development/certification-readiness'
     | '/development/product-development/overview'
     | '/development/research-innovation/overview'
     | '/development/research-innovation/product-release-management'
     | '/development/research-innovation/reports'
+    | '/management/administration-management/approval-matrix-management'
+    | '/management/administration-management/audit-management'
+    | '/management/administration-management/branch-management'
+    | '/management/administration-management/department-management'
+    | '/management/administration-management/document-control-management'
+    | '/management/administration-management/master-data-management'
+    | '/management/administration-management/notifications-management'
+    | '/management/administration-management/organization-structure'
+    | '/management/administration-management/policy-management'
+    | '/management/administration-management/user-role-management'
     | '/management/finance/assets'
     | '/management/finance/audit'
     | '/management/finance/budgeting'
@@ -2243,6 +2634,7 @@ export interface FileRouteTypes {
     | '/manufacturing-development/pilot-production/new'
     | '/manufacturing-development/robotics-integration/$id'
     | '/manufacturing-development/robotics-integration/new'
+    | '/development/business-development/'
     | '/manufacturing-development/automation-development/'
     | '/manufacturing-development/lean-manufacturing/'
     | '/manufacturing-development/mass-production-readiness/'
@@ -2310,6 +2702,8 @@ export interface FileRouteTypes {
     | '/development/research-innovation/trl-assessment/new'
     | '/development/research-innovation/ui-ux-development/new'
     | '/development/research-innovation/work-instruction-development/new'
+    | '/development/business-development/business-model-development/'
+    | '/development/business-development/value-proposition-development/'
     | '/development/ip-development/patent-management/'
     | '/development/manufacturing-development/assembly-line-development/'
     | '/development/manufacturing-development/automation-development/'
@@ -2431,10 +2825,41 @@ export interface FileRouteTypes {
     | '/administration/home/overview'
     | '/administration/home/roles'
     | '/administration/home/users'
+    | '/development/business-development/business-scaling-development'
+    | '/development/business-development/business-transformation-development'
+    | '/development/business-development/competitive-analysis'
+    | '/development/business-development/corporate-strategy-development'
+    | '/development/business-development/customer-discovery'
+    | '/development/business-development/customer-validation'
+    | '/development/business-development/dealer-network-development'
+    | '/development/business-development/distributor-development'
+    | '/development/business-development/export-development'
+    | '/development/business-development/franchise-development'
+    | '/development/business-development/fundraising-development'
+    | '/development/business-development/go-to-market-development'
+    | '/development/business-development/international-expansion-development'
+    | '/development/business-development/investor-relations-development'
+    | '/development/business-development/market-research'
+    | '/development/business-development/overview'
+    | '/development/business-development/partnership-development'
+    | '/development/business-development/pricing-strategy-development'
+    | '/development/business-development/revenue-model-development'
+    | '/development/business-development/sales-channel-development'
+    | '/development/business-development/vendor-ecosystem-development'
     | '/development/manufacturing-development/overview'
     | '/development/product-development/overview'
     | '/development/research-innovation/overview'
     | '/development/research-innovation/reports'
+    | '/management/administration-management/approval-matrix-management'
+    | '/management/administration-management/audit-management'
+    | '/management/administration-management/branch-management'
+    | '/management/administration-management/department-management'
+    | '/management/administration-management/document-control-management'
+    | '/management/administration-management/master-data-management'
+    | '/management/administration-management/notifications-management'
+    | '/management/administration-management/organization-structure'
+    | '/management/administration-management/policy-management'
+    | '/management/administration-management/user-role-management'
     | '/management/finance/assets'
     | '/management/finance/audit'
     | '/management/finance/budgeting'
@@ -2459,6 +2884,7 @@ export interface FileRouteTypes {
     | '/manufacturing-development/pilot-production/new'
     | '/manufacturing-development/robotics-integration/$id'
     | '/manufacturing-development/robotics-integration/new'
+    | '/development/business-development'
     | '/manufacturing-development/automation-development'
     | '/manufacturing-development/lean-manufacturing'
     | '/manufacturing-development/mass-production-readiness'
@@ -2526,6 +2952,8 @@ export interface FileRouteTypes {
     | '/development/research-innovation/trl-assessment/new'
     | '/development/research-innovation/ui-ux-development/new'
     | '/development/research-innovation/work-instruction-development/new'
+    | '/development/business-development/business-model-development'
+    | '/development/business-development/value-proposition-development'
     | '/development/ip-development/patent-management'
     | '/development/manufacturing-development/assembly-line-development'
     | '/development/manufacturing-development/automation-development'
@@ -2641,18 +3069,50 @@ export interface FileRouteTypes {
     | '/transactions'
     | '/users'
     | '/vendors'
+    | '/development/business-development'
     | '/administration/home/branches'
     | '/administration/home/companies'
     | '/administration/home/departments'
     | '/administration/home/overview'
     | '/administration/home/roles'
     | '/administration/home/users'
+    | '/development/business-development/business-scaling-development'
+    | '/development/business-development/business-transformation-development'
+    | '/development/business-development/competitive-analysis'
+    | '/development/business-development/corporate-strategy-development'
+    | '/development/business-development/customer-discovery'
+    | '/development/business-development/customer-validation'
+    | '/development/business-development/dealer-network-development'
+    | '/development/business-development/distributor-development'
+    | '/development/business-development/export-development'
+    | '/development/business-development/franchise-development'
+    | '/development/business-development/fundraising-development'
+    | '/development/business-development/go-to-market-development'
+    | '/development/business-development/international-expansion-development'
+    | '/development/business-development/investor-relations-development'
+    | '/development/business-development/market-research'
+    | '/development/business-development/overview'
+    | '/development/business-development/partnership-development'
+    | '/development/business-development/pricing-strategy-development'
+    | '/development/business-development/revenue-model-development'
+    | '/development/business-development/sales-channel-development'
+    | '/development/business-development/vendor-ecosystem-development'
     | '/development/manufacturing-development/overview'
     | '/development/product-development/certification-readiness'
     | '/development/product-development/overview'
     | '/development/research-innovation/overview'
     | '/development/research-innovation/product-release-management'
     | '/development/research-innovation/reports'
+    | '/management/administration-management/approval-matrix-management'
+    | '/management/administration-management/audit-management'
+    | '/management/administration-management/branch-management'
+    | '/management/administration-management/department-management'
+    | '/management/administration-management/document-control-management'
+    | '/management/administration-management/master-data-management'
+    | '/management/administration-management/notifications-management'
+    | '/management/administration-management/organization-structure'
+    | '/management/administration-management/policy-management'
+    | '/management/administration-management/user-role-management'
     | '/management/finance/assets'
     | '/management/finance/audit'
     | '/management/finance/budgeting'
@@ -2677,6 +3137,7 @@ export interface FileRouteTypes {
     | '/manufacturing-development/pilot-production/new'
     | '/manufacturing-development/robotics-integration/$id'
     | '/manufacturing-development/robotics-integration/new'
+    | '/development/business-development/'
     | '/manufacturing-development/automation-development/'
     | '/manufacturing-development/lean-manufacturing/'
     | '/manufacturing-development/mass-production-readiness/'
@@ -2744,6 +3205,8 @@ export interface FileRouteTypes {
     | '/development/research-innovation/trl-assessment/new'
     | '/development/research-innovation/ui-ux-development/new'
     | '/development/research-innovation/work-instruction-development/new'
+    | '/development/business-development/business-model-development/'
+    | '/development/business-development/value-proposition-development/'
     | '/development/ip-development/patent-management/'
     | '/development/manufacturing-development/assembly-line-development/'
     | '/development/manufacturing-development/automation-development/'
@@ -2860,6 +3323,7 @@ export interface RootRouteChildren {
   TransactionsRoute: typeof TransactionsRoute
   UsersRoute: typeof UsersRoute
   VendorsRoute: typeof VendorsRoute
+  DevelopmentBusinessDevelopmentRoute: typeof DevelopmentBusinessDevelopmentRouteWithChildren
   AdministrationHomeBranchesRoute: typeof AdministrationHomeBranchesRoute
   AdministrationHomeCompaniesRoute: typeof AdministrationHomeCompaniesRoute
   AdministrationHomeDepartmentsRoute: typeof AdministrationHomeDepartmentsRoute
@@ -2872,6 +3336,16 @@ export interface RootRouteChildren {
   DevelopmentResearchInnovationOverviewRoute: typeof DevelopmentResearchInnovationOverviewRoute
   DevelopmentResearchInnovationProductReleaseManagementRoute: typeof DevelopmentResearchInnovationProductReleaseManagementRouteWithChildren
   DevelopmentResearchInnovationReportsRoute: typeof DevelopmentResearchInnovationReportsRoute
+  ManagementAdministrationManagementApprovalMatrixManagementRoute: typeof ManagementAdministrationManagementApprovalMatrixManagementRoute
+  ManagementAdministrationManagementAuditManagementRoute: typeof ManagementAdministrationManagementAuditManagementRoute
+  ManagementAdministrationManagementBranchManagementRoute: typeof ManagementAdministrationManagementBranchManagementRoute
+  ManagementAdministrationManagementDepartmentManagementRoute: typeof ManagementAdministrationManagementDepartmentManagementRoute
+  ManagementAdministrationManagementDocumentControlManagementRoute: typeof ManagementAdministrationManagementDocumentControlManagementRoute
+  ManagementAdministrationManagementMasterDataManagementRoute: typeof ManagementAdministrationManagementMasterDataManagementRoute
+  ManagementAdministrationManagementNotificationsManagementRoute: typeof ManagementAdministrationManagementNotificationsManagementRoute
+  ManagementAdministrationManagementOrganizationStructureRoute: typeof ManagementAdministrationManagementOrganizationStructureRoute
+  ManagementAdministrationManagementPolicyManagementRoute: typeof ManagementAdministrationManagementPolicyManagementRoute
+  ManagementAdministrationManagementUserRoleManagementRoute: typeof ManagementAdministrationManagementUserRoleManagementRoute
   ManagementFinanceAssetsRoute: typeof ManagementFinanceAssetsRoute
   ManagementFinanceAuditRoute: typeof ManagementFinanceAuditRoute
   ManagementFinanceBudgetingRoute: typeof ManagementFinanceBudgetingRoute
@@ -3131,6 +3605,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/development/business-development': {
+      id: '/development/business-development'
+      path: '/development/business-development'
+      fullPath: '/development/business-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/manufacturing-development/robotics-integration/': {
       id: '/manufacturing-development/robotics-integration/'
       path: '/manufacturing-development/robotics-integration'
@@ -3165,6 +3646,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/manufacturing-development/automation-development/'
       preLoaderRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/development/business-development/': {
+      id: '/development/business-development/'
+      path: '/'
+      fullPath: '/development/business-development/'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentIndexRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
     }
     '/manufacturing-development/robotics-integration/new': {
       id: '/manufacturing-development/robotics-integration/new'
@@ -3334,6 +3822,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementFinanceAssetsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/administration-management/user-role-management': {
+      id: '/management/administration-management/user-role-management'
+      path: '/management/administration-management/user-role-management'
+      fullPath: '/management/administration-management/user-role-management'
+      preLoaderRoute: typeof ManagementAdministrationManagementUserRoleManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/policy-management': {
+      id: '/management/administration-management/policy-management'
+      path: '/management/administration-management/policy-management'
+      fullPath: '/management/administration-management/policy-management'
+      preLoaderRoute: typeof ManagementAdministrationManagementPolicyManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/organization-structure': {
+      id: '/management/administration-management/organization-structure'
+      path: '/management/administration-management/organization-structure'
+      fullPath: '/management/administration-management/organization-structure'
+      preLoaderRoute: typeof ManagementAdministrationManagementOrganizationStructureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/notifications-management': {
+      id: '/management/administration-management/notifications-management'
+      path: '/management/administration-management/notifications-management'
+      fullPath: '/management/administration-management/notifications-management'
+      preLoaderRoute: typeof ManagementAdministrationManagementNotificationsManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/master-data-management': {
+      id: '/management/administration-management/master-data-management'
+      path: '/management/administration-management/master-data-management'
+      fullPath: '/management/administration-management/master-data-management'
+      preLoaderRoute: typeof ManagementAdministrationManagementMasterDataManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/document-control-management': {
+      id: '/management/administration-management/document-control-management'
+      path: '/management/administration-management/document-control-management'
+      fullPath: '/management/administration-management/document-control-management'
+      preLoaderRoute: typeof ManagementAdministrationManagementDocumentControlManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/department-management': {
+      id: '/management/administration-management/department-management'
+      path: '/management/administration-management/department-management'
+      fullPath: '/management/administration-management/department-management'
+      preLoaderRoute: typeof ManagementAdministrationManagementDepartmentManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/branch-management': {
+      id: '/management/administration-management/branch-management'
+      path: '/management/administration-management/branch-management'
+      fullPath: '/management/administration-management/branch-management'
+      preLoaderRoute: typeof ManagementAdministrationManagementBranchManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/audit-management': {
+      id: '/management/administration-management/audit-management'
+      path: '/management/administration-management/audit-management'
+      fullPath: '/management/administration-management/audit-management'
+      preLoaderRoute: typeof ManagementAdministrationManagementAuditManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/approval-matrix-management': {
+      id: '/management/administration-management/approval-matrix-management'
+      path: '/management/administration-management/approval-matrix-management'
+      fullPath: '/management/administration-management/approval-matrix-management'
+      preLoaderRoute: typeof ManagementAdministrationManagementApprovalMatrixManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/development/research-innovation/reports': {
       id: '/development/research-innovation/reports'
       path: '/development/research-innovation/reports'
@@ -3375,6 +3933,153 @@ declare module '@tanstack/react-router' {
       fullPath: '/development/manufacturing-development/overview'
       preLoaderRoute: typeof DevelopmentManufacturingDevelopmentOverviewRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/development/business-development/vendor-ecosystem-development': {
+      id: '/development/business-development/vendor-ecosystem-development'
+      path: '/vendor-ecosystem-development'
+      fullPath: '/development/business-development/vendor-ecosystem-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/sales-channel-development': {
+      id: '/development/business-development/sales-channel-development'
+      path: '/sales-channel-development'
+      fullPath: '/development/business-development/sales-channel-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/revenue-model-development': {
+      id: '/development/business-development/revenue-model-development'
+      path: '/revenue-model-development'
+      fullPath: '/development/business-development/revenue-model-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/pricing-strategy-development': {
+      id: '/development/business-development/pricing-strategy-development'
+      path: '/pricing-strategy-development'
+      fullPath: '/development/business-development/pricing-strategy-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/partnership-development': {
+      id: '/development/business-development/partnership-development'
+      path: '/partnership-development'
+      fullPath: '/development/business-development/partnership-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentPartnershipDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/overview': {
+      id: '/development/business-development/overview'
+      path: '/overview'
+      fullPath: '/development/business-development/overview'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentOverviewRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/market-research': {
+      id: '/development/business-development/market-research'
+      path: '/market-research'
+      fullPath: '/development/business-development/market-research'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentMarketResearchRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/investor-relations-development': {
+      id: '/development/business-development/investor-relations-development'
+      path: '/investor-relations-development'
+      fullPath: '/development/business-development/investor-relations-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/international-expansion-development': {
+      id: '/development/business-development/international-expansion-development'
+      path: '/international-expansion-development'
+      fullPath: '/development/business-development/international-expansion-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/go-to-market-development': {
+      id: '/development/business-development/go-to-market-development'
+      path: '/go-to-market-development'
+      fullPath: '/development/business-development/go-to-market-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentGoToMarketDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/fundraising-development': {
+      id: '/development/business-development/fundraising-development'
+      path: '/fundraising-development'
+      fullPath: '/development/business-development/fundraising-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentFundraisingDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/franchise-development': {
+      id: '/development/business-development/franchise-development'
+      path: '/franchise-development'
+      fullPath: '/development/business-development/franchise-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentFranchiseDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/export-development': {
+      id: '/development/business-development/export-development'
+      path: '/export-development'
+      fullPath: '/development/business-development/export-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentExportDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/distributor-development': {
+      id: '/development/business-development/distributor-development'
+      path: '/distributor-development'
+      fullPath: '/development/business-development/distributor-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentDistributorDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/dealer-network-development': {
+      id: '/development/business-development/dealer-network-development'
+      path: '/dealer-network-development'
+      fullPath: '/development/business-development/dealer-network-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/customer-validation': {
+      id: '/development/business-development/customer-validation'
+      path: '/customer-validation'
+      fullPath: '/development/business-development/customer-validation'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentCustomerValidationRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/customer-discovery': {
+      id: '/development/business-development/customer-discovery'
+      path: '/customer-discovery'
+      fullPath: '/development/business-development/customer-discovery'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentCustomerDiscoveryRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/corporate-strategy-development': {
+      id: '/development/business-development/corporate-strategy-development'
+      path: '/corporate-strategy-development'
+      fullPath: '/development/business-development/corporate-strategy-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/competitive-analysis': {
+      id: '/development/business-development/competitive-analysis'
+      path: '/competitive-analysis'
+      fullPath: '/development/business-development/competitive-analysis'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/business-transformation-development': {
+      id: '/development/business-development/business-transformation-development'
+      path: '/business-transformation-development'
+      fullPath: '/development/business-development/business-transformation-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/business-scaling-development': {
+      id: '/development/business-development/business-scaling-development'
+      path: '/business-scaling-development'
+      fullPath: '/development/business-development/business-scaling-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
     }
     '/administration/home/users': {
       id: '/administration/home/users'
@@ -4146,6 +4851,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevelopmentIpDevelopmentPatentManagementIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/development/business-development/value-proposition-development/': {
+      id: '/development/business-development/value-proposition-development/'
+      path: '/value-proposition-development'
+      fullPath: '/development/business-development/value-proposition-development/'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/business-model-development/': {
+      id: '/development/business-development/business-model-development/'
+      path: '/business-model-development'
+      fullPath: '/development/business-development/business-model-development/'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
     '/development/research-innovation/work-instruction-development/new': {
       id: '/development/research-innovation/work-instruction-development/new'
       path: '/development/research-innovation/work-instruction-development/new'
@@ -4583,6 +5302,90 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DevelopmentBusinessDevelopmentRouteChildren {
+  DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute: typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
+  DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute: typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
+  DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute: typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
+  DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRoute: typeof DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRoute
+  DevelopmentBusinessDevelopmentCustomerDiscoveryRoute: typeof DevelopmentBusinessDevelopmentCustomerDiscoveryRoute
+  DevelopmentBusinessDevelopmentCustomerValidationRoute: typeof DevelopmentBusinessDevelopmentCustomerValidationRoute
+  DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRoute: typeof DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRoute
+  DevelopmentBusinessDevelopmentDistributorDevelopmentRoute: typeof DevelopmentBusinessDevelopmentDistributorDevelopmentRoute
+  DevelopmentBusinessDevelopmentExportDevelopmentRoute: typeof DevelopmentBusinessDevelopmentExportDevelopmentRoute
+  DevelopmentBusinessDevelopmentFranchiseDevelopmentRoute: typeof DevelopmentBusinessDevelopmentFranchiseDevelopmentRoute
+  DevelopmentBusinessDevelopmentFundraisingDevelopmentRoute: typeof DevelopmentBusinessDevelopmentFundraisingDevelopmentRoute
+  DevelopmentBusinessDevelopmentGoToMarketDevelopmentRoute: typeof DevelopmentBusinessDevelopmentGoToMarketDevelopmentRoute
+  DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRoute: typeof DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRoute
+  DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRoute: typeof DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRoute
+  DevelopmentBusinessDevelopmentMarketResearchRoute: typeof DevelopmentBusinessDevelopmentMarketResearchRoute
+  DevelopmentBusinessDevelopmentOverviewRoute: typeof DevelopmentBusinessDevelopmentOverviewRoute
+  DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute: typeof DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute
+  DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute: typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
+  DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
+  DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
+  DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute: typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
+  DevelopmentBusinessDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentIndexRoute
+  DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
+  DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
+}
+
+const DevelopmentBusinessDevelopmentRouteChildren: DevelopmentBusinessDevelopmentRouteChildren =
+  {
+    DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute:
+      DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute,
+    DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute:
+      DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute,
+    DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute:
+      DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute,
+    DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRoute:
+      DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRoute,
+    DevelopmentBusinessDevelopmentCustomerDiscoveryRoute:
+      DevelopmentBusinessDevelopmentCustomerDiscoveryRoute,
+    DevelopmentBusinessDevelopmentCustomerValidationRoute:
+      DevelopmentBusinessDevelopmentCustomerValidationRoute,
+    DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRoute:
+      DevelopmentBusinessDevelopmentDealerNetworkDevelopmentRoute,
+    DevelopmentBusinessDevelopmentDistributorDevelopmentRoute:
+      DevelopmentBusinessDevelopmentDistributorDevelopmentRoute,
+    DevelopmentBusinessDevelopmentExportDevelopmentRoute:
+      DevelopmentBusinessDevelopmentExportDevelopmentRoute,
+    DevelopmentBusinessDevelopmentFranchiseDevelopmentRoute:
+      DevelopmentBusinessDevelopmentFranchiseDevelopmentRoute,
+    DevelopmentBusinessDevelopmentFundraisingDevelopmentRoute:
+      DevelopmentBusinessDevelopmentFundraisingDevelopmentRoute,
+    DevelopmentBusinessDevelopmentGoToMarketDevelopmentRoute:
+      DevelopmentBusinessDevelopmentGoToMarketDevelopmentRoute,
+    DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRoute:
+      DevelopmentBusinessDevelopmentInternationalExpansionDevelopmentRoute,
+    DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRoute:
+      DevelopmentBusinessDevelopmentInvestorRelationsDevelopmentRoute,
+    DevelopmentBusinessDevelopmentMarketResearchRoute:
+      DevelopmentBusinessDevelopmentMarketResearchRoute,
+    DevelopmentBusinessDevelopmentOverviewRoute:
+      DevelopmentBusinessDevelopmentOverviewRoute,
+    DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute:
+      DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute,
+    DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute:
+      DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute,
+    DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute:
+      DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute,
+    DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute:
+      DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute,
+    DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute:
+      DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute,
+    DevelopmentBusinessDevelopmentIndexRoute:
+      DevelopmentBusinessDevelopmentIndexRoute,
+    DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute:
+      DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute,
+    DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute:
+      DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute,
+  }
+
+const DevelopmentBusinessDevelopmentRouteWithChildren =
+  DevelopmentBusinessDevelopmentRoute._addFileChildren(
+    DevelopmentBusinessDevelopmentRouteChildren,
+  )
+
 interface DevelopmentProductDevelopmentCertificationReadinessRouteChildren {
   DevelopmentProductDevelopmentCertificationReadinessIndexRoute: typeof DevelopmentProductDevelopmentCertificationReadinessIndexRoute
 }
@@ -4626,6 +5429,8 @@ const rootRouteChildren: RootRouteChildren = {
   TransactionsRoute: TransactionsRoute,
   UsersRoute: UsersRoute,
   VendorsRoute: VendorsRoute,
+  DevelopmentBusinessDevelopmentRoute:
+    DevelopmentBusinessDevelopmentRouteWithChildren,
   AdministrationHomeBranchesRoute: AdministrationHomeBranchesRoute,
   AdministrationHomeCompaniesRoute: AdministrationHomeCompaniesRoute,
   AdministrationHomeDepartmentsRoute: AdministrationHomeDepartmentsRoute,
@@ -4644,6 +5449,26 @@ const rootRouteChildren: RootRouteChildren = {
     DevelopmentResearchInnovationProductReleaseManagementRouteWithChildren,
   DevelopmentResearchInnovationReportsRoute:
     DevelopmentResearchInnovationReportsRoute,
+  ManagementAdministrationManagementApprovalMatrixManagementRoute:
+    ManagementAdministrationManagementApprovalMatrixManagementRoute,
+  ManagementAdministrationManagementAuditManagementRoute:
+    ManagementAdministrationManagementAuditManagementRoute,
+  ManagementAdministrationManagementBranchManagementRoute:
+    ManagementAdministrationManagementBranchManagementRoute,
+  ManagementAdministrationManagementDepartmentManagementRoute:
+    ManagementAdministrationManagementDepartmentManagementRoute,
+  ManagementAdministrationManagementDocumentControlManagementRoute:
+    ManagementAdministrationManagementDocumentControlManagementRoute,
+  ManagementAdministrationManagementMasterDataManagementRoute:
+    ManagementAdministrationManagementMasterDataManagementRoute,
+  ManagementAdministrationManagementNotificationsManagementRoute:
+    ManagementAdministrationManagementNotificationsManagementRoute,
+  ManagementAdministrationManagementOrganizationStructureRoute:
+    ManagementAdministrationManagementOrganizationStructureRoute,
+  ManagementAdministrationManagementPolicyManagementRoute:
+    ManagementAdministrationManagementPolicyManagementRoute,
+  ManagementAdministrationManagementUserRoleManagementRoute:
+    ManagementAdministrationManagementUserRoleManagementRoute,
   ManagementFinanceAssetsRoute: ManagementFinanceAssetsRoute,
   ManagementFinanceAuditRoute: ManagementFinanceAuditRoute,
   ManagementFinanceBudgetingRoute: ManagementFinanceBudgetingRoute,

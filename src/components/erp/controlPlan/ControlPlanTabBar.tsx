@@ -11,6 +11,8 @@ import {
   Paperclip,
   History,
 } from "lucide-react";
+import { ScrollableTabBarContainer } from "../ScrollableTabBarContainer";
+import { cn } from "@/lib/utils";
 
 export type ControlPlanTabType =
   | "overview"
@@ -47,27 +49,28 @@ export const ControlPlanTabBar: React.FC<ControlPlanTabBarProps> = ({
   ];
 
   return (
-    <div className="bg-card border-b border-border px-4 overflow-x-auto scrollbar-none">
-      <div className="flex items-center gap-1 min-w-max">
-        {tabs.map((t) => {
-          const Icon = t.icon;
-          const isActive = activeTab === t.id;
-          return (
-            <button
-              key={t.id}
-              onClick={() => onTabChange(t.id)}
-              className={`flex items-center gap-2 px-3.5 py-3 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
-                isActive
-                  ? "border-primary text-primary bg-primary/5"
-                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/40"
-              }`}
-            >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-              <span>{t.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
+    <ScrollableTabBarContainer activeKey={activeTab} className="bg-card border-b border-border">
+      {tabs.map((t) => {
+        const Icon = t.icon;
+        const isActive = activeTab === t.id;
+        return (
+          <button
+            key={t.id}
+            type="button"
+            data-active={isActive ? "true" : "false"}
+            onClick={() => onTabChange(t.id)}
+            className={cn(
+              "flex items-center gap-2 px-3.5 py-3 text-xs font-semibold border-b-2 transition-all cursor-pointer shrink-0 whitespace-nowrap",
+              isActive
+                ? "border-primary text-primary bg-primary/5 font-bold"
+                : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/40"
+            )}
+          >
+            <Icon className={cn("w-3.5 h-3.5", isActive ? "text-primary" : "text-muted-foreground")} />
+            <span>{t.label}</span>
+          </button>
+        );
+      })}
+    </ScrollableTabBarContainer>
   );
 };

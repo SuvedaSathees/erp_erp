@@ -53,6 +53,7 @@ import {
   BookOpen,
   FolderTree,
   GitCommit,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { company, mockUsers } from "@/lib/mock-data";
@@ -133,6 +134,37 @@ const NAV_GROUPS: GroupItem[] = [
         label: "Development",
         icon: Package,
         children: [
+          {
+            kind: "leaf",
+            to: "/development/business-development/business-model-development",
+            matchPrefix: "/development/business-development",
+            label: "Business Development",
+            icon: Briefcase,
+            subItems: [
+              { to: "/development/business-development/business-model-development", label: "Business Model Development" },
+              { to: "/development/business-development/value-proposition-development", label: "Value Proposition Development" },
+              { to: "/development/business-development/customer-discovery", label: "Customer Discovery" },
+              { to: "/development/business-development/customer-validation", label: "Customer Validation" },
+              { to: "/development/business-development/market-research", label: "Market Research" },
+              { to: "/development/business-development/competitive-analysis", label: "Competitive Analysis" },
+              { to: "/development/business-development/go-to-market-development", label: "Go-To-Market (GTM) Development" },
+              { to: "/development/business-development/pricing-strategy-development", label: "Pricing Strategy Development" },
+              { to: "/development/business-development/revenue-model-development", label: "Revenue Model Development" },
+              { to: "/development/business-development/sales-channel-development", label: "Sales Channel Development" },
+              { to: "/development/business-development/franchise-development", label: "Franchise Development" },
+              { to: "/development/business-development/partnership-development", label: "Partnership Development" },
+              { to: "/development/business-development/dealer-network-development", label: "Dealer Network Development" },
+              { to: "/development/business-development/distributor-development", label: "Distributor Development" },
+              { to: "/development/business-development/vendor-ecosystem-development", label: "Vendor Ecosystem Development" },
+              { to: "/development/business-development/investor-relations-development", label: "Investor Relations Development" },
+              { to: "/development/business-development/fundraising-development", label: "Fundraising Development" },
+              { to: "/development/business-development/international-expansion-development", label: "International Expansion Development" },
+              { to: "/development/business-development/export-development", label: "Export Development" },
+              { to: "/development/business-development/business-scaling-development", label: "Business Scaling Development" },
+              { to: "/development/business-development/corporate-strategy-development", label: "Corporate Strategy Development" },
+              { to: "/development/business-development/business-transformation-development", label: "Business Transformation Development" },
+            ],
+          },
           {
             kind: "leaf",
             to: "/development/product-development/overview",
@@ -243,6 +275,25 @@ const NAV_GROUPS: GroupItem[] = [
         label: "Management",
         icon: Landmark,
         children: [
+          {
+            kind: "leaf",
+            to: "/management/administration-management/organization-structure",
+            matchPrefix: "/management/administration-management",
+            label: "Administration Management",
+            icon: Building2,
+            subItems: [
+              { to: "/management/administration-management/organization-structure", label: "Organization Structure" },
+              { to: "/management/administration-management/branch-management", label: "Branch Management" },
+              { to: "/management/administration-management/department-management", label: "Department Management" },
+              { to: "/management/administration-management/user-role-management", label: "User & Role Management" },
+              { to: "/management/administration-management/approval-matrix-management", label: "Approval Matrix Management" },
+              { to: "/management/administration-management/document-control-management", label: "Document Control Management" },
+              { to: "/management/administration-management/policy-management", label: "Policy Management" },
+              { to: "/management/administration-management/master-data-management", label: "Master Data Management" },
+              { to: "/management/administration-management/notifications-management", label: "Notifications Management" },
+              { to: "/management/administration-management/audit-management", label: "Audit Management" },
+            ],
+          },
           {
             kind: "leaf",
             to: "/management/finance/overview",

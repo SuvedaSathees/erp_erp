@@ -1,13 +1,13 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const TAB_BASE =
-  "shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent bg-transparent px-0.5 pb-3 text-[13px] font-semibold text-muted-foreground shadow-none transition-colors hover:text-foreground focus-visible:outline-none";
-const TAB_ACTIVE = "border-primary text-primary hover:text-primary";
+  "shrink-0 whitespace-nowrap border-b-2 border-transparent bg-transparent px-3 pb-2.5 pt-1 text-[13px] font-semibold text-muted-foreground shadow-none transition-all hover:text-foreground focus-visible:outline-none cursor-pointer";
+const TAB_ACTIVE = "border-primary text-primary hover:text-primary font-bold";
 
-const TABS = [
+export const ADMIN_MANAGEMENT_TABS = [
   { to: "/management/administration-management/organization-structure", label: "Organization Structure" },
   { to: "/management/administration-management/branch-management", label: "Branch Management" },
   { to: "/management/administration-management/department-management", label: "Department Management" },
@@ -23,74 +23,111 @@ const TABS = [
 export function AdminManagementTabBar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
+  const [showLeftBtn, setShowLeftBtn] = useState(false);
+  const [showRightBtn, setShowRightBtn] = useState(false);
 
   const checkScroll = useCallback(() => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    setCanScrollLeft(scrollLeft > 2);
-    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 2);
+    const container = scrollContainerRef.current;
+    if (container) {
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      setShowLeftBtn(scrollLeft > 5);
+      setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 5);
+    }
   }, []);
 
   useEffect(() => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-    checkScroll();
-    el.addEventListener("scroll", checkScroll, { passive: true });
-    window.addEventListener("resize", checkScroll);
-    return () => {
-      el.removeEventListener("scroll", checkScroll);
-      window.removeEventListener("resize", checkScroll);
-    };
+    const container = scrollContainerRef.current;
+    if (container) {
+      checkScroll();
+      container.addEventListener("scroll", checkScroll, { passive: true });
+      const observer = new ResizeObserver(() => checkScroll());
+      observer.observe(container);
+      return () => {
+        container.removeEventListener("scroll", checkScroll);
+        observer.disconnect();
+      };
+    }
   }, [checkScroll]);
 
-  const handleScroll = (direction: "left" | "right") => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-    const scrollAmount = direction === "left" ? -240 : 240;
-    el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  // Smoothly scroll active tab to center whenever route/pathname changes
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const activeEl = container.querySelector('[data-active="true"]');
+      if (activeEl) {
+        activeEl.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+      setTimeout(checkScroll, 350);
+    }
+  }, [pathname, checkScroll]);
+
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const { scrollWidth, clientWidth } = container;
+      if (scrollWidth > clientWidth) {
+        container.scrollLeft += e.deltaY;
+      }
+    }
+  };
+
+  const scrollLeft = () => {
+    scrollContainerRef.current?.scrollBy({ left: -240, behavior: "smooth" });
+  };
+
+  const scrollRight = () => {
+    scrollContainerRef.current?.scrollBy({ left: 240, behavior: "smooth" });
   };
 
   return (
-    <div className="relative flex items-center w-full group">
-      {/* Left Arrow Button */}
-      {canScrollLeft && (
+    <div className="sticky-tab-bar relative w-full border-b border-border/60 bg-card/50 py-0.5 group">
+      {showLeftBtn && (
         <button
-          onClick={() => handleScroll("left")}
-          className="absolute left-0 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/95 border border-border/80 text-foreground shadow-md backdrop-blur-sm transition-all hover:bg-muted hover:scale-105 cursor-pointer -translate-y-1.5"
-          aria-label="Scroll left"
+          type="button"
+          onClick={scrollLeft}
+          className="absolute left-0 top-0 z-20 flex h-full w-8 items-center justify-center bg-gradient-to-r from-card via-card/90 to-transparent text-slate-700 hover:text-slate-950 transition-all cursor-pointer"
+          aria-label="Scroll sub-modules left"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-4 w-4 stroke-[2.5]" />
         </button>
       )}
 
-      {/* Tab Items Container */}
       <div
         ref={scrollContainerRef}
-        className="flex items-center gap-6 overflow-x-auto border-b border-border/40 pb-0 scrollbar-none no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth w-full px-1"
+        onWheel={handleWheel}
+        className="no-scrollbar flex items-center gap-2 overflow-x-auto px-2 pt-1 scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
-        {TABS.map((tab) => {
-          const active = pathname.startsWith(tab.to);
+        {ADMIN_MANAGEMENT_TABS.map((tab) => {
+          const isActive = pathname.startsWith(tab.to);
+
           return (
-            <Link key={tab.to} to={tab.to} className={cn(TAB_BASE, active && TAB_ACTIVE)}>
+            <Link
+              key={tab.to}
+              to={tab.to}
+              data-active={isActive ? "true" : "false"}
+              className={cn(TAB_BASE, isActive && TAB_ACTIVE)}
+            >
               {tab.label}
             </Link>
           );
         })}
       </div>
 
-      {/* Right Arrow Button */}
-      {canScrollRight && (
+      {showRightBtn && (
         <button
-          onClick={() => handleScroll("right")}
-          className="absolute right-0 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/95 border border-border/80 text-foreground shadow-md backdrop-blur-sm transition-all hover:bg-muted hover:scale-105 cursor-pointer -translate-y-1.5"
-          aria-label="Scroll right"
+          type="button"
+          onClick={scrollRight}
+          className="absolute right-0 top-0 z-20 flex h-full w-8 items-center justify-center bg-gradient-to-l from-card via-card/90 to-transparent text-slate-700 hover:text-slate-950 transition-all cursor-pointer"
+          aria-label="Scroll sub-modules right"
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4 stroke-[2.5]" />
         </button>
       )}
     </div>
   );
 }
+

@@ -35,6 +35,7 @@ import { Route as ManufacturingDevelopmentLeanManufacturingNewRouteImport } from
 import { Route as ManufacturingDevelopmentLeanManufacturingIdRouteImport } from './routes/manufacturing-development.lean-manufacturing.$id'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentNewRouteImport } from './routes/manufacturing-development.automation-development.new'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentIdRouteImport } from './routes/manufacturing-development.automation-development.$id'
+import { Route as ManagementSalesManagementCustomerOrdersManagementRouteImport } from './routes/management.sales-management.customer-orders-management'
 import { Route as ManagementFinanceTaxRouteImport } from './routes/management.finance.tax'
 import { Route as ManagementFinanceSetupRouteImport } from './routes/management.finance.setup'
 import { Route as ManagementFinanceReportsRouteImport } from './routes/management.finance.reports'
@@ -49,6 +50,19 @@ import { Route as ManagementFinanceCashBankRouteImport } from './routes/manageme
 import { Route as ManagementFinanceBudgetingRouteImport } from './routes/management.finance.budgeting'
 import { Route as ManagementFinanceAuditRouteImport } from './routes/management.finance.audit'
 import { Route as ManagementFinanceAssetsRouteImport } from './routes/management.finance.assets'
+import { Route as ManagementCrmManagementSalesPipelineManagementRouteImport } from './routes/management.crm-management.sales-pipeline-management'
+import { Route as ManagementCrmManagementQuotationsManagementRouteImport } from './routes/management.crm-management.quotations-management'
+import { Route as ManagementCrmManagementOpportunityManagementRouteImport } from './routes/management.crm-management.opportunity-management'
+import { Route as ManagementCrmManagementLoyaltyManagementRouteImport } from './routes/management.crm-management.loyalty-management'
+import { Route as ManagementCrmManagementLeadManagementRouteImport } from './routes/management.crm-management.lead-management'
+import { Route as ManagementCrmManagementCustomerSupportRouteImport } from './routes/management.crm-management.customer-support'
+import { Route as ManagementCrmManagementCustomerSuccessRouteImport } from './routes/management.crm-management.customer-success'
+import { Route as ManagementCrmManagementCustomerOrdersManagementRouteImport } from './routes/management.crm-management.customer-orders-management'
+import { Route as ManagementCrmManagementCustomerFeedbackRouteImport } from './routes/management.crm-management.customer-feedback'
+import { Route as ManagementCrmManagementContactManagementRouteImport } from './routes/management.crm-management.contact-management'
+import { Route as ManagementCrmManagementComplaintManagementRouteImport } from './routes/management.crm-management.complaint-management'
+import { Route as ManagementCrmManagementAccountsRouteImport } from './routes/management.crm-management.accounts'
+import { Route as ManagementCrmManagementAccountManagementRouteImport } from './routes/management.crm-management.account-management'
 import { Route as ManagementAdministrationManagementUserRoleManagementRouteImport } from './routes/management.administration-management.user-role-management'
 import { Route as ManagementAdministrationManagementPolicyManagementRouteImport } from './routes/management.administration-management.policy-management'
 import { Route as ManagementAdministrationManagementOrganizationStructureRouteImport } from './routes/management.administration-management.organization-structure'
@@ -66,6 +80,7 @@ import { Route as DevelopmentProductDevelopmentOverviewRouteImport } from './rou
 import { Route as DevelopmentProductDevelopmentCertificationReadinessRouteImport } from './routes/development.product-development.certification-readiness'
 import { Route as DevelopmentManufacturingDevelopmentOverviewRouteImport } from './routes/development.manufacturing-development.overview'
 import { Route as DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRouteImport } from './routes/development.business-development.vendor-ecosystem-development'
+import { Route as DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteImport } from './routes/development.business-development.value-proposition-development'
 import { Route as DevelopmentBusinessDevelopmentSalesChannelDevelopmentRouteImport } from './routes/development.business-development.sales-channel-development'
 import { Route as DevelopmentBusinessDevelopmentRevenueModelDevelopmentRouteImport } from './routes/development.business-development.revenue-model-development'
 import { Route as DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRouteImport } from './routes/development.business-development.pricing-strategy-development'
@@ -86,6 +101,7 @@ import { Route as DevelopmentBusinessDevelopmentCorporateStrategyDevelopmentRout
 import { Route as DevelopmentBusinessDevelopmentCompetitiveAnalysisRouteImport } from './routes/development.business-development.competitive-analysis'
 import { Route as DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRouteImport } from './routes/development.business-development.business-transformation-development'
 import { Route as DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRouteImport } from './routes/development.business-development.business-scaling-development'
+import { Route as DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteImport } from './routes/development.business-development.business-model-development'
 import { Route as AdministrationHomeUsersRouteImport } from './routes/administration.home.users'
 import { Route as AdministrationHomeRolesRouteImport } from './routes/administration.home.roles'
 import { Route as AdministrationHomeOverviewRouteImport } from './routes/administration.home.overview'
@@ -198,6 +214,8 @@ import { Route as DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentInde
 import { Route as DevelopmentIpDevelopmentPatentManagementIndexRouteImport } from './routes/development.ip-development.patent-management.index'
 import { Route as DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRouteImport } from './routes/development.business-development.value-proposition-development.index'
 import { Route as DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport } from './routes/development.business-development.business-model-development.index'
+import { Route as ManagementCrmManagementCustomerSupportCustomerFeedbackRouteImport } from './routes/management.crm-management.customer-support.customer-feedback'
+import { Route as ManagementCrmManagementCustomerSupportComplaintManagementRouteImport } from './routes/management.crm-management.customer-support.complaint-management'
 import { Route as DevelopmentResearchInnovationWorkInstructionDevelopmentNewRouteImport } from './routes/development.research-innovation.work-instruction-development.new'
 import { Route as DevelopmentResearchInnovationUiUxDevelopmentNewRouteImport } from './routes/development.research-innovation.ui-ux-development.new'
 import { Route as DevelopmentResearchInnovationTrlAssessmentNewRouteImport } from './routes/development.research-innovation.trl-assessment.new'
@@ -408,6 +426,12 @@ const ManufacturingDevelopmentAutomationDevelopmentIdRoute =
     path: '/manufacturing-development/automation-development/$id',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementSalesManagementCustomerOrdersManagementRoute =
+  ManagementSalesManagementCustomerOrdersManagementRouteImport.update({
+    id: '/management/sales-management/customer-orders-management',
+    path: '/management/sales-management/customer-orders-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementFinanceTaxRoute = ManagementFinanceTaxRouteImport.update({
   id: '/management/finance/tax',
   path: '/management/finance/tax',
@@ -487,6 +511,84 @@ const ManagementFinanceAssetsRoute = ManagementFinanceAssetsRouteImport.update({
   path: '/management/finance/assets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ManagementCrmManagementSalesPipelineManagementRoute =
+  ManagementCrmManagementSalesPipelineManagementRouteImport.update({
+    id: '/management/crm-management/sales-pipeline-management',
+    path: '/management/crm-management/sales-pipeline-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementQuotationsManagementRoute =
+  ManagementCrmManagementQuotationsManagementRouteImport.update({
+    id: '/management/crm-management/quotations-management',
+    path: '/management/crm-management/quotations-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementOpportunityManagementRoute =
+  ManagementCrmManagementOpportunityManagementRouteImport.update({
+    id: '/management/crm-management/opportunity-management',
+    path: '/management/crm-management/opportunity-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementLoyaltyManagementRoute =
+  ManagementCrmManagementLoyaltyManagementRouteImport.update({
+    id: '/management/crm-management/loyalty-management',
+    path: '/management/crm-management/loyalty-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementLeadManagementRoute =
+  ManagementCrmManagementLeadManagementRouteImport.update({
+    id: '/management/crm-management/lead-management',
+    path: '/management/crm-management/lead-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementCustomerSupportRoute =
+  ManagementCrmManagementCustomerSupportRouteImport.update({
+    id: '/management/crm-management/customer-support',
+    path: '/management/crm-management/customer-support',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementCustomerSuccessRoute =
+  ManagementCrmManagementCustomerSuccessRouteImport.update({
+    id: '/management/crm-management/customer-success',
+    path: '/management/crm-management/customer-success',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementCustomerOrdersManagementRoute =
+  ManagementCrmManagementCustomerOrdersManagementRouteImport.update({
+    id: '/management/crm-management/customer-orders-management',
+    path: '/management/crm-management/customer-orders-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementCustomerFeedbackRoute =
+  ManagementCrmManagementCustomerFeedbackRouteImport.update({
+    id: '/management/crm-management/customer-feedback',
+    path: '/management/crm-management/customer-feedback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementContactManagementRoute =
+  ManagementCrmManagementContactManagementRouteImport.update({
+    id: '/management/crm-management/contact-management',
+    path: '/management/crm-management/contact-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementComplaintManagementRoute =
+  ManagementCrmManagementComplaintManagementRouteImport.update({
+    id: '/management/crm-management/complaint-management',
+    path: '/management/crm-management/complaint-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementAccountsRoute =
+  ManagementCrmManagementAccountsRouteImport.update({
+    id: '/management/crm-management/accounts',
+    path: '/management/crm-management/accounts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCrmManagementAccountManagementRoute =
+  ManagementCrmManagementAccountManagementRouteImport.update({
+    id: '/management/crm-management/account-management',
+    path: '/management/crm-management/account-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementAdministrationManagementUserRoleManagementRoute =
   ManagementAdministrationManagementUserRoleManagementRouteImport.update({
     id: '/management/administration-management/user-role-management',
@@ -589,6 +691,12 @@ const DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute =
   DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRouteImport.update({
     id: '/vendor-ecosystem-development',
     path: '/vendor-ecosystem-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute =
+  DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteImport.update({
+    id: '/value-proposition-development',
+    path: '/value-proposition-development',
     getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
   } as any)
 const DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute =
@@ -713,6 +821,12 @@ const DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute =
   DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRouteImport.update({
     id: '/business-scaling-development',
     path: '/business-scaling-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute =
+  DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteImport.update({
+    id: '/business-model-development',
+    path: '/business-model-development',
     getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
   } as any)
 const AdministrationHomeUsersRoute = AdministrationHomeUsersRouteImport.update({
@@ -1410,19 +1524,33 @@ const DevelopmentIpDevelopmentPatentManagementIndexRoute =
 const DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute =
   DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRouteImport.update(
     {
-      id: '/value-proposition-development/',
-      path: '/value-proposition-development/',
-      getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+      id: '/',
+      path: '/',
+      getParentRoute: () =>
+        DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute,
     } as any,
   )
 const DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute =
   DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport.update(
     {
-      id: '/business-model-development/',
-      path: '/business-model-development/',
-      getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+      id: '/',
+      path: '/',
+      getParentRoute: () =>
+        DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute,
     } as any,
   )
+const ManagementCrmManagementCustomerSupportCustomerFeedbackRoute =
+  ManagementCrmManagementCustomerSupportCustomerFeedbackRouteImport.update({
+    id: '/customer-feedback',
+    path: '/customer-feedback',
+    getParentRoute: () => ManagementCrmManagementCustomerSupportRoute,
+  } as any)
+const ManagementCrmManagementCustomerSupportComplaintManagementRoute =
+  ManagementCrmManagementCustomerSupportComplaintManagementRouteImport.update({
+    id: '/complaint-management',
+    path: '/complaint-management',
+    getParentRoute: () => ManagementCrmManagementCustomerSupportRoute,
+  } as any)
 const DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute =
   DevelopmentResearchInnovationWorkInstructionDevelopmentNewRouteImport.update({
     id: '/development/research-innovation/work-instruction-development/new',
@@ -1814,6 +1942,7 @@ export interface FileRoutesByFullPath {
   '/administration/home/overview': typeof AdministrationHomeOverviewRoute
   '/administration/home/roles': typeof AdministrationHomeRolesRoute
   '/administration/home/users': typeof AdministrationHomeUsersRoute
+  '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteWithChildren
   '/development/business-development/business-scaling-development': typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
   '/development/business-development/business-transformation-development': typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
   '/development/business-development/competitive-analysis': typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
@@ -1834,6 +1963,7 @@ export interface FileRoutesByFullPath {
   '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
   '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
+  '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteWithChildren
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/product-development/certification-readiness': typeof DevelopmentProductDevelopmentCertificationReadinessRouteWithChildren
@@ -1851,6 +1981,19 @@ export interface FileRoutesByFullPath {
   '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
+  '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
+  '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
+  '/management/crm-management/complaint-management': typeof ManagementCrmManagementComplaintManagementRoute
+  '/management/crm-management/contact-management': typeof ManagementCrmManagementContactManagementRoute
+  '/management/crm-management/customer-feedback': typeof ManagementCrmManagementCustomerFeedbackRoute
+  '/management/crm-management/customer-orders-management': typeof ManagementCrmManagementCustomerOrdersManagementRoute
+  '/management/crm-management/customer-success': typeof ManagementCrmManagementCustomerSuccessRoute
+  '/management/crm-management/customer-support': typeof ManagementCrmManagementCustomerSupportRouteWithChildren
+  '/management/crm-management/lead-management': typeof ManagementCrmManagementLeadManagementRoute
+  '/management/crm-management/loyalty-management': typeof ManagementCrmManagementLoyaltyManagementRoute
+  '/management/crm-management/opportunity-management': typeof ManagementCrmManagementOpportunityManagementRoute
+  '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
+  '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
   '/management/finance/budgeting': typeof ManagementFinanceBudgetingRoute
@@ -1865,6 +2008,7 @@ export interface FileRoutesByFullPath {
   '/management/finance/reports': typeof ManagementFinanceReportsRoute
   '/management/finance/setup': typeof ManagementFinanceSetupRoute
   '/management/finance/tax': typeof ManagementFinanceTaxRoute
+  '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   '/manufacturing-development/lean-manufacturing/$id': typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -1943,6 +2087,8 @@ export interface FileRoutesByFullPath {
   '/development/research-innovation/trl-assessment/new': typeof DevelopmentResearchInnovationTrlAssessmentNewRoute
   '/development/research-innovation/ui-ux-development/new': typeof DevelopmentResearchInnovationUiUxDevelopmentNewRoute
   '/development/research-innovation/work-instruction-development/new': typeof DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute
+  '/management/crm-management/customer-support/complaint-management': typeof ManagementCrmManagementCustomerSupportComplaintManagementRoute
+  '/management/crm-management/customer-support/customer-feedback': typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRoute
   '/development/business-development/business-model-development/': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
   '/development/business-development/value-proposition-development/': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management/': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
@@ -2101,6 +2247,19 @@ export interface FileRoutesByTo {
   '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
+  '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
+  '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
+  '/management/crm-management/complaint-management': typeof ManagementCrmManagementComplaintManagementRoute
+  '/management/crm-management/contact-management': typeof ManagementCrmManagementContactManagementRoute
+  '/management/crm-management/customer-feedback': typeof ManagementCrmManagementCustomerFeedbackRoute
+  '/management/crm-management/customer-orders-management': typeof ManagementCrmManagementCustomerOrdersManagementRoute
+  '/management/crm-management/customer-success': typeof ManagementCrmManagementCustomerSuccessRoute
+  '/management/crm-management/customer-support': typeof ManagementCrmManagementCustomerSupportRouteWithChildren
+  '/management/crm-management/lead-management': typeof ManagementCrmManagementLeadManagementRoute
+  '/management/crm-management/loyalty-management': typeof ManagementCrmManagementLoyaltyManagementRoute
+  '/management/crm-management/opportunity-management': typeof ManagementCrmManagementOpportunityManagementRoute
+  '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
+  '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
   '/management/finance/budgeting': typeof ManagementFinanceBudgetingRoute
@@ -2115,6 +2274,7 @@ export interface FileRoutesByTo {
   '/management/finance/reports': typeof ManagementFinanceReportsRoute
   '/management/finance/setup': typeof ManagementFinanceSetupRoute
   '/management/finance/tax': typeof ManagementFinanceTaxRoute
+  '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   '/manufacturing-development/lean-manufacturing/$id': typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -2193,6 +2353,8 @@ export interface FileRoutesByTo {
   '/development/research-innovation/trl-assessment/new': typeof DevelopmentResearchInnovationTrlAssessmentNewRoute
   '/development/research-innovation/ui-ux-development/new': typeof DevelopmentResearchInnovationUiUxDevelopmentNewRoute
   '/development/research-innovation/work-instruction-development/new': typeof DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute
+  '/management/crm-management/customer-support/complaint-management': typeof ManagementCrmManagementCustomerSupportComplaintManagementRoute
+  '/management/crm-management/customer-support/customer-feedback': typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRoute
   '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
   '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
@@ -2318,6 +2480,7 @@ export interface FileRoutesById {
   '/administration/home/overview': typeof AdministrationHomeOverviewRoute
   '/administration/home/roles': typeof AdministrationHomeRolesRoute
   '/administration/home/users': typeof AdministrationHomeUsersRoute
+  '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteWithChildren
   '/development/business-development/business-scaling-development': typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
   '/development/business-development/business-transformation-development': typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
   '/development/business-development/competitive-analysis': typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
@@ -2338,6 +2501,7 @@ export interface FileRoutesById {
   '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
   '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
+  '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteWithChildren
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/product-development/certification-readiness': typeof DevelopmentProductDevelopmentCertificationReadinessRouteWithChildren
@@ -2355,6 +2519,19 @@ export interface FileRoutesById {
   '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
+  '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
+  '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
+  '/management/crm-management/complaint-management': typeof ManagementCrmManagementComplaintManagementRoute
+  '/management/crm-management/contact-management': typeof ManagementCrmManagementContactManagementRoute
+  '/management/crm-management/customer-feedback': typeof ManagementCrmManagementCustomerFeedbackRoute
+  '/management/crm-management/customer-orders-management': typeof ManagementCrmManagementCustomerOrdersManagementRoute
+  '/management/crm-management/customer-success': typeof ManagementCrmManagementCustomerSuccessRoute
+  '/management/crm-management/customer-support': typeof ManagementCrmManagementCustomerSupportRouteWithChildren
+  '/management/crm-management/lead-management': typeof ManagementCrmManagementLeadManagementRoute
+  '/management/crm-management/loyalty-management': typeof ManagementCrmManagementLoyaltyManagementRoute
+  '/management/crm-management/opportunity-management': typeof ManagementCrmManagementOpportunityManagementRoute
+  '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
+  '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
   '/management/finance/budgeting': typeof ManagementFinanceBudgetingRoute
@@ -2369,6 +2546,7 @@ export interface FileRoutesById {
   '/management/finance/reports': typeof ManagementFinanceReportsRoute
   '/management/finance/setup': typeof ManagementFinanceSetupRoute
   '/management/finance/tax': typeof ManagementFinanceTaxRoute
+  '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   '/manufacturing-development/lean-manufacturing/$id': typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -2447,6 +2625,8 @@ export interface FileRoutesById {
   '/development/research-innovation/trl-assessment/new': typeof DevelopmentResearchInnovationTrlAssessmentNewRoute
   '/development/research-innovation/ui-ux-development/new': typeof DevelopmentResearchInnovationUiUxDevelopmentNewRoute
   '/development/research-innovation/work-instruction-development/new': typeof DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute
+  '/management/crm-management/customer-support/complaint-management': typeof ManagementCrmManagementCustomerSupportComplaintManagementRoute
+  '/management/crm-management/customer-support/customer-feedback': typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRoute
   '/development/business-development/business-model-development/': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
   '/development/business-development/value-proposition-development/': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management/': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
@@ -2573,6 +2753,7 @@ export interface FileRouteTypes {
     | '/administration/home/overview'
     | '/administration/home/roles'
     | '/administration/home/users'
+    | '/development/business-development/business-model-development'
     | '/development/business-development/business-scaling-development'
     | '/development/business-development/business-transformation-development'
     | '/development/business-development/competitive-analysis'
@@ -2593,6 +2774,7 @@ export interface FileRouteTypes {
     | '/development/business-development/pricing-strategy-development'
     | '/development/business-development/revenue-model-development'
     | '/development/business-development/sales-channel-development'
+    | '/development/business-development/value-proposition-development'
     | '/development/business-development/vendor-ecosystem-development'
     | '/development/manufacturing-development/overview'
     | '/development/product-development/certification-readiness'
@@ -2610,6 +2792,19 @@ export interface FileRouteTypes {
     | '/management/administration-management/organization-structure'
     | '/management/administration-management/policy-management'
     | '/management/administration-management/user-role-management'
+    | '/management/crm-management/account-management'
+    | '/management/crm-management/accounts'
+    | '/management/crm-management/complaint-management'
+    | '/management/crm-management/contact-management'
+    | '/management/crm-management/customer-feedback'
+    | '/management/crm-management/customer-orders-management'
+    | '/management/crm-management/customer-success'
+    | '/management/crm-management/customer-support'
+    | '/management/crm-management/lead-management'
+    | '/management/crm-management/loyalty-management'
+    | '/management/crm-management/opportunity-management'
+    | '/management/crm-management/quotations-management'
+    | '/management/crm-management/sales-pipeline-management'
     | '/management/finance/assets'
     | '/management/finance/audit'
     | '/management/finance/budgeting'
@@ -2624,6 +2819,7 @@ export interface FileRouteTypes {
     | '/management/finance/reports'
     | '/management/finance/setup'
     | '/management/finance/tax'
+    | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
     | '/manufacturing-development/lean-manufacturing/$id'
@@ -2702,6 +2898,8 @@ export interface FileRouteTypes {
     | '/development/research-innovation/trl-assessment/new'
     | '/development/research-innovation/ui-ux-development/new'
     | '/development/research-innovation/work-instruction-development/new'
+    | '/management/crm-management/customer-support/complaint-management'
+    | '/management/crm-management/customer-support/customer-feedback'
     | '/development/business-development/business-model-development/'
     | '/development/business-development/value-proposition-development/'
     | '/development/ip-development/patent-management/'
@@ -2860,6 +3058,19 @@ export interface FileRouteTypes {
     | '/management/administration-management/organization-structure'
     | '/management/administration-management/policy-management'
     | '/management/administration-management/user-role-management'
+    | '/management/crm-management/account-management'
+    | '/management/crm-management/accounts'
+    | '/management/crm-management/complaint-management'
+    | '/management/crm-management/contact-management'
+    | '/management/crm-management/customer-feedback'
+    | '/management/crm-management/customer-orders-management'
+    | '/management/crm-management/customer-success'
+    | '/management/crm-management/customer-support'
+    | '/management/crm-management/lead-management'
+    | '/management/crm-management/loyalty-management'
+    | '/management/crm-management/opportunity-management'
+    | '/management/crm-management/quotations-management'
+    | '/management/crm-management/sales-pipeline-management'
     | '/management/finance/assets'
     | '/management/finance/audit'
     | '/management/finance/budgeting'
@@ -2874,6 +3085,7 @@ export interface FileRouteTypes {
     | '/management/finance/reports'
     | '/management/finance/setup'
     | '/management/finance/tax'
+    | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
     | '/manufacturing-development/lean-manufacturing/$id'
@@ -2952,6 +3164,8 @@ export interface FileRouteTypes {
     | '/development/research-innovation/trl-assessment/new'
     | '/development/research-innovation/ui-ux-development/new'
     | '/development/research-innovation/work-instruction-development/new'
+    | '/management/crm-management/customer-support/complaint-management'
+    | '/management/crm-management/customer-support/customer-feedback'
     | '/development/business-development/business-model-development'
     | '/development/business-development/value-proposition-development'
     | '/development/ip-development/patent-management'
@@ -3076,6 +3290,7 @@ export interface FileRouteTypes {
     | '/administration/home/overview'
     | '/administration/home/roles'
     | '/administration/home/users'
+    | '/development/business-development/business-model-development'
     | '/development/business-development/business-scaling-development'
     | '/development/business-development/business-transformation-development'
     | '/development/business-development/competitive-analysis'
@@ -3096,6 +3311,7 @@ export interface FileRouteTypes {
     | '/development/business-development/pricing-strategy-development'
     | '/development/business-development/revenue-model-development'
     | '/development/business-development/sales-channel-development'
+    | '/development/business-development/value-proposition-development'
     | '/development/business-development/vendor-ecosystem-development'
     | '/development/manufacturing-development/overview'
     | '/development/product-development/certification-readiness'
@@ -3113,6 +3329,19 @@ export interface FileRouteTypes {
     | '/management/administration-management/organization-structure'
     | '/management/administration-management/policy-management'
     | '/management/administration-management/user-role-management'
+    | '/management/crm-management/account-management'
+    | '/management/crm-management/accounts'
+    | '/management/crm-management/complaint-management'
+    | '/management/crm-management/contact-management'
+    | '/management/crm-management/customer-feedback'
+    | '/management/crm-management/customer-orders-management'
+    | '/management/crm-management/customer-success'
+    | '/management/crm-management/customer-support'
+    | '/management/crm-management/lead-management'
+    | '/management/crm-management/loyalty-management'
+    | '/management/crm-management/opportunity-management'
+    | '/management/crm-management/quotations-management'
+    | '/management/crm-management/sales-pipeline-management'
     | '/management/finance/assets'
     | '/management/finance/audit'
     | '/management/finance/budgeting'
@@ -3127,6 +3356,7 @@ export interface FileRouteTypes {
     | '/management/finance/reports'
     | '/management/finance/setup'
     | '/management/finance/tax'
+    | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
     | '/manufacturing-development/lean-manufacturing/$id'
@@ -3205,6 +3435,8 @@ export interface FileRouteTypes {
     | '/development/research-innovation/trl-assessment/new'
     | '/development/research-innovation/ui-ux-development/new'
     | '/development/research-innovation/work-instruction-development/new'
+    | '/management/crm-management/customer-support/complaint-management'
+    | '/management/crm-management/customer-support/customer-feedback'
     | '/development/business-development/business-model-development/'
     | '/development/business-development/value-proposition-development/'
     | '/development/ip-development/patent-management/'
@@ -3346,6 +3578,19 @@ export interface RootRouteChildren {
   ManagementAdministrationManagementOrganizationStructureRoute: typeof ManagementAdministrationManagementOrganizationStructureRoute
   ManagementAdministrationManagementPolicyManagementRoute: typeof ManagementAdministrationManagementPolicyManagementRoute
   ManagementAdministrationManagementUserRoleManagementRoute: typeof ManagementAdministrationManagementUserRoleManagementRoute
+  ManagementCrmManagementAccountManagementRoute: typeof ManagementCrmManagementAccountManagementRoute
+  ManagementCrmManagementAccountsRoute: typeof ManagementCrmManagementAccountsRoute
+  ManagementCrmManagementComplaintManagementRoute: typeof ManagementCrmManagementComplaintManagementRoute
+  ManagementCrmManagementContactManagementRoute: typeof ManagementCrmManagementContactManagementRoute
+  ManagementCrmManagementCustomerFeedbackRoute: typeof ManagementCrmManagementCustomerFeedbackRoute
+  ManagementCrmManagementCustomerOrdersManagementRoute: typeof ManagementCrmManagementCustomerOrdersManagementRoute
+  ManagementCrmManagementCustomerSuccessRoute: typeof ManagementCrmManagementCustomerSuccessRoute
+  ManagementCrmManagementCustomerSupportRoute: typeof ManagementCrmManagementCustomerSupportRouteWithChildren
+  ManagementCrmManagementLeadManagementRoute: typeof ManagementCrmManagementLeadManagementRoute
+  ManagementCrmManagementLoyaltyManagementRoute: typeof ManagementCrmManagementLoyaltyManagementRoute
+  ManagementCrmManagementOpportunityManagementRoute: typeof ManagementCrmManagementOpportunityManagementRoute
+  ManagementCrmManagementQuotationsManagementRoute: typeof ManagementCrmManagementQuotationsManagementRoute
+  ManagementCrmManagementSalesPipelineManagementRoute: typeof ManagementCrmManagementSalesPipelineManagementRoute
   ManagementFinanceAssetsRoute: typeof ManagementFinanceAssetsRoute
   ManagementFinanceAuditRoute: typeof ManagementFinanceAuditRoute
   ManagementFinanceBudgetingRoute: typeof ManagementFinanceBudgetingRoute
@@ -3360,6 +3605,7 @@ export interface RootRouteChildren {
   ManagementFinanceReportsRoute: typeof ManagementFinanceReportsRoute
   ManagementFinanceSetupRoute: typeof ManagementFinanceSetupRoute
   ManagementFinanceTaxRoute: typeof ManagementFinanceTaxRoute
+  ManagementSalesManagementCustomerOrdersManagementRoute: typeof ManagementSalesManagementCustomerOrdersManagementRoute
   ManufacturingDevelopmentAutomationDevelopmentIdRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   ManufacturingDevelopmentAutomationDevelopmentNewRoute: typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   ManufacturingDevelopmentLeanManufacturingIdRoute: typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -3724,6 +3970,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/sales-management/customer-orders-management': {
+      id: '/management/sales-management/customer-orders-management'
+      path: '/management/sales-management/customer-orders-management'
+      fullPath: '/management/sales-management/customer-orders-management'
+      preLoaderRoute: typeof ManagementSalesManagementCustomerOrdersManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/finance/tax': {
       id: '/management/finance/tax'
       path: '/management/finance/tax'
@@ -3820,6 +4073,97 @@ declare module '@tanstack/react-router' {
       path: '/management/finance/assets'
       fullPath: '/management/finance/assets'
       preLoaderRoute: typeof ManagementFinanceAssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/sales-pipeline-management': {
+      id: '/management/crm-management/sales-pipeline-management'
+      path: '/management/crm-management/sales-pipeline-management'
+      fullPath: '/management/crm-management/sales-pipeline-management'
+      preLoaderRoute: typeof ManagementCrmManagementSalesPipelineManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/quotations-management': {
+      id: '/management/crm-management/quotations-management'
+      path: '/management/crm-management/quotations-management'
+      fullPath: '/management/crm-management/quotations-management'
+      preLoaderRoute: typeof ManagementCrmManagementQuotationsManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/opportunity-management': {
+      id: '/management/crm-management/opportunity-management'
+      path: '/management/crm-management/opportunity-management'
+      fullPath: '/management/crm-management/opportunity-management'
+      preLoaderRoute: typeof ManagementCrmManagementOpportunityManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/loyalty-management': {
+      id: '/management/crm-management/loyalty-management'
+      path: '/management/crm-management/loyalty-management'
+      fullPath: '/management/crm-management/loyalty-management'
+      preLoaderRoute: typeof ManagementCrmManagementLoyaltyManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/lead-management': {
+      id: '/management/crm-management/lead-management'
+      path: '/management/crm-management/lead-management'
+      fullPath: '/management/crm-management/lead-management'
+      preLoaderRoute: typeof ManagementCrmManagementLeadManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/customer-support': {
+      id: '/management/crm-management/customer-support'
+      path: '/management/crm-management/customer-support'
+      fullPath: '/management/crm-management/customer-support'
+      preLoaderRoute: typeof ManagementCrmManagementCustomerSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/customer-success': {
+      id: '/management/crm-management/customer-success'
+      path: '/management/crm-management/customer-success'
+      fullPath: '/management/crm-management/customer-success'
+      preLoaderRoute: typeof ManagementCrmManagementCustomerSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/customer-orders-management': {
+      id: '/management/crm-management/customer-orders-management'
+      path: '/management/crm-management/customer-orders-management'
+      fullPath: '/management/crm-management/customer-orders-management'
+      preLoaderRoute: typeof ManagementCrmManagementCustomerOrdersManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/customer-feedback': {
+      id: '/management/crm-management/customer-feedback'
+      path: '/management/crm-management/customer-feedback'
+      fullPath: '/management/crm-management/customer-feedback'
+      preLoaderRoute: typeof ManagementCrmManagementCustomerFeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/contact-management': {
+      id: '/management/crm-management/contact-management'
+      path: '/management/crm-management/contact-management'
+      fullPath: '/management/crm-management/contact-management'
+      preLoaderRoute: typeof ManagementCrmManagementContactManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/complaint-management': {
+      id: '/management/crm-management/complaint-management'
+      path: '/management/crm-management/complaint-management'
+      fullPath: '/management/crm-management/complaint-management'
+      preLoaderRoute: typeof ManagementCrmManagementComplaintManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/accounts': {
+      id: '/management/crm-management/accounts'
+      path: '/management/crm-management/accounts'
+      fullPath: '/management/crm-management/accounts'
+      preLoaderRoute: typeof ManagementCrmManagementAccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/crm-management/account-management': {
+      id: '/management/crm-management/account-management'
+      path: '/management/crm-management/account-management'
+      fullPath: '/management/crm-management/account-management'
+      preLoaderRoute: typeof ManagementCrmManagementAccountManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/administration-management/user-role-management': {
@@ -3939,6 +4283,13 @@ declare module '@tanstack/react-router' {
       path: '/vendor-ecosystem-development'
       fullPath: '/development/business-development/vendor-ecosystem-development'
       preLoaderRoute: typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/value-proposition-development': {
+      id: '/development/business-development/value-proposition-development'
+      path: '/value-proposition-development'
+      fullPath: '/development/business-development/value-proposition-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteImport
       parentRoute: typeof DevelopmentBusinessDevelopmentRoute
     }
     '/development/business-development/sales-channel-development': {
@@ -4079,6 +4430,13 @@ declare module '@tanstack/react-router' {
       path: '/business-scaling-development'
       fullPath: '/development/business-development/business-scaling-development'
       preLoaderRoute: typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/business-model-development': {
+      id: '/development/business-development/business-model-development'
+      path: '/business-model-development'
+      fullPath: '/development/business-development/business-model-development'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteImport
       parentRoute: typeof DevelopmentBusinessDevelopmentRoute
     }
     '/administration/home/users': {
@@ -4853,17 +5211,31 @@ declare module '@tanstack/react-router' {
     }
     '/development/business-development/value-proposition-development/': {
       id: '/development/business-development/value-proposition-development/'
-      path: '/value-proposition-development'
+      path: '/'
       fullPath: '/development/business-development/value-proposition-development/'
       preLoaderRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRouteImport
-      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+      parentRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
     }
     '/development/business-development/business-model-development/': {
       id: '/development/business-development/business-model-development/'
-      path: '/business-model-development'
+      path: '/'
       fullPath: '/development/business-development/business-model-development/'
       preLoaderRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport
-      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+      parentRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute
+    }
+    '/management/crm-management/customer-support/customer-feedback': {
+      id: '/management/crm-management/customer-support/customer-feedback'
+      path: '/customer-feedback'
+      fullPath: '/management/crm-management/customer-support/customer-feedback'
+      preLoaderRoute: typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRouteImport
+      parentRoute: typeof ManagementCrmManagementCustomerSupportRoute
+    }
+    '/management/crm-management/customer-support/complaint-management': {
+      id: '/management/crm-management/customer-support/complaint-management'
+      path: '/complaint-management'
+      fullPath: '/management/crm-management/customer-support/complaint-management'
+      preLoaderRoute: typeof ManagementCrmManagementCustomerSupportComplaintManagementRouteImport
+      parentRoute: typeof ManagementCrmManagementCustomerSupportRoute
     }
     '/development/research-innovation/work-instruction-development/new': {
       id: '/development/research-innovation/work-instruction-development/new'
@@ -5302,7 +5674,38 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteChildren {
+  DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
+}
+
+const DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteChildren: DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteChildren =
+  {
+    DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute:
+      DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute,
+  }
+
+const DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteWithChildren =
+  DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute._addFileChildren(
+    DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteChildren,
+  )
+
+interface DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteChildren {
+  DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
+}
+
+const DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteChildren: DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteChildren =
+  {
+    DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute:
+      DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute,
+  }
+
+const DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteWithChildren =
+  DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute._addFileChildren(
+    DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteChildren,
+  )
+
 interface DevelopmentBusinessDevelopmentRouteChildren {
+  DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteWithChildren
   DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute: typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
   DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute: typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
   DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute: typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
@@ -5323,14 +5726,15 @@ interface DevelopmentBusinessDevelopmentRouteChildren {
   DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute: typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
   DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
+  DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteWithChildren
   DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute: typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   DevelopmentBusinessDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentIndexRoute
-  DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
-  DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
 }
 
 const DevelopmentBusinessDevelopmentRouteChildren: DevelopmentBusinessDevelopmentRouteChildren =
   {
+    DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute:
+      DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteWithChildren,
     DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute:
       DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute,
     DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute:
@@ -5371,14 +5775,12 @@ const DevelopmentBusinessDevelopmentRouteChildren: DevelopmentBusinessDevelopmen
       DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute,
     DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute:
       DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute,
+    DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute:
+      DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteWithChildren,
     DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute:
       DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute,
     DevelopmentBusinessDevelopmentIndexRoute:
       DevelopmentBusinessDevelopmentIndexRoute,
-    DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute:
-      DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute,
-    DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute:
-      DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute,
   }
 
 const DevelopmentBusinessDevelopmentRouteWithChildren =
@@ -5417,6 +5819,24 @@ const DevelopmentResearchInnovationProductReleaseManagementRouteChildren: Develo
 const DevelopmentResearchInnovationProductReleaseManagementRouteWithChildren =
   DevelopmentResearchInnovationProductReleaseManagementRoute._addFileChildren(
     DevelopmentResearchInnovationProductReleaseManagementRouteChildren,
+  )
+
+interface ManagementCrmManagementCustomerSupportRouteChildren {
+  ManagementCrmManagementCustomerSupportComplaintManagementRoute: typeof ManagementCrmManagementCustomerSupportComplaintManagementRoute
+  ManagementCrmManagementCustomerSupportCustomerFeedbackRoute: typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRoute
+}
+
+const ManagementCrmManagementCustomerSupportRouteChildren: ManagementCrmManagementCustomerSupportRouteChildren =
+  {
+    ManagementCrmManagementCustomerSupportComplaintManagementRoute:
+      ManagementCrmManagementCustomerSupportComplaintManagementRoute,
+    ManagementCrmManagementCustomerSupportCustomerFeedbackRoute:
+      ManagementCrmManagementCustomerSupportCustomerFeedbackRoute,
+  }
+
+const ManagementCrmManagementCustomerSupportRouteWithChildren =
+  ManagementCrmManagementCustomerSupportRoute._addFileChildren(
+    ManagementCrmManagementCustomerSupportRouteChildren,
   )
 
 const rootRouteChildren: RootRouteChildren = {
@@ -5469,6 +5889,31 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementAdministrationManagementPolicyManagementRoute,
   ManagementAdministrationManagementUserRoleManagementRoute:
     ManagementAdministrationManagementUserRoleManagementRoute,
+  ManagementCrmManagementAccountManagementRoute:
+    ManagementCrmManagementAccountManagementRoute,
+  ManagementCrmManagementAccountsRoute: ManagementCrmManagementAccountsRoute,
+  ManagementCrmManagementComplaintManagementRoute:
+    ManagementCrmManagementComplaintManagementRoute,
+  ManagementCrmManagementContactManagementRoute:
+    ManagementCrmManagementContactManagementRoute,
+  ManagementCrmManagementCustomerFeedbackRoute:
+    ManagementCrmManagementCustomerFeedbackRoute,
+  ManagementCrmManagementCustomerOrdersManagementRoute:
+    ManagementCrmManagementCustomerOrdersManagementRoute,
+  ManagementCrmManagementCustomerSuccessRoute:
+    ManagementCrmManagementCustomerSuccessRoute,
+  ManagementCrmManagementCustomerSupportRoute:
+    ManagementCrmManagementCustomerSupportRouteWithChildren,
+  ManagementCrmManagementLeadManagementRoute:
+    ManagementCrmManagementLeadManagementRoute,
+  ManagementCrmManagementLoyaltyManagementRoute:
+    ManagementCrmManagementLoyaltyManagementRoute,
+  ManagementCrmManagementOpportunityManagementRoute:
+    ManagementCrmManagementOpportunityManagementRoute,
+  ManagementCrmManagementQuotationsManagementRoute:
+    ManagementCrmManagementQuotationsManagementRoute,
+  ManagementCrmManagementSalesPipelineManagementRoute:
+    ManagementCrmManagementSalesPipelineManagementRoute,
   ManagementFinanceAssetsRoute: ManagementFinanceAssetsRoute,
   ManagementFinanceAuditRoute: ManagementFinanceAuditRoute,
   ManagementFinanceBudgetingRoute: ManagementFinanceBudgetingRoute,
@@ -5483,6 +5928,8 @@ const rootRouteChildren: RootRouteChildren = {
   ManagementFinanceReportsRoute: ManagementFinanceReportsRoute,
   ManagementFinanceSetupRoute: ManagementFinanceSetupRoute,
   ManagementFinanceTaxRoute: ManagementFinanceTaxRoute,
+  ManagementSalesManagementCustomerOrdersManagementRoute:
+    ManagementSalesManagementCustomerOrdersManagementRoute,
   ManufacturingDevelopmentAutomationDevelopmentIdRoute:
     ManufacturingDevelopmentAutomationDevelopmentIdRoute,
   ManufacturingDevelopmentAutomationDevelopmentNewRoute:

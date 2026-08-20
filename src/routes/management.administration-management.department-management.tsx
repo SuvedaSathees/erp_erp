@@ -935,35 +935,147 @@ export function DepartmentManagementPage() {
             </div>
           )}
 
-          {/* OTHER TABS PLACEHOLDER */}
+          {/* OTHER TABS / DETAILED SURFACES */}
           {activeTab !== "overview" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <h4 className="text-sm font-bold text-foreground capitalize">{activeTab} Workspace</h4>
-                <span className="text-xs text-muted-foreground">Department ID: DEP-2024-0007</span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Detailed data view for <span className="font-semibold text-foreground capitalize">{activeTab}</span> parameters adhering to MAICW specification.
-              </p>
-              <div className="grid gap-4 sm:grid-cols-3 pt-2">
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Headcount Utilization</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">93.0%</span>
-                  <p className="text-[11px] text-muted-foreground">156 filled out of 162 positions.</p>
+            <div className="rounded-xl border border-border bg-card p-6 space-y-6 shadow-xs">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
+                <div>
+                  <h4 className="text-base font-bold text-foreground capitalize flex items-center gap-2">
+                    <Briefcase className="h-4 w-4 text-primary" />
+                    {activeTab.replace("-", " ")} Management Workspace
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Department: <span className="font-semibold text-foreground font-mono">DEP-DEL-001</span> (Finance & Accounts) · MAICW Level 3 Specification
+                  </p>
                 </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Budget Variance</span>
-                  <span className="text-xl font-bold font-mono text-blue-600">₹ 8,25,00,000</span>
-                  <p className="text-[11px] text-muted-foreground">Remaining allocated budget for FY 24-25.</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Risk Index</span>
-                  <span className="text-xl font-bold font-mono text-amber-600">3.2 / 5</span>
-                  <p className="text-[11px] text-muted-foreground">Moderate process compliance risk.</p>
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 border border-emerald-500/20">
+                    Active
+                  </span>
+                  <button
+                    onClick={() => showNotification(`Added new entry to ${activeTab} workspace`)}
+                    className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    Add {activeTab.slice(0, -1)} Record
+                  </button>
                 </div>
               </div>
+
+              {activeTab === "positions" && (
+                <div className="space-y-4">
+                  <div className="overflow-x-auto rounded-lg border border-border">
+                    <table className="w-full text-left text-xs border-collapse">
+                      <thead>
+                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                          <th className="py-2.5 px-3">Position Code</th>
+                          <th className="py-2.5 px-3">Position Title</th>
+                          <th className="py-2.5 px-3">Grade Level</th>
+                          <th className="py-2.5 px-3 text-right">Sanctioned</th>
+                          <th className="py-2.5 px-3 text-right">Filled</th>
+                          <th className="py-2.5 px-3 text-right">Vacant</th>
+                          <th className="py-2.5 px-3">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/60 text-foreground font-mono">
+                        {[
+                          { code: "POS-FIN-001", title: "Chief Financial Officer", grade: "CXO", sanc: 1, filled: 1, vac: 0, status: "Occupied" },
+                          { code: "POS-FIN-002", title: "General Manager - Accounts", grade: "M1", sanc: 2, filled: 2, vac: 0, status: "Occupied" },
+                          { code: "POS-FIN-003", title: "Senior Finance Controller", grade: "M2", sanc: 4, filled: 3, vac: 1, status: "Hiring Open" },
+                          { code: "POS-FIN-004", title: "Tax & Compliance Lead", grade: "M3", sanc: 3, filled: 3, vac: 0, status: "Occupied" },
+                          { code: "POS-FIN-005", title: "Accounts Executive", grade: "E1", sanc: 12, filled: 10, vac: 2, status: "Hiring Open" },
+                        ].map((p, idx) => (
+                          <tr key={idx} className="hover:bg-muted/30 transition-colors">
+                            <td className="py-2 px-3 font-semibold text-primary">{p.code}</td>
+                            <td className="py-2 px-3 font-sans font-medium text-foreground">{p.title}</td>
+                            <td className="py-2 px-3">{p.grade}</td>
+                            <td className="py-2 px-3 text-right">{p.sanc}</td>
+                            <td className="py-2 px-3 text-right text-emerald-600 font-bold">{p.filled}</td>
+                            <td className="py-2 px-3 text-right text-amber-600">{p.vac}</td>
+                            <td className="py-2 px-3">
+                              <span className={cn(
+                                "rounded-full px-2 py-0.5 text-[10px] font-bold border font-sans",
+                                p.vac > 0 ? "bg-amber-500/10 text-amber-600 border-amber-500/20" : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                              )}>
+                                {p.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "processes" && (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {[
+                    { title: "Accounts Payable (AP)", code: "PRC-FIN-01", owner: "Rohan Verma", sla: "48 Hours", status: "Automated" },
+                    { title: "Accounts Receivable (AR)", code: "PRC-FIN-02", owner: "Sneha Reddy", sla: "24 Hours", status: "Active" },
+                    { title: "Financial Month-End Close", code: "PRC-FIN-03", owner: "Vikram Singh", sla: "5 Days", status: "Critical" },
+                    { title: "Tax Filing & E-Way Bill", code: "PRC-FIN-04", owner: "Ananya Roy", sla: "Monthly", status: "Compliant" },
+                    { title: "Payroll Reconciliation", code: "PRC-FIN-05", owner: "Karan Mehta", sla: "28th Monthly", status: "Scheduled" },
+                    { title: "Capital Expenditure Approval", code: "PRC-FIN-06", owner: "Rajeev Malhotra", sla: "72 Hours", status: "Active" },
+                  ].map((prc, idx) => (
+                    <div key={idx} className="rounded-xl border border-border bg-card p-4 space-y-2 shadow-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-foreground">{prc.title}</span>
+                        <span className="text-[10px] font-mono text-muted-foreground">{prc.code}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Owner: <span className="font-semibold text-foreground">{prc.owner}</span></p>
+                      <div className="flex items-center justify-between text-[11px] pt-1 border-t border-border/50">
+                        <span className="text-muted-foreground font-mono">SLA: {prc.sla}</span>
+                        <span className="rounded bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary border border-primary/20">
+                          {prc.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {activeTab !== "positions" && activeTab !== "processes" && (
+                <div className="space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-3">
+                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
+                      <span className="text-xs font-bold text-foreground block">Headcount Utilization</span>
+                      <span className="text-xl font-bold font-mono text-emerald-600">93.0%</span>
+                      <p className="text-[11px] text-muted-foreground">156 filled out of 162 positions.</p>
+                    </div>
+
+                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
+                      <span className="text-xs font-bold text-foreground block">Budget Variance</span>
+                      <span className="text-xl font-bold font-mono text-blue-600">₹ 8,25,00,000</span>
+                      <p className="text-[11px] text-muted-foreground">Remaining allocated budget for FY 24-25.</p>
+                    </div>
+
+                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
+                      <span className="text-xs font-bold text-foreground block">Risk Index</span>
+                      <span className="text-xl font-bold font-mono text-amber-600">3.2 / 5</span>
+                      <p className="text-[11px] text-muted-foreground">Moderate process compliance risk.</p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-border bg-card p-4">
+                    <h5 className="text-xs font-bold text-foreground mb-3 capitalize">{activeTab} Parameters & Audit Trail</h5>
+                    <div className="space-y-2 text-xs text-muted-foreground">
+                      <div className="flex justify-between py-1 border-b border-border/50">
+                        <span>Last System Audit:</span>
+                        <span className="font-mono text-foreground">15 May 2024, 09:30 AM</span>
+                      </div>
+                      <div className="flex justify-between py-1 border-b border-border/50">
+                        <span>Assigned Head:</span>
+                        <span className="font-semibold text-foreground">Vikram Singh (VP Finance)</span>
+                      </div>
+                      <div className="flex justify-between py-1">
+                        <span>ERP Synchronization Status:</span>
+                        <span className="text-emerald-600 font-bold">100% Synced</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

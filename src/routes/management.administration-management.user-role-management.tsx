@@ -1059,35 +1059,144 @@ export function UserRoleManagementPage() {
             </div>
           )}
 
-          {/* OTHER TABS PLACEHOLDER */}
+          {/* OTHER TABS / DETAILED SURFACES */}
           {activeTab !== "profile" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <h4 className="text-sm font-bold text-foreground capitalize">{activeTab} Workspace</h4>
-                <span className="text-xs text-muted-foreground">User ID: USR-2024-00456</span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Detailed configurations for <span className="font-semibold text-foreground capitalize">{activeTab}</span> adhering to MAICW specification.
-              </p>
-              <div className="grid gap-4 sm:grid-cols-3 pt-2">
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Active Role Count</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">3 Roles</span>
-                  <p className="text-[11px] text-muted-foreground">1 Primary, 2 Secondary Roles assigned.</p>
+            <div className="rounded-xl border border-border bg-card p-6 space-y-6 shadow-xs">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
+                <div>
+                  <h4 className="text-base font-bold text-foreground capitalize flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-primary" />
+                    {activeTab.replace("-", " ")} Security Workspace
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Target Identity: <span className="font-semibold text-foreground font-mono">vikram.singh</span> (USR-VIK-001) · Enterprise RBAC & Security Scopes
+                  </p>
                 </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Segregation of Duties (SoD)</span>
-                  <span className="text-xl font-bold font-mono text-blue-600">0 Conflicts</span>
-                  <p className="text-[11px] text-muted-foreground">Compliant with internal control policies.</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Security Policy Index</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">High Protection</span>
-                  <p className="text-[11px] text-muted-foreground">MFA Enabled & SSO Bound.</p>
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 border border-emerald-500/20">
+                    Active Session
+                  </span>
+                  <button
+                    onClick={() => showNotification(`Saved security rule to ${activeTab} workspace`)}
+                    className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    Assign {activeTab.slice(0, -1)} Rule
+                  </button>
                 </div>
               </div>
+
+              {activeTab === "roles" && (
+                <div className="space-y-4">
+                  <div className="overflow-x-auto rounded-lg border border-border">
+                    <table className="w-full text-left text-xs border-collapse">
+                      <thead>
+                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                          <th className="py-2.5 px-3">Role Code</th>
+                          <th className="py-2.5 px-3">Role Name</th>
+                          <th className="py-2.5 px-3">Role Type</th>
+                          <th className="py-2.5 px-3">Primary</th>
+                          <th className="py-2.5 px-3">Data Scope</th>
+                          <th className="py-2.5 px-3">Assigned Date</th>
+                          <th className="py-2.5 px-3">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/60 text-foreground font-mono">
+                        {[
+                          { code: "ROL-FIN-001", name: "Finance Manager", type: "Management Role", isPri: "Yes", scope: "Organization", date: "01 Apr 2024", status: "Active" },
+                          { code: "ROL-FIN-002", name: "Accounts Approver", type: "Approval Role", isPri: "No", scope: "Department", date: "01 Apr 2024", status: "Active" },
+                          { code: "ROL-FIN-003", name: "Budget Controller", type: "Functional Role", isPri: "No", scope: "Department", date: "15 May 2024", status: "Active" },
+                        ].map((r, idx) => (
+                          <tr key={idx} className="hover:bg-muted/30 transition-colors">
+                            <td className="py-2 px-3 font-semibold text-primary">{r.code}</td>
+                            <td className="py-2 px-3 font-sans font-medium text-foreground">{r.name}</td>
+                            <td className="py-2 px-3 font-sans text-muted-foreground">{r.type}</td>
+                            <td className="py-2 px-3">
+                              <span className={cn("rounded px-1.5 py-0.5 text-[10px] font-bold font-sans", r.isPri === "Yes" ? "bg-blue-500/10 text-blue-600" : "bg-muted text-muted-foreground")}>
+                                {r.isPri}
+                              </span>
+                            </td>
+                            <td className="py-2 px-3 font-sans text-muted-foreground">{r.scope}</td>
+                            <td className="py-2 px-3 text-muted-foreground">{r.date}</td>
+                            <td className="py-2 px-3">
+                              <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-500/20 font-sans">
+                                {r.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "permissions" && (
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  {[
+                    { module: "General Ledger", read: true, create: true, edit: true, delete: false },
+                    { module: "Accounts Payable", read: true, create: true, edit: true, delete: true },
+                    { module: "Accounts Receivable", read: true, create: true, edit: true, delete: false },
+                    { module: "Budgeting & Planning", read: true, create: true, edit: true, delete: false },
+                    { module: "Fixed Assets", read: true, create: false, edit: false, delete: false },
+                    { module: "Tax & Compliance", read: true, create: true, edit: true, delete: false },
+                    { module: "Financial Reports", read: true, create: true, edit: true, delete: true },
+                    { module: "System Settings", read: true, create: false, edit: false, delete: false },
+                  ].map((perm, idx) => (
+                    <div key={idx} className="rounded-xl border border-border bg-card p-3 space-y-2 shadow-xs">
+                      <span className="text-xs font-bold text-foreground block">{perm.module}</span>
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold">
+                        <span className={cn("px-1.5 py-0.5 rounded", perm.read ? "bg-emerald-500/10 text-emerald-600" : "bg-muted text-muted-foreground opacity-50")}>R</span>
+                        <span className={cn("px-1.5 py-0.5 rounded", perm.create ? "bg-blue-500/10 text-blue-600" : "bg-muted text-muted-foreground opacity-50")}>C</span>
+                        <span className={cn("px-1.5 py-0.5 rounded", perm.edit ? "bg-amber-500/10 text-amber-600" : "bg-muted text-muted-foreground opacity-50")}>E</span>
+                        <span className={cn("px-1.5 py-0.5 rounded", perm.delete ? "bg-rose-500/10 text-rose-600" : "bg-muted text-muted-foreground opacity-50")}>D</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {activeTab !== "roles" && activeTab !== "permissions" && (
+                <div className="space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-3">
+                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
+                      <span className="text-xs font-bold text-foreground block">Active Role Count</span>
+                      <span className="text-xl font-bold font-mono text-emerald-600">3 Roles</span>
+                      <p className="text-[11px] text-muted-foreground">1 Primary, 2 Secondary Roles assigned.</p>
+                    </div>
+
+                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
+                      <span className="text-xs font-bold text-foreground block">Segregation of Duties (SoD)</span>
+                      <span className="text-xl font-bold font-mono text-blue-600">0 Conflicts</span>
+                      <p className="text-[11px] text-muted-foreground">Compliant with internal control policies.</p>
+                    </div>
+
+                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
+                      <span className="text-xs font-bold text-foreground block">Security Policy Index</span>
+                      <span className="text-xl font-bold font-mono text-emerald-600">High Protection</span>
+                      <p className="text-[11px] text-muted-foreground">MFA Enabled & SSO Bound.</p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-border bg-card p-4">
+                    <h5 className="text-xs font-bold text-foreground mb-3 capitalize">{activeTab} Parameters & Audit Trail</h5>
+                    <div className="space-y-2 text-xs text-muted-foreground">
+                      <div className="flex justify-between py-1 border-b border-border/50">
+                        <span>Last Security Audit:</span>
+                        <span className="font-mono text-foreground">15 May 2024, 10:45 AM</span>
+                      </div>
+                      <div className="flex justify-between py-1 border-b border-border/50">
+                        <span>Assigned Security Officer:</span>
+                        <span className="font-semibold text-foreground">Ananya Roy (CISO Office)</span>
+                      </div>
+                      <div className="flex justify-between py-1">
+                        <span>Authentication Identity:</span>
+                        <span className="text-emerald-600 font-bold">Verified SAML 2.0 SSO</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

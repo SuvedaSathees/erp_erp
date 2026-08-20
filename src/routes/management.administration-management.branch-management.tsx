@@ -1064,35 +1064,178 @@ export function BranchManagementPage() {
             </div>
           )}
 
-          {/* OTHER TABS PLACEHOLDER / DETAILED SURFACES */}
+          {/* OTHER TABS / DETAILED SURFACES */}
           {activeTab !== "overview" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <h4 className="text-sm font-bold text-foreground capitalize">{activeTab} Workspace</h4>
-                <span className="text-xs text-muted-foreground">Branch ID: BR-2024-0008</span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Detailed data view for <span className="font-semibold text-foreground capitalize">{activeTab}</span> parameters adhering to MAICW specification.
-              </p>
-              <div className="grid gap-4 sm:grid-cols-3 pt-2">
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Branch Compliance Score</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">92.0%</span>
-                  <p className="text-[11px] text-muted-foreground">All statutory & tax filings updated.</p>
+            <div className="rounded-xl border border-border bg-card p-6 space-y-6 shadow-xs">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
+                <div>
+                  <h4 className="text-base font-bold text-foreground capitalize flex items-center gap-2">
+                    <Building className="h-4 w-4 text-primary" />
+                    {activeTab.replace("-", " ")} Management Workspace
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Branch: <span className="font-semibold text-foreground font-mono">BR-DEL-001</span> (Delhi Corporate Branch) · MAICW Level 2 Specification
+                  </p>
                 </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Infrastructure Capacity</span>
-                  <span className="text-xl font-bold font-mono text-blue-600">156 / 200</span>
-                  <p className="text-[11px] text-muted-foreground">78% office workstation utilization.</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Risk Assessment Index</span>
-                  <span className="text-xl font-bold font-mono text-amber-600">Low Risk (8.2/100)</span>
-                  <p className="text-[11px] text-muted-foreground">No major operational bottlenecks.</p>
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 border border-emerald-500/20">
+                    Active
+                  </span>
+                  <button
+                    onClick={() => showNotification(`Added record to ${activeTab} workspace`)}
+                    className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    Add {activeTab.slice(0, -1)} Record
+                  </button>
                 </div>
               </div>
+
+              {activeTab === "location" && (
+                <div className="space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
+                      <span className="text-[11px] text-muted-foreground block">Facility Area</span>
+                      <span className="text-lg font-bold font-mono text-foreground">24,500 sq. ft</span>
+                      <span className="text-[10px] text-emerald-600 font-medium">Owned Property</span>
+                    </div>
+                    <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
+                      <span className="text-[11px] text-muted-foreground block">GPS Coordinates</span>
+                      <span className="text-lg font-bold font-mono text-foreground">28.6139° N, 77.2090° E</span>
+                      <span className="text-[10px] text-blue-600 font-medium">Connaught Place, New Delhi</span>
+                    </div>
+                    <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
+                      <span className="text-[11px] text-muted-foreground block">Timezone & Shift</span>
+                      <span className="text-lg font-bold font-mono text-foreground">IST (UTC+05:30)</span>
+                      <span className="text-[10px] text-purple-600 font-medium">Standard 9:00 AM - 6:00 PM</span>
+                    </div>
+                    <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
+                      <span className="text-[11px] text-muted-foreground block">Geo-Fence Status</span>
+                      <span className="text-lg font-bold font-mono text-emerald-600">Active (500m Radius)</span>
+                      <span className="text-[10px] text-muted-foreground">Mobile Check-in Enabled</span>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+                    <h5 className="text-xs font-bold text-foreground">Physical Address & Contact Directory</h5>
+                    <div className="grid gap-3 sm:grid-cols-2 text-xs">
+                      <div className="space-y-1 rounded-lg border border-border/60 p-3">
+                        <span className="font-bold text-foreground block">Registered Office Address</span>
+                        <p className="text-muted-foreground leading-relaxed">
+                          Plot No. 42, Outer Ring Road, District Centre, Saket, New Delhi, Delhi 110017, India
+                        </p>
+                      </div>
+                      <div className="space-y-1 rounded-lg border border-border/60 p-3">
+                        <span className="font-bold text-foreground block">Emergency Contact & Helpdesk</span>
+                        <p className="text-muted-foreground">Phone: +91 11 4567 8900 / +91 98110 12345</p>
+                        <p className="text-muted-foreground">Email: delhi.admin@magnertia.com</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "registration" && (
+                <div className="space-y-4">
+                  <div className="overflow-x-auto rounded-lg border border-border">
+                    <table className="w-full text-left text-xs border-collapse">
+                      <thead>
+                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                          <th className="py-2.5 px-3">Registration Type</th>
+                          <th className="py-2.5 px-3">Registration No.</th>
+                          <th className="py-2.5 px-3">Issuing Authority</th>
+                          <th className="py-2.5 px-3">Issue Date</th>
+                          <th className="py-2.5 px-3">Expiry Date</th>
+                          <th className="py-2.5 px-3">Compliance Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/60 text-foreground">
+                        {[
+                          { type: "GSTIN Registration", no: "07AAAAM1234F1Z5", auth: "GST Department, Delhi", issue: "01 Apr 2020", exp: "Perpetual", status: "Active" },
+                          { type: "PAN Card", no: "AAAAM1234F", auth: "Income Tax Dept", issue: "15 Jan 2018", exp: "Perpetual", status: "Active" },
+                          { type: "TAN Number", no: "DELM12345E", auth: "Income Tax Dept", issue: "01 Feb 2018", exp: "Perpetual", status: "Active" },
+                          { type: "Shop & Establishment License", no: "SE-DEL-99482", auth: "Labour Dept, Delhi", issue: "01 Apr 2024", exp: "31 Mar 2025", status: "Active" },
+                          { type: "Fire NOC", no: "NOC-FIRE-2024-88", auth: "Delhi Fire Service", issue: "10 Mar 2024", exp: "09 Mar 2027", status: "Verified" },
+                        ].map((r, idx) => (
+                          <tr key={idx} className="hover:bg-muted/30 transition-colors">
+                            <td className="py-2 px-3 font-semibold">{r.type}</td>
+                            <td className="py-2 px-3 font-mono">{r.no}</td>
+                            <td className="py-2 px-3 text-muted-foreground">{r.auth}</td>
+                            <td className="py-2 px-3 font-mono">{r.issue}</td>
+                            <td className="py-2 px-3 font-mono">{r.exp}</td>
+                            <td className="py-2 px-3">
+                              <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-500/20">
+                                {r.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "infrastructure" && (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {[
+                    { title: "Workstations", value: "156 / 200", desc: "Ergonomic dual-monitor setups with CAT-6 Ethernet.", color: "text-blue-500" },
+                    { title: "Primary Internet", value: "1 Gbps Leased Line", desc: "Airtel Enterprise Fiber with 99.9% uptime SLA.", color: "text-emerald-500" },
+                    { title: "Power Backup", value: "60 kVA Online UPS", desc: "100kVA DG Generator auto-synchronization.", color: "text-amber-500" },
+                    { title: "Server Room", value: "Tier-II On-Premise", desc: "Biometric access control with FM-200 fire suppression.", color: "text-purple-500" },
+                    { title: "CCTV Surveillance", value: "32 HD Cameras", desc: "30-day cloud retention with AI motion detection.", color: "text-rose-500" },
+                    { title: "Conference Rooms", value: "4 Smart Rooms", desc: "Video conferencing soundbars & smart whiteboards.", color: "text-primary" },
+                  ].map((item, idx) => (
+                    <div key={idx} className="rounded-xl border border-border bg-card p-4 space-y-2 shadow-xs">
+                      <span className="text-xs font-bold text-muted-foreground block">{item.title}</span>
+                      <span className={cn("text-xl font-bold font-mono", item.color)}>{item.value}</span>
+                      <p className="text-xs text-muted-foreground">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {activeTab !== "location" && activeTab !== "registration" && activeTab !== "infrastructure" && (
+                <div className="space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-3">
+                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
+                      <span className="text-xs font-bold text-foreground block">Branch Operational Index</span>
+                      <span className="text-xl font-bold font-mono text-emerald-600">94.8%</span>
+                      <p className="text-[11px] text-muted-foreground">High efficiency score for {activeTab}.</p>
+                    </div>
+
+                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
+                      <span className="text-xs font-bold text-foreground block">Active Records</span>
+                      <span className="text-xl font-bold font-mono text-blue-600">24 Items</span>
+                      <p className="text-[11px] text-muted-foreground">Managed under ERP governance.</p>
+                    </div>
+
+                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
+                      <span className="text-xs font-bold text-foreground block">Compliance Audit</span>
+                      <span className="text-xl font-bold font-mono text-purple-600">Verified</span>
+                      <p className="text-[11px] text-muted-foreground">Passed latest quarterly audit.</p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-border bg-card p-4">
+                    <h5 className="text-xs font-bold text-foreground mb-3 capitalize">{activeTab} Parameters & Audit Trail</h5>
+                    <div className="space-y-2 text-xs text-muted-foreground">
+                      <div className="flex justify-between py-1 border-b border-border/50">
+                        <span>Last System Audit:</span>
+                        <span className="font-mono text-foreground">15 May 2024, 09:30 AM</span>
+                      </div>
+                      <div className="flex justify-between py-1 border-b border-border/50">
+                        <span>Assigned Controller:</span>
+                        <span className="font-semibold text-foreground">Rajeev Malhotra (Branch Head)</span>
+                      </div>
+                      <div className="flex justify-between py-1">
+                        <span>ERP Synchronization Status:</span>
+                        <span className="text-emerald-600 font-bold">100% Synced</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

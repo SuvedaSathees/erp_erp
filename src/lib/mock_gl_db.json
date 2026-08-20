@@ -535,15 +535,158 @@
               "id": "dash-insights",
               "widgetId": "insight.quick-financial",
               "size": "full"
+            },
+            {
+              "id": "95ac4f30-35b2-4426-8d76-d2328e3e8179",
+              "widgetId": "kpi.total-cash-balance",
+              "size": "sm",
+              "theme": "default",
+              "pinned": false
             }
           ],
-          "updatedAt": "2026-07-30T07:25:24.619Z"
+          "updatedAt": "2026-08-19T14:29:23.989Z"
+        },
+        "finance-cash-bank": {
+          "instances": [
+            {
+              "id": "d1b7be6f-e81d-4125-ab77-489c85bd017a",
+              "widgetId": "kpi.total-cash-balance",
+              "size": "sm",
+              "theme": "default",
+              "pinned": false
+            }
+          ],
+          "updatedAt": "2026-08-19T14:29:35.037Z"
+        },
+        "finance-overview": {
+          "instances": [
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-revenue",
+              "widgetId": "kpi.total-revenue",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-expenses",
+              "widgetId": "kpi.total-expenses",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-cash",
+              "widgetId": "kpi.cash-balance",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-net-profit",
+              "widgetId": "kpi.net-profit",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-accounts",
+              "widgetId": "kpi.total-accounts",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-posted",
+              "widgetId": "kpi.posted-journals",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-trial-diff",
+              "widgetId": "kpi.trial-balance-diff",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-ap",
+              "widgetId": "kpi.pending-payables",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-ar",
+              "widgetId": "kpi.pending-receivables",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-trend",
+              "widgetId": "chart.overview-trend",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-cash-flow",
+              "widgetId": "list.overview-cash-flow",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-bank-balances",
+              "widgetId": "list.bank-balances",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-net-income",
+              "widgetId": "chart.net-income-area",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-ops-ledger",
+              "widgetId": "table.operations-ledger",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-alerts",
+              "widgetId": "insight.system-alerts",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-ai",
+              "widgetId": "ai.financial-intelligence",
+              "size": "full"
+            },
+            {
+              "id": "f584110f-2bf3-4e3d-9561-c866de92a6aa",
+              "widgetId": "kpi.total-cash-balance",
+              "size": "sm",
+              "theme": "default",
+              "pinned": false
+            }
+          ],
+          "updatedAt": "2026-08-19T14:29:24.910Z"
         }
       },
       "favorites": [],
       "recentlyUsed": [],
       "templates": [],
-      "updatedAt": "2026-07-30T07:25:24.630Z"
+      "updatedAt": "2026-08-19T14:29:35.046Z"
     }
   ]
 }

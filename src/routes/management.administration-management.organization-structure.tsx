@@ -38,8 +38,17 @@ import {
   UserCheck,
   Clock,
   ArrowRight,
-  UserCheck2,
   ShieldAlert,
+  Edit,
+  Trash2,
+  X,
+  PieChart,
+  BarChart3,
+  Check,
+  FileSpreadsheet,
+  Activity,
+  Layers3,
+  Globe,
 } from "lucide-react";
 
 export const Route = createFileRoute("/management/administration-management/organization-structure")({
@@ -55,7 +64,7 @@ export const Route = createFileRoute("/management/administration-management/orga
   component: OrganizationStructurePage,
 });
 
-// --- Mock Data & Definitions ---
+// --- Initial Mock Data & Interfaces ---
 
 interface OrgTreeNode {
   id: string;
@@ -67,7 +76,7 @@ interface OrgTreeNode {
   children?: OrgTreeNode[];
 }
 
-const ORG_HIERARCHY_TREE: OrgTreeNode = {
+const INITIAL_HIERARCHY_TREE: OrgTreeNode = {
   id: "NODE-001",
   code: "MAG-GLOBAL",
   name: "Magnertia Global Technologies",
@@ -132,82 +141,102 @@ const ORG_HIERARCHY_TREE: OrgTreeNode = {
   ],
 };
 
-const UNITS_DATA = [
-  { id: "UNIT-001", name: "Product Business", code: "BU-PROD", type: "Business Unit", parent: "Business Units", head: "Amit Desai", function: "Product Strategy", costCentre: "CC-BU-PROD", profitCentre: "PC-BU-PROD", location: "Multiple Locations", employees: 1024, budget: "$12,500,000", revenueTarget: "$28,000,000", costTarget: "$10,000,000", status: "Active" },
-  { id: "UNIT-002", name: "Technology Business", code: "BU-TECH", type: "Business Unit", parent: "Business Units", head: "Vikram Singh", function: "Engineering", costCentre: "CC-BU-TECH", profitCentre: "PC-BU-TECH", location: "Development Centre", employees: 866, budget: "$14,000,000", revenueTarget: "$24,000,000", costTarget: "$11,500,000", status: "Active" },
-  { id: "UNIT-003", name: "Services Business", code: "BU-SRV", type: "Business Unit", parent: "Business Units", head: "Sandeep Iyer", function: "Operations", costCentre: "CC-BU-SRV", profitCentre: "PC-BU-SRV", location: "Headquarters", employees: 732, budget: "$8,200,000", revenueTarget: "$18,500,000", costTarget: "$6,800,000", status: "Active" },
-  { id: "UNIT-004", name: "International Business", code: "BU-INTL", type: "Business Unit", parent: "Business Units", head: "Arjun Mehta", function: "Global Sales", costCentre: "CC-BU-INTL", profitCentre: "PC-BU-INTL", location: "Regional Offices", employees: 644, budget: "$9,500,000", revenueTarget: "$22,000,000", costTarget: "$7,800,000", status: "Active" },
-  { id: "UNIT-005", name: "Finance Function", code: "FN-FIN", type: "Function", parent: "Functions", head: "Anita Verma", function: "Finance", costCentre: "CC-FN-FIN", profitCentre: "N/A", location: "Headquarters", employees: 186, budget: "$3,400,000", revenueTarget: "$0", costTarget: "$3,200,000", status: "Active" },
+const INITIAL_UNITS = [
+  { id: "UNIT-001", name: "Product Business", code: "BU-PROD", type: "Business Unit", parent: "Business Units", head: "Amit Desai", function: "Product Strategy", costCentre: "CC-BU-PROD", profitCentre: "PC-BU-PROD", location: "Headquarters", employees: 1024, budget: 12500000, revenueTarget: 28000000, status: "Active" },
+  { id: "UNIT-002", name: "Technology Business", code: "BU-TECH", type: "Business Unit", parent: "Business Units", head: "Vikram Singh", function: "Engineering", costCentre: "CC-BU-TECH", profitCentre: "PC-BU-TECH", location: "Development Centre", employees: 866, budget: 14000000, revenueTarget: 24000000, status: "Active" },
+  { id: "UNIT-003", name: "Services Business", code: "BU-SRV", type: "Business Unit", parent: "Business Units", head: "Sandeep Iyer", function: "Operations", costCentre: "CC-BU-SRV", profitCentre: "PC-BU-SRV", location: "Headquarters", employees: 732, budget: 8200000, revenueTarget: 18500000, status: "Active" },
+  { id: "UNIT-004", name: "International Business", code: "BU-INTL", type: "Business Unit", parent: "Business Units", head: "Arjun Mehta", function: "Global Sales", costCentre: "CC-BU-INTL", profitCentre: "PC-BU-INTL", location: "Regional Offices", employees: 644, budget: 9500000, revenueTarget: 22000000, status: "Active" },
+  { id: "UNIT-005", name: "Corporate Holding", code: "CORP-HOLD", type: "Corporate", parent: "None", head: "Rajeev Malhotra", function: "Governance", costCentre: "CC-CORP", profitCentre: "N/A", location: "Headquarters", employees: 186, budget: 5400000, revenueTarget: 0, status: "Active" },
 ];
 
-const CORE_FUNCTIONS = [
-  { id: "FNC-001", name: "Corporate Governance", code: "FN-GOV", head: "Rajeev Malhotra", objective: "Drive strategic leadership, policy compliance & board reporting", budget: "$1,800,000", status: "Active" },
-  { id: "FNC-002", name: "Strategy & Transformation", code: "FN-STR", head: "Rajeev Malhotra", objective: "Define corporate growth, M&A strategy & transformation agenda", budget: "$2,200,000", status: "Active" },
-  { id: "FNC-003", name: "Product Development", code: "FN-PDV", head: "Amit Desai", objective: "Deliver innovative SaaS & hardware product suite", budget: "$12,500,000", status: "Active" },
-  { id: "FNC-004", name: "Research & Development", code: "FN-RND", head: "Vikram Singh", objective: "Pioneer next-gen technologies, AI algorithms & patents", budget: "$14,000,000", status: "Active" },
-  { id: "FNC-005", name: "Engineering & Cloud", code: "FN-ENG", head: "Vikram Singh", objective: "Architect robust enterprise platform & cloud backend", budget: "$11,200,000", status: "Active" },
-  { id: "FNC-006", name: "Manufacturing", code: "FN-MFG", head: "Ramesh Kumar", objective: "Precision electronics & hardware manufacturing operations", budget: "$18,400,000", status: "Active" },
-  { id: "FNC-007", name: "Quality Assurance", code: "FN-QA", head: "Suresh Raina", objective: "Ensure ISO, APQP & Six Sigma quality compliance", budget: "$3,100,000", status: "Active" },
-  { id: "FNC-008", name: "Supply Chain Management", code: "FN-SCM", head: "Karan Patel", objective: "Optimize procurement, logistics & global inventory", budget: "$9,800,000", status: "Active" },
-  { id: "FNC-009", name: "Sales & Enterprise", code: "FN-SLS", head: "Arjun Mehta", objective: "Achieve annual revenue targets across global channels", budget: "$8,500,000", status: "Active" },
-  { id: "FNC-010", name: "Marketing & Brand", code: "FN-MKT", head: "Priya Sharma", objective: "Strengthen global brand positioning & lead generation", budget: "$4,600,000", status: "Active" },
-  { id: "FNC-011", name: "Finance & Accounts", code: "FN-FIN", head: "Anita Verma", objective: "Maintain fiscal discipline, tax compliance & audit integrity", budget: "$3,400,000", status: "Active" },
-  { id: "FNC-012", name: "Human Capital Management", code: "FN-HCM", head: "Meera Nair", objective: "Attract, develop & retain top tier global talent", budget: "$4,200,000", status: "Active" },
+const INITIAL_FUNCTIONS = [
+  { id: "FNC-001", name: "Corporate Governance", code: "FN-GOV", head: "Rajeev Malhotra", objective: "Drive strategic leadership, policy compliance & board reporting", budget: 1800000, status: "Active" },
+  { id: "FNC-002", name: "Strategy & Transformation", code: "FN-STR", head: "Rajeev Malhotra", objective: "Define corporate growth, M&A strategy & transformation agenda", budget: 2200000, status: "Active" },
+  { id: "FNC-003", name: "Product Development", code: "FN-PDV", head: "Amit Desai", objective: "Deliver innovative SaaS & hardware product suite", budget: 12500000, status: "Active" },
+  { id: "FNC-004", name: "Research & Development", code: "FN-RND", head: "Vikram Singh", objective: "Pioneer next-gen technologies, AI algorithms & patents", budget: 14000000, status: "Active" },
+  { id: "FNC-005", name: "Engineering & Cloud", code: "FN-ENG", head: "Vikram Singh", objective: "Architect robust enterprise platform & cloud backend", budget: 11200000, status: "Active" },
+  { id: "FNC-006", name: "Manufacturing", code: "FN-MFG", head: "Ramesh Kumar", objective: "Precision electronics & hardware manufacturing operations", budget: 18400000, status: "Active" },
+  { id: "FNC-007", name: "Quality Assurance", code: "FN-QA", head: "Suresh Raina", objective: "Ensure ISO, APQP & Six Sigma quality compliance", budget: 3100000, status: "Active" },
+  { id: "FNC-008", name: "Supply Chain Management", code: "FN-SCM", head: "Karan Patel", objective: "Optimize procurement, logistics & global inventory", budget: 9800000, status: "Active" },
+  { id: "FNC-009", name: "Sales & Enterprise", code: "FN-SLS", head: "Arjun Mehta", objective: "Achieve annual revenue targets across global channels", budget: 8500000, status: "Active" },
+  { id: "FNC-010", name: "Finance & Accounts", code: "FN-FIN", head: "Anita Verma", objective: "Maintain fiscal discipline, tax compliance & audit integrity", budget: 3400000, status: "Active" },
 ];
 
-const DEPARTMENTS_DATA = [
-  { id: "DEPT-001", name: "Accounts & Financial Control", code: "DP-ACC", function: "Finance", head: "Sunil Agarwal", employees: 82, budget: "$1,400,000", kpis: ["Month-End Close SLA", "Audit Zero-Defect"], status: "Active" },
-  { id: "DEPT-002", name: "Treasury & Cash Management", code: "DP-TRS", function: "Finance", head: "Kavita Rao", employees: 48, budget: "$950,000", kpis: ["Liquidity Ratio", "Yield Optimization"], status: "Active" },
-  { id: "DEPT-003", name: "Production Engineering", code: "DP-PRD", function: "Manufacturing", head: "Ramesh Kumar", employees: 214, budget: "$6,200,000", kpis: ["OEE Score", "First Pass Yield"], status: "Active" },
-  { id: "DEPT-004", name: "Quality Assurance & APQP", code: "DP-QAS", function: "Quality", head: "Suresh Raina", employees: 142, budget: "$3,100,000", kpis: ["PPM Defect Rate", "Customer COPQ"], status: "Active" },
-  { id: "DEPT-005", name: "Product Engineering", code: "DP-PDE", function: "Product Development", head: "Amit Desai", employees: 172, budget: "$5,400,000", kpis: ["On-time Sprint Velocity", "Release Stability"], status: "Active" },
-  { id: "DEPT-006", name: "Cloud Architecture", code: "DP-CLD", function: "Engineering", head: "Vikram Singh", employees: 126, budget: "$4,800,000", kpis: ["99.99% Uptime SLA", "Latency < 50ms"], status: "Active" },
-  { id: "DEPT-007", name: "Talent Acquisition", code: "DP-TA", function: "Human Resources", head: "Meera Nair", employees: 68, budget: "$1,800,000", kpis: ["Time-to-Fill SLA", "Offer Acceptance %"], status: "Active" },
-  { id: "DEPT-008", name: "Employee Relations & Legal", code: "DP-ER", function: "Human Resources", head: "Deepak Joshi", employees: 86, budget: "$1,200,000", kpis: ["Retention Rate", "Compliance Score"], status: "Active" },
+const INITIAL_DEPARTMENTS = [
+  { id: "DEPT-001", name: "Accounts & Financial Control", code: "DP-ACC", function: "Finance & Accounts", head: "Sunil Agarwal", employees: 82, budget: 1400000, kpis: ["Month-End Close SLA", "Audit Zero-Defect"], status: "Active" },
+  { id: "DEPT-002", name: "Treasury & Cash Management", code: "DP-TRS", function: "Finance & Accounts", head: "Kavita Rao", employees: 48, budget: 950000, kpis: ["Liquidity Ratio", "Yield Optimization"], status: "Active" },
+  { id: "DEPT-003", name: "Production Engineering", code: "DP-PRD", function: "Manufacturing", head: "Ramesh Kumar", employees: 214, budget: 6200000, kpis: ["OEE Score", "First Pass Yield"], status: "Active" },
+  { id: "DEPT-004", name: "Quality Assurance & APQP", code: "DP-QAS", function: "Quality Assurance", head: "Suresh Raina", employees: 142, budget: 3100000, kpis: ["PPM Defect Rate", "Customer COPQ"], status: "Active" },
+  { id: "DEPT-005", name: "Product Engineering", code: "DP-PDE", function: "Product Development", head: "Amit Desai", employees: 172, budget: 5400000, kpis: ["On-time Sprint Velocity", "Release Stability"], status: "Active" },
+  { id: "DEPT-006", name: "Cloud Architecture", code: "DP-CLD", function: "Engineering & Cloud", head: "Vikram Singh", employees: 126, budget: 4800000, kpis: ["99.99% Uptime SLA", "Latency < 50ms"], status: "Active" },
+  { id: "DEPT-007", name: "Talent Acquisition", code: "DP-TA", function: "Corporate Governance", head: "Meera Nair", employees: 68, budget: 1800000, kpis: ["Time-to-Fill SLA", "Offer Acceptance %"], status: "Active" },
+  { id: "DEPT-008", name: "Employee Relations & Legal", code: "DP-ER", function: "Corporate Governance", head: "Deepak Joshi", employees: 86, budget: 1200000, kpis: ["Retention Rate", "Compliance Score"], status: "Active" },
 ];
 
-const POSITIONS_DATA = [
-  { id: "POS-001", title: "Chief Executive Officer", code: "POS-CEO", level: "CEO / Managing Director", unit: "Corporate", function: "Corporate Governance", dept: "Executive Office", headcount: 1, manager: "Board of Directors", status: "Active" },
-  { id: "POS-002", title: "Chief Financial Officer", code: "POS-CFO", level: "CXO / Executive Management", unit: "Corporate", function: "Finance", dept: "Finance", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
-  { id: "POS-003", title: "Chief Operating Officer", code: "POS-COO", level: "CXO / Executive Management", unit: "Corporate", function: "Operations", dept: "Operations", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
-  { id: "POS-004", title: "Chief Technology Officer", code: "POS-CTO", level: "CXO / Executive Management", unit: "Corporate", function: "R&D / Technology", dept: "Engineering", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
-  { id: "POS-005", title: "Chief Human Resources Officer", code: "POS-CHRO", level: "CXO / Executive Management", unit: "Corporate", function: "Human Resources", dept: "Human Resources", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
-  { id: "POS-006", title: "Chief Sales Officer", code: "POS-CSO", level: "CXO / Executive Management", unit: "Corporate", function: "Sales", dept: "Sales", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
-  { id: "POS-007", title: "Head of Product Development", code: "POS-HPD", level: "Business Head / Function Head", unit: "Product Business", function: "Product Development", dept: "Product Engineering", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
+const INITIAL_TEAMS = [
+  { id: "TEAM-001", name: "Core ERP Engine Squad", code: "TM-ERP", dept: "Product Engineering", lead: "Anand Sharma", members: 14, focus: "Microservice Kernel & TanStack Engine", status: "Active" },
+  { id: "TEAM-002", name: "Cloud Infrastructure Squad", code: "TM-CLD", dept: "Cloud Architecture", lead: "Rajesh V", members: 18, focus: "Kubernetes & AWS Multi-Region Failover", status: "Active" },
+  { id: "TEAM-003", name: "Robotics Firmware Team", code: "TM-ROB", dept: "Production Engineering", lead: "Pravin K", members: 22, focus: "PLC Controller & ROS2 Drivers", status: "Active" },
+  { id: "TEAM-004", name: "Tax & GST Automation Squad", code: "TM-TAX", dept: "Accounts & Financial Control", lead: "Sunil Agarwal", members: 8, focus: "E-Invoicing & Compliance Engine", status: "Active" },
 ];
 
-const RACI_MATRIX = [
+const INITIAL_POSITIONS = [
+  { id: "POS-001", title: "Chief Executive Officer", code: "POS-CEO", level: "CEO / Managing Director", unit: "Corporate", dept: "Executive Office", headcount: 1, manager: "Board of Directors", status: "Active" },
+  { id: "POS-002", title: "Chief Financial Officer", code: "POS-CFO", level: "CXO / Executive Management", unit: "Corporate", dept: "Finance", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
+  { id: "POS-003", title: "Chief Operating Officer", code: "POS-COO", level: "CXO / Executive Management", unit: "Corporate", dept: "Operations", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
+  { id: "POS-004", title: "Chief Technology Officer", code: "POS-CTO", level: "CXO / Executive Management", unit: "Corporate", dept: "Engineering", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
+  { id: "POS-005", title: "Chief Human Resources Officer", code: "POS-CHRO", level: "CXO / Executive Management", unit: "Corporate", dept: "Human Resources", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
+  { id: "POS-006", title: "Head of Product Engineering", code: "POS-HPD", level: "Business Head / Function Head", unit: "Product Business", dept: "Product Engineering", headcount: 1, manager: "Rajeev Malhotra (CEO)", status: "Active" },
+  { id: "POS-007", title: "Lead Systems Architect", code: "POS-LSA", level: "Team Lead", unit: "Technology Business", dept: "Cloud Architecture", headcount: 4, manager: "Vikram Singh (CTO)", status: "Active" },
+];
+
+const INITIAL_AUTHORITY = [
+  { id: "AUTH-001", position: "Chief Executive Officer", unit: "Corporate", authorityType: "Strategic & Legal", approvalLimit: "$5,000,000", financial: true, contract: true, hiring: true, procurement: true, technical: true, legal: true, status: "Active" },
+  { id: "AUTH-002", position: "Chief Financial Officer", unit: "Corporate", authorityType: "Financial & Tax", approvalLimit: "$2,500,000", financial: true, contract: true, hiring: true, procurement: true, technical: false, legal: true, status: "Active" },
+  { id: "AUTH-003", position: "Chief Operating Officer", unit: "Corporate", authorityType: "Operational & Capex", approvalLimit: "$1,000,000", financial: true, contract: true, hiring: true, procurement: true, technical: true, legal: false, status: "Active" },
+  { id: "AUTH-004", position: "Business Head / VP", unit: "Business Unit", authorityType: "BU Operational", approvalLimit: "$500,000", financial: true, contract: true, hiring: true, procurement: true, technical: false, legal: false, status: "Active" },
+  { id: "AUTH-005", position: "Department Head", unit: "Function", authorityType: "Departmental Opex", approvalLimit: "$100,000", financial: true, contract: false, hiring: true, procurement: true, technical: true, legal: false, status: "Active" },
+];
+
+const INITIAL_RACI = [
   { id: "RACI-001", process: "Annual Corporate Budgeting", activity: "Approval of Capital & Operational Budgets", responsible: "Anita Verma (CFO)", accountable: "Rajeev Malhotra (CEO)", consulted: "Function Heads, Business Heads", informed: "Board of Directors", escalation: "Board Audit Committee", sla: 15, status: "Active" },
   { id: "RACI-002", process: "Reorganization & Entity Change", activity: "Approval of New Business Unit / Dept Creation", responsible: "Meera Nair (CHRO)", accountable: "Rajeev Malhotra (CEO)", consulted: "CFO, Legal Counsel, COO", informed: "All Employees", escalation: "CEO / Board", sla: 30, status: "Active" },
   { id: "RACI-003", process: "Product Release & Architecture", activity: "Sign-off on Production Architecture", responsible: "Vikram Singh (CTO)", accountable: "Amit Desai (Product Head)", consulted: "Security Lead, QA Head", informed: "Customer Success", escalation: "CTO", sla: 5, status: "Active" },
   { id: "RACI-004", process: "Capex Procurement (> $250k)", activity: "Contract Approval & Vendor Binding", responsible: "Karan Patel (SCM Head)", accountable: "Anita Verma (CFO)", consulted: "Legal Lead, Unit Head", informed: "Internal Audit", escalation: "CFO / CEO", sla: 7, status: "Active" },
 ];
 
-const AUTHORITY_MATRIX = [
-  { id: "AUTH-001", position: "Chief Executive Officer", unit: "Corporate", authorityType: "Strategic & Legal", approvalLimit: "$5,000,000", financial: true, contract: true, hiring: true, procurement: true, technical: true, legal: true, status: "Active" },
-  { id: "AUTH-002", position: "Chief Financial Officer", unit: "Corporate", authorityType: "Financial & Tax", approvalLimit: "$2,500,000", financial: true, contract: true, hiring: true, procurement: true, technical: false, legal: true, status: "Active" },
-  { id: "AUTH-003", position: "Chief Operating Officer", unit: "Corporate", authorityType: "Operational & Capex", approvalLimit: "$1,000,000", financial: true, contract: true, hiring: true, procurement: true, technical: true, legal: false, status: "Active" },
-  { id: "AUTH-004", position: "Business Head / VP", unit: "Business Unit", authorityType: "BU Operational", approvalLimit: "$500,000", financial: true, contract: true, hiring: true, procurement: true, technical: false, legal: false, status: "Active" },
-];
-
-const LOCATIONS_DATA = [
+const INITIAL_LOCATIONS = [
   { id: "LOC-001", name: "Global Headquarters", code: "HQ-BLR", type: "Headquarters", head: "Rajeev Malhotra", address: "Magnertia Tech Park, Outer Ring Road, Bengaluru", country: "India", capacity: 1500, current: 1256, status: "Active" },
   { id: "LOC-002", name: "R&D Development Centre", code: "DC-HYD", type: "Development Centre", head: "Vikram Singh", address: "HITEC City Phase II, Hyderabad", country: "India", capacity: 1000, current: 856, status: "Active" },
   { id: "LOC-003", name: "Smart Manufacturing Facility", code: "MU-PNE", type: "Manufacturing Unit", head: "Ramesh Kumar", address: "Chakan Industrial Area Phase III, Pune", country: "India", capacity: 1000, current: 872, status: "Active" },
   { id: "LOC-004", name: "North America Regional Office", code: "RO-US", type: "Regional Office", head: "Arjun Mehta", address: "100 Tech Promenade, San Jose, CA", country: "United States", capacity: 350, current: 272, status: "Active" },
 ];
 
-const GOVERNANCE_BODIES = [
+const INITIAL_COST_CENTRES = [
+  { id: "CC-001", code: "CC-BU-PROD", name: "Product Business Cost Pool", type: "Profit Centre", unit: "Product Business", manager: "Amit Desai", budget: 12500000, status: "Active" },
+  { id: "CC-002", code: "CC-BU-TECH", name: "R&D Technology Pool", type: "Cost Centre", unit: "Technology Business", manager: "Vikram Singh", budget: 14000000, status: "Active" },
+  { id: "CC-003", code: "CC-FN-FIN", name: "Corporate Finance Pool", type: "Cost Centre", unit: "Finance & Accounts", manager: "Anita Verma", budget: 3400000, status: "Active" },
+  { id: "CC-004", code: "CC-MFG-PNE", name: "Pune Manufacturing Plant Pool", type: "Cost Centre", unit: "Manufacturing", manager: "Ramesh Kumar", budget: 18400000, status: "Active" },
+];
+
+const INITIAL_GOVERNANCE_BODIES = [
   { id: "GOV-001", body: "Board of Directors", role: "Supreme Governance", frequency: "Quarterly", rights: "Approve strategy, CEO appointment, financial results & dividends", escalation: "Shareholders", policy: "POL-GOV-001", status: "Active" },
   { id: "GOV-002", body: "Executive Leadership Council", role: "Operational Execution", frequency: "Weekly", rights: "Approve operational targets, cross-functional budgets & policies", escalation: "Board of Directors", policy: "POL-GOV-002", status: "Active" },
   { id: "GOV-003", body: "Audit & Risk Committee", role: "Risk & Compliance", frequency: "Bi-Monthly", rights: "Approve internal audit scope, risk appetite & financial disclosures", escalation: "Board Audit Chair", policy: "POL-GOV-003", status: "Active" },
   { id: "GOV-004", body: "Technology & Product Steering", role: "R&D Oversight", frequency: "Monthly", rights: "Approve product roadmaps, platform standards & patent filings", escalation: "Executive Leadership", policy: "POL-GOV-004", status: "Active" },
 ];
 
-const ORG_RISK_ASSESSMENT = [
+const INITIAL_RISKS = [
   { id: "RSK-001", category: "Succession Risk", unit: "Corporate", desc: "Key person risk in Executive Officer positions without designated backup", prob: "35%", impact: "High (8.5/10)", score: "High", mitigation: "Implement dual-hat succession pipeline & shadow VP development", status: "Active" },
   { id: "RSK-002", category: "Span-of-Control Risk", unit: "Product Business", desc: "Excessive direct reports (>12) for Engineering Team Leads", prob: "60%", impact: "Medium (6.2/10)", score: "Medium", mitigation: "Introduce Tech Lead sub-tier to balance reporting span", status: "Active" },
   { id: "RSK-003", category: "Capacity Utilization Risk", unit: "Development Centre", desc: "Cloud engineering team running at 112% capacity utilization", prob: "75%", impact: "High (8.8/10)", score: "Critical", mitigation: "Accelerate hiring pipeline & engage contract specialist team", status: "Active" },
+];
+
+const INITIAL_KPIS = [
+  { id: "KPI-001", name: "Span of Control Index", unit: "Corporate", target: "1:7 Ratio", actual: "1:8.2 Ratio", status: "On Track", owner: "Meera Nair", freq: "Monthly" },
+  { id: "KPI-002", name: "Budget Variance SLA", unit: "Finance", target: "< 2.5%", actual: "1.8%", status: "Exceeded", owner: "Anita Verma", freq: "Quarterly" },
+  { id: "KPI-003", name: "Key Position Retention Rate", unit: "All Functions", target: "> 95%", actual: "96.4%", status: "Exceeded", owner: "Meera Nair", freq: "Quarterly" },
+  { id: "KPI-004", name: "RACI Escalation SLA", unit: "Operations", target: "< 48 Hours", actual: "36 Hours", status: "On Track", owner: "Sandeep Iyer", freq: "Monthly" },
 ];
 
 export function OrganizationStructurePage() {
@@ -228,11 +257,26 @@ export function OrganizationStructurePage() {
     | "analytics"
   >("hierarchy");
 
-  // Master Form State
+  // --- Dynamic Master State Arrays ---
+  const [hierarchyTree, setHierarchyTree] = useState<OrgTreeNode>(INITIAL_HIERARCHY_TREE);
+  const [units, setUnits] = useState(INITIAL_UNITS);
+  const [functions, setFunctions] = useState(INITIAL_FUNCTIONS);
+  const [departments, setDepartments] = useState(INITIAL_DEPARTMENTS);
+  const [teams, setTeams] = useState(INITIAL_TEAMS);
+  const [positions, setPositions] = useState(INITIAL_POSITIONS);
+  const [authorityRules, setAuthorityRules] = useState(INITIAL_AUTHORITY);
+  const [raciRules, setRaciRules] = useState(INITIAL_RACI);
+  const [locations, setLocations] = useState(INITIAL_LOCATIONS);
+  const [costCentres, setCostCentres] = useState(INITIAL_COST_CENTRES);
+  const [governanceBodies, setGovernanceBodies] = useState(INITIAL_GOVERNANCE_BODIES);
+  const [risks, setRisks] = useState(INITIAL_RISKS);
+  const [kpis, setKpis] = useState(INITIAL_KPIS);
+
+  // --- Master Form State ---
   const [masterForm, setMasterForm] = useState({
     structureId: "ORG-STR-2024-0001",
     formCode: "ORG-FRM-2024",
-    version: "1.0",
+    version: "1.2",
     status: "Active",
     effectiveFrom: "2024-04-01",
     effectiveTo: "",
@@ -243,32 +287,259 @@ export function OrganizationStructurePage() {
     orgType: "Corporate",
     orgLevel: "Level 1 - Corporate",
     orgHead: "Rajeev Malhotra",
-    operatingModel: "Functional",
-    buCount: 4,
-    functionCount: 8,
-    deptCount: 24,
-    totalEmployees: 3256,
-    vision: "To be a global leader in technology-driven products and services that create sustainable value for customers, employees, and society.",
-    mission: "We innovate, build and deliver technology solutions that empower businesses and improve lives.",
-    objectives: "• Drive innovation and digital transformation\n• Deliver operational excellence\n• Build global capabilities\n• Create sustainable growth and value",
+    operatingModel: "Functional Matrix",
+    vision: "To be a global leader in technology-driven enterprise products and services.",
+    mission: "We innovate, build, and deliver scalable technology solutions that empower industries globally.",
+    objectives: "• Accelerate product innovation & R&D\n• Drive zero-defect operational governance\n• Optimize capital allocation & cross-functional synergy",
   });
 
-  const [selectedTreeNode, setSelectedTreeNode] = useState<string>("BU-001");
+  // --- Calculated MAICW Metrics ---
+  const computedMetrics = useMemo(() => {
+    const buCount = units.filter((u) => u.type === "Business Unit").length;
+    const functionCount = functions.length;
+    const deptCount = departments.length;
+    const totalEmployees = departments.reduce((acc, d) => acc + d.employees, 0);
+    const totalBudget = units.reduce((acc, u) => acc + u.budget, 0);
+    return { buCount, functionCount, deptCount, totalEmployees, totalBudget };
+  }, [units, functions, departments]);
+
+  // --- Hierarchy & Navigation State ---
+  const [selectedTreeNodeId, setSelectedTreeNodeId] = useState<string>("BU-001");
   const [searchQuery, setSearchQuery] = useState("");
   const [zoomLevel, setZoomLevel] = useState(100);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Toast Notification
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const showNotification = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
   };
 
+  // Modals Control
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [editingItem, setEditingItem] = useState<any | null>(null);
+  const [showValidationModal, setShowValidationModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+
+  // Temporary Form Inputs inside Modals
+  const [formData, setFormData] = useState<any>({});
+
+  // Node details lookup
+  const selectedUnitDetails = useMemo(() => {
+    const found = units.find((u) => u.code === selectedTreeNodeId || u.id === selectedTreeNodeId);
+    if (found) return found;
+    return {
+      id: selectedTreeNodeId,
+      name: "Product Business",
+      code: "BU-PROD",
+      type: "Business Unit",
+      parent: "Business Units",
+      head: "Amit Desai",
+      function: "Product Strategy",
+      costCentre: "CC-BU-PROD",
+      profitCentre: "PC-BU-PROD",
+      location: "Headquarters",
+      employees: 1024,
+      budget: 12500000,
+      revenueTarget: 28000000,
+      status: "Active",
+    };
+  }, [selectedTreeNodeId, units]);
+
+  // --- Handlers & Actions ---
+
   const handleValidateStructure = () => {
-    showNotification("Validation Passed: 0 circular dependencies, 100% position reporting integrity verified.");
+    setShowValidationModal(true);
   };
 
   const handleSaveMaster = () => {
     showNotification("Organization Structure Master record saved successfully.");
+  };
+
+  const handleOpenAddModal = (type: string) => {
+    setEditingItem(null);
+    setFormData({});
+    setActiveModal(type);
+  };
+
+  const handleOpenEditModal = (type: string, item: any) => {
+    setEditingItem(item);
+    setFormData({ ...item });
+    setActiveModal(type);
+  };
+
+  const handleSaveModalItem = () => {
+    if (!activeModal) return;
+
+    if (activeModal === "unit") {
+      if (editingItem) {
+        setUnits(units.map((u) => (u.id === editingItem.id ? { ...u, ...formData } : u)));
+        showNotification(`Unit "${formData.name || editingItem.name}" updated.`);
+      } else {
+        const newItem = {
+          id: `UNIT-00${units.length + 1}`,
+          name: formData.name || "New Unit",
+          code: formData.code || `BU-${units.length + 1}`,
+          type: formData.type || "Business Unit",
+          parent: formData.parent || "Business Units",
+          head: formData.head || "Rajeev Malhotra",
+          function: formData.function || "General",
+          costCentre: formData.costCentre || "CC-GEN",
+          profitCentre: formData.profitCentre || "PC-GEN",
+          location: formData.location || "Headquarters",
+          employees: Number(formData.employees) || 50,
+          budget: Number(formData.budget) || 1000000,
+          revenueTarget: Number(formData.revenueTarget) || 2000000,
+          status: "Active",
+        };
+        setUnits([...units, newItem]);
+        showNotification(`New Unit "${newItem.name}" added.`);
+      }
+    } else if (activeModal === "function") {
+      if (editingItem) {
+        setFunctions(functions.map((f) => (f.id === editingItem.id ? { ...f, ...formData } : f)));
+        showNotification(`Function "${formData.name}" updated.`);
+      } else {
+        const newItem = {
+          id: `FNC-00${functions.length + 1}`,
+          name: formData.name || "New Function",
+          code: formData.code || `FN-${functions.length + 1}`,
+          head: formData.head || "Rajeev Malhotra",
+          objective: formData.objective || "Core function objective statement.",
+          budget: Number(formData.budget) || 1500000,
+          status: "Active",
+        };
+        setFunctions([...functions, newItem]);
+        showNotification(`Function "${newItem.name}" added.`);
+      }
+    } else if (activeModal === "department") {
+      if (editingItem) {
+        setDepartments(departments.map((d) => (d.id === editingItem.id ? { ...d, ...formData } : d)));
+        showNotification(`Department "${formData.name}" updated.`);
+      } else {
+        const newItem = {
+          id: `DEPT-00${departments.length + 1}`,
+          name: formData.name || "New Department",
+          code: formData.code || `DP-${departments.length + 1}`,
+          function: formData.function || "Finance & Accounts",
+          head: formData.head || "Sunil Agarwal",
+          employees: Number(formData.employees) || 30,
+          budget: Number(formData.budget) || 800000,
+          kpis: formData.kpis ? formData.kpis.split(",") : ["Efficiency SLA"],
+          status: "Active",
+        };
+        setDepartments([...departments, newItem]);
+        showNotification(`Department "${newItem.name}" created.`);
+      }
+    } else if (activeModal === "position") {
+      if (editingItem) {
+        setPositions(positions.map((p) => (p.id === editingItem.id ? { ...p, ...formData } : p)));
+        showNotification(`Position "${formData.title}" updated.`);
+      } else {
+        const newItem = {
+          id: `POS-00${positions.length + 1}`,
+          title: formData.title || "New Position Title",
+          code: formData.code || `POS-NEW`,
+          level: formData.level || "Manager",
+          unit: formData.unit || "Corporate",
+          dept: formData.dept || "General",
+          headcount: Number(formData.headcount) || 1,
+          manager: formData.manager || "Rajeev Malhotra (CEO)",
+          status: "Active",
+        };
+        setPositions([...positions, newItem]);
+        showNotification(`Position "${newItem.title}" created.`);
+      }
+    } else if (activeModal === "raci") {
+      if (editingItem) {
+        setRaciRules(raciRules.map((r) => (r.id === editingItem.id ? { ...r, ...formData } : r)));
+        showNotification(`RACI Matrix rule updated.`);
+      } else {
+        const newItem = {
+          id: `RACI-00${raciRules.length + 1}`,
+          process: formData.process || "New Corporate Process",
+          activity: formData.activity || "Key execution activity",
+          responsible: formData.responsible || "Anita Verma (CFO)",
+          accountable: formData.accountable || "Rajeev Malhotra (CEO)",
+          consulted: formData.consulted || "Function Heads",
+          informed: formData.informed || "All Personnel",
+          escalation: "Executive Board",
+          sla: Number(formData.sla) || 7,
+          status: "Active",
+        };
+        setRaciRules([...raciRules, newItem]);
+        showNotification(`New RACI Matrix process rule created.`);
+      }
+    } else if (activeModal === "authority") {
+      if (editingItem) {
+        setAuthorityRules(authorityRules.map((a) => (a.id === editingItem.id ? { ...a, ...formData } : a)));
+        showNotification(`Authority Rule updated.`);
+      } else {
+        const newItem = {
+          id: `AUTH-00${authorityRules.length + 1}`,
+          position: formData.position || "Manager Level",
+          unit: formData.unit || "Business Unit",
+          authorityType: formData.authorityType || "Operational",
+          approvalLimit: formData.approvalLimit || "$100,000",
+          financial: formData.financial ?? true,
+          contract: formData.contract ?? false,
+          hiring: formData.hiring ?? true,
+          procurement: formData.procurement ?? true,
+          technical: formData.technical ?? false,
+          legal: formData.legal ?? false,
+          status: "Active",
+        };
+        setAuthorityRules([...authorityRules, newItem]);
+        showNotification(`New Authority Rule created.`);
+      }
+    } else if (activeModal === "location") {
+      if (editingItem) {
+        setLocations(locations.map((l) => (l.id === editingItem.id ? { ...l, ...formData } : l)));
+        showNotification(`Location "${formData.name}" updated.`);
+      } else {
+        const newItem = {
+          id: `LOC-00${locations.length + 1}`,
+          name: formData.name || "New Regional Campus",
+          code: formData.code || `LOC-NEW`,
+          type: formData.type || "Regional Office",
+          head: formData.head || "Sunil Verma",
+          address: formData.address || "Tech Promenade, City Campus",
+          country: formData.country || "India",
+          capacity: Number(formData.capacity) || 500,
+          current: Number(formData.current) || 200,
+          status: "Active",
+        };
+        setLocations([...locations, newItem]);
+        showNotification(`Location Campus "${newItem.name}" registered.`);
+      }
+    }
+
+    setActiveModal(null);
+  };
+
+  const handleDeleteItem = (type: string, id: string) => {
+    if (type === "unit") {
+      setUnits(units.filter((u) => u.id !== id));
+      showNotification("Unit record removed.");
+    } else if (type === "function") {
+      setFunctions(functions.filter((f) => f.id !== id));
+      showNotification("Function record removed.");
+    } else if (type === "department") {
+      setDepartments(departments.filter((d) => d.id !== id));
+      showNotification("Department record removed.");
+    } else if (type === "position") {
+      setPositions(positions.filter((p) => p.id !== id));
+      showNotification("Position title removed.");
+    } else if (type === "raci") {
+      setRaciRules(raciRules.filter((r) => r.id !== id));
+      showNotification("RACI rule removed.");
+    } else if (type === "authority") {
+      setAuthorityRules(authorityRules.filter((a) => a.id !== id));
+      showNotification("Authority rule removed.");
+    } else if (type === "location") {
+      setLocations(locations.filter((l) => l.id !== id));
+      showNotification("Location campus removed.");
+    }
   };
 
   return (
@@ -327,6 +598,14 @@ export function OrganizationStructurePage() {
             </button>
 
             <button
+              onClick={() => setShowExportModal(true)}
+              className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer"
+            >
+              <Download className="h-3.5 w-3.5 text-emerald-500" />
+              Export Package
+            </button>
+
+            <button
               onClick={handleSaveMaster}
               className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-medium text-primary-foreground shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
             >
@@ -335,7 +614,10 @@ export function OrganizationStructurePage() {
             </button>
 
             <button
-              onClick={() => showNotification("Submitted for Executive Board Approval.")}
+              onClick={() => {
+                setMasterForm((prev) => ({ ...prev, status: "Active (Approved)" }));
+                showNotification("Organization Structure submitted & approved by Executive Board.");
+              }}
               className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-medium text-white shadow-xs hover:bg-emerald-700 transition-colors cursor-pointer"
             >
               <Send className="h-3.5 w-3.5" />
@@ -412,6 +694,7 @@ export function OrganizationStructurePage() {
               >
                 <option value="Draft">Draft</option>
                 <option value="Active">Active</option>
+                <option value="Active (Approved)">Active (Approved)</option>
                 <option value="Archived">Archived</option>
               </select>
             </div>
@@ -515,27 +798,6 @@ export function OrganizationStructurePage() {
                 <option value="Business Unit">Business Unit</option>
                 <option value="Division">Division</option>
                 <option value="Function">Function</option>
-                <option value="Department">Department</option>
-                <option value="Regional Office">Regional Office</option>
-                <option value="Development Centre">Development Centre</option>
-                <option value="Manufacturing Unit">Manufacturing Unit</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
-                <span>Organization Level *</span>
-                <span className="text-[10px] font-bold text-blue-500 bg-blue-500/10 px-1 rounded">M</span>
-              </label>
-              <select
-                value={masterForm.orgLevel}
-                onChange={(e) => setMasterForm({ ...masterForm, orgLevel: e.target.value })}
-                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-              >
-                <option value="Level 1 - Corporate">Level 1 - Corporate</option>
-                <option value="Level 2 - Business Unit">Level 2 - Business Unit</option>
-                <option value="Level 3 - Function">Level 3 - Function</option>
-                <option value="Level 4 - Department">Level 4 - Department</option>
               </select>
             </div>
 
@@ -556,50 +818,33 @@ export function OrganizationStructurePage() {
               </select>
             </div>
 
-            <div>
-              <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
-                <span>Operating Model *</span>
-                <span className="text-[10px] font-bold text-blue-500 bg-blue-500/10 px-1 rounded">M</span>
-              </label>
-              <select
-                value={masterForm.operatingModel}
-                onChange={(e) => setMasterForm({ ...masterForm, operatingModel: e.target.value })}
-                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-              >
-                <option value="Functional">Functional</option>
-                <option value="Divisional">Divisional</option>
-                <option value="Matrix">Matrix Structure</option>
-                <option value="Flat / Hybrid">Flat / Hybrid</option>
-              </select>
-            </div>
-
-            {/* Calculated Counters */}
-            <div className="grid grid-cols-4 gap-2 sm:col-span-2 lg:col-span-2 rounded-lg bg-muted/30 p-2 border border-border/50">
+            {/* Dynamic Calculated Counters */}
+            <div className="grid grid-cols-4 gap-2 sm:col-span-2 lg:col-span-4 rounded-lg bg-muted/30 p-2.5 border border-border/50">
               <div className="text-center">
-                <span className="text-[10px] text-muted-foreground block">Business Units</span>
-                <span className="text-sm font-bold text-foreground font-mono">{masterForm.buCount}</span>
-                <span className="text-[9px] font-bold text-purple-500 block">C</span>
+                <span className="text-[10px] text-muted-foreground block font-medium">Business Units</span>
+                <span className="text-sm font-bold text-foreground font-mono">{computedMetrics.buCount}</span>
+                <span className="text-[9px] font-bold text-purple-500 block">Calculated</span>
               </div>
               <div className="text-center">
-                <span className="text-[10px] text-muted-foreground block">Functions</span>
-                <span className="text-sm font-bold text-foreground font-mono">{masterForm.functionCount}</span>
-                <span className="text-[9px] font-bold text-purple-500 block">C</span>
+                <span className="text-[10px] text-muted-foreground block font-medium">Functions</span>
+                <span className="text-sm font-bold text-foreground font-mono">{computedMetrics.functionCount}</span>
+                <span className="text-[9px] font-bold text-purple-500 block">Calculated</span>
               </div>
               <div className="text-center">
-                <span className="text-[10px] text-muted-foreground block">Departments</span>
-                <span className="text-sm font-bold text-foreground font-mono">{masterForm.deptCount}</span>
-                <span className="text-[9px] font-bold text-purple-500 block">C</span>
+                <span className="text-[10px] text-muted-foreground block font-medium">Departments</span>
+                <span className="text-sm font-bold text-foreground font-mono">{computedMetrics.deptCount}</span>
+                <span className="text-[9px] font-bold text-purple-500 block">Calculated</span>
               </div>
               <div className="text-center">
-                <span className="text-[10px] text-muted-foreground block">Total Employees</span>
-                <span className="text-sm font-bold text-primary font-mono">{masterForm.totalEmployees.toLocaleString()}</span>
-                <span className="text-[9px] font-bold text-purple-500 block">C</span>
+                <span className="text-[10px] text-muted-foreground block font-medium">Total Headcount</span>
+                <span className="text-sm font-bold text-primary font-mono">{computedMetrics.totalEmployees.toLocaleString()}</span>
+                <span className="text-[9px] font-bold text-purple-500 block">Calculated</span>
               </div>
             </div>
           </div>
 
-          {/* Strategic Purpose & Vision Text Areas */}
-          <div className="grid gap-3 sm:grid-cols-3 pt-2">
+          {/* Strategic Vision & Mission */}
+          <div className="grid gap-3 sm:grid-cols-3 pt-2 border-t border-border/50">
             <div>
               <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
                 <span>Organization Vision *</span>
@@ -643,23 +888,23 @@ export function OrganizationStructurePage() {
 
         {/* 2. Sub-Module Interactive Workspace Tabs */}
         <div className="space-y-4">
-          {/* Tab Navigation Header */}
+          {/* Tab Navigation Bar */}
           <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
             {[
-              { key: "hierarchy", label: "Hierarchy", icon: FolderTree },
-              { key: "units", label: "Units", icon: Building2 },
+              { key: "hierarchy", label: "Hierarchy View", icon: FolderTree },
+              { key: "units", label: "Units Directory", icon: Building2 },
               { key: "functions", label: "Functions", icon: Layers },
               { key: "departments", label: "Departments", icon: Briefcase },
-              { key: "teams", label: "Teams", icon: Users },
+              { key: "teams", label: "Squads & Teams", icon: Users },
               { key: "positions", label: "Positions", icon: UserCheck },
-              { key: "reporting", label: "Reporting", icon: GitBranchIcon },
-              { key: "authority", label: "Authority", icon: ShieldCheck },
-              { key: "raci", label: "RACI", icon: Sliders },
+              { key: "reporting", label: "Reporting Chain", icon: GitBranchIcon },
+              { key: "authority", label: "Authority Matrix", icon: ShieldCheck },
+              { key: "raci", label: "RACI Matrix", icon: Sliders },
               { key: "locations", label: "Locations", icon: MapPin },
-              { key: "cost-centres", label: "Cost Centres", icon: Landmark },
-              { key: "governance", label: "Governance", icon: Award },
-              { key: "kpis", label: "KPIs", icon: TrendingUp },
-              { key: "analytics", label: "Analytics", icon: Sparkles },
+              { key: "cost-centres", label: "Cost & Profit Centres", icon: Landmark },
+              { key: "governance", label: "Governance & Risk", icon: Award },
+              { key: "kpis", label: "KPI Scorecard", icon: TrendingUp },
+              { key: "analytics", label: "Org Analytics", icon: Sparkles },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
@@ -681,13 +926,13 @@ export function OrganizationStructurePage() {
             })}
           </div>
 
-          {/* TAB 1: Hierarchy View (Matching the attached screenshot exactly) */}
+          {/* TAB 1: Hierarchy View */}
           {activeTab === "hierarchy" && (
             <div className="grid gap-4 lg:grid-cols-12">
-              {/* Left Column: Organization Hierarchy Tree */}
+              {/* Left Column: Tree Navigation */}
               <div className="lg:col-span-3 rounded-xl border border-border bg-card p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold text-foreground">3. Organization Hierarchy</h4>
+                  <h4 className="text-xs font-bold text-foreground">Hierarchy Tree Explorer</h4>
                 </div>
 
                 <div className="relative">
@@ -702,15 +947,15 @@ export function OrganizationStructurePage() {
                 </div>
 
                 <div className="space-y-1 max-h-[520px] overflow-y-auto text-xs pr-1">
-                  <TreeNodeItem node={ORG_HIERARCHY_TREE} selectedId={selectedTreeNode} onSelect={setSelectedTreeNode} />
+                  <TreeNodeItem node={hierarchyTree} selectedId={selectedTreeNodeId} onSelect={setSelectedTreeNodeId} />
                 </div>
               </div>
 
-              {/* Center Column: Organization Visual Chart (Diagram matching screenshot) */}
+              {/* Center Column: Visual Org Chart */}
               <div className="lg:col-span-6 rounded-xl border border-border bg-card p-4 flex flex-col justify-between min-h-[560px]">
                 <div className="flex items-center justify-between border-b border-border/60 pb-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-foreground">Organization Chart</span>
+                    <span className="text-xs font-bold text-foreground">Organization Visual Chart</span>
                     <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full font-mono">
                       Zoom: {zoomLevel}%
                     </span>
@@ -738,7 +983,7 @@ export function OrganizationStructurePage() {
                       <RotateCcw className="h-4 w-4" />
                     </button>
                     <button
-                      onClick={() => showNotification("Chart exported to high-resolution PNG & PDF.")}
+                      onClick={() => showNotification("Org Chart PNG exported.")}
                       className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
                       title="Download Chart"
                     >
@@ -760,7 +1005,13 @@ export function OrganizationStructurePage() {
                   <div className="h-4 w-0.5 bg-border" />
 
                   {/* Level 1: CEO */}
-                  <div className="rounded-xl border border-primary/40 bg-card p-3 shadow-md flex items-center gap-3 w-64 mb-6">
+                  <div
+                    onClick={() => setSelectedTreeNodeId("NODE-001")}
+                    className={cn(
+                      "rounded-xl border bg-card p-3 shadow-md flex items-center gap-3 w-64 mb-6 cursor-pointer transition-all hover:scale-105",
+                      selectedTreeNodeId === "NODE-001" ? "border-primary ring-2 ring-primary/30" : "border-border"
+                    )}
+                  >
                     <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm shrink-0 border border-primary/30">
                       RM
                     </div>
@@ -778,49 +1029,70 @@ export function OrganizationStructurePage() {
 
                   {/* Level 2: Executive CXOs */}
                   <div className="grid grid-cols-5 gap-3 w-full max-w-2xl">
-                    <VisualOrgCard name="Anita Verma" title="Chief Financial Officer" dept="Finance" count="186" color="border-amber-500/40 bg-amber-500/5" text="text-amber-600" />
-                    <VisualOrgCard name="Sandeep Iyer" title="Chief Operating Officer" dept="Operations" count="356" color="border-emerald-500/40 bg-emerald-500/5" text="text-emerald-600" />
-                    <VisualOrgCard name="Vikram Singh" title="Chief Technology Officer" dept="R&D / Cloud" count="298" color="border-blue-500/40 bg-blue-500/5" text="text-blue-600" />
-                    <VisualOrgCard name="Meera Nair" title="Chief Human Resources Officer" dept="HR" count="154" color="border-rose-500/40 bg-rose-500/5" text="text-rose-600" />
-                    <VisualOrgCard name="Arjun Mehta" title="Chief Sales Officer" dept="Sales" count="412" color="border-orange-500/40 bg-orange-500/5" text="text-orange-600" />
-                  </div>
-
-                  {/* Level 3: Departments Sub-tier */}
-                  <div className="grid grid-cols-5 gap-3 w-full max-w-2xl mt-6">
-                    <div className="space-y-2">
-                      <MiniDeptCard label="Accounts" count="82" />
-                      <MiniDeptCard label="Treasury" count="48" />
-                    </div>
-                    <div className="space-y-2">
-                      <MiniDeptCard label="Production" count="214" />
-                      <MiniDeptCard label="Quality" count="142" />
-                    </div>
-                    <div className="space-y-2">
-                      <MiniDeptCard label="Product Dev" count="172" />
-                      <MiniDeptCard label="Engineering" count="126" />
-                    </div>
-                    <div className="space-y-2">
-                      <MiniDeptCard label="Talent Acq" count="68" />
-                      <MiniDeptCard label="Emp Relations" count="86" />
-                    </div>
-                    <div className="space-y-2">
-                      <MiniDeptCard label="Domestic Sales" count="214" />
-                      <MiniDeptCard label="Intl Sales" count="198" />
-                    </div>
+                    <VisualOrgCard
+                      name="Anita Verma"
+                      title="Chief Financial Officer"
+                      dept="Finance"
+                      count="186"
+                      color="border-amber-500/40 bg-amber-500/5"
+                      text="text-amber-600"
+                      onClick={() => setSelectedTreeNodeId("FUNC-FIN")}
+                      isSelected={selectedTreeNodeId === "FUNC-FIN"}
+                    />
+                    <VisualOrgCard
+                      name="Sandeep Iyer"
+                      title="Chief Operating Officer"
+                      dept="Operations"
+                      count="356"
+                      color="border-emerald-500/40 bg-emerald-500/5"
+                      text="text-emerald-600"
+                      onClick={() => setSelectedTreeNodeId("BU-003")}
+                      isSelected={selectedTreeNodeId === "BU-003"}
+                    />
+                    <VisualOrgCard
+                      name="Vikram Singh"
+                      title="Chief Technology Officer"
+                      dept="R&D / Cloud"
+                      count="298"
+                      color="border-blue-500/40 bg-blue-500/5"
+                      text="text-blue-600"
+                      onClick={() => setSelectedTreeNodeId("BU-002")}
+                      isSelected={selectedTreeNodeId === "BU-002"}
+                    />
+                    <VisualOrgCard
+                      name="Meera Nair"
+                      title="Chief HR Officer"
+                      dept="HR"
+                      count="154"
+                      color="border-rose-500/40 bg-rose-500/5"
+                      text="text-rose-600"
+                      onClick={() => setSelectedTreeNodeId("FUNC-HR")}
+                      isSelected={selectedTreeNodeId === "FUNC-HR"}
+                    />
+                    <VisualOrgCard
+                      name="Arjun Mehta"
+                      title="Chief Sales Officer"
+                      dept="Sales"
+                      count="412"
+                      color="border-orange-500/40 bg-orange-500/5"
+                      text="text-orange-600"
+                      onClick={() => setSelectedTreeNodeId("BU-004")}
+                      isSelected={selectedTreeNodeId === "BU-004"}
+                    />
                   </div>
                 </div>
 
                 <div className="text-[11px] text-muted-foreground text-center">
-                  Click any node card to inspect detailed organizational unit metrics.
+                  Click any node card to inspect and edit organizational unit metrics.
                 </div>
               </div>
 
-              {/* Right Column: Organization Unit Details Card */}
+              {/* Right Column: Node Inspector */}
               <div className="lg:col-span-3 rounded-xl border border-border bg-card p-4 space-y-4">
                 <div className="flex items-center justify-between border-b border-border/60 pb-3">
-                  <h4 className="text-xs font-bold text-foreground">Organization Unit Details</h4>
+                  <h4 className="text-xs font-bold text-foreground">Unit Details Inspector</h4>
                   <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                    Active
+                    {selectedUnitDetails.status}
                   </span>
                 </div>
 
@@ -830,7 +1102,7 @@ export function OrganizationStructurePage() {
                     <input
                       type="text"
                       readOnly
-                      value="Product Business"
+                      value={selectedUnitDetails.name}
                       className="mt-0.5 w-full rounded-md border border-border bg-muted/40 px-2.5 py-1 text-xs font-semibold text-foreground"
                     />
                   </div>
@@ -840,36 +1112,18 @@ export function OrganizationStructurePage() {
                     <input
                       type="text"
                       readOnly
-                      value="BU-PROD"
+                      value={selectedUnitDetails.code}
                       className="mt-0.5 w-full rounded-md border border-border bg-muted/40 px-2.5 py-1 text-xs font-mono text-foreground"
                     />
                   </div>
 
                   <div>
-                    <label className="text-[11px] text-muted-foreground block">Unit Type</label>
-                    <input
-                      type="text"
-                      readOnly
-                      value="Business Unit"
-                      className="mt-0.5 w-full rounded-md border border-border bg-muted/40 px-2.5 py-1 text-xs text-foreground"
-                    />
-                  </div>
-
-                  <div>
                     <label className="text-[11px] text-muted-foreground block">Unit Head</label>
-                    <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2.5 py-1 text-xs text-foreground">
-                      <option value="Amit Desai">Amit Desai</option>
-                      <option value="Rajeev Malhotra">Rajeev Malhotra</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] text-muted-foreground block">Parent Unit</label>
                     <input
                       type="text"
                       readOnly
-                      value="Business Units Group"
-                      className="mt-0.5 w-full rounded-md border border-border bg-muted/40 px-2.5 py-1 text-xs text-foreground"
+                      value={selectedUnitDetails.head}
+                      className="mt-0.5 w-full rounded-md border border-border bg-muted/40 px-2.5 py-1 text-xs font-medium text-foreground"
                     />
                   </div>
 
@@ -879,7 +1133,7 @@ export function OrganizationStructurePage() {
                       <input
                         type="text"
                         readOnly
-                        value="CC-BU-PROD"
+                        value={selectedUnitDetails.costCentre}
                         className="mt-0.5 w-full rounded-md border border-border bg-muted/40 px-2 py-1 text-[11px] font-mono text-foreground"
                       />
                     </div>
@@ -888,38 +1142,64 @@ export function OrganizationStructurePage() {
                       <input
                         type="text"
                         readOnly
-                        value="PC-BU-PROD"
+                        value={selectedUnitDetails.profitCentre}
                         className="mt-0.5 w-full rounded-md border border-border bg-muted/40 px-2 py-1 text-[11px] font-mono text-foreground"
                       />
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-border/60">
+                  <div className="pt-2 border-t border-border/60 space-y-2">
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-muted-foreground">Total Headcount</span>
-                      <span className="font-bold text-primary text-sm font-mono">1,024</span>
+                      <span className="text-muted-foreground">Employees</span>
+                      <span className="font-bold text-primary font-mono">{selectedUnitDetails.employees}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground">Annual Budget</span>
+                      <span className="font-bold text-foreground font-mono">
+                        ${selectedUnitDetails.budget.toLocaleString()}
+                      </span>
                     </div>
                   </div>
+
+                  <button
+                    onClick={() => handleOpenEditModal("unit", selectedUnitDetails)}
+                    className="w-full mt-2 flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+                  >
+                    <Edit className="h-3.5 w-3.5" />
+                    Edit Unit Metrics
+                  </button>
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 2: Units (Organizational Units Data Surface) */}
+          {/* TAB 2: Units Directory */}
           {activeTab === "units" && (
             <div className="rounded-xl border border-border bg-card p-5 space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <h4 className="text-sm font-bold text-foreground">Organizational Units Directory</h4>
-                  <p className="text-xs text-muted-foreground">List of all registered legal entities, business units, and functions.</p>
+                  <p className="text-xs text-muted-foreground">List of registered legal entities, business units, and corporate divisions.</p>
                 </div>
-                <button
-                  onClick={() => showNotification("New Unit Wizard launched.")}
-                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs cursor-pointer"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  Add Organization Unit
-                </button>
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <Search className="absolute left-2.5 top-2 h-3.5 w-3.5 text-muted-foreground" />
+                    <input
+                      type="text"
+                      placeholder="Search units..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="rounded-lg border border-border bg-background pl-8 pr-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    />
+                  </div>
+                  <button
+                    onClick={() => handleOpenAddModal("unit")}
+                    className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs cursor-pointer hover:bg-primary/90"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    Add Unit
+                  </button>
+                </div>
               </div>
 
               <div className="overflow-x-auto">
@@ -929,38 +1209,57 @@ export function OrganizationStructurePage() {
                       <th className="p-3">Unit ID</th>
                       <th className="p-3">Unit Name</th>
                       <th className="p-3">Code</th>
-                      <th className="p-3">Unit Type</th>
+                      <th className="p-3">Type</th>
                       <th className="p-3">Unit Head</th>
                       <th className="p-3">Cost Centre</th>
-                      <th className="p-3">Profit Centre</th>
-                      <th className="p-3 text-right">Employees</th>
-                      <th className="p-3 text-right">Budget</th>
-                      <th className="p-3">Status</th>
+                      <th className="p-3 text-right">Headcount</th>
+                      <th className="p-3 text-right">Budget ($)</th>
+                      <th className="p-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/60">
-                    {UNITS_DATA.map((unit) => (
-                      <tr key={unit.id} className="hover:bg-muted/30 transition-colors">
-                        <td className="p-3 font-mono font-medium text-primary">{unit.id}</td>
-                        <td className="p-3 font-bold text-foreground">{unit.name}</td>
-                        <td className="p-3 font-mono text-muted-foreground">{unit.code}</td>
-                        <td className="p-3">
-                          <span className="rounded-md bg-blue-500/10 px-2 py-0.5 text-[11px] font-medium text-blue-600">
-                            {unit.type}
-                          </span>
-                        </td>
-                        <td className="p-3 text-foreground">{unit.head}</td>
-                        <td className="p-3 font-mono text-xs">{unit.costCentre}</td>
-                        <td className="p-3 font-mono text-xs">{unit.profitCentre}</td>
-                        <td className="p-3 text-right font-bold font-mono">{unit.employees}</td>
-                        <td className="p-3 text-right font-medium">{unit.budget}</td>
-                        <td className="p-3">
-                          <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600">
-                            {unit.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                    {units
+                      .filter(
+                        (u) =>
+                          u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          u.code.toLowerCase().includes(searchQuery.toLowerCase())
+                      )
+                      .map((unit) => (
+                        <tr key={unit.id} className="hover:bg-muted/30 transition-colors">
+                          <td className="p-3 font-mono font-medium text-primary">{unit.id}</td>
+                          <td className="p-3 font-bold text-foreground">{unit.name}</td>
+                          <td className="p-3 font-mono text-muted-foreground">{unit.code}</td>
+                          <td className="p-3">
+                            <span className="rounded-md bg-blue-500/10 px-2 py-0.5 text-[11px] font-medium text-blue-600">
+                              {unit.type}
+                            </span>
+                          </td>
+                          <td className="p-3 text-foreground font-medium">{unit.head}</td>
+                          <td className="p-3 font-mono text-xs">{unit.costCentre}</td>
+                          <td className="p-3 text-right font-bold font-mono">{unit.employees}</td>
+                          <td className="p-3 text-right font-bold font-mono text-emerald-600">
+                            ${unit.budget.toLocaleString()}
+                          </td>
+                          <td className="p-3 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <button
+                                onClick={() => handleOpenEditModal("unit", unit)}
+                                className="p-1 text-muted-foreground hover:text-primary rounded cursor-pointer"
+                                title="Edit"
+                              >
+                                <Edit className="h-3.5 w-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteItem("unit", unit.id)}
+                                className="p-1 text-muted-foreground hover:text-rose-500 rounded cursor-pointer"
+                                title="Delete"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -973,21 +1272,36 @@ export function OrganizationStructurePage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="text-sm font-bold text-foreground">Business Function Structure</h4>
-                  <p className="text-xs text-muted-foreground">Functional classification and leadership allocation.</p>
+                  <p className="text-xs text-muted-foreground">Core business capabilities and executive lead assignments.</p>
                 </div>
+                <button
+                  onClick={() => handleOpenAddModal("function")}
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Function
+                </button>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {CORE_FUNCTIONS.map((fn) => (
+                {functions.map((fn) => (
                   <div key={fn.id} className="rounded-lg border border-border bg-background p-3.5 space-y-2 hover:border-primary/40 transition-all">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-xs text-foreground">{fn.name}</span>
                       <span className="text-[10px] font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground">{fn.code}</span>
                     </div>
                     <p className="text-[11px] text-muted-foreground line-clamp-2">{fn.objective}</p>
-                    <div className="flex items-center justify-between text-[11px] pt-1 border-t border-border/50">
+                    <div className="flex items-center justify-between text-[11px] pt-2 border-t border-border/50">
                       <span className="text-muted-foreground">Head: <span className="font-semibold text-foreground">{fn.head}</span></span>
-                      <span className="font-bold text-primary">{fn.budget}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-emerald-600 font-mono">${(fn.budget / 1000000).toFixed(1)}M</span>
+                        <button onClick={() => handleOpenEditModal("function", fn)} className="text-muted-foreground hover:text-primary">
+                          <Edit className="h-3 w-3" />
+                        </button>
+                        <button onClick={() => handleDeleteItem("function", fn.id)} className="text-muted-foreground hover:text-rose-500">
+                          <Trash2 className="h-3 w-3" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1000,36 +1314,43 @@ export function OrganizationStructurePage() {
             <div className="rounded-xl border border-border bg-card p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-bold text-foreground">Department Structure</h4>
-                  <p className="text-xs text-muted-foreground">Departmental breakdown, heads, headcount, and budget allocation.</p>
+                  <h4 className="text-sm font-bold text-foreground">Department Directory</h4>
+                  <p className="text-xs text-muted-foreground">Departmental breakdown, operational leads, and headcount tracking.</p>
                 </div>
+                <button
+                  onClick={() => handleOpenAddModal("department")}
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Department
+                </button>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
-                      <th className="p-3">Dept ID</th>
+                      <th className="p-3">Dept Code</th>
                       <th className="p-3">Department Name</th>
-                      <th className="p-3">Code</th>
                       <th className="p-3">Function</th>
                       <th className="p-3">Department Head</th>
                       <th className="p-3 text-right">Headcount</th>
-                      <th className="p-3 text-right">Budget</th>
+                      <th className="p-3 text-right">Budget ($)</th>
                       <th className="p-3">KPIs</th>
-                      <th className="p-3">Status</th>
+                      <th className="p-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/60">
-                    {DEPARTMENTS_DATA.map((d) => (
+                    {departments.map((d) => (
                       <tr key={d.id} className="hover:bg-muted/30 transition-colors">
-                        <td className="p-3 font-mono font-medium text-primary">{d.id}</td>
+                        <td className="p-3 font-mono font-medium text-primary">{d.code}</td>
                         <td className="p-3 font-bold text-foreground">{d.name}</td>
-                        <td className="p-3 font-mono text-muted-foreground">{d.code}</td>
                         <td className="p-3">{d.function}</td>
                         <td className="p-3 font-medium text-foreground">{d.head}</td>
                         <td className="p-3 text-right font-bold font-mono">{d.employees}</td>
-                        <td className="p-3 text-right font-medium">{d.budget}</td>
+                        <td className="p-3 text-right font-bold font-mono text-emerald-600">
+                          ${d.budget.toLocaleString()}
+                        </td>
                         <td className="p-3">
                           <div className="flex flex-wrap gap-1">
                             {d.kpis.map((kpi, i) => (
@@ -1039,10 +1360,15 @@ export function OrganizationStructurePage() {
                             ))}
                           </div>
                         </td>
-                        <td className="p-3">
-                          <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600">
-                            {d.status}
-                          </span>
+                        <td className="p-3 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button onClick={() => handleOpenEditModal("department", d)} className="p-1 text-muted-foreground hover:text-primary">
+                              <Edit className="h-3.5 w-3.5" />
+                            </button>
+                            <button onClick={() => handleDeleteItem("department", d.id)} className="p-1 text-muted-foreground hover:text-rose-500">
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -1052,14 +1378,61 @@ export function OrganizationStructurePage() {
             </div>
           )}
 
-          {/* TAB 5: Positions */}
+          {/* TAB 5: Teams & Squads */}
+          {activeTab === "teams" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-foreground">Cross-Functional Agile Squads & Teams</h4>
+                  <p className="text-xs text-muted-foreground">Team level allocation, squad leads, and engineering sprint focus.</p>
+                </div>
+                <button
+                  onClick={() => showNotification("Team Creation Modal launched.")}
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Team Squad
+                </button>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
+                {teams.map((tm) => (
+                  <div key={tm.id} className="rounded-xl border border-border bg-background p-4 space-y-2 hover:border-primary/40 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-xs text-foreground">{tm.name}</span>
+                      <span className="font-mono text-[10px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">{tm.code}</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">
+                      Department: <span className="font-semibold text-foreground">{tm.dept}</span> | Lead: <span className="font-semibold text-foreground">{tm.lead}</span>
+                    </p>
+                    <p className="text-[11px] text-primary font-medium bg-primary/5 p-2 rounded border border-primary/20">
+                      Focus: {tm.focus}
+                    </p>
+                    <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                      <span className="text-muted-foreground">Members: <span className="font-bold text-foreground">{tm.members} Specialists</span></span>
+                      <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">{tm.status}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: Positions Architecture */}
           {activeTab === "positions" && (
             <div className="rounded-xl border border-border bg-card p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-bold text-foreground">Position Architecture</h4>
-                  <p className="text-xs text-muted-foreground">Formal job titles, management levels, and direct reporting lines.</p>
+                  <h4 className="text-sm font-bold text-foreground">Position Architecture Directory</h4>
+                  <p className="text-xs text-muted-foreground">Job position catalog, headcount allocation, and reporting lines.</p>
                 </div>
+                <button
+                  onClick={() => handleOpenAddModal("position")}
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Position
+                </button>
               </div>
 
               <div className="overflow-x-auto">
@@ -1069,14 +1442,14 @@ export function OrganizationStructurePage() {
                       <th className="p-3">Position Code</th>
                       <th className="p-3">Position Title</th>
                       <th className="p-3">Management Level</th>
-                      <th className="p-3">Unit / Dept</th>
+                      <th className="p-3">Department</th>
                       <th className="p-3">Reporting Manager</th>
                       <th className="p-3 text-center">Headcount</th>
-                      <th className="p-3">Status</th>
+                      <th className="p-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/60">
-                    {POSITIONS_DATA.map((p) => (
+                    {positions.map((p) => (
                       <tr key={p.id} className="hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-mono font-medium text-primary">{p.code}</td>
                         <td className="p-3 font-bold text-foreground">{p.title}</td>
@@ -1088,10 +1461,15 @@ export function OrganizationStructurePage() {
                         <td className="p-3">{p.dept}</td>
                         <td className="p-3 font-medium text-foreground">{p.manager}</td>
                         <td className="p-3 text-center font-bold font-mono">{p.headcount}</td>
-                        <td className="p-3">
-                          <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600">
-                            {p.status}
-                          </span>
+                        <td className="p-3 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button onClick={() => handleOpenEditModal("position", p)} className="p-1 text-muted-foreground hover:text-primary">
+                              <Edit className="h-3.5 w-3.5" />
+                            </button>
+                            <button onClick={() => handleDeleteItem("position", p.id)} className="p-1 text-muted-foreground hover:text-rose-500">
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -1101,18 +1479,17 @@ export function OrganizationStructurePage() {
             </div>
           )}
 
-          {/* TAB 6: Reporting & Management Hierarchy */}
+          {/* TAB 7: Reporting Hierarchy */}
           {activeTab === "reporting" && (
             <div className="rounded-xl border border-border bg-card p-5 space-y-6">
               <div>
-                <h4 className="text-sm font-bold text-foreground">Management Hierarchy & Reporting Chains</h4>
-                <p className="text-xs text-muted-foreground">Vertical reporting structure from Board of Directors down to Associate level.</p>
+                <h4 className="text-sm font-bold text-foreground">Management Reporting Flow</h4>
+                <p className="text-xs text-muted-foreground">Executive to associate reporting flow across organizational tiers.</p>
               </div>
 
-              {/* Management Level Flow Diagram */}
-              <div className="flex flex-wrap items-center justify-center gap-2 py-3 bg-muted/20 rounded-xl p-4 border border-border/50">
+              <div className="flex flex-wrap items-center justify-center gap-2 py-4 bg-muted/20 rounded-xl p-4 border border-border/50">
                 {[
-                  "Board",
+                  "Board of Directors",
                   "CEO / MD",
                   "CXO Executive",
                   "Business Head",
@@ -1120,11 +1497,11 @@ export function OrganizationStructurePage() {
                   "Dept Head",
                   "Team Lead",
                   "Manager",
-                  "Specialist / Engineer",
+                  "Senior Specialist",
                   "Associate",
                 ].map((lvl, idx, arr) => (
                   <div key={lvl} className="flex items-center gap-2">
-                    <div className="rounded-lg border border-primary/30 bg-card px-3 py-1.5 text-center text-xs font-bold text-foreground shadow-2xs">
+                    <div className="rounded-lg border border-primary/30 bg-card px-3 py-2 text-center text-xs font-bold text-foreground shadow-2xs">
                       {lvl}
                     </div>
                     {idx < arr.length - 1 && <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />}
@@ -1134,12 +1511,21 @@ export function OrganizationStructurePage() {
             </div>
           )}
 
-          {/* TAB 7: Authority & Delegation */}
+          {/* TAB 8: Authority Matrix */}
           {activeTab === "authority" && (
             <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-              <div>
-                <h4 className="text-sm font-bold text-foreground">Authority & Delegation Matrix</h4>
-                <p className="text-xs text-muted-foreground">Financial limits, contract binding, and hiring approval authority per position.</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-foreground">Delegation of Authority Matrix</h4>
+                  <p className="text-xs text-muted-foreground">Financial limits, contract binding, and hiring approval permissions.</p>
+                </div>
+                <button
+                  onClick={() => handleOpenAddModal("authority")}
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Authority Rule
+                </button>
               </div>
 
               <div className="overflow-x-auto">
@@ -1154,11 +1540,11 @@ export function OrganizationStructurePage() {
                       <th className="p-3 text-center">Contract</th>
                       <th className="p-3 text-center">Hiring</th>
                       <th className="p-3 text-center">Procurement</th>
-                      <th className="p-3">Status</th>
+                      <th className="p-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/60">
-                    {AUTHORITY_MATRIX.map((a) => (
+                    {authorityRules.map((a) => (
                       <tr key={a.id} className="hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-mono font-medium text-primary">{a.id}</td>
                         <td className="p-3 font-bold text-foreground">{a.position}</td>
@@ -1168,10 +1554,15 @@ export function OrganizationStructurePage() {
                         <td className="p-3 text-center">{a.contract ? <CheckCircle2 className="h-4 w-4 text-emerald-500 inline" /> : <XCircle className="h-4 w-4 text-muted-foreground inline opacity-40" />}</td>
                         <td className="p-3 text-center">{a.hiring ? <CheckCircle2 className="h-4 w-4 text-emerald-500 inline" /> : <XCircle className="h-4 w-4 text-muted-foreground inline opacity-40" />}</td>
                         <td className="p-3 text-center">{a.procurement ? <CheckCircle2 className="h-4 w-4 text-emerald-500 inline" /> : <XCircle className="h-4 w-4 text-muted-foreground inline opacity-40" />}</td>
-                        <td className="p-3">
-                          <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600">
-                            {a.status}
-                          </span>
+                        <td className="p-3 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button onClick={() => handleOpenEditModal("authority", a)} className="p-1 text-muted-foreground hover:text-primary">
+                              <Edit className="h-3.5 w-3.5" />
+                            </button>
+                            <button onClick={() => handleDeleteItem("authority", a.id)} className="p-1 text-muted-foreground hover:text-rose-500">
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -1181,17 +1572,26 @@ export function OrganizationStructurePage() {
             </div>
           )}
 
-          {/* TAB 8: RACI Matrix */}
+          {/* TAB 9: RACI Matrix */}
           {activeTab === "raci" && (
             <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-              <div>
-                <h4 className="text-sm font-bold text-foreground">Responsibility Matrix (RACI)</h4>
-                <p className="text-xs text-muted-foreground">
-                  <span className="font-bold text-emerald-600">R</span> Responsible ·{" "}
-                  <span className="font-bold text-blue-600">A</span> Accountable ·{" "}
-                  <span className="font-bold text-amber-600">C</span> Consulted ·{" "}
-                  <span className="font-bold text-purple-600">I</span> Informed
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-foreground">Responsibility Assignment Matrix (RACI)</h4>
+                  <p className="text-xs text-muted-foreground">
+                    <span className="font-bold text-emerald-600">R</span> Responsible ·{" "}
+                    <span className="font-bold text-blue-600">A</span> Accountable ·{" "}
+                    <span className="font-bold text-amber-600">C</span> Consulted ·{" "}
+                    <span className="font-bold text-purple-600">I</span> Informed
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleOpenAddModal("raci")}
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add RACI Process
+                </button>
               </div>
 
               <div className="overflow-x-auto">
@@ -1205,10 +1605,11 @@ export function OrganizationStructurePage() {
                       <th className="p-3">Consulted (C)</th>
                       <th className="p-3">Informed (I)</th>
                       <th className="p-3 text-center">SLA (Days)</th>
+                      <th className="p-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/60">
-                    {RACI_MATRIX.map((r) => (
+                    {raciRules.map((r) => (
                       <tr key={r.id} className="hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-bold text-foreground">{r.process}</td>
                         <td className="p-3 text-muted-foreground">{r.activity}</td>
@@ -1217,6 +1618,16 @@ export function OrganizationStructurePage() {
                         <td className="p-3 text-amber-600">{r.consulted}</td>
                         <td className="p-3 text-purple-600">{r.informed}</td>
                         <td className="p-3 text-center font-mono font-bold">{r.sla}</td>
+                        <td className="p-3 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button onClick={() => handleOpenEditModal("raci", r)} className="p-1 text-muted-foreground hover:text-primary">
+                              <Edit className="h-3.5 w-3.5" />
+                            </button>
+                            <button onClick={() => handleDeleteItem("raci", r.id)} className="p-1 text-muted-foreground hover:text-rose-500">
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -1225,57 +1636,140 @@ export function OrganizationStructurePage() {
             </div>
           )}
 
-          {/* TAB 9: Locations */}
+          {/* TAB 10: Locations Footprint */}
           {activeTab === "locations" && (
             <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-              <div>
-                <h4 className="text-sm font-bold text-foreground">Organizational Locations</h4>
-                <p className="text-xs text-muted-foreground">Geographic footprint, campuses, and employee capacity.</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-foreground">Organizational Locations & Campuses</h4>
+                  <p className="text-xs text-muted-foreground">Geographic footprint, campus addresses, and employee capacity utilization.</p>
+                </div>
+                <button
+                  onClick={() => handleOpenAddModal("location")}
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Campus Location
+                </button>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {LOCATIONS_DATA.map((loc) => (
-                  <div key={loc.id} className="rounded-xl border border-border bg-background p-4 space-y-2 hover:border-primary/40 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-foreground">{loc.name}</span>
-                      <span className="font-mono text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">{loc.code}</span>
+                {locations.map((loc) => {
+                  const pct = Math.round((loc.current / loc.capacity) * 100);
+                  return (
+                    <div key={loc.id} className="rounded-xl border border-border bg-background p-4 space-y-3 hover:border-primary/40 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs text-foreground">{loc.name}</span>
+                        <span className="font-mono text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">{loc.code}</span>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground flex items-center gap-1">
+                        <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
+                        {loc.address}
+                      </p>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center text-[11px]">
+                          <span className="text-muted-foreground">Capacity ({loc.current} / {loc.capacity})</span>
+                          <span className="font-bold text-emerald-600">{pct}%</span>
+                        </div>
+                        <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
+                          <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-2 pt-1 border-t border-border/50">
+                        <button onClick={() => handleOpenEditModal("location", loc)} className="text-muted-foreground hover:text-primary">
+                          <Edit className="h-3.5 w-3.5" />
+                        </button>
+                        <button onClick={() => handleDeleteItem("location", loc.id)} className="text-muted-foreground hover:text-rose-500">
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
                     </div>
-                    <p className="text-[11px] text-muted-foreground flex items-center gap-1">
-                      <MapPin className="h-3 w-3 text-primary shrink-0" />
-                      {loc.address}
-                    </p>
-                    <div className="pt-2 border-t border-border/50 flex justify-between items-center text-xs">
-                      <span className="text-muted-foreground">Capacity: {loc.current} / {loc.capacity}</span>
-                      <span className="font-bold text-emerald-600">{Math.round((loc.current / loc.capacity) * 100)}%</span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {/* TAB 10: Governance & Risk */}
-          {(activeTab === "governance" || activeTab === "teams" || activeTab === "cost-centres" || activeTab === "kpis" || activeTab === "analytics") && (
-            <div className="rounded-xl border border-border bg-card p-5 space-y-6">
-              <div>
-                <h4 className="text-sm font-bold text-foreground">Governance Bodies & Organization Risk Assessment</h4>
-                <p className="text-xs text-muted-foreground">Governance structure oversight, policy references, and structural risk mitigation.</p>
+          {/* TAB 11: Cost & Profit Centres */}
+          {activeTab === "cost-centres" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-foreground">Cost & Profit Centre Allocation</h4>
+                  <p className="text-xs text-muted-foreground">ERP financial ledger linkages for organizational units.</p>
+                </div>
+                <button
+                  onClick={() => showNotification("Cost Centre Modal launched.")}
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Cost Pool
+                </button>
               </div>
 
-              {/* Governance Bodies */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="p-3">Cost Code</th>
+                      <th className="p-3">Cost Pool Name</th>
+                      <th className="p-3">Pool Type</th>
+                      <th className="p-3">Mapped Unit</th>
+                      <th className="p-3">Manager</th>
+                      <th className="p-3 text-right">Budget Allocation</th>
+                      <th className="p-3 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/60">
+                    {costCentres.map((cc) => (
+                      <tr key={cc.id} className="hover:bg-muted/30 transition-colors">
+                        <td className="p-3 font-mono font-bold text-primary">{cc.code}</td>
+                        <td className="p-3 font-bold text-foreground">{cc.name}</td>
+                        <td className="p-3">
+                          <span className="rounded bg-purple-500/10 px-2 py-0.5 text-[11px] font-medium text-purple-600">
+                            {cc.type}
+                          </span>
+                        </td>
+                        <td className="p-3">{cc.unit}</td>
+                        <td className="p-3 font-medium text-foreground">{cc.manager}</td>
+                        <td className="p-3 text-right font-mono font-bold text-emerald-600">
+                          ${cc.budget.toLocaleString()}
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600">
+                            {cc.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 12: Governance & Risk */}
+          {activeTab === "governance" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-6">
+              <div>
+                <h4 className="text-sm font-bold text-foreground">Governance Oversight & Risk Assessment</h4>
+                <p className="text-xs text-muted-foreground">Governance bodies, decision rights, and structural risk mitigation matrix.</p>
+              </div>
+
+              {/* Governance Bodies Table */}
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
                       <th className="p-3">Governance Body</th>
-                      <th className="p-3">Governance Role</th>
+                      <th className="p-3">Role</th>
                       <th className="p-3">Frequency</th>
                       <th className="p-3">Decision Rights</th>
                       <th className="p-3">Policy Reference</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/60">
-                    {GOVERNANCE_BODIES.map((g) => (
+                    {governanceBodies.map((g) => (
                       <tr key={g.id} className="hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-bold text-foreground">{g.body}</td>
                         <td className="p-3 text-primary font-medium">{g.role}</td>
@@ -1288,14 +1782,14 @@ export function OrganizationStructurePage() {
                 </table>
               </div>
 
-              {/* Organization Risk Assessment */}
+              {/* Risk Assessment Section */}
               <div className="space-y-3 pt-3 border-t border-border/60">
                 <h5 className="text-xs font-bold text-foreground flex items-center gap-1.5">
                   <AlertTriangle className="h-4 w-4 text-amber-500" />
-                  Organization Structural Risk Matrix
+                  Organization Risk Assessment Matrix
                 </h5>
                 <div className="grid gap-3 sm:grid-cols-3">
-                  {ORG_RISK_ASSESSMENT.map((r) => (
+                  {risks.map((r) => (
                     <div key={r.id} className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 space-y-1.5">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-xs text-foreground">{r.category}</span>
@@ -1313,6 +1807,79 @@ export function OrganizationStructurePage() {
               </div>
             </div>
           )}
+
+          {/* TAB 13: KPI Scorecard */}
+          {activeTab === "kpis" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-foreground">Executive Organization KPI Scorecard</h4>
+                  <p className="text-xs text-muted-foreground">Organizational governance KPIs, target performance, and owners.</p>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="p-3">KPI ID</th>
+                      <th className="p-3">KPI Indicator</th>
+                      <th className="p-3">Target</th>
+                      <th className="p-3">Actual Achieved</th>
+                      <th className="p-3">Status</th>
+                      <th className="p-3">Owner</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/60">
+                    {kpis.map((k) => (
+                      <tr key={k.id} className="hover:bg-muted/30 transition-colors">
+                        <td className="p-3 font-mono font-medium text-primary">{k.id}</td>
+                        <td className="p-3 font-bold text-foreground">{k.name}</td>
+                        <td className="p-3 font-mono">{k.target}</td>
+                        <td className="p-3 font-mono font-bold text-emerald-600">{k.actual}</td>
+                        <td className="p-3">
+                          <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600">
+                            {k.status}
+                          </span>
+                        </td>
+                        <td className="p-3 font-medium text-foreground">{k.owner}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 14: Analytics Dashboard */}
+          {activeTab === "analytics" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-6">
+              <div>
+                <h4 className="text-sm font-bold text-foreground">Organizational Analytics & Intelligence</h4>
+                <p className="text-xs text-muted-foreground">Real-time metrics on headcount distribution, span of control, and budget allocation.</p>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="rounded-xl border border-border bg-background p-4 space-y-2 text-center">
+                  <span className="text-xs text-muted-foreground block font-medium">Headcount Efficiency Index</span>
+                  <span className="text-2xl font-bold text-primary font-mono">98.4%</span>
+                  <span className="text-[10px] text-emerald-600 block font-semibold">+2.1% YoY</span>
+                </div>
+                <div className="rounded-xl border border-border bg-background p-4 space-y-2 text-center">
+                  <span className="text-xs text-muted-foreground block font-medium">Average Span of Control</span>
+                  <span className="text-2xl font-bold text-foreground font-mono">1:7.4</span>
+                  <span className="text-[10px] text-blue-600 block font-semibold">Optimal Target Range</span>
+                </div>
+                <div className="rounded-xl border border-border bg-background p-4 space-y-2 text-center">
+                  <span className="text-xs text-muted-foreground block font-medium">Total Organizational Budget</span>
+                  <span className="text-2xl font-bold text-emerald-600 font-mono">
+                    ${(computedMetrics.totalBudget / 1000000).toFixed(1)}M
+                  </span>
+                  <span className="text-[10px] text-muted-foreground block font-medium">Across all Business Units</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Footer Classification & Modification Strip */}
@@ -1325,10 +1892,207 @@ export function OrganizationStructurePage() {
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div>
-            Last Modified: <span className="font-sans font-semibold text-foreground">15 May 2024 11:30 AM</span> | Created By: <span className="font-sans font-semibold text-foreground">Rahul Sharma</span>
+            Last Modified: <span className="font-sans font-semibold text-foreground">20 Aug 2026</span> | Created By: <span className="font-sans font-semibold text-foreground">System Admin</span>
           </div>
         </div>
       </div>
+
+      {/* --- CRUD MODAL --- */}
+      {activeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+          <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-sm font-bold text-foreground">
+                {editingItem ? "Edit" : "Add New"} {activeModal.toUpperCase()}
+              </h3>
+              <button onClick={() => setActiveModal(null)} className="text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="text-muted-foreground block font-medium">Name / Title *</label>
+                <input
+                  type="text"
+                  value={formData.name || formData.title || formData.process || ""}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value, title: e.target.value, process: e.target.value })}
+                  className="mt-1 w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
+
+              <div>
+                <label className="text-muted-foreground block font-medium">Code / ID *</label>
+                <input
+                  type="text"
+                  value={formData.code || ""}
+                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                  className="mt-1 w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
+
+              {activeModal === "unit" && (
+                <>
+                  <div>
+                    <label className="text-muted-foreground block font-medium">Unit Head</label>
+                    <input
+                      type="text"
+                      value={formData.head || ""}
+                      onChange={(e) => setFormData({ ...formData, head: e.target.value })}
+                      className="mt-1 w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs text-foreground"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-muted-foreground block font-medium">Annual Budget ($)</label>
+                    <input
+                      type="number"
+                      value={formData.budget || ""}
+                      onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                      className="mt-1 w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground"
+                    />
+                  </div>
+                </>
+              )}
+
+              {activeModal === "department" && (
+                <>
+                  <div>
+                    <label className="text-muted-foreground block font-medium">Headcount</label>
+                    <input
+                      type="number"
+                      value={formData.employees || ""}
+                      onChange={(e) => setFormData({ ...formData, employees: e.target.value })}
+                      className="mt-1 w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-muted-foreground block font-medium">Department Head</label>
+                    <input
+                      type="text"
+                      value={formData.head || ""}
+                      onChange={(e) => setFormData({ ...formData, head: e.target.value })}
+                      className="mt-1 w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs text-foreground"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-border">
+              <button
+                onClick={() => setActiveModal(null)}
+                className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveModalItem}
+                className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+              >
+                Save Item
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- VALIDATION RESULTS MODAL --- */}
+      {showValidationModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+          <div className="w-full max-w-lg rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-blue-500" />
+                <h3 className="text-sm font-bold text-foreground">Organization Structure Validation Audit</h3>
+              </div>
+              <button onClick={() => setShowValidationModal(false)} className="text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-3 flex items-center justify-between">
+                <span className="font-bold text-emerald-600">Compliance & Integrity Score</span>
+                <span className="text-base font-bold text-emerald-600 font-mono">98.4% Passed</span>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-foreground font-medium">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  <span>0 Circular Reporting Dependencies Detected</span>
+                </div>
+                <div className="flex items-center gap-2 text-foreground font-medium">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  <span>100% Legal Entity Linkage Integrity Verified</span>
+                </div>
+                <div className="flex items-center gap-2 text-foreground font-medium">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  <span>All Cost & Profit Centres Mapped to Valid Ledgers</span>
+                </div>
+                <div className="flex items-center gap-2 text-amber-600 font-medium">
+                  <AlertTriangle className="h-4 w-4 text-amber-500" />
+                  <span>1 Notice: Cloud Architecture capacity running at 112% utilization</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-3 border-t border-border">
+              <button
+                onClick={() => setShowValidationModal(false)}
+                className="rounded-lg bg-primary px-4 py-1.5 text-xs font-bold text-primary-foreground"
+              >
+                Close Audit Report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- EXPORT PACKAGE MODAL --- */}
+      {showExportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+          <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-sm font-bold text-foreground">Export Organization Package</h3>
+              <button onClick={() => setShowExportModal(false)} className="text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-muted-foreground">
+              Export the full organizational architecture package including Units, Functions, Departments, RACI, Authority Matrix, and Locations.
+            </p>
+
+            <div className="space-y-2">
+              <button
+                onClick={() => {
+                  showNotification("Org Package exported to CSV Spreadsheet.");
+                  setShowExportModal(false);
+                }}
+                className="w-full flex items-center justify-between rounded-lg border border-border bg-background p-3 text-xs font-semibold text-foreground hover:bg-muted transition-colors cursor-pointer"
+              >
+                <span className="flex items-center gap-2">
+                  <FileSpreadsheet className="h-4 w-4 text-emerald-500" /> Excel / CSV Spreadsheet Package
+                </span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </button>
+
+              <button
+                onClick={() => {
+                  showNotification("Org Package exported to JSON Format.");
+                  setShowExportModal(false);
+                }}
+                className="w-full flex items-center justify-between rounded-lg border border-border bg-background p-3 text-xs font-semibold text-foreground hover:bg-muted transition-colors cursor-pointer"
+              >
+                <span className="flex items-center gap-2">
+                  <FileCheck className="h-4 w-4 text-blue-500" /> Full ERP JSON Schema Dump
+                </span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }
@@ -1353,7 +2117,7 @@ function TreeNodeItem({
       <div
         onClick={() => onSelect(node.id)}
         className={cn(
-          "flex items-center justify-between rounded-lg px-2 py-1.5 transition-colors cursor-pointer",
+          "flex items-center justify-between rounded-lg px-2 py-1.5 transition-colors cursor-pointer text-xs",
           isSelected ? "bg-primary text-primary-foreground font-semibold" : "hover:bg-muted text-foreground"
         )}
       >
@@ -1401,6 +2165,8 @@ function VisualOrgCard({
   count,
   color,
   text,
+  onClick,
+  isSelected,
 }: {
   name: string;
   title: string;
@@ -1408,24 +2174,24 @@ function VisualOrgCard({
   count: string;
   color: string;
   text: string;
+  onClick: () => void;
+  isSelected?: boolean;
 }) {
   return (
-    <div className={cn("rounded-xl border p-2.5 shadow-xs text-center space-y-1 bg-card", color)}>
+    <div
+      onClick={onClick}
+      className={cn(
+        "rounded-xl border p-2.5 shadow-xs text-center space-y-1 bg-card cursor-pointer transition-all hover:scale-105",
+        color,
+        isSelected && "ring-2 ring-primary border-primary"
+      )}
+    >
       <h6 className="text-[11px] font-bold text-foreground leading-tight">{name}</h6>
       <p className="text-[9px] text-muted-foreground leading-tight line-clamp-1">{title}</p>
       <div className="flex items-center justify-between pt-1 border-t border-border/40 text-[9px]">
         <span className={cn("font-bold", text)}>{dept}</span>
         <span className="font-mono text-muted-foreground">{count} emp</span>
       </div>
-    </div>
-  );
-}
-
-function MiniDeptCard({ label, count }: { label: string; count: string }) {
-  return (
-    <div className="rounded-lg border border-border bg-card p-1.5 text-center shadow-2xs">
-      <span className="text-[10px] font-bold text-foreground block truncate">{label}</span>
-      <span className="text-[9px] font-mono text-muted-foreground">{count} Employees</span>
     </div>
   );
 }

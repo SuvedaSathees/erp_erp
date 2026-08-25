@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -255,23 +254,16 @@ export default function AttendanceManagementPage() {
           {/* Top Row: Employee Profile + Dropdown Selectors */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             {/* Employee Quick Identity */}
-            <div className="flex items-center gap-3.5">
-              <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&auto=format&fit=crop&q=80"
-                alt="employee"
-                className="h-14 w-14 rounded-full object-cover ring-2 ring-slate-100 shadow-2xs shrink-0"
-              />
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-slate-900 text-sm">EMP-000125</span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    Active
-                  </span>
-                </div>
-                <h3 className="text-base font-bold text-slate-900 mt-0.5">Sankaranarayanan R</h3>
-                <div className="text-xs text-muted-foreground font-medium">
-                  Senior Mechanical Engineer • Engineering Department
-                </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono font-bold text-slate-900 text-sm">EMP-000125</span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Active
+                </span>
+              </div>
+              <h3 className="text-base font-bold text-slate-900 mt-0.5">Sankaranarayanan R</h3>
+              <div className="text-xs text-muted-foreground font-medium">
+                Senior Mechanical Engineer • Engineering Department
               </div>
             </div>
 
@@ -397,15 +389,9 @@ export default function AttendanceManagementPage() {
             {[
               { id: "daily", label: "Daily Attendance", icon: Clock },
               { id: "punches", label: "Punch Details", icon: FingerprintIcon },
-              { id: "exceptions", label: "Exceptions", badge: "1", icon: AlertTriangle },
-              { id: "regularization", label: "Regularization", icon: CheckSquare },
-              { id: "leave", label: "Leave", icon: Calendar },
-              { id: "overtime", label: "Overtime", icon: Timer },
-              { id: "comp-off", label: "Comp Off", icon: RefreshCw },
+              { id: "regularization", label: "Regularization & Exceptions", badge: "1", icon: CheckSquare },
+              { id: "overtime", label: "Overtime & Comp Off", icon: Timer },
               { id: "monthly", label: "Monthly Summary", icon: CalendarDays },
-              { id: "approvals", label: "Approvals", icon: CheckCheck },
-              { id: "documents", label: "Documents", icon: FileText },
-              { id: "history", label: "History", icon: Activity },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -945,6 +931,172 @@ export default function AttendanceManagementPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: REGULARIZATION & EXCEPTIONS */}
+        {activeTab === "regularization" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <CheckSquare className="h-4 w-4 text-primary" />
+                  Attendance Regularization & Exceptions
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Missed punch regularization requests, late mark justifications, and on-duty approvals.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsRegularizationModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Apply Regularization
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead>
+                  <tr className="bg-slate-50 border-y border-slate-200 text-slate-600 font-semibold">
+                    <th className="py-2.5 px-3">Date</th>
+                    <th className="py-2.5 px-3">Type</th>
+                    <th className="py-2.5 px-3">Reason / Justification</th>
+                    <th className="py-2.5 px-3">Approver</th>
+                    <th className="py-2.5 px-3 text-right">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  <tr className="hover:bg-slate-50/70">
+                    <td className="py-3 px-3 font-mono font-bold text-slate-900">16 May 2024</td>
+                    <td className="py-3 px-3">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                        Late Mark (09:38)
+                      </span>
+                    </td>
+                    <td className="py-3 px-3 text-slate-700">Metro signal disruption between Gandhipuram & Tech Park</td>
+                    <td className="py-3 px-3 text-slate-600">Arun Kumar (Engineering Manager)</td>
+                    <td className="py-3 px-3 text-right">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                        Pending Approval
+                      </span>
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-slate-50/70">
+                    <td className="py-3 px-3 font-mono font-bold text-slate-900">08 May 2024</td>
+                    <td className="py-3 px-3">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                        On Duty / Client Visit
+                      </span>
+                    </td>
+                    <td className="py-3 px-3 text-slate-700">EV Fleet fast-charger site inspection at Pollachi Depot</td>
+                    <td className="py-3 px-3 text-slate-600">Arun Kumar (Engineering Manager)</td>
+                    <td className="py-3 px-3 text-right">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        Approved
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: OVERTIME & COMP OFF */}
+        {activeTab === "overtime" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Timer className="h-4 w-4 text-emerald-600" />
+                  Overtime Tracking & Compensatory Off Ledger
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Overtime calculations, multiplier rates, accumulated hours, and compensatory off grant balance.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => toast.success("Comp Off request submitted")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer shadow-xs"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Claim Comp Off
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="text-muted-foreground text-[11px] font-semibold">Overtime Rate & Eligibility</div>
+                <div className="text-lg font-bold font-mono text-slate-900">1.5x Hourly CTC</div>
+                <div className="text-[11px] text-emerald-700 font-semibold">Eligible for Weekend & After-Shift Overtime</div>
+              </div>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="text-muted-foreground text-[11px] font-semibold">Accumulated Overtime (May)</div>
+                <div className="text-lg font-bold font-mono text-primary">06 hrs 45 mins</div>
+                <div className="text-[11px] text-slate-500">3 Sessions Logged</div>
+              </div>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="text-muted-foreground text-[11px] font-semibold">Comp Off Balance</div>
+                <div className="text-lg font-bold font-mono text-purple-700">2.0 Days Available</div>
+                <div className="text-[11px] text-slate-500">Valid until 30 Jun 2024</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: MONTHLY SUMMARY */}
+        {activeTab === "monthly" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4 text-primary" />
+                  Monthly Attendance & Muster Roll Summary (May 2024)
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Consolidated monthly attendance summary, presence percentage, and payroll sync metrics.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => toast.success("Monthly attendance report downloaded")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Export Monthly Roll
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 text-xs">
+              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+                <span className="text-[10px] text-emerald-800 font-semibold">Present Days</span>
+                <div className="text-base font-bold font-mono text-emerald-900 mt-1">22.0 Days</div>
+              </div>
+              <div className="p-3 bg-blue-50 rounded-xl border border-blue-200">
+                <span className="text-[10px] text-blue-800 font-semibold">Weekly Offs</span>
+                <div className="text-base font-bold font-mono text-blue-900 mt-1">4.0 Days</div>
+              </div>
+              <div className="p-3 bg-amber-50 rounded-xl border border-amber-200">
+                <span className="text-[10px] text-amber-800 font-semibold">Paid Leave</span>
+                <div className="text-base font-bold font-mono text-amber-900 mt-1">1.0 Day</div>
+              </div>
+              <div className="p-3 bg-purple-50 rounded-xl border border-purple-200">
+                <span className="text-[10px] text-purple-800 font-semibold">Comp Off Used</span>
+                <div className="text-base font-bold font-mono text-purple-900 mt-1">0.0 Days</div>
+              </div>
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                <span className="text-[10px] text-slate-600 font-semibold">Loss of Pay (LOP)</span>
+                <div className="text-base font-bold font-mono text-slate-800 mt-1">0.0 Days</div>
+              </div>
+              <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-200">
+                <span className="text-[10px] text-indigo-800 font-semibold">Total Payable</span>
+                <div className="text-base font-bold font-mono text-indigo-900 mt-1">27.0 / 27 Days</div>
+              </div>
             </div>
           </div>
         )}

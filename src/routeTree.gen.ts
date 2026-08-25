@@ -50,6 +50,7 @@ import { Route as ManagementHrmManagementExpenseClaimsRouteImport } from './rout
 import { Route as ManagementHrmManagementExitManagementRouteImport } from './routes/management.hrm-management.exit-management'
 import { Route as ManagementHrmManagementEmployeeWelfareRouteImport } from './routes/management.hrm-management.employee-welfare'
 import { Route as ManagementHrmManagementEmployeeManagementRouteImport } from './routes/management.hrm-management.employee-management'
+import { Route as ManagementHrmManagementCompetencyFormRouteImport } from './routes/management.hrm-management.competency-form'
 import { Route as ManagementHrmManagementCareerDevelopmentRouteImport } from './routes/management.hrm-management.career-development'
 import { Route as ManagementHrmManagementAttendanceManagementRouteImport } from './routes/management.hrm-management.attendance-management'
 import { Route as ManagementFinanceTaxRouteImport } from './routes/management.finance.tax'
@@ -533,6 +534,12 @@ const ManagementHrmManagementEmployeeManagementRoute =
   ManagementHrmManagementEmployeeManagementRouteImport.update({
     id: '/management/hrm-management/employee-management',
     path: '/management/hrm-management/employee-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementCompetencyFormRoute =
+  ManagementHrmManagementCompetencyFormRouteImport.update({
+    id: '/management/hrm-management/competency-form',
+    path: '/management/hrm-management/competency-form',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementHrmManagementCareerDevelopmentRoute =
@@ -2145,6 +2152,7 @@ export interface FileRoutesByFullPath {
   '/management/finance/tax': typeof ManagementFinanceTaxRoute
   '/management/hrm-management/attendance-management': typeof ManagementHrmManagementAttendanceManagementRoute
   '/management/hrm-management/career-development': typeof ManagementHrmManagementCareerDevelopmentRoute
+  '/management/hrm-management/competency-form': typeof ManagementHrmManagementCompetencyFormRoute
   '/management/hrm-management/employee-management': typeof ManagementHrmManagementEmployeeManagementRoute
   '/management/hrm-management/employee-welfare': typeof ManagementHrmManagementEmployeeWelfareRoute
   '/management/hrm-management/exit-management': typeof ManagementHrmManagementExitManagementRoute
@@ -2430,6 +2438,7 @@ export interface FileRoutesByTo {
   '/management/finance/tax': typeof ManagementFinanceTaxRoute
   '/management/hrm-management/attendance-management': typeof ManagementHrmManagementAttendanceManagementRoute
   '/management/hrm-management/career-development': typeof ManagementHrmManagementCareerDevelopmentRoute
+  '/management/hrm-management/competency-form': typeof ManagementHrmManagementCompetencyFormRoute
   '/management/hrm-management/employee-management': typeof ManagementHrmManagementEmployeeManagementRoute
   '/management/hrm-management/employee-welfare': typeof ManagementHrmManagementEmployeeWelfareRoute
   '/management/hrm-management/exit-management': typeof ManagementHrmManagementExitManagementRoute
@@ -2721,6 +2730,7 @@ export interface FileRoutesById {
   '/management/finance/tax': typeof ManagementFinanceTaxRoute
   '/management/hrm-management/attendance-management': typeof ManagementHrmManagementAttendanceManagementRoute
   '/management/hrm-management/career-development': typeof ManagementHrmManagementCareerDevelopmentRoute
+  '/management/hrm-management/competency-form': typeof ManagementHrmManagementCompetencyFormRoute
   '/management/hrm-management/employee-management': typeof ManagementHrmManagementEmployeeManagementRoute
   '/management/hrm-management/employee-welfare': typeof ManagementHrmManagementEmployeeWelfareRoute
   '/management/hrm-management/exit-management': typeof ManagementHrmManagementExitManagementRoute
@@ -3013,6 +3023,7 @@ export interface FileRouteTypes {
     | '/management/finance/tax'
     | '/management/hrm-management/attendance-management'
     | '/management/hrm-management/career-development'
+    | '/management/hrm-management/competency-form'
     | '/management/hrm-management/employee-management'
     | '/management/hrm-management/employee-welfare'
     | '/management/hrm-management/exit-management'
@@ -3298,6 +3309,7 @@ export interface FileRouteTypes {
     | '/management/finance/tax'
     | '/management/hrm-management/attendance-management'
     | '/management/hrm-management/career-development'
+    | '/management/hrm-management/competency-form'
     | '/management/hrm-management/employee-management'
     | '/management/hrm-management/employee-welfare'
     | '/management/hrm-management/exit-management'
@@ -3588,6 +3600,7 @@ export interface FileRouteTypes {
     | '/management/finance/tax'
     | '/management/hrm-management/attendance-management'
     | '/management/hrm-management/career-development'
+    | '/management/hrm-management/competency-form'
     | '/management/hrm-management/employee-management'
     | '/management/hrm-management/employee-welfare'
     | '/management/hrm-management/exit-management'
@@ -3856,6 +3869,7 @@ export interface RootRouteChildren {
   ManagementFinanceTaxRoute: typeof ManagementFinanceTaxRoute
   ManagementHrmManagementAttendanceManagementRoute: typeof ManagementHrmManagementAttendanceManagementRoute
   ManagementHrmManagementCareerDevelopmentRoute: typeof ManagementHrmManagementCareerDevelopmentRoute
+  ManagementHrmManagementCompetencyFormRoute: typeof ManagementHrmManagementCompetencyFormRoute
   ManagementHrmManagementEmployeeManagementRoute: typeof ManagementHrmManagementEmployeeManagementRoute
   ManagementHrmManagementEmployeeWelfareRoute: typeof ManagementHrmManagementEmployeeWelfareRoute
   ManagementHrmManagementExitManagementRoute: typeof ManagementHrmManagementExitManagementRoute
@@ -4338,6 +4352,13 @@ declare module '@tanstack/react-router' {
       path: '/management/hrm-management/employee-management'
       fullPath: '/management/hrm-management/employee-management'
       preLoaderRoute: typeof ManagementHrmManagementEmployeeManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/competency-form': {
+      id: '/management/hrm-management/competency-form'
+      path: '/management/hrm-management/competency-form'
+      fullPath: '/management/hrm-management/competency-form'
+      preLoaderRoute: typeof ManagementHrmManagementCompetencyFormRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/hrm-management/career-development': {
@@ -6348,6 +6369,8 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementHrmManagementAttendanceManagementRoute,
   ManagementHrmManagementCareerDevelopmentRoute:
     ManagementHrmManagementCareerDevelopmentRoute,
+  ManagementHrmManagementCompetencyFormRoute:
+    ManagementHrmManagementCompetencyFormRoute,
   ManagementHrmManagementEmployeeManagementRoute:
     ManagementHrmManagementEmployeeManagementRoute,
   ManagementHrmManagementEmployeeWelfareRoute:

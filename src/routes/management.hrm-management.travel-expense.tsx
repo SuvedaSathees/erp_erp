@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -151,8 +150,8 @@ const TOP_EXPENSES = [
   { category: "Other", date: "-", amount: "500", status: "Estimated" },
 ];
 
-export default function TravelManagementPage() {
-  const [activeTab, setActiveTab] = useState<string>("overview");
+export function TravelManagementPage() {
+  const [activeTab, setActiveTab] = useState<string>("itinerary");
 
   // Modals
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
@@ -230,67 +229,38 @@ export default function TravelManagementPage() {
           </div>
         </div>
 
-        {/* 1. Employee Header & Travel Master Metadata (Exact match to reference screenshot) */}
+        {/* 1. Travel Requisition Header (Clean enterprise layout, no profile photos, no stars) */}
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-5">
-          {/* Top Row: Employee Profile + Top Meta Strip */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            {/* Left Photo & Identity */}
-            <div className="flex items-center gap-3.5">
-              <div className="relative shrink-0">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&auto=format&fit=crop&q=80"
-                  alt="employee"
-                  className="h-16 w-16 rounded-full object-cover ring-2 ring-slate-100 shadow-2xs"
-                />
-                <span className="absolute -bottom-1 -right-1 flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-600 text-white shadow-xs">
-                  Approved
-                </span>
-              </div>
-              <div className="space-y-0.5">
-                <h3 className="text-base font-bold text-slate-900">Sankaranarayanan R</h3>
-                <div className="font-mono text-xs font-semibold text-slate-700">EMP-000125</div>
-                <div className="text-xs text-muted-foreground font-medium">
-                  Senior Mechanical Engineer • Engineering Department
-                </div>
-                <div className="flex items-center gap-3 text-[11px] text-slate-500 pt-0.5">
-                  <span className="flex items-center gap-1"><Mail className="h-3 w-3 text-slate-400" /> sankar.r@magnertia.com</span>
-                  <span className="flex items-center gap-1"><Phone className="h-3 w-3 text-slate-400" /> +91 98765 43210</span>
-                  <span className="flex items-center gap-1"><MapPin className="h-3 w-3 text-slate-400" /> Coimbatore, Tamil Nadu, India</span>
-                </div>
-              </div>
+          {/* Top Row Meta Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Travel Requisition</span>
+              <div className="font-mono font-bold text-slate-900 text-sm truncate">TRV-2024-00128</div>
             </div>
 
-            {/* Top Row Meta Fields */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs divide-x divide-slate-100">
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Travel Number</span>
-                <div className="font-bold text-slate-900 font-mono mt-0.5">TRV-2024-00128</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Travel Type</span>
+              <div className="font-semibold text-slate-900 text-sm truncate">Business Travel</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Travel Type</span>
-                <div className="font-bold text-slate-900 mt-0.5">Business Travel</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Category</span>
+              <div className="font-semibold text-slate-900 text-sm truncate">Domestic</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Travel Category</span>
-                <div className="font-bold text-slate-900 mt-0.5">Domestic</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Purpose</span>
+              <div className="font-semibold text-slate-900 text-sm truncate">Client Architecture Review</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Purpose</span>
-                <div className="font-bold text-slate-900 mt-0.5">Client Meeting</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Cost Center</span>
+              <div className="font-mono font-semibold text-slate-900 text-sm truncate">CC-ENG-001</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Cost Center</span>
-                <div className="font-bold text-slate-900 font-mono mt-0.5">CC-ENG-001</div>
-              </div>
-
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Project</span>
-                <div className="font-bold text-primary font-mono mt-0.5">PMP-00045</div>
-              </div>
+            <div className="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200/80 space-y-0.5">
+              <span className="text-[10px] text-emerald-800 font-semibold uppercase tracking-wider">Charge Project</span>
+              <div className="font-mono font-bold text-emerald-700 text-sm truncate">PMP-00045</div>
             </div>
           </div>
 
@@ -340,20 +310,13 @@ export default function TravelManagementPage() {
           </div>
         </div>
 
-        {/* Sub-Tabs Bar (Matching screenshot) */}
+        {/* Sub-Tabs Bar (3 Core Workable Tabs) */}
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-1.5">
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth">
             {[
-              { id: "overview", label: "Overview", icon: BarChart3 },
-              { id: "itinerary", label: "Itinerary", icon: Navigation },
-              { id: "bookings", label: "Bookings", icon: Hotel },
-              { id: "approvals", label: "Approvals", icon: CheckCheck },
-              { id: "advance", label: "Advance", icon: DollarSign },
-              { id: "expenses", label: "Expenses", icon: Receipt },
-              { id: "claims", label: "Claims", icon: FileText },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "outcomes", label: "Outcomes", icon: Target },
-              { id: "history", label: "History", icon: Activity },
+              { id: "itinerary", label: "Itinerary & Travel Plan", icon: Navigation },
+              { id: "bookings", label: "Flight & Hotel Bookings", icon: Hotel },
+              { id: "advance", label: "Travel Advance & Settlement", icon: DollarSign },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -376,8 +339,8 @@ export default function TravelManagementPage() {
           </div>
         </div>
 
-        {/* TAB 1: OVERVIEW DASHBOARD (Exact match to reference screenshot) */}
-        {activeTab === "overview" && (
+        {/* TAB 1: ITINERARY & TRAVEL PLAN */}
+        {activeTab === "itinerary" && (
           <div className="space-y-6">
             {/* Row 1: Travel Progress, Cost Summary, Advance & Settlement, Quick Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -389,9 +352,9 @@ export default function TravelManagementPage() {
 
                 {/* Progress Steps */}
                 <div className="py-2">
-                  <div className="flex items-center justify-between relative">
-                    <div className="absolute top-1/2 left-3 right-3 -translate-y-1/2 h-0.5 bg-slate-200 z-0" />
-                    <div className="absolute top-1/2 left-3 w-3/4 -translate-y-1/2 h-0.5 bg-emerald-600 z-0" />
+                  <div className="flex items-start justify-between relative">
+                    <div className="absolute top-3 left-4 right-4 h-0.5 bg-slate-200 z-0" />
+                    <div className="absolute top-3 left-4 w-3/4 h-0.5 bg-emerald-600 z-0" />
 
                     {[
                       { step: "1", label: "Submitted", date: "20 May 2024", done: true },
@@ -400,20 +363,20 @@ export default function TravelManagementPage() {
                       { step: "4", label: "In Progress", date: "25 May 2024", active: true },
                       { step: "5", label: "Expense Claim", date: "", future: true },
                     ].map((s) => (
-                      <div key={s.step} className="flex flex-col items-center relative z-10">
+                      <div key={s.step} className="flex flex-col items-center relative z-10 max-w-[65px] text-center">
                         <div
                           className={cn(
-                            "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-xs",
+                            "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-xs shrink-0",
                             s.done
-                              ? "bg-emerald-600 text-white"
+                              ? "bg-emerald-600 text-white ring-4 ring-white"
                               : s.active
-                                ? "bg-blue-600 text-white ring-4 ring-blue-100"
-                                : "bg-white border-2 border-slate-300 text-slate-400",
+                                ? "bg-blue-600 text-white ring-4 ring-blue-100 ring-offset-2 ring-offset-white"
+                                : "bg-white border-2 border-slate-300 text-slate-400 ring-4 ring-white",
                           )}
                         >
-                          {s.done ? "✓" : s.active ? <Plane className="h-3 w-3 text-white" /> : "6"}
+                          {s.done ? "✓" : s.active ? <Plane className="h-3 w-3 text-white" /> : s.step}
                         </div>
-                        <div className="text-[8px] font-bold text-slate-900 mt-1 text-center truncate max-w-[55px]">
+                        <div className="text-[8px] font-bold text-slate-900 mt-2 text-center truncate max-w-[55px]">
                           {s.label}
                         </div>
                         {s.date && <div className="text-[7px] text-muted-foreground text-center">{s.date}</div>}
@@ -432,8 +395,8 @@ export default function TravelManagementPage() {
                     <div className="font-bold text-slate-800">Expense Claim</div>
                   </div>
                   <div>
-                    <span className="text-slate-400 text-[9px]">Expected Completion</span>
-                    <div className="font-bold text-slate-800">03 Jun 2024</div>
+                    <span className="text-slate-400 text-[9px]">Expected Return</span>
+                    <div className="font-bold text-slate-800">27 May 2024</div>
                   </div>
                 </div>
               </div>
@@ -477,43 +440,43 @@ export default function TravelManagementPage() {
                           <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: c.color }} />
                           {c.name}
                         </span>
-                        <span className="font-mono font-bold text-slate-800">₹ {c.value.toLocaleString("en-IN")} ({c.percentage})</span>
+                        <span className="font-mono font-bold text-slate-800">₹ {c.value.toLocaleString("en-IN")}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <button onClick={() => setActiveTab("expenses")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
-                  View Cost Breakdown →
+                <button onClick={() => setActiveTab("advance")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
+                  View Cost & Advance Breakdown →
                 </button>
               </div>
 
-              {/* 3. Advance & Settlement */}
+              {/* 3. Advance & Settlement Summary */}
               <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Advance & Settlement</h4>
                 </div>
 
-                <div className="space-y-1.5 text-[11px]">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Advance Approved</span>
-                    <span className="font-mono font-bold text-slate-800">₹ 10,000</span>
+                <div className="space-y-1.5 text-[10px]">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500">Advance Disbursed</span>
+                    <span className="font-mono font-bold text-slate-900">₹ 10,000</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Advance Paid</span>
-                    <span className="font-mono font-bold text-emerald-700">₹ 10,000</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500">Estimated Total Cost</span>
+                    <span className="font-mono font-bold text-slate-900">₹ 18,500</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Total Expenses</span>
-                    <span className="font-mono font-bold text-slate-800">₹ 0</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500">Advance Mode</span>
+                    <span className="font-medium text-slate-700">Bank Transfer</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Approved Expenses</span>
-                    <span className="font-mono font-bold text-slate-800">₹ 0</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500">Disbursed Date</span>
+                    <span className="font-mono text-slate-600">22 May 2024</span>
                   </div>
-                  <div className="flex justify-between pt-1 border-t border-slate-100 font-bold">
-                    <span className="text-slate-800">Balance to Settle</span>
-                    <span className="font-mono text-emerald-700">₹ 0</span>
+                  <div className="flex justify-between items-center pt-1 border-t border-slate-100">
+                    <span className="font-bold text-slate-700">Net Payable Balance</span>
+                    <span className="font-mono font-extrabold text-emerald-700">₹ 8,500</span>
                   </div>
                 </div>
 
@@ -528,10 +491,10 @@ export default function TravelManagementPage() {
                   <h4 className="text-xs font-bold text-slate-800">Quick Info</h4>
                 </div>
 
-                <div className="space-y-1.5 text-[11px]">
+                <div className="space-y-1.5 text-[10px]">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Travel Policy</span>
-                    <span className="font-semibold text-slate-800">Standard Policy</span>
+                    <span className="text-slate-500">Travel Policy Tier</span>
+                    <span className="font-semibold text-slate-800">Tier 2 - Domestic</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Approval Matrix</span>
@@ -563,8 +526,8 @@ export default function TravelManagementPage() {
               <div className="lg:col-span-8 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Itinerary Summary</h4>
-                  <button onClick={() => setActiveTab("itinerary")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View Full Itinerary →
+                  <button onClick={() => setActiveTab("bookings")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
+                    View Bookings →
                   </button>
                 </div>
 
@@ -572,35 +535,35 @@ export default function TravelManagementPage() {
                   <table className="w-full text-[10px] text-left">
                     <thead>
                       <tr className="border-b border-slate-100 text-slate-400 font-semibold">
-                        <th className="pb-1">Date</th>
+                        <th className="pb-1 whitespace-nowrap">Date</th>
                         <th className="pb-1">From</th>
                         <th className="pb-1">To</th>
                         <th className="pb-1">Mode</th>
-                        <th className="pb-1">Departure</th>
-                        <th className="pb-1">Arrival</th>
-                        <th className="pb-1">Booking Ref.</th>
-                        <th className="pb-1 text-right">Status</th>
+                        <th className="pb-1 whitespace-nowrap">Departure</th>
+                        <th className="pb-1 whitespace-nowrap">Arrival</th>
+                        <th className="pb-1 whitespace-nowrap">Booking Ref.</th>
+                        <th className="pb-1 text-right whitespace-nowrap">Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                       {ITINERARY_LIST.map((it, idx) => (
                         <tr key={idx} className="hover:bg-slate-50/60">
-                          <td className="py-2 font-mono text-slate-800">{it.date}</td>
+                          <td className="py-2 font-mono text-slate-800 whitespace-nowrap">{it.date}</td>
                           <td className="py-2 font-semibold text-slate-900">{it.from}</td>
                           <td className="py-2 font-semibold text-slate-900">{it.to}</td>
-                          <td className="py-2 text-slate-600">
+                          <td className="py-2 text-slate-600 whitespace-nowrap">
                             <span className="flex items-center gap-1">
                               {it.mode === "Flight" ? <Plane className="h-3 w-3 text-blue-600" /> : <Car className="h-3 w-3 text-amber-600" />}
                               {it.mode}
                             </span>
                           </td>
-                          <td className="py-2 font-mono text-slate-600">{it.dep}</td>
-                          <td className="py-2 font-mono text-slate-600">{it.arr}</td>
-                          <td className="py-2 font-mono font-bold text-primary">{it.ref}</td>
-                          <td className="py-2 text-right">
+                          <td className="py-2 font-mono text-slate-600 whitespace-nowrap">{it.dep}</td>
+                          <td className="py-2 font-mono text-slate-600 whitespace-nowrap">{it.arr}</td>
+                          <td className="py-2 font-mono font-bold text-primary whitespace-nowrap">{it.ref}</td>
+                          <td className="py-2 text-right whitespace-nowrap">
                             <span
                               className={cn(
-                                "px-1.5 py-0.2 rounded-md font-bold text-[9px]",
+                                "inline-flex items-center px-2 py-0.5 rounded-full font-bold text-[9px] whitespace-nowrap",
                                 it.status === "Confirmed"
                                   ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                                   : "bg-amber-50 text-amber-700 border border-amber-200",
@@ -621,7 +584,7 @@ export default function TravelManagementPage() {
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Upcoming Activities</h4>
                   <button onClick={() => toast.info("Activity calendar")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View Full Schedule →
+                    Full Schedule →
                   </button>
                 </div>
 
@@ -630,7 +593,7 @@ export default function TravelManagementPage() {
                     <div className="flex items-center gap-2">
                       <Plane className="h-3.5 w-3.5 text-blue-600" />
                       <div>
-                        <div className="font-bold text-slate-900">Departure</div>
+                        <div className="font-bold text-slate-900">Departure Flight 6E-4521</div>
                         <div className="text-[9px] text-muted-foreground font-mono">25 May 2024, 08:30 AM</div>
                       </div>
                     </div>
@@ -641,7 +604,7 @@ export default function TravelManagementPage() {
                     <div className="flex items-center gap-2">
                       <Calendar className="h-3.5 w-3.5 text-emerald-600" />
                       <div>
-                        <div className="font-bold text-slate-900">Client Meeting</div>
+                        <div className="font-bold text-slate-900">Client Strategy Meeting</div>
                         <div className="text-[9px] text-muted-foreground font-mono">25 May 2024, 11:00 AM</div>
                       </div>
                     </div>
@@ -652,7 +615,7 @@ export default function TravelManagementPage() {
                     <div className="flex items-center gap-2">
                       <Users className="h-3.5 w-3.5 text-purple-600" />
                       <div>
-                        <div className="font-bold text-slate-900">Project Discussion</div>
+                        <div className="font-bold text-slate-900">Project Review & Demo</div>
                         <div className="text-[9px] text-muted-foreground font-mono">26 May 2024, 10:00 AM</div>
                       </div>
                     </div>
@@ -663,7 +626,7 @@ export default function TravelManagementPage() {
                     <div className="flex items-center gap-2">
                       <Plane className="h-3.5 w-3.5 text-indigo-600" />
                       <div>
-                        <div className="font-bold text-slate-900">Return</div>
+                        <div className="font-bold text-slate-900">Return Flight 6E-4528</div>
                         <div className="text-[9px] text-muted-foreground font-mono">27 May 2024, 06:40 PM</div>
                       </div>
                     </div>
@@ -679,8 +642,8 @@ export default function TravelManagementPage() {
               <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Top Expenses</h4>
-                  <button onClick={() => setActiveTab("expenses")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All Expenses →
+                  <button onClick={() => setActiveTab("advance")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
+                    View All →
                   </button>
                 </div>
 
@@ -697,13 +660,13 @@ export default function TravelManagementPage() {
                       {TOP_EXPENSES.map((ex) => (
                         <tr key={ex.category} className="hover:bg-slate-50/60">
                           <td className="py-1.5 font-medium text-slate-900">{ex.category}</td>
-                          <td className="py-1.5 font-mono font-bold text-slate-800">{ex.amount}</td>
-                          <td className="py-1.5 text-right">
+                          <td className="py-1.5 font-mono font-bold text-slate-800">₹ {ex.amount}</td>
+                          <td className="py-1.5 text-right whitespace-nowrap">
                             <span
                               className={cn(
                                 "px-1.5 py-0.2 rounded-md font-bold text-[8px]",
                                 ex.status === "Booked"
-                                  ? "bg-emerald-50 text-emerald-700"
+                                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                                   : "bg-slate-100 text-slate-500",
                               )}
                             >
@@ -721,8 +684,8 @@ export default function TravelManagementPage() {
               <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Documents</h4>
-                  <button onClick={() => setActiveTab("documents")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All Documents →
+                  <button onClick={() => toast.info("Viewing all documents")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
+                    View All →
                   </button>
                 </div>
 
@@ -754,9 +717,6 @@ export default function TravelManagementPage() {
               <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Recent History</h4>
-                  <button onClick={() => setActiveTab("history")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View Full History →
-                  </button>
                 </div>
 
                 <div className="space-y-2 text-[10px]">
@@ -812,29 +772,20 @@ export default function TravelManagementPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.info("Submit expense claim")}
+                    onClick={() => setActiveTab("advance")}
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-blue-600 hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <FileText className="h-3 w-3 text-blue-600" />
-                    Submit Claim
+                    Settlement
                   </button>
 
                   <button
                     type="button"
-                    onClick={() => toast.info("Upload travel receipt")}
+                    onClick={() => setActiveTab("bookings")}
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-purple-600 hover:bg-purple-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
-                    <Paperclip className="h-3 w-3 text-purple-600" />
-                    Upload Document
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.error("Travel request cancellation initiated")}
-                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-rose-600 hover:bg-rose-50/40 text-rose-700 font-semibold transition cursor-pointer text-[10px]"
-                  >
-                    <XCircle className="h-3 w-3 text-rose-600" />
-                    Cancel Travel
+                    <Hotel className="h-3 w-3 text-purple-600" />
+                    Bookings
                   </button>
 
                   <button
@@ -843,7 +794,7 @@ export default function TravelManagementPage() {
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-emerald-600 hover:bg-emerald-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <DollarSign className="h-3 w-3 text-emerald-600" />
-                    Request Advance
+                    Advance
                   </button>
 
                   <button
@@ -852,7 +803,7 @@ export default function TravelManagementPage() {
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-amber-600 hover:bg-amber-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <ShieldCheck className="h-3 w-3 text-amber-600" />
-                    Travel Policy
+                    Policy
                   </button>
 
                   <button
@@ -861,7 +812,7 @@ export default function TravelManagementPage() {
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-cyan-600 hover:bg-cyan-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <Download className="h-3 w-3 text-cyan-600" />
-                    Download Itinerary
+                    Manifest
                   </button>
 
                   <button
@@ -870,9 +821,285 @@ export default function TravelManagementPage() {
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-indigo-600 hover:bg-indigo-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <FileSpreadsheet className="h-3 w-3 text-indigo-600" />
-                    View Reports
+                    Reports
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => toast.error("Travel request cancellation dialog")}
+                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-rose-600 hover:bg-rose-50/40 text-rose-700 font-semibold transition cursor-pointer text-[10px]"
+                  >
+                    <XCircle className="h-3 w-3 text-rose-600" />
+                    Cancel
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: FLIGHT & HOTEL BOOKINGS */}
+        {activeTab === "bookings" && (
+          <div className="space-y-6">
+            {/* 1. Flight Bookings Card */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <Plane className="h-4 w-4 text-blue-600" />
+                  <h4 className="text-sm font-bold text-slate-900">Flight & Air Travel Bookings</h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => toast.info("Add new flight booking")}
+                  className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Flight
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/60">
+                      <th className="py-2.5 px-3">Flight / Airline</th>
+                      <th className="py-2.5 px-3">Route / Sector</th>
+                      <th className="py-2.5 px-3 whitespace-nowrap">Departure</th>
+                      <th className="py-2.5 px-3 whitespace-nowrap">Arrival</th>
+                      <th className="py-2.5 px-3">Class & Seat</th>
+                      <th className="py-2.5 px-3 whitespace-nowrap">PNR Reference</th>
+                      <th className="py-2.5 px-3">Fare Amount</th>
+                      <th className="py-2.5 px-3 text-right whitespace-nowrap">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {[
+                      { flight: "6E-4521 (Indigo)", from: "Coimbatore (CJB)", to: "Bengaluru (BLR)", dep: "25 May 2024, 08:30 AM", arr: "25 May 2024, 09:25 AM", seat: "Economy • 14B", pnr: "PNR-984210", amount: "₹ 4,500", status: "Confirmed" },
+                      { flight: "6E-4528 (Indigo)", from: "Bengaluru (BLR)", to: "Coimbatore (CJB)", dep: "27 May 2024, 06:40 PM", arr: "27 May 2024, 07:35 PM", seat: "Economy • 12A", pnr: "PNR-984255", amount: "₹ 4,500", status: "Confirmed" },
+                    ].map((f) => (
+                      <tr key={f.pnr} className="hover:bg-slate-50/60">
+                        <td className="py-3 px-3 font-bold text-slate-900">{f.flight}</td>
+                        <td className="py-3 px-3 text-slate-700 font-medium">{f.from} → {f.to}</td>
+                        <td className="py-3 px-3 font-mono text-slate-600 whitespace-nowrap">{f.dep}</td>
+                        <td className="py-3 px-3 font-mono text-slate-600 whitespace-nowrap">{f.arr}</td>
+                        <td className="py-3 px-3 text-slate-600">{f.seat}</td>
+                        <td className="py-3 px-3 font-mono font-bold text-primary whitespace-nowrap">{f.pnr}</td>
+                        <td className="py-3 px-3 font-mono font-bold text-slate-900">{f.amount}</td>
+                        <td className="py-3 px-3 text-right whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            {f.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* 2. Hotel Accommodations Card */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <Hotel className="h-4 w-4 text-emerald-600" />
+                  <h4 className="text-sm font-bold text-slate-900">Hotel & Accommodation Vouchers</h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => toast.info("Add new hotel accommodation")}
+                  className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Hotel
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/60">
+                      <th className="py-2.5 px-3">Hotel Property</th>
+                      <th className="py-2.5 px-3">Location / City</th>
+                      <th className="py-2.5 px-3">Room Type</th>
+                      <th className="py-2.5 px-3 whitespace-nowrap">Check-In</th>
+                      <th className="py-2.5 px-3 whitespace-nowrap">Check-Out</th>
+                      <th className="py-2.5 px-3 text-center">Nights</th>
+                      <th className="py-2.5 px-3 whitespace-nowrap">Booking Voucher</th>
+                      <th className="py-2.5 px-3">Tariff Total</th>
+                      <th className="py-2.5 px-3 text-right whitespace-nowrap">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {[
+                      { hotel: "Taj West End / Marriott Whitefield", city: "Bengaluru Central", room: "Deluxe Executive (Complimentary Breakfast)", in: "25 May 2024 (12:00 PM)", out: "27 May 2024 (11:00 AM)", nights: 2, voucher: "HTL-BLR-84920", total: "₹ 6,500", status: "Confirmed" },
+                    ].map((h) => (
+                      <tr key={h.voucher} className="hover:bg-slate-50/60">
+                        <td className="py-3 px-3 font-bold text-slate-900">{h.hotel}</td>
+                        <td className="py-3 px-3 text-slate-600 font-medium">{h.city}</td>
+                        <td className="py-3 px-3 text-slate-700">{h.room}</td>
+                        <td className="py-3 px-3 font-mono text-slate-600 whitespace-nowrap">{h.in}</td>
+                        <td className="py-3 px-3 font-mono text-slate-600 whitespace-nowrap">{h.out}</td>
+                        <td className="py-3 px-3 text-center font-mono font-bold text-slate-800">{h.nights}</td>
+                        <td className="py-3 px-3 font-mono font-bold text-primary whitespace-nowrap">{h.voucher}</td>
+                        <td className="py-3 px-3 font-mono font-bold text-slate-900">{h.total}</td>
+                        <td className="py-3 px-3 text-right whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            {h.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* 3. Local Ground Transportation */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <Car className="h-4 w-4 text-amber-600" />
+                  <h4 className="text-sm font-bold text-slate-900">Local Ground Transportation & Transfers</h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => toast.info("Add new cab transfer")}
+                  className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Cab Transfer
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/60">
+                      <th className="py-2.5 px-3">Transfer Route</th>
+                      <th className="py-2.5 px-3">Vehicle Type</th>
+                      <th className="py-2.5 px-3 whitespace-nowrap">Pickup Time</th>
+                      <th className="py-2.5 px-3 whitespace-nowrap">Booking Ref</th>
+                      <th className="py-2.5 px-3">Estimated Fare</th>
+                      <th className="py-2.5 px-3 text-right whitespace-nowrap">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {[
+                      { route: "BLR Airport → Client Office (Whitefield)", vehicle: "Sedan EV Prime", time: "25 May 2024, 09:45 AM", ref: "CAB-9281", fare: "₹ 1,500", status: "Confirmed" },
+                      { route: "Client Office → BLR Airport", vehicle: "Sedan EV Prime", time: "27 May 2024, 04:30 PM", ref: "CAB-9294", fare: "₹ 1,500", status: "Confirmed" },
+                    ].map((c) => (
+                      <tr key={c.ref} className="hover:bg-slate-50/60">
+                        <td className="py-3 px-3 font-bold text-slate-900">{c.route}</td>
+                        <td className="py-3 px-3 text-slate-700">{c.vehicle}</td>
+                        <td className="py-3 px-3 font-mono text-slate-600 whitespace-nowrap">{c.time}</td>
+                        <td className="py-3 px-3 font-mono font-bold text-primary whitespace-nowrap">{c.ref}</td>
+                        <td className="py-3 px-3 font-mono font-bold text-slate-900">{c.fare}</td>
+                        <td className="py-3 px-3 text-right whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            {c.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: TRAVEL ADVANCE & SETTLEMENT */}
+        {activeTab === "advance" && (
+          <div className="space-y-6">
+            {/* Top Cards: Advance Disbursal & Net Financial Summary */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-2">
+                <div className="text-xs text-muted-foreground font-semibold">Advance Disbursed (Pre-Travel)</div>
+                <div className="text-2xl font-extrabold text-slate-900 font-mono">₹ 10,000</div>
+                <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-medium">
+                  <CheckCircle className="h-3 w-3 text-emerald-600" />
+                  Credited via NEFT on 22 May 2024
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-2">
+                <div className="text-xs text-muted-foreground font-semibold">Total Incurred / Estimated Cost</div>
+                <div className="text-2xl font-extrabold text-blue-700 font-mono">₹ 18,500</div>
+                <div className="text-[11px] text-slate-500">
+                  Approved policy budget under Tier 2 Domestic
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-2 bg-emerald-50/20">
+                <div className="text-xs text-emerald-800 font-semibold">Net Balance to Employee</div>
+                <div className="text-2xl font-extrabold text-emerald-700 font-mono">₹ 8,500</div>
+                <div className="text-[11px] text-emerald-700 font-semibold">
+                  Payable upon post-travel settlement submission
+                </div>
+              </div>
+            </div>
+
+            {/* Settlement Itemized Table */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Expense Category Breakdown & Advance Offset</h4>
+                  <p className="text-xs text-muted-foreground mt-0.5">Itemized claims against corporate travel advance.</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsAdvanceModalOpen(true)}
+                    className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+                  >
+                    + Request Additional Advance
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toast.success("Settlement statement exported")}
+                    className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer flex items-center gap-1.5"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    Export Settlement
+                  </button>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/60">
+                      <th className="py-2.5 px-3">Expense Category</th>
+                      <th className="py-2.5 px-3">Budgeted / Estimated</th>
+                      <th className="py-2.5 px-3">Actual Incurred</th>
+                      <th className="py-2.5 px-3 text-center">Receipts Attached</th>
+                      <th className="py-2.5 px-3">Payment Method</th>
+                      <th className="py-2.5 px-3 text-right whitespace-nowrap">Settlement Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {[
+                      { cat: "Flight & Airfare", budget: "₹ 9,000", actual: "₹ 9,000", receipts: "2 Tax Invoices", mode: "Company Card", status: "Verified & Pre-paid" },
+                      { cat: "Hotel & Accommodation", budget: "₹ 6,500", actual: "₹ 6,500", receipts: "1 Hotel Folio", mode: "Direct Corporate", status: "Verified & Pre-paid" },
+                      { cat: "Meals & Per Diem", budget: "₹ 1,500", actual: "₹ 1,500", receipts: "3 Meal Bills", mode: "Travel Advance", status: "Adjusted from Advance" },
+                      { cat: "Local Cabs & Transit", budget: "₹ 1,000", actual: "₹ 1,000", receipts: "2 Cab E-Receipts", mode: "Travel Advance", status: "Adjusted from Advance" },
+                      { cat: "Client Entertainment / Other", budget: "₹ 500", actual: "₹ 500", receipts: "1 Bill", mode: "Employee Cash", status: "Reimbursable" },
+                    ].map((s) => (
+                      <tr key={s.cat} className="hover:bg-slate-50/60">
+                        <td className="py-3 px-3 font-bold text-slate-900">{s.cat}</td>
+                        <td className="py-3 px-3 font-mono text-slate-600">{s.budget}</td>
+                        <td className="py-3 px-3 font-mono font-bold text-slate-900">{s.actual}</td>
+                        <td className="py-3 px-3 text-center font-medium text-blue-700">{s.receipts}</td>
+                        <td className="py-3 px-3 text-slate-600">{s.mode}</td>
+                        <td className="py-3 px-3 text-right whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            {s.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -1100,3 +1327,6 @@ export default function TravelManagementPage() {
     </AppShell>
   );
 }
+
+export default TravelManagementPage;
+

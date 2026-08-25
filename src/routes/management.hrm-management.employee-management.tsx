@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -137,13 +136,13 @@ const INITIAL_PROFILE: EmployeeProfile = {
   name: "Sankaranarayanan R",
   photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80",
   designation: "Senior Mechanical Engineer",
-  department: "Engineering Department",
+  department: "Engineering",
   status: "Active",
   officialEmail: "sankar.r@magnertia.com",
   mobile: "+91 98765 43210",
   dob: "27 Jul 1996",
   age: 27,
-  location: "Coimbatore, Tamil Nadu, India",
+  location: "Coimbatore",
   joiningDate: "01 Aug 2023",
   totalExperience: "5.2 Years",
   currentGrade: "G4",
@@ -152,7 +151,7 @@ const INITIAL_PROFILE: EmployeeProfile = {
   reportingManager: {
     name: "Arun Kumar",
     designation: "Engineering Manager",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&auto=format&fit=crop&q=80",
+    avatar: "",
   },
   employmentType: "Full Time",
   nextReviewDate: "01 Oct 2024",
@@ -275,68 +274,136 @@ export default function EmployeeManagementPage() {
           </div>
         </div>
 
-        {/* 1. Employee Master Header & Profile Banner */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            {/* Left Photo & Main Identity */}
-            <div className="flex items-center gap-4">
-              <div className="relative shrink-0">
-                <img
-                  src={profile.photo}
-                  alt={profile.name}
-                  className="h-18 w-18 rounded-xl object-cover ring-4 ring-slate-100 shadow-xs"
-                />
-                <span className="absolute -bottom-2 -right-1 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white shadow-xs">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+        {/* 1. Employee Master Header & Profile Banner (Premium Enterprise Card Layout) */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-5">
+          {/* Top Identity Header Row */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">{profile.name}</h3>
+                <BadgeCheck className="h-5 w-5 text-blue-600 shrink-0" />
+                <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   Active
                 </span>
               </div>
+              <div className="text-xs font-semibold text-slate-700">
+                {profile.designation} • <span className="text-primary font-bold">{profile.department} Department</span>
+              </div>
 
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-slate-900">{profile.name}</h3>
-                  <BadgeCheck className="h-4 w-4 text-blue-600" />
-                </div>
-                <div className="text-xs font-semibold text-slate-700">{profile.designation}</div>
-                <div className="text-xs text-primary font-medium">{profile.department}</div>
-
-                <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 pt-0.5">
-                  <span className="flex items-center gap-1">
-                    <Mail className="h-3.5 w-3.5 text-slate-400" />
-                    {profile.officialEmail}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Phone className="h-3.5 w-3.5 text-slate-400" />
-                    {profile.mobile}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MapPin className="h-3.5 w-3.5 text-slate-400" />
-                    {profile.location}
-                  </span>
-                </div>
+              <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 pt-1">
+                <span className="flex items-center gap-1.5">
+                  <Mail className="h-3.5 w-3.5 text-slate-400" />
+                  {profile.officialEmail}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Phone className="h-3.5 w-3.5 text-slate-400" />
+                  {profile.mobile}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                  27 Jul 1996 (Age {profile.age})
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5 text-slate-400" />
+                  {profile.location}, Tamil Nadu, India
+                </span>
               </div>
             </div>
 
-            {/* Right Metric Quick View Columns */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs divide-x divide-slate-100">
-              <div className="px-3">
-                <span className="text-[10px] text-muted-foreground font-medium">Employee ID</span>
-                <div className="font-mono font-bold text-slate-900 mt-0.5">{profile.employeeId}</div>
+            {/* Quick Badges */}
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="p-2.5 px-3 rounded-lg bg-slate-50 border border-slate-200 text-right">
+                <div className="text-[10px] text-muted-foreground font-semibold">Current Grade</div>
+                <div className="text-sm font-bold font-mono text-slate-900">{profile.currentGrade}</div>
               </div>
-
-              <div className="px-3">
-                <span className="text-[10px] text-muted-foreground font-medium">Current Grade</span>
-                <div className="font-bold text-slate-900 mt-0.5">{profile.currentGrade}</div>
+              <div className="p-2.5 px-3 rounded-lg bg-emerald-50/50 border border-emerald-200 text-right">
+                <div className="text-[10px] text-emerald-800 font-semibold">Annual CTC</div>
+                <div className="text-sm font-bold font-mono text-emerald-700">{profile.annualCTC}</div>
               </div>
+            </div>
+          </div>
 
-              <div className="px-3">
-                <span className="text-[10px] text-muted-foreground font-medium">Total Experience</span>
-                <div className="font-bold text-slate-900 mt-0.5">{profile.totalExperience}</div>
+          {/* Core Metric Cards Grid (6 Clean Distinct Cards) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Employee ID</span>
+              <div className="font-mono font-bold text-slate-900 text-sm truncate">{profile.employeeId}</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Employee No.</span>
+              <div className="font-mono font-bold text-slate-900 text-sm truncate">{profile.employeeNumber}</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Joining Date</span>
+              <div className="font-semibold text-slate-900 text-sm truncate">{profile.joiningDate}</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Experience</span>
+              <div className="font-bold text-slate-900 text-sm truncate">{profile.totalExperience}</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Grade Band</span>
+              <div className="font-bold font-mono text-slate-900 text-sm truncate">{profile.currentGrade} (Executive)</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200/80 space-y-0.5">
+              <span className="text-[10px] text-emerald-800 font-semibold uppercase tracking-wider">CTC (Annual)</span>
+              <div className="font-mono font-bold text-emerald-700 text-sm truncate">{profile.annualCTC}</div>
+            </div>
+          </div>
+
+          {/* Bottom Meta Summary Row */}
+          <div className="pt-3 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs text-slate-700">
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-slate-50/50 border border-slate-100">
+              <Building2 className="h-4 w-4 text-slate-400 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-[10px] text-muted-foreground">Business Unit</div>
+                <div className="font-semibold truncate">{profile.businessUnit}</div>
               </div>
+            </div>
 
-              <div className="px-3">
-                <span className="text-[10px] text-muted-foreground font-medium">Annual CTC</span>
-                <div className="font-mono font-bold text-emerald-700 mt-0.5">{profile.annualCTC}</div>
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-slate-50/50 border border-slate-100">
+              <Layers className="h-4 w-4 text-slate-400 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-[10px] text-muted-foreground">Department</div>
+                <div className="font-semibold truncate">{profile.department}</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-slate-50/50 border border-slate-100">
+              <UserCheck className="h-4 w-4 text-slate-400 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-[10px] text-muted-foreground">Reporting Manager</div>
+                <div className="font-semibold truncate">{profile.reportingManager.name}</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-slate-50/50 border border-slate-100">
+              <MapPin className="h-4 w-4 text-slate-400 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-[10px] text-muted-foreground">Location</div>
+                <div className="font-semibold truncate">{profile.location}</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-slate-50/50 border border-slate-100">
+              <Briefcase className="h-4 w-4 text-slate-400 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-[10px] text-muted-foreground">Employment Type</div>
+                <div className="font-semibold truncate">{profile.employmentType}</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-rose-50/50 border border-rose-100">
+              <Calendar className="h-4 w-4 text-rose-500 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-[10px] text-muted-foreground">Next Review</div>
+                <div className="font-semibold text-rose-600 truncate">{profile.nextReviewDate}</div>
               </div>
             </div>
           </div>
@@ -628,14 +695,7 @@ export default function EmployeeManagementPage() {
               <div className="space-y-2 text-[11px]">
                 <div className="flex justify-between items-center">
                   <span className="text-slate-500">Overall Rating</span>
-                  <div className="flex items-center gap-1 font-mono font-bold text-slate-900">
-                    <div className="flex text-amber-400">
-                      <Star className="h-3 w-3 fill-amber-400" />
-                      <Star className="h-3 w-3 fill-amber-400" />
-                      <Star className="h-3 w-3 fill-amber-400" />
-                      <Star className="h-3 w-3 fill-amber-400" />
-                      <Star className="h-3 w-3 fill-slate-200" />
-                    </div>
+                  <div className="font-mono font-bold text-slate-900">
                     <span>4.4 / 5</span>
                   </div>
                 </div>

@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -71,21 +70,6 @@ import {
   Eye,
   CheckCircle,
 } from "lucide-react";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip as RechartsTooltip,
-  PieChart as RePieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-  CartesianGrid,
-  Legend,
-} from "recharts";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/management/hrm-management/recruitment-management")({
@@ -409,32 +393,8 @@ const RECENT_ACTIVITIES: RecentActivityItem[] = [
   },
 ];
 
-const SOURCE_EFFECTIVENESS_PIE = [
-  { name: "Employee Referral", value: 12, percentage: "37.5%", color: "#2563EB" },
-  { name: "LinkedIn", value: 8, percentage: "25.0%", color: "#06B6D4" },
-  { name: "Job Portal", value: 7, percentage: "21.9%", color: "#F59E0B" },
-  { name: "Company Website", value: 3, percentage: "9.4%", color: "#8B5CF6" },
-  { name: "Walk-in", value: 2, percentage: "6.2%", color: "#EC4899" },
-];
-
-const STAGE_WISE_TABLE = [
-  { stage: "Applications Received", count: 32, percentage: "100%", avgDays: "-" },
-  { stage: "Screening", count: 12, percentage: "37.50%", avgDays: 3 },
-  { stage: "Assessment", count: 8, percentage: "25.00%", avgDays: 5 },
-  { stage: "Interview", count: 5, percentage: "15.63%", avgDays: 7 },
-  { stage: "Offer", count: 2, percentage: "6.25%", avgDays: 2 },
-  { stage: "Joined", count: 1, percentage: "3.13%", avgDays: 1 },
-];
-
-const OFFER_SUMMARY_PIE = [
-  { name: "Awaiting Response", value: 1, percentage: "50%", color: "#F59E0B" },
-  { name: "Accepted", value: 1, percentage: "50%", color: "#10B981" },
-  { name: "Rejected", value: 0, percentage: "0%", color: "#EF4444" },
-  { name: "Expired", value: 0, percentage: "0%", color: "#6366F1" },
-];
-
 export default function RecruitmentManagementPage() {
-  const [activeTab, setActiveTab] = useState<string>("overview");
+  const [activeTab, setActiveTab] = useState<string>("requisition");
   const [master, setMaster] = useState<RecruitmentMaster>(INITIAL_MASTER);
   const [candidates, setCandidates] = useState<CandidateApplication[]>(INITIAL_CANDIDATES);
   const [searchTerm, setSearchTerm] = useState("");
@@ -739,21 +699,17 @@ export default function RecruitmentManagementPage() {
               <label className="block text-[11px] font-semibold text-slate-600 mb-1">
                 Recruiter <span className="text-rose-500">*</span>
               </label>
-              <div className="flex items-center gap-2 h-8 px-2 rounded-md border border-slate-200 bg-white">
-                <img
-                  src={master.recruiter.avatar}
-                  alt={master.recruiter.name}
-                  className="h-5 w-5 rounded-full object-cover"
-                />
-                <span className="text-xs font-medium text-slate-800 truncate">{master.recruiter.name}</span>
-                <button
-                  type="button"
-                  onClick={() => toast.info("Recruiter selector opened")}
-                  className="text-slate-400 hover:text-slate-600 ml-auto text-xs"
-                >
-                  ✕
-                </button>
-              </div>
+              <input
+                type="text"
+                value={master.recruiter.name}
+                onChange={(e) =>
+                  setMaster({
+                    ...master,
+                    recruiter: { ...master.recruiter, name: e.target.value },
+                  })
+                }
+                className="w-full h-8 px-2.5 rounded-md border border-slate-200 text-xs font-medium text-slate-800 focus:border-primary focus:outline-hidden"
+              />
             </div>
 
             {/* Objective spanning last column */}
@@ -791,21 +747,17 @@ export default function RecruitmentManagementPage() {
               <label className="block text-[11px] font-semibold text-slate-600 mb-1">
                 Hiring Manager <span className="text-rose-500">*</span>
               </label>
-              <div className="flex items-center gap-2 h-8 px-2 rounded-md border border-slate-200 bg-white">
-                <img
-                  src={master.hiringManager.avatar}
-                  alt={master.hiringManager.name}
-                  className="h-5 w-5 rounded-full object-cover"
-                />
-                <span className="text-xs font-medium text-slate-800 truncate">{master.hiringManager.name}</span>
-                <button
-                  type="button"
-                  onClick={() => toast.info("Hiring manager selector opened")}
-                  className="text-slate-400 hover:text-slate-600 ml-auto text-xs"
-                >
-                  ✕
-                </button>
-              </div>
+              <input
+                type="text"
+                value={master.hiringManager.name}
+                onChange={(e) =>
+                  setMaster({
+                    ...master,
+                    hiringManager: { ...master.hiringManager, name: e.target.value },
+                  })
+                }
+                className="w-full h-8 px-2.5 rounded-md border border-slate-200 text-xs font-medium text-slate-800 focus:border-primary focus:outline-hidden"
+              />
             </div>
 
             <div>
@@ -848,20 +800,13 @@ export default function RecruitmentManagementPage() {
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-1.5">
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth">
             {[
-              { id: "overview", label: "Overview", icon: BarChart3 },
               { id: "requisition", label: "Requisition", icon: FileCheck },
               { id: "job-description", label: "Job Description", icon: FileText },
               { id: "sourcing", label: "Sourcing", icon: Globe },
               { id: "applications", label: "Applications", badge: "32", icon: Users },
-              { id: "screening", label: "Screening", badge: "12", icon: UserCheck2 },
-              { id: "assessment", label: "Assessment", badge: "8", icon: BrainCircuit },
               { id: "interview", label: "Interview", badge: "5", icon: Video },
-              { id: "selection", label: "Selection", icon: Award },
-              { id: "offer", label: "Offer", badge: "2", icon: Mail },
-              { id: "joining", label: "Joining", icon: UserCheck },
+              { id: "offer", label: "Offer & Joining", badge: "2", icon: Mail },
               { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "timeline", label: "Timeline", icon: Clock },
-              { id: "history", label: "History", icon: Activity },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -894,445 +839,7 @@ export default function RecruitmentManagementPage() {
           </div>
         </div>
 
-        {/* TAB 1: OVERVIEW DASHBOARD */}
-        {activeTab === "overview" && (
-          <div className="space-y-6">
-            {/* Top Stat Cards Row (7 Cards matching screenshot) */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
-              {/* Card 1: Open Positions */}
-              <div className="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-muted-foreground">Open Positions</span>
-                  <div className="p-1 rounded-md bg-blue-50 text-blue-600">
-                    <Lock className="h-3.5 w-3.5" />
-                  </div>
-                </div>
-                <div className="text-xl font-bold text-slate-900 font-mono">2</div>
-                <div className="text-[10px] text-muted-foreground">of 2</div>
-              </div>
-
-              {/* Card 2: Applications */}
-              <div className="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-muted-foreground">Applications</span>
-                  <div className="p-1 rounded-md bg-emerald-50 text-emerald-600">
-                    <FileText className="h-3.5 w-3.5" />
-                  </div>
-                </div>
-                <div className="text-xl font-bold text-slate-900 font-mono">32</div>
-              </div>
-
-              {/* Card 3: Shortlisted */}
-              <div className="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-muted-foreground">Shortlisted</span>
-                  <div className="p-1 rounded-md bg-amber-50 text-amber-600">
-                    <UserCheck2 className="h-3.5 w-3.5" />
-                  </div>
-                </div>
-                <div className="text-xl font-bold text-slate-900 font-mono">12</div>
-                <div className="text-[10px] text-amber-600 font-semibold">37.50%</div>
-              </div>
-
-              {/* Card 4: Interviews */}
-              <div className="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-muted-foreground">Interviews</span>
-                  <div className="p-1 rounded-md bg-purple-50 text-purple-600">
-                    <ShieldCheck className="h-3.5 w-3.5" />
-                  </div>
-                </div>
-                <div className="text-xl font-bold text-slate-900 font-mono">5</div>
-                <div className="text-[10px] text-purple-600 font-semibold">15.63%</div>
-              </div>
-
-              {/* Card 5: Offers */}
-              <div className="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-muted-foreground">Offers</span>
-                  <div className="p-1 rounded-md bg-teal-50 text-teal-600">
-                    <Mail className="h-3.5 w-3.5" />
-                  </div>
-                </div>
-                <div className="text-xl font-bold text-slate-900 font-mono">2</div>
-              </div>
-
-              {/* Card 6: Joined */}
-              <div className="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-muted-foreground">Joined</span>
-                  <div className="p-1 rounded-md bg-rose-50 text-rose-600">
-                    <UserCheck className="h-3.5 w-3.5" />
-                  </div>
-                </div>
-                <div className="text-xl font-bold text-slate-900 font-mono">1</div>
-              </div>
-
-              {/* Card 7: Time to Fill */}
-              <div className="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-muted-foreground">Time to Fill</span>
-                  <div className="p-1 rounded-full bg-emerald-50 text-emerald-600">
-                    <CheckCircle className="h-3.5 w-3.5" />
-                  </div>
-                </div>
-                <div className="text-lg font-bold text-slate-900">28 Days</div>
-                <div className="text-[10px] text-muted-foreground">Target: 30 Days</div>
-              </div>
-            </div>
-
-            {/* Row 1: Charts & Details (4 Cards) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {/* 2. Recruitment Funnel */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs flex flex-col justify-between space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      2
-                    </span>
-                    Recruitment Funnel
-                  </h4>
-                </div>
-
-                <div className="space-y-1.5 text-[11px]">
-                  <div className="flex items-center justify-between bg-blue-600 text-white px-2.5 py-1 rounded-md">
-                    <span>Applications Received</span>
-                    <span className="font-mono font-bold">32 (100%)</span>
-                  </div>
-                  <div className="flex items-center justify-between bg-blue-500 text-white px-2.5 py-1 rounded-md mx-2">
-                    <span>Screening</span>
-                    <span className="font-mono font-bold">12 (37.50%)</span>
-                  </div>
-                  <div className="flex items-center justify-between bg-cyan-500 text-white px-2.5 py-1 rounded-md mx-4">
-                    <span>Assessment</span>
-                    <span className="font-mono font-bold">8 (25.00%)</span>
-                  </div>
-                  <div className="flex items-center justify-between bg-amber-500 text-white px-2.5 py-1 rounded-md mx-6">
-                    <span>Interview</span>
-                    <span className="font-mono font-bold">5 (15.63%)</span>
-                  </div>
-                  <div className="flex items-center justify-between bg-orange-500 text-white px-2.5 py-1 rounded-md mx-8">
-                    <span>Offer</span>
-                    <span className="font-mono font-bold">2 (6.25%)</span>
-                  </div>
-                  <div className="flex items-center justify-between bg-emerald-600 text-white px-2.5 py-1 rounded-md mx-10">
-                    <span>Joined</span>
-                    <span className="font-mono font-bold">1 (3.13%)</span>
-                  </div>
-                </div>
-
-                <div className="text-center pt-2 border-t border-slate-100 text-[11px] font-semibold text-slate-700">
-                  Conversion Rate: <span className="font-mono text-emerald-600 font-bold">3.13%</span>
-                </div>
-              </div>
-
-              {/* 3. Source Effectiveness */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs flex flex-col justify-between space-y-2">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      3
-                    </span>
-                    Source Effectiveness
-                  </h4>
-                </div>
-
-                <div className="h-36 relative flex items-center justify-center">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RePieChart>
-                      <Pie
-                        data={SOURCE_EFFECTIVENESS_PIE}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={40}
-                        outerRadius={58}
-                        paddingAngle={2}
-                        dataKey="value"
-                      >
-                        {SOURCE_EFFECTIVENESS_PIE.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <RechartsTooltip />
-                    </RePieChart>
-                  </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-lg font-extrabold text-slate-900 font-mono">32</span>
-                    <span className="text-[9px] text-muted-foreground">Applications</span>
-                  </div>
-                </div>
-
-                <div className="space-y-1 text-[10px]">
-                  {SOURCE_EFFECTIVENESS_PIE.slice(0, 3).map((s) => (
-                    <div key={s.name} className="flex justify-between items-center">
-                      <span className="flex items-center gap-1 text-slate-600 truncate">
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: s.color }} />
-                        {s.name}
-                      </span>
-                      <span className="font-mono font-semibold text-slate-800">
-                        {s.value} ({s.percentage})
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between pt-1.5 border-t border-slate-100 text-[10px]">
-                  <span className="text-slate-500">Total Cost: <strong className="text-slate-900 font-mono">₹ 48,700</strong></span>
-                  <button onClick={() => setActiveTab("sourcing")} className="text-primary font-semibold hover:underline cursor-pointer">
-                    View Report
-                  </button>
-                </div>
-              </div>
-
-              {/* 4. Stage Wise Details Table */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      4
-                    </span>
-                    Stage Wise Details
-                  </h4>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-[10px] text-left">
-                    <thead>
-                      <tr className="border-b border-slate-100 text-slate-500 font-semibold">
-                        <th className="pb-1">Stage</th>
-                        <th className="pb-1 text-center">Count</th>
-                        <th className="pb-1 text-center">%</th>
-                        <th className="pb-1 text-right">Avg. Time</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {STAGE_WISE_TABLE.map((row) => (
-                        <tr key={row.stage} className="hover:bg-slate-50/60">
-                          <td className="py-1.5 font-medium text-slate-800 truncate max-w-[100px]">{row.stage}</td>
-                          <td className="py-1.5 text-center font-mono font-semibold">{row.count}</td>
-                          <td className="py-1.5 text-center font-mono text-slate-600">{row.percentage}</td>
-                          <td className="py-1.5 text-right font-mono">{row.avgDays !== "-" ? `${row.avgDays} Days` : "-"}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* 5. Top Candidates */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      5
-                    </span>
-                    Top Candidates
-                  </h4>
-                  <button onClick={() => setActiveTab("applications")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer">
-                    View All
-                  </button>
-                </div>
-
-                <div className="space-y-2.5">
-                  {candidates.slice(0, 3).map((can) => (
-                    <div key={can.id} className="flex items-center justify-between gap-2 p-1.5 rounded-lg border border-slate-100 bg-slate-50/40">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <img src={can.avatar} alt={can.name} className="h-7 w-7 rounded-full object-cover shrink-0" />
-                        <div className="min-w-0">
-                          <div className="text-xs font-bold text-slate-900 truncate">{can.name}</div>
-                          <div className="text-[10px] text-muted-foreground truncate">{can.designation}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <span className="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono">
-                          {can.score}%
-                        </span>
-                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Row 2: Recent Activities, Offer Summary, Key Dates, Cost Summary */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {/* 6. Recent Activities */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      6
-                    </span>
-                    Recent Activities
-                  </h4>
-                </div>
-
-                <div className="space-y-2 text-[10px]">
-                  {RECENT_ACTIVITIES.slice(0, 4).map((act) => (
-                    <div key={act.id} className="p-1.5 rounded-md bg-slate-50 border border-slate-100 space-y-0.5">
-                      <div className="flex items-center justify-between text-slate-400">
-                        <span>{act.date}</span>
-                        <span className="text-slate-600 font-medium">{act.by}</span>
-                      </div>
-                      <div className="font-semibold text-slate-900">{act.activity}</div>
-                      <div className="text-muted-foreground truncate">{act.candidateDetails}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <button onClick={() => setActiveTab("history")} className="text-center text-[10px] font-semibold text-primary hover:underline cursor-pointer pt-1">
-                  View All Activities →
-                </button>
-              </div>
-
-              {/* 7. Offer Summary */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      7
-                    </span>
-                    Offer Summary
-                  </h4>
-                </div>
-
-                <div className="h-32 relative flex items-center justify-center">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RePieChart>
-                      <Pie
-                        data={OFFER_SUMMARY_PIE}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={36}
-                        outerRadius={52}
-                        paddingAngle={3}
-                        dataKey="value"
-                      >
-                        {OFFER_SUMMARY_PIE.map((entry, index) => (
-                          <Cell key={`offer-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <RechartsTooltip />
-                    </RePieChart>
-                  </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-lg font-extrabold text-slate-900 font-mono">2</span>
-                    <span className="text-[9px] text-muted-foreground">Offers</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-1 text-[10px] pt-1">
-                  {OFFER_SUMMARY_PIE.map((o) => (
-                    <div key={o.name} className="flex justify-between items-center">
-                      <span className="flex items-center gap-1 text-slate-600 truncate">
-                        <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: o.color }} />
-                        {o.name}
-                      </span>
-                      <span className="font-mono font-bold">{o.value} ({o.percentage})</span>
-                    </div>
-                  ))}
-                </div>
-
-                <button onClick={() => setActiveTab("offer")} className="text-center text-[10px] font-semibold text-primary hover:underline cursor-pointer pt-1">
-                  View Offer Report →
-                </button>
-              </div>
-
-              {/* 8. Key Dates */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      8
-                    </span>
-                    Key Dates
-                  </h4>
-                </div>
-
-                <div className="space-y-2 text-[10px]">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-slate-700 font-medium">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                      Requisition Approved
-                    </span>
-                    <span className="font-mono text-slate-600">12 Apr 2024</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-slate-700 font-medium">
-                      <Globe className="h-3.5 w-3.5 text-blue-600" />
-                      Job Posted
-                    </span>
-                    <span className="font-mono text-slate-600">13 Apr 2024</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-slate-700 font-medium">
-                      <UserCheck2 className="h-3.5 w-3.5 text-cyan-600" />
-                      Screening Started
-                    </span>
-                    <span className="font-mono text-slate-600">14 Apr 2024</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-slate-700 font-medium">
-                      <Video className="h-3.5 w-3.5 text-amber-600" />
-                      Interview Started
-                    </span>
-                    <span className="font-mono text-slate-600">16 Apr 2024</span>
-                  </div>
-                  <div className="flex items-center justify-between font-bold text-slate-900 border-t border-slate-100 pt-1">
-                    <span className="flex items-center gap-1.5">
-                      <Calendar className="h-3.5 w-3.5 text-rose-600" />
-                      Target Joining Date
-                    </span>
-                    <span className="font-mono text-rose-600">30 Jun 2024</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 9. Cost Summary */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      9
-                    </span>
-                    Cost Summary
-                  </h4>
-                </div>
-
-                <div className="space-y-2 text-[11px]">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Recruitment Budget</span>
-                    <span className="font-mono font-bold text-slate-900">₹ 1,20,000</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Actual Cost</span>
-                    <span className="font-mono font-bold text-blue-600">₹ 48,700</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Cost per Hire</span>
-                    <span className="font-mono font-bold text-emerald-600">₹ 48,700</span>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-[10px] text-slate-500 mb-1">
-                      <span>Budget Utilization</span>
-                      <span className="font-mono font-bold text-primary">40.58%</span>
-                    </div>
-                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full w-[40.58%]" />
-                    </div>
-                  </div>
-                </div>
-
-                <button onClick={() => setActiveTab("overview")} className="text-center text-[10px] font-semibold text-primary hover:underline cursor-pointer pt-1">
-                  View Cost Report →
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 2: REQUISITION */}
+        {/* TAB 1: REQUISITION */}
         {activeTab === "requisition" && (
           <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
             <div className="border-b border-slate-100 pb-3">
@@ -1366,6 +873,113 @@ export default function RecruitmentManagementPage() {
                 Critical requirement to support Generation-4 EV High-Speed Charging firmware and embedded cloud controllers.
                 Immediate replacement is required to maintain zero downtime delivery timelines for Q2 enterprise fleet deployments.
               </p>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: JOB DESCRIPTION */}
+        {activeTab === "job-description" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  Job Description & Key Responsibilities
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Designation: {master.position} • Department: {master.department} • Experience: 5–8 Years
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => toast.success("Job description updated")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
+              >
+                <Edit className="h-3.5 w-3.5" />
+                Edit JD
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/40 space-y-2">
+                <h4 className="font-bold text-slate-900">Role Summary</h4>
+                <p className="text-slate-600 leading-relaxed">
+                  We are looking for an experienced Senior Embedded Systems & Firmware Engineer to architect and develop real-time embedded firmware for our next-generation battery management systems (BMS) and smart electric vehicle power modules.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-2">
+                  <h4 className="font-bold text-slate-900">Key Responsibilities</h4>
+                  <ul className="list-disc list-inside space-y-1 text-slate-600 text-[11px]">
+                    <li>Design, code, and verify firmware in Embedded C/C++ on ARM Cortex-M/R microcontrollers.</li>
+                    <li>Develop RTOS tasks, device drivers (CAN, SPI, I2C, UART), and communication stacks.</li>
+                    <li>Collaborate with hardware and system engineering teams for board bring-up.</li>
+                    <li>Ensure ISO 26262 functional safety compliance across all critical modules.</li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-2">
+                  <h4 className="font-bold text-slate-900">Required Qualifications & Skills</h4>
+                  <ul className="list-disc list-inside space-y-1 text-slate-600 text-[11px]">
+                    <li>B.Tech/M.Tech in Electrical, Electronics, or Computer Science.</li>
+                    <li>5+ years of hands-on experience in Embedded C and real-time operating systems (FreeRTOS/Zephyr).</li>
+                    <li>Proficiency with CAN bus analyzers, oscilloscopes, and hardware debuggers (JTAG).</li>
+                    <li>Experience in automotive electronics or energy storage systems preferred.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: SOURCING */}
+        {activeTab === "sourcing" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Globe className="h-4 w-4 text-primary" />
+                  Sourcing Channels & Job Postings
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Multi-channel candidate sourcing across job boards, professional networks, and internal referrals.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => toast.success("Job posting published to LinkedIn and Careers Portal")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Post to New Channel
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+              {[
+                { channel: "Careers Website", applicants: 14, status: "Active", views: 420 },
+                { channel: "LinkedIn Jobs", applicants: 11, status: "Active", views: 680 },
+                { channel: "Naukri.com", applicants: 5, status: "Active", views: 310 },
+                { channel: "Employee Referral", applicants: 2, status: "Active", views: 45 },
+              ].map((src) => (
+                <div key={src.channel} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-slate-900">{src.channel}</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      {src.status}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-[11px] pt-1">
+                    <span className="text-slate-500">Applicants</span>
+                    <span className="font-mono font-bold text-primary">{src.applicants}</span>
+                  </div>
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-slate-500">Total Views</span>
+                    <span className="font-mono text-slate-700">{src.views}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -1419,15 +1033,11 @@ export default function RecruitmentManagementPage() {
                   {candidates.map((can) => (
                     <tr key={can.id} className="hover:bg-slate-50/70 transition">
                       <td className="py-3 px-3">
-                        <div className="flex items-center gap-2.5">
-                          <img src={can.avatar} alt={can.name} className="h-8 w-8 rounded-full object-cover" />
-                          <div>
-                            <div className="font-bold text-slate-900 flex items-center gap-1">
-                              {can.name}
-                              {can.ratingStar && <Star className="h-3 w-3 fill-amber-400 text-amber-400" />}
-                            </div>
-                            <div className="text-[10px] text-muted-foreground">{can.email} • {can.mobile}</div>
+                        <div>
+                          <div className="font-bold text-slate-900">
+                            {can.name}
                           </div>
+                          <div className="text-[10px] text-muted-foreground">{can.email} • {can.mobile}</div>
                         </div>
                       </td>
                       <td className="py-3 px-3 font-medium text-slate-700">{can.experience}</td>
@@ -1533,8 +1143,8 @@ export default function RecruitmentManagementPage() {
           </div>
         )}
 
-        {/* TAB 5: OFFER & JOINING */}
-        {(activeTab === "offer" || activeTab === "joining") && (
+        {/* TAB 6: OFFER & JOINING */}
+        {activeTab === "offer" && (
           <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
             <div className="border-b border-slate-100 pb-3">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -1572,6 +1182,57 @@ export default function RecruitmentManagementPage() {
                   <div className="font-mono font-bold text-rose-600">22 Apr 2024</div>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 7: DOCUMENTS */}
+        {activeTab === "documents" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Paperclip className="h-4 w-4 text-primary" />
+                  Recruitment Documents & Attachments
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Job specifications, candidate resumes, interview scorecards, and offer letters.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => toast.success("File uploaded successfully")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Upload Document
+              </button>
+            </div>
+
+            <div className="space-y-2 text-xs">
+              {[
+                { name: "Approved_Manpower_Requisition.pdf", type: "PDF", size: "450 KB", date: "15 Apr 2024", uploader: "Arun Kumar" },
+                { name: "Senior_Firmware_Engineer_JD_v2.docx", type: "Word Document", size: "120 KB", date: "16 Apr 2024", uploader: "Neha Kapoor" },
+                { name: "Priyanka_Sharma_Offer_Letter_Signed.pdf", type: "PDF", size: "820 KB", date: "20 Apr 2024", uploader: "HR Operations" },
+              ].map((doc) => (
+                <div key={doc.name} className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-slate-50/50">
+                  <div className="flex items-center gap-3">
+                    <Paperclip className="h-4 w-4 text-slate-400" />
+                    <div>
+                      <div className="font-bold text-slate-900">{doc.name}</div>
+                      <div className="text-[10px] text-muted-foreground">{doc.size} • Uploaded by {doc.uploader} on {doc.date}</div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => toast.success(`Downloading ${doc.name}`)}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline cursor-pointer"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    Download
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         )}

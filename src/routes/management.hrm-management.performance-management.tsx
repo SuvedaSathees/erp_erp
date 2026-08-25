@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -168,8 +167,8 @@ const ACTION_ITEMS = [
   { action: "Mentoring sessions", owner: "Arun Kumar", dueDate: "30 Jul 2024", status: "Not Started" },
 ];
 
-export default function PerformanceManagementPage() {
-  const [activeTab, setActiveTab] = useState<string>("overview");
+export function PerformanceManagementPage() {
+  const [activeTab, setActiveTab] = useState<string>("goals");
 
   // Modals
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
@@ -247,75 +246,38 @@ export default function PerformanceManagementPage() {
           </div>
         </div>
 
-        {/* 1. Employee Header & 6 Key Performance Badges (Exact match to reference screenshot) */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-6">
-          {/* Top Row: Employee Profile + Cycle Info */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            {/* Left Photo & Identity */}
-            <div className="flex items-center gap-3.5">
-              <div className="relative shrink-0">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&auto=format&fit=crop&q=80"
-                  alt="employee"
-                  className="h-16 w-16 rounded-full object-cover ring-2 ring-slate-100 shadow-2xs"
-                />
-                <span className="absolute -bottom-1 -right-1 flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-600 text-white shadow-xs">
-                  Active
-                </span>
-              </div>
-              <div className="space-y-0.5">
-                <h3 className="text-base font-bold text-slate-900">Sankaranarayanan R</h3>
-                <div className="font-mono text-xs font-semibold text-slate-700">EMP-000125</div>
-                <div className="text-xs text-muted-foreground font-medium">
-                  Senior Mechanical Engineer • Engineering Department
-                </div>
-                <div className="flex items-center gap-3 text-[11px] text-slate-500 pt-0.5">
-                  <span className="flex items-center gap-1"><Mail className="h-3 w-3 text-slate-400" /> sankar.r@magnertia.com</span>
-                  <span className="flex items-center gap-1"><Phone className="h-3 w-3 text-slate-400" /> +91 98765 43210</span>
-                  <span className="flex items-center gap-1"><MapPin className="h-3 w-3 text-slate-400" /> Coimbatore, Tamil Nadu, India</span>
-                </div>
-              </div>
+        {/* 1. Performance Cycle Header & Key Metrics (Clean enterprise layout, no profile photos, no stars) */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-5">
+          {/* Top Cycle Metadata Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Performance Cycle</span>
+              <div className="font-bold text-slate-900 text-sm truncate">FY 2023-24 Annual</div>
             </div>
 
-            {/* Quick Cycle Metadata */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs divide-x divide-slate-100">
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Performance Cycle</span>
-                <div className="font-bold text-slate-900 mt-0.5">FY 2023-24 Annual</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Review Type</span>
+              <div className="font-bold text-slate-900 text-sm truncate">Annual Appraisal</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Review Type</span>
-                <div className="font-bold text-slate-900 mt-0.5">Annual</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Review Period</span>
+              <div className="font-semibold text-slate-900 text-sm truncate">01 Apr 2023 - 31 Mar 2024</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Review Period</span>
-                <div className="font-bold text-slate-900 mt-0.5">01 Apr 2023 - 31 Mar 2024</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Lead Evaluator</span>
+              <div className="font-semibold text-slate-900 text-sm truncate">Arun Kumar (Lead)</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Reporting Manager</span>
-                <div className="font-bold text-slate-900 mt-0.5 flex items-center gap-1.5">
-                  <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&auto=format&fit=crop&q=80" alt="manager" className="h-4 w-4 rounded-full" />
-                  <div>
-                    <div>Arun Kumar</div>
-                    <div className="text-[9px] text-muted-foreground font-normal">Engineering Manager</div>
-                  </div>
-                </div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Due Date</span>
+              <div className="font-bold text-rose-600 text-sm truncate">30 Apr 2024</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Due Date</span>
-                <div className="font-bold text-rose-600 mt-0.5">30 Apr 2024</div>
-              </div>
-
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Status</span>
-                <span className="inline-block mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                  In Progress
-                </span>
-              </div>
+            <div className="p-3 rounded-xl bg-amber-50/60 border border-amber-200/80 space-y-0.5">
+              <span className="text-[10px] text-amber-800 font-semibold uppercase tracking-wider">Cycle Status</span>
+              <div className="font-bold text-amber-700 text-sm truncate">In Progress</div>
             </div>
           </div>
 
@@ -324,7 +286,7 @@ export default function PerformanceManagementPage() {
             {/* 1. Overall Rating */}
             <div className="p-2.5 rounded-xl border border-slate-200 bg-amber-50/30 flex items-center gap-2.5 shadow-2xs">
               <div className="p-2 rounded-lg bg-amber-100 text-amber-600">
-                <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
+                <Award className="h-4 w-4 text-amber-600" />
               </div>
               <div>
                 <div className="text-[10px] text-muted-foreground font-semibold">Overall Rating</div>
@@ -399,17 +361,11 @@ export default function PerformanceManagementPage() {
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-1.5">
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth">
             {[
-              { id: "overview", label: "Overview", icon: BarChart3 },
               { id: "goals", label: "Goals & KPIs", icon: Target },
               { id: "competencies", label: "Competencies", icon: Award },
               { id: "360", label: "360° Feedback", icon: Users },
-              { id: "reviews", label: "Reviews", icon: FileText },
-              { id: "ratings", label: "Ratings", icon: Star },
-              { id: "calibration", label: "Calibration", icon: Scale },
+              { id: "reviews", label: "Reviews & Appraisal", icon: FileText },
               { id: "development", label: "Development Plan", icon: BrainCircuit },
-              { id: "rewards", label: "Rewards", icon: DollarSign },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "history", label: "History", icon: Activity },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -432,15 +388,16 @@ export default function PerformanceManagementPage() {
           </div>
         </div>
 
-        {/* TAB 1: OVERVIEW DASHBOARD (Exact match to reference screenshot) */}
-        {activeTab === "overview" && (
+        {/* Functional Tab Section */}
+        {/* Tab 1: Goals & KPIs */}
+        {activeTab === "goals" && (
           <div className="space-y-6">
             {/* Row 1: Performance Summary, Goal Achievement, KPI Performance */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
               {/* 1. Performance Summary (4 Cols) */}
               <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Performance Summary</h4>
+                  <h4 className="text-xs font-bold text-slate-800">Performance Rating Distribution</h4>
                 </div>
 
                 <div className="h-32 relative flex items-center justify-center">
@@ -463,7 +420,7 @@ export default function PerformanceManagementPage() {
                     </RePieChart>
                   </ResponsiveContainer>
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-lg font-extrabold text-slate-900 font-mono">4.2</span>
+                    <span className="text-lg font-extrabold text-slate-900 font-mono">4.2 / 5</span>
                     <span className="text-[8px] text-muted-foreground">Overall Rating</span>
                   </div>
                 </div>
@@ -479,17 +436,13 @@ export default function PerformanceManagementPage() {
                     </div>
                   ))}
                 </div>
-
-                <button onClick={() => setActiveTab("ratings")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
-                  View Rating Scale →
-                </button>
               </div>
 
               {/* 2. Goal Achievement (4 Cols) */}
               <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Goal Achievement</h4>
-                  <span className="text-xs font-extrabold text-emerald-700 font-mono">91% Excellent</span>
+                  <span className="text-xs font-extrabold text-emerald-700 font-mono">91% Overall</span>
                 </div>
 
                 <div className="space-y-2 text-[11px]">
@@ -506,17 +459,17 @@ export default function PerformanceManagementPage() {
                   ))}
                 </div>
 
-                <button onClick={() => setActiveTab("goals")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
-                  View All Goals →
+                <button onClick={() => setIsGoalModalOpen(true)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
+                  + Add New Goal
                 </button>
               </div>
 
               {/* 3. KPI Performance (4 Cols) */}
               <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">KPI Performance</h4>
-                  <button onClick={() => setActiveTab("goals")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All KPIs
+                  <h4 className="text-xs font-bold text-slate-800">Key Performance Indicators</h4>
+                  <button onClick={() => setIsKpiModalOpen(true)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
+                    + Add KPI
                   </button>
                 </div>
 
@@ -539,265 +492,309 @@ export default function PerformanceManagementPage() {
                 </div>
               </div>
             </div>
+          </div>
+        )}
 
-            {/* Row 2: Competency Assessment, Review Progress, Strengths & Improvement Areas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
-              {/* 1. Competency Assessment (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Competency Assessment</h4>
-                  <button onClick={() => setActiveTab("competencies")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All
-                  </button>
+        {/* Tab 2: Competencies */}
+        {activeTab === "competencies" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-3">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Role–Competency Proficiency Matrix</h4>
+                  <p className="text-xs text-muted-foreground mt-0.5">Core calculation: Required Level − Current Level = Competency Gap</p>
                 </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-[10px] text-left">
-                    <thead>
-                      <tr className="border-b border-slate-100 text-slate-400 font-semibold">
-                        <th className="pb-1">Competency</th>
-                        <th className="pb-1 text-center">Exp</th>
-                        <th className="pb-1 text-center">Act</th>
-                        <th className="pb-1 text-right">Score</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {COMPETENCIES_LIST.map((c) => (
-                        <tr key={c.name} className="hover:bg-slate-50/60">
-                          <td className="py-1.5 font-medium text-slate-900">{c.name}</td>
-                          <td className="py-1.5 text-center font-mono text-slate-500">{c.expected}</td>
-                          <td className="py-1.5 text-center font-mono font-bold text-slate-800">{c.actual}</td>
-                          <td className="py-1.5 text-right font-mono font-bold text-amber-600">{c.score}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* 2. Review Progress (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Review Progress</h4>
-                </div>
-
-                <div className="space-y-1.5 text-[10px]">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 font-semibold text-slate-800">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> Goal Setting
-                    </span>
-                    <span className="font-mono text-slate-400">Completed on 10 Apr 2023</span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 font-semibold text-slate-800">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> Self Review
-                    </span>
-                    <span className="font-mono text-slate-400">Completed on 15 Mar 2024</span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 font-semibold text-slate-800">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> Manager Review
-                    </span>
-                    <span className="font-mono text-slate-400">Completed on 20 Mar 2024</span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 font-bold text-blue-700">
-                      <span className="h-3.5 w-3.5 rounded-full bg-blue-600 text-white text-[9px] flex items-center justify-center font-bold">4</span>
-                      360° Feedback
-                    </span>
-                    <span className="font-bold text-blue-600">In Progress (Due 25 Mar)</span>
-                  </div>
-
-                  <div className="flex items-center justify-between text-slate-400">
-                    <span className="flex items-center gap-1.5">
-                      <span className="h-3.5 w-3.5 rounded-full bg-slate-100 text-slate-500 text-[9px] flex items-center justify-center font-bold">5</span>
-                      Calibration
-                    </span>
-                    <span>Pending (Due 05 Apr)</span>
-                  </div>
-
-                  <div className="flex items-center justify-between text-slate-400">
-                    <span className="flex items-center gap-1.5">
-                      <span className="h-3.5 w-3.5 rounded-full bg-slate-100 text-slate-500 text-[9px] flex items-center justify-center font-bold">6</span>
-                      Final Rating
-                    </span>
-                    <span>Pending (Due 10 Apr)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. Strengths & Improvement Areas (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Strengths & Improvement Areas</h4>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 text-[10px]">
-                  {/* Strengths */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-1 font-bold text-emerald-800">
-                      <ThumbsUp className="h-3 w-3 text-emerald-600" /> Top Strengths
-                    </div>
-                    <ul className="space-y-1 text-slate-600 list-disc list-inside text-[9px]">
-                      <li>Strong technical skills</li>
-                      <li>Ownership & accountability</li>
-                      <li>Problem solving ability</li>
-                      <li>Process improvement mindset</li>
-                    </ul>
-                  </div>
-
-                  {/* Improvements */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-1 font-bold text-amber-800">
-                      <ThumbsDown className="h-3 w-3 text-amber-600" /> Areas to Improve
-                    </div>
-                    <ul className="space-y-1 text-slate-600 list-disc list-inside text-[9px]">
-                      <li>Strategic thinking</li>
-                      <li>Leadership development</li>
-                      <li>Time management</li>
-                      <li>Delegation</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <button onClick={() => setActiveTab("development")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
-                  View Development Plan →
+                <button
+                  type="button"
+                  onClick={() => toast.success("Competency assessment updated")}
+                  className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer"
+                >
+                  Save Competency Scores
                 </button>
               </div>
-            </div>
 
-            {/* Row 3: Recent Performance History, Action Items, Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
-              {/* 1. Recent Performance History (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Recent Performance History</h4>
-                  <button onClick={() => setActiveTab("history")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All
-                  </button>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-[10px] text-left">
-                    <thead>
-                      <tr className="border-b border-slate-100 text-slate-400 font-semibold">
-                        <th className="pb-1">Cycle</th>
-                        <th className="pb-1">Review Type</th>
-                        <th className="pb-1 text-center">Score</th>
-                        <th className="pb-1 text-right">Comments</th>
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/60">
+                      <th className="py-2.5 px-3">Competency</th>
+                      <th className="py-2.5 px-3">Category</th>
+                      <th className="py-2.5 px-3 text-center">Required Level</th>
+                      <th className="py-2.5 px-3 text-center">Current Level</th>
+                      <th className="py-2.5 px-3 text-center">Gap</th>
+                      <th className="py-2.5 px-3 text-center">Weightage</th>
+                      <th className="py-2.5 px-3 text-right">Rating Score</th>
+                      <th className="py-2.5 px-3 text-right">Proficiency Band</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {[
+                      { name: "Technical Expertise & Architecture", cat: "Technical", req: 4, cur: 5, gap: 0, weight: "25%", score: "4.8 / 5", band: "Expert", bandColor: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+                      { name: "Problem Solving & Analysis", cat: "Core", req: 4, cur: 4, gap: 0, weight: "20%", score: "4.2 / 5", band: "Advanced", bandColor: "bg-blue-50 text-blue-700 border-blue-200" },
+                      { name: "Team Collaboration & Cross-Functional", cat: "Behavioural", req: 4, cur: 4, gap: 0, weight: "15%", score: "4.3 / 5", band: "Advanced", bandColor: "bg-blue-50 text-blue-700 border-blue-200" },
+                      { name: "Leadership & Team Mentoring", cat: "Leadership", req: 4, cur: 3, gap: 1, weight: "20%", score: "3.2 / 5", band: "Developing", bandColor: "bg-amber-50 text-amber-700 border-amber-200" },
+                      { name: "Strategic Thinking & Planning", cat: "Strategic", req: 4, cur: 3, gap: 1, weight: "20%", score: "3.4 / 5", band: "Developing", bandColor: "bg-amber-50 text-amber-700 border-amber-200" },
+                    ].map((c) => (
+                      <tr key={c.name} className="hover:bg-slate-50/60">
+                        <td className="py-3 px-3 font-bold text-slate-900">{c.name}</td>
+                        <td className="py-3 px-3 text-slate-600 font-medium">{c.cat}</td>
+                        <td className="py-3 px-3 text-center font-mono font-bold text-slate-700">{c.req}</td>
+                        <td className="py-3 px-3 text-center font-mono font-bold text-slate-900">{c.cur}</td>
+                        <td className="py-3 px-3 text-center font-mono font-bold">
+                          <span className={cn(c.gap > 0 ? "text-rose-600 font-extrabold" : "text-emerald-600")}>
+                            {c.gap}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 text-center font-mono text-slate-500">{c.weight}</td>
+                        <td className="py-3 px-3 text-right font-mono font-bold text-slate-800">{c.score}</td>
+                        <td className="py-3 px-3 text-right">
+                          <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold border", c.bandColor)}>
+                            {c.band}
+                          </span>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {PERFORMANCE_HISTORY.map((h) => (
-                        <tr key={h.cycle} className="hover:bg-slate-50/60">
-                          <td className="py-2 font-bold text-slate-900">{h.cycle}</td>
-                          <td className="py-2 text-slate-600">{h.type}</td>
-                          <td className="py-2 text-center font-mono font-bold text-amber-600">{h.score}</td>
-                          <td className="py-2 text-right text-slate-700 truncate max-w-[110px]">{h.comments}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 3: 360° Feedback */}
+        {activeTab === "360" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+              {/* Multi-Rater Breakdown */}
+              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                    <Users className="h-4 w-4 text-purple-600" />
+                    360° Multi-Rater Score Breakdown
+                  </h4>
+                  <span className="font-mono text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                    Weighted Average: 4.2 / 5
+                  </span>
                 </div>
+
+                <div className="space-y-3 text-xs">
+                  {[
+                    { role: "Self Assessment", score: "4.3 / 5", weight: "10%", desc: "Accurate self-awareness of technical depth." },
+                    { role: "Manager (Arun Kumar)", score: "4.1 / 5", weight: "40%", desc: "Strong technical delivery, high ownership." },
+                    { role: "Peers (4 Reviewers)", score: "4.4 / 5", weight: "25%", desc: "Extremely collaborative and helpful." },
+                    { role: "Direct Reports (3 Reviewers)", score: "4.2 / 5", weight: "15%", desc: "Approachable, clear architectural guidance." },
+                    { role: "Customer / Stakeholder", score: "4.0 / 5", weight: "10%", desc: "Prompt issue resolution and support." },
+                  ].map((r) => (
+                    <div key={r.role} className="p-3 rounded-lg border border-slate-100 bg-slate-50/60 flex items-center justify-between">
+                      <div>
+                        <div className="font-bold text-slate-900">{r.role} <span className="text-[10px] text-muted-foreground font-normal">({r.weight})</span></div>
+                        <div className="text-[11px] text-slate-600 mt-0.5">{r.desc}</div>
+                      </div>
+                      <div className="font-mono font-extrabold text-sm text-slate-900">{r.score}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsFeedbackModalOpen(true)}
+                  className="w-full py-2 rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 font-semibold text-xs transition cursor-pointer"
+                >
+                  + Request More 360° Peer Feedback
+                </button>
               </div>
 
-              {/* 2. Action Items (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Action Items</h4>
-                  <button onClick={() => toast.info("Action item management opened")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All
-                  </button>
+              {/* Qualitative Feedback */}
+              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4 flex flex-col justify-between">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <h4 className="text-sm font-bold text-slate-900">Key Peer Comments & Feedback</h4>
                 </div>
 
-                <div className="space-y-1.5 text-[10px]">
-                  {ACTION_ITEMS.map((item) => (
-                    <div key={item.action} className="flex items-center justify-between p-1.5 rounded-md bg-slate-50 border border-slate-100">
-                      <div>
-                        <div className="font-semibold text-slate-900">{item.action}</div>
-                        <div className="text-[9px] text-muted-foreground">{item.owner} • Due: {item.dueDate}</div>
-                      </div>
-                      <span
+                <div className="space-y-3 text-xs">
+                  <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-100 space-y-1">
+                    <div className="font-bold text-emerald-900 flex items-center gap-1.5">
+                      <ThumbsUp className="h-3.5 w-3.5 text-emerald-600" />
+                      Strengths & Commendations
+                    </div>
+                    <p className="text-[11px] text-emerald-800 leading-relaxed">
+                      "Sankar is the go-to engineer for complex mechanical FEA simulations. Highly disciplined, meets project milestones ahead of schedule, and fosters great team morale."
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100 space-y-1">
+                    <div className="font-bold text-amber-900 flex items-center gap-1.5">
+                      <ThumbsDown className="h-3.5 w-3.5 text-amber-600" />
+                      Growth & Improvement Areas
+                    </div>
+                    <p className="text-[11px] text-amber-800 leading-relaxed">
+                      "Can delegate routine module designs more aggressively to junior engineers to free up capacity for strategic cross-functional product roadmapping."
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Feedback Status: <strong>Calibrated & Verified</strong></span>
+                  <span>Cycle: <strong>FY 2023-24</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 4: Reviews & Appraisal */}
+        {activeTab === "reviews" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+              {/* Appraisal Workflow Timeline */}
+              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <h4 className="text-sm font-bold text-slate-900">Appraisal Review Lifecycle</h4>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                    Calibration In Progress
+                  </span>
+                </div>
+
+                <div className="space-y-3 text-xs">
+                  {[
+                    { step: "1", title: "Goal Setting & KRA Alignment", status: "Completed on 10 Apr 2023", done: true },
+                    { step: "2", title: "Self Appraisal & Evidence Submission", status: "Completed on 15 Mar 2024", done: true },
+                    { step: "3", title: "Manager Assessment & Evaluation", status: "Completed on 20 Mar 2024", done: true },
+                    { step: "4", title: "360° Peer Feedback Synthesis", status: "Completed on 25 Mar 2024", done: true },
+                    { step: "5", title: "HR Calibration & Normalization", status: "In Progress (Due 05 Apr 2024)", active: true },
+                    { step: "6", title: "Final Scorecard & Sign-off", status: "Pending (Due 10 Apr 2024)", pending: true },
+                  ].map((s) => (
+                    <div key={s.step} className="flex items-start gap-3 p-2.5 rounded-lg border border-slate-100">
+                      <div
                         className={cn(
-                          "px-1.5 py-0.2 rounded-md font-bold text-[9px]",
-                          item.status === "In Progress"
-                            ? "bg-blue-50 text-blue-700 border border-blue-200"
-                            : item.status === "Pending"
-                              ? "bg-amber-50 text-amber-700 border border-amber-200"
-                              : "bg-slate-100 text-slate-500",
+                          "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5",
+                          s.done ? "bg-emerald-600 text-white" : s.active ? "bg-blue-600 text-white ring-2 ring-blue-100" : "bg-slate-100 text-slate-500"
                         )}
                       >
-                        {item.status}
-                      </span>
+                        {s.done ? "✓" : s.step}
+                      </div>
+                      <div className="space-y-0.5">
+                        <div className="font-bold text-slate-900">{s.title}</div>
+                        <div className="text-[11px] text-muted-foreground font-mono">{s.status}</div>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* 3. Quick Actions (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Quick Actions</h4>
+              {/* Final Scorecard Synthesis */}
+              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4 flex flex-col justify-between">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <h4 className="text-sm font-bold text-slate-900">Scorecard Weightage & Synthesis</h4>
+                  <span className="font-mono text-sm font-extrabold text-slate-900">Total: 4.2 / 5</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setIsGoalModalOpen(true)}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-primary hover:bg-slate-50/70 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <Target className="h-3.5 w-3.5 text-primary" />
-                    Update Goals
-                  </button>
+                <div className="space-y-3 text-xs">
+                  <div className="p-3 rounded-lg border border-slate-100 bg-slate-50/60 space-y-1.5">
+                    <div className="flex justify-between font-semibold">
+                      <span>Goals & KPIs (60% Weightage)</span>
+                      <span className="font-mono font-bold text-emerald-700">91% (4.5 / 5)</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-emerald-600 rounded-full" style={{ width: "91%" }} />
+                    </div>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setIsKpiModalOpen(true)}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-blue-600 hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <BarChart3 className="h-3.5 w-3.5 text-blue-600" />
-                    Add KPI
-                  </button>
+                  <div className="p-3 rounded-lg border border-slate-100 bg-slate-50/60 space-y-1.5">
+                    <div className="flex justify-between font-semibold">
+                      <span>Competencies & Skills (30% Weightage)</span>
+                      <span className="font-mono font-bold text-blue-700">82% (4.1 / 5)</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-blue-600 rounded-full" style={{ width: "82%" }} />
+                    </div>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setIsFeedbackModalOpen(true)}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-purple-600 hover:bg-purple-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <Users className="h-3.5 w-3.5 text-purple-600" />
-                    Request Feedback
-                  </button>
+                  <div className="p-3 rounded-lg border border-slate-100 bg-slate-50/60 space-y-1.5">
+                    <div className="flex justify-between font-semibold">
+                      <span>Core Values & Adherence (10% Weightage)</span>
+                      <span className="font-mono font-bold text-purple-700">88% (4.4 / 5)</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-purple-600 rounded-full" style={{ width: "88%" }} />
+                    </div>
+                  </div>
+                </div>
 
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                   <button
                     type="button"
-                    onClick={() => setActiveTab("development")}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-emerald-600 hover:bg-emerald-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
+                    onClick={handleSubmitForReview}
+                    className="w-full py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold text-xs transition cursor-pointer"
                   >
-                    <BrainCircuit className="h-3.5 w-3.5 text-emerald-600" />
-                    Development Plan
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.info("Upload appraisal document dialog")}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-amber-600 hover:bg-amber-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <Paperclip className="h-3.5 w-3.5 text-amber-600" />
-                    Upload Document
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.info("Performance reports preview")}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-indigo-600 hover:bg-indigo-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <FileSpreadsheet className="h-3.5 w-3.5 text-indigo-600" />
-                    View Reports
+                    Submit for Final Sign-off
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: Development Plan */}
+        {activeTab === "development" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-3">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Individual Development Plan (IDP)</h4>
+                  <p className="text-xs text-muted-foreground mt-0.5">Targeted development programs based on identified competency gaps</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => toast.success("New development action added to IDP")}
+                  className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer"
+                >
+                  + Add Development Action
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/60">
+                      <th className="py-2.5 px-3">Target Competency</th>
+                      <th className="py-2.5 px-3">Development Action Plan</th>
+                      <th className="py-2.5 px-3">Method</th>
+                      <th className="py-2.5 px-3">Assigned Mentor / Coach</th>
+                      <th className="py-2.5 px-3 whitespace-nowrap">Target Date</th>
+                      <th className="py-2.5 px-3 text-center whitespace-nowrap">Progress</th>
+                      <th className="py-2.5 px-3 text-right whitespace-nowrap">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {[
+                      { competency: "Leadership & Team Management", plan: "Advanced Engineering Leadership Executive Program", method: "Training & Workshop", mentor: "Dr. Arvind Rao", target: "30 Sep 2024", progress: 78, status: "In Progress" },
+                      { competency: "Strategic Thinking", plan: "Cross-functional Product Roadmap Architecture Workshop", method: "Mentoring", mentor: "Arun Kumar", target: "31 Aug 2024", progress: 60, status: "In Progress" },
+                      { competency: "Executive Communication", plan: "Stakeholder Presentation & Negotiation Masterclass", method: "Coaching", mentor: "Priya Nair", target: "30 Jun 2024", progress: 85, status: "In Progress" },
+                      { competency: "Engineering Delegation", plan: "Task Delegation & Junior Mentorship Project", method: "On-the-Job", mentor: "Arun Kumar", target: "31 Jul 2024", progress: 40, status: "In Progress" },
+                    ].map((d) => (
+                      <tr key={d.competency} className="hover:bg-slate-50/60">
+                        <td className="py-3 px-3 font-bold text-slate-900">{d.competency}</td>
+                        <td className="py-3 px-3 text-slate-700 font-medium">{d.plan}</td>
+                        <td className="py-3 px-3 text-slate-600">{d.method}</td>
+                        <td className="py-3 px-3 text-slate-600 whitespace-nowrap">{d.mentor}</td>
+                        <td className="py-3 px-3 font-mono text-slate-600 whitespace-nowrap">{d.target}</td>
+                        <td className="py-3 px-3 text-center whitespace-nowrap">
+                          <div className="flex items-center gap-1.5 justify-center">
+                            <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                              <div className="h-full bg-blue-600 rounded-full" style={{ width: `${d.progress}%` }} />
+                            </div>
+                            <span className="font-mono font-bold text-blue-700 text-[11px]">{d.progress}%</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-3 text-right whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs whitespace-nowrap">
+                            {d.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -937,3 +934,5 @@ export default function PerformanceManagementPage() {
     </AppShell>
   );
 }
+
+export default PerformanceManagementPage;

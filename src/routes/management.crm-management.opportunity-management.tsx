@@ -845,12 +845,9 @@ export function OpportunityManagementPage() {
                             {CONTACTS_MAPPED.map((c, idx) => (
                               <tr key={idx} className="hover:bg-slate-100/60 transition-colors">
                                 <td className="py-1.5 px-1">
-                                  <div className="flex items-center gap-1.5 min-w-0">
-                                    <img src={c.avatar} alt={c.name} className="w-6 h-6 rounded-full object-cover shrink-0 border border-slate-200" />
-                                    <div className="min-w-0">
-                                      <div className="font-bold text-slate-800 text-xs truncate leading-tight">{c.name}</div>
-                                      <div className="text-[10px] text-slate-500 truncate leading-tight">{c.role}</div>
-                                    </div>
+                                  <div className="min-w-0">
+                                    <div className="font-bold text-slate-800 text-xs truncate leading-tight">{c.name}</div>
+                                    <div className="text-[10px] text-slate-500 truncate leading-tight">{c.role}</div>
                                   </div>
                                 </td>
                                 <td className="py-1.5 px-1">

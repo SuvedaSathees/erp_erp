@@ -335,7 +335,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/hrm-management/payroll-management", label: "Payroll Management" },
               { to: "/management/hrm-management/performance-management", label: "Performance Management" },
               { to: "/management/hrm-management/learning-development", label: "Training & Development" },
-              { to: "/management/hrm-management/performance-management/competency-form", label: "Competency Form" },
+              { to: "/management/hrm-management/competency-form", label: "Competency Form" },
               { to: "/management/hrm-management/career-development", label: "Career Development" },
               { to: "/management/hrm-management/travel-expense", label: "Travel & Expense" },
               { to: "/management/hrm-management/expense-claims", label: "Expense Claims" },

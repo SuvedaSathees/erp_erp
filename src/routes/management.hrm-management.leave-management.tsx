@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -255,24 +254,17 @@ export default function LeaveManagementPage() {
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-5">
           {/* Top Profile Strip */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            {/* Left Photo & Employee Details */}
-            <div className="flex items-center gap-3.5">
-              <div className="relative shrink-0">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&auto=format&fit=crop&q=80"
-                  alt="employee"
-                  className="h-16 w-16 rounded-full object-cover ring-2 ring-slate-100 shadow-2xs"
-                />
-                <span className="absolute -bottom-1 -right-1 flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-600 text-white shadow-xs">
+            {/* Left Identity */}
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-bold text-slate-900">Sankaranarayanan R</h3>
+                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-600 text-white shadow-xs">
                   Active
                 </span>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-slate-900">Sankaranarayanan R</h3>
-                <div className="font-mono text-xs font-semibold text-slate-700">EMP-000125</div>
-                <div className="text-xs text-muted-foreground font-medium">
-                  Senior Mechanical Engineer • Engineering Department
-                </div>
+              <div className="font-mono text-xs font-semibold text-slate-700">EMP-000125</div>
+              <div className="text-xs text-muted-foreground font-medium">
+                Senior Mechanical Engineer • Engineering Department
               </div>
             </div>
 
@@ -297,7 +289,6 @@ export default function LeaveManagementPage() {
                   <User className="h-3 w-3" /> Reporting Manager
                 </span>
                 <div className="font-semibold text-slate-900 mt-0.5 flex items-center gap-1.5">
-                  <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&auto=format&fit=crop&q=80" alt="manager" className="h-4 w-4 rounded-full" />
                   <span>Arun Kumar</span>
                 </div>
               </div>
@@ -354,12 +345,8 @@ export default function LeaveManagementPage() {
               { id: "request", label: "Leave Request", icon: Plus },
               { id: "balance", label: "Leave Balance", icon: FolderOpen },
               { id: "calendar", label: "Leave Calendar", icon: CalendarDays },
-              { id: "history", label: "Leave History", icon: Clock },
-              { id: "comp-off", label: "Comp Off", icon: RefreshCw },
-              { id: "encashment", label: "Encashment", icon: DollarSign },
-              { id: "policies", label: "Policies", icon: FileText },
-              { id: "approvals", label: "Approvals", icon: CheckCheck },
-              { id: "documents", label: "Documents", icon: Paperclip },
+              { id: "history", label: "Leave History & Approvals", icon: Clock },
+              { id: "encashment", label: "Comp Off & Encashment", icon: DollarSign },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -848,6 +835,220 @@ export default function LeaveManagementPage() {
                     </div>
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: LEAVE BALANCE */}
+        {activeTab === "balance" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <FolderOpen className="h-4 w-4 text-primary" />
+                  Leave Entitlement & Accrual Balance Ledger (FY 2024–25)
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Category-wise annual quotas, monthly accruals, approved leaves, and available balance.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => toast.success("Leave policy & accrual rules exported")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Export Ledger
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+              {LEAVE_BALANCES.map((l) => (
+                <div key={l.type} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-slate-900">{l.type}</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      Active
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-[11px]">
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Annual Quota</span>
+                      <span className="font-mono font-semibold text-slate-800">{l.entitlement.toFixed(1)} Days</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Taken</span>
+                      <span className="font-mono font-semibold text-rose-600">{l.taken.toFixed(1)} Days</span>
+                    </div>
+                    <div className="flex justify-between border-t border-slate-200 pt-1.5">
+                      <span className="font-bold text-slate-900">Available Balance</span>
+                      <span className="font-mono font-bold text-emerald-700 text-sm">{l.balance.toFixed(1)} Days</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: LEAVE CALENDAR */}
+        {activeTab === "calendar" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4 text-primary" />
+                  Team Availability & Holiday Calendar
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Upcoming organization holidays and team member planned leaves.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/40 space-y-3">
+                <h4 className="font-bold text-slate-900">Upcoming Public Holidays</h4>
+                <div className="space-y-2">
+                  {[
+                    { name: "Bakrid / Eid al-Adha", date: "17 Jun 2024", day: "Monday" },
+                    { name: "Independence Day", date: "15 Aug 2024", day: "Thursday" },
+                    { name: "Ganesh Chaturthi", date: "07 Sep 2024", day: "Saturday" },
+                    { name: "Gandhi Jayanti", date: "02 Oct 2024", day: "Wednesday" },
+                  ].map((h) => (
+                    <div key={h.name} className="flex items-center justify-between p-2.5 rounded-lg bg-white border border-slate-200">
+                      <div>
+                        <div className="font-bold text-slate-900">{h.name}</div>
+                        <div className="text-[10px] text-muted-foreground">{h.day}</div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded-md font-mono text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                        {h.date}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/40 space-y-3">
+                <h4 className="font-bold text-slate-900">Engineering Team Planned Leaves</h4>
+                <div className="space-y-2">
+                  {[
+                    { employee: "Sankaranarayanan R", dates: "20 May – 24 May 2024", days: "5 Days", type: "Annual Leave" },
+                    { employee: "Karthik Subramanian", dates: "03 Jun – 04 Jun 2024", days: "2 Days", type: "Casual Leave" },
+                    { employee: "Divya Ramesh", dates: "18 Jun 2024", days: "1 Day", type: "Comp Off" },
+                  ].map((tl) => (
+                    <div key={tl.employee} className="flex items-center justify-between p-2.5 rounded-lg bg-white border border-slate-200">
+                      <div>
+                        <div className="font-bold text-slate-900">{tl.employee}</div>
+                        <div className="text-[10px] text-muted-foreground">{tl.type} • {tl.days}</div>
+                      </div>
+                      <span className="font-mono text-[11px] font-semibold text-slate-700">
+                        {tl.dates}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: LEAVE HISTORY & APPROVALS */}
+        {activeTab === "history" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
+                  Leave Application History & Approval Trail
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Complete audit trail of submitted, approved, and rejected leave requests.
+                </p>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead>
+                  <tr className="bg-slate-50 border-y border-slate-200 text-slate-600 font-semibold">
+                    <th className="py-2.5 px-3">Leave Number</th>
+                    <th className="py-2.5 px-3">Type</th>
+                    <th className="py-2.5 px-3">From Date</th>
+                    <th className="py-2.5 px-3">To Date</th>
+                    <th className="py-2.5 px-3 text-center">Days</th>
+                    <th className="py-2.5 px-3">Approver</th>
+                    <th className="py-2.5 px-3 text-right">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {requests.map((r) => (
+                    <tr key={r.id} className="hover:bg-slate-50/70">
+                      <td className="py-3 px-3 font-mono font-bold text-slate-900">{r.leaveNumber}</td>
+                      <td className="py-3 px-3 font-medium text-slate-800">{r.leaveType}</td>
+                      <td className="py-3 px-3 text-slate-600">{r.fromDate}</td>
+                      <td className="py-3 px-3 text-slate-600">{r.toDate}</td>
+                      <td className="py-3 px-3 text-center font-mono font-bold">{r.days.toFixed(1)}</td>
+                      <td className="py-3 px-3 text-slate-600">Arun Kumar (Engineering Manager)</td>
+                      <td className="py-3 px-3 text-right">
+                        <span
+                          className={cn(
+                            "px-2.5 py-0.5 rounded-full text-[10px] font-bold",
+                            r.status === "Approved"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : "bg-amber-50 text-amber-700 border border-amber-200",
+                          )}
+                        >
+                          {r.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: COMP OFF & ENCASHMENT */}
+        {activeTab === "encashment" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <DollarSign className="h-4 w-4 text-emerald-600" />
+                  Compensatory Off Credit & Leave Encashment
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Earned comp off balances, year-end encashable leave calculation, and payout settlements.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => toast.success("Encashment request submitted to Payroll")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer shadow-xs"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Apply Encashment
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="text-muted-foreground text-[11px] font-semibold">Earned Comp Off Balance</div>
+                <div className="text-lg font-bold font-mono text-purple-700">2.0 Days Available</div>
+                <div className="text-[11px] text-slate-500">Credited for Weekend Shift Deployment</div>
+              </div>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="text-muted-foreground text-[11px] font-semibold">Encashable Annual Leave</div>
+                <div className="text-lg font-bold font-mono text-emerald-700">6.0 Days Max</div>
+                <div className="text-[11px] text-slate-500">Rate: ₹ 3,425 / Day</div>
+              </div>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="text-muted-foreground text-[11px] font-semibold">Estimated Encashment Payout</div>
+                <div className="text-lg font-bold font-mono text-slate-900">₹ 20,550</div>
+                <div className="text-[11px] text-emerald-600 font-semibold">Processed with March Payroll</div>
               </div>
             </div>
           </div>

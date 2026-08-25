@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -174,8 +173,8 @@ const CAREER_REVIEWS = [
   { date: "15 Mar 2023", reviewer: "Arun Kumar", readiness: "50%", recommendation: "Build technical depth" },
 ];
 
-export default function CareerDevelopmentPage() {
-  const [activeTab, setActiveTab] = useState<string>("overview");
+export function CareerDevelopmentPage() {
+  const [activeTab, setActiveTab] = useState<string>("path");
 
   // Modals
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
@@ -253,86 +252,51 @@ export default function CareerDevelopmentPage() {
           </div>
         </div>
 
-        {/* 1. Employee Header & 6 Key Career Metrics (Exact match to reference screenshot) */}
+        {/* 1. Career Development Plan Header (Clean enterprise layout, no profile photos, no stars) */}
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-5">
-          {/* Top Row: Employee Profile + Top Meta Strip */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            {/* Left Photo & Identity */}
-            <div className="flex items-center gap-3.5">
-              <div className="relative shrink-0">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&auto=format&fit=crop&q=80"
-                  alt="employee"
-                  className="h-16 w-16 rounded-full object-cover ring-2 ring-slate-100 shadow-2xs"
-                />
-                <span className="absolute -bottom-1 -right-1 flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-600 text-white shadow-xs">
-                  Active
-                </span>
-              </div>
-              <div className="space-y-0.5">
-                <h3 className="text-base font-bold text-slate-900">Sankaranarayanan R</h3>
-                <div className="font-mono text-xs font-semibold text-slate-700">EMP-000125</div>
-                <div className="text-xs text-muted-foreground font-medium">
-                  Senior Mechanical Engineer • Engineering Department
-                </div>
-                <div className="flex items-center gap-3 text-[11px] text-slate-500 pt-0.5">
-                  <span className="flex items-center gap-1"><Mail className="h-3 w-3 text-slate-400" /> sankar.r@magnertia.com</span>
-                  <span className="flex items-center gap-1"><Phone className="h-3 w-3 text-slate-400" /> +91 98765 43210</span>
-                  <span className="flex items-center gap-1"><MapPin className="h-3 w-3 text-slate-400" /> Coimbatore, Tamil Nadu, India</span>
-                </div>
-              </div>
+          {/* Quick Career Plan Meta Fields Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Plan Number</span>
+              <div className="font-mono font-bold text-slate-900 text-sm truncate">CDP-2024-00025</div>
             </div>
 
-            {/* Quick Career Plan Meta Fields */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs divide-x divide-slate-100">
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Career Plan Number</span>
-                <div className="font-bold text-slate-900 font-mono mt-0.5">CDP-2024-00025</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Career Path</span>
+              <div className="font-semibold text-slate-900 text-sm truncate">Engineering Leadership</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Career Path</span>
-                <div className="font-bold text-slate-900 mt-0.5">Engineering Leadership</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Current Role</span>
+              <div className="font-semibold text-slate-900 text-sm truncate">Sr. Mechanical Engineer</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Current Role</span>
-                <div className="font-bold text-slate-900 mt-0.5">Senior Mechanical Engineer</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Target Role</span>
+              <div className="font-bold text-primary text-sm truncate">Lead Engineer</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Target Role</span>
-                <div className="font-bold text-primary mt-0.5">Lead Mechanical Engineer</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Target Date</span>
+              <div className="font-mono font-semibold text-slate-900 text-sm truncate">30 Sep 2026</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Target Date</span>
-                <div className="font-bold text-slate-900 mt-0.5">30 Sep 2026</div>
-              </div>
-
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Plan Owner</span>
-                <div className="font-bold text-slate-900 mt-0.5 flex items-center gap-1.5">
-                  <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&auto=format&fit=crop&q=80" alt="manager" className="h-4 w-4 rounded-full" />
-                  <div>
-                    <div>Arun Kumar</div>
-                    <div className="text-[9px] text-muted-foreground font-normal">Engineering Manager</div>
-                  </div>
-                </div>
-              </div>
+            <div className="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200/80 space-y-0.5">
+              <span className="text-[10px] text-emerald-800 font-semibold uppercase tracking-wider">Plan Mentor</span>
+              <div className="font-semibold text-emerald-800 text-sm truncate">Arun Kumar (Manager)</div>
             </div>
           </div>
 
           {/* 6 Key Career Metric Badges Strip */}
           <div className="pt-3 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
             {/* 1. Overall Readiness */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-emerald-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="h-9 w-9 relative shrink-0 flex items-center justify-center">
-                <svg className="h-9 w-9 -rotate-90" viewBox="0 0 36 36">
-                  <path className="text-slate-100" strokeWidth="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path className="text-emerald-600" strokeDasharray="78, 100" strokeWidth="4" strokeLinecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <div className="p-2.5 rounded-xl border border-slate-200 bg-emerald-50/40 flex items-center gap-3 shadow-2xs">
+              <div className="h-10 w-10 relative shrink-0 flex items-center justify-center">
+                <svg className="h-10 w-10" viewBox="0 0 36 36">
+                  <path className="text-slate-200" strokeWidth="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path className="text-emerald-600" strokeDasharray="78, 100" strokeWidth="3.5" strokeLinecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                 </svg>
-                <span className="absolute font-mono text-[9px] font-bold text-slate-800">78%</span>
+                <span className="absolute font-mono text-[10px] font-extrabold text-slate-900 tracking-tight">78%</span>
               </div>
               <div>
                 <div className="text-[10px] text-muted-foreground font-semibold">Overall Readiness</div>
@@ -402,20 +366,13 @@ export default function CareerDevelopmentPage() {
           </div>
         </div>
 
-        {/* Sub-Tabs Bar (Matching screenshot) */}
+        {/* Sub-Tabs Bar (3 Core Tabs) */}
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-1.5">
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth">
             {[
-              { id: "overview", label: "Overview", icon: BarChart3 },
-              { id: "path", label: "Career Path", icon: GitCommitIcon },
-              { id: "gap", label: "Competency Gap", icon: Compass },
-              { id: "development", label: "Development Plan", icon: BrainCircuit },
-              { id: "milestones", label: "Milestones", icon: Milestone },
-              { id: "readiness", label: "Readiness", icon: Award },
-              { id: "reviews", label: "Reviews", icon: FileText },
-              { id: "mentoring", label: "Mentoring", icon: Users },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "history", label: "History", icon: Activity },
+              { id: "path", label: "Career Path & Ladders", icon: GitCommitIcon },
+              { id: "gap", label: "Competency Gap & Skills", icon: Compass },
+              { id: "development", label: "Development Action Plan", icon: BrainCircuit },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -438,75 +395,75 @@ export default function CareerDevelopmentPage() {
           </div>
         </div>
 
-        {/* TAB 1: OVERVIEW DASHBOARD (Exact match to reference screenshot) */}
-        {activeTab === "overview" && (
+        {/* TAB 1: CAREER PATH & LADDERS (Full Overview Dashboard) */}
+        {activeTab === "path" && (
           <div className="space-y-6">
             {/* Row 1: Career Path Progress, Readiness Breakdown, Top Strengths, Top Development Areas */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
-              {/* 1. Career Path Progress (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+              {/* 1. Career Path Progress (3 Cols) */}
+              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Career Path Progress</h4>
                   <span className="text-xs font-extrabold text-emerald-700 font-mono">72% On Track</span>
                 </div>
 
                 {/* 5-Step Career Path Diagram */}
-                <div className="py-2">
-                  <div className="flex items-center justify-between relative">
-                    {/* Progress Connecting Line */}
-                    <div className="absolute top-1/2 left-4 right-4 -translate-y-1/2 h-0.5 bg-slate-200 z-0" />
-                    <div className="absolute top-1/2 left-4 w-1/2 -translate-y-1/2 h-0.5 bg-emerald-600 z-0" />
+                <div className="py-2 px-1">
+                  <div className="relative flex items-start justify-between">
+                    {/* Progress Connecting Line centered at 12px circle center */}
+                    <div className="absolute top-3 left-4 right-4 h-0.5 bg-slate-200 z-0" />
+                    <div className="absolute top-3 left-4 w-1/2 h-0.5 bg-emerald-600 z-0" />
 
                     {[
                       { step: "1", title: "Engineer", date: "Jun 2020", done: true },
-                      { step: "2", title: "Senior Engineer", date: "Jun 2022", done: true },
-                      { step: "3", title: "Lead Engineer", date: "Target: Sep 2026", active: true },
-                      { step: "4", title: "Engineering Manager", date: "", future: true },
-                      { step: "5", title: "Head of Engineering", date: "", future: true },
+                      { step: "2", title: "Sr. Eng.", date: "Jun 2022", done: true },
+                      { step: "3", title: "Lead Eng.", date: "Sep 2026", active: true },
+                      { step: "4", title: "Manager", date: "Future", future: true },
+                      { step: "5", title: "Head", date: "Future", future: true },
                     ].map((s) => (
-                      <div key={s.step} className="flex flex-col items-center relative z-10">
+                      <div key={s.step} className="flex flex-col items-center relative z-10 w-11 text-center">
                         <div
                           className={cn(
-                            "h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold shadow-xs",
+                            "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-xs transition-all",
                             s.done
                               ? "bg-emerald-600 text-white"
                               : s.active
-                                ? "bg-blue-600 text-white ring-4 ring-blue-100"
-                                : "bg-white border-2 border-slate-300 text-slate-400",
+                                ? "bg-blue-600 text-white ring-3 ring-blue-100"
+                                : "bg-white border border-slate-300 text-slate-400",
                           )}
                         >
                           {s.done ? "✓" : s.step}
                         </div>
-                        <div className="text-[9px] font-bold text-slate-900 mt-1 text-center truncate max-w-[65px]">
+                        <div className="text-[9px] font-bold text-slate-800 mt-1 leading-tight truncate w-full" title={s.title}>
                           {s.title}
                         </div>
-                        {s.date && <div className="text-[8px] text-muted-foreground text-center">{s.date}</div>}
+                        {s.date && <div className="text-[8px] text-slate-400 font-mono mt-0.5 leading-none">{s.date}</div>}
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden mt-1">
                   <div className="h-full bg-emerald-600 rounded-full w-[72%]" />
                 </div>
               </div>
 
-              {/* 2. Readiness Breakdown (3.5 Cols) */}
-              <div className="lg:col-span-3.5 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
+              {/* 2. Readiness Breakdown (3 Cols) */}
+              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Readiness Breakdown</h4>
                 </div>
 
                 <div className="flex items-center justify-between gap-3">
-                  <div className="h-28 w-28 relative shrink-0 flex items-center justify-center">
+                  <div className="h-24 w-24 relative shrink-0 flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
                       <RePieChart>
                         <Pie
                           data={READINESS_BREAKDOWN_PIE}
                           cx="50%"
                           cy="50%"
-                          innerRadius={28}
-                          outerRadius={44}
+                          innerRadius={24}
+                          outerRadius={38}
                           paddingAngle={2}
                           dataKey="value"
                         >
@@ -518,8 +475,8 @@ export default function CareerDevelopmentPage() {
                       </RePieChart>
                     </ResponsiveContainer>
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                      <span className="text-sm font-extrabold text-slate-900 font-mono">78%</span>
-                      <span className="text-[7px] text-muted-foreground">Overall</span>
+                      <span className="text-xs font-extrabold text-slate-900 font-mono">78%</span>
+                      <span className="text-[6px] text-muted-foreground">Overall</span>
                     </div>
                   </div>
 
@@ -537,15 +494,15 @@ export default function CareerDevelopmentPage() {
                 </div>
               </div>
 
-              {/* 3. Top Strengths (2.25 Cols) */}
-              <div className="lg:col-span-2.25 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+              {/* 3. Top Strengths (3 Cols) */}
+              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-emerald-800 flex items-center gap-1">
                     <CheckCircle className="h-3.5 w-3.5 text-emerald-600" /> Top Strengths
                   </h4>
                 </div>
 
-                <div className="space-y-1.5 text-[10px]">
+                <div className="space-y-1 text-[10px]">
                   {[
                     { name: "Technical Expertise", score: "4.5 / 5" },
                     { name: "Problem Solving", score: "4.2 / 5" },
@@ -564,15 +521,15 @@ export default function CareerDevelopmentPage() {
                 </div>
               </div>
 
-              {/* 4. Top Development Areas (2.25 Cols) */}
-              <div className="lg:col-span-2.25 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+              {/* 4. Top Development Areas (3 Cols) */}
+              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-rose-800 flex items-center gap-1">
                     <ArrowUp className="h-3.5 w-3.5 text-rose-600" /> Top Dev Areas
                   </h4>
                 </div>
 
-                <div className="space-y-1.5 text-[10px]">
+                <div className="space-y-1 text-[10px]">
                   {[
                     { name: "Leadership", score: "3.0 / 5" },
                     { name: "Strategic Thinking", score: "3.1 / 5" },
@@ -597,11 +554,11 @@ export default function CareerDevelopmentPage() {
             {/* Row 2: Competency Gap Summary, Development Plan Overview, Milestone Tracker */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
               {/* 1. Competency Gap Summary (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Competency Gap Summary</h4>
                   <button onClick={() => setActiveTab("gap")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All Competency Gaps →
+                    View Details →
                   </button>
                 </div>
 
@@ -643,11 +600,11 @@ export default function CareerDevelopmentPage() {
               </div>
 
               {/* 2. Development Plan Overview (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Development Plan Overview</h4>
                   <button onClick={() => setActiveTab("development")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View Full Development Plan →
+                    View Plan →
                   </button>
                 </div>
 
@@ -682,11 +639,11 @@ export default function CareerDevelopmentPage() {
               </div>
 
               {/* 3. Milestone Tracker (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Milestone Tracker</h4>
-                  <button onClick={() => setActiveTab("milestones")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All Milestones →
+                  <button onClick={() => setIsMilestoneModalOpen(true)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
+                    + Add Milestone
                   </button>
                 </div>
 
@@ -731,7 +688,7 @@ export default function CareerDevelopmentPage() {
             {/* Row 3: Career Aspirations, Recent Career Reviews, Successor Pipeline, Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
               {/* 1. Career Aspirations (3 Cols) */}
-              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
+              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Career Aspirations</h4>
                   <button onClick={() => setIsAspirationModalOpen(true)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
@@ -741,19 +698,21 @@ export default function CareerDevelopmentPage() {
 
                 <div className="space-y-2 text-[10px]">
                   <div>
-                    <div className="font-bold text-blue-700">Short Term (1-2 Years)</div>
-                    <div className="text-slate-600">Lead a critical project and develop leadership skills</div>
+                    <div className="text-muted-foreground font-semibold">Short-Term (1-2 Yrs)</div>
+                    <div className="font-bold text-slate-900 mt-0.5">Lead Engineer (Mechanical Systems)</div>
                   </div>
-
                   <div>
-                    <div className="font-bold text-indigo-700">Medium Term (2-4 Years)</div>
-                    <div className="text-slate-600">Become a Technical Lead and manage small teams</div>
+                    <div className="text-muted-foreground font-semibold">Medium-Term (3-5 Yrs)</div>
+                    <div className="font-semibold text-slate-800 mt-0.5">Engineering Manager - R&D</div>
                   </div>
-
                   <div>
-                    <div className="font-bold text-purple-700">Long Term (5+ Years)</div>
-                    <div className="text-slate-600">Grow into Engineering Manager role</div>
+                    <div className="text-muted-foreground font-semibold">Long-Term (5+ Yrs)</div>
+                    <div className="font-semibold text-slate-800 mt-0.5">VP - Engineering / Chief Engineer</div>
                   </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-100 text-[9px] text-slate-500">
+                  Preferred Track: <span className="font-semibold text-slate-700">Technical Leadership</span>
                 </div>
               </div>
 
@@ -761,41 +720,43 @@ export default function CareerDevelopmentPage() {
               <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Recent Career Reviews</h4>
-                  <button onClick={() => setActiveTab("reviews")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All Reviews →
-                  </button>
                 </div>
 
-                <div className="space-y-1.5 text-[10px]">
-                  {CAREER_REVIEWS.map((rev) => (
-                    <div key={rev.date} className="p-1.5 rounded-md bg-slate-50 border border-slate-100">
-                      <div className="flex justify-between font-bold text-slate-900">
-                        <span>{rev.date}</span>
-                        <span className="font-mono text-emerald-700">Readiness: {rev.readiness}</span>
+                <div className="space-y-2 text-[10px]">
+                  {CAREER_REVIEWS.map((r) => (
+                    <div key={r.date} className="p-2 rounded-lg bg-slate-50 border border-slate-100 space-y-0.5">
+                      <div className="flex justify-between font-semibold">
+                        <span className="text-slate-900">{r.date}</span>
+                        <span className="font-mono text-emerald-700">{r.readiness}</span>
                       </div>
-                      <div className="text-slate-500 text-[9px]">Reviewer: {rev.reviewer}</div>
-                      <div className="text-slate-600 italic text-[9px] mt-0.5">"{rev.recommendation}"</div>
+                      <div className="text-slate-600 text-[9px]">{r.recommendation}</div>
+                      <div className="text-[8px] text-slate-400">By: {r.reviewer}</div>
                     </div>
                   ))}
                 </div>
+
+                <button onClick={() => toast.info("Full review history")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer text-center pt-1 border-t border-slate-100">
+                  View Review History →
+                </button>
               </div>
 
               {/* 3. Successor Pipeline (3 Cols) */}
               <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Successor Pipeline (for Target Role)</h4>
+                  <h4 className="text-xs font-bold text-slate-800">Successor Pipeline</h4>
+                  <span className="font-mono text-xs font-bold text-emerald-700">6 Successors</span>
                 </div>
 
-                <div className="flex items-center justify-between gap-2">
-                  <div className="h-24 w-24 relative shrink-0 flex items-center justify-center">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="h-20 w-20 relative shrink-0 flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
                       <RePieChart>
                         <Pie
                           data={SUCCESSOR_PIPELINE_PIE}
                           cx="50%"
                           cy="50%"
-                          innerRadius={24}
-                          outerRadius={38}
+                          innerRadius={20}
+                          outerRadius={30}
                           paddingAngle={2}
                           dataKey="value"
                         >
@@ -807,8 +768,7 @@ export default function CareerDevelopmentPage() {
                       </RePieChart>
                     </ResponsiveContainer>
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                      <span className="text-xs font-extrabold text-slate-900 font-mono">6</span>
-                      <span className="text-[6px] text-muted-foreground">Successors</span>
+                      <span className="text-[10px] font-extrabold text-slate-900 font-mono">6</span>
                     </div>
                   </div>
 
@@ -819,7 +779,7 @@ export default function CareerDevelopmentPage() {
                           <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: s.color }} />
                           {s.name}
                         </span>
-                        <span className="font-mono font-bold text-slate-800">{s.value} ({s.percentage})</span>
+                        <span className="font-mono font-bold text-slate-800">{s.value}</span>
                       </div>
                     ))}
                   </div>
@@ -866,11 +826,11 @@ export default function CareerDevelopmentPage() {
 
                   <button
                     type="button"
-                    onClick={() => setActiveTab("readiness")}
+                    onClick={() => setActiveTab("development")}
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-emerald-600 hover:bg-emerald-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <Award className="h-3 w-3 text-emerald-600" />
-                    Readiness
+                    Action Plan
                   </button>
 
                   <button
@@ -910,6 +870,122 @@ export default function CareerDevelopmentPage() {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: COMPETENCY GAP & SKILLS */}
+        {activeTab === "gap" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h4 className="text-sm font-bold text-slate-900">Target Role Competency Gap & Skills Matrix</h4>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Current Role: Senior Mechanical Engineer → Target Role: Lead Mechanical Engineer
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPlanModalOpen(true)}
+                className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer"
+              >
+                + Bridge Gap Action
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/60">
+                    <th className="py-2.5 px-3">Competency & Skill Area</th>
+                    <th className="py-2.5 px-3 text-center">Required Level (1-5)</th>
+                    <th className="py-2.5 px-3 text-center">Current Level (1-5)</th>
+                    <th className="py-2.5 px-3 text-center">Gap Score</th>
+                    <th className="py-2.5 px-3 text-center">Priority</th>
+                    <th className="py-2.5 px-3 text-right">Recommended Development Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {COMPETENCY_GAPS.map((g) => (
+                    <tr key={g.name} className="hover:bg-slate-50/60">
+                      <td className="py-3 px-3 font-bold text-slate-900">{g.name}</td>
+                      <td className="py-3 px-3 text-center font-mono font-semibold text-slate-600">{g.req} / 5</td>
+                      <td className="py-3 px-3 text-center font-mono font-bold text-slate-900">{g.cur} / 5</td>
+                      <td className="py-3 px-3 text-center font-mono font-bold">
+                        <span className={cn(g.gap > 0 ? "text-rose-600" : "text-emerald-600")}>
+                          {g.gap > 0 ? `-${g.gap}` : "0 (Proficient)"}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 text-center">
+                        <span
+                          className={cn(
+                            "px-2 py-0.5 rounded-full text-[10px] font-bold",
+                            g.priority === "High"
+                              ? "bg-rose-50 text-rose-700 border border-rose-200"
+                              : "bg-amber-50 text-amber-700 border border-amber-200",
+                          )}
+                        >
+                          {g.priority} Priority
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 text-right text-slate-700 font-medium">
+                        {g.priority === "High" ? "Executive Mentoring & Workshop" : "Cross-Functional Project"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: DEVELOPMENT ACTION PLAN */}
+        {activeTab === "development" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h4 className="text-sm font-bold text-slate-900">Individual Career Development Plan (IDP)</h4>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Target milestones, executive coaching, and stretch assignments for Lead Engineer transition.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPlanModalOpen(true)}
+                className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer flex items-center gap-1.5"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Add Development Action
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/60">
+                    <th className="py-2.5 px-3">Development Area</th>
+                    <th className="py-2.5 px-3">Intervention & Action Plan</th>
+                    <th className="py-2.5 px-3 whitespace-nowrap">Target Date</th>
+                    <th className="py-2.5 px-3 text-center whitespace-nowrap">Progress %</th>
+                    <th className="py-2.5 px-3 text-right whitespace-nowrap">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {DEVELOPMENT_PLANS.map((d) => (
+                    <tr key={d.plan} className="hover:bg-slate-50/60">
+                      <td className="py-3 px-3 font-bold text-slate-900">{d.area}</td>
+                      <td className="py-3 px-3 text-slate-700">{d.plan}</td>
+                      <td className="py-3 px-3 font-mono text-slate-600 whitespace-nowrap">{d.target}</td>
+                      <td className="py-3 px-3 text-center font-mono font-bold text-blue-700 whitespace-nowrap">{d.progress}%</td>
+                      <td className="py-3 px-3 text-right whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs whitespace-nowrap">
+                          {d.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
@@ -1151,3 +1227,5 @@ function GitCommitIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export default CareerDevelopmentPage;

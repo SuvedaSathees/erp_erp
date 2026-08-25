@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -162,7 +161,7 @@ const DEPARTMENT_HEADCOUNT_PIE = [
 ];
 
 export default function PayrollManagementPage() {
-  const [activeTab, setActiveTab] = useState<string>("overview");
+  const [activeTab, setActiveTab] = useState<string>("earnings");
   const [isProcessModalOpen, setIsProcessModalOpen] = useState(false);
   const [isAdvanceModalOpen, setIsAdvanceModalOpen] = useState(false);
 
@@ -376,17 +375,11 @@ export default function PayrollManagementPage() {
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-1.5">
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth">
             {[
-              { id: "overview", label: "Overview", icon: BarChart3 },
-              { id: "earnings", label: "Earnings", icon: Banknote },
-              { id: "deductions", label: "Deductions", icon: ArrowDownCircle },
-              { id: "statutory", label: "Statutory", icon: ShieldCheck },
-              { id: "attendance", label: "Attendance & Leave", icon: Calendar },
-              { id: "validation", label: "Validation", icon: CheckSquare },
-              { id: "approvals", label: "Approvals", icon: CheckCheck },
-              { id: "payslips", label: "Payslips", icon: FileText },
-              { id: "payments", label: "Payments", icon: CreditCard },
-              { id: "accounting", label: "Accounting", icon: Landmark },
-              { id: "history", label: "History", icon: Activity },
+              { id: "earnings", label: "Earnings & Structure", icon: Banknote },
+              { id: "deductions", label: "Deductions & Statutory", icon: ShieldCheck },
+              { id: "attendance", label: "Attendance & LOP Sync", icon: Calendar },
+              { id: "payslips", label: "Payslips & Distribution", icon: FileText },
+              { id: "payments", label: "Disbursement & Accounting", icon: Landmark },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -409,8 +402,8 @@ export default function PayrollManagementPage() {
           </div>
         </div>
 
-        {/* TAB 1: OVERVIEW DASHBOARD (Exact match to reference screenshot) */}
-        {activeTab === "overview" && (
+        {/* TAB 1: EARNINGS & STRUCTURE */}
+        {activeTab === "earnings" && (
           <div className="space-y-6">
             {/* Row 1: Payroll Summary, Earnings vs Deductions, Statutory Contributions, Status Tracker */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -749,167 +742,222 @@ export default function PayrollManagementPage() {
                 </div>
               </div>
             </div>
+          </div>
+        )}
 
-            {/* Row 3: Pending Approvals, Quick Actions, Important Dates */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
-              {/* 1. Pending Approvals (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Pending Approvals</h4>
-                  <button onClick={() => setActiveTab("approvals")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All
-                  </button>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-[10px] text-left">
-                    <thead>
-                      <tr className="border-b border-slate-100 text-slate-400 font-semibold">
-                        <th className="pb-1">Level</th>
-                        <th className="pb-1">Approver</th>
-                        <th className="pb-1">Status</th>
-                        <th className="pb-1 text-center">Action</th>
-                        <th className="pb-1 text-right">Due Date</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {[
-                        { level: "HR Review", approver: "Priya Nair", status: "Pending", due: "15 May 2024" },
-                        { level: "Finance Approval", approver: "Vikram Singh", status: "Pending", due: "15 May 2024" },
-                        { level: "Final Approval", approver: "Rahul Sharma", status: "Pending", due: "16 May 2024" },
-                      ].map((app) => (
-                        <tr key={app.level} className="hover:bg-slate-50/60">
-                          <td className="py-2 font-bold text-slate-900">{app.level}</td>
-                          <td className="py-2 text-slate-600">{app.approver}</td>
-                          <td className="py-2">
-                            <span className="px-1.5 py-0.2 rounded-md font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                              {app.status}
-                            </span>
-                          </td>
-                          <td className="py-2 text-center">
-                            <button
-                              type="button"
-                              onClick={() => toast.info(`Viewing ${app.level} details`)}
-                              className="text-slate-400 hover:text-primary p-0.5 cursor-pointer"
-                            >
-                              <Eye className="h-3.5 w-3.5" />
-                            </button>
-                          </td>
-                          <td className="py-2 text-right font-mono text-slate-500">{app.due}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+        {/* TAB 2: DEDUCTIONS & STATUTORY */}
+        {activeTab === "deductions" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                  Statutory Compliance & Deductions Breakdown
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Provident Fund (EPF), ESI, Professional Tax (PT), and Tax Deducted at Source (TDS).
+                </p>
               </div>
+              <button
+                type="button"
+                onClick={() => toast.success("Statutory Challans exported for EPFO & ESIC portals")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Export Challans
+              </button>
+            </div>
 
-              {/* 2. Quick Actions (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Quick Actions</h4>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setIsProcessModalOpen(true)}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-primary hover:bg-slate-50/70 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <Plus className="h-3.5 w-3.5 text-primary" />
-                    Create Payroll
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.info("Importing attendance records...")}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-blue-600 hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <Upload className="h-3.5 w-3.5 text-blue-600" />
-                    Import Attendance
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.info("Calculating payroll engine...")}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-indigo-600 hover:bg-indigo-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <Settings className="h-3.5 w-3.5 text-indigo-600" />
-                    Process Payroll
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.info("Generating bulk payslips...")}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-emerald-600 hover:bg-emerald-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <FileText className="h-3.5 w-3.5 text-emerald-600" />
-                    Generate Payslips
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.info("Upload expense claims")}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-purple-600 hover:bg-purple-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <Paperclip className="h-3.5 w-3.5 text-purple-600" />
-                    Upload Claims
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsAdvanceModalOpen(true)}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-amber-600 hover:bg-amber-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
-                  >
-                    <DollarSign className="h-3.5 w-3.5 text-amber-600" />
-                    Salary Advance
-                  </button>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="font-bold text-slate-900">Employees' PF (EPF)</div>
+                <div className="text-lg font-bold font-mono text-primary">₹ 3,25,000</div>
+                <div className="text-[10px] text-slate-500">12% of Basic Salary</div>
               </div>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="font-bold text-slate-900">ESIC Contribution</div>
+                <div className="text-lg font-bold font-mono text-primary">₹ 85,000</div>
+                <div className="text-[10px] text-slate-500">0.75% Employee + 3.25% Employer</div>
+              </div>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="font-bold text-slate-900">Income Tax (TDS)</div>
+                <div className="text-lg font-bold font-mono text-primary">₹ 4,30,000</div>
+                <div className="text-[10px] text-slate-500">Section 192 Monthly Withholding</div>
+              </div>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="font-bold text-slate-900">Professional Tax (PT)</div>
+                <div className="text-lg font-bold font-mono text-primary">₹ 25,000</div>
+                <div className="text-[10px] text-slate-500">Tamil Nadu State Slab</div>
+              </div>
+            </div>
+          </div>
+        )}
 
-              {/* 3. Important Dates (4 Cols) */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Important Dates</h4>
-                </div>
+        {/* TAB 3: ATTENDANCE & LOP SYNC */}
+        {activeTab === "attendance" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-primary" />
+                  Attendance Muster & LOP Integration
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Muster roll synchronization, unpaid absence loss of pay (LOP), and payable days calculation.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => toast.success("Attendance synced successfully with Biometric Punch DB")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                Sync Biometric Data
+              </button>
+            </div>
 
-                <div className="space-y-2 text-[10px]">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-slate-700 font-medium">
-                      <Calendar className="h-3.5 w-3.5 text-blue-600" />
-                      Payroll Cut-Off Date
-                    </span>
-                    <span className="font-mono text-slate-600">14 May 2024</span>
-                  </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-emerald-50/40 space-y-1">
+                <span className="text-[10px] text-emerald-800 font-semibold">Total Work Days</span>
+                <div className="text-base font-bold font-mono text-emerald-900">31.0 Days</div>
+              </div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-blue-50/40 space-y-1">
+                <span className="text-[10px] text-blue-800 font-semibold">Average Attendance</span>
+                <div className="text-base font-bold font-mono text-blue-900">98.4%</div>
+              </div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-amber-50/40 space-y-1">
+                <span className="text-[10px] text-amber-800 font-semibold">LOP Days Logged</span>
+                <div className="text-base font-bold font-mono text-amber-900">4.5 Days Total</div>
+              </div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-purple-50/40 space-y-1">
+                <span className="text-[10px] text-purple-800 font-semibold">Total Overtime Hours</span>
+                <div className="text-base font-bold font-mono text-purple-900">142.5 Hours</div>
+              </div>
+            </div>
+          </div>
+        )}
 
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-slate-700 font-medium">
-                      <Lock className="h-3.5 w-3.5 text-amber-600" />
-                      Input Lock Date
-                    </span>
-                    <span className="font-mono text-slate-600">15 May 2024</span>
-                  </div>
+        {/* TAB 4: PAYSLIPS & DISTRIBUTION */}
+        {activeTab === "payslips" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  Employee Digital Payslip Dispatcher (125 Total)
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Download individual payslips, batch export password-protected PDFs, and send via email.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => toast.success("Batch payslips emailed to all 125 employees")}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-xs"
+                >
+                  <Send className="h-3.5 w-3.5" />
+                  Email All Payslips
+                </button>
+                <button
+                  type="button"
+                  onClick={() => toast.success("Downloading zip archive of all May 2024 payslips")}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  Download ZIP
+                </button>
+              </div>
+            </div>
 
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-slate-700 font-medium">
-                      <ShieldCheck className="h-3.5 w-3.5 text-purple-600" />
-                      Payroll Lock Date
-                    </span>
-                    <span className="font-mono text-slate-600">16 May 2024</span>
-                  </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead>
+                  <tr className="bg-slate-50 border-y border-slate-200 text-slate-600 font-semibold">
+                    <th className="py-2.5 px-3">Emp ID</th>
+                    <th className="py-2.5 px-3">Employee Name</th>
+                    <th className="py-2.5 px-3">Designation</th>
+                    <th className="py-2.5 px-3 text-right">Gross Pay</th>
+                    <th className="py-2.5 px-3 text-right">Deductions</th>
+                    <th className="py-2.5 px-3 text-right">Net Pay</th>
+                    <th className="py-2.5 px-3 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {[
+                    { id: "EMP-000125", name: "Sankaranarayanan R", role: "Senior Mechanical Engineer", gross: "₹ 1,04,166", ded: "₹ 14,200", net: "₹ 89,966" },
+                    { id: "EMP-2024-0128", name: "Priya Nair", role: "Senior Software Engineer", gross: "₹ 1,87,500", ded: "₹ 26,400", net: "₹ 1,61,100" },
+                    { id: "EMP-2023-0094", name: "Arun Kumar", role: "Engineering Lead", gross: "₹ 2,25,000", ded: "₹ 34,500", net: "₹ 1,90,500" },
+                  ].map((emp) => (
+                    <tr key={emp.id} className="hover:bg-slate-50/60">
+                      <td className="py-3 px-3 font-mono font-bold text-slate-900">{emp.id}</td>
+                      <td className="py-3 px-3 font-bold text-slate-900">{emp.name}</td>
+                      <td className="py-3 px-3 text-slate-600">{emp.role}</td>
+                      <td className="py-3 px-3 text-right font-mono font-bold text-slate-800">{emp.gross}</td>
+                      <td className="py-3 px-3 text-right font-mono font-bold text-rose-600">{emp.ded}</td>
+                      <td className="py-3 px-3 text-right font-mono font-bold text-emerald-700">{emp.net}</td>
+                      <td className="py-3 px-3 text-center">
+                        <button
+                          type="button"
+                          onClick={() => toast.success(`Payslip downloaded for ${emp.name}`)}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline cursor-pointer"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          PDF
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
-                  <div className="flex items-center justify-between font-bold text-slate-900 border-t border-slate-100 pt-1">
-                    <span className="flex items-center gap-1.5">
-                      <CreditCard className="h-3.5 w-3.5 text-emerald-600" />
-                      Pay Date
-                    </span>
-                    <span className="font-mono text-emerald-700">31 May 2024</span>
-                  </div>
-                </div>
+        {/* TAB 5: DISBURSEMENT & ACCOUNTING */}
+        {activeTab === "payments" && (
+          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Landmark className="h-4 w-4 text-primary" />
+                  Bank Disbursement & GL Accounting Vouchers
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Direct bank NEFT/RTGS transfer batch, payment advice file, and General Ledger (GL) journal posting.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => toast.success("Bank NEFT/RTGS payment batch file generated")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer shadow-xs"
+              >
+                <CreditCard className="h-3.5 w-3.5" />
+                Generate Bank Batch File
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="text-muted-foreground text-[11px] font-semibold">Disbursement Bank</div>
+                <div className="text-base font-bold text-slate-900">HDFC Bank Corporate (A/C: 001928374)</div>
+                <div className="text-[11px] text-emerald-700 font-semibold">Direct API Integration Active</div>
+              </div>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="text-muted-foreground text-[11px] font-semibold">Total Payout Value</div>
+                <div className="text-lg font-bold font-mono text-emerald-700">₹ 34,15,000</div>
+                <div className="text-[11px] text-slate-500">125 Accounts Credited on 31 May</div>
+              </div>
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                <div className="text-muted-foreground text-[11px] font-semibold">ERP General Ledger Posting</div>
+                <div className="text-base font-bold text-slate-900">JV-2024-MAY-0091</div>
+                <div className="text-[11px] text-blue-700 font-semibold">Auto-Synced to Accounting Module</div>
               </div>
             </div>
           </div>
         )}
       </div>
+
 
       {/* Modal: Process / Create Payroll */}
       {isProcessModalOpen && (

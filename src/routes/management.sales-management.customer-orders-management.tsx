@@ -344,39 +344,25 @@ export function CustomerOrdersManagementPage() {
     >
       <div className="flex flex-col min-h-screen text-slate-800 space-y-6">
         {/* Customer Order Master Action Bar */}
-        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-2xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-base font-bold tracking-tight text-slate-900">Customer Orders Form</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-2xs">
+          <div className="flex items-center justify-between gap-3 flex-nowrap overflow-x-auto scrollbar-none">
+            {/* Title & Status Badges */}
+            <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 whitespace-nowrap">Customer Orders Form</h2>
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap font-mono">
                 {order.orderNumber}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300">
-                ● {order.status}
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 whitespace-nowrap flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 inline-block" />
+                <span>{order.status}</span>
               </span>
             </div>
 
             {/* Header Action Buttons */}
-            <div className="flex items-center flex-wrap gap-2">
-              <button
-                onClick={() => window.print()}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Printer className="h-3.5 w-3.5 text-slate-600" />
-                <span>Print</span>
-              </button>
-
-              <button
-                onClick={() => alert("Opening Email Composer for Order Confirmation...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Mail className="h-3.5 w-3.5 text-blue-600" />
-                <span>Send Email</span>
-              </button>
-
+            <div className="flex items-center gap-2.5 shrink-0 flex-nowrap">
               <button
                 onClick={() => setIsCreateInvoiceOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md border border-emerald-300 flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-3 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md border border-emerald-300 flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <FileText className="h-3.5 w-3.5 text-emerald-600" />
                 <span>Create Invoice</span>
@@ -384,32 +370,17 @@ export function CustomerOrdersManagementPage() {
 
               <button
                 onClick={handleSaveOrder}
-                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save</span>
               </button>
 
-              <button
-                onClick={() => alert("Order saved as new revision!")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md border border-slate-300 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <span>Save & New</span>
-              </button>
-
-              <button
-                onClick={() => alert("More order options...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 flex items-center gap-1 transition-colors cursor-pointer"
-              >
-                <span>More</span>
-                <MoreHorizontal className="h-3.5 w-3.5" />
-              </button>
-
-              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs">
+              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1 shrink-0 whitespace-nowrap">
+                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs shrink-0">
                   RS
                 </div>
-                <div className="text-left hidden sm:block">
+                <div className="text-left hidden sm:block whitespace-nowrap">
                   <div className="text-xs font-semibold text-slate-800 leading-none">Rahul Sharma</div>
                   <div className="text-[10px] text-slate-500">Sales Manager</div>
                 </div>
@@ -629,17 +600,10 @@ export function CustomerOrdersManagementPage() {
         <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-1.5 overflow-x-auto scrollbar-none">
             {[
-              { id: "details", label: "Order Details", icon: Layers },
-              { id: "items", label: "Items", icon: Package },
-              { id: "pricing", label: "Pricing", icon: DollarSign },
-              { id: "taxes", label: "Taxes", icon: Percent },
-              { id: "delivery", label: "Terms & Delivery", icon: Truck },
-              { id: "approvals", label: "Approvals", icon: Award },
-              { id: "fulfilment", label: "Fulfilment", icon: Activity },
-              { id: "invoicing", label: "Invoicing", icon: FileText },
-              { id: "payments", label: "Payments", icon: CreditCard },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "history", label: "History", icon: Clock },
+              { id: "details", label: "Order Details & Delivery", icon: Layers },
+              { id: "items", label: "Items & Pricing", icon: Package },
+              { id: "approvals", label: "Approvals & Governance", icon: Award },
+              { id: "payments", label: "Payments & Invoicing", icon: CreditCard },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -663,276 +627,285 @@ export function CustomerOrdersManagementPage() {
 
           {/* TAB CONTENT AREA */}
           <div className="p-5">
-            {activeTab === "details" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Left & Center Columns (Sections 2 to 9) */}
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Grid Row 1: Customer Details, Order Value Summary, Delivery Summary, Order Timeline */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Card 2: Customer Details */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        2. Customer Details
-                      </h3>
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div>
-                          <span className="text-slate-500 font-medium block">Customer ID</span>
-                          <span className="font-mono font-bold text-slate-800">{order.customerId}</span>
-                        </div>
-                        <div>
-                          <span className="text-slate-500 font-medium block">Customer Name</span>
-                          <span className="font-bold text-slate-900 truncate block">{order.customerName}</span>
-                        </div>
-                        <div>
-                          <span className="text-slate-500 font-medium block">Customer Type</span>
-                          <span className="font-semibold text-slate-700">{order.customerType}</span>
-                        </div>
-                        <div>
-                          <span className="text-slate-500 font-medium block">Industry</span>
-                          <span className="font-semibold text-slate-700">{order.industry}</span>
-                        </div>
-                        <div>
-                          <span className="text-slate-500 font-medium block">GSTIN</span>
-                          <span className="font-mono text-slate-800">{order.gstin}</span>
-                        </div>
-                        <div>
-                          <span className="text-slate-500 font-medium block">PAN</span>
-                          <span className="font-mono text-slate-800">{order.pan}</span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-1 text-xs border-t border-slate-200 pt-2">
-                        <div>
-                          <span className="text-slate-500 font-semibold">Billing Address:</span>
-                          <p className="font-medium text-slate-700 text-[11px] leading-tight">{order.billingAddress}</p>
-                        </div>
-                        <div className="mt-1">
-                          <span className="text-slate-500 font-semibold">Shipping Address:</span>
-                          <p className="font-medium text-slate-700 text-[11px] leading-tight">{order.shippingAddress}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between border-t border-slate-200 pt-2 text-xs">
-                        <span className="text-slate-600 font-semibold">Credit Status</span>
-                        <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded border border-emerald-200">
-                          ● {order.creditStatus}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Card 3: Order Value Summary */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        3. Order Value Summary
-                      </h3>
-                      <div className="space-y-1.5 text-xs">
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Total Items (5)</span>
-                          <span className="font-semibold font-mono">₹ 3,24,000.00</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Discount</span>
-                          <span className="font-semibold text-rose-600 font-mono">- ₹ 20,750.00</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Taxable Value</span>
-                          <span className="font-semibold font-mono">₹ 2,94,250.00</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Total Tax</span>
-                          <span className="font-semibold text-blue-700 font-mono">₹ 52,965.00</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Freight</span>
-                          <span className="font-semibold font-mono">₹ 5,000.00</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Installation</span>
-                          <span className="font-semibold font-mono">₹ 25,000.00</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Other Charges</span>
-                          <span className="font-semibold font-mono">₹ 3,000.00</span>
-                        </div>
-
-                        <div className="flex justify-between border-t border-slate-200 pt-2 text-sm font-extrabold text-primary">
-                          <span>Grand Total</span>
-                          <span className="font-mono">₹ 3,47,215.00</span>
-                        </div>
-
-                        <div className="flex justify-between pt-1 font-semibold text-[11px]">
-                          <span className="text-slate-500">Margin</span>
-                          <span className="text-emerald-700">₹ 75,250.00 (21.66%)</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card 4: Delivery Summary */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
-                      <div className="flex justify-between border-b border-slate-200 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          4. Delivery Summary
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left & Center Columns based on active tab */}
+              <div className="lg:col-span-2 space-y-6">
+                {activeTab === "details" && (
+                  <div className="space-y-6">
+                    {/* Customer Details & Order Value Summary */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Card 2: Customer Details */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
+                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
+                          Customer Details
                         </h3>
-                        <button onClick={() => alert("Viewing Delivery Schedule...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View Delivery Schedule
-                        </button>
-                      </div>
-                      <div className="space-y-1">
-                        <div>
-                          <span className="text-slate-500 font-semibold">Delivery Location:</span>
-                          <p className="font-medium text-slate-800 text-[11px] leading-tight">{order.deliveryLocation}</p>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div>
+                            <span className="text-slate-500 font-medium block">Customer ID</span>
+                            <span className="font-mono font-bold text-slate-800">{order.customerId}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-500 font-medium block">Customer Name</span>
+                            <span className="font-bold text-slate-900 truncate block">{order.customerName}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-500 font-medium block">Customer Type</span>
+                            <span className="font-semibold text-slate-700">{order.customerType}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-500 font-medium block">Industry</span>
+                            <span className="font-semibold text-slate-700">{order.industry}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-500 font-medium block">GSTIN</span>
+                            <span className="font-mono text-slate-800">{order.gstin}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-500 font-medium block">PAN</span>
+                            <span className="font-mono text-slate-800">{order.pan}</span>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Delivery Method</span>
-                          <span className="font-semibold text-slate-800">{order.deliveryMethod}</span>
+
+                        <div className="space-y-1 text-xs border-t border-slate-200 pt-2">
+                          <div>
+                            <span className="text-slate-500 font-semibold">Billing Address:</span>
+                            <p className="font-medium text-slate-700 text-[11px] leading-tight">{order.billingAddress}</p>
+                          </div>
+                          <div className="mt-1">
+                            <span className="text-slate-500 font-semibold">Shipping Address:</span>
+                            <p className="font-medium text-slate-700 text-[11px] leading-tight">{order.shippingAddress}</p>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Promised Delivery Date</span>
-                          <span className="font-bold text-blue-700">{order.promisedDeliveryDate}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Installation Required</span>
+
+                        <div className="flex items-center justify-between border-t border-slate-200 pt-2 text-xs">
+                          <span className="text-slate-600 font-semibold">Credit Status</span>
                           <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded border border-emerald-200">
-                            Yes
+                            ● {order.creditStatus}
                           </span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Shipping Method</span>
-                          <span className="font-semibold text-slate-800">{order.shippingMethod}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Freight Responsibility</span>
-                          <span className="font-semibold text-slate-800">{order.freightResponsibility}</span>
-                        </div>
                       </div>
-                    </div>
 
-                    {/* Card 5: Order Timeline */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        5. Order Timeline
-                      </h3>
-                      <div className="space-y-1">
-                        {[
-                          { name: "Draft Created", date: "16 Apr 2024 09:30 AM", status: "Done" },
-                          { name: "Under Review", date: "16 Apr 2024 10:15 AM", status: "Done" },
-                          { name: "Approved", date: "16 Apr 2024 01:30 PM", status: "Done" },
-                          { name: "Confirmed", date: "16 Apr 2024 02:45 PM", status: "Done" },
-                          { name: "Processing", date: "-", status: "Pending" },
-                          { name: "Partially Delivered", date: "-", status: "Pending" },
-                          { name: "Fully Delivered", date: "-", status: "Pending" },
-                          { name: "Invoiced", date: "-", status: "Pending" },
-                          { name: "Completed", date: "-", status: "Pending" },
-                          { name: "Cancelled", date: "-", status: "Pending" },
-                        ].map((t, idx) => (
-                          <div key={idx} className="flex justify-between items-center text-[11px]">
-                            <div className="flex items-center gap-1.5">
-                              <span className={cn("h-2 w-2 rounded-full", t.status === "Done" ? "bg-emerald-500" : "bg-slate-300")} />
-                              <span className={cn("font-medium", t.status === "Done" ? "text-slate-800" : "text-slate-400")}>{t.name}</span>
-                            </div>
-                            <span className="font-mono text-slate-400">{t.date}</span>
+                      {/* Card 3: Order Value Summary */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
+                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
+                          Order Value Summary
+                        </h3>
+                        <div className="space-y-1.5 text-xs">
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Total Items (5)</span>
+                            <span className="font-semibold font-mono">₹ 3,24,000.00</span>
                           </div>
-                        ))}
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Discount</span>
+                            <span className="font-semibold text-rose-600 font-mono">- ₹ 20,750.00</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Taxable Value</span>
+                            <span className="font-semibold font-mono">₹ 2,94,250.00</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Total Tax</span>
+                            <span className="font-semibold text-blue-700 font-mono">₹ 52,965.00</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Freight</span>
+                            <span className="font-semibold font-mono">₹ 5,000.00</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Installation</span>
+                            <span className="font-semibold font-mono">₹ 25,000.00</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Other Charges</span>
+                            <span className="font-semibold font-mono">₹ 3,000.00</span>
+                          </div>
+
+                          <div className="flex justify-between border-t border-slate-200 pt-2 text-sm font-extrabold text-primary">
+                            <span>Grand Total</span>
+                            <span className="font-mono">₹ 3,47,215.00</span>
+                          </div>
+
+                          <div className="flex justify-between pt-1 font-semibold text-[11px]">
+                            <span className="text-slate-500">Margin</span>
+                            <span className="text-emerald-700">₹ 75,250.00 (21.66%)</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Delivery Summary & Order Timeline */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Card 4: Delivery Summary */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
+                        <div className="flex justify-between border-b border-slate-200 pb-2">
+                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                            Delivery & Logistics
+                          </h3>
+                          <button onClick={() => alert("Viewing Delivery Schedule...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                            Delivery Schedule
+                          </button>
+                        </div>
+                        <div className="space-y-1">
+                          <div>
+                            <span className="text-slate-500 font-semibold">Delivery Location:</span>
+                            <p className="font-medium text-slate-800 text-[11px] leading-tight">{order.deliveryLocation}</p>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Delivery Method</span>
+                            <span className="font-semibold text-slate-800">{order.deliveryMethod}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Promised Delivery Date</span>
+                            <span className="font-bold text-blue-700">{order.promisedDeliveryDate}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Installation Required</span>
+                            <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded border border-emerald-200">
+                              Yes
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Shipping Method</span>
+                            <span className="font-semibold text-slate-800">{order.shippingMethod}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Freight Responsibility</span>
+                            <span className="font-semibold text-slate-800">{order.freightResponsibility}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card 5: Order Timeline */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
+                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
+                          Order Timeline & Milestones
+                        </h3>
+                        <div className="space-y-1">
+                          {[
+                            { name: "Draft Created", date: "16 Apr 2024 09:30 AM", status: "Done" },
+                            { name: "Under Review", date: "16 Apr 2024 10:15 AM", status: "Done" },
+                            { name: "Approved", date: "16 Apr 2024 01:30 PM", status: "Done" },
+                            { name: "Confirmed", date: "16 Apr 2024 02:45 PM", status: "Done" },
+                            { name: "Processing", date: "-", status: "Pending" },
+                            { name: "Partially Delivered", date: "-", status: "Pending" },
+                            { name: "Fully Delivered", date: "-", status: "Pending" },
+                            { name: "Invoiced", date: "-", status: "Pending" },
+                            { name: "Completed", date: "-", status: "Pending" },
+                          ].map((t, idx) => (
+                            <div key={idx} className="flex justify-between items-center text-[11px]">
+                              <div className="flex items-center gap-1.5">
+                                <span className={cn("h-2 w-2 rounded-full", t.status === "Done" ? "bg-emerald-500" : "bg-slate-300")} />
+                                <span className={cn("font-medium", t.status === "Done" ? "text-slate-800" : "text-slate-400")}>{t.name}</span>
+                              </div>
+                              <span className="font-mono text-slate-400">{t.date}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
+                )}
 
-                  {/* Card 6: Order Items Table */}
-                  <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                        6. Order Items
-                      </h3>
-                      <button
-                        onClick={() => setIsAddItemOpen(true)}
-                        className="h-7 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded shadow-2xs flex items-center gap-1 cursor-pointer"
-                      >
-                        <Plus className="h-3.5 w-3.5" />
-                        <span>Add Item</span>
-                      </button>
-                    </div>
+                {activeTab === "items" && (
+                  <div className="space-y-6">
+                    {/* Card 6: Order Items Table */}
+                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                          Order Line Items & Pricing Breakdown
+                        </h3>
+                        <button
+                          onClick={() => setIsAddItemOpen(true)}
+                          className="h-7 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded shadow-2xs flex items-center gap-1 cursor-pointer"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                          <span>Add Item</span>
+                        </button>
+                      </div>
 
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                            <th className="py-2 px-2 text-center w-8">#</th>
-                            <th className="py-2 px-2">Product / Service</th>
-                            <th className="py-2 px-2">Description</th>
-                            <th className="py-2 px-2 text-center">Qty</th>
-                            <th className="py-2 px-2 text-center">UOM</th>
-                            <th className="py-2 px-2 text-right">Unit Price (₹)</th>
-                            <th className="py-2 px-2 text-center">Discount (%)</th>
-                            <th className="py-2 px-2 text-center">Tax (%)</th>
-                            <th className="py-2 px-2 text-right">Line Total (₹)</th>
-                            <th className="py-2 px-2 text-center">Delivery Date</th>
-                            <th className="py-2 px-2 text-center">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                          {items.map((item, idx) => {
-                            const gross = item.quantity * item.unitPrice;
-                            const disc = (gross * item.discountPct) / 100;
-                            const taxable = gross - disc;
-                            const lineTotal = taxable * (1 + item.taxRate / 100);
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs border-collapse">
+                          <thead>
+                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                              <th className="py-2 px-2 text-center w-8">#</th>
+                              <th className="py-2 px-2">Product / Service</th>
+                              <th className="py-2 px-2">Description</th>
+                              <th className="py-2 px-2 text-center">Qty</th>
+                              <th className="py-2 px-2 text-center">UOM</th>
+                              <th className="py-2 px-2 text-right">Unit Price (₹)</th>
+                              <th className="py-2 px-2 text-center">Discount (%)</th>
+                              <th className="py-2 px-2 text-center">Tax (%)</th>
+                              <th className="py-2 px-2 text-right">Line Total (₹)</th>
+                              <th className="py-2 px-2 text-center">Delivery Date</th>
+                              <th className="py-2 px-2 text-center">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {items.map((item, idx) => {
+                              const gross = item.quantity * item.unitPrice;
+                              const disc = (gross * item.discountPct) / 100;
+                              const taxable = gross - disc;
+                              const lineTotal = taxable * (1 + item.taxRate / 100);
 
-                            return (
-                              <tr key={item.id} className="hover:bg-slate-50/80">
-                                <td className="py-2 px-2 text-center font-bold text-slate-500">{idx + 1}</td>
-                                <td className="py-2 px-2 font-bold text-slate-900">{item.productName}</td>
-                                <td className="py-2 px-2 text-slate-600">{item.description}</td>
-                                <td className="py-2 px-2 text-center font-bold text-slate-800">{item.quantity}</td>
-                                <td className="py-2 px-2 text-center text-slate-600">{item.uom}</td>
-                                <td className="py-2 px-2 text-right font-mono font-semibold">{item.unitPrice.toLocaleString("en-IN")}</td>
-                                <td className="py-2 px-2 text-center font-semibold text-rose-600">{item.discountPct}%</td>
-                                <td className="py-2 px-2 text-center font-semibold text-blue-600">{item.taxRate}%</td>
-                                <td className="py-2 px-2 text-right font-mono font-bold text-slate-900">
-                                  {lineTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-                                </td>
-                                <td className="py-2 px-2 text-center text-slate-600 font-medium">{item.deliveryDate}</td>
-                                <td className="py-2 px-2 text-center">
-                                  <span
-                                    className={cn(
-                                      "px-2 py-0.5 text-[10px] font-bold rounded",
-                                      item.status === "Confirmed"
-                                        ? "bg-emerald-100 text-emerald-800"
-                                        : item.status === "In Progress"
-                                        ? "bg-blue-100 text-blue-800"
-                                        : "bg-slate-100 text-slate-600"
-                                    )}
-                                  >
-                                    {item.status}
-                                  </span>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
+                              return (
+                                <tr key={item.id} className="hover:bg-slate-50/80">
+                                  <td className="py-2 px-2 text-center font-bold text-slate-500">{idx + 1}</td>
+                                  <td className="py-2 px-2 font-bold text-slate-900">{item.productName}</td>
+                                  <td className="py-2 px-2 text-slate-600">{item.description}</td>
+                                  <td className="py-2 px-2 text-center font-bold text-slate-800">{item.quantity}</td>
+                                  <td className="py-2 px-2 text-center text-slate-600">{item.uom}</td>
+                                  <td className="py-2 px-2 text-right font-mono font-semibold">{item.unitPrice.toLocaleString("en-IN")}</td>
+                                  <td className="py-2 px-2 text-center font-semibold text-rose-600">{item.discountPct}%</td>
+                                  <td className="py-2 px-2 text-center font-semibold text-blue-600">{item.taxRate}%</td>
+                                  <td className="py-2 px-2 text-right font-mono font-bold text-slate-900">
+                                    {lineTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                                  </td>
+                                  <td className="py-2 px-2 text-center text-slate-600 font-medium">{item.deliveryDate}</td>
+                                  <td className="py-2 px-2 text-center">
+                                    <span
+                                      className={cn(
+                                        "px-2 py-0.5 text-[10px] font-bold rounded",
+                                        item.status === "Confirmed"
+                                          ? "bg-emerald-100 text-emerald-800"
+                                          : item.status === "In Progress"
+                                          ? "bg-blue-100 text-blue-800"
+                                          : "bg-slate-100 text-slate-600"
+                                      )}
+                                    >
+                                      {item.status}
+                                    </span>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
 
-                    <div className="flex items-center justify-between border-t border-slate-200 pt-3 font-semibold text-xs">
-                      <button
-                        onClick={() => setIsAddItemOpen(true)}
-                        className="text-primary hover:underline flex items-center gap-1 font-bold cursor-pointer"
-                      >
-                        <Plus className="h-3.5 w-3.5" /> Add Item
-                      </button>
-                      <div className="text-right">
-                        <span className="text-slate-600 mr-2">Total (Excl. Tax):</span>
-                        <span className="font-extrabold text-slate-900 text-sm font-mono">
-                          ₹ 3,15,000.00
-                        </span>
+                      <div className="flex items-center justify-between border-t border-slate-200 pt-3 font-semibold text-xs">
+                        <button
+                          onClick={() => setIsAddItemOpen(true)}
+                          className="text-primary hover:underline flex items-center gap-1 font-bold cursor-pointer"
+                        >
+                          <Plus className="h-3.5 w-3.5" /> Add Item
+                        </button>
+                        <div className="text-right">
+                          <span className="text-slate-600 mr-2">Total (Excl. Tax):</span>
+                          <span className="font-extrabold text-slate-900 text-sm font-mono">
+                            ₹ 3,15,000.00
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
+                )}
 
-                  {/* Grid Row 3: Approvals, Payment Summary, Next Follow-up */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {activeTab === "approvals" && (
+                  <div className="space-y-6">
                     {/* Card 7: Approvals */}
                     <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
                       <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">
-                        7. Approvals
+                        Approval Matrix & Governance Audit
                       </h3>
                       <div className="overflow-x-auto text-xs">
                         <table className="w-full text-left">
@@ -961,74 +934,82 @@ export function CustomerOrdersManagementPage() {
                         </table>
                       </div>
                     </div>
+                  </div>
+                )}
 
-                    {/* Card 8: Payment Summary */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
-                      <div className="flex justify-between border-b border-slate-200 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          8. Payment Summary
-                        </h3>
-                        <button onClick={() => setIsRecordPaymentOpen(true)} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          Record Payment
-                        </button>
+                {activeTab === "payments" && (
+                  <div className="space-y-6">
+                    {/* Grid Row: Payment Summary & Next Follow-up */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Card 8: Payment Summary */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
+                        <div className="flex justify-between border-b border-slate-200 pb-2">
+                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                            Payment Summary
+                          </h3>
+                          <button onClick={() => setIsRecordPaymentOpen(true)} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                            Record Payment
+                          </button>
+                        </div>
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Payment Terms</span>
+                            <span className="font-semibold text-slate-800 text-[11px]">{order.paymentTerms}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Advance Received</span>
+                            <span className="font-mono font-semibold text-slate-800">₹ {(order.advanceReceived).toLocaleString("en-IN")}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Paid Amount</span>
+                            <span className="font-mono font-semibold text-emerald-700">₹ {(order.paidAmount).toLocaleString("en-IN")}</span>
+                          </div>
+                          <div className="flex justify-between border-t border-slate-200 pt-1 font-bold">
+                            <span className="text-slate-800">Balance Due</span>
+                            <span className="font-mono text-rose-600">₹ {(order.balanceDue).toLocaleString("en-IN")}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500 font-semibold">Payment Status</span>
+                            <span className="px-2 py-0.5 bg-amber-50 text-amber-700 font-bold rounded border border-amber-200">
+                              Partial
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Payment Terms</span>
-                          <span className="font-semibold text-slate-800 text-[11px]">{order.paymentTerms}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Advance Received</span>
-                          <span className="font-mono font-semibold text-slate-800">₹ {(order.advanceReceived).toLocaleString("en-IN")}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Paid Amount</span>
-                          <span className="font-mono font-semibold text-emerald-700">₹ {(order.paidAmount).toLocaleString("en-IN")}</span>
-                        </div>
-                        <div className="flex justify-between border-t border-slate-200 pt-1 font-bold">
-                          <span className="text-slate-800">Balance Due</span>
-                          <span className="font-mono text-rose-600">₹ {(order.balanceDue).toLocaleString("en-IN")}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500 font-semibold">Payment Status</span>
-                          <span className="px-2 py-0.5 bg-amber-50 text-amber-700 font-bold rounded border border-amber-200">
-                            Partial
-                          </span>
-                        </div>
-                      </div>
-                    </div>
 
-                    {/* Card 9: Next Follow-up */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
-                      <div className="flex justify-between border-b border-slate-200 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          9. Next Follow-up
-                        </h3>
-                        <button onClick={() => alert("Scheduling follow-up...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          Schedule Follow-up
-                        </button>
-                      </div>
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Next Action</span>
-                          <span className="font-bold text-slate-800">{order.nextAction}</span>
+                      {/* Card 9: Next Follow-up */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
+                        <div className="flex justify-between border-b border-slate-200 pb-2">
+                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                            Next Follow-up & Actions
+                          </h3>
+                          <button onClick={() => alert("Scheduling follow-up...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                            Schedule Follow-up
+                          </button>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Next Action Date</span>
-                          <span className="font-semibold text-slate-800">{order.nextActionDate}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Assigned To</span>
-                          <span className="font-semibold text-slate-800">{order.salesOwner.name}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Priority</span>
-                          <span className="font-bold text-rose-600">● {order.nextActionPriority}</span>
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Next Action</span>
+                            <span className="font-bold text-slate-800">{order.nextAction}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Next Action Date</span>
+                            <span className="font-semibold text-slate-800">{order.nextActionDate}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Assigned To</span>
+                            <span className="font-semibold text-slate-800">{order.salesOwner.name}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Priority</span>
+                            <span className="font-bold text-rose-600">● {order.nextActionPriority}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
+              </div>
 
                 {/* Right Column: Sidebar Panels (Matching Mockup Image) */}
                 <div className="space-y-6">
@@ -1186,9 +1167,8 @@ export function CustomerOrdersManagementPage() {
                   </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
 
         {/* MODAL 1: CREATE INVOICE */}
         {isCreateInvoiceOpen && (

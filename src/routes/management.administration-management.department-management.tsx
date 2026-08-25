@@ -33,6 +33,14 @@ import {
   UserCheck,
   ArrowRight,
   ShieldAlert,
+  Calendar,
+  Percent,
+  Lock,
+  Archive,
+  RefreshCw,
+  Award,
+  Zap,
+  Target,
 } from "lucide-react";
 
 export const Route = createFileRoute("/management/administration-management/department-management")({
@@ -41,7 +49,8 @@ export const Route = createFileRoute("/management/administration-management/depa
       { title: "Department Management · Magnertia ERP" },
       {
         name: "description",
-        content: "Manage complete department lifecycle from strategy, organizational mapping, workforce positions, processes, resources, budget, KPIs, compliance, risk to performance.",
+        content:
+          "Manage complete department lifecycle from strategy, organizational mapping, workforce positions, processes, resources, budget, KPIs, compliance, risk to performance.",
       },
     ],
   }),
@@ -85,21 +94,8 @@ const RECENT_ACTIVITIES = [
 
 export function DepartmentManagementPage() {
   const [activeTab, setActiveTab] = useState<
-    | "overview"
-    | "organization"
-    | "structure"
-    | "people"
-    | "positions"
-    | "processes"
-    | "resources"
-    | "budget"
-    | "kpis"
-    | "compliance"
-    | "risk"
-    | "projects"
-    | "documents"
-    | "history"
-  >("overview");
+    "organization" | "people" | "positions" | "budget" | "kpis" | "compliance"
+  >("organization");
 
   // Master Form State
   const [deptMaster, setDeptMaster] = useState({
@@ -109,8 +105,8 @@ export function DepartmentManagementPage() {
     legalEntity: "Magnertia Global Pvt. Ltd.",
     businessUnit: "Corporate Services",
     functionName: "Finance",
-    division: "Select division",
-    parentDept: "Select parent department",
+    division: "Finance Operations",
+    parentDept: "Corporate Services",
     deptType: "Functional Department",
     deptHead: "Vikram Singh",
     location: "Noida Head Office",
@@ -120,6 +116,57 @@ export function DepartmentManagementPage() {
     effectiveTo: "",
     version: "1.0",
     orgLevel: "Level 3 - Department",
+  });
+
+  // Dynamic Departments List State
+  const [departmentsList, setDepartmentsList] = useState([
+    { code: "DEPT-ACC-01", name: "Corporate Accounts & General Ledger", fn: "Finance", head: "Rohan Kapoor", count: 82, cc: "CC-FIN-ACC", status: "Active" },
+    { code: "DEPT-TRS-02", name: "Treasury & Cash Management", fn: "Finance", head: "Sunil Joshi", count: 48, cc: "CC-FIN-TRS", status: "Active" },
+    { code: "DEPT-PRD-03", name: "Plant Production Line A/B", fn: "Operations", head: "Dinesh Patil", count: 214, cc: "CC-OPS-PRD", status: "Active" },
+    { code: "DEPT-QA-04", name: "Quality Assurance & Testing", fn: "Operations", head: "Anjali Gupta", count: 142, cc: "CC-OPS-QA", status: "Active" },
+    { code: "DEPT-DEV-05", name: "Core Product Development", fn: "R&D", head: "Siddharth Roy", count: 172, cc: "CC-RD-DEV", status: "Active" },
+    { code: "DEPT-ENG-06", name: "Systems & Cloud Engineering", fn: "R&D", head: "Priya Menon", count: 126, cc: "CC-RD-ENG", status: "Active" },
+    { code: "DEPT-TA-07", name: "Talent Acquisition & Sourcing", fn: "HR", head: "Karan Johar", count: 68, cc: "CC-HR-TA", status: "Active" },
+    { code: "DEPT-ER-08", name: "Employee Relations & Payroll", fn: "HR", head: "Deepa Nair", count: 86, cc: "CC-HR-ER", status: "Active" },
+  ]);
+
+  // Dynamic Positions List State
+  const [positionsList, setPositionsList] = useState([
+    { code: "POS-FIN-001", title: "Chief Financial Officer", grade: "CXO", sanc: 1, filled: 1, vac: 0, status: "Occupied" },
+    { code: "POS-FIN-002", title: "General Manager - Accounts", grade: "M1", sanc: 2, filled: 2, vac: 0, status: "Occupied" },
+    { code: "POS-FIN-003", title: "Senior Finance Controller", grade: "M2", sanc: 4, filled: 3, vac: 1, status: "Hiring Open" },
+    { code: "POS-FIN-004", title: "Tax & Compliance Lead", grade: "M3", sanc: 3, filled: 3, vac: 0, status: "Occupied" },
+    { code: "POS-FIN-005", title: "Accounts Executive", grade: "E1", sanc: 12, filled: 10, vac: 2, status: "Hiring Open" },
+  ]);
+
+  // Department People Roster State
+  const [peopleRoster, setPeopleRoster] = useState([
+    { id: "EMP-101", name: "Vikram Singh", role: "Head - Finance & Accounts", email: "vikram.singh@magnertia.com", phone: "+91 98112 34567", rating: "4.8/5", status: "Active" },
+    { id: "EMP-102", name: "Priya Malhotra", role: "Senior Finance Controller", email: "priya.m@magnertia.com", phone: "+91 98112 34568", rating: "4.7/5", status: "Active" },
+    { id: "EMP-103", name: "Rohit Verma", role: "Tax & Compliance Lead", email: "rohit.v@magnertia.com", phone: "+91 98112 34569", rating: "4.9/5", status: "Active" },
+    { id: "EMP-104", name: "Sunil Yadav", role: "Treasury Manager", email: "sunil.y@magnertia.com", phone: "+91 98112 34570", rating: "4.6/5", status: "Active" },
+    { id: "EMP-105", name: "Kavita Sharma", role: "Accounts Executive", email: "kavita.s@magnertia.com", phone: "+91 98112 34571", rating: "4.5/5", status: "Active" },
+  ]);
+
+  const [showAddDeptModal, setShowAddDeptModal] = useState(false);
+  const [showAddPosModal, setShowAddPosModal] = useState(false);
+
+  const [newDeptForm, setNewDeptForm] = useState({
+    code: "",
+    name: "",
+    fn: "Finance",
+    head: "Vikram Singh",
+    count: "25",
+    cc: "CC-NEW",
+  });
+
+  const [newPosForm, setNewPosForm] = useState({
+    code: "",
+    title: "",
+    grade: "M2",
+    sanc: "1",
+    filled: "1",
+    vac: "0",
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -138,7 +185,7 @@ export function DepartmentManagementPage() {
     >
       {/* Toast Notification Banner */}
       {toastMessage && (
-        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-[#0a192f] border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
           <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
           <span>{toastMessage}</span>
         </div>
@@ -153,7 +200,7 @@ export function DepartmentManagementPage() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold tracking-tight text-foreground">Department Management Form</h2>
+                <h2 className="text-base font-bold tracking-tight text-foreground">{deptMaster.deptName}</h2>
                 <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 border border-emerald-500/20">
                   {deptMaster.deptStatus}
                 </span>
@@ -162,14 +209,14 @@ export function DepartmentManagementPage() {
                 </span>
               </div>
               <p className="text-xs text-muted-foreground">
-                MAICW Classification · Departmental Architecture & Operational Control
+                MAICW Classification · Code: <span className="font-mono font-bold text-foreground">{deptMaster.deptCode}</span> | Cost Centre: <span className="font-mono text-foreground">{deptMaster.costCentre}</span>
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             <button
-              onClick={() => showNotification("Department preview modal generated.")}
+              onClick={() => showNotification("Department configuration preview generated.")}
               className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer"
             >
               <Eye className="h-3.5 w-3.5 text-primary" />
@@ -202,25 +249,17 @@ export function DepartmentManagementPage() {
           </div>
         </div>
 
-        {/* 1. Department Master Form & Snapshot Card (Matching Attached Screenshot) */}
+        {/* 1. Department Master Parameters & Snapshot Card */}
         <div className="grid gap-4 lg:grid-cols-12">
           {/* Left 9 columns: Department Master Fields */}
           <div className="lg:col-span-9 rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
             <div className="flex items-center justify-between border-b border-border/60 pb-3">
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <span className="text-primary">1.</span> Department Master
+                <span className="text-primary">1.</span> Department Master Parameters
               </h3>
-              <span className="text-[11px] text-muted-foreground font-medium">
-                MAICW Fields: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
-                <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
-                <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-                <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
-                <span className="text-rose-500 font-bold">W</span> (Workflow)
-              </span>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {/* Auto Fields */}
               <div>
                 <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
                   <span>Department ID</span>
@@ -317,8 +356,9 @@ export function DepartmentManagementPage() {
                   onChange={(e) => setDeptMaster({ ...deptMaster, division: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Select division">Select division</option>
                   <option value="Finance Operations">Finance Operations</option>
+                  <option value="Global Treasury">Global Treasury</option>
+                  <option value="Strategic Planning">Strategic Planning</option>
                 </select>
               </div>
 
@@ -332,7 +372,8 @@ export function DepartmentManagementPage() {
                   onChange={(e) => setDeptMaster({ ...deptMaster, parentDept: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Select parent department">Select parent department</option>
+                  <option value="Corporate Services">Corporate Services</option>
+                  <option value="Executive Secretariat">Executive Secretariat</option>
                 </select>
               </div>
 
@@ -382,6 +423,7 @@ export function DepartmentManagementPage() {
                 >
                   <option value="Noida Head Office">Noida Head Office</option>
                   <option value="Bengaluru Campus">Bengaluru Campus</option>
+                  <option value="Pune Plant">Pune Plant</option>
                 </select>
               </div>
 
@@ -506,8 +548,22 @@ export function DepartmentManagementPage() {
                 <span className="text-xs font-medium text-muted-foreground block">Performance Score</span>
                 <span className="text-[10px] text-emerald-600 font-semibold">Good</span>
               </div>
-              <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-emerald-500 text-xs font-bold font-mono text-emerald-600">
-                82%
+              <div className="relative inline-flex items-center justify-center">
+                <svg width="48" height="48" className="transform -rotate-90">
+                  <circle cx="24" cy="24" r="19" stroke="currentColor" strokeWidth="3.5" className="text-muted/30" fill="transparent" />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="19"
+                    stroke="#10b981"
+                    strokeWidth="3.5"
+                    strokeDasharray={2 * Math.PI * 19}
+                    strokeDashoffset={2 * Math.PI * 19 * (1 - 0.82)}
+                    strokeLinecap="round"
+                    fill="transparent"
+                  />
+                </svg>
+                <span className="absolute text-[11px] font-bold font-mono text-emerald-600">82%</span>
               </div>
             </div>
           </div>
@@ -517,20 +573,12 @@ export function DepartmentManagementPage() {
         <div className="space-y-4">
           <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
             {[
-              { key: "overview", label: "Overview", icon: Layers },
-              { key: "organization", label: "Organization", icon: Building },
-              { key: "structure", label: "Structure", icon: FolderTree },
-              { key: "people", label: "People", icon: Users },
-              { key: "positions", label: "Positions", icon: UserCheck },
-              { key: "processes", label: "Processes", icon: Sliders },
-              { key: "resources", label: "Resources", icon: Building2 },
-              { key: "budget", label: "Budget", icon: Landmark },
-              { key: "kpis", label: "KPIs", icon: TrendingUp },
-              { key: "compliance", label: "Compliance", icon: ShieldCheck },
-              { key: "risk", label: "Risk", icon: AlertTriangle },
-              { key: "projects", label: "Projects", icon: Briefcase },
-              { key: "documents", label: "Documents", icon: FileText },
-              { key: "history", label: "History", icon: Clock },
+              { key: "organization", label: "Organization & Roster", icon: Building },
+              { key: "people", label: "People Directory", icon: Users },
+              { key: "positions", label: "Positions & Roles", icon: UserCheck },
+              { key: "budget", label: "Budget & Financials", icon: Landmark },
+              { key: "kpis", label: "KPIs & Performance", icon: TrendingUp },
+              { key: "compliance", label: "Compliance & Risk", icon: ShieldCheck },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
@@ -552,533 +600,548 @@ export function DepartmentManagementPage() {
             })}
           </div>
 
-          {/* OVERVIEW TAB CONTENT (Matching attached screenshot layout) */}
-          {activeTab === "overview" && (
-            <div className="space-y-6">
-              {/* Row 1: Purpose & Strategy | Organizational Mapping | Key Metrics (YTD) */}
-              <div className="grid gap-4 lg:grid-cols-3">
-                {/* 2. Department Purpose & Strategy */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    2. Department Purpose & Strategy
-                  </h4>
-
-                  <div className="space-y-2 text-xs">
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Department Vision *</label>
-                      <textarea
-                        rows={2}
-                        readOnly
-                        value="To be a trusted financial partner driving sustainable value creation through financial excellence."
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 p-2 text-xs text-foreground resize-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Department Mission *</label>
-                      <textarea
-                        rows={2}
-                        readOnly
-                        value="To deliver accurate financial information, ensure compliance and support strategic decision making."
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 p-2 text-xs text-foreground resize-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Department Purpose *</label>
-                      <textarea
-                        rows={2}
-                        readOnly
-                        value="To manage financial resources, ensure regulatory compliance, enable control and support business growth."
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 p-2 text-xs text-foreground resize-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Strategic Objectives *</label>
-                      <textarea
-                        rows={2}
-                        readOnly
-                        value="• Strengthen financial governance and compliance&#10;• Improve cost efficiency and reduce variances&#10;• Enhance financial analytics and reporting&#10;• Automate financial processes and systems"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 p-2 text-xs text-foreground resize-none"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 pt-1">
-                      <div>
-                        <label className="text-[11px] text-muted-foreground block">Priority</label>
-                        <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                          <option>High</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="text-[11px] text-muted-foreground block">Strategic Importance</label>
-                        <div className="mt-1 flex items-center gap-1 text-amber-500">
-                          {Array.from({ length: 4 }).map((_, i) => (
-                            <Star key={i} className="h-3.5 w-3.5 fill-amber-500" />
-                          ))}
-                          <Star className="h-3.5 w-3.5 text-muted-foreground/30" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+          {/* ORGANIZATION & ROSTER TAB */}
+          {activeTab === "organization" && (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-4">
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Total Departments</span>
+                  <div className="text-xl font-bold font-mono text-foreground">{departmentsList.length} Depts</div>
+                  <p className="text-[10px] text-emerald-600 font-medium">100% Operational</p>
                 </div>
-
-                {/* 3. Organizational Mapping */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    3. Organizational Mapping
-                  </h4>
-
-                  <div className="grid grid-cols-3 gap-2 text-xs">
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Business Unit *</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Corporate Services</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Function *</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Finance</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Division</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Finance Operations</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Branch</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Noida Head Office</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Region</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>North Region</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Country</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>India</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Department Head *</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Vikram Singh</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Functional Head</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Neha Kapoor</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Administrative Head</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Arjun Mehta</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Reporting Dept</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Corporate Services</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Org Level</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Level 3 - Department</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Org Status</label>
-                      <span className="mt-1 inline-block rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-500/20">
-                        Active
-                      </span>
-                    </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Total Personnel</span>
+                  <div className="text-xl font-bold font-mono text-foreground">
+                    {departmentsList.reduce((acc, d) => acc + Number(d.count), 0).toLocaleString()} Staff
                   </div>
-
-                  {/* Visual Reporting Structure Tree Mini Diagram */}
-                  <div className="pt-2 border-t border-border/50">
-                    <span className="text-[11px] font-bold text-foreground block mb-2">Reporting Structure</span>
-                    <div className="flex flex-col items-center space-y-1 bg-muted/20 p-2 rounded-lg text-[10px]">
-                      <div className="rounded border border-purple-500/30 bg-purple-500/10 px-2 py-1 font-bold text-purple-700">
-                        Neha Kapoor (Chief Financial Officer)
-                      </div>
-                      <div className="h-2 w-0.5 bg-border" />
-                      <div className="rounded border border-primary/40 bg-card px-2 py-1 font-bold text-primary">
-                        Vikram Singh (Head - Finance & Accounts)
-                      </div>
-                      <div className="h-2 w-0.5 bg-border" />
-                      <div className="flex gap-1 overflow-x-auto w-full justify-center">
-                        {["Amit Desai", "Priya Malhotra", "Rohit Verma", "Sunil Yadav", "Kavita Sharma"].map((m) => (
-                          <div key={m} className="rounded border border-border bg-background px-1.5 py-0.5 text-[9px] truncate">
-                            {m}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-[10px] text-blue-600 font-medium">Active Headcount</p>
                 </div>
-
-                {/* 4. Key Metrics (YTD) */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    4. Key Metrics (YTD)
-                  </h4>
-
-                  <div className="grid grid-cols-3 gap-2.5">
-                    <div className="rounded-lg border border-border bg-muted/20 p-2 space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Budget (Total)</span>
-                      <span className="font-bold text-xs text-foreground font-mono">₹ 12,50,00,000</span>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-2 space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Spent (YTD)</span>
-                      <span className="font-bold text-xs text-emerald-600 font-mono">₹ 4,25,00,000</span>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-2 space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Budget Utilization</span>
-                      <span className="font-bold text-xs text-foreground font-mono">34.00%</span>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-2 space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Total Employees</span>
-                      <span className="font-bold text-xs text-foreground font-mono">156</span>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-2 space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Open Positions</span>
-                      <span className="font-bold text-xs text-amber-600 font-mono">6</span>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-2 space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Headcount Utilization</span>
-                      <span className="font-bold text-xs text-foreground font-mono">93%</span>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-2 space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">KPI Achievement</span>
-                      <span className="font-bold text-xs text-primary font-mono">82%</span>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-2 space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Process Compliance</span>
-                      <span className="font-bold text-xs text-emerald-600 font-mono">90%</span>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-2 space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Risk Score</span>
-                      <span className="font-bold text-xs text-amber-600 font-mono">3.2 / 5</span>
-                    </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Average Dept Size</span>
+                  <div className="text-xl font-bold font-mono text-foreground">
+                    {Math.round(departmentsList.reduce((acc, d) => acc + Number(d.count), 0) / (departmentsList.length || 1))} Members
                   </div>
+                  <p className="text-[10px] text-purple-600 font-medium">Balanced Distribution</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Cost Ledgers</span>
+                  <div className="text-xl font-bold font-mono text-foreground">{departmentsList.length} Centres</div>
+                  <p className="text-[10px] text-amber-600 font-medium">Mapped to SAP/GL</p>
                 </div>
               </div>
 
-              {/* Row 2: Top KPIs | Financial Summary | Department Health & Recent Activities */}
-              <div className="grid gap-4 lg:grid-cols-3">
-                {/* 5. Top KPIs */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    5. Top KPIs
-                  </h4>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
-                          <th className="py-2 px-1">KPI</th>
-                          <th className="py-2 px-1 text-right">Target</th>
-                          <th className="py-2 px-1 text-right">Actual</th>
-                          <th className="py-2 px-1 text-right">Achv</th>
-                          <th className="py-2 px-1">Status</th>
+              <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                  <h4 className="text-xs font-bold text-foreground">Enterprise Department Roster ({departmentsList.length} Departments)</h4>
+                  <button
+                    onClick={() => setShowAddDeptModal(true)}
+                    className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                  >
+                    + Add Department
+                  </button>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-border text-muted-foreground font-semibold">
+                        <th className="py-2 px-2">Dept Code</th>
+                        <th className="py-2 px-2">Department Name</th>
+                        <th className="py-2 px-2">Parent Function / BU</th>
+                        <th className="py-2 px-2">Department Manager</th>
+                        <th className="py-2 px-2 text-right">Headcount</th>
+                        <th className="py-2 px-2">Cost Center</th>
+                        <th className="py-2 px-2">Status</th>
+                        <th className="py-2 px-2 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/50 text-[11px]">
+                      {departmentsList.map((dept) => (
+                        <tr key={dept.code} className="hover:bg-muted/30">
+                          <td className="py-2 px-2 font-mono font-bold text-primary">{dept.code}</td>
+                          <td className="py-2 px-2 font-semibold text-foreground">{dept.name}</td>
+                          <td className="py-2 px-2 text-muted-foreground">{dept.fn}</td>
+                          <td className="py-2 px-2 text-foreground">{dept.head}</td>
+                          <td className="py-2 px-2 text-right font-mono font-bold">{dept.count}</td>
+                          <td className="py-2 px-2 font-mono text-muted-foreground">{dept.cc}</td>
+                          <td className="py-2 px-2">
+                            <span className="rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold">
+                              {dept.status}
+                            </span>
+                          </td>
+                          <td className="py-2 px-2 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setDepartmentsList((prev) => prev.filter((item) => item.code !== dept.code));
+                                showNotification(`Department ${dept.code} removed.`);
+                              }}
+                              className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
+                            >
+                              Remove
+                            </button>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/50 text-[11px]">
-                        {TOP_KPIS_DATA.map((kpi) => (
-                          <tr key={kpi.id} className="hover:bg-muted/30 transition-colors">
-                            <td className="py-1.5 px-1 font-medium text-foreground">{kpi.name}</td>
-                            <td className="py-1.5 px-1 text-right font-mono text-muted-foreground">{kpi.target}</td>
-                            <td className="py-1.5 px-1 text-right font-mono font-bold text-foreground">{kpi.actual}</td>
-                            <td className="py-1.5 px-1 text-right font-mono">{kpi.achievement}</td>
-                            <td className="py-1.5 px-1">
-                              <span className={cn("rounded px-1.5 py-0.5 text-[9px] font-bold border", kpi.statusColor)}>
-                                {kpi.status}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                {/* 6. Financial Summary (FY 2024-25) */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    6. Financial Summary (FY 2024-25)
-                  </h4>
-
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Budget (Total)</span>
-                      <span className="font-bold text-foreground font-mono">₹ 12,50,00,000</span>
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Personnel Budget</span>
-                      <span className="font-bold text-foreground font-mono">₹ 4,20,00,000</span>
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Operating Budget</span>
-                      <span className="font-bold text-foreground font-mono">₹ 6,30,00,000</span>
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">CAPEX Budget</span>
-                      <span className="font-bold text-foreground font-mono">₹ 1,00,00,000</span>
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Actual Spend (YTD)</span>
-                      <span className="font-bold text-emerald-600 font-mono">₹ 4,25,00,000</span>
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Variance</span>
-                      <span className="font-bold text-foreground font-mono">₹ 8,25,00,000</span>
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Forecast Spend</span>
-                      <span className="font-bold text-primary font-mono">₹ 10,20,00,000</span>
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] text-muted-foreground block">Forecast Variance</span>
-                      <span className="font-bold text-foreground font-mono">₹ 2,30,00,000</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 7. Department Health Score & 8. Recent Activities */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-4 shadow-xs">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      7. Department Health Score
-                    </h4>
-
-                    <div className="flex items-center gap-4 pt-2">
-                      <div className="grid h-16 w-16 place-items-center rounded-full border-4 border-emerald-500 text-sm font-bold font-mono text-emerald-600 shrink-0">
-                        82%
-                      </div>
-
-                      <div className="flex-1 space-y-1 text-[10px]">
-                        {[
-                          { name: "Finance", val: "85%", w: "w-[85%]", c: "bg-emerald-500" },
-                          { name: "Processes", val: "80%", w: "w-[80%]", c: "bg-blue-500" },
-                          { name: "People", val: "78%", w: "w-[78%]", c: "bg-primary" },
-                          { name: "Compliance", val: "90%", w: "w-[90%]", c: "bg-emerald-500" },
-                        ].map((b) => (
-                          <div key={b.name} className="flex items-center justify-between gap-2">
-                            <span className="text-muted-foreground w-16">{b.name}</span>
-                            <div className="h-1.5 flex-1 rounded-full bg-muted overflow-hidden">
-                              <div className={cn("h-full rounded-full", b.w, b.c)} />
-                            </div>
-                            <span className="font-mono font-bold w-6 text-right">{b.val}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="border-t border-border/60 pt-3">
-                    <h4 className="text-xs font-bold text-foreground mb-2">8. Recent Activities</h4>
-                    <div className="space-y-2 text-[11px]">
-                      {RECENT_ACTIVITIES.slice(0, 3).map((act) => {
-                        const Icon = act.icon;
-                        return (
-                          <div key={act.id} className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2 truncate">
-                              <Icon className={cn("h-3.5 w-3.5 shrink-0", act.color)} />
-                              <span className="truncate text-foreground font-medium">{act.title}</span>
-                            </div>
-                            <span className="text-[10px] text-muted-foreground shrink-0">{act.date}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           )}
 
-          {/* OTHER TABS / DETAILED SURFACES */}
-          {activeTab !== "overview" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-6 shadow-xs">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
-                <div>
-                  <h4 className="text-base font-bold text-foreground capitalize flex items-center gap-2">
-                    <Briefcase className="h-4 w-4 text-primary" />
-                    {activeTab.replace("-", " ")} Management Workspace
-                  </h4>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Department: <span className="font-semibold text-foreground font-mono">DEP-DEL-001</span> (Finance & Accounts) · MAICW Level 3 Specification
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 border border-emerald-500/20">
-                    Active
-                  </span>
-                  <button
-                    onClick={() => showNotification(`Added new entry to ${activeTab} workspace`)}
-                    className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                    Add {activeTab.slice(0, -1)} Record
-                  </button>
-                </div>
+          {/* PEOPLE DIRECTORY TAB */}
+          {activeTab === "people" && (
+            <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                <h4 className="text-xs font-bold text-foreground">Department Personnel Directory ({peopleRoster.length} Members)</h4>
+                <button
+                  onClick={() => showNotification("Add staff requisition opened.")}
+                  className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                >
+                  + Add Member
+                </button>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2 px-2">Staff ID</th>
+                      <th className="py-2 px-2">Employee Name</th>
+                      <th className="py-2 px-2">Role & Title</th>
+                      <th className="py-2 px-2">Email</th>
+                      <th className="py-2 px-2">Contact</th>
+                      <th className="py-2 px-2 text-center">Rating</th>
+                      <th className="py-2 px-2 text-right">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 text-[11px]">
+                    {peopleRoster.map((p) => (
+                      <tr key={p.id} className="hover:bg-muted/30">
+                        <td className="py-2 px-2 font-mono font-bold text-primary">{p.id}</td>
+                        <td className="py-2 px-2 font-semibold text-foreground">{p.name}</td>
+                        <td className="py-2 px-2 text-muted-foreground">{p.role}</td>
+                        <td className="py-2 px-2 font-mono text-[10px]">{p.email}</td>
+                        <td className="py-2 px-2 font-mono text-[10px]">{p.phone}</td>
+                        <td className="py-2 px-2 text-center font-bold text-emerald-600">{p.rating}</td>
+                        <td className="py-2 px-2 text-right">
+                          <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold border border-emerald-500/20">
+                            {p.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* POSITIONS & ROLES WORKSPACE */}
+          {activeTab === "positions" && (
+            <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                <h4 className="text-xs font-bold text-foreground">Department Positions & Role Architecture ({positionsList.length} Roles)</h4>
+                <button
+                  onClick={() => setShowAddPosModal(true)}
+                  className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                >
+                  + Add Position
+                </button>
               </div>
 
-              {activeTab === "positions" && (
-                <div className="space-y-4">
-                  <div className="overflow-x-auto rounded-lg border border-border">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
-                          <th className="py-2.5 px-3">Position Code</th>
-                          <th className="py-2.5 px-3">Position Title</th>
-                          <th className="py-2.5 px-3">Grade Level</th>
-                          <th className="py-2.5 px-3 text-right">Sanctioned</th>
-                          <th className="py-2.5 px-3 text-right">Filled</th>
-                          <th className="py-2.5 px-3 text-right">Vacant</th>
-                          <th className="py-2.5 px-3">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/60 text-foreground font-mono">
-                        {[
-                          { code: "POS-FIN-001", title: "Chief Financial Officer", grade: "CXO", sanc: 1, filled: 1, vac: 0, status: "Occupied" },
-                          { code: "POS-FIN-002", title: "General Manager - Accounts", grade: "M1", sanc: 2, filled: 2, vac: 0, status: "Occupied" },
-                          { code: "POS-FIN-003", title: "Senior Finance Controller", grade: "M2", sanc: 4, filled: 3, vac: 1, status: "Hiring Open" },
-                          { code: "POS-FIN-004", title: "Tax & Compliance Lead", grade: "M3", sanc: 3, filled: 3, vac: 0, status: "Occupied" },
-                          { code: "POS-FIN-005", title: "Accounts Executive", grade: "E1", sanc: 12, filled: 10, vac: 2, status: "Hiring Open" },
-                        ].map((p, idx) => (
-                          <tr key={idx} className="hover:bg-muted/30 transition-colors">
-                            <td className="py-2 px-3 font-semibold text-primary">{p.code}</td>
-                            <td className="py-2 px-3 font-sans font-medium text-foreground">{p.title}</td>
-                            <td className="py-2 px-3">{p.grade}</td>
-                            <td className="py-2 px-3 text-right">{p.sanc}</td>
-                            <td className="py-2 px-3 text-right text-emerald-600 font-bold">{p.filled}</td>
-                            <td className="py-2 px-3 text-right text-amber-600">{p.vac}</td>
-                            <td className="py-2 px-3">
-                              <span className={cn(
-                                "rounded-full px-2 py-0.5 text-[10px] font-bold border font-sans",
-                                p.vac > 0 ? "bg-amber-500/10 text-amber-600 border-amber-500/20" : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
-                              )}>
-                                {p.status}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2 px-2">Position Code</th>
+                      <th className="py-2 px-2">Position Title</th>
+                      <th className="py-2 px-2">Grade Level</th>
+                      <th className="py-2 px-2 text-right">Sanctioned</th>
+                      <th className="py-2 px-2 text-right">Filled</th>
+                      <th className="py-2 px-2 text-right">Vacant</th>
+                      <th className="py-2 px-2">Status</th>
+                      <th className="py-2 px-2 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/60 text-foreground font-mono text-[11px]">
+                    {positionsList.map((p) => (
+                      <tr key={p.code} className="hover:bg-muted/30">
+                        <td className="py-2 px-2 font-semibold text-primary">{p.code}</td>
+                        <td className="py-2 px-2 font-sans font-medium text-foreground">{p.title}</td>
+                        <td className="py-2 px-2">{p.grade}</td>
+                        <td className="py-2 px-2 text-right">{p.sanc}</td>
+                        <td className="py-2 px-2 text-right text-emerald-600 font-bold">{p.filled}</td>
+                        <td className="py-2 px-2 text-right text-amber-600 font-bold">{p.vac}</td>
+                        <td className="py-2 px-2">
+                          <span
+                            className={cn(
+                              "rounded-full px-2 py-0.5 text-[10px] font-bold border font-sans",
+                              Number(p.vac) > 0 ? "bg-amber-500/10 text-amber-600 border-amber-500/20" : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                            )}
+                          >
+                            {p.status}
+                          </span>
+                        </td>
+                        <td className="py-2 px-2 text-right">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPositionsList((prev) => prev.filter((item) => item.code !== p.code));
+                              showNotification(`Position ${p.code} removed.`);
+                            }}
+                            className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* BUDGET & FINANCIALS TAB */}
+          {activeTab === "budget" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <Landmark className="h-4 w-4 text-primary" />
+                  Department Financial Breakdown & Cost Allocation
+                </h4>
+                <span className="text-[11px] font-mono text-emerald-600 font-bold">FY 2024-25 Allocated: ₹ 12,50,00,000</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                <div className="p-3.5 rounded-lg border border-border bg-muted/15 space-y-1">
+                  <span className="text-muted-foreground block text-[11px]">Personnel Expenditure</span>
+                  <div className="text-lg font-bold font-mono text-foreground">₹ 4,20,00,000</div>
+                  <span className="text-[10px] text-emerald-600">Salaries, bonuses & health insurance</span>
                 </div>
-              )}
-
-              {activeTab === "processes" && (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {[
-                    { title: "Accounts Payable (AP)", code: "PRC-FIN-01", owner: "Rohan Verma", sla: "48 Hours", status: "Automated" },
-                    { title: "Accounts Receivable (AR)", code: "PRC-FIN-02", owner: "Sneha Reddy", sla: "24 Hours", status: "Active" },
-                    { title: "Financial Month-End Close", code: "PRC-FIN-03", owner: "Vikram Singh", sla: "5 Days", status: "Critical" },
-                    { title: "Tax Filing & E-Way Bill", code: "PRC-FIN-04", owner: "Ananya Roy", sla: "Monthly", status: "Compliant" },
-                    { title: "Payroll Reconciliation", code: "PRC-FIN-05", owner: "Karan Mehta", sla: "28th Monthly", status: "Scheduled" },
-                    { title: "Capital Expenditure Approval", code: "PRC-FIN-06", owner: "Rajeev Malhotra", sla: "72 Hours", status: "Active" },
-                  ].map((prc, idx) => (
-                    <div key={idx} className="rounded-xl border border-border bg-card p-4 space-y-2 shadow-xs">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-foreground">{prc.title}</span>
-                        <span className="text-[10px] font-mono text-muted-foreground">{prc.code}</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">Owner: <span className="font-semibold text-foreground">{prc.owner}</span></p>
-                      <div className="flex items-center justify-between text-[11px] pt-1 border-t border-border/50">
-                        <span className="text-muted-foreground font-mono">SLA: {prc.sla}</span>
-                        <span className="rounded bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary border border-primary/20">
-                          {prc.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                <div className="p-3.5 rounded-lg border border-border bg-muted/15 space-y-1">
+                  <span className="text-muted-foreground block text-[11px]">Operational & Software Costs</span>
+                  <div className="text-lg font-bold font-mono text-foreground">₹ 6,30,00,000</div>
+                  <span className="text-[10px] text-blue-600">ERP licenses, audits & consulting</span>
                 </div>
-              )}
-
-              {activeTab !== "positions" && activeTab !== "processes" && (
-                <div className="space-y-4">
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                      <span className="text-xs font-bold text-foreground block">Headcount Utilization</span>
-                      <span className="text-xl font-bold font-mono text-emerald-600">93.0%</span>
-                      <p className="text-[11px] text-muted-foreground">156 filled out of 162 positions.</p>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                      <span className="text-xs font-bold text-foreground block">Budget Variance</span>
-                      <span className="text-xl font-bold font-mono text-blue-600">₹ 8,25,00,000</span>
-                      <p className="text-[11px] text-muted-foreground">Remaining allocated budget for FY 24-25.</p>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                      <span className="text-xs font-bold text-foreground block">Risk Index</span>
-                      <span className="text-xl font-bold font-mono text-amber-600">3.2 / 5</span>
-                      <p className="text-[11px] text-muted-foreground">Moderate process compliance risk.</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-border bg-card p-4">
-                    <h5 className="text-xs font-bold text-foreground mb-3 capitalize">{activeTab} Parameters & Audit Trail</h5>
-                    <div className="space-y-2 text-xs text-muted-foreground">
-                      <div className="flex justify-between py-1 border-b border-border/50">
-                        <span>Last System Audit:</span>
-                        <span className="font-mono text-foreground">15 May 2024, 09:30 AM</span>
-                      </div>
-                      <div className="flex justify-between py-1 border-b border-border/50">
-                        <span>Assigned Head:</span>
-                        <span className="font-semibold text-foreground">Vikram Singh (VP Finance)</span>
-                      </div>
-                      <div className="flex justify-between py-1">
-                        <span>ERP Synchronization Status:</span>
-                        <span className="text-emerald-600 font-bold">100% Synced</span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="p-3.5 rounded-lg border border-border bg-muted/15 space-y-1">
+                  <span className="text-muted-foreground block text-[11px]">CAPEX Hardware & Infrastructure</span>
+                  <div className="text-lg font-bold font-mono text-foreground">₹ 1,00,00,000</div>
+                  <span className="text-[10px] text-purple-600">Servers, secured workstations & laptops</span>
                 </div>
-              )}
+              </div>
+            </div>
+          )}
+
+          {/* KPIS TAB */}
+          {activeTab === "kpis" && (
+            <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                <h4 className="text-xs font-bold text-foreground">Department Performance & Metric Scorecard</h4>
+                <span className="text-xs font-semibold text-emerald-600">Quarterly Audit Grade: A</span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2 px-2">KPI Code</th>
+                      <th className="py-2 px-2">Performance Indicator</th>
+                      <th className="py-2 px-2 text-right">Target</th>
+                      <th className="py-2 px-2 text-right">Actual YTD</th>
+                      <th className="py-2 px-2 text-right">Achievement</th>
+                      <th className="py-2 px-2">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 text-[11px]">
+                    {TOP_KPIS_DATA.map((kpi) => (
+                      <tr key={kpi.id} className="hover:bg-muted/30">
+                        <td className="py-2 px-2 font-mono font-bold text-primary">{kpi.id}</td>
+                        <td className="py-2 px-2 font-semibold text-foreground">{kpi.name}</td>
+                        <td className="py-2 px-2 text-right font-mono text-muted-foreground">{kpi.target}</td>
+                        <td className="py-2 px-2 text-right font-mono font-bold text-foreground">{kpi.actual}</td>
+                        <td className="py-2 px-2 text-right font-mono">{kpi.achievement}</td>
+                        <td className="py-2 px-2">
+                          <span className={cn("rounded px-2 py-0.5 text-[9px] font-bold border", kpi.statusColor)}>
+                            {kpi.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* COMPLIANCE TAB */}
+          {activeTab === "compliance" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                  Regulatory Compliance & Statutory Alignment
+                </h4>
+                <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-500/20">
+                  Compliant (100%)
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div className="p-3 rounded-lg border border-border bg-muted/10">
+                  <div className="font-bold text-foreground">Statutory GST & TDS Filing</div>
+                  <div className="text-[10px] text-muted-foreground mt-1">Status: Filed On-Time (May 2024)</div>
+                </div>
+                <div className="p-3 rounded-lg border border-border bg-muted/10">
+                  <div className="font-bold text-foreground">SOX / Internal Financial Controls</div>
+                  <div className="text-[10px] text-muted-foreground mt-1">Status: Fully Audited (Grade A)</div>
+                </div>
+                <div className="p-3 rounded-lg border border-border bg-muted/10">
+                  <div className="font-bold text-foreground">ISO 9001 QMS Compliance</div>
+                  <div className="text-[10px] text-muted-foreground mt-1">Status: Certified (Expiry 2026)</div>
+                </div>
+              </div>
             </div>
           )}
         </div>
+
+        {/* --- ADD DEPARTMENT MODAL --- */}
+        {showAddDeptModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+            <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <Briefcase className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Add New Department</h3>
+                </div>
+                <button onClick={() => setShowAddDeptModal(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Dept Code *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. DEPT-SEC-09"
+                    value={newDeptForm.code}
+                    onChange={(e) => setNewDeptForm({ ...newDeptForm, code: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Department Name *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Cybersecurity & Compliance"
+                    value={newDeptForm.name}
+                    onChange={(e) => setNewDeptForm({ ...newDeptForm, name: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Parent Function</label>
+                    <select
+                      value={newDeptForm.fn}
+                      onChange={(e) => setNewDeptForm({ ...newDeptForm, fn: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                    >
+                      <option value="Finance">Finance</option>
+                      <option value="Operations">Operations</option>
+                      <option value="R&D">R&D</option>
+                      <option value="HR">HR</option>
+                      <option value="Sales">Sales</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Department Manager</label>
+                    <input
+                      type="text"
+                      value={newDeptForm.head}
+                      onChange={(e) => setNewDeptForm({ ...newDeptForm, head: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Headcount</label>
+                    <input
+                      type="number"
+                      value={newDeptForm.count}
+                      onChange={(e) => setNewDeptForm({ ...newDeptForm, count: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-mono text-foreground"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Cost Centre</label>
+                    <input
+                      type="text"
+                      value={newDeptForm.cc}
+                      onChange={(e) => setNewDeptForm({ ...newDeptForm, cc: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-mono text-foreground"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowAddDeptModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newDeptForm.code || !newDeptForm.name) {
+                      alert("Please provide department code and name.");
+                    }
+                    setDepartmentsList((prev) => [
+                      ...prev,
+                      {
+                        code: newDeptForm.code.toUpperCase(),
+                        name: newDeptForm.name,
+                        fn: newDeptForm.fn,
+                        head: newDeptForm.head,
+                        count: Number(newDeptForm.count) || 20,
+                        cc: newDeptForm.cc,
+                        status: "Active",
+                      },
+                    ]);
+                    setShowAddDeptModal(false);
+                    showNotification(`Department ${newDeptForm.code.toUpperCase()} successfully added.`);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Add Department
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* --- ADD POSITION MODAL --- */}
+        {showAddPosModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+            <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <UserCheck className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Add New Position</h3>
+                </div>
+                <button onClick={() => setShowAddPosModal(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Position Code *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. POS-FIN-006"
+                    value={newPosForm.code}
+                    onChange={(e) => setNewPosForm({ ...newPosForm, code: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Position Title *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Internal Audit Manager"
+                    value={newPosForm.title}
+                    onChange={(e) => setNewPosForm({ ...newPosForm, title: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground"
+                  />
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Grade Level</label>
+                    <select
+                      value={newPosForm.grade}
+                      onChange={(e) => setNewPosForm({ ...newPosForm, grade: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-xs text-foreground"
+                    >
+                      <option value="CXO">CXO</option>
+                      <option value="M1">M1 - Director</option>
+                      <option value="M2">M2 - Senior Manager</option>
+                      <option value="M3">M3 - Manager</option>
+                      <option value="E1">E1 - Executive</option>
+                      <option value="E2">E2 - Analyst</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Sanctioned</label>
+                    <input
+                      type="number"
+                      value={newPosForm.sanc}
+                      onChange={(e) => setNewPosForm({ ...newPosForm, sanc: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Vacant</label>
+                    <input
+                      type="number"
+                      value={newPosForm.vac}
+                      onChange={(e) => setNewPosForm({ ...newPosForm, vac: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowAddPosModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newPosForm.code || !newPosForm.title) {
+                      alert("Please provide position code and title.");
+                      return;
+                    }
+                    setPositionsList((prev) => [
+                      ...prev,
+                      {
+                        code: newPosForm.code.toUpperCase(),
+                        title: newPosForm.title,
+                        grade: newPosForm.grade,
+                        sanc: Number(newPosForm.sanc) || 1,
+                        filled: Math.max(0, (Number(newPosForm.sanc) || 1) - (Number(newPosForm.vac) || 0)),
+                        vac: Number(newPosForm.vac) || 0,
+                        status: Number(newPosForm.vac) > 0 ? "Hiring Open" : "Occupied",
+                      },
+                    ]);
+                    setShowAddPosModal(false);
+                    showNotification(`Position ${newPosForm.code.toUpperCase()} created successfully.`);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Add Position
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer Classification & Modification Strip */}
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card p-3 text-[11px] text-muted-foreground font-mono">

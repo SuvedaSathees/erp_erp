@@ -51,7 +51,7 @@ export function BusinessSectionNavTabBar({
             {sec.badge !== undefined && (
               <span
                 className={cn(
-                  "rounded-full px-1.5 py-0.2 text-[10px] font-bold",
+                  "rounded-full px-1.5 py-0.5 text-[10px] font-bold",
                   isActive ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"
                 )}
               >

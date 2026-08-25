@@ -118,20 +118,7 @@ const RECENT_MASTER_VERSIONS = [
 ];
 
 export function MasterDataManagementPage() {
-  const [activeTab, setActiveTab] = useState<
-    | "overview"
-    | "attributes"
-    | "relationships"
-    | "classification"
-    | "ownership"
-    | "validation"
-    | "approval"
-    | "versions"
-    | "change-control"
-    | "usage"
-    | "attachments"
-    | "audit"
-  >("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "attributes" | "governance" | "audit">("overview");
 
   // Master Form State
   const [masterData, setMasterData] = useState({
@@ -152,6 +139,35 @@ export function MasterDataManagementPage() {
     effectiveTo: "",
     version: "v1.2",
     tags: ["Corporate", "IT Solutions", "High Value"],
+  });
+
+  // Dynamic Attributes State
+  const [attributesList, setAttributesList] = useState([
+    { id: "ATT-1", name: "Customer Name", code: "CUST_NAME", type: "Text", mandatory: true, unique: true, status: "Active" },
+    { id: "ATT-2", name: "Legal Entity Name", code: "LEGAL_NAME", type: "Text", mandatory: true, unique: false, status: "Active" },
+    { id: "ATT-3", name: "Customer Type", code: "CUST_TYPE", type: "Dropdown", mandatory: true, unique: false, status: "Active" },
+    { id: "ATT-4", name: "Country Code", code: "COUNTRY", type: "Lookup", mandatory: true, unique: false, status: "Active" },
+    { id: "ATT-5", name: "Billing State", code: "STATE", type: "Lookup", mandatory: false, unique: false, status: "Active" },
+    { id: "ATT-6", name: "Corporate Email", code: "EMAIL", type: "Text", mandatory: false, unique: true, status: "Active" },
+    { id: "ATT-7", name: "Primary Contact Phone", code: "PHONE", type: "Text", mandatory: false, unique: true, status: "Active" },
+    { id: "ATT-8", name: "Tax Identification (GSTIN)", code: "TAX_ID", type: "Text", mandatory: true, unique: true, status: "Active" },
+  ]);
+
+  // Dynamic Master Registry Records
+  const [masterRegistryList, setMasterRegistryList] = useState([
+    { id: "MD-001", code: "CUST-000245", name: "ABC Technologies Pvt. Ltd.", type: "CUSTOMER", mod: "CRM", steward: "Amit Verma", ver: "v1.2", status: "Active" },
+    { id: "MD-002", code: "SUPP-000102", name: "Delta Global Hardware Corp", type: "SUPPLIER", mod: "Procurement", steward: "Neha Kapoor", ver: "v2.0", status: "Active" },
+    { id: "MD-003", code: "PROD-000891", name: "Enterprise ERP Cloud License", type: "PRODUCT", mod: "Inventory", steward: "Vikram Singh", ver: "v1.0", status: "Active" },
+    { id: "MD-004", code: "GL-000450", name: "Accounts Receivable - Domestic", type: "CHART OF ACCOUNT", mod: "Finance", steward: "Rahul Sharma", ver: "v3.1", status: "Active" },
+  ]);
+
+  const [showAddAttrModal, setShowAddAttrModal] = useState(false);
+  const [newAttrForm, setNewAttrForm] = useState({
+    name: "",
+    code: "",
+    type: "Text",
+    mandatory: true,
+    unique: false,
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -249,13 +265,6 @@ export function MasterDataManagementPage() {
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <span className="text-primary">1.</span> Master Data Master
               </h3>
-              <span className="text-[11px] text-muted-foreground font-medium">
-                MAICW Fields: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
-                <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
-                <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-                <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
-                <span className="text-rose-500 font-bold">W</span> (Workflow)
-              </span>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -573,29 +582,35 @@ export function MasterDataManagementPage() {
                 <span className="text-xs font-medium text-muted-foreground block">Data Quality Score</span>
                 <span className="text-[10px] text-emerald-600 font-semibold">Excellent</span>
               </div>
-              <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-emerald-500 text-xs font-bold font-mono text-emerald-600">
-                95%
+              <div className="relative inline-flex items-center justify-center">
+                <svg width="48" height="48" className="transform -rotate-90">
+                  <circle cx="24" cy="24" r="19" stroke="currentColor" strokeWidth="3.5" className="text-muted/30" fill="transparent" />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="19"
+                    stroke="#10b981"
+                    strokeWidth="3.5"
+                    strokeDasharray={2 * Math.PI * 19}
+                    strokeDashoffset={2 * Math.PI * 19 * (1 - 0.95)}
+                    strokeLinecap="round"
+                    fill="transparent"
+                  />
+                </svg>
+                <span className="absolute text-[11px] font-bold font-mono text-emerald-600">95%</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 2. Workspace Navigation Tabs */}
+        {/* 2. Workspace Navigation Tabs (Centered & Streamlined) */}
         <div className="space-y-4">
-          <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
+          <div className="flex items-center justify-center gap-2 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
             {[
-              { key: "overview", label: "Overview", icon: Layers },
-              { key: "attributes", label: "Attributes", icon: Sliders },
-              { key: "relationships", label: "Relationships", icon: GitBranch },
-              { key: "classification", label: "Classification", icon: Shield },
-              { key: "ownership", label: "Ownership", icon: UserCheck },
-              { key: "validation", label: "Validation", icon: CheckCircle2 },
-              { key: "approval", label: "Approval", icon: FileCheck },
-              { key: "versions", label: "Versions", icon: History },
-              { key: "change-control", label: "Change Control", icon: RefreshCw },
-              { key: "usage", label: "Usage", icon: TrendingUp },
-              { key: "attachments", label: "Attachments", icon: File },
-              { key: "audit", label: "Audit Trail", icon: Activity },
+              { key: "overview", label: "Master Entity Overview", icon: Layers },
+              { key: "attributes", label: "Data Model & Schema Attributes", icon: Sliders },
+              { key: "governance", label: "Governance & Quality Matrix", icon: CheckCircle2 },
+              { key: "audit", label: "Master Registry & Audit Trail", icon: Clock },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
@@ -604,7 +619,7 @@ export function MasterDataManagementPage() {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key as typeof activeTab)}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
+                    "flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
                     isActive
                       ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -617,432 +632,324 @@ export function MasterDataManagementPage() {
             })}
           </div>
 
-          {/* OVERVIEW TAB CONTENT (Matching attached screenshot layout) */}
+
+          {/* OVERVIEW TAB CONTENT */}
           {activeTab === "overview" && (
             <div className="space-y-6">
-              {/* Row 1: 2. Classification | 4. Key Attributes (8) | 5. Relationships Overview */}
-              <div className="grid gap-4 lg:grid-cols-3">
-                {/* 2. Classification */}
+              {/* Row 1: Master Schema Definition | Governance Ownership */}
+              <div className="grid gap-4 lg:grid-cols-2">
+                {/* 2. Master Schema Classification */}
                 <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                   <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    2. Classification
+                    2. Master Schema & Classification
                   </h4>
 
-                  <div className="space-y-2 text-xs">
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Classification Level</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Level 2 - Business</option>
-                      </select>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Entity Domain Type:</span>
+                      <span className="font-semibold text-foreground">{masterData.masterType}</span>
                     </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Data Domain</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Customer Domain</option>
-                      </select>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Governing Module:</span>
+                      <span className="font-semibold text-foreground">{masterData.module}</span>
                     </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Data Category</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>External Master</option>
-                      </select>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Primary Key Code:</span>
+                      <span className="font-mono font-bold text-primary">{masterData.masterCode}</span>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground text-[11px]">Criticality</span>
-                      <span className="rounded bg-rose-500/10 px-2 py-0.5 text-[10px] font-bold text-rose-600 border border-rose-500/20">
-                        High
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground text-[11px]">Confidentiality</span>
-                      <span className="rounded bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-600 border border-amber-500/20">
-                        Internal
-                      </span>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Regulatory Classification</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>General</option>
-                      </select>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground text-[11px]">Sensitivity</span>
-                      <span className="rounded bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-600 border border-amber-500/20">
-                        Internal
-                      </span>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Classification Owner</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Pooja Mehta"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                      <span className="text-muted-foreground text-[11px]">Classification Status</span>
-                      <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                        Active
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Deduplication Matching:</span>
+                      <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold">
+                        Exact & Fuzzy Match Enforced
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* 4. Key Attributes (8) */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                    <h4 className="text-xs font-bold text-foreground">4. Key Attributes (8)</h4>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                          <th className="py-1 px-1">Attribute Name</th>
-                          <th className="py-1 px-1">Code</th>
-                          <th className="py-1 px-1">Data Type</th>
-                          <th className="py-1 px-1 text-center">Mandatory</th>
-                          <th className="py-1 px-1 text-center">Unique</th>
-                          <th className="py-1 px-1">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/50 text-[10px]">
-                        {KEY_ATTRIBUTES_DATA.map((att) => (
-                          <tr key={att.id} className="hover:bg-muted/30 transition-colors">
-                            <td className="py-1 px-1 font-medium text-foreground">{att.name}</td>
-                            <td className="py-1 px-1 font-mono text-[9px] text-muted-foreground">{att.code}</td>
-                            <td className="py-1 px-1 text-muted-foreground">{att.type}</td>
-                            <td className="py-1 px-1 text-center">
-                              {att.mandatory ? (
-                                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 inline" />
-                              ) : (
-                                <span className="text-muted-foreground">-</span>
-                              )}
-                            </td>
-                            <td className="py-1 px-1 text-center">
-                              {att.unique ? (
-                                <CheckCircle2 className="h-3.5 w-3.5 text-blue-500 inline" />
-                              ) : (
-                                <span className="text-muted-foreground">-</span>
-                              )}
-                            </td>
-                            <td className="py-1 px-1">
-                              <span className="rounded bg-emerald-500/10 px-1 py-0.2 text-[9px] font-bold text-emerald-600">
-                                {att.status}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Full attributes catalog opened.")}
-                    className="text-[11px] font-bold text-primary hover:underline cursor-pointer pt-1"
-                  >
-                    View All Attributes
-                  </button>
-                </div>
-
-                {/* 5. Relationships Overview */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      5. Relationships Overview
-                    </h4>
-
-                    {/* Hierarchy Tree Diagram */}
-                    <div className="space-y-2 py-2 text-center text-[10px]">
-                      <div className="rounded-lg border border-primary/40 bg-primary/10 p-2 font-bold text-primary">
-                        ABC Technologies Pvt. Ltd.
-                      </div>
-                      <div className="h-2 w-0.5 bg-border mx-auto" />
-
-                      <div className="grid grid-cols-3 gap-1">
-                        <div className="rounded border border-border bg-muted/20 p-1.5">
-                          <span className="text-muted-foreground block text-[9px]">Customer Group</span>
-                          <span className="font-bold text-foreground truncate block">Corporate</span>
-                        </div>
-
-                        <div className="rounded border border-border bg-muted/20 p-1.5">
-                          <span className="text-muted-foreground block text-[9px]">Customer Category</span>
-                          <span className="font-bold text-foreground truncate block">IT Services</span>
-                        </div>
-
-                        <div className="rounded border border-border bg-muted/20 p-1.5">
-                          <span className="text-muted-foreground block text-[9px]">Company Hierarchy</span>
-                          <span className="font-bold text-foreground truncate block">Level 2</span>
-                        </div>
-                      </div>
-
-                      <div className="h-2 w-0.5 bg-border mx-auto" />
-
-                      <div className="grid grid-cols-3 gap-1">
-                        <div className="rounded border border-border bg-card p-1.5">
-                          <span className="text-muted-foreground block text-[9px]">Price List</span>
-                          <span className="font-mono text-foreground font-bold text-[9px]">CORP-PL-01</span>
-                        </div>
-
-                        <div className="rounded border border-border bg-card p-1.5">
-                          <span className="text-muted-foreground block text-[9px]">Payment Term</span>
-                          <span className="font-mono text-foreground font-bold text-[9px]">NET 30</span>
-                        </div>
-
-                        <div className="rounded border border-border bg-card p-1.5">
-                          <span className="text-muted-foreground block text-[9px]">Tax Classification</span>
-                          <span className="font-mono text-foreground font-bold text-[9px]">GST-REG</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Entity relationship graph loaded.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View All Relationships
-                  </button>
-                </div>
-              </div>
-
-              {/* Row 2: 3. Ownership Summary | 7. Version History | 8. Quick Actions */}
-              <div className="grid gap-4 lg:grid-cols-3">
-                {/* 3. Ownership Summary */}
+                {/* 3. Data Governance Custodianship */}
                 <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                   <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    3. Ownership Summary
+                    3. Data Ownership & Stewardship
                   </h4>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs pt-1">
-                    <div className="space-y-0.5">
-                      <div className="flex justify-between text-[11px]">
-                        <span className="text-muted-foreground">Completeness</span>
-                        <span className="font-mono font-bold text-foreground">96%</span>
-                      </div>
-                      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                        <div className="h-full w-[96%] rounded-full bg-emerald-500" />
-                      </div>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Data Owner:</span>
+                      <span className="font-semibold text-foreground">{masterData.dataOwner}</span>
                     </div>
-
-                    <div className="space-y-0.5">
-                      <div className="flex justify-between text-[11px]">
-                        <span className="text-muted-foreground">Accuracy</span>
-                        <span className="font-mono font-bold text-foreground">94%</span>
-                      </div>
-                      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                        <div className="h-full w-[94%] rounded-full bg-emerald-500" />
-                      </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Data Steward / Custodian:</span>
+                      <span className="font-semibold text-foreground">{masterData.dataSteward}</span>
                     </div>
-
-                    <div className="space-y-0.5">
-                      <div className="flex justify-between text-[11px]">
-                        <span className="text-muted-foreground">Consistency</span>
-                        <span className="font-mono font-bold text-foreground">93%</span>
-                      </div>
-                      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                        <div className="h-full w-[93%] rounded-full bg-blue-500" />
-                      </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Effective From:</span>
+                      <span className="font-mono text-muted-foreground">{masterData.effectiveFrom}</span>
                     </div>
-
-                    <div className="space-y-0.5">
-                      <div className="flex justify-between text-[11px]">
-                        <span className="text-muted-foreground">Timeliness</span>
-                        <span className="font-mono font-bold text-foreground">98%</span>
-                      </div>
-                      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                        <div className="h-full w-[98%] rounded-full bg-emerald-500" />
-                      </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Synchronization Protocol:</span>
+                      <span className="font-semibold text-foreground">Real-time ERP Event Bus</span>
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/50 text-xs">
-                    <div>
-                      <span className="text-muted-foreground text-[10px] block">Usage Count</span>
-                      <span className="font-bold text-foreground font-mono">18</span>
-                    </div>
-
-                    <div>
-                      <span className="text-muted-foreground text-[10px] block">Last Used On</span>
-                      <span className="font-mono text-muted-foreground text-[10px]">15 Apr 2024</span>
-                    </div>
-
-                    <div>
-                      <span className="text-muted-foreground text-[10px] block">Active In Modules</span>
-                      <span className="font-semibold text-foreground text-[11px]">CRM, SCM, FIN</span>
-                    </div>
-
-                    <div>
-                      <span className="text-muted-foreground text-[10px] block">Change Requests</span>
-                      <span className="font-bold text-primary font-mono">2</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 7. Version History */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      7. Version History
-                    </h4>
-
-                    <div className="overflow-x-auto mt-2">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                            <th className="py-1 px-1">Version</th>
-                            <th className="py-1 px-1">Effective From</th>
-                            <th className="py-1 px-1">Effective To</th>
-                            <th className="py-1 px-1">Change Type</th>
-                            <th className="py-1 px-1">Changed By</th>
-                            <th className="py-1 px-1">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 text-[10px]">
-                          {RECENT_MASTER_VERSIONS.map((v) => (
-                            <tr key={v.id} className="hover:bg-muted/30 transition-colors">
-                              <td className="py-1 px-1 font-mono font-bold text-foreground">{v.version}</td>
-                              <td className="py-1 px-1 font-mono text-muted-foreground">{v.effectiveFrom}</td>
-                              <td className="py-1 px-1 font-mono text-muted-foreground">{v.effectiveTo}</td>
-                              <td className="py-1 px-1 font-medium">{v.changeType}</td>
-                              <td className="py-1 px-1 text-muted-foreground">{v.changedBy}</td>
-                              <td className="py-1 px-1">
-                                <span className={cn("rounded px-1 py-0.2 text-[9px] font-bold border", v.badge)}>
-                                  {v.status}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Complete version diff audit trail loaded.")}
-                    className="text-[11px] font-bold text-primary hover:underline cursor-pointer pt-1"
-                  >
-                    View All Versions
-                  </button>
-                </div>
-
-                {/* 8. Quick Actions */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    8. Quick Actions
-                  </h4>
-
-                  <div className="grid grid-cols-4 gap-2 text-center text-[10px]">
-                    <button
-                      onClick={() => showNotification("New master record creation opened.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <Plus className="h-4 w-4 text-emerald-600" />
-                      <span>New Record</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Edit record enabled.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <Edit className="h-4 w-4 text-primary" />
-                      <span>Edit Record</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Master record cloned.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <Copy className="h-4 w-4 text-purple-600" />
-                      <span>Clone Record</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Deactivation process initiated.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer text-rose-600"
-                    >
-                      <Power className="h-4 w-4" />
-                      <span>Deactivate</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Change request form opened.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <RefreshCw className="h-4 w-4 text-amber-600" />
-                      <span>Change Request</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Approval sign-off granted.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                      <span>Approve Record</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Cross-module references loaded.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <ExternalLink className="h-4 w-4 text-blue-600" />
-                      <span>View References</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Master data export started.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <Download className="h-4 w-4 text-emerald-600" />
-                      <span>Export Data</span>
-                    </button>
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* OTHER TABS PLACEHOLDER */}
-          {activeTab !== "overview" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <h4 className="text-sm font-bold text-foreground capitalize">{activeTab} Workspace</h4>
-                <span className="text-xs text-muted-foreground">Master Data ID: MD-2024-000127</span>
+          {/* ATTRIBUTES WORKSPACE */}
+          {activeTab === "attributes" && (
+            <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                <h4 className="text-xs font-bold text-foreground">Data Model & Key Attributes Schema ({attributesList.length} Fields)</h4>
+                <button
+                  onClick={() => setShowAddAttrModal(true)}
+                  className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                >
+                  + Add Schema Field
+                </button>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Detailed parameters for <span className="font-semibold text-foreground capitalize">{activeTab}</span> adhering to MAICW specification.
-              </p>
-              <div className="grid gap-4 sm:grid-cols-3 pt-2">
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Data Uniqueness</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">Verified Unique</span>
-                  <p className="text-[11px] text-muted-foreground">0 duplicate records found in customer domain.</p>
-                </div>
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">ERP Synchronization</span>
-                  <span className="text-xl font-bold font-mono text-blue-600">Sync Complete</span>
-                  <p className="text-[11px] text-muted-foreground">Active in CRM, SCM, and Finance modules.</p>
-                </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2.5 px-3">Field Name</th>
+                      <th className="py-2.5 px-3">Attribute Code</th>
+                      <th className="py-2.5 px-3">Data Type</th>
+                      <th className="py-2.5 px-3 text-center">Mandatory</th>
+                      <th className="py-2.5 px-3 text-center">Unique Index</th>
+                      <th className="py-2.5 px-3">Status</th>
+                      <th className="py-2.5 px-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/60 text-[11px]">
+                    {attributesList.map((attr) => (
+                      <tr key={attr.id} className="hover:bg-muted/30 transition-colors">
+                        <td className="py-2 px-3 font-semibold text-foreground">{attr.name}</td>
+                        <td className="py-2 px-3 font-mono font-bold text-primary">{attr.code}</td>
+                        <td className="py-2 px-3 text-muted-foreground">{attr.type}</td>
+                        <td className="py-2 px-3 text-center">
+                          <span className={cn("rounded px-1.5 py-0.5 text-[9px] font-bold", attr.mandatory ? "bg-blue-500/10 text-blue-600" : "text-muted-foreground")}>
+                            {attr.mandatory ? "Yes" : "No"}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3 text-center">
+                          <span className={cn("rounded px-1.5 py-0.5 text-[9px] font-bold", attr.unique ? "bg-purple-500/10 text-purple-600" : "text-muted-foreground")}>
+                            {attr.unique ? "Unique" : "-"}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3">
+                          <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold">
+                            {attr.status}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3 text-right">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAttributesList((prev) => prev.filter((a) => a.id !== attr.id));
+                              showNotification(`Attribute ${attr.code} removed.`);
+                            }}
+                            className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Governance Rating</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">High Quality</span>
-                  <p className="text-[11px] text-muted-foreground">95% complete master record profile.</p>
+          {/* GOVERNANCE & QUALITY WORKSPACE */}
+          {activeTab === "governance" && (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Duplicate Detection Rate</span>
+                  <div className="text-xl font-bold font-mono text-emerald-600">99.8%</div>
+                  <p className="text-[10px] text-muted-foreground">Automated checksum & fuzzy matching</p>
                 </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Golden Record Health</span>
+                  <div className="text-xl font-bold font-mono text-blue-600">95.4% Score</div>
+                  <p className="text-[10px] text-muted-foreground">All required mandatory fields populated</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Sync Latency</span>
+                  <div className="text-xl font-bold font-mono text-purple-600">&lt; 150 ms</div>
+                  <p className="text-[10px] text-muted-foreground">Cross-subsystem replication speed</p>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-5 space-y-3 shadow-xs">
+                <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
+                  Active Data Cleansing & Validation Rules
+                </h4>
+
+                <div className="space-y-2.5 text-xs">
+                  {[
+                    { name: "Tax Identification Strict Format Verification", rule: "Regex validation for standard 15-digit GSTIN format", state: "Active" },
+                    { name: "Phone & E.164 Country Code Normalization", rule: "Auto-strips non-numeric characters and formats international prefixes", state: "Active" },
+                    { name: "Email Domain Validation & DNS MX Lookup", rule: "Verifies deliverability and prohibits disposable domains", state: "Active" },
+                    { name: "Duplicate Legal Name Fuzzy Match Threshold", rule: "Levenshtein distance & similarity index > 85% flags warning", state: "Active" },
+                  ].map((r, i) => (
+                    <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border bg-muted/15">
+                      <div className="space-y-0.5">
+                        <span className="font-bold text-foreground">{r.name}</span>
+                        <p className="text-muted-foreground font-mono text-[11px]">{r.rule}</p>
+                      </div>
+                      <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold border border-emerald-500/20">
+                        {r.state}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* MASTER REGISTRY & AUDIT WORKSPACE */}
+          {activeTab === "audit" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <Database className="h-4 w-4 text-primary" />
+                  Enterprise Master Records Registry & Lineage Log
+                </h4>
+                <span className="text-[11px] font-mono text-muted-foreground">Unified Golden Records</span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2.5 px-3">Master ID</th>
+                      <th className="py-2.5 px-3">Entity Name</th>
+                      <th className="py-2.5 px-3">Domain Type</th>
+                      <th className="py-2.5 px-3">Module</th>
+                      <th className="py-2.5 px-3">Data Steward</th>
+                      <th className="py-2.5 px-3">Version</th>
+                      <th className="py-2.5 px-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 text-[11px]">
+                    {masterRegistryList.map((m) => (
+                      <tr key={m.id} className="hover:bg-muted/30 transition-colors">
+                        <td className="py-2 px-3 font-mono font-bold text-primary">{m.code}</td>
+                        <td className="py-2 px-3 font-semibold text-foreground">{m.name}</td>
+                        <td className="py-2 px-3 text-muted-foreground">{m.type}</td>
+                        <td className="py-2 px-3 text-muted-foreground">{m.mod}</td>
+                        <td className="py-2 px-3 text-foreground">{m.steward}</td>
+                        <td className="py-2 px-3 font-mono">{m.ver}</td>
+                        <td className="py-2 px-3">
+                          <span className="rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold">
+                            {m.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
         </div>
+
+        {/* --- ADD ATTRIBUTE MODAL --- */}
+        {showAddAttrModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+            <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <Sliders className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Add Master Schema Field</h3>
+                </div>
+                <button onClick={() => setShowAddAttrModal(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Field Label *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Credit Rating Score"
+                    value={newAttrForm.name}
+                    onChange={(e) => setNewAttrForm({ ...newAttrForm, name: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Attribute Code *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. CREDIT_SCORE"
+                    value={newAttrForm.code}
+                    onChange={(e) => setNewAttrForm({ ...newAttrForm, code: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Data Type</label>
+                  <select
+                    value={newAttrForm.type}
+                    onChange={(e) => setNewAttrForm({ ...newAttrForm, type: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                  >
+                    <option value="Text">Text</option>
+                    <option value="Number">Number</option>
+                    <option value="Dropdown">Dropdown</option>
+                    <option value="Lookup">Lookup</option>
+                    <option value="Date">Date</option>
+                    <option value="Boolean">Boolean</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowAddAttrModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newAttrForm.name || !newAttrForm.code) {
+                      alert("Please provide field name and attribute code.");
+                      return;
+                    }
+                    setAttributesList((prev) => [
+                      ...prev,
+                      {
+                        id: `ATT-${prev.length + 1}`,
+                        name: newAttrForm.name,
+                        code: newAttrForm.code.toUpperCase(),
+                        type: newAttrForm.type,
+                        mandatory: newAttrForm.mandatory,
+                        unique: newAttrForm.unique,
+                        status: "Active",
+                      },
+                    ]);
+                    setShowAddAttrModal(false);
+                    showNotification(`Attribute ${newAttrForm.code.toUpperCase()} added to schema.`);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Save Attribute
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
 
         {/* Footer Classification & Modification Strip */}
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card p-3 text-[11px] text-muted-foreground font-mono">

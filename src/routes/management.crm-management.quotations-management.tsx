@@ -294,12 +294,19 @@ export function QuotationsManagementPage() {
     };
   }, [items, quotation]);
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const handleInputChange = (field: keyof QuotationRecord, value: any) => {
     setQuotation((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSaveQuotation = () => {
-    alert(`Quotation ${quotation.quotationNumber} saved successfully!`);
+    showNotification(`Quotation ${quotation.quotationNumber} saved successfully!`);
   };
 
   return (
@@ -309,41 +316,33 @@ export function QuotationsManagementPage() {
       description="The Quotations Form manages the complete commercial quotation lifecycle from opportunity → quotation creation → pricing → taxes → terms → approval → customer submission → revision → negotiation → acceptance/rejection → sales order conversion."
       tabs={<CrmManagementTabBar />}
     >
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <div className="flex flex-col min-h-screen text-slate-800 space-y-6">
-        {/* Quotation Master Action Bar */}
-        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-2xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-base font-bold tracking-tight text-slate-900">Quotations Form</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+        {/* Top Header Action Bar */}
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-2xs">
+          <div className="flex items-center justify-between gap-3 flex-nowrap overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 whitespace-nowrap">Quotations Form</h2>
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap font-mono">
                 {quotation.quotationNumber}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300">
-                ● {quotation.status}
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 whitespace-nowrap flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 inline-block" />
+                <span>{quotation.status}</span>
               </span>
             </div>
 
             {/* Header Toolbar Buttons */}
-            <div className="flex items-center flex-wrap gap-2">
+            <div className="flex items-center gap-2.5 shrink-0 flex-nowrap">
               <button
-                onClick={() => window.print()}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Printer className="h-3.5 w-3.5 text-slate-600" />
-                <span>Print</span>
-              </button>
-
-              <button
-                onClick={() => alert("Opening Email Composer with Quotation Attachment...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Mail className="h-3.5 w-3.5 text-blue-600" />
-                <span>Send Email</span>
-              </button>
-
-              <button
-                onClick={() => alert("Generating PDF Quotation...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                onClick={() => showNotification("Generating PDF for " + quotation.quotationNumber + "...")}
+                className="h-8 px-3 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <FileText className="h-3.5 w-3.5 text-red-600" />
                 <span>Create PDF</span>
@@ -351,32 +350,17 @@ export function QuotationsManagementPage() {
 
               <button
                 onClick={handleSaveQuotation}
-                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save</span>
               </button>
 
-              <button
-                onClick={() => alert("Quotation saved as new revision!")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md border border-slate-300 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <span>Save & New</span>
-              </button>
-
-              <button
-                onClick={() => alert("More quotation options...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 flex items-center gap-1 transition-colors cursor-pointer"
-              >
-                <span>More</span>
-                <MoreHorizontal className="h-3.5 w-3.5" />
-              </button>
-
-              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs">
+              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1 shrink-0 whitespace-nowrap">
+                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs shrink-0">
                   RS
                 </div>
-                <div className="text-left hidden sm:block">
+                <div className="text-left hidden sm:block whitespace-nowrap">
                   <div className="text-xs font-semibold text-slate-800 leading-none">Rahul Sharma</div>
                   <div className="text-[10px] text-slate-500">Sales Manager</div>
                 </div>
@@ -577,18 +561,10 @@ export function QuotationsManagementPage() {
         <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-1.5 overflow-x-auto scrollbar-none">
             {[
-              { id: "items", label: "Items", icon: Layers },
-              { id: "pricing", label: "Pricing", icon: DollarSign },
-              { id: "taxes", label: "Taxes", icon: Percent },
+              { id: "items", label: "Items & Commercials", icon: Layers },
               { id: "terms", label: "Terms & Conditions", icon: FileText },
-              { id: "approval", label: "Approval", icon: Award },
-              { id: "submission", label: "Customer Submission", icon: Send },
-              { id: "revision", label: "Revision", icon: RefreshCw },
-              { id: "negotiation", label: "Negotiation", icon: Activity },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "notes", label: "Notes", icon: CheckSquare },
-              { id: "activities", label: "Activities", icon: Calendar },
-              { id: "history", label: "History", icon: Clock },
+              { id: "approval", label: "Approvals & Submission", icon: Award },
+              { id: "activities", label: "Follow-up & Activities", icon: Calendar },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -612,187 +588,193 @@ export function QuotationsManagementPage() {
 
           {/* TAB CONTENT AREA */}
           <div className="p-5">
-            {activeTab === "items" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Left & Center Columns (Sections 2 to 10) */}
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Card 2: Quotation Items Table */}
-                  <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                        2. Quotation Items
-                      </h3>
-                      <button
-                        onClick={() => setIsAddItemOpen(true)}
-                        className="h-7 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded shadow-2xs flex items-center gap-1 cursor-pointer"
-                      >
-                        <Plus className="h-3.5 w-3.5" />
-                        <span>Add Item</span>
-                      </button>
-                    </div>
-
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                            <th className="py-2 px-2 text-center w-8">#</th>
-                            <th className="py-2 px-2">Product / Service</th>
-                            <th className="py-2 px-2">Description</th>
-                            <th className="py-2 px-2 text-center">Qty</th>
-                            <th className="py-2 px-2 text-center">UOM</th>
-                            <th className="py-2 px-2 text-right">Unit Price (₹)</th>
-                            <th className="py-2 px-2 text-center">Discount %</th>
-                            <th className="py-2 px-2 text-center">Tax Rate</th>
-                            <th className="py-2 px-2 text-right">Line Total (₹)</th>
-                            <th className="py-2 px-2 text-center">Delivery Time</th>
-                            <th className="py-2 px-2 text-center w-12">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                          {items.map((item, idx) => {
-                            const gross = item.quantity * item.unitPrice;
-                            const disc = (gross * item.discountPct) / 100;
-                            const taxable = gross - disc;
-                            const lineTotal = taxable * (1 + item.taxRate / 100);
-
-                            return (
-                              <tr key={item.id} className="hover:bg-slate-50/80">
-                                <td className="py-2 px-2 text-center font-bold text-slate-500">{idx + 1}</td>
-                                <td className="py-2 px-2 font-bold text-slate-900">{item.productName}</td>
-                                <td className="py-2 px-2 text-slate-600">{item.description}</td>
-                                <td className="py-2 px-2 text-center font-bold text-slate-800">{item.quantity}</td>
-                                <td className="py-2 px-2 text-center text-slate-600">{item.uom}</td>
-                                <td className="py-2 px-2 text-right font-mono font-semibold">{item.unitPrice.toLocaleString("en-IN")}</td>
-                                <td className="py-2 px-2 text-center font-semibold text-rose-600">{item.discountPct}%</td>
-                                <td className="py-2 px-2 text-center font-semibold text-blue-600">{item.taxRate}%</td>
-                                <td className="py-2 px-2 text-right font-mono font-bold text-slate-900">
-                                  {lineTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-                                </td>
-                                <td className="py-2 px-2 text-center text-slate-600 font-medium">{item.deliveryTime}</td>
-                                <td className="py-2 px-2 text-center">
-                                  <button
-                                    onClick={() => setItems((prev) => prev.filter((i) => i.id !== item.id))}
-                                    className="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"
-                                  >
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                  </button>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    <div className="flex items-center justify-between border-t border-slate-200 pt-3 font-semibold text-xs">
-                      <button
-                        onClick={() => setIsAddItemOpen(true)}
-                        className="text-primary hover:underline flex items-center gap-1 font-bold cursor-pointer"
-                      >
-                        <Plus className="h-3.5 w-3.5" /> Add Item
-                      </button>
-                      <div className="text-right">
-                        <span className="text-slate-600 mr-2">Total (Excl. Tax):</span>
-                        <span className="font-extrabold text-slate-900 text-sm font-mono">
-                          ₹ {calculations.rawSubtotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-                        </span>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left & Center Columns (Sections based on active tab) */}
+              <div className="lg:col-span-2 space-y-6">
+                {activeTab === "items" && (
+                  <div className="space-y-6">
+                    {/* Card 2: Quotation Items Table */}
+                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                          Quotation Line Items & Specifications
+                        </h3>
+                        <button
+                          onClick={() => setIsAddItemOpen(true)}
+                          className="h-7 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded shadow-2xs flex items-center gap-1 cursor-pointer"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                          <span>Add Item</span>
+                        </button>
                       </div>
-                    </div>
-                  </div>
 
-                  {/* Grid Row 2: Pricing Summary, Tax Details, Terms */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Card 3: Pricing Summary */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        3. Pricing Summary
-                      </h3>
-                      <div className="space-y-1.5 text-xs">
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Base Price</span>
-                          <span className="font-semibold">₹ {calculations.rawSubtotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Discount ({calculations.discountPct}%)</span>
-                          <span className="font-semibold text-rose-600">- ₹ {calculations.totalDiscountAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Freight</span>
-                          <span className="font-semibold">₹ {quotation.freightCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Installation</span>
-                          <span className="font-semibold">₹ {quotation.installationCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
-                        </div>
-                        <div className="flex justify-between border-t border-slate-200 pt-1 font-semibold">
-                          <span className="text-slate-700">Subtotal</span>
-                          <span>₹ {calculations.grossTotalWithFreight?.toLocaleString("en-IN", { minimumFractionDigits: 2 }) || "3,24,250.00"}</span>
-                        </div>
-                        <div className="flex justify-between font-bold">
-                          <span className="text-slate-800">Taxable Value</span>
-                          <span className="text-slate-900">₹ 2,94,250.00</span>
-                        </div>
-                        <div className="flex justify-between border-t border-slate-200 pt-1 text-sm font-extrabold text-primary">
-                          <span>Grand Total</span>
-                          <span>₹ 3,47,215.00</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card 4: Tax Details */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        4. Tax Details
-                      </h3>
-                      <div className="overflow-x-auto text-xs">
-                        <table className="w-full text-left">
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs border-collapse">
                           <thead>
-                            <tr className="text-slate-500 font-semibold border-b border-slate-200">
-                              <th className="py-1">Tax Type</th>
-                              <th className="py-1">Rate (%)</th>
-                              <th className="py-1 text-right">Taxable (₹)</th>
-                              <th className="py-1 text-right">Tax Amt (₹)</th>
+                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                              <th className="py-2 px-2 text-center w-8">#</th>
+                              <th className="py-2 px-2">Product / Service</th>
+                              <th className="py-2 px-2">Description</th>
+                              <th className="py-2 px-2 text-center">Qty</th>
+                              <th className="py-2 px-2 text-center">UOM</th>
+                              <th className="py-2 px-2 text-right">Unit Price (₹)</th>
+                              <th className="py-2 px-2 text-center">Discount %</th>
+                              <th className="py-2 px-2 text-center">Tax Rate</th>
+                              <th className="py-2 px-2 text-right">Line Total (₹)</th>
+                              <th className="py-2 px-2 text-center">Delivery Time</th>
+                              <th className="py-2 px-2 text-center w-12">Actions</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100">
-                            <tr>
-                              <td className="py-1 font-semibold text-slate-800">CGST</td>
-                              <td className="py-1">9%</td>
-                              <td className="py-1 text-right font-mono">1,47,125.00</td>
-                              <td className="py-1 text-right font-mono font-semibold">13,241.25</td>
-                            </tr>
-                            <tr>
-                              <td className="py-1 font-semibold text-slate-800">SGST</td>
-                              <td className="py-1">9%</td>
-                              <td className="py-1 text-right font-mono">1,47,125.00</td>
-                              <td className="py-1 text-right font-mono font-semibold">13,241.25</td>
-                            </tr>
-                            <tr>
-                              <td className="py-1 font-semibold text-slate-800">IGST</td>
-                              <td className="py-1">0%</td>
-                              <td className="py-1 text-right font-mono">0.00</td>
-                              <td className="py-1 text-right font-mono font-semibold">0.00</td>
-                            </tr>
+                            {items.map((item, idx) => {
+                              const gross = item.quantity * item.unitPrice;
+                              const disc = (gross * item.discountPct) / 100;
+                              const taxable = gross - disc;
+                              const lineTotal = taxable * (1 + item.taxRate / 100);
+
+                              return (
+                                <tr key={item.id} className="hover:bg-slate-50/80">
+                                  <td className="py-2 px-2 text-center font-bold text-slate-500">{idx + 1}</td>
+                                  <td className="py-2 px-2 font-bold text-slate-900">{item.productName}</td>
+                                  <td className="py-2 px-2 text-slate-600">{item.description}</td>
+                                  <td className="py-2 px-2 text-center font-bold text-slate-800">{item.quantity}</td>
+                                  <td className="py-2 px-2 text-center text-slate-600">{item.uom}</td>
+                                  <td className="py-2 px-2 text-right font-mono font-semibold">{item.unitPrice.toLocaleString("en-IN")}</td>
+                                  <td className="py-2 px-2 text-center font-semibold text-rose-600">{item.discountPct}%</td>
+                                  <td className="py-2 px-2 text-center font-semibold text-blue-600">{item.taxRate}%</td>
+                                  <td className="py-2 px-2 text-right font-mono font-bold text-slate-900">
+                                    {lineTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                                  </td>
+                                  <td className="py-2 px-2 text-center text-slate-600 font-medium">{item.deliveryTime}</td>
+                                  <td className="py-2 px-2 text-center">
+                                    <button
+                                      onClick={() => setItems((prev) => prev.filter((i) => i.id !== item.id))}
+                                      className="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"
+                                    >
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
-                        <div className="flex justify-between border-t border-slate-200 pt-2 font-bold mt-2">
-                          <span className="text-blue-700">Total Tax (18%)</span>
-                          <span className="text-blue-900 font-mono">₹ 26,482.50</span>
+                      </div>
+
+                      <div className="flex items-center justify-between border-t border-slate-200 pt-3 font-semibold text-xs">
+                        <button
+                          onClick={() => setIsAddItemOpen(true)}
+                          className="text-primary hover:underline flex items-center gap-1 font-bold cursor-pointer"
+                        >
+                          <Plus className="h-3.5 w-3.5" /> Add Item
+                        </button>
+                        <div className="text-right">
+                          <span className="text-slate-600 mr-2">Total (Excl. Tax):</span>
+                          <span className="font-extrabold text-slate-900 text-sm font-mono">
+                            ₹ {calculations.rawSubtotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                          </span>
                         </div>
                       </div>
                     </div>
 
+                    {/* Pricing Summary & Tax Details */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Card 3: Pricing Summary */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
+                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
+                          Pricing Breakdown
+                        </h3>
+                        <div className="space-y-1.5 text-xs">
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Base Price</span>
+                            <span className="font-semibold">₹ {calculations.rawSubtotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Discount ({calculations.discountPct}%)</span>
+                            <span className="font-semibold text-rose-600">- ₹ {calculations.totalDiscountAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Freight</span>
+                            <span className="font-semibold">₹ {quotation.freightCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-600">Installation</span>
+                            <span className="font-semibold">₹ {quotation.installationCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+                          </div>
+                          <div className="flex justify-between border-t border-slate-200 pt-1 font-semibold">
+                            <span className="text-slate-700">Subtotal</span>
+                            <span>₹ {calculations.grossTotalWithFreight?.toLocaleString("en-IN", { minimumFractionDigits: 2 }) || "3,24,250.00"}</span>
+                          </div>
+                          <div className="flex justify-between font-bold">
+                            <span className="text-slate-800">Taxable Value</span>
+                            <span className="text-slate-900">₹ 2,94,250.00</span>
+                          </div>
+                          <div className="flex justify-between border-t border-slate-200 pt-1 text-sm font-extrabold text-primary">
+                            <span>Grand Total</span>
+                            <span>₹ 3,47,215.00</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card 4: Tax Details */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
+                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
+                          Tax Computation (GST)
+                        </h3>
+                        <div className="overflow-x-auto text-xs">
+                          <table className="w-full text-left">
+                            <thead>
+                              <tr className="text-slate-500 font-semibold border-b border-slate-200">
+                                <th className="py-1">Tax Type</th>
+                                <th className="py-1">Rate (%)</th>
+                                <th className="py-1 text-right">Taxable (₹)</th>
+                                <th className="py-1 text-right">Tax Amt (₹)</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                              <tr>
+                                <td className="py-1 font-semibold text-slate-800">CGST</td>
+                                <td className="py-1">9%</td>
+                                <td className="py-1 text-right font-mono">1,47,125.00</td>
+                                <td className="py-1 text-right font-mono font-semibold">13,241.25</td>
+                              </tr>
+                              <tr>
+                                <td className="py-1 font-semibold text-slate-800">SGST</td>
+                                <td className="py-1">9%</td>
+                                <td className="py-1 text-right font-mono">1,47,125.00</td>
+                                <td className="py-1 text-right font-mono font-semibold">13,241.25</td>
+                              </tr>
+                              <tr>
+                                <td className="py-1 font-semibold text-slate-800">IGST</td>
+                                <td className="py-1">0%</td>
+                                <td className="py-1 text-right font-mono">0.00</td>
+                                <td className="py-1 text-right font-mono font-semibold">0.00</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <div className="flex justify-between border-t border-slate-200 pt-2 font-bold mt-2">
+                            <span className="text-blue-700">Total Tax (18%)</span>
+                            <span className="text-blue-900 font-mono">₹ 26,482.50</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "terms" && (
+                  <div className="space-y-6">
                     {/* Card 5: Terms & Conditions */}
                     <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
                       <div className="flex justify-between border-b border-slate-200 pb-2">
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          5. Terms & Conditions
+                          Commercial Terms & Conditions
                         </h3>
-                        <button onClick={() => alert("Viewing All Terms...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View All Terms
+                        <button onClick={() => showNotification("Viewing All Terms...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                          Edit Terms
                         </button>
                       </div>
-                      <div className="space-y-1">
+                      <div className="space-y-2">
                         <div>
                           <span className="text-slate-500 font-semibold">Payment Terms:</span>
                           <p className="font-medium text-slate-800">{quotation.paymentTerms}</p>
@@ -806,7 +788,7 @@ export function QuotationsManagementPage() {
                           <p className="font-medium text-slate-800">{quotation.deliveryPeriod}</p>
                         </div>
                         <div>
-                          <span className="text-slate-500 font-semibold">Warranty:</span>
+                          <span className="text-slate-500 font-semibold">Warranty Terms:</span>
                           <p className="font-medium text-slate-800">{quotation.warrantyTerms}</p>
                         </div>
                         <div>
@@ -816,113 +798,142 @@ export function QuotationsManagementPage() {
                       </div>
                     </div>
                   </div>
+                )}
 
-                  {/* Grid Row 3: Approvals, Customer Submission, Follow-up */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Card 6: Approval Details */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
-                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">
-                        6. Approval Details
-                      </h3>
-                      <div className="overflow-x-auto text-xs">
-                        <table className="w-full text-left">
-                          <thead>
-                            <tr className="text-slate-500 font-semibold border-b border-slate-200">
-                              <th className="py-1">Level</th>
-                              <th className="py-1">Approver</th>
-                              <th className="py-1">Role</th>
-                              <th className="py-1">Status</th>
-                              <th className="py-1">Approved On</th>
-                              <th className="py-1">Remarks</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {APPROVALS_DATA.map((app) => (
-                              <tr key={app.level}>
-                                <td className="py-1 font-bold text-slate-700">{app.level}</td>
-                                <td className="py-1 font-bold text-slate-800">{app.approver}</td>
-                                <td className="py-1 text-slate-600">{app.role}</td>
-                                <td className="py-1 font-bold text-emerald-700">{app.status}</td>
-                                <td className="py-1 text-slate-500 whitespace-nowrap">{app.date}</td>
-                                <td className="py-1 text-slate-600">{app.remarks}</td>
+                {activeTab === "approval" && (
+                  <div className="space-y-6">
+                    {/* Approvals Matrix & Customer Submission */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Card 6: Approval Details */}
+                      <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
+                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">
+                          Approval Hierarchy
+                        </h3>
+                        <div className="overflow-x-auto text-xs">
+                          <table className="w-full text-left">
+                            <thead>
+                              <tr className="text-slate-500 font-semibold border-b border-slate-200">
+                                <th className="py-1">Level</th>
+                                <th className="py-1">Approver</th>
+                                <th className="py-1">Status</th>
+                                <th className="py-1">Approved On</th>
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                              {APPROVALS_DATA.map((app) => (
+                                <tr key={app.level}>
+                                  <td className="py-1 font-bold text-slate-700">{app.level}</td>
+                                  <td className="py-1 font-bold text-slate-800">{app.approver}</td>
+                                  <td className="py-1 font-bold text-emerald-700">{app.status}</td>
+                                  <td className="py-1 text-slate-500 whitespace-nowrap">{app.date}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Card 7: Customer Submission */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
-                      <div className="flex justify-between border-b border-slate-200 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          7. Customer Submission
-                        </h3>
-                        <button onClick={() => alert("Viewing Communication Log...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View Communication
-                        </button>
-                      </div>
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Submission Date</span>
-                          <span className="font-semibold text-slate-800">{quotation.submittedDate}</span>
+                      {/* Card 7: Customer Submission */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
+                        <div className="flex justify-between border-b border-slate-200 pb-2">
+                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                            Customer Submission Log
+                          </h3>
+                          <button onClick={() => showNotification("Viewing Communication Log...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                            View Log
+                          </button>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Submitted By</span>
-                          <span className="font-semibold text-slate-800">{quotation.submittedBy}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Submission Channel</span>
-                          <span className="font-semibold text-slate-800">{quotation.submissionChannel}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Recipient Email</span>
-                          <span className="font-semibold text-blue-700">{quotation.recipientEmail}</span>
-                        </div>
-                        <div className="flex justify-between border-t border-slate-200 pt-1">
-                          <span className="text-slate-500 font-bold">Delivery Status</span>
-                          <span className="font-bold text-emerald-700">● {quotation.deliveryStatus}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card 8: Next Follow-up */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
-                      <div className="flex justify-between border-b border-slate-200 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          8. Next Follow-up
-                        </h3>
-                        <button onClick={() => alert("Scheduling Follow-up...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          Schedule Follow-up
-                        </button>
-                      </div>
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Next Action</span>
-                          <span className="font-bold text-slate-800">{quotation.nextAction}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Next Action Date</span>
-                          <span className="font-semibold text-slate-800">{quotation.nextActionDate}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Assigned To</span>
-                          <span className="font-semibold text-slate-800">{quotation.assignedTo}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Priority</span>
-                          <span className="font-bold text-rose-600">● {quotation.nextActionPriority}</span>
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Submission Date</span>
+                            <span className="font-semibold text-slate-800">{quotation.submittedDate}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Submitted By</span>
+                            <span className="font-semibold text-slate-800">{quotation.submittedBy}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Channel</span>
+                            <span className="font-semibold text-slate-800">{quotation.submissionChannel}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Recipient</span>
+                            <span className="font-semibold text-blue-700">{quotation.recipientEmail}</span>
+                          </div>
+                          <div className="flex justify-between border-t border-slate-200 pt-1">
+                            <span className="text-slate-500 font-bold">Delivery Status</span>
+                            <span className="font-bold text-emerald-700">● {quotation.deliveryStatus}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                )}
 
-                  {/* Grid Row 4: Recent Activities & Summary Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Card 9: Recent Activities Table (2 Cols) */}
-                    <div className="md:col-span-2 bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
+                {activeTab === "activities" && (
+                  <div className="space-y-6">
+                    {/* Follow-up & Recent Activities */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Card 8: Next Follow-up */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
+                        <div className="flex justify-between border-b border-slate-200 pb-2">
+                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                            Next Follow-up & Milestone
+                          </h3>
+                          <button onClick={() => showNotification("Scheduling Follow-up...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                            Schedule
+                          </button>
+                        </div>
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Next Action</span>
+                            <span className="font-bold text-slate-800">{quotation.nextAction}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Next Action Date</span>
+                            <span className="font-semibold text-slate-800">{quotation.nextActionDate}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Assigned To</span>
+                            <span className="font-semibold text-slate-800">{quotation.assignedTo}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500">Priority</span>
+                            <span className="font-bold text-rose-600">● {quotation.nextActionPriority}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card 10: Summary KPIs */}
+                      <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
+                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">
+                          Quotation Performance
+                        </h3>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div className="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200">
+                            <div className="text-[10px] text-blue-700 font-medium">Total Quotations</div>
+                            <div className="text-base font-extrabold text-blue-900">24</div>
+                          </div>
+                          <div className="p-2.5 bg-emerald-50/60 rounded-lg border border-emerald-200">
+                            <div className="text-[10px] text-emerald-700 font-medium">Quotation Value</div>
+                            <div className="text-xs font-extrabold text-emerald-900">₹ 2.48 Cr</div>
+                          </div>
+                          <div className="p-2.5 bg-purple-50/60 rounded-lg border border-purple-200">
+                            <div className="text-[10px] text-purple-700 font-medium">Conversion Rate</div>
+                            <div className="text-base font-extrabold text-purple-900">62%</div>
+                          </div>
+                          <div className="p-2.5 bg-amber-50/60 rounded-lg border border-amber-200">
+                            <div className="text-[10px] text-amber-700 font-medium">Accepted Value</div>
+                            <div className="text-xs font-extrabold text-amber-900">₹ 1.54 Cr</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 9: Recent Activities Table */}
+                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
                       <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">
-                        9. Recent Activities
+                        Recent Activity Timeline
                       </h3>
                       <div className="overflow-x-auto text-xs">
                         <table className="w-full text-left">
@@ -953,41 +964,9 @@ export function QuotationsManagementPage() {
                         </table>
                       </div>
                     </div>
-
-                    {/* Card 10: Summary Cards (1 Col) */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
-                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">
-                        10. Summary Cards
-                      </h3>
-
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div className="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200">
-                          <div className="text-[10px] text-blue-700 font-medium">Total Quotations</div>
-                          <div className="text-base font-extrabold text-blue-900">24</div>
-                          <div className="text-[9px] text-slate-400">This Month</div>
-                        </div>
-
-                        <div className="p-2.5 bg-emerald-50/60 rounded-lg border border-emerald-200">
-                          <div className="text-[10px] text-emerald-700 font-medium">Quotation Value</div>
-                          <div className="text-xs font-extrabold text-emerald-900">₹ 2,48,50,000</div>
-                          <div className="text-[9px] text-slate-400">This Month</div>
-                        </div>
-
-                        <div className="p-2.5 bg-purple-50/60 rounded-lg border border-purple-200">
-                          <div className="text-[10px] text-purple-700 font-medium">Conversion Rate</div>
-                          <div className="text-base font-extrabold text-purple-900">62%</div>
-                          <div className="text-[9px] text-slate-400">This Month</div>
-                        </div>
-
-                        <div className="p-2.5 bg-amber-50/60 rounded-lg border border-amber-200">
-                          <div className="text-[10px] text-amber-700 font-medium">Accepted Value</div>
-                          <div className="text-xs font-extrabold text-amber-900">₹ 1,54,80,000</div>
-                          <div className="text-[9px] text-slate-400">This Month</div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
-                </div>
+                )}
+              </div>
 
                 {/* Right Column: Sidebar Panels (Matching Mockup Image) */}
                 <div className="space-y-6">
@@ -1069,7 +1048,7 @@ export function QuotationsManagementPage() {
 
                     <div className="grid grid-cols-3 gap-2">
                       <button
-                        onClick={() => alert("Sending email...")}
+                        onClick={() => showNotification("Quotation emailed to " + quotation.contactPerson)}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Mail className="h-4 w-4 text-blue-600" />
@@ -1083,28 +1062,34 @@ export function QuotationsManagementPage() {
                         <span>Print</span>
                       </button>
                       <button
-                        onClick={() => alert("Downloading PDF...")}
+                        onClick={() => showNotification("Downloading PDF for " + quotation.quotationNumber + "...")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Download className="h-4 w-4 text-red-600" />
                         <span>Download PDF</span>
                       </button>
                       <button
-                        onClick={() => setIsRevisionOpen(true)}
+                        onClick={() => {
+                          setQuotation((prev) => ({ ...prev, revision: "v1.1" }));
+                          showNotification("Created revision v1.1 for " + quotation.quotationNumber);
+                        }}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <RefreshCw className="h-4 w-4 text-purple-600" />
                         <span>Create Revision</span>
                       </button>
                       <button
-                        onClick={() => alert("Cloning quotation...")}
+                        onClick={() => showNotification("Quotation duplicated as draft copy.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Copy className="h-4 w-4 text-emerald-600" />
                         <span>Clone Quotation</span>
                       </button>
                       <button
-                        onClick={() => alert("Shareable link copied to clipboard!")}
+                        onClick={() => {
+                          navigator.clipboard?.writeText(window.location.href);
+                          showNotification("Shareable quotation link copied to clipboard!");
+                        }}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Share2 className="h-4 w-4 text-indigo-600" />
@@ -1113,7 +1098,10 @@ export function QuotationsManagementPage() {
                     </div>
 
                     <button
-                      onClick={() => alert("Converting Quotation to Sales Order...")}
+                      onClick={() => {
+                        setQuotation((prev) => ({ ...prev, status: "Converted to Order" }));
+                        showNotification("Quotation successfully converted to Sales Order ORD-2024-0091!");
+                      }}
                       className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
                     >
                       <RefreshCw className="h-4 w-4" />
@@ -1122,9 +1110,8 @@ export function QuotationsManagementPage() {
                   </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
 
         {/* MODAL 1: ADD ITEM */}
         {isAddItemOpen && (
@@ -1224,7 +1211,7 @@ export function QuotationsManagementPage() {
                 <button
                   onClick={() => {
                     setIsRevisionOpen(false);
-                    alert("Quotation Revision V2 created!");
+                    showNotification("Quotation Revision V2 created!");
                   }}
                   className="px-4 py-1.5 text-xs bg-purple-600 text-white font-bold rounded shadow-xs"
                 >

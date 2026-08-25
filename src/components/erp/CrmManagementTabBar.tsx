@@ -8,6 +8,7 @@ const TAB_BASE =
 const TAB_ACTIVE = "border-primary text-primary hover:text-primary font-bold";
 
 const CRM_TABS = [
+  { to: "/management/crm-management/overview", label: "Overview" },
   { to: "/management/crm-management/lead-management", label: "Lead Management" },
   { to: "/management/crm-management/contact-management", label: "Contact Management" },
   { to: "/management/crm-management/account-management", label: "Account Management" },

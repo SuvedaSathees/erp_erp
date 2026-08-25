@@ -13,6 +13,7 @@ import {
   Clock,
   DollarSign,
   Plus,
+  Printer,
   Save,
   Send,
   Download,
@@ -403,7 +404,7 @@ const RECENT_ACTIVITIES = [
     type: "Meeting",
     subject: "Product Demo - PLC Solutions",
     outcome: "Positive",
-    outcomeColor: "bg-emerald-100 text-emerald-700 border-emerald-300",
+    outcomeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
     nextAction: "Send Technical Proposal",
     nextActionDate: "22 Apr 2024",
     assignedTo: "Rahul Sharma",
@@ -415,7 +416,7 @@ const RECENT_ACTIVITIES = [
     type: "Email",
     subject: "Product Brochure Shared",
     outcome: "Information Sent",
-    outcomeColor: "bg-blue-100 text-blue-700 border-blue-300",
+    outcomeColor: "bg-blue-50 text-blue-700 border-blue-200",
     nextAction: "Follow-up Call",
     nextActionDate: "20 Apr 2024",
     assignedTo: "Rahul Sharma",
@@ -427,7 +428,7 @@ const RECENT_ACTIVITIES = [
     type: "Call",
     subject: "Initial Discussion",
     outcome: "Interested",
-    outcomeColor: "bg-purple-100 text-purple-700 border-purple-300",
+    outcomeColor: "bg-purple-50 text-purple-700 border-purple-200",
     nextAction: "Schedule Demo",
     nextActionDate: "18 Apr 2024",
     assignedTo: "Rahul Sharma",
@@ -439,7 +440,7 @@ const RECENT_ACTIVITIES = [
     type: "Note",
     subject: "Requirement Understanding",
     outcome: "Requirement Captured",
-    outcomeColor: "bg-amber-100 text-amber-700 border-amber-300",
+    outcomeColor: "bg-amber-50 text-amber-700 border-amber-200",
     nextAction: "Prepare Solution",
     nextActionDate: "15 Apr 2024",
     assignedTo: "Rahul Sharma",
@@ -450,7 +451,6 @@ const RECENT_ACTIVITIES = [
 export function ContactManagementPage() {
   const [contacts, setContacts] = useState<ContactRecord[]>(INITIAL_CONTACTS);
   const [selectedContactId, setSelectedContactId] = useState<string>("CONT-0002458");
-  const [activeTab, setActiveTab] = useState<string>("overview");
 
   // Dialog States
   const [isNewContactOpen, setIsNewContactOpen] = useState(false);
@@ -465,6 +465,13 @@ export function ContactManagementPage() {
   // Form State initialized from current Contact
   const [formState, setFormState] = useState<ContactRecord>(currentContact);
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const handleSelectContact = (id: string) => {
     setSelectedContactId(id);
     const target = contacts.find((c) => c.id === id);
@@ -477,7 +484,7 @@ export function ContactManagementPage() {
 
   const handleSaveContact = () => {
     setContacts((prev) => prev.map((c) => (c.id === formState.id ? formState : c)));
-    alert(`Contact ${formState.contactNumber} (${formState.preferredName}) saved successfully!`);
+    showNotification(`Contact ${formState.contactNumber} (${formState.preferredName}) saved successfully!`);
   };
 
   return (
@@ -487,35 +494,37 @@ export function ContactManagementPage() {
       description="The Contact Management Form is the central CRM record for managing individual business contacts, their organization relationship, communication details, engagement history, responsibilities, preferences, and lifecycle."
       tabs={<CrmManagementTabBar />}
     >
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <div className="flex flex-col min-h-screen text-slate-800 space-y-6">
         {/* Contact Master Action Bar */}
-        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-2xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => window.history.back()}
-                className="h-8 px-2.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 flex items-center gap-1 cursor-pointer transition-colors"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" />
-                <span>Back</span>
-              </button>
-              <h2 className="text-base font-bold tracking-tight text-slate-900">Contact Master Form</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-2xs">
+          <div className="flex items-center justify-between gap-3 flex-nowrap overflow-x-auto scrollbar-none">
+            {/* Title & Status Badges */}
+            <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 whitespace-nowrap">Contact Master Form</h2>
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap font-mono">
                 {formState.contactNumber}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300">
-                ● {formState.status}
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 whitespace-nowrap flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 inline-block" />
+                <span>{formState.status}</span>
               </span>
             </div>
 
             {/* Quick Actions Header Buttons */}
-            <div className="flex items-center flex-wrap gap-2">
-              <div className="flex items-center gap-2 mr-2">
-                <label className="text-xs font-semibold text-slate-600">Select Contact:</label>
+            <div className="flex items-center gap-2.5 shrink-0 flex-nowrap">
+              <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+                <label className="text-xs font-semibold text-slate-600 whitespace-nowrap">Select Contact:</label>
                 <select
                   value={selectedContactId}
                   onChange={(e) => handleSelectContact(e.target.value)}
-                  className="h-8 text-xs bg-slate-50 border border-slate-300 rounded-md px-2 font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+                  className="h-8 max-w-[210px] text-xs bg-slate-50 border border-slate-300 rounded-md px-2 font-medium focus:ring-2 focus:ring-primary focus:outline-none truncate"
                 >
                   {contacts.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -527,40 +536,25 @@ export function ContactManagementPage() {
 
               <button
                 onClick={() => setIsNewContactOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Plus className="h-3.5 w-3.5" />
                 <span>New Contact</span>
               </button>
 
               <button
-                onClick={() => setIsConvertLeadOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md border border-emerald-300 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                <span>Convert to Lead</span>
-              </button>
-
-              <button
                 onClick={handleSaveContact}
-                className="h-8 px-4 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer font-bold"
+                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save</span>
               </button>
 
-              <button
-                onClick={() => alert("Saved as new revision!")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md border border-slate-300 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <span>Save & New</span>
-              </button>
-
-              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs">
+              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1 shrink-0 whitespace-nowrap">
+                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs shrink-0">
                   RS
                 </div>
-                <div className="text-left hidden sm:block">
+                <div className="text-left hidden sm:block whitespace-nowrap">
                   <div className="text-xs font-semibold text-slate-800 leading-none">Rahul Sharma</div>
                   <div className="text-[10px] text-slate-500">Sales Manager</div>
                 </div>
@@ -579,33 +573,12 @@ export function ContactManagementPage() {
             <span className="text-xs font-medium text-slate-400">MAICW Controlled Record</span>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Contact Avatar Profile Photo Upload */}
-            <div className="flex flex-col items-center justify-center p-3 bg-slate-50 rounded-xl border border-slate-200 shrink-0 w-36 text-center space-y-2">
-              <div className="relative group">
-                <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80"
-                  alt={formState.preferredName}
-                  className="w-24 h-24 rounded-full object-cover border-2 border-primary shadow-sm"
-                />
-                <button
-                  onClick={() => alert("Upload photo dialog...")}
-                  className="absolute bottom-0 right-0 h-7 w-7 bg-primary text-white rounded-full flex items-center justify-center shadow-md hover:bg-primary/90 transition-all cursor-pointer"
-                  title="Upload Photo"
-                >
-                  <CameraIcon className="h-3.5 w-3.5" />
-                </button>
-              </div>
-              <span className="text-[11px] font-semibold text-slate-500">Profile Photo</span>
-            </div>
-
-            {/* Master Inputs Grid */}
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-              <div>
-                <label className="block text-slate-500 font-semibold mb-1">Contact ID</label>
-                <input
-                  type="text"
-                  disabled
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div>
+              <label className="block text-slate-500 font-semibold mb-1">Contact ID</label>
+              <input
+                type="text"
+                disabled
                   value={formState.id}
                   className="w-full h-8 px-2.5 bg-slate-100 border border-slate-200 rounded text-slate-600 font-mono font-medium"
                 />
@@ -772,59 +745,19 @@ export function ContactManagementPage() {
                 />
               </div>
             </div>
+
+            <div>
+              <label className="block text-slate-500 font-semibold text-xs mb-1">Description / Summary</label>
+              <textarea
+                rows={2}
+                value={formState.description}
+                onChange={(e) => handleInputChange("description", e.target.value)}
+                className="w-full p-2.5 bg-white border border-slate-300 rounded text-xs font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-slate-500 font-semibold text-xs mb-1">Description / Summary</label>
-            <textarea
-              rows={2}
-              value={formState.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
-              className="w-full p-2.5 bg-white border border-slate-300 rounded text-xs font-medium focus:ring-2 focus:ring-primary focus:outline-none"
-            />
-          </div>
-        </div>
-
-        {/* Form Inner Sub-Tabs Header */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-1.5 overflow-x-auto scrollbar-none">
-            {[
-              { id: "overview", label: "Overview", icon: Layers },
-              { id: "activities", label: "Activities", icon: Activity },
-              { id: "communication", label: "Communication", icon: Mail },
-              { id: "organization", label: "Organization", icon: Building2 },
-              { id: "qualification", label: "Qualification", icon: Award },
-              { id: "opportunities", label: "Opportunities", icon: Target },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "notes", label: "Notes", icon: CheckSquare },
-              { id: "preferences", label: "Preferences", icon: Lock },
-              { id: "audit", label: "Audit Trail", icon: ShieldCheck },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer",
-                    active
-                      ? "bg-white text-primary shadow-2xs border border-slate-200/80"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                  )}
-                >
-                  <Icon className={cn("h-3.5 w-3.5", active ? "text-primary" : "text-slate-400")} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* TAB CONTENT AREA */}
-          <div className="p-5">
-            {/* TAB 1: OVERVIEW (MATCHING REFERENCE MOCKUP IMAGE EXACTLY) */}
-            {activeTab === "overview" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left & Center Columns: Cards 2 to 10 */}
                 <div className="lg:col-span-2 space-y-6">
                   {/* Grid Row 1: Contact Information & Organization Relationship */}
@@ -1201,34 +1134,40 @@ export function ContactManagementPage() {
                       </button>
                     </div>
 
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs border-collapse">
+                    <div className="w-full">
+                      <table className="w-full text-left text-xs border-collapse table-fixed">
                         <thead>
-                          <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                            <th className="py-2 px-3">Date & Time</th>
-                            <th className="py-2 px-3">Activity Type</th>
-                            <th className="py-2 px-3">Subject</th>
-                            <th className="py-2 px-3">Outcome</th>
-                            <th className="py-2 px-3">Next Action</th>
-                            <th className="py-2 px-3">Assigned To</th>
-                            <th className="py-2 px-3">Status</th>
+                          <tr className="bg-slate-50 text-slate-600 text-[11px] font-semibold border-b border-slate-200">
+                            <th className="py-2 px-3 w-[22%]">Date & Time</th>
+                            <th className="py-2 px-2 w-[12%]">Type</th>
+                            <th className="py-2 px-3 w-[34%]">Subject & Next Action</th>
+                            <th className="py-2 px-2.5 w-[20%] text-center">Outcome</th>
+                            <th className="py-2 px-2 w-[12%] text-right">Status</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                           {RECENT_ACTIVITIES.map((act) => (
                             <tr key={act.id} className="hover:bg-slate-50/80 transition-colors">
-                              <td className="py-2 px-3 text-slate-600 whitespace-nowrap">{act.time}</td>
-                              <td className="py-2 px-3 font-semibold text-slate-800">{act.type}</td>
-                              <td className="py-2 px-3 text-slate-700">{act.subject}</td>
-                              <td className="py-2 px-3">
-                                <span className={cn("px-2 py-0.5 text-[11px] font-semibold rounded border", act.outcomeColor)}>
-                                  {act.outcome}
+                              <td className="py-2.5 px-3">
+                                <div className="text-slate-600 font-mono text-[11px] truncate leading-tight">{act.time}</div>
+                              </td>
+                              <td className="py-2.5 px-2">
+                                <span className="font-semibold text-slate-800 text-xs">{act.type}</span>
+                              </td>
+                              <td className="py-2.5 px-3">
+                                <div className="font-semibold text-slate-900 text-xs truncate leading-tight">{act.subject}</div>
+                                <div className="text-[10px] text-slate-500 truncate leading-tight mt-0.5">
+                                  Next: <span className="font-medium text-slate-700">{act.nextAction}</span> ({act.nextActionDate}) · By: <span className="text-slate-600">{act.assignedTo}</span>
+                                </div>
+                              </td>
+                              <td className="py-2.5 px-2.5 text-center">
+                                <span className={cn("px-2.5 py-1 text-[11px] font-bold rounded-full border shadow-2xs whitespace-nowrap inline-flex items-center justify-center gap-1.5", act.outcomeColor)}>
+                                  <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+                                  <span>{act.outcome}</span>
                                 </span>
                               </td>
-                              <td className="py-2 px-3 text-slate-700">{act.nextAction}</td>
-                              <td className="py-2 px-3 text-slate-600">{act.assignedTo}</td>
-                              <td className="py-2 px-3">
-                                <span className="px-2 py-0.5 text-[11px] font-semibold bg-emerald-50 text-emerald-700 rounded border border-emerald-200">
+                              <td className="py-2.5 px-2 text-right">
+                                <span className="px-2.5 py-1 text-[10px] font-bold bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200 whitespace-nowrap inline-block">
                                   {act.status}
                                 </span>
                               </td>
@@ -1293,12 +1232,28 @@ export function ContactManagementPage() {
 
                     {/* Gauge Meter */}
                     <div className="relative flex flex-col items-center justify-center pt-1 pb-1">
-                      <div className="w-36 h-36 rounded-full border-8 border-slate-100 border-t-amber-500 border-r-emerald-500 border-b-emerald-500 flex flex-col items-center justify-center shadow-inner">
-                        <span className="text-3xl font-extrabold text-slate-900">{formState.engagementScore}</span>
-                        <span className="text-xs font-semibold text-slate-400">/ 100</span>
+                      <div className="relative inline-flex items-center justify-center">
+                        <svg width="128" height="128" className="transform -rotate-90">
+                          <circle cx="64" cy="64" r="50" stroke="currentColor" strokeWidth="8" className="text-slate-100" fill="transparent" />
+                          <circle
+                            cx="64"
+                            cy="64"
+                            r="50"
+                            stroke="#10b981"
+                            strokeWidth="8"
+                            strokeDasharray={2 * Math.PI * 50}
+                            strokeDashoffset={2 * Math.PI * 50 * (1 - formState.engagementScore / 100)}
+                            strokeLinecap="round"
+                            fill="transparent"
+                          />
+                        </svg>
+                        <div className="absolute flex flex-col items-center justify-center">
+                          <span className="text-2xl font-extrabold text-slate-900 font-mono">{formState.engagementScore}</span>
+                          <span className="text-[10px] font-semibold text-slate-400">/ 100</span>
+                        </div>
                       </div>
                       <span className="mt-2 px-3 py-0.5 bg-emerald-50 text-emerald-700 font-bold text-xs rounded-full border border-emerald-200">
-                        High Engagement
+                        {formState.engagementScore >= 75 ? "High Engagement" : "Moderate Engagement"}
                       </span>
                     </div>
 
@@ -1341,14 +1296,14 @@ export function ContactManagementPage() {
                         <span>Add Activity</span>
                       </button>
                       <button
-                        onClick={() => alert("Opening Email Composer...")}
+                        onClick={() => showNotification("Opening Email Composer...")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Mail className="h-4 w-4 text-emerald-600" />
                         <span>Send Email</span>
                       </button>
                       <button
-                        onClick={() => alert("Opening Meeting Scheduler...")}
+                        onClick={() => showNotification("Opening Meeting Scheduler...")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Calendar className="h-4 w-4 text-purple-600" />
@@ -1366,9 +1321,6 @@ export function ContactManagementPage() {
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
 
         {/* MODAL 1: NEW CONTACT */}
         {isNewContactOpen && (
@@ -1464,7 +1416,7 @@ export function ContactManagementPage() {
                 <button
                   onClick={() => {
                     setIsActivityModalOpen(false);
-                    alert("Contact Activity logged!");
+                    showNotification("Contact Activity logged!");
                   }}
                   className="px-4 py-1.5 text-xs bg-primary text-white font-bold rounded shadow-xs"
                 >
@@ -1476,14 +1428,5 @@ export function ContactManagementPage() {
         )}
       </div>
     </AppShell>
-  );
-}
-
-function CameraIcon(props: any) {
-  return (
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
   );
 }

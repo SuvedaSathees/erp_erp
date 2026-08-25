@@ -5,6 +5,9 @@ import { FINANCE_KPI_WIDGETS } from "./content/finance/kpis";
 import { RI_KPI_WIDGETS } from "./content/ri/kpis";
 import { pdWidgets } from "./content/pd/pdWidgets";
 import { mdWidgets } from "./content/md/mdWidgets";
+import { CRM_WIDGETS } from "./content/crm";
+import { HRM_WIDGETS } from "./content/hrm";
+import { ADMIN_WIDGETS } from "./content/admin";
 
 /* ===========================================================================
    Widget registry
@@ -23,6 +26,9 @@ const ALL_DEFINITIONS: WidgetDefinition[] = [
   ...RI_KPI_WIDGETS,
   ...pdWidgets,
   ...mdWidgets,
+  ...CRM_WIDGETS,
+  ...HRM_WIDGETS,
+  ...ADMIN_WIDGETS,
   // Future modules append here: ...INVENTORY_WIDGETS, ...FLEET_WIDGETS, ...
 ];
 

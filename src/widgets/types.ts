@@ -37,7 +37,12 @@ export type WidgetCategory =
   | "payables"
   | "ledger"
   | "assets"
-  | "innovation";
+  | "innovation"
+  | "crm"
+  | "hrm"
+  | "admin"
+  | "pd"
+  | "md";
 
 /**
  * Simulated roles for access control. There is no auth system yet — identity is
@@ -81,7 +86,12 @@ export type WidgetPageId =
   | "ri-patents"
   // Product Development & Manufacturing Development Overviews
   | "pd-overview"
-  | "md-overview";
+  | "md-overview"
+  // CRM Management Overview
+  | "crm-overview"
+  // HRM & Administration Management Overviews
+  | "hrm-overview"
+  | "admin-overview";
 
 /** Grid spans per breakpoint tier, expressed in that tier's column count. */
 export type WidgetSpan = {

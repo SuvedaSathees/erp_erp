@@ -13,6 +13,7 @@ import {
   Clock,
   DollarSign,
   Plus,
+  Printer,
   Save,
   Send,
   Download,
@@ -432,7 +433,7 @@ const RECENT_ACTIVITIES = [
 export function LeadManagementPage() {
   const [leads, setLeads] = useState<LeadRecord[]>(INITIAL_LEADS);
   const [selectedLeadId, setSelectedLeadId] = useState<string>("LEAD-0000578");
-  const [activeTab, setActiveTab] = useState<string>("overview");
+  const [activeTab, setActiveTab] = useState<string>("contact");
 
   // Dialog States
   const [isNewLeadOpen, setIsNewLeadOpen] = useState(false);
@@ -447,6 +448,12 @@ export function LeadManagementPage() {
 
   // Form State initialized from current Lead
   const [formState, setFormState] = useState<LeadRecord>(currentLead);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   // Update formState when selected lead changes
   const handleSelectLead = (id: string) => {
@@ -487,7 +494,7 @@ export function LeadManagementPage() {
 
   const handleSaveLead = () => {
     setLeads((prev) => prev.map((l) => (l.id === formState.id ? formState : l)));
-    alert(`Lead ${formState.leadNumber} updated successfully!`);
+    showNotification(`Lead ${formState.leadNumber} updated successfully!`);
   };
 
   // KPI Analytics Computations
@@ -520,19 +527,26 @@ export function LeadManagementPage() {
       description="The Lead Management Form is the central CRM record for capturing, qualifying, nurturing, assigning, converting, and tracking prospective customers from lead creation through conversion or closure."
       tabs={<CrmManagementTabBar />}
     >
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <div className="flex flex-col min-h-screen text-slate-800 space-y-6">
         {/* Lead Master Action Bar */}
-        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-2xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-2xs">
+          <div className="flex items-center justify-between gap-3 flex-nowrap overflow-x-auto scrollbar-none">
             {/* Lead Status & Number Badges */}
-            <div className="flex items-center gap-3">
-              <h2 className="text-base font-bold tracking-tight text-slate-900">Lead Master Form</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 whitespace-nowrap">Lead Master Form</h2>
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap font-mono">
                 {formState.leadNumber}
               </span>
               <span
                 className={cn(
-                  "px-2.5 py-0.5 rounded-full text-xs font-semibold border",
+                  "px-2 py-0.5 rounded-full text-xs font-semibold border whitespace-nowrap flex items-center gap-1",
                   formState.status === "Qualified"
                     ? "bg-emerald-50 text-emerald-700 border-emerald-300"
                     : formState.status === "Contacted"
@@ -540,19 +554,20 @@ export function LeadManagementPage() {
                     : "bg-amber-50 text-amber-700 border-amber-300"
                 )}
               >
-                {formState.status}
+                <span className="h-1.5 w-1.5 rounded-full bg-current inline-block" />
+                <span>{formState.status}</span>
               </span>
             </div>
 
             {/* Quick Actions Header Buttons & Lead Selector */}
-            <div className="flex items-center flex-wrap gap-2">
+            <div className="flex items-center gap-2.5 shrink-0 flex-nowrap">
               {/* Select Existing Lead */}
-              <div className="flex items-center gap-2 mr-2">
-                <label className="text-xs font-semibold text-slate-600">Select Lead:</label>
+              <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+                <label className="text-xs font-semibold text-slate-600 whitespace-nowrap">Select Lead:</label>
                 <select
                   value={selectedLeadId}
                   onChange={(e) => handleSelectLead(e.target.value)}
-                  className="h-8 text-xs bg-slate-50 border border-slate-300 rounded-md px-2 font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+                  className="h-8 max-w-[210px] text-xs bg-slate-50 border border-slate-300 rounded-md px-2 font-medium focus:ring-2 focus:ring-primary focus:outline-none truncate"
                 >
                   {leads.map((l) => (
                     <option key={l.id} value={l.id}>
@@ -564,41 +579,26 @@ export function LeadManagementPage() {
 
               <button
                 onClick={() => setIsNewLeadOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-md border border-primary/30 flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Plus className="h-3.5 w-3.5" />
                 <span>New Lead</span>
               </button>
 
               <button
-                onClick={() => setIsConvertModalOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md border border-emerald-300 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                <span>Convert Lead</span>
-              </button>
-
-              <button
                 onClick={handleSaveLead}
-                className="h-8 px-4 text-xs font-medium text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save</span>
               </button>
 
-              <button
-                onClick={() => alert("Saved as new revision!")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md border border-slate-300 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <span>Save & New</span>
-              </button>
-
               {/* User Avatar Info */}
-              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs">
+              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1 shrink-0 whitespace-nowrap">
+                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs shrink-0">
                   RS
                 </div>
-                <div className="text-left hidden sm:block">
+                <div className="text-left hidden sm:block whitespace-nowrap">
                   <div className="text-xs font-semibold text-slate-800 leading-none">Rahul Sharma</div>
                   <div className="text-[10px] text-slate-500">Sales Manager</div>
                 </div>
@@ -784,15 +784,9 @@ export function LeadManagementPage() {
           <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
             <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-1.5 overflow-x-auto scrollbar-none">
               {[
-                { id: "overview", label: "Overview", icon: Layers },
                 { id: "contact", label: "Contact & Company", icon: Building2 },
-                { id: "requirement", label: "Requirement", icon: Target },
-                { id: "qualification", label: "Qualification", icon: Award },
-                { id: "activities", label: "Activities", icon: Activity },
-                { id: "communication", label: "Communication", icon: Mail },
-                { id: "documents", label: "Documents", icon: Paperclip },
-                { id: "notes", label: "Notes & Follow-up", icon: CheckSquare },
-                { id: "audit", label: "Audit Trail", icon: ShieldCheck },
+                { id: "requirement", label: "Requirements & Scope", icon: Target },
+                { id: "qualification", label: "Qualification & Scoring", icon: Award },
                 { id: "analytics", label: "Analytics Dashboard", icon: BarChart3 },
               ].map((tab) => {
                 const Icon = tab.icon;
@@ -817,582 +811,7 @@ export function LeadManagementPage() {
 
             {/* TAB CONTENT AREA */}
             <div className="p-5">
-              {/* TAB 1: OVERVIEW (MATCHES UI MOCKUP SCREENSHOT) */}
-              {activeTab === "overview" && (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* Left & Middle Column: Grid of Lead Cards */}
-                  <div className="lg:col-span-2 space-y-6">
-                    {/* Grid Row 1: Lead Source & Contact Details */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Card 2: Lead Source */}
-                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                            2. Lead Source
-                          </h3>
-                          <span className="text-[10px] text-slate-400 font-mono">{formState.sourceId}</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 text-xs">
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Lead Source *</label>
-                            <select
-                              value={formState.leadSource}
-                              onChange={(e) => handleInputChange("leadSource", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            >
-                              <option value="Website">Website</option>
-                              <option value="Referral">Referral</option>
-                              <option value="Social Media">Social Media</option>
-                              <option value="Exhibition">Exhibition</option>
-                              <option value="Trade Show">Trade Show</option>
-                              <option value="Email Campaign">Email Campaign</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Source Channel</label>
-                            <input
-                              type="text"
-                              value={formState.sourceChannel}
-                              onChange={(e) => handleInputChange("sourceChannel", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Source Medium</label>
-                            <input
-                              type="text"
-                              value={formState.sourceMedium}
-                              onChange={(e) => handleInputChange("sourceMedium", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Source Campaign</label>
-                            <input
-                              type="text"
-                              value={formState.sourceCampaign}
-                              onChange={(e) => handleInputChange("sourceCampaign", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Landing Page</label>
-                            <input
-                              type="text"
-                              value={formState.landingPage}
-                              onChange={(e) => handleInputChange("landingPage", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Referral Partner</label>
-                            <input
-                              type="text"
-                              value={formState.referralPartner}
-                              onChange={(e) => handleInputChange("referralPartner", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Card 3: Lead Contact Details */}
-                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                            3. Lead Contact Details
-                          </h3>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 text-xs">
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Contact Person *</label>
-                            <input
-                              type="text"
-                              value={formState.contactPerson}
-                              onChange={(e) => handleInputChange("contactPerson", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2 font-medium"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Designation</label>
-                            <input
-                              type="text"
-                              value={formState.designation}
-                              onChange={(e) => handleInputChange("designation", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Email *</label>
-                            <input
-                              type="email"
-                              value={formState.email}
-                              onChange={(e) => handleInputChange("email", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2 text-primary font-medium"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Mobile *</label>
-                            <input
-                              type="text"
-                              value={formState.mobile}
-                              onChange={(e) => handleInputChange("mobile", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2 font-medium"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Preferred Contact Method</label>
-                            <select
-                              value={formState.preferredContactMethod}
-                              onChange={(e) => handleInputChange("preferredContactMethod", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            >
-                              <option value="Email">Email</option>
-                              <option value="Phone">Phone</option>
-                              <option value="WhatsApp">WhatsApp</option>
-                              <option value="Meeting">Meeting</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Best Contact Time</label>
-                            <input
-                              type="text"
-                              value={formState.bestContactTime}
-                              onChange={(e) => handleInputChange("bestContactTime", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Grid Row 2: Organization / Company Details & Lead Requirement */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Card 4: Organization / Company Details */}
-                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                            4. Organization / Company Details
-                          </h3>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 text-xs">
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Organization Name *</label>
-                            <input
-                              type="text"
-                              value={formState.orgName}
-                              onChange={(e) => handleInputChange("orgName", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2 font-medium"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Industry *</label>
-                            <input
-                              type="text"
-                              value={formState.industry}
-                              onChange={(e) => handleInputChange("industry", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Company Size</label>
-                            <input
-                              type="text"
-                              value={formState.companySize}
-                              onChange={(e) => handleInputChange("companySize", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Annual Revenue Range</label>
-                            <input
-                              type="text"
-                              value={formState.annualRevenue}
-                              onChange={(e) => handleInputChange("annualRevenue", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">GSTIN</label>
-                            <input
-                              type="text"
-                              value={formState.gstin}
-                              onChange={(e) => handleInputChange("gstin", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2 font-mono"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">PAN</label>
-                            <input
-                              type="text"
-                              value={formState.pan}
-                              onChange={(e) => handleInputChange("pan", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2 font-mono"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Card 5: Lead Requirement */}
-                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                            5. Lead Requirement
-                          </h3>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 text-xs">
-                          <div className="col-span-2">
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Product / Service *</label>
-                            <input
-                              type="text"
-                              value={formState.productService}
-                              onChange={(e) => handleInputChange("productService", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2 font-semibold text-primary"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Quantity</label>
-                            <input
-                              type="text"
-                              value={formState.quantity}
-                              onChange={(e) => handleInputChange("quantity", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Budget</label>
-                            <input
-                              type="text"
-                              value={formState.budget}
-                              onChange={(e) => handleInputChange("budget", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2 font-semibold text-emerald-700"
-                            />
-                          </div>
-                          <div className="col-span-2">
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Application</label>
-                            <input
-                              type="text"
-                              value={formState.application}
-                              onChange={(e) => handleInputChange("application", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Grid Row 3: BANT Qualification & Next Steps */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Card 6: Qualification Summary (BANT / FAINT) */}
-                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                            6. Qualification Summary (BANT)
-                          </h3>
-                          <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            Score: {formState.qualificationScore}/100
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
-                          <div className="flex items-center justify-between">
-                            <span className="text-slate-600 font-medium">Need</span>
-                            <div className="flex items-center gap-1 text-amber-500">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                  key={star}
-                                  className={cn("h-3 w-3 cursor-pointer", star <= formState.needRating ? "fill-amber-400 text-amber-400" : "text-slate-300")}
-                                  onClick={() => handleInputChange("needRating", star)}
-                                />
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <span className="text-slate-600 font-medium">Authority</span>
-                            <div className="flex items-center gap-1 text-amber-500">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                  key={star}
-                                  className={cn("h-3 w-3 cursor-pointer", star <= formState.authorityRating ? "fill-amber-400 text-amber-400" : "text-slate-300")}
-                                  onClick={() => handleInputChange("authorityRating", star)}
-                                />
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <span className="text-slate-600 font-medium">Budget</span>
-                            <div className="flex items-center gap-1 text-amber-500">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                  key={star}
-                                  className={cn("h-3 w-3 cursor-pointer", star <= formState.budgetRating ? "fill-amber-400 text-amber-400" : "text-slate-300")}
-                                  onClick={() => handleInputChange("budgetRating", star)}
-                                />
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <span className="text-slate-600 font-medium">Timeline</span>
-                            <div className="flex items-center gap-1 text-amber-500">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                  key={star}
-                                  className={cn("h-3 w-3 cursor-pointer", star <= formState.timelineRating ? "fill-amber-400 text-amber-400" : "text-slate-300")}
-                                  onClick={() => handleInputChange("timelineRating", star)}
-                                />
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <span className="text-slate-600 font-medium">Business Fit</span>
-                            <div className="flex items-center gap-1 text-amber-500">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                  key={star}
-                                  className={cn("h-3 w-3 cursor-pointer", star <= formState.fitRating ? "fill-amber-400 text-amber-400" : "text-slate-300")}
-                                  onClick={() => handleInputChange("fitRating", star)}
-                                />
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <span className="text-slate-600 font-medium">Purchase Intent</span>
-                            <div className="flex items-center gap-1 text-amber-500">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                  key={star}
-                                  className={cn("h-3 w-3 cursor-pointer", star <= formState.intentRating ? "fill-amber-400 text-amber-400" : "text-slate-300")}
-                                  onClick={() => handleInputChange("intentRating", star)}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Card 7: Next Steps */}
-                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                            7. Next Steps
-                          </h3>
-                        </div>
-                        <div className="space-y-2 text-xs">
-                          <div>
-                            <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Next Action</label>
-                            <input
-                              type="text"
-                              value={formState.nextAction}
-                              onChange={(e) => handleInputChange("nextAction", e.target.value)}
-                              className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2 font-medium"
-                            />
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Next Action Date</label>
-                              <input
-                                type="text"
-                                value={formState.nextActionDate}
-                                onChange={(e) => handleInputChange("nextActionDate", e.target.value)}
-                                className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-slate-500 font-semibold text-[11px] mb-0.5">Assigned To</label>
-                              <input
-                                type="text"
-                                value={formState.nextActionAssignedTo}
-                                onChange={(e) => handleInputChange("nextActionAssignedTo", e.target.value)}
-                                className="w-full h-7 text-xs bg-white border border-slate-300 rounded px-2"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card 8: Recent Activities Table */}
-                    <div className="bg-white rounded-lg border border-slate-200 p-4 space-y-3 shadow-2xs">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          8. Recent Activities
-                        </h3>
-                        <button
-                          onClick={() => setIsActivityModalOpen(true)}
-                          className="text-xs text-primary font-semibold hover:underline flex items-center gap-1 cursor-pointer"
-                        >
-                          <Plus className="h-3 w-3" /> Log Activity
-                        </button>
-                      </div>
-
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs border-collapse">
-                          <thead>
-                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                              <th className="py-2 px-3">Date & Time</th>
-                              <th className="py-2 px-3">Activity Type</th>
-                              <th className="py-2 px-3">Subject</th>
-                              <th className="py-2 px-3">Outcome</th>
-                              <th className="py-2 px-3">Next Action</th>
-                              <th className="py-2 px-3">Assigned To</th>
-                              <th className="py-2 px-3">Status</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {RECENT_ACTIVITIES.map((act) => (
-                              <tr key={act.id} className="hover:bg-slate-50/80 transition-colors">
-                                <td className="py-2 px-3 text-slate-600 whitespace-nowrap">{act.time}</td>
-                                <td className="py-2 px-3 font-semibold text-slate-800">{act.type}</td>
-                                <td className="py-2 px-3 text-slate-700">{act.subject}</td>
-                                <td className="py-2 px-3">
-                                  <span className={cn("px-2 py-0.5 text-[11px] font-semibold rounded border", act.outcomeColor)}>
-                                    {act.outcome}
-                                  </span>
-                                </td>
-                                <td className="py-2 px-3 text-slate-700">{act.nextAction}</td>
-                                <td className="py-2 px-3 text-slate-600">{act.assignedTo}</td>
-                                <td className="py-2 px-3">
-                                  <span className="px-2 py-0.5 text-[11px] font-semibold bg-emerald-50 text-emerald-700 rounded border border-emerald-200">
-                                    {act.status}
-                                  </span>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Column: Sidebar Widgets (Matching Screenshot) */}
-                  <div className="space-y-6">
-                    {/* Lead Score & Qualification Gauge Widget */}
-                    <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-4">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider text-center">
-                        Lead Score & Qualification
-                      </h3>
-
-                      {/* Semi-circular Meter */}
-                      <div className="relative flex flex-col items-center justify-center pt-2 pb-1">
-                        <div className="w-36 h-36 rounded-full border-8 border-slate-100 border-t-amber-500 border-r-emerald-500 border-b-emerald-500 flex flex-col items-center justify-center shadow-inner">
-                          <span className="text-3xl font-extrabold text-slate-900">{formState.qualificationScore}</span>
-                          <span className="text-xs font-semibold text-slate-400">/ 100</span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2 text-xs border-t border-slate-100 pt-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500">Score Grade</span>
-                          <span className="px-2 py-0.5 text-xs font-bold bg-emerald-100 text-emerald-800 rounded">
-                            {formState.scoreGrade}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500">Qualification Status</span>
-                          <span className="px-2 py-0.5 text-xs font-bold bg-emerald-50 text-emerald-700 rounded border border-emerald-200">
-                            {formState.status === "Qualified" ? "Qualified" : formState.status}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500">Qualification Date</span>
-                          <span className="font-semibold text-slate-700">{formState.qualificationDate}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500">Qualified By</span>
-                          <span className="font-semibold text-slate-700">{formState.qualifiedBy}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Lead Lifecycle Stepper Timeline */}
-                    <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-4">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2">
-                        Lead Lifecycle Stage
-                      </h3>
-
-                      <div className="space-y-3 relative pl-4 border-l-2 border-slate-200">
-                        {[
-                          { stage: "Lead Created", time: "15 Apr 2024 09:35 AM", done: true },
-                          { stage: "Assigned", time: "15 Apr 2024 09:40 AM", done: true },
-                          { stage: "Contacted", time: "16 Apr 2024 11:15 AM", done: true },
-                          { stage: "Qualified", time: "18 Apr 2024 04:30 PM", done: formState.status === "Qualified" },
-                          { stage: "Nurturing", time: "-", done: false },
-                          { stage: "Converted", time: "-", done: false },
-                        ].map((step, idx) => (
-                          <div key={idx} className="relative flex items-center justify-between text-xs">
-                            <div
-                              className={cn(
-                                "absolute -left-[21px] h-3.5 w-3.5 rounded-full border-2 bg-white flex items-center justify-center",
-                                step.done ? "border-emerald-500 bg-emerald-500" : "border-slate-300"
-                              )}
-                            >
-                              {step.done && <CheckCircle2 className="h-3 w-3 text-white" />}
-                            </div>
-                            <span className={cn("font-semibold", step.done ? "text-slate-900" : "text-slate-400")}>
-                              {step.stage}
-                            </span>
-                            <span className="text-[10px] text-slate-400 font-mono">{step.time}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Quick Actions Panel */}
-                    <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-3">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2">
-                        Quick Actions
-                      </h3>
-
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          onClick={() => setIsActivityModalOpen(true)}
-                          className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-xs font-medium text-slate-700 transition-all cursor-pointer"
-                        >
-                          <Phone className="h-4 w-4 text-primary" />
-                          <span>Add Activity</span>
-                        </button>
-                        <button
-                          onClick={() => alert("Opening Email Composer...")}
-                          className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-xs font-medium text-slate-700 transition-all cursor-pointer"
-                        >
-                          <Mail className="h-4 w-4 text-emerald-600" />
-                          <span>Send Email</span>
-                        </button>
-                        <button
-                          onClick={() => alert("Opening Note Editor...")}
-                          className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-xs font-medium text-slate-700 transition-all cursor-pointer"
-                        >
-                          <FileText className="h-4 w-4 text-amber-600" />
-                          <span>Add Note</span>
-                        </button>
-                        <button
-                          onClick={() => alert("Opening Call Scheduler...")}
-                          className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-xs font-medium text-slate-700 transition-all cursor-pointer"
-                        >
-                          <Calendar className="h-4 w-4 text-purple-600" />
-                          <span>Schedule Call</span>
-                        </button>
-                      </div>
-
-                      <button
-                        onClick={() => setIsConvertModalOpen(true)}
-                        className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <RefreshCw className="h-4 w-4" />
-                        <span>Convert to Opportunity</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 2: CONTACT & COMPANY */}
+              {/* TAB 1: CONTACT & COMPANY */}
               {activeTab === "contact" && (
                 <div className="space-y-6 text-xs">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1571,13 +990,13 @@ export function LeadManagementPage() {
                       <div className="text-2xl font-bold text-emerald-600 mt-1">{qualifiedCount}</div>
                     </div>
                     <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-                      <span className="text-xs font-semibold text-slate-500">Hot Leads 🔥</span>
+                      <span className="text-xs font-semibold text-slate-500">Hot Leads</span>
                       <div className="text-2xl font-bold text-rose-600 mt-1">{hotLeadsCount}</div>
                     </div>
                     <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
                       <span className="text-xs font-semibold text-slate-500">Qualification Rate</span>
-                      <div className="text-2xl font-bold text-primary mt-1">
-                        {Math.round((qualifiedCount / totalLeadsCount) * 100)}%
+                      <div className="text-2xl font-bold text-primary mt-1 font-mono">
+                        {totalLeadsCount > 0 ? ((qualifiedCount / totalLeadsCount) * 100).toFixed(1) : "0.0"}%
                       </div>
                     </div>
                   </div>
@@ -1710,7 +1129,7 @@ export function LeadManagementPage() {
                   onClick={() => {
                     handleInputChange("status", "Converted");
                     setIsConvertModalOpen(false);
-                    alert(`Lead ${formState.leadNumber} successfully converted to Opportunity!`);
+                    showNotification(`Lead ${formState.leadNumber} successfully converted to Opportunity!`);
                   }}
                   className="px-4 py-1.5 text-xs bg-emerald-600 text-white font-bold rounded shadow-xs"
                 >
@@ -1754,7 +1173,7 @@ export function LeadManagementPage() {
                 <button
                   onClick={() => {
                     setIsActivityModalOpen(false);
-                    alert("Activity logged successfully!");
+                    showNotification("Activity logged successfully!");
                   }}
                   className="px-4 py-1.5 text-xs bg-primary text-white font-bold rounded shadow-xs"
                 >

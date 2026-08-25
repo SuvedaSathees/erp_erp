@@ -7,44 +7,12 @@ import {
   Activity,
   ShieldCheck,
   CheckCircle2,
-  XCircle,
-  Eye,
   Save,
-  Send,
-  Plus,
-  Sliders,
   Clock,
-  UserCheck,
   Layers,
-  ArrowRight,
-  TrendingUp,
-  AlertTriangle,
-  FileCheck,
-  Upload,
   Download,
-  Share2,
-  Lock,
-  Archive,
-  Edit,
-  Building,
-  Briefcase,
-  FolderTree,
-  User,
-  Shield,
-  History,
-  File,
-  Check,
-  ChevronRight,
-  Users,
   Printer,
-  FileSpreadsheet,
-  ExternalLink,
-  Search,
-  MessageSquare,
-  ChevronLeft,
-  Key,
-  Globe,
-  Monitor,
+  History,
   FileText,
   RefreshCw,
 } from "lucide-react";
@@ -78,20 +46,7 @@ const AUDIT_TIMELINE_DATA = [
 ];
 
 export function AuditManagementPage() {
-  const [activeTab, setActiveTab] = useState<
-    | "overview"
-    | "changes"
-    | "user"
-    | "action-details"
-    | "record-context"
-    | "system-context"
-    | "security"
-    | "evidence"
-    | "workflow"
-    | "approvals"
-    | "review"
-    | "timeline"
-  >("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "changes" | "security" | "timeline">("overview");
 
   // Master Form State
   const [auditMaster, setAuditMaster] = useState({
@@ -116,6 +71,10 @@ export function AuditManagementPage() {
     sessionId: "SID-7D9E1C2A3B4F",
     correlationId: "CORR-93A1B2C3D4E5",
   });
+
+  const [filterModule, setFilterModule] = useState("ALL");
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [timelineLogs] = useState(AUDIT_TIMELINE_DATA);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -161,7 +120,7 @@ export function AuditManagementPage() {
 
           <div className="flex flex-wrap items-center gap-2">
             <button
-              onClick={() => showNotification("Audit log export started (CSV / PDF format).")}
+              onClick={() => setShowExportModal(true)}
               className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer"
             >
               <Download className="h-3.5 w-3.5 text-primary" />
@@ -186,7 +145,7 @@ export function AuditManagementPage() {
           </div>
         </div>
 
-        {/* 1. Audit Master Form & Snapshot Side Card (Matching Attached Reference Screenshot) */}
+        {/* 1. Audit Master Form & Snapshot Side Card */}
         <div className="grid gap-4 lg:grid-cols-12">
           {/* Left 9 columns: Audit Master Fields */}
           <div className="lg:col-span-9 rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
@@ -194,13 +153,6 @@ export function AuditManagementPage() {
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <span className="text-primary">1.</span> Audit Trail Master
               </h3>
-              <span className="text-[11px] text-muted-foreground font-medium">
-                MAICW Fields: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
-                <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
-                <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-                <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
-                <span className="text-rose-500 font-bold">W</span> (Workflow)
-              </span>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -539,29 +491,35 @@ export function AuditManagementPage() {
                 <span className="text-xs font-medium text-muted-foreground block">Risk Score</span>
                 <span className="text-[10px] text-emerald-600 font-semibold">Low Risk</span>
               </div>
-              <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-emerald-500 text-xs font-bold font-mono text-emerald-600">
-                35%
+              <div className="relative inline-flex items-center justify-center">
+                <svg width="48" height="48" className="transform -rotate-90">
+                  <circle cx="24" cy="24" r="19" stroke="currentColor" strokeWidth="3.5" className="text-muted/30" fill="transparent" />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="19"
+                    stroke="#10b981"
+                    strokeWidth="3.5"
+                    strokeDasharray={2 * Math.PI * 19}
+                    strokeDashoffset={2 * Math.PI * 19 * (1 - 0.35)}
+                    strokeLinecap="round"
+                    fill="transparent"
+                  />
+                </svg>
+                <span className="absolute text-[11px] font-bold font-mono text-emerald-600">35%</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 2. Workspace Navigation Tabs */}
+        {/* 2. Workspace Navigation Tabs (Centered & Streamlined) */}
         <div className="space-y-4">
-          <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
+          <div className="flex items-center justify-center gap-2 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
             {[
-              { key: "overview", label: "Overview", icon: Layers },
-              { key: "changes", label: "Changes (2)", icon: RefreshCw },
-              { key: "user", label: "User & Actor", icon: User },
-              { key: "action-details", label: "Action Details", icon: FileText },
-              { key: "record-context", label: "Record Context", icon: FolderTree },
-              { key: "system-context", label: "System Context", icon: Monitor },
-              { key: "security", label: "Security", icon: ShieldCheck },
-              { key: "evidence", label: "Evidence", icon: FileCheck },
-              { key: "workflow", label: "Workflow", icon: ArrowRight },
-              { key: "approvals", label: "Approvals", icon: CheckCircle2 },
-              { key: "review", label: "Review & Findings", icon: Eye },
-              { key: "timeline", label: "Timeline", icon: History },
+              { key: "overview", label: "Audit Log & Event Overview", icon: Layers },
+              { key: "changes", label: "Field Diffs & Data Mutations", icon: RefreshCw },
+              { key: "security", label: "Security Context & Forensic Signatures", icon: ShieldCheck },
+              { key: "timeline", label: "Immutable Timeline & Audit Trail", icon: History },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
@@ -570,7 +528,7 @@ export function AuditManagementPage() {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key as typeof activeTab)}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
+                    "flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
                     isActive
                       ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -583,480 +541,63 @@ export function AuditManagementPage() {
             })}
           </div>
 
-          {/* OVERVIEW TAB CONTENT (Matching attached screenshot layout) */}
+          {/* OVERVIEW TAB CONTENT */}
           {activeTab === "overview" && (
             <div className="space-y-6">
-              {/* Row 1: 2. Action Summary | 3. Change Details | 4. Record Context */}
-              <div className="grid gap-4 lg:grid-cols-3">
+              {/* Row 1: Action Summary & Scope | Record Context & Attribution */}
+              <div className="grid gap-4 lg:grid-cols-2">
                 {/* 2. Action Summary */}
                 <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                   <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    2. Action Summary
+                    2. Event Summary & Execution Metadata
                   </h4>
 
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Action</span>
-                      <span className="font-bold text-foreground">Update</span>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Action Performed:</span>
+                      <span className="font-bold text-foreground">{auditMaster.action} ({auditMaster.eventType})</span>
                     </div>
-
-                    <div>
-                      <span className="text-muted-foreground block text-[10px]">Action Description</span>
-                      <p className="text-[11px] font-semibold text-foreground mt-0.5">Supplier Invoice amount updated</p>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Action Result</span>
-                      <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                        Success
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Execution Outcome:</span>
+                      <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold">
+                        {auditMaster.status}
                       </span>
                     </div>
-
-                    <div>
-                      <span className="text-muted-foreground block text-[10px]">Reason</span>
-                      <p className="text-[11px] text-muted-foreground mt-0.5 bg-muted/20 p-1.5 rounded border border-border/50">
-                        Amount corrected as per supplier credit note
-                      </p>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Source Module:</span>
+                      <span className="font-semibold text-foreground">{auditMaster.module} &gt; {auditMaster.submodule}</span>
                     </div>
-
-                    <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                      <span className="text-muted-foreground">Related Document</span>
-                      <span className="font-mono text-primary font-bold">CN-000125</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Workflow Reference</span>
-                      <span className="font-mono text-muted-foreground text-[10px]">WF-INV-APPR-2024-0152</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Approval Reference</span>
-                      <span className="font-mono text-muted-foreground text-[10px]">APR-2024-000256</span>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-1">
-                      <span className="text-muted-foreground">Performed By</span>
-                      <div className="flex items-center gap-1">
-                        <div className="h-5 w-5 rounded-full bg-primary/10 text-primary font-bold text-[9px] flex items-center justify-center font-mono">
-                          AV
-                        </div>
-                        <span className="font-bold text-foreground text-[11px]">Amit Verma</span>
-                      </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Target Record:</span>
+                      <span className="font-mono font-bold text-primary">{auditMaster.recordType} ({auditMaster.recordId})</span>
                     </div>
                   </div>
                 </div>
 
-                {/* 3. Change Details */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      3. Change Details
-                    </h4>
-
-                    <div className="overflow-x-auto mt-1">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                            <th className="py-1 px-1">#</th>
-                            <th className="py-1 px-1">Field Name</th>
-                            <th className="py-1 px-1">Previous Value</th>
-                            <th className="py-1 px-1">New Value</th>
-                            <th className="py-1 px-1">Change Type</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 text-[10px]">
-                          {CHANGE_DETAILS_DATA.map((c) => (
-                            <tr key={c.id} className="hover:bg-muted/30 transition-colors">
-                              <td className="py-1 px-1 font-mono text-muted-foreground">{c.id.replace("CHG-", "")}</td>
-                              <td className="py-1 px-1 font-bold text-foreground">{c.field}</td>
-                              <td className="py-1 px-1 font-mono text-rose-600 line-through">{c.prev}</td>
-                              <td className="py-1 px-1 font-mono font-bold text-emerald-600">{c.next}</td>
-                              <td className="py-1 px-1">
-                                <span className="rounded bg-blue-500/10 px-1 py-0.2 text-[9px] font-bold text-blue-600">
-                                  {c.changeType}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Full change diff viewer loaded.")}
-                    className="text-[11px] font-bold text-primary hover:underline cursor-pointer pt-1"
-                  >
-                    View All Changes
-                  </button>
-                </div>
-
-                {/* 4. Record Context */}
+                {/* 3. Record Context & Origin */}
                 <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                   <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    4. Record Context
+                    3. Network Origin & System Session
                   </h4>
 
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Entity Type</span>
-                      <span className="font-semibold text-foreground">Supplier Invoice</span>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Origin IP Address:</span>
+                      <span className="font-mono text-foreground font-semibold">{auditMaster.ipAddress}</span>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Entity Name</span>
-                      <span className="font-semibold text-foreground">Supplier Invoice</span>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Request Correlation ID:</span>
+                      <span className="font-mono text-primary text-[11px] font-bold">{auditMaster.correlationId}</span>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Record ID</span>
-                      <span className="font-mono font-bold text-primary">INV-000458</span>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Audit Timestamp:</span>
+                      <span className="font-mono text-muted-foreground">{auditMaster.timestamp}</span>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Record Number</span>
-                      <span className="font-mono text-foreground">INV-000458</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Parent Record</span>
-                      <span className="font-mono text-muted-foreground">PO-000789</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Related Record</span>
-                      <span className="font-mono text-muted-foreground">SPL-000125</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Module</span>
-                      <span className="font-semibold text-foreground">Finance</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Submodule</span>
-                      <span className="font-medium text-foreground">Accounts Payable</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Business Process</span>
-                      <span className="font-medium text-foreground">Procure to Pay</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Business Function</span>
-                      <span className="font-medium text-foreground">Finance Operations</span>
-                    </div>
-
-                    <div className="pt-1 border-t border-border/50">
-                      <button
-                        onClick={() => showNotification("Navigating to Supplier Invoice INV-000458...")}
-                        className="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline cursor-pointer"
-                      >
-                        <ExternalLink className="h-3 w-3" />
-                        View Record
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Row 2: 5. System & Technical Context | 6. Authentication Summary | 7. Security Summary */}
-              <div className="grid gap-4 lg:grid-cols-3">
-                {/* 5. System & Technical Context */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    5. System & Technical Context
-                  </h4>
-
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <span className="text-[10px] text-muted-foreground block">Source System</span>
-                      <span className="font-semibold text-foreground text-[11px]">ERP Application</span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] text-muted-foreground block">Operating System</span>
-                      <span className="font-mono text-foreground text-[11px]">Windows 11</span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] text-muted-foreground block">Application</span>
-                      <span className="font-semibold text-foreground text-[11px]">Magnertia ERP</span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] text-muted-foreground block">Device Type</span>
-                      <span className="font-medium text-foreground text-[11px]">Desktop</span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] text-muted-foreground block">IP Address</span>
-                      <span className="font-mono text-foreground text-[11px]">192.168.10.245</span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] text-muted-foreground block">Session ID</span>
-                      <span className="font-mono text-muted-foreground text-[10px] truncate block">SID-7D9E1C2A3B4F</span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] text-muted-foreground block">Device ID</span>
-                      <span className="font-mono text-muted-foreground text-[10px] truncate block">DEV-7F9A2C5D1E4B</span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] text-muted-foreground block">Request ID</span>
-                      <span className="font-mono text-muted-foreground text-[10px] truncate block">REQ-8F7A9D2C1B4E</span>
-                    </div>
-
-                    <div className="col-span-2 pt-1 border-t border-border/50">
-                      <span className="text-[10px] text-muted-foreground block">Browser</span>
-                      <span className="font-mono text-foreground text-[11px]">Chrome 123.0.6312.86</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 6. Authentication Summary */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      6. Authentication Summary
-                    </h4>
-
-                    <div className="space-y-2 pt-1 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Login Time</span>
-                        <span className="font-mono text-foreground text-[10px]">15 Apr 2024 08:55:12 AM</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Logout Time</span>
-                        <span className="font-mono text-muted-foreground">-</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Authentication Method</span>
-                        <span className="font-medium text-foreground">Password + MFA</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">MFA Status</span>
-                        <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                          Success
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Login Result</span>
-                        <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                          Successful
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                        <span className="text-muted-foreground">Location</span>
-                        <span className="font-medium text-foreground">Mumbai, India</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Authentication logs loaded.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View Authentication Audit
-                  </button>
-                </div>
-
-                {/* 7. Security Summary */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      7. Security Summary
-                    </h4>
-
-                    <div className="space-y-2 pt-1 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Security Event</span>
-                        <span className="font-bold text-foreground">Data Update</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Access Type</span>
-                        <span className="font-medium text-foreground">Update</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Access Result</span>
-                        <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                          Allowed
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Threat Level</span>
-                        <span className="font-medium text-blue-600">Informational</span>
-                      </div>
-
-                      <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                        <span className="text-muted-foreground">Security Rule</span>
-                        <span className="font-mono font-bold text-foreground">DATA-UPDATE-001</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Security event audit trail opened.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View Security Audit
-                  </button>
-                </div>
-              </div>
-
-              {/* Row 3: 8. Quick Actions | 9. Audit Timeline */}
-              <div className="grid gap-4 lg:grid-cols-12">
-                {/* 8. Quick Actions */}
-                <div className="lg:col-span-4 rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    8. Quick Actions
-                  </h4>
-
-                  <div className="grid grid-cols-3 gap-2 text-center text-[10px]">
-                    <button
-                      onClick={() => showNotification("Record preview opened.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <Eye className="h-4 w-4 text-primary" />
-                      <span>View Record</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Changes diff loaded.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <RefreshCw className="h-4 w-4 text-blue-600" />
-                      <span>View Changes</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Workflow diagram opened.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <ArrowRight className="h-4 w-4 text-purple-600" />
-                      <span>View Workflow</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Approval sign-off history loaded.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                      <span>View Approvals</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Audit evidence files retrieved.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <FileCheck className="h-4 w-4 text-amber-600" />
-                      <span>View Evidence</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Audit report exported.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <Download className="h-4 w-4 text-emerald-600" />
-                      <span>Export Audit</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Audit finding form opened.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer text-amber-600"
-                    >
-                      <AlertTriangle className="h-4 w-4" />
-                      <span>Create Finding</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Add comment modal opened.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <MessageSquare className="h-4 w-4 text-primary" />
-                      <span>Add Comment</span>
-                    </button>
-
-                    <button
-                      onClick={() => showNotification("Audit record link copied to clipboard.")}
-                      className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                    >
-                      <Share2 className="h-4 w-4 text-indigo-600" />
-                      <span>Share Audit</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* 9. Audit Timeline */}
-                <div className="lg:col-span-8 rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                    <h4 className="text-xs font-bold text-foreground">9. Audit Timeline</h4>
-                    <span className="text-[10px] text-muted-foreground">Record: INV-000458</span>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                          <th className="py-1.5 px-1">#</th>
-                          <th className="py-1.5 px-1">Timestamp</th>
-                          <th className="py-1.5 px-1">Event Type</th>
-                          <th className="py-1.5 px-1">Action</th>
-                          <th className="py-1.5 px-1">Performed By</th>
-                          <th className="py-1.5 px-1">Module</th>
-                          <th className="py-1.5 px-1">Record</th>
-                          <th className="py-1.5 px-1">Status</th>
-                          <th className="py-1.5 px-1">Description</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/50 text-[10px]">
-                        {AUDIT_TIMELINE_DATA.map((tl) => (
-                          <tr key={tl.id} className="hover:bg-muted/30 transition-colors">
-                            <td className="py-1.5 px-1 font-mono text-muted-foreground">{tl.id.replace("TL-", "")}</td>
-                            <td className="py-1.5 px-1 font-mono text-[9px] text-muted-foreground">{tl.time}</td>
-                            <td className="py-1.5 px-1 font-medium">{tl.type}</td>
-                            <td className="py-1.5 px-1 text-primary font-bold">{tl.action}</td>
-                            <td className="py-1.5 px-1 text-foreground font-medium">{tl.by}</td>
-                            <td className="py-1.5 px-1 text-muted-foreground">{tl.module}</td>
-                            <td className="py-1.5 px-1 font-mono">{tl.record}</td>
-                            <td className="py-1.5 px-1">
-                              <span className={cn("rounded px-1 py-0.2 text-[9px] font-bold border", tl.badge)}>
-                                {tl.status}
-                              </span>
-                            </td>
-                            <td className="py-1.5 px-1 text-muted-foreground truncate max-w-[120px]">{tl.desc}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-1 border-t border-border/50 text-xs">
-                    <button
-                      onClick={() => showNotification("Full timeline loaded.")}
-                      className="text-[11px] font-bold text-primary hover:underline cursor-pointer"
-                    >
-                      View Full Audit Trail
-                    </button>
-
-                    <div className="flex items-center gap-1 text-[11px] font-mono text-muted-foreground">
-                      <ChevronLeft className="h-3.5 w-3.5" />
-                      <span className="px-1 font-bold text-foreground">1</span>
-                      <span>2</span>
-                      <span>3</span>
-                      <span>... 20</span>
-                      <ChevronRight className="h-3.5 w-3.5" />
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Severity Rating:</span>
+                      <span className="rounded bg-blue-500/10 text-blue-600 px-2 py-0.5 text-[10px] font-bold">
+                        {auditMaster.severity} Severity Event
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1064,38 +605,223 @@ export function AuditManagementPage() {
             </div>
           )}
 
-          {/* OTHER TABS PLACEHOLDER */}
-          {activeTab !== "overview" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <h4 className="text-sm font-bold text-foreground capitalize">{activeTab} Workspace</h4>
-                <span className="text-xs text-muted-foreground">Audit ID: AUD-2024-000458</span>
+          {/* CHANGES WORKSPACE */}
+          {activeTab === "changes" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <div className="flex items-center gap-2">
+                  <RefreshCw className="h-4 w-4 text-primary" />
+                  <h4 className="text-sm font-bold text-foreground">Field-Level Mutation Breakdown ({CHANGE_DETAILS_DATA.length} Attributes Changed)</h4>
+                </div>
+                <span className="text-xs font-mono text-muted-foreground">Record: {auditMaster.recordId}</span>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Detailed telemetry and forensic logs for <span className="font-semibold text-foreground capitalize">{activeTab}</span> adhering to MAICW specification.
-              </p>
-              <div className="grid gap-4 sm:grid-cols-3 pt-2">
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Event Integrity</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">SHA-256 Hash Verified</span>
-                  <p className="text-[11px] text-muted-foreground">Immutable audit trail chain intact.</p>
-                </div>
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Audit Review Status</span>
-                  <span className="text-xl font-bold font-mono text-blue-600">0 Open Findings</span>
-                  <p className="text-[11px] text-muted-foreground">Compliant with internal controls.</p>
-                </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2.5 px-3">Field / Attribute</th>
+                      <th className="py-2.5 px-3">Type</th>
+                      <th className="py-2.5 px-3 text-rose-500">Previous Value (Before)</th>
+                      <th className="py-2.5 px-3 text-emerald-600">New Value (After)</th>
+                      <th className="py-2.5 px-3">Changed By</th>
+                      <th className="py-2.5 px-3 text-right">Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/60 text-[11px]">
+                    {CHANGE_DETAILS_DATA.map((chg) => (
+                      <tr key={chg.id} className="hover:bg-muted/30 transition-colors">
+                        <td className="py-2.5 px-3 font-semibold text-foreground">{chg.label}</td>
+                        <td className="py-2.5 px-3 text-muted-foreground">{chg.type}</td>
+                        <td className="py-2.5 px-3 font-mono text-rose-600 bg-rose-500/5">{chg.prev}</td>
+                        <td className="py-2.5 px-3 font-mono text-emerald-600 bg-emerald-500/5 font-bold">{chg.next}</td>
+                        <td className="py-2.5 px-3 text-foreground">{chg.by}</td>
+                        <td className="py-2.5 px-3 text-right font-mono text-muted-foreground">{chg.time}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Retention Schedule</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">7 Years Active</span>
-                  <p className="text-[11px] text-muted-foreground">Legal hold status: Clear.</p>
+          {/* SECURITY & FORENSICS WORKSPACE */}
+          {activeTab === "security" && (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Cryptographic Signature</span>
+                  <div className="text-base font-bold font-mono text-emerald-600 truncate">SHA-256 Verified</div>
+                  <p className="text-[10px] text-muted-foreground">HMAC integrity validated against root key</p>
                 </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Risk Assessment</span>
+                  <div className="text-base font-bold font-mono text-emerald-600">Low Risk (35/100)</div>
+                  <p className="text-[10px] text-muted-foreground">Authorized corporate subnet activity</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Statutory Retention</span>
+                  <div className="text-base font-bold font-mono text-blue-600">7 Years Immutability</div>
+                  <p className="text-[10px] text-muted-foreground">SOX / SOC-2 Compliance Certified</p>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-5 space-y-3 shadow-xs">
+                <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
+                  Security Forensics & Session Fingerprint
+                </h4>
+
+                <div className="space-y-2.5 text-xs">
+                  <div className="flex justify-between items-center py-1.5 border-b border-border/40">
+                    <span className="text-muted-foreground">Session Fingerprint Hash:</span>
+                    <span className="font-mono text-foreground">d89e2b1a9f04c782390aef92138a0bc1</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-border/40">
+                    <span className="text-muted-foreground">TLS Cipher Suite:</span>
+                    <span className="font-mono text-foreground">TLS_AES_256_GCM_SHA384 (TLS 1.3)</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-border/40">
+                    <span className="text-muted-foreground">Multi-Factor Authentication (MFA):</span>
+                    <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold">
+                      FIDO2 Hardware Key Authenticated
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-muted-foreground">Tamper-Proof Block Hash:</span>
+                    <span className="font-mono text-primary font-bold text-[11px]">#00458-7A8B9C-BLOCK-VALID</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TIMELINE WORKSPACE */}
+          {activeTab === "timeline" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-3">
+                <div className="flex items-center gap-2">
+                  <History className="h-4 w-4 text-primary" />
+                  <h4 className="text-sm font-bold text-foreground">Immutable Audit Timeline ({timelineLogs.length} Events)</h4>
+                </div>
+                <div className="flex items-center gap-2">
+                  <select
+                    value={filterModule}
+                    onChange={(e) => setFilterModule(e.target.value)}
+                    className="rounded-lg border border-border bg-background px-2.5 py-1 text-xs text-foreground"
+                  >
+                    <option value="ALL">All Modules</option>
+                    <option value="Finance">Finance</option>
+                    <option value="HR">HR</option>
+                    <option value="CRM">CRM</option>
+                  </select>
+                  <button
+                    onClick={() => setShowExportModal(true)}
+                    className="px-3 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                  >
+                    Export Log
+                  </button>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2 px-2">#</th>
+                      <th className="py-2 px-2">Timestamp</th>
+                      <th className="py-2 px-2">Event Type</th>
+                      <th className="py-2 px-2">Action</th>
+                      <th className="py-2 px-2">Actor / User</th>
+                      <th className="py-2 px-2">Module</th>
+                      <th className="py-2 px-2">Target Record</th>
+                      <th className="py-2 px-2">Status</th>
+                      <th className="py-2 px-2">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 text-[11px]">
+                    {timelineLogs
+                      .filter((t) => filterModule === "ALL" || t.module === filterModule)
+                      .map((tl) => (
+                        <tr key={tl.id} className="hover:bg-muted/30 transition-colors">
+                          <td className="py-2 px-2 font-mono text-muted-foreground">{tl.id.replace("TL-", "")}</td>
+                          <td className="py-2 px-2 font-mono text-muted-foreground">{tl.time}</td>
+                          <td className="py-2 px-2 font-medium">{tl.type}</td>
+                          <td className="py-2 px-2 font-bold text-primary">{tl.action}</td>
+                          <td className="py-2 px-2 text-foreground font-medium">{tl.by}</td>
+                          <td className="py-2 px-2 text-muted-foreground">{tl.module}</td>
+                          <td className="py-2 px-2 font-mono">{tl.record}</td>
+                          <td className="py-2 px-2">
+                            <span className={cn("rounded px-2 py-0.5 text-[10px] font-bold border", tl.badge)}>
+                              {tl.status}
+                            </span>
+                          </td>
+                          <td className="py-2 px-2 text-muted-foreground">{tl.desc}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
         </div>
+
+        {/* --- EXPORT MODAL --- */}
+        {showExportModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+            <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <Download className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Export Compliance Audit Logs</h3>
+                </div>
+                <button onClick={() => setShowExportModal(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Export Format</label>
+                  <select className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground">
+                    <option value="CSV">Comma Separated Values (.CSV)</option>
+                    <option value="JSON">Encrypted JSON (.JSON)</option>
+                    <option value="PDF">Signed PDF Audit Certificate (.PDF)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Date Range</label>
+                  <input
+                    type="text"
+                    readOnly
+                    value="Past 30 Days (01 Apr 2024 - 30 Apr 2024)"
+                    className="mt-1 w-full rounded-lg border border-border bg-muted/40 px-3 py-1.5 text-xs font-mono text-foreground"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowExportModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowExportModal(false);
+                    showNotification("Audit trail exported successfully.");
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Download Log Archive
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer Classification & Modification Strip */}
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card p-3 text-[11px] text-muted-foreground font-mono">

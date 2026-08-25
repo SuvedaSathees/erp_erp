@@ -1,16 +1,19 @@
 import { useEffect } from "react";
 import { FINANCE_PAGE_KPIS } from "../content/finance/financeKpiMap";
+import { CRM_PAGE_KPIS } from "../content/crm/crmKpiMap";
+import { HRM_PAGE_KPIS } from "../content/hrm/hrmKpiMap";
+import { ADMIN_PAGE_KPIS } from "../content/admin/adminKpiMap";
 import type { WidgetPageId } from "../types";
 
 /* ===========================================================================
-   KpiQuickAddLayer — makes a finance page's OWN KPI cards clickable
+   KpiQuickAddLayer — makes a module page's OWN KPI cards clickable
    ---------------------------------------------------------------------------
-   The 11 finance pages render their KPIs as plain <StatCard>s, not widgets, and
+   The pages render their KPIs as plain <StatCard>s, not widgets, and
    we don't want to rewrite those pages. So this layer bridges them into the
    widget system by delegation:
 
      - it finds the page's KPI cards by matching each card's StatCard label
-       (StatCard puts the label in a `title` attribute) against FINANCE_PAGE_KPIS
+       (StatCard puts the label in a `title` attribute) against PAGE_KPIS
      - matched cards get a `data-kpi-quickadd` attribute (for the hover/cursor
        affordance in styles.css)
      - clicking one opens the widget settings dialog for the matching widget, so
@@ -37,7 +40,11 @@ function matchWidgetId(card: Element, map: Record<string, string>): string | und
 
 export function KpiQuickAddLayer({ pageId, onOpen }: KpiQuickAddLayerProps) {
   useEffect(() => {
-    const map = FINANCE_PAGE_KPIS[pageId];
+    const map =
+      FINANCE_PAGE_KPIS[pageId] ??
+      CRM_PAGE_KPIS[pageId] ??
+      HRM_PAGE_KPIS[pageId] ??
+      ADMIN_PAGE_KPIS[pageId];
     if (!map) return;
     const root = document.querySelector("main");
     if (!root) return;

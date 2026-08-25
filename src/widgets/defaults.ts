@@ -98,6 +98,10 @@ export const DEFAULT_LAYOUTS: Record<WidgetPageId, WidgetInstance[]> = {
     { ...base, id: "pd-ovw-release", widgetId: "kpi.pd.ready-release", size: "sm" },
     { ...base, id: "pd-ovw-lifecycle", widgetId: "kpi.pd.active-lifecycle", size: "sm" },
     { ...base, id: "pd-ovw-health", widgetId: "kpi.pd.overall-health", size: "sm" },
+    { ...base, id: "pd-ovw-funnel", widgetId: "chart.pd.funnel", size: "xl" },
+    { ...base, id: "pd-ovw-trend", widgetId: "chart.pd.trend", size: "md" },
+    { ...base, id: "pd-ovw-top-projects", widgetId: "table.pd.top-projects", size: "full" },
+    { ...base, id: "pd-ovw-ai", widgetId: "ai.pd.engineering-intelligence", size: "full" },
   ],
   "md-overview": [
     { ...base, id: "md-ovw-active", widgetId: "kpi.md.active-projects", size: "sm" },
@@ -105,6 +109,76 @@ export const DEFAULT_LAYOUTS: Record<WidgetPageId, WidgetInstance[]> = {
     { ...base, id: "md-ovw-ppap", widgetId: "kpi.md.ready-ppap", size: "sm" },
     { ...base, id: "md-ovw-mass", widgetId: "kpi.md.mass-production", size: "sm" },
     { ...base, id: "md-ovw-readiness", widgetId: "kpi.md.overall-readiness", size: "sm" },
+    { ...base, id: "md-ovw-funnel", widgetId: "chart.md.funnel", size: "xl" },
+    { ...base, id: "md-ovw-yield-trend", widgetId: "chart.md.yield-trend", size: "md" },
+    { ...base, id: "md-ovw-top-projects", widgetId: "table.md.top-projects", size: "full" },
+    { ...base, id: "md-ovw-ai", widgetId: "ai.md.manufacturing-intelligence", size: "full" },
+  ],
+
+  /** HRM Management Overview layout */
+  "hrm-overview": [
+    { ...base, id: "hrm-ovw-total-emp", widgetId: "kpi.hrm.total-employees", size: "sm" },
+    { ...base, id: "hrm-ovw-active-workforce", widgetId: "kpi.hrm.active-workforce", size: "sm" },
+    { ...base, id: "hrm-ovw-payroll", widgetId: "kpi.hrm.monthly-payroll", size: "sm" },
+    { ...base, id: "hrm-ovw-requisitions", widgetId: "kpi.hrm.open-requisitions", size: "sm" },
+    { ...base, id: "hrm-ovw-attendance", widgetId: "kpi.hrm.attendance-rate", size: "sm" },
+    { ...base, id: "hrm-ovw-onboarding", widgetId: "kpi.hrm.onboarding-in-progress", size: "sm" },
+    { ...base, id: "hrm-ovw-leaves", widgetId: "kpi.hrm.pending-leaves", size: "sm" },
+    { ...base, id: "hrm-ovw-training", widgetId: "kpi.hrm.training-hours", size: "sm" },
+    { ...base, id: "hrm-ovw-retention", widgetId: "kpi.hrm.retention-rate", size: "sm" },
+    { ...base, id: "hrm-ovw-performance", widgetId: "kpi.hrm.performance-score", size: "sm" },
+
+    { ...base, id: "hrm-ovw-funnel", widgetId: "chart.hrm.recruitment-funnel", size: "xl" },
+    { ...base, id: "hrm-ovw-dept-dist", widgetId: "chart.hrm.department-distribution", size: "md" },
+
+    { ...base, id: "hrm-ovw-payroll-trend", widgetId: "chart.hrm.payroll-trend", size: "xl" },
+    { ...base, id: "hrm-ovw-reviews", widgetId: "table.hrm.upcoming-reviews", size: "md" },
+
+    { ...base, id: "hrm-ovw-ai", widgetId: "ai.hrm.workforce-intelligence", size: "full" },
+  ],
+
+  /** Administration Management Overview layout */
+  "admin-overview": [
+    { ...base, id: "admin-ovw-branches", widgetId: "kpi.admin.total-branches", size: "sm" },
+    { ...base, id: "admin-ovw-depts", widgetId: "kpi.admin.active-departments", size: "sm" },
+    { ...base, id: "admin-ovw-users", widgetId: "kpi.admin.active-users", size: "sm" },
+    { ...base, id: "admin-ovw-roles", widgetId: "kpi.admin.roles-permissions", size: "sm" },
+    { ...base, id: "admin-ovw-approvals", widgetId: "kpi.admin.pending-approvals", size: "sm" },
+    { ...base, id: "admin-ovw-docs", widgetId: "kpi.admin.controlled-documents", size: "sm" },
+    { ...base, id: "admin-ovw-policies", widgetId: "kpi.admin.active-policies", size: "sm" },
+    { ...base, id: "admin-ovw-master", widgetId: "kpi.admin.master-data-entities", size: "sm" },
+    { ...base, id: "admin-ovw-audit", widgetId: "kpi.admin.system-audit-score", size: "sm" },
+    { ...base, id: "admin-ovw-alerts", widgetId: "kpi.admin.system-notifications", size: "sm" },
+
+    { ...base, id: "admin-ovw-branch-hier", widgetId: "table.admin.branch-hierarchy", size: "xl" },
+    { ...base, id: "admin-ovw-approval-matrix", widgetId: "list.admin.approval-matrix", size: "md" },
+
+    { ...base, id: "admin-ovw-pending-table", widgetId: "table.admin.pending-approvals", size: "xl" },
+    { ...base, id: "admin-ovw-doc-control", widgetId: "chart.admin.document-control", size: "md" },
+
+    { ...base, id: "admin-ovw-ai", widgetId: "ai.admin.governance-intelligence", size: "full" },
+  ],
+
+  /** CRM Management Overview layout */
+  "crm-overview": [
+    { ...base, id: "crm-ovw-leads", widgetId: "kpi.crm.total-leads", size: "sm" },
+    { ...base, id: "crm-ovw-hot-leads", widgetId: "kpi.crm.hot-leads", size: "sm" },
+    { ...base, id: "crm-ovw-pipeline-val", widgetId: "kpi.crm.pipeline-value", size: "sm" },
+    { ...base, id: "crm-ovw-weighted-pipe", widgetId: "kpi.crm.weighted-pipeline", size: "sm" },
+    { ...base, id: "crm-ovw-win-rate", widgetId: "kpi.crm.win-rate", size: "sm" },
+    { ...base, id: "crm-ovw-accounts", widgetId: "kpi.crm.active-accounts", size: "sm" },
+    { ...base, id: "crm-ovw-health", widgetId: "kpi.crm.account-health", size: "sm" },
+    { ...base, id: "crm-ovw-tickets", widgetId: "kpi.crm.open-tickets", size: "sm" },
+    { ...base, id: "crm-ovw-sla", widgetId: "kpi.crm.sla-compliance", size: "sm" },
+    { ...base, id: "crm-ovw-csat", widgetId: "kpi.crm.csat-score", size: "sm" },
+
+    { ...base, id: "crm-ovw-funnel", widgetId: "chart.crm.pipeline-funnel", size: "xl" },
+    { ...base, id: "crm-ovw-sources", widgetId: "chart.crm.lead-source", size: "md" },
+
+    { ...base, id: "crm-ovw-forecast", widgetId: "chart.crm.sales-forecast", size: "xl" },
+    { ...base, id: "crm-ovw-critical-acc", widgetId: "table.crm.critical-accounts", size: "md" },
+
+    { ...base, id: "crm-ovw-top-opps", widgetId: "table.crm.top-opportunities", size: "full" },
   ],
 
   /* R&I module dashboards — reproduce today's KPI row exactly (all sm/1-of-5). */
@@ -231,6 +305,7 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
   "finance-reports": { label: "Financial Reports", route: "/management/finance/reports" },
   "finance-assets": { label: "Fixed Assets", route: "/management/finance/assets" },
   "finance-audit": { label: "Audit Trail", route: "/management/finance/audit" },
+  "crm-overview": { label: "CRM Overview", route: "/management/crm-management/overview" },
   "ri-overview": { label: "R&I Overview", route: "/development/research-innovation/overview" },
   "ri-ideas": { label: "Ideas", route: "/development/research-innovation/idea-management" },
   "ri-opportunities": { label: "Opportunities", route: "/development/research-innovation/opportunity-discovery" },
@@ -249,6 +324,8 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
   "ri-patents": { label: "Patents", route: "/development/ip-development/patent-management" },
   "pd-overview": { label: "Product Development Overview", route: "/development/product-development/overview" },
   "md-overview": { label: "Manufacturing Development Overview", route: "/development/manufacturing-development/overview" },
+  "hrm-overview": { label: "HRM Overview", route: "/management/hrm-management/overview" },
+  "admin-overview": { label: "Administration Overview", route: "/management/administration-management/overview" },
 };
 
 /**
@@ -258,6 +335,11 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
 export const PLACEABLE_PAGES: WidgetPageId[] = [
   "dashboard",
   "finance-overview",
+  "crm-overview",
+  "hrm-overview",
+  "admin-overview",
+  "pd-overview",
+  "md-overview",
   "ri-overview",
   "ri-ideas",
   "ri-opportunities",

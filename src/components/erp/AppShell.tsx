@@ -278,11 +278,12 @@ const NAV_GROUPS: GroupItem[] = [
         children: [
           {
             kind: "leaf",
-            to: "/management/administration-management/organization-structure",
+            to: "/management/administration-management/overview",
             matchPrefix: "/management/administration-management",
             label: "Administration Management",
             icon: Building2,
             subItems: [
+              { to: "/management/administration-management/overview", label: "Overview" },
               { to: "/management/administration-management/organization-structure", label: "Organization Structure" },
               { to: "/management/administration-management/branch-management", label: "Branch Management" },
               { to: "/management/administration-management/department-management", label: "Department Management" },
@@ -297,11 +298,12 @@ const NAV_GROUPS: GroupItem[] = [
           },
           {
             kind: "leaf",
-            to: "/management/crm-management/lead-management",
+            to: "/management/crm-management/overview",
             matchPrefix: "/management/crm-management",
             label: "CRM Management",
             icon: Target,
             subItems: [
+              { to: "/management/crm-management/overview", label: "Overview" },
               { to: "/management/crm-management/lead-management", label: "Lead Management" },
               { to: "/management/crm-management/contact-management", label: "Contact Management" },
               { to: "/management/crm-management/account-management", label: "Account Management" },
@@ -314,6 +316,32 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/crm-management/customer-feedback", label: "Customer Feedback" },
               { to: "/management/crm-management/customer-success", label: "Customer Success" },
               { to: "/management/crm-management/loyalty-management", label: "Loyalty Management" },
+            ],
+          },
+          {
+            kind: "leaf",
+            to: "/management/hrm-management/overview",
+            matchPrefix: "/management/hrm-management",
+            label: "HRM Management",
+            icon: Users,
+            subItems: [
+              { to: "/management/hrm-management/overview", label: "Overview" },
+              { to: "/management/hrm-management/workforce-planning", label: "Workforce Planning" },
+              { to: "/management/hrm-management/recruitment-management", label: "Recruitment Management" },
+              { to: "/management/hrm-management/onboarding-management", label: "Onboarding Management" },
+              { to: "/management/hrm-management/employee-management", label: "Employee Management" },
+              { to: "/management/hrm-management/attendance-management", label: "Attendance Management" },
+              { to: "/management/hrm-management/leave-management", label: "Leave Management" },
+              { to: "/management/hrm-management/payroll-management", label: "Payroll Management" },
+              { to: "/management/hrm-management/performance-management", label: "Performance Management" },
+              { to: "/management/hrm-management/learning-development", label: "Training & Development" },
+              { to: "/management/hrm-management/performance-management/competency-form", label: "Competency Form" },
+              { to: "/management/hrm-management/career-development", label: "Career Development" },
+              { to: "/management/hrm-management/travel-expense", label: "Travel & Expense" },
+              { to: "/management/hrm-management/expense-claims", label: "Expense Claims" },
+              { to: "/management/hrm-management/employee-welfare", label: "Employee Welfare" },
+              { to: "/management/hrm-management/exit-management", label: "Exit Management" },
+              { to: "/management/hrm-management/hr-analytics", label: "HR Analytics" },
             ],
           },
           {
@@ -716,13 +744,11 @@ function NavGroup({
 
   const [openGroups, setOpenGroups] = useState<string[]>(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("magnertia_sidebar_open_groups");
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.error(e);
-        }
+      try {
+        const saved = localStorage.getItem("magnertia_sidebar_open_groups");
+        if (saved) return JSON.parse(saved);
+      } catch (e) {
+        console.error(e);
       }
     }
     return [];
@@ -735,7 +761,13 @@ function NavGroup({
           ? prev
           : [...prev, group.label]
         : prev.filter((g) => g !== group.label);
-      localStorage.setItem("magnertia_sidebar_open_groups", JSON.stringify(next));
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("magnertia_sidebar_open_groups", JSON.stringify(next));
+        } catch (e) {
+          console.error(e);
+        }
+      }
       return next;
     });
   };
@@ -881,20 +913,32 @@ function SidebarNav({
   // Handle scroll persistence
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const scrollTop = e.currentTarget.scrollTop;
-    localStorage.setItem("magnertia_sidebar_scroll_top", String(scrollTop));
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("magnertia_sidebar_scroll_top", String(scrollTop));
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
 
   useEffect(() => {
-    const savedScroll = localStorage.getItem("magnertia_sidebar_scroll_top");
-    if (savedScroll && navRef.current) {
-      const parsed = parseFloat(savedScroll);
-      if (!isNaN(parsed)) {
-        const timer = setTimeout(() => {
-          if (navRef.current) {
-            navRef.current.scrollTop = parsed;
+    if (typeof window !== "undefined") {
+      try {
+        const savedScroll = localStorage.getItem("magnertia_sidebar_scroll_top");
+        if (savedScroll && navRef.current) {
+          const parsed = parseFloat(savedScroll);
+          if (!isNaN(parsed)) {
+            const timer = setTimeout(() => {
+              if (navRef.current) {
+                navRef.current.scrollTop = parsed;
+              }
+            }, 100);
+            return () => clearTimeout(timer);
           }
-        }, 100);
-        return () => clearTimeout(timer);
+        }
+      } catch (err) {
+        console.error(err);
       }
     }
   }, [isCollapsed]);
@@ -1299,8 +1343,12 @@ export function AppShell({
   const [searchQuery, setSearchQuery] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("magnertia_sidebar_expanded");
-      return saved === "false";
+      try {
+        const saved = localStorage.getItem("magnertia_sidebar_expanded");
+        return saved === "false";
+      } catch (err) {
+        console.error(err);
+      }
     }
     return false;
   });
@@ -1308,7 +1356,13 @@ export function AppShell({
   const toggleCollapsed = () => {
     setIsCollapsed((prev) => {
       const next = !prev;
-      localStorage.setItem("magnertia_sidebar_expanded", String(!next));
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("magnertia_sidebar_expanded", String(!next));
+        } catch (err) {
+          console.error(err);
+        }
+      }
       return next;
     });
   };

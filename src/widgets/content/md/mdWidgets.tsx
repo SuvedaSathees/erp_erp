@@ -1,13 +1,27 @@
-import { Settings, Repeat, ShieldCheck, Rocket, Gauge } from "lucide-react";
+import {
+  CheckSquare,
+  Cpu,
+  FileCheck,
+  Gauge,
+  Repeat,
+  Rocket,
+  Settings,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Zap,
+} from "lucide-react";
 import type { WidgetDefinition } from "../../types";
 import { makeStatCardWidget } from "../shared/StatCardWidget";
+import { MD_PANEL_WIDGETS } from "./panels";
 
-export const mdWidgets: WidgetDefinition[] = [
+export const mdKpis: WidgetDefinition[] = [
   makeStatCardWidget({
     id: "kpi.md.active-projects",
     title: "Active Mfg Projects",
     description: "Total active manufacturing engineering and industrialization projects.",
     category: "kpi",
+    tags: ["kpi", "md"],
     icon: Settings,
     iconBg: "bg-blue-500/10",
     iconColor: "text-blue-500",
@@ -19,6 +33,7 @@ export const mdWidgets: WidgetDefinition[] = [
     title: "In Pilot Production",
     description: "Line trial runs and pilot production builds underway.",
     category: "kpi",
+    tags: ["kpi", "md"],
     icon: Repeat,
     iconBg: "bg-amber-500/10",
     iconColor: "text-amber-500",
@@ -30,6 +45,7 @@ export const mdWidgets: WidgetDefinition[] = [
     title: "Ready for PPAP",
     description: "Process validation complete and ready for PPAP submission.",
     category: "kpi",
+    tags: ["kpi", "md"],
     icon: ShieldCheck,
     iconBg: "bg-purple-500/10",
     iconColor: "text-purple-500",
@@ -41,6 +57,7 @@ export const mdWidgets: WidgetDefinition[] = [
     title: "In Mass Production",
     description: "Full rate mass production lines operating under control plans.",
     category: "kpi",
+    tags: ["kpi", "md"],
     icon: Rocket,
     iconBg: "bg-emerald-500/10",
     iconColor: "text-emerald-500",
@@ -52,10 +69,52 @@ export const mdWidgets: WidgetDefinition[] = [
     title: "Overall Mfg Readiness",
     description: "Aggregate manufacturing readiness score across tooling, process, and quality.",
     category: "kpi",
+    tags: ["kpi", "md"],
     icon: Gauge,
     iconBg: "bg-teal-500/10",
     iconColor: "text-teal-500",
     options: () => ({ queryKey: ["md", "overall-readiness"], queryFn: async () => ({ value: "92%", statusText: "Target MRL 8+" }) }),
     map: (data: any) => ({ value: String(data?.value ?? "92%"), delta: { label: "Target MRL 8+", direction: "up", tone: "positive" } }),
   }),
+  makeStatCardWidget({
+    id: "kpi.md.apqp-gates",
+    title: "APQP Quality Gates",
+    description: "Active APQP phase deliverables under gate review.",
+    category: "kpi",
+    tags: ["kpi", "md"],
+    icon: FileCheck,
+    iconBg: "bg-indigo-500/10",
+    iconColor: "text-indigo-500",
+    options: () => ({ queryKey: ["md", "apqp-gates"], queryFn: async () => ({ value: 22, statusText: "100% on schedule" }) }),
+    map: (data: any) => ({ value: String(data?.value ?? 22), delta: { label: "100% on schedule", direction: "up", tone: "positive" } }),
+  }),
+  makeStatCardWidget({
+    id: "kpi.md.robotics-cells",
+    title: "Automated Robotics Cells",
+    description: "Operating robotic welding, cobot assembly, and automated testing cells.",
+    category: "kpi",
+    tags: ["kpi", "md"],
+    icon: Cpu,
+    iconBg: "bg-rose-500/10",
+    iconColor: "text-rose-500",
+    options: () => ({ queryKey: ["md", "robotics-cells"], queryFn: async () => ({ value: 14, statusText: "99.8% availability" }) }),
+    map: (data: any) => ({ value: String(data?.value ?? 14), delta: { label: "99.8% availability", direction: "up", tone: "positive" } }),
+  }),
+  makeStatCardWidget({
+    id: "kpi.md.smart-factory-oee",
+    title: "Smart Factory OEE",
+    description: "Overall Equipment Effectiveness across connected IIoT manufacturing assets.",
+    category: "kpi",
+    tags: ["kpi", "md"],
+    icon: Zap,
+    iconBg: "bg-cyan-500/10",
+    iconColor: "text-cyan-500",
+    options: () => ({ queryKey: ["md", "smart-factory-oee"], queryFn: async () => ({ value: "89.4%", statusText: "+2.1% vs Q2" }) }),
+    map: (data: any) => ({ value: String(data?.value ?? "89.4%"), delta: { label: "+2.1% vs Q2", direction: "up", tone: "positive" } }),
+  }),
+];
+
+export const mdWidgets: WidgetDefinition[] = [
+  ...mdKpis,
+  ...MD_PANEL_WIDGETS,
 ];

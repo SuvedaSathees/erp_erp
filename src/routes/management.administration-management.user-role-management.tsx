@@ -88,20 +88,7 @@ const RECENT_USER_ACTIVITY = [
 ];
 
 export function UserRoleManagementPage() {
-  const [activeTab, setActiveTab] = useState<
-    | "profile"
-    | "organization"
-    | "roles"
-    | "permissions"
-    | "data-access"
-    | "authority"
-    | "authentication"
-    | "security"
-    | "activity"
-    | "review"
-    | "documents"
-    | "history"
-  >("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "directory" | "roles" | "activity">("profile");
 
   // Master Form State
   const [userMaster, setUserMaster] = useState({
@@ -118,6 +105,54 @@ export function UserRoleManagementPage() {
     effectiveFrom: "2024-04-01",
     effectiveTo: "",
     version: "1.0",
+  });
+
+  // Dynamic Users List State
+  const [usersList, setUsersList] = useState([
+    { code: "USR-VIK-001", name: "Vikram Singh", email: "vikram.singh@magnertia.com", role: "Finance Manager", dept: "Finance & Accounts", type: "Employee", status: "Active" },
+    { code: "USR-ANI-002", name: "Anita Verma", email: "anita.verma@magnertia.com", role: "Chief Financial Officer", dept: "Corporate Services", type: "Management", status: "Active" },
+    { code: "USR-RAJ-003", name: "Rajeev Malhotra", email: "rajeev.m@magnertia.com", role: "Chief Executive Officer", dept: "Executive Office", type: "Management", status: "Active" },
+    { code: "USR-PRI-004", name: "Priya Menon", email: "priya.menon@magnertia.com", role: "Lead Systems Architect", dept: "R&D Systems", type: "Employee", status: "Active" },
+    { code: "USR-ROH-005", name: "Rohan Kapoor", email: "rohan.k@magnertia.com", role: "Accounts Controller", dept: "Finance & Accounts", type: "Employee", status: "Active" },
+  ]);
+
+  // Dynamic Roles List State
+  const [rolesList, setRolesList] = useState([
+    { code: "ROL-FIN-001", name: "Finance Manager", type: "Management Role", isPri: "Yes", scope: "Organization", date: "01 Apr 2024", status: "Active" },
+    { code: "ROL-FIN-002", name: "Accounts Approver", type: "Approval Role", isPri: "No", scope: "Department", date: "01 Apr 2024", status: "Active" },
+    { code: "ROL-FIN-003", name: "Budget Controller", type: "Functional Role", isPri: "No", scope: "Department", date: "15 May 2024", status: "Active" },
+    { code: "ROL-SEC-004", name: "Security Administrator", type: "System Role", isPri: "No", scope: "Enterprise", date: "10 Mar 2024", status: "Active" },
+  ]);
+
+  // Dynamic Permissions List
+  const [permissionsList, setPermissionsList] = useState([
+    { module: "General Ledger", read: true, create: true, edit: true, delete: false },
+    { module: "Accounts Payable", read: true, create: true, edit: true, delete: true },
+    { module: "Accounts Receivable", read: true, create: true, edit: true, delete: false },
+    { module: "Budgeting & Planning", read: true, create: true, edit: true, delete: false },
+    { module: "Fixed Assets", read: true, create: false, edit: false, delete: false },
+    { module: "Tax & Compliance", read: true, create: true, edit: true, delete: false },
+    { module: "Financial Reports", read: true, create: true, edit: true, delete: true },
+    { module: "System Settings", read: true, create: false, edit: false, delete: false },
+  ]);
+
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [showAddRoleModal, setShowAddRoleModal] = useState(false);
+
+  const [newUserForm, setNewUserForm] = useState({
+    code: "",
+    name: "",
+    email: "",
+    role: "Finance Manager",
+    dept: "Finance & Accounts",
+    type: "Employee",
+  });
+
+  const [newRoleForm, setNewRoleForm] = useState({
+    code: "",
+    name: "",
+    type: "Functional Role",
+    scope: "Department",
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -210,13 +245,6 @@ export function UserRoleManagementPage() {
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <span className="text-primary">1.</span> User Master
               </h3>
-              <span className="text-[11px] text-muted-foreground font-medium">
-                MAICW Fields: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
-                <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
-                <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-                <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
-                <span className="text-rose-500 font-bold">W</span> (Workflow)
-              </span>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -392,31 +420,6 @@ export function UserRoleManagementPage() {
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
-
-              {/* Profile Photo Upload Box */}
-              <div className="sm:col-span-2 flex items-center gap-3 bg-muted/20 p-2 rounded-lg border border-border/60">
-                <div className="relative h-12 w-12 rounded-full overflow-hidden bg-primary/10 border border-primary/30 flex items-center justify-center text-primary font-bold text-sm shrink-0">
-                  <span className="font-mono">VS</span>
-                </div>
-                <div className="space-y-0.5">
-                  <label className="text-xs font-bold text-foreground block">Profile Photo</label>
-                  <p className="text-[10px] text-muted-foreground">JPEG or PNG under 2MB</p>
-                </div>
-                <div className="ml-auto flex items-center gap-1.5">
-                  <button
-                    onClick={() => showNotification("Photo updated.")}
-                    className="p-1.5 rounded-md border border-border hover:bg-muted text-foreground cursor-pointer"
-                  >
-                    <Pencil className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    onClick={() => showNotification("Photo removed.")}
-                    className="p-1.5 rounded-md border border-border hover:bg-muted text-rose-500 cursor-pointer"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -463,29 +466,35 @@ export function UserRoleManagementPage() {
                 <span className="text-xs font-medium text-muted-foreground block">Account Health</span>
                 <span className="text-[10px] text-emerald-600 font-semibold">Excellent</span>
               </div>
-              <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-emerald-500 text-xs font-bold font-mono text-emerald-600">
-                92%
+              <div className="relative inline-flex items-center justify-center">
+                <svg width="48" height="48" className="transform -rotate-90">
+                  <circle cx="24" cy="24" r="19" stroke="currentColor" strokeWidth="3.5" className="text-muted/30" fill="transparent" />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="19"
+                    stroke="#10b981"
+                    strokeWidth="3.5"
+                    strokeDasharray={2 * Math.PI * 19}
+                    strokeDashoffset={2 * Math.PI * 19 * (1 - 0.92)}
+                    strokeLinecap="round"
+                    fill="transparent"
+                  />
+                </svg>
+                <span className="absolute text-[11px] font-bold font-mono text-emerald-600">92%</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 2. Workspace Navigation Tabs */}
+        {/* 2. Workspace Navigation Tabs (Centered & Streamlined) */}
         <div className="space-y-4">
-          <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
+          <div className="flex items-center justify-center gap-2 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
             {[
-              { key: "profile", label: "Profile", icon: UserCheck },
-              { key: "organization", label: "Organization Mapping", icon: Building },
-              { key: "roles", label: "Roles", icon: ShieldCheck },
-              { key: "permissions", label: "Permissions", icon: Key },
-              { key: "data-access", label: "Data Access", icon: Lock },
-              { key: "authority", label: "Approval Authority", icon: Sliders },
-              { key: "authentication", label: "Authentication", icon: Smartphone },
-              { key: "security", label: "Security", icon: ShieldAlert },
-              { key: "activity", label: "Activity", icon: Activity },
-              { key: "review", label: "Review", icon: CheckCircle2 },
-              { key: "documents", label: "Documents", icon: FileText },
-              { key: "history", label: "History", icon: History },
+              { key: "profile", label: "User Profile & Access", icon: Users },
+              { key: "directory", label: "User Directory", icon: UserCheck },
+              { key: "roles", label: "Role Matrix & Permissions", icon: ShieldCheck },
+              { key: "activity", label: "Activity & Audit Log", icon: Clock },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
@@ -494,7 +503,7 @@ export function UserRoleManagementPage() {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key as typeof activeTab)}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
+                    "flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
                     isActive
                       ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -507,7 +516,7 @@ export function UserRoleManagementPage() {
             })}
           </div>
 
-          {/* PROFILE / OVERVIEW TAB CONTENT (Matching attached screenshot layout) */}
+          {/* PROFILE / OVERVIEW TAB CONTENT */}
           {activeTab === "profile" && (
             <div className="space-y-6">
               {/* Row 1: User Identity & Profile | Organization Mapping | Role Assignment & Permission Summary */}
@@ -518,140 +527,52 @@ export function UserRoleManagementPage() {
                     2. User Identity & Profile
                   </h4>
 
-                  <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <label className="text-[11px] text-muted-foreground block">First Name *</label>
+                      <label className="text-[11px] text-muted-foreground block">Display Name</label>
                       <input
                         type="text"
                         readOnly
-                        value="Vikram"
+                        value={userMaster.displayName}
+                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground font-semibold"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] text-muted-foreground block">Username / Login ID</label>
+                      <input
+                        type="text"
+                        readOnly
+                        value={userMaster.username}
+                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs font-mono text-primary font-bold"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] text-muted-foreground block">Email Address</label>
+                      <input
+                        type="text"
+                        readOnly
+                        value={userMaster.email}
                         className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
                       />
                     </div>
 
                     <div>
-                      <label className="text-[11px] text-muted-foreground block">Middle Name</label>
+                      <label className="text-[11px] text-muted-foreground block">Contact Mobile</label>
                       <input
                         type="text"
                         readOnly
-                        value="Kumar"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Last Name *</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Singh"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Preferred Name</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Vikram"
+                        value={userMaster.mobile}
                         className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
                       />
                     </div>
 
                     <div className="col-span-2">
-                      <label className="text-[11px] text-muted-foreground block">Employee ID</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>VIK001 - Vikram Singh</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Department</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Finance & Accounts"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Branch</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Noida Head Office"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Business Unit</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Corporate Services"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Function</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Finance</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Reporting Manager</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Neha Kapoor</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Work Location</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Noida"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Employment Type *</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Permanent</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Joining Date</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="10 Jan 2022"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs font-mono text-foreground"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Manager User ID</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>USR-NEH-001</option>
-                      </select>
-                    </div>
-
-                    <div className="col-span-3 pt-1">
-                      <label className="text-[11px] text-muted-foreground block">User Profile</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Finance Professional"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs font-medium text-foreground"
-                      />
+                      <label className="text-[11px] text-muted-foreground block">Employee Linkage</label>
+                      <div className="mt-0.5 rounded-md border border-border bg-muted/20 px-2 py-1 text-xs text-foreground font-mono">
+                        {userMaster.employee}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -662,544 +583,548 @@ export function UserRoleManagementPage() {
                     3. Organization Mapping
                   </h4>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Legal Entity *</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Magnertia Global Pvt. Ltd.</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Business Unit</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Corporate Services</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Function</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Finance</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Department</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Finance & Accounts</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Division</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Finance Operations</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Team</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Accounts Payable</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Branch</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Noida Head Office</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Region</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>North Region</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Cost Centre</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="CC-FIN-001"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs font-mono text-foreground"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Profit Centre</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="PC-FIN-001"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs font-mono text-foreground"
-                      />
-                    </div>
-
-                    <div className="col-span-2 flex items-center justify-between pt-2 border-t border-border/50">
-                      <div>
-                        <label className="text-[11px] text-muted-foreground block">Organization Level</label>
-                        <select className="mt-0.5 rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                          <option>Level 3 - Department</option>
-                        </select>
-                      </div>
-
-                      <div className="flex items-center gap-2 cursor-pointer" onClick={() => setPrimaryOrgToggle(!primaryOrgToggle)}>
-                        <span className="text-[11px] text-muted-foreground">Primary Org</span>
-                        {primaryOrgToggle ? (
-                          <ToggleRight className="h-6 w-6 text-primary" />
-                        ) : (
-                          <ToggleLeft className="h-6 w-6 text-muted-foreground" />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 4. Role Assignment & 5. Permission Summary */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-4 shadow-xs">
-                  <div>
-                    <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                      <h4 className="text-xs font-bold text-foreground">4. Role Assignment</h4>
-                    </div>
-
-                    <div className="overflow-x-auto mt-2">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[11px]">
-                            <th className="py-1.5 px-1">Role</th>
-                            <th className="py-1.5 px-1">Type</th>
-                            <th className="py-1.5 px-1 text-center">Primary</th>
-                            <th className="py-1.5 px-1">Scope</th>
-                            <th className="py-1.5 px-1">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 text-[11px]">
-                          {ROLES_ASSIGNED_DATA.map((r) => (
-                            <tr key={r.id} className="hover:bg-muted/30 transition-colors">
-                              <td className="py-1.5 px-1 font-bold text-foreground">{r.name}</td>
-                              <td className="py-1.5 px-1 text-muted-foreground">{r.type}</td>
-                              <td className="py-1.5 px-1 text-center">
-                                <div className={cn("h-3 w-3 rounded-full mx-auto border flex items-center justify-center", r.isPrimary ? "bg-primary border-primary" : "border-muted-foreground")}>
-                                  {r.isPrimary && <div className="h-1 w-1 bg-white rounded-full" />}
-                                </div>
-                              </td>
-                              <td className="py-1.5 px-1 text-muted-foreground">{r.scope}</td>
-                              <td className="py-1.5 px-1">
-                                <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-bold text-emerald-600">
-                                  {r.status}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    <button
-                      onClick={() => showNotification("Role selection modal opened.")}
-                      className="mt-2 text-[11px] font-bold text-primary flex items-center gap-1 hover:underline cursor-pointer"
-                    >
-                      <Plus className="h-3 w-3" />
-                      Add Role
-                    </button>
-                  </div>
-
-                  {/* 5. Permission Summary */}
-                  <div className="pt-3 border-t border-border/60 space-y-2">
-                    <h4 className="text-xs font-bold text-foreground">5. Permission Summary</h4>
-
-                    <div className="grid grid-cols-4 gap-2 text-center text-xs">
-                      <div className="rounded-lg border border-primary/30 bg-primary/5 p-2">
-                        <Shield className="h-4 w-4 text-primary mx-auto mb-1" />
-                        <span className="font-bold text-sm text-foreground block font-mono">126</span>
-                        <span className="text-[9px] text-muted-foreground">Total</span>
-                      </div>
-
-                      <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-2">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500 mx-auto mb-1" />
-                        <span className="font-bold text-sm text-emerald-600 block font-mono">98</span>
-                        <span className="text-[9px] text-muted-foreground">Allow</span>
-                      </div>
-
-                      <div className="rounded-lg border border-rose-500/30 bg-rose-500/5 p-2">
-                        <XCircle className="h-4 w-4 text-rose-500 mx-auto mb-1" />
-                        <span className="font-bold text-sm text-rose-600 block font-mono">20</span>
-                        <span className="text-[9px] text-muted-foreground">Deny</span>
-                      </div>
-
-                      <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-2">
-                        <Clock className="h-4 w-4 text-amber-500 mx-auto mb-1" />
-                        <span className="font-bold text-sm text-amber-600 block font-mono">8</span>
-                        <span className="text-[9px] text-muted-foreground">Conditional</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Row 2: Data Access Scope | Approval Authority | Authentication | Recent Activity */}
-              <div className="grid gap-4 lg:grid-cols-4">
-                {/* 6. Data Access Scope */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    6. Data Access Scope
-                  </h4>
-
                   <div className="space-y-2 text-xs">
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Scope Type</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Department Scope</option>
-                      </select>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="rounded-lg border border-border bg-muted/15 p-2 space-y-0.5">
+                        <span className="text-[10px] text-muted-foreground block">Legal Entity</span>
+                        <span className="font-semibold text-foreground truncate block">Magnertia Global Pvt. Ltd.</span>
+                      </div>
+                      <div className="rounded-lg border border-border bg-muted/15 p-2 space-y-0.5">
+                        <span className="text-[10px] text-muted-foreground block">Primary Branch</span>
+                        <span className="font-semibold text-foreground truncate block">Delhi Corporate Hub</span>
+                      </div>
                     </div>
 
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Branch Scope</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Noida Head Office"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="rounded-lg border border-border bg-muted/15 p-2 space-y-0.5">
+                        <span className="text-[10px] text-muted-foreground block">Assigned Dept</span>
+                        <span className="font-semibold text-foreground truncate block">Finance & Accounts</span>
+                      </div>
+                      <div className="rounded-lg border border-border bg-muted/15 p-2 space-y-0.5">
+                        <span className="text-[10px] text-muted-foreground block">Reporting Manager</span>
+                        <span className="font-semibold text-foreground truncate block">Anita Verma (CFO)</span>
+                      </div>
                     </div>
 
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Department Scope</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Finance & Accounts"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Cost Centre Scope</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="CC-FIN-001"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs font-mono text-foreground"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Data Filter</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Own Department Data"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                      <span className="text-muted-foreground text-[11px]">Status</span>
-                      <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                        Active
-                      </span>
+                    <div className="rounded-lg border border-border bg-muted/15 p-2 space-y-0.5">
+                      <span className="text-[10px] text-muted-foreground block">Cost Centre Mapping</span>
+                      <span className="font-mono text-xs font-semibold text-primary">CC-FIN-001</span>
                     </div>
                   </div>
                 </div>
 
-                {/* 7. Approval Authority */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    7. Approval Authority
-                  </h4>
-
-                  <div className="space-y-2 text-xs">
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Approval Type</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Finance Approval</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Transaction Type</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Payment</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Approval Limit (INR)</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="₹ 25,00,000"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs font-mono font-bold text-emerald-600"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Escalation User</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Neha Kapoor"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div className="flex justify-between items-center pt-1" onClick={() => setDelegationAllowed(!delegationAllowed)}>
-                      <span className="text-[11px] text-muted-foreground">Delegation Allowed</span>
-                      {delegationAllowed ? (
-                        <ToggleRight className="h-6 w-6 text-primary cursor-pointer" />
-                      ) : (
-                        <ToggleLeft className="h-6 w-6 text-muted-foreground cursor-pointer" />
-                      )}
-                    </div>
-
-                    <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                      <span className="text-muted-foreground text-[11px]">Status</span>
-                      <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                        Active
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 8. Authentication */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    8. Authentication
-                  </h4>
-
-                  <div className="space-y-2 text-xs">
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Authentication Method</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="SSO (Azure AD)"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground text-[11px]">MFA Status</span>
-                      <span className="font-bold text-emerald-600 text-[11px]">Enabled</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground text-[11px]">Last Login</span>
-                      <span className="font-mono text-muted-foreground text-[10px]">15 May 2024 10:45 AM</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground text-[11px]">Password Expiry</span>
-                      <span className="font-mono text-foreground text-[10px]">12 Jun 2024</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground text-[11px]">Account Locked</span>
-                      <span className="font-semibold text-foreground text-[11px]">No</span>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-2 border-t border-border/50">
-                      <span className="text-muted-foreground text-[11px]">Status</span>
-                      <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                        Active
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 9. Recent Activity */}
+                {/* 4. Security & Authentication Health */}
                 <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
                   <div>
                     <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      9. Recent Activity
+                      4. Authentication & Security Status
                     </h4>
 
-                    <div className="overflow-x-auto mt-2">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                            <th className="py-1 px-1">Date & Time</th>
-                            <th className="py-1 px-1">Module</th>
-                            <th className="py-1 px-1">Action</th>
-                            <th className="py-1 px-1">IP Address</th>
-                            <th className="py-1 px-1">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 text-[10px]">
-                          {RECENT_USER_ACTIVITY.map((act) => (
-                            <tr key={act.id} className="hover:bg-muted/30 transition-colors">
-                              <td className="py-1 px-1 font-mono text-[9px] text-muted-foreground">{act.datetime}</td>
-                              <td className="py-1 px-1 font-medium text-foreground">{act.module}</td>
-                              <td className="py-1 px-1 text-primary">{act.action}</td>
-                              <td className="py-1 px-1 font-mono text-[9px]">{act.ip}</td>
-                              <td className="py-1 px-1">
-                                <span className="rounded bg-emerald-500/10 px-1 py-0.2 text-[9px] font-bold text-emerald-600">
-                                  {act.status}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                    <div className="space-y-2 pt-1 text-xs">
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Auth Provider:</span>
+                        <span className="font-semibold text-foreground">Azure AD / SAML 2.0</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">MFA Status:</span>
+                        <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold">Enabled</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Active Roles:</span>
+                        <span className="font-bold text-foreground font-mono">{rolesList.length} Roles Assigned</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">SoD Policy Conflicts:</span>
+                        <span className="font-bold text-emerald-600 font-mono">0 Conflicts</span>
+                      </div>
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => showNotification("Full security audit trail logs opened.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View All Activity
-                  </button>
+                  <div className="pt-2 border-t border-border/50 flex justify-between items-center">
+                    <span className="text-[11px] text-muted-foreground">Account Status</span>
+                    <span className="rounded bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-xs font-bold text-emerald-600">
+                      Active & Compliant
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* OTHER TABS / DETAILED SURFACES */}
-          {activeTab !== "profile" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-6 shadow-xs">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
-                <div>
-                  <h4 className="text-base font-bold text-foreground capitalize flex items-center gap-2">
-                    <ShieldCheck className="h-4 w-4 text-primary" />
-                    {activeTab.replace("-", " ")} Security Workspace
-                  </h4>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Target Identity: <span className="font-semibold text-foreground font-mono">vikram.singh</span> (USR-VIK-001) · Enterprise RBAC & Security Scopes
-                  </p>
+          {/* USER DIRECTORY WORKSPACE */}
+          {activeTab === "directory" && (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-4">
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Active User Accounts</span>
+                  <div className="text-xl font-bold font-mono text-foreground">{usersList.length} Users</div>
+                  <p className="text-[10px] text-emerald-600 font-medium">100% Verified</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 border border-emerald-500/20">
-                    Active Session
-                  </span>
-                  <button
-                    onClick={() => showNotification(`Saved security rule to ${activeTab} workspace`)}
-                    className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                    Assign {activeTab.slice(0, -1)} Rule
-                  </button>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">MFA Protected</span>
+                  <div className="text-xl font-bold font-mono text-foreground">100%</div>
+                  <p className="text-[10px] text-blue-600 font-medium">Enterprise SSO Enforced</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Active Sessions</span>
+                  <div className="text-xl font-bold font-mono text-foreground">14 Sessions</div>
+                  <p className="text-[10px] text-purple-600 font-medium">Zero anomalous logins</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">License Utilization</span>
+                  <div className="text-xl font-bold font-mono text-foreground">248 / 300</div>
+                  <p className="text-[10px] text-amber-600 font-medium">52 Available seats</p>
                 </div>
               </div>
 
-              {activeTab === "roles" && (
-                <div className="space-y-4">
-                  <div className="overflow-x-auto rounded-lg border border-border">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
-                          <th className="py-2.5 px-3">Role Code</th>
-                          <th className="py-2.5 px-3">Role Name</th>
-                          <th className="py-2.5 px-3">Role Type</th>
-                          <th className="py-2.5 px-3">Primary</th>
-                          <th className="py-2.5 px-3">Data Scope</th>
-                          <th className="py-2.5 px-3">Assigned Date</th>
-                          <th className="py-2.5 px-3">Status</th>
+              <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                  <h4 className="text-xs font-bold text-foreground">Enterprise User Directory ({usersList.length} Accounts)</h4>
+                  <button
+                    onClick={() => setShowAddUserModal(true)}
+                    className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                  >
+                    + Add User
+                  </button>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-border text-muted-foreground font-semibold">
+                        <th className="py-2 px-2">User ID</th>
+                        <th className="py-2 px-2">Full Name</th>
+                        <th className="py-2 px-2">Email Address</th>
+                        <th className="py-2 px-2">Assigned Primary Role</th>
+                        <th className="py-2 px-2">Department</th>
+                        <th className="py-2 px-2">User Type</th>
+                        <th className="py-2 px-2">Status</th>
+                        <th className="py-2 px-2 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/50 text-[11px]">
+                      {usersList.map((user) => (
+                        <tr key={user.code} className="hover:bg-muted/30">
+                          <td className="py-2 px-2 font-mono font-bold text-primary">{user.code}</td>
+                          <td className="py-2 px-2 font-semibold text-foreground">{user.name}</td>
+                          <td className="py-2 px-2 text-muted-foreground font-mono text-[11px]">{user.email}</td>
+                          <td className="py-2 px-2 text-foreground font-medium">{user.role}</td>
+                          <td className="py-2 px-2 text-muted-foreground">{user.dept}</td>
+                          <td className="py-2 px-2">
+                            <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-foreground font-medium">
+                              {user.type}
+                            </span>
+                          </td>
+                          <td className="py-2 px-2">
+                            <span className="rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold">
+                              {user.status}
+                            </span>
+                          </td>
+                          <td className="py-2 px-2 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setUsersList((prev) => prev.filter((u) => u.code !== user.code));
+                                showNotification(`User ${user.code} removed.`);
+                              }}
+                              className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
+                            >
+                              Remove
+                            </button>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/60 text-foreground font-mono">
-                        {[
-                          { code: "ROL-FIN-001", name: "Finance Manager", type: "Management Role", isPri: "Yes", scope: "Organization", date: "01 Apr 2024", status: "Active" },
-                          { code: "ROL-FIN-002", name: "Accounts Approver", type: "Approval Role", isPri: "No", scope: "Department", date: "01 Apr 2024", status: "Active" },
-                          { code: "ROL-FIN-003", name: "Budget Controller", type: "Functional Role", isPri: "No", scope: "Department", date: "15 May 2024", status: "Active" },
-                        ].map((r, idx) => (
-                          <tr key={idx} className="hover:bg-muted/30 transition-colors">
-                            <td className="py-2 px-3 font-semibold text-primary">{r.code}</td>
-                            <td className="py-2 px-3 font-sans font-medium text-foreground">{r.name}</td>
-                            <td className="py-2 px-3 font-sans text-muted-foreground">{r.type}</td>
-                            <td className="py-2 px-3">
-                              <span className={cn("rounded px-1.5 py-0.5 text-[10px] font-bold font-sans", r.isPri === "Yes" ? "bg-blue-500/10 text-blue-600" : "bg-muted text-muted-foreground")}>
-                                {r.isPri}
-                              </span>
-                            </td>
-                            <td className="py-2 px-3 font-sans text-muted-foreground">{r.scope}</td>
-                            <td className="py-2 px-3 text-muted-foreground">{r.date}</td>
-                            <td className="py-2 px-3">
-                              <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-500/20 font-sans">
-                                {r.status}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ROLE MATRIX & PERMISSIONS WORKSPACE */}
+          {activeTab === "roles" && (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                  <h4 className="text-xs font-bold text-foreground">Role Architecture & Data Access Scopes ({rolesList.length} Roles)</h4>
+                  <button
+                    onClick={() => setShowAddRoleModal(true)}
+                    className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                  >
+                    + Add Role
+                  </button>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                        <th className="py-2.5 px-3">Role Code</th>
+                        <th className="py-2.5 px-3">Role Name</th>
+                        <th className="py-2.5 px-3">Role Type</th>
+                        <th className="py-2.5 px-3">Primary</th>
+                        <th className="py-2.5 px-3">Data Scope</th>
+                        <th className="py-2.5 px-3">Assigned Date</th>
+                        <th className="py-2.5 px-3">Status</th>
+                        <th className="py-2.5 px-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/60 text-foreground font-mono text-[11px]">
+                      {rolesList.map((r) => (
+                        <tr key={r.code} className="hover:bg-muted/30 transition-colors">
+                          <td className="py-2 px-3 font-semibold text-primary">{r.code}</td>
+                          <td className="py-2 px-3 font-sans font-medium text-foreground">{r.name}</td>
+                          <td className="py-2 px-3 font-sans text-muted-foreground">{r.type}</td>
+                          <td className="py-2 px-3">
+                            <span className={cn("rounded px-1.5 py-0.5 text-[10px] font-bold font-sans", r.isPri === "Yes" ? "bg-blue-500/10 text-blue-600" : "bg-muted text-muted-foreground")}>
+                              {r.isPri}
+                            </span>
+                          </td>
+                          <td className="py-2 px-3 font-sans text-muted-foreground">{r.scope}</td>
+                          <td className="py-2 px-3 text-muted-foreground">{r.date}</td>
+                          <td className="py-2 px-3">
+                            <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-500/20 font-sans">
+                              {r.status}
+                            </span>
+                          </td>
+                          <td className="py-2 px-3 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setRolesList((prev) => prev.filter((item) => item.code !== r.code));
+                                showNotification(`Role ${r.code} removed.`);
+                              }}
+                              className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
+                            >
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Granular Module Permissions Matrix */}
+              <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                  <h4 className="text-xs font-bold text-foreground">Granular Module Permissions Grid (CRUD Matrix)</h4>
+                  <div className="text-[10px] text-muted-foreground font-mono flex items-center gap-2">
+                    <span className="text-emerald-600 font-bold">R: Read</span>
+                    <span className="text-blue-600 font-bold">C: Create</span>
+                    <span className="text-amber-600 font-bold">E: Edit</span>
+                    <span className="text-rose-600 font-bold">D: Delete</span>
                   </div>
                 </div>
-              )}
 
-              {activeTab === "permissions" && (
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                  {[
-                    { module: "General Ledger", read: true, create: true, edit: true, delete: false },
-                    { module: "Accounts Payable", read: true, create: true, edit: true, delete: true },
-                    { module: "Accounts Receivable", read: true, create: true, edit: true, delete: false },
-                    { module: "Budgeting & Planning", read: true, create: true, edit: true, delete: false },
-                    { module: "Fixed Assets", read: true, create: false, edit: false, delete: false },
-                    { module: "Tax & Compliance", read: true, create: true, edit: true, delete: false },
-                    { module: "Financial Reports", read: true, create: true, edit: true, delete: true },
-                    { module: "System Settings", read: true, create: false, edit: false, delete: false },
-                  ].map((perm, idx) => (
-                    <div key={idx} className="rounded-xl border border-border bg-card p-3 space-y-2 shadow-xs">
+                  {permissionsList.map((perm, idx) => (
+                    <div key={idx} className="rounded-xl border border-border bg-muted/15 p-3 space-y-2 shadow-2xs">
                       <span className="text-xs font-bold text-foreground block">{perm.module}</span>
                       <div className="flex items-center gap-1.5 text-[10px] font-bold">
-                        <span className={cn("px-1.5 py-0.5 rounded", perm.read ? "bg-emerald-500/10 text-emerald-600" : "bg-muted text-muted-foreground opacity-50")}>R</span>
-                        <span className={cn("px-1.5 py-0.5 rounded", perm.create ? "bg-blue-500/10 text-blue-600" : "bg-muted text-muted-foreground opacity-50")}>C</span>
-                        <span className={cn("px-1.5 py-0.5 rounded", perm.edit ? "bg-amber-500/10 text-amber-600" : "bg-muted text-muted-foreground opacity-50")}>E</span>
-                        <span className={cn("px-1.5 py-0.5 rounded", perm.delete ? "bg-rose-500/10 text-rose-600" : "bg-muted text-muted-foreground opacity-50")}>D</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPermissionsList((prev) => prev.map((p, i) => i === idx ? { ...p, read: !p.read } : p));
+                          }}
+                          className={cn("px-2 py-0.5 rounded cursor-pointer transition-colors", perm.read ? "bg-emerald-500/15 text-emerald-600 border border-emerald-500/30" : "bg-muted text-muted-foreground opacity-40")}
+                        >
+                          R
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPermissionsList((prev) => prev.map((p, i) => i === idx ? { ...p, create: !p.create } : p));
+                          }}
+                          className={cn("px-2 py-0.5 rounded cursor-pointer transition-colors", perm.create ? "bg-blue-500/15 text-blue-600 border border-blue-500/30" : "bg-muted text-muted-foreground opacity-40")}
+                        >
+                          C
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPermissionsList((prev) => prev.map((p, i) => i === idx ? { ...p, edit: !p.edit } : p));
+                          }}
+                          className={cn("px-2 py-0.5 rounded cursor-pointer transition-colors", perm.edit ? "bg-amber-500/15 text-amber-600 border border-amber-500/30" : "bg-muted text-muted-foreground opacity-40")}
+                        >
+                          E
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPermissionsList((prev) => prev.map((p, i) => i === idx ? { ...p, delete: !p.delete } : p));
+                          }}
+                          className={cn("px-2 py-0.5 rounded cursor-pointer transition-colors", perm.delete ? "bg-rose-500/15 text-rose-600 border border-rose-500/30" : "bg-muted text-muted-foreground opacity-40")}
+                        >
+                          D
+                        </button>
                       </div>
                     </div>
                   ))}
                 </div>
-              )}
+              </div>
+            </div>
+          )}
 
-              {activeTab !== "roles" && activeTab !== "permissions" && (
-                <div className="space-y-4">
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                      <span className="text-xs font-bold text-foreground block">Active Role Count</span>
-                      <span className="text-xl font-bold font-mono text-emerald-600">3 Roles</span>
-                      <p className="text-[11px] text-muted-foreground">1 Primary, 2 Secondary Roles assigned.</p>
-                    </div>
+          {/* ACTIVITY & AUDIT LOG WORKSPACE */}
+          {activeTab === "activity" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
+                  Security Authentication & Access Activity Audit Trail
+                </h4>
+                <span className="text-[11px] font-mono text-muted-foreground">Active IP Geolocation Monitoring</span>
+              </div>
 
-                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                      <span className="text-xs font-bold text-foreground block">Segregation of Duties (SoD)</span>
-                      <span className="text-xl font-bold font-mono text-blue-600">0 Conflicts</span>
-                      <p className="text-[11px] text-muted-foreground">Compliant with internal control policies.</p>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                      <span className="text-xs font-bold text-foreground block">Security Policy Index</span>
-                      <span className="text-xl font-bold font-mono text-emerald-600">High Protection</span>
-                      <p className="text-[11px] text-muted-foreground">MFA Enabled & SSO Bound.</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-border bg-card p-4">
-                    <h5 className="text-xs font-bold text-foreground mb-3 capitalize">{activeTab} Parameters & Audit Trail</h5>
-                    <div className="space-y-2 text-xs text-muted-foreground">
-                      <div className="flex justify-between py-1 border-b border-border/50">
-                        <span>Last Security Audit:</span>
-                        <span className="font-mono text-foreground">15 May 2024, 10:45 AM</span>
-                      </div>
-                      <div className="flex justify-between py-1 border-b border-border/50">
-                        <span>Assigned Security Officer:</span>
-                        <span className="font-semibold text-foreground">Ananya Roy (CISO Office)</span>
-                      </div>
-                      <div className="flex justify-between py-1">
-                        <span>Authentication Identity:</span>
-                        <span className="text-emerald-600 font-bold">Verified SAML 2.0 SSO</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2 px-2">Timestamp</th>
+                      <th className="py-2 px-2">Target Module</th>
+                      <th className="py-2 px-2">Action Executed</th>
+                      <th className="py-2 px-2">IP Address</th>
+                      <th className="py-2 px-2">Security Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 text-[11px]">
+                    {RECENT_USER_ACTIVITY.map((act) => (
+                      <tr key={act.id} className="hover:bg-muted/30 transition-colors">
+                        <td className="py-2 px-2 font-mono text-muted-foreground">{act.datetime}</td>
+                        <td className="py-2 px-2 font-semibold text-foreground">{act.module}</td>
+                        <td className="py-2 px-2 text-primary font-medium">{act.action}</td>
+                        <td className="py-2 px-2 font-mono">{act.ip}</td>
+                        <td className="py-2 px-2">
+                          <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-500/20">
+                            {act.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
+
+        {/* --- ADD USER MODAL --- */}
+        {showAddUserModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+            <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <UserCheck className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Create User Account</h3>
+                </div>
+                <button onClick={() => setShowAddUserModal(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">User Code *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. USR-DEV-006"
+                    value={newUserForm.code}
+                    onChange={(e) => setNewUserForm({ ...newUserForm, code: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Full Name *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Anand Kumar"
+                    value={newUserForm.name}
+                    onChange={(e) => setNewUserForm({ ...newUserForm, name: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Email Address *</label>
+                  <input
+                    type="email"
+                    placeholder="e.g. anand.k@magnertia.com"
+                    value={newUserForm.email}
+                    onChange={(e) => setNewUserForm({ ...newUserForm, email: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Primary Role</label>
+                    <input
+                      type="text"
+                      value={newUserForm.role}
+                      onChange={(e) => setNewUserForm({ ...newUserForm, role: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Department</label>
+                    <input
+                      type="text"
+                      value={newUserForm.dept}
+                      onChange={(e) => setNewUserForm({ ...newUserForm, dept: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowAddUserModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newUserForm.code || !newUserForm.name || !newUserForm.email) {
+                      alert("Please provide user code, name, and email.");
+                      return;
+                    }
+                    setUsersList((prev) => [
+                      ...prev,
+                      {
+                        code: newUserForm.code.toUpperCase(),
+                        name: newUserForm.name,
+                        email: newUserForm.email,
+                        role: newUserForm.role,
+                        dept: newUserForm.dept,
+                        type: newUserForm.type,
+                        status: "Active",
+                      },
+                    ]);
+                    setShowAddUserModal(false);
+                    showNotification(`User account ${newUserForm.code.toUpperCase()} successfully created.`);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Create User
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* --- ADD ROLE MODAL --- */}
+        {showAddRoleModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+            <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Create RBAC Role</h3>
+                </div>
+                <button onClick={() => setShowAddRoleModal(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Role Code *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. ROL-OPS-005"
+                    value={newRoleForm.code}
+                    onChange={(e) => setNewRoleForm({ ...newRoleForm, code: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Role Name *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Operations Coordinator"
+                    value={newRoleForm.name}
+                    onChange={(e) => setNewRoleForm({ ...newRoleForm, name: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Role Type</label>
+                    <select
+                      value={newRoleForm.type}
+                      onChange={(e) => setNewRoleForm({ ...newRoleForm, type: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-xs text-foreground"
+                    >
+                      <option value="Management Role">Management Role</option>
+                      <option value="Functional Role">Functional Role</option>
+                      <option value="Approval Role">Approval Role</option>
+                      <option value="System Role">System Role</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Data Scope</label>
+                    <select
+                      value={newRoleForm.scope}
+                      onChange={(e) => setNewRoleForm({ ...newRoleForm, scope: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-xs text-foreground"
+                    >
+                      <option value="Enterprise">Enterprise</option>
+                      <option value="Organization">Organization</option>
+                      <option value="Department">Department</option>
+                      <option value="Branch">Branch</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowAddRoleModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newRoleForm.code || !newRoleForm.name) {
+                      alert("Please provide role code and name.");
+                      return;
+                    }
+                    setRolesList((prev) => [
+                      ...prev,
+                      {
+                        code: newRoleForm.code.toUpperCase(),
+                        name: newRoleForm.name,
+                        type: newRoleForm.type,
+                        isPri: "No",
+                        scope: newRoleForm.scope,
+                        date: "Today",
+                        status: "Active",
+                      },
+                    ]);
+                    setShowAddRoleModal(false);
+                    showNotification(`Role ${newRoleForm.code.toUpperCase()} successfully created.`);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Create Role
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer Classification & Modification Strip */}
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card p-3 text-[11px] text-muted-foreground font-mono">

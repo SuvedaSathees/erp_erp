@@ -13,6 +13,7 @@ import {
   Clock,
   DollarSign,
   Plus,
+  Printer,
   Save,
   Send,
   Download,
@@ -338,7 +339,7 @@ const RECENT_ACTIVITIES = [
     type: "Meeting",
     subject: "Solution Demo with Technical Team",
     outcome: "Positive",
-    outcomeColor: "bg-emerald-100 text-emerald-700 border-emerald-300",
+    outcomeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
     nextAction: "Send Proposal",
     nextActionDate: "22 May 2024",
     assignedTo: "Rahul Sharma",
@@ -349,8 +350,8 @@ const RECENT_ACTIVITIES = [
     time: "15 May 2024 04:30 PM",
     type: "Email",
     subject: "Technical Specification Shared",
-    outcome: "Information Sent",
-    outcomeColor: "bg-blue-100 text-blue-700 border-blue-300",
+    outcome: "Info Sent",
+    outcomeColor: "bg-blue-50 text-blue-700 border-blue-200",
     nextAction: "Clarify Technical Queries",
     nextActionDate: "20 May 2024",
     assignedTo: "Rahul Sharma",
@@ -362,7 +363,7 @@ const RECENT_ACTIVITIES = [
     type: "Call",
     subject: "Requirement Discussion",
     outcome: "Interested",
-    outcomeColor: "bg-purple-100 text-purple-700 border-purple-300",
+    outcomeColor: "bg-purple-50 text-purple-700 border-purple-200",
     nextAction: "Schedule Product Demo",
     nextActionDate: "18 May 2024",
     assignedTo: "Rahul Sharma",
@@ -373,8 +374,8 @@ const RECENT_ACTIVITIES = [
     time: "10 May 2024 10:00 AM",
     type: "Note",
     subject: "Initial Discovery Meeting",
-    outcome: "Requirement Identified",
-    outcomeColor: "bg-amber-100 text-amber-700 border-amber-300",
+    outcome: "Req. Identified",
+    outcomeColor: "bg-amber-50 text-amber-700 border-amber-200",
     nextAction: "Share Brochure",
     nextActionDate: "13 May 2024",
     assignedTo: "Rahul Sharma",
@@ -385,7 +386,6 @@ const RECENT_ACTIVITIES = [
 export function OpportunityManagementPage() {
   const [opportunities, setOpportunities] = useState<OpportunityRecord[]>(INITIAL_OPPORTUNITIES);
   const [selectedOppId, setSelectedOppId] = useState<string>("OPP-001");
-  const [activeTab, setActiveTab] = useState<string>("overview");
 
   // Dialog States
   const [isNewOppOpen, setIsNewOppOpen] = useState(false);
@@ -399,6 +399,12 @@ export function OpportunityManagementPage() {
   }, [opportunities, selectedOppId]);
 
   const [formState, setFormState] = useState<OpportunityRecord>(currentOpp);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const handleSelectOpp = (id: string) => {
     setSelectedOppId(id);
@@ -419,7 +425,7 @@ export function OpportunityManagementPage() {
 
   const handleSaveOpp = () => {
     setOpportunities((prev) => prev.map((o) => (o.id === formState.id ? formState : o)));
-    alert(`Opportunity ${formState.opportunityNumber} (${formState.opportunityName}) saved successfully!`);
+    showNotification(`Opportunity ${formState.opportunityNumber} (${formState.opportunityName}) saved successfully!`);
   };
 
   const STAGES_PIPELINE: { stage: SalesStage; date: string; status: "Completed" | "In Progress" | "Pending" }[] = [
@@ -437,40 +443,42 @@ export function OpportunityManagementPage() {
 
   return (
     <AppShell
-      title="Opportunity Management"
-      breadcrumb="Management > CRM Management > Opportunity Management"
-      description="The Opportunity Management Form is the central CRM record for managing qualified business opportunities from opportunity creation → qualification → sales stages → proposal → negotiation → forecasting → closure → conversion → analytics."
+      title="Opportunity Management Form"
+      breadcrumb="Management > CRM Management > Opportunity Management > Opportunity Form"
+      description="The Opportunity Management Form is the central CRM record for managing revenue-generating deals—from lead conversion/creation → qualification → solution mapping → competitor strategy → stage progression → revenue forecasting → proposal/quoting → discount approvals → closing → win/loss analysis."
       tabs={<CrmManagementTabBar />}
     >
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <div className="flex flex-col min-h-screen text-slate-800 space-y-6">
         {/* Opportunity Master Action Bar */}
-        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-2xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => window.history.back()}
-                className="h-8 px-2.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 flex items-center gap-1 cursor-pointer transition-colors"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" />
-                <span>Back</span>
-              </button>
-              <h2 className="text-base font-bold tracking-tight text-slate-900">Opportunity Master Form</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-2xs">
+          <div className="flex items-center justify-between gap-3 flex-nowrap overflow-x-auto scrollbar-none">
+            {/* Title & Status Badges */}
+            <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 whitespace-nowrap">Opportunity Form</h2>
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap font-mono">
                 {formState.opportunityNumber}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300">
-                ● {formState.status}
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 whitespace-nowrap flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 inline-block" />
+                <span>{formState.stage}</span>
               </span>
             </div>
 
-            {/* Header Action Buttons */}
-            <div className="flex items-center flex-wrap gap-2">
-              <div className="flex items-center gap-2 mr-2">
-                <label className="text-xs font-semibold text-slate-600">Select Opportunity:</label>
+            {/* Quick Actions Header */}
+            <div className="flex items-center gap-2.5 shrink-0 flex-nowrap">
+              <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+                <label className="text-xs font-semibold text-slate-600 whitespace-nowrap">Select Deal:</label>
                 <select
                   value={selectedOppId}
                   onChange={(e) => handleSelectOpp(e.target.value)}
-                  className="h-8 text-xs bg-slate-50 border border-slate-300 rounded-md px-2 font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+                  className="h-8 max-w-[210px] text-xs bg-slate-50 border border-slate-300 rounded-md px-2 font-medium focus:ring-2 focus:ring-primary focus:outline-none truncate"
                 >
                   {opportunities.map((o) => (
                     <option key={o.id} value={o.id}>
@@ -482,40 +490,25 @@ export function OpportunityManagementPage() {
 
               <button
                 onClick={() => setIsNewOppOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Plus className="h-3.5 w-3.5" />
-                <span>New Opportunity</span>
-              </button>
-
-              <button
-                onClick={() => setIsConvertOrderOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md border border-emerald-300 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                <span>Convert to Order</span>
+                <span>New Deal</span>
               </button>
 
               <button
                 onClick={handleSaveOpp}
-                className="h-8 px-4 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer font-bold"
+                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save</span>
               </button>
 
-              <button
-                onClick={() => alert("Saved as new revision!")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md border border-slate-300 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <span>Save & New</span>
-              </button>
-
-              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs">
+              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1 shrink-0 whitespace-nowrap">
+                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs shrink-0">
                   RS
                 </div>
-                <div className="text-left hidden sm:block">
+                <div className="text-left hidden sm:block whitespace-nowrap">
                   <div className="text-xs font-semibold text-slate-800 leading-none">Rahul Sharma</div>
                   <div className="text-[10px] text-slate-500">Sales Manager</div>
                 </div>
@@ -718,47 +711,7 @@ export function OpportunityManagementPage() {
           </div>
         </div>
 
-        {/* Form Inner Sub-Tabs Header */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-1.5 overflow-x-auto scrollbar-none">
-            {[
-              { id: "overview", label: "Overview", icon: Layers },
-              { id: "requirement", label: "Requirement", icon: Target },
-              { id: "solution", label: "Solution & Value", icon: DollarSign },
-              { id: "activities", label: "Activities", icon: Activity },
-              { id: "proposal", label: "Proposal", icon: FileText },
-              { id: "competition", label: "Competition", icon: ShieldCheck },
-              { id: "forecast", label: "Forecast", icon: TrendingUp },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "notes", label: "Notes", icon: CheckSquare },
-              { id: "approvals", label: "Approvals", icon: Award },
-              { id: "audit", label: "Audit Trail", icon: ShieldCheck },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer",
-                    active
-                      ? "bg-white text-primary shadow-2xs border border-slate-200/80"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                  )}
-                >
-                  <Icon className={cn("h-3.5 w-3.5", active ? "text-primary" : "text-slate-400")} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* TAB CONTENT AREA */}
-          <div className="p-5">
-            {/* TAB 1: OVERVIEW (MATCHING MOCKUP IMAGE SECTIONS 2-10 EXACTLY) */}
-            {activeTab === "overview" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left & Center Columns: Cards 2 to 10 */}
                 <div className="lg:col-span-2 space-y-6">
                   {/* Grid Row 1: Stage Progress & Opportunity Value */}
@@ -823,7 +776,7 @@ export function OpportunityManagementPage() {
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                           3. Opportunity Value
                         </h3>
-                        <button onClick={() => alert("Viewing Value Details...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Viewing Value Details...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           View Value Details
                         </button>
                       </div>
@@ -873,34 +826,50 @@ export function OpportunityManagementPage() {
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                           4. Contacts Involved
                         </h3>
-                        <button onClick={() => alert("Viewing All Contacts...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Viewing All Contacts...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           View All Contacts
                         </button>
                       </div>
 
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs border-collapse">
+                      <div className="w-full">
+                        <table className="w-full text-left text-xs border-collapse table-fixed">
                           <thead>
-                            <tr className="text-slate-500 font-semibold border-b border-slate-200 pb-1">
-                              <th className="py-1 px-1">Contact</th>
-                              <th className="py-1 px-1">Role</th>
-                              <th className="py-1 px-1">Decision Role</th>
-                              <th className="py-1 px-1">Influence</th>
-                              <th className="py-1 px-1 text-center">Primary</th>
+                            <tr className="text-slate-500 text-[11px] font-semibold border-b border-slate-200">
+                              <th className="py-1 px-1 w-[38%]">Contact</th>
+                              <th className="py-1 px-1 w-[30%]">Decision Role</th>
+                              <th className="py-1 px-1 w-[20%]">Influence</th>
+                              <th className="py-1 px-1 w-[12%] text-center">Primary</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100">
                             {CONTACTS_MAPPED.map((c, idx) => (
-                              <tr key={idx} className="hover:bg-slate-100/60">
-                                <td className="py-1.5 px-1 font-semibold text-slate-800 flex items-center gap-1.5">
-                                  <img src={c.avatar} alt={c.name} className="w-5 h-5 rounded-full object-cover" />
-                                  <span className="truncate max-w-[90px]">{c.name}</span>
+                              <tr key={idx} className="hover:bg-slate-100/60 transition-colors">
+                                <td className="py-1.5 px-1">
+                                  <div className="flex items-center gap-1.5 min-w-0">
+                                    <img src={c.avatar} alt={c.name} className="w-6 h-6 rounded-full object-cover shrink-0 border border-slate-200" />
+                                    <div className="min-w-0">
+                                      <div className="font-bold text-slate-800 text-xs truncate leading-tight">{c.name}</div>
+                                      <div className="text-[10px] text-slate-500 truncate leading-tight">{c.role}</div>
+                                    </div>
+                                  </div>
                                 </td>
-                                <td className="py-1.5 px-1 text-slate-600 truncate max-w-[80px]">{c.role}</td>
-                                <td className="py-1.5 px-1 font-medium text-slate-700">{c.decisionRole}</td>
-                                <td className="py-1.5 px-1 text-amber-500">{"★".repeat(c.influence)}</td>
+                                <td className="py-1.5 px-1">
+                                  <span className="inline-block px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-medium truncate max-w-full">
+                                    {c.decisionRole}
+                                  </span>
+                                </td>
+                                <td className="py-1.5 px-1 text-amber-500 text-xs">
+                                  {"★".repeat(c.influence)}
+                                  <span className="text-slate-300">{"★".repeat(5 - c.influence)}</span>
+                                </td>
                                 <td className="py-1.5 px-1 text-center">
-                                  <input type="checkbox" checked={c.primary} readOnly className="h-3.5 w-3.5 text-primary rounded" />
+                                  {c.primary ? (
+                                    <span className="inline-flex items-center justify-center h-4 px-1.5 bg-blue-50 border border-blue-200 text-primary text-[9px] font-bold rounded-full">
+                                      Primary
+                                    </span>
+                                  ) : (
+                                    <span className="text-slate-300 text-xs">—</span>
+                                  )}
                                 </td>
                               </tr>
                             ))}
@@ -915,7 +884,7 @@ export function OpportunityManagementPage() {
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                           5. Qualification Summary
                         </h3>
-                        <button onClick={() => alert("Viewing Qualification Details...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Viewing Qualification Details...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           View Qualification Details
                         </button>
                       </div>
@@ -940,8 +909,27 @@ export function OpportunityManagementPage() {
                         ))}
 
                         <div className="flex items-center justify-between border-t border-slate-200 pt-2 mt-2">
-                          <span className="font-bold text-slate-800">Qualification Score</span>
-                          <span className="font-extrabold text-emerald-600 text-sm">{formState.qualificationScore} / 100</span>
+                          <div>
+                            <span className="font-bold text-slate-800 block">Qualification Score</span>
+                            <span className="font-extrabold text-emerald-600 text-sm font-mono">{formState.qualificationScore} / 100</span>
+                          </div>
+                          <div className="relative inline-flex items-center justify-center shrink-0">
+                            <svg width="36" height="36" className="transform -rotate-90">
+                              <circle cx="18" cy="18" r="13" stroke="currentColor" strokeWidth="2.5" className="text-emerald-100" fill="transparent" />
+                              <circle
+                                cx="18"
+                                cy="18"
+                                r="13"
+                                stroke="#10b981"
+                                strokeWidth="2.5"
+                                strokeDasharray={2 * Math.PI * 13}
+                                strokeDashoffset={2 * Math.PI * 13 * (1 - (Number(formState.qualificationScore) || 85) / 100)}
+                                strokeLinecap="round"
+                                fill="transparent"
+                              />
+                            </svg>
+                            <span className="absolute text-[8px] font-bold font-mono text-emerald-700">{formState.qualificationScore}%</span>
+                          </div>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-slate-800">Qualification Status</span>
@@ -961,31 +949,36 @@ export function OpportunityManagementPage() {
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                           6. Top Competitors
                         </h3>
-                        <button onClick={() => alert("Viewing Competition Analysis...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Viewing Competition Analysis...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           View Competition Analysis
                         </button>
                       </div>
 
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs border-collapse">
+                      <div className="w-full">
+                        <table className="w-full text-left text-xs border-collapse table-fixed">
                           <thead>
-                            <tr className="text-slate-500 font-semibold border-b border-slate-200 pb-1">
-                              <th className="py-1 px-1">Competitor</th>
-                              <th className="py-1 px-1">Product</th>
-                              <th className="py-1 px-1">Price (INR)</th>
-                              <th className="py-1 px-1">Strength</th>
-                              <th className="py-1 px-1">Our Position</th>
+                            <tr className="text-slate-500 text-[11px] font-semibold border-b border-slate-200">
+                              <th className="py-1 px-1 w-[34%]">Competitor</th>
+                              <th className="py-1 px-1 w-[24%]">Price (INR)</th>
+                              <th className="py-1 px-1 w-[24%]">Strength</th>
+                              <th className="py-1 px-1 w-[18%] text-right">Position</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100">
                             {COMPETITORS_DATA.map((comp, idx) => (
-                              <tr key={idx} className="hover:bg-slate-100/60">
-                                <td className="py-1.5 px-1 font-bold text-slate-800">{comp.competitor}</td>
-                                <td className="py-1.5 px-1 text-slate-600">{comp.product}</td>
-                                <td className="py-1.5 px-1 font-mono">{comp.price}</td>
-                                <td className="py-1.5 px-1 text-slate-600">{comp.strength}</td>
+                              <tr key={idx} className="hover:bg-slate-100/60 transition-colors">
                                 <td className="py-1.5 px-1">
-                                  <span className={cn("px-2 py-0.5 text-[10px] font-bold rounded", comp.position === "Strong" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800")}>
+                                  <div className="font-bold text-slate-800 text-xs truncate leading-tight">{comp.competitor}</div>
+                                  <div className="text-[10px] text-slate-500 truncate leading-tight">{comp.product}</div>
+                                </td>
+                                <td className="py-1.5 px-1 font-mono text-xs text-slate-700 font-semibold truncate">
+                                  {comp.price}
+                                </td>
+                                <td className="py-1.5 px-1 text-slate-600 text-xs truncate">
+                                  {comp.strength}
+                                </td>
+                                <td className="py-1.5 px-1 text-right">
+                                  <span className={cn("px-2 py-0.5 text-[10px] font-bold rounded-full inline-block", comp.position === "Strong" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-amber-50 text-amber-700 border border-amber-200")}>
                                     {comp.position}
                                   </span>
                                 </td>
@@ -1004,7 +997,7 @@ export function OpportunityManagementPage() {
                           <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                             7. Next Steps
                           </h3>
-                          <button onClick={() => alert("Viewing All Follow-ups...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                          <button onClick={() => showNotification("Viewing All Follow-ups...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                             View All Follow-ups
                           </button>
                         </div>
@@ -1051,7 +1044,7 @@ export function OpportunityManagementPage() {
                           <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                             8. Risk & Strategy
                           </h3>
-                          <button onClick={() => alert("Viewing Risk Details...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                          <button onClick={() => showNotification("Viewing Risk Details...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                             View Risk Details
                           </button>
                         </div>
@@ -1087,31 +1080,34 @@ export function OpportunityManagementPage() {
                         </button>
                       </div>
 
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs border-collapse">
+                      <div className="w-full">
+                        <table className="w-full text-left text-xs border-collapse table-fixed">
                           <thead>
-                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                              <th className="py-2 px-3">Date & Time</th>
-                              <th className="py-2 px-3">Activity Type</th>
-                              <th className="py-2 px-3">Subject</th>
-                              <th className="py-2 px-3">Outcome</th>
-                              <th className="py-2 px-3">Next Action</th>
-                              <th className="py-2 px-3">Assigned To</th>
+                            <tr className="bg-slate-50 text-slate-600 text-[11px] font-semibold border-b border-slate-200">
+                              <th className="py-2 px-2.5 w-[30%]">Date & Type</th>
+                              <th className="py-2 px-2.5 w-[44%]">Subject & Next Action</th>
+                              <th className="py-2 px-2.5 w-[26%] text-right">Outcome</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100">
                             {RECENT_ACTIVITIES.map((act) => (
                               <tr key={act.id} className="hover:bg-slate-50/80 transition-colors">
-                                <td className="py-2 px-3 text-slate-600 whitespace-nowrap">{act.time}</td>
-                                <td className="py-2 px-3 font-semibold text-slate-800">{act.type}</td>
-                                <td className="py-2 px-3 text-slate-700">{act.subject}</td>
-                                <td className="py-2 px-3">
-                                  <span className={cn("px-2 py-0.5 text-[11px] font-semibold rounded border", act.outcomeColor)}>
-                                    {act.outcome}
+                                <td className="py-2.5 px-2.5">
+                                  <div className="font-bold text-slate-800 text-xs leading-tight">{act.type}</div>
+                                  <div className="text-slate-500 font-mono text-[10px] truncate leading-tight mt-0.5">{act.time}</div>
+                                </td>
+                                <td className="py-2.5 px-2.5">
+                                  <div className="font-bold text-slate-900 text-xs truncate leading-tight">{act.subject}</div>
+                                  <div className="text-[10px] text-slate-500 truncate leading-tight mt-0.5">
+                                    Next: <span className="font-medium text-slate-700">{act.nextAction}</span> ({act.nextActionDate})
+                                  </div>
+                                </td>
+                                <td className="py-2.5 px-2.5 text-right">
+                                  <span className={cn("px-2 py-0.5 text-[10px] font-bold rounded-full border shadow-2xs whitespace-nowrap inline-flex items-center justify-center gap-1", act.outcomeColor)}>
+                                    <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+                                    <span>{act.outcome}</span>
                                   </span>
                                 </td>
-                                <td className="py-2 px-3 text-slate-700">{act.nextAction}</td>
-                                <td className="py-2 px-3 text-slate-600">{act.assignedTo}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -1125,7 +1121,7 @@ export function OpportunityManagementPage() {
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                           10. Win / Loss Summary
                         </h3>
-                        <button onClick={() => alert("Viewing Opportunity Analytics...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Viewing Opportunity Analytics...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           View Analytics
                         </button>
                       </div>
@@ -1171,10 +1167,36 @@ export function OpportunityManagementPage() {
                     </h3>
 
                     {/* Probability Gauge Meter */}
-                    <div className="relative flex flex-col items-center justify-center pt-1 pb-1">
-                      <div className="w-36 h-36 rounded-full border-8 border-slate-100 border-t-amber-500 border-r-emerald-500 border-b-emerald-500 flex flex-col items-center justify-center shadow-inner">
-                        <span className="text-3xl font-extrabold text-slate-900">{formState.probability}%</span>
-                        <span className="text-xs font-semibold text-slate-400">Probability</span>
+                    <div className="relative flex flex-col items-center justify-center py-2">
+                      <div className="relative w-36 h-36 flex items-center justify-center">
+                        <svg className="w-full h-full -rotate-90" viewBox="0 0 140 140">
+                          {/* Background Track */}
+                          <circle
+                            cx="70"
+                            cy="70"
+                            r="56"
+                            className="text-slate-100"
+                            strokeWidth="10"
+                            stroke="currentColor"
+                            fill="transparent"
+                          />
+                          {/* Probability Segment */}
+                          <circle
+                            cx="70"
+                            cy="70"
+                            r="56"
+                            stroke="#10b981"
+                            strokeWidth="10"
+                            strokeDasharray={2 * Math.PI * 56}
+                            strokeDashoffset={2 * Math.PI * 56 * (1 - (formState.probability || 75) / 100)}
+                            strokeLinecap="round"
+                            fill="transparent"
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                          <span className="text-2xl font-extrabold text-slate-900 font-mono">{formState.probability}%</span>
+                          <span className="text-[11px] font-semibold text-slate-400">Probability</span>
+                        </div>
                       </div>
                     </div>
 
@@ -1248,35 +1270,35 @@ export function OpportunityManagementPage() {
                         <span>Add Activity</span>
                       </button>
                       <button
-                        onClick={() => alert("Opening Meeting Scheduler...")}
+                        onClick={() => showNotification("Meeting invite generated for " + formState.accountName)}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Calendar className="h-4 w-4 text-purple-600" />
                         <span>Schedule</span>
                       </button>
                       <button
-                        onClick={() => alert("Opening Email Composer...")}
+                        onClick={() => showNotification("Email drafted to " + formState.accountName)}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Mail className="h-4 w-4 text-emerald-600" />
                         <span>Send Email</span>
                       </button>
                       <button
-                        onClick={() => alert("Opening Proposal Generator...")}
+                        onClick={() => showNotification("Draft proposal QT-2024-0091 created from opportunity deal.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <FileText className="h-4 w-4 text-blue-600" />
                         <span>Proposal</span>
                       </button>
                       <button
-                        onClick={() => alert("Opening Note Editor...")}
+                        onClick={() => showNotification("Note added to deal timeline.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <CheckSquare className="h-4 w-4 text-amber-600" />
                         <span>Add Note</span>
                       </button>
                       <button
-                        onClick={() => alert("Opening Document Uploader...")}
+                        onClick={() => showNotification("Document attachment window ready.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Paperclip className="h-4 w-4 text-indigo-600" />
@@ -1294,9 +1316,6 @@ export function OpportunityManagementPage() {
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
 
         {/* MODAL 1: NEW OPPORTUNITY */}
         {isNewOppOpen && (
@@ -1386,7 +1405,8 @@ export function OpportunityManagementPage() {
                     handleInputChange("stage", "Closed Won");
                     handleInputChange("status", "Closed Won");
                     setIsConvertOrderOpen(false);
-                    alert(`Opportunity ${formState.opportunityNumber} converted to Closed Won Sales Order!`);
+                    setFormState((prev) => ({ ...prev, stage: "Closed Won", probability: "100%" }));
+                    showNotification(`Opportunity ${formState.opportunityNumber} converted to Closed Won Sales Order!`);
                   }}
                   className="px-4 py-1.5 text-xs bg-emerald-600 text-white font-bold rounded shadow-xs"
                 >

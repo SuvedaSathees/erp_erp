@@ -94,18 +94,7 @@ const RECENT_APPROVAL_REQUESTS = [
 ];
 
 export function ApprovalMatrixManagementPage() {
-  const [activeTab, setActiveTab] = useState<
-    | "overview"
-    | "approval-levels"
-    | "conditions"
-    | "routing"
-    | "escalation"
-    | "delegation"
-    | "sla"
-    | "sod"
-    | "history"
-    | "documents"
-  >("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "levels" | "routing" | "requests">("overview");
 
   // Master Form State
   const [matrixMaster, setMatrixMaster] = useState({
@@ -124,6 +113,37 @@ export function ApprovalMatrixManagementPage() {
     effectiveTo: "2025-03-31",
     version: "1.0",
     createdBy: "Rahul Sharma",
+  });
+
+  // Dynamic Approval Levels State
+  const [levelsList, setLevelsList] = useState([
+    { id: "LVL-1", level: 1, name: "Department Approval", type: "Role", approver: "Purchase Manager", limit: "Up to ₹ 1,00,000", mandatory: true, time: 1 },
+    { id: "LVL-2", level: 2, name: "Finance Approval", type: "Role", approver: "Finance Manager", limit: "₹ 1,00,001 - ₹ 10,00,000", mandatory: true, time: 2 },
+    { id: "LVL-3", level: 3, name: "BU Head Approval", type: "Role", approver: "Head - Procurement", limit: "₹ 10,00,001 - ₹ 50,00,000", mandatory: true, time: 3 },
+    { id: "LVL-4", level: 4, name: "CFO Approval", type: "User", approver: "Chief Financial Officer", limit: "Above ₹ 50,00,000", mandatory: true, time: 4 },
+  ]);
+
+  // Dynamic Live Requests
+  const [requestsList, setRequestsList] = useState([
+    { id: "APR-2024-01576", tx: "Purchase Order", amount: "₹ 75,00,000", initiator: "Amit Verma", level: "Level 3", approver: "Head - Procurement", status: "Pending", due: "15 May 2024 05:00 PM" },
+    { id: "APR-2024-01575", tx: "Purchase Order", amount: "₹ 8,50,000", initiator: "Neha Kapoor", level: "Level 2", approver: "Finance Manager", status: "Pending", due: "15 May 2024 02:00 PM" },
+    { id: "APR-2024-01574", tx: "Purchase Order", amount: "₹ 45,00,000", initiator: "Vikram Singh", level: "Level 3", approver: "Head - Procurement", status: "Approved", due: "14 May 2024 06:00 PM" },
+    { id: "APR-2024-01573", tx: "Purchase Order", amount: "₹ 90,000", initiator: "Pooja Mehta", level: "Level 1", approver: "Purchase Manager", status: "Approved", due: "14 May 2024 11:00 AM" },
+  ]);
+
+  const [conditionsList, setConditionsList] = useState([
+    { id: "CND-1", name: "Amount Threshold Rule", field: "PO Amount", operator: "Greater Than", value: "₹ 1,00,000", logic: "AND", active: true },
+    { id: "CND-2", name: "Capex Category Check", field: "Item Category", operator: "In", value: "Machinery, IT Infrastructure", logic: "AND", active: true },
+    { id: "CND-3", name: "Urgent Expedited Flag", field: "Criticality", operator: "Equals", value: "High", logic: "OR", active: false },
+  ]);
+
+  const [showAddLevelModal, setShowAddLevelModal] = useState(false);
+  const [newLevelForm, setNewLevelForm] = useState({
+    name: "",
+    type: "Role",
+    approver: "Purchase Manager",
+    limit: "Up to ₹ 5,00,000",
+    time: "2",
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -214,13 +234,6 @@ export function ApprovalMatrixManagementPage() {
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <span className="text-primary">1.</span> Approval Matrix Master
               </h3>
-              <span className="text-[11px] text-muted-foreground font-medium">
-                MAICW Fields: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
-                <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
-                <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-                <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
-                <span className="text-rose-500 font-bold">W</span> (Workflow)
-              </span>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -481,27 +494,35 @@ export function ApprovalMatrixManagementPage() {
                 <span className="text-[10px] text-emerald-600 font-semibold">Excellent</span>
                 <span className="text-[9px] text-muted-foreground block mt-1">Avg: 12h 45m</span>
               </div>
-              <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-emerald-500 text-xs font-bold font-mono text-emerald-600">
-                96%
+              <div className="relative inline-flex items-center justify-center">
+                <svg width="48" height="48" className="transform -rotate-90">
+                  <circle cx="24" cy="24" r="19" stroke="currentColor" strokeWidth="3.5" className="text-muted/30" fill="transparent" />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="19"
+                    stroke="#10b981"
+                    strokeWidth="3.5"
+                    strokeDasharray={2 * Math.PI * 19}
+                    strokeDashoffset={2 * Math.PI * 19 * (1 - 0.96)}
+                    strokeLinecap="round"
+                    fill="transparent"
+                  />
+                </svg>
+                <span className="absolute text-[11px] font-bold font-mono text-emerald-600">96%</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 2. Workspace Navigation Tabs */}
+        {/* 2. Workspace Navigation Tabs (Centered & Streamlined) */}
         <div className="space-y-4">
-          <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
+          <div className="flex items-center justify-center gap-2 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
             {[
-              { key: "overview", label: "Overview", icon: Layers },
-              { key: "approval-levels", label: "Approval Levels", icon: UserCheck },
-              { key: "conditions", label: "Conditions", icon: Sliders },
-              { key: "routing", label: "Routing & Sequence", icon: ArrowRight },
-              { key: "escalation", label: "Escalation", icon: AlertTriangle },
-              { key: "delegation", label: "Delegation", icon: UserCheck },
-              { key: "sla", label: "SLA & Reminders", icon: Clock },
-              { key: "sod", label: "SoD & Controls", icon: ShieldCheck },
-              { key: "history", label: "History & Versions", icon: History },
-              { key: "documents", label: "Documents", icon: FileText },
+              { key: "overview", label: "Matrix Overview & Parameters", icon: Layers },
+              { key: "levels", label: "Approval Levels & Authority", icon: UserCheck },
+              { key: "routing", label: "Conditional Routing", icon: Sliders },
+              { key: "requests", label: "Live Requests & Audit Logs", icon: Clock },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
@@ -510,7 +531,7 @@ export function ApprovalMatrixManagementPage() {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key as typeof activeTab)}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
+                    "flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
                     isActive
                       ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -523,464 +544,339 @@ export function ApprovalMatrixManagementPage() {
             })}
           </div>
 
-          {/* OVERVIEW TAB CONTENT (Matching attached screenshot layout) */}
+          {/* OVERVIEW TAB CONTENT */}
           {activeTab === "overview" && (
             <div className="space-y-6">
-              {/* Row 1: 2. Approval Levels | 3. Conditions | 4. Transaction Definition */}
+              {/* Row 1: Approval Matrix Setup | Routing Sequence Preview */}
               <div className="grid gap-4 lg:grid-cols-3">
-                {/* 2. Approval Levels */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                    <h4 className="text-xs font-bold text-foreground">2. Approval Levels</h4>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                          <th className="py-1.5 px-1">Level</th>
-                          <th className="py-1.5 px-1">Level Name</th>
-                          <th className="py-1.5 px-1">Approver / Role</th>
-                          <th className="py-1.5 px-1 text-right">Approval Limit (INR)</th>
-                          <th className="py-1.5 px-1 text-center">Mandatory</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/50 text-[11px]">
-                        {APPROVAL_LEVELS_DATA.map((lvl) => (
-                          <tr key={lvl.id} className="hover:bg-muted/30 transition-colors">
-                            <td className="py-1.5 px-1 font-mono font-bold text-primary">{lvl.level}</td>
-                            <td className="py-1.5 px-1 font-medium text-foreground">{lvl.name}</td>
-                            <td className="py-1.5 px-1 text-muted-foreground">{lvl.approver}</td>
-                            <td className="py-1.5 px-1 text-right font-mono font-bold text-foreground">{lvl.limit}</td>
-                            <td className="py-1.5 px-1 text-center">
-                              <CheckCircle2 className="h-4 w-4 text-emerald-500 inline" />
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Add Level modal opened.")}
-                    className="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline cursor-pointer pt-1"
-                  >
-                    <Plus className="h-3 w-3" />
-                    Add Level
-                  </button>
-                </div>
-
-                {/* 3. Conditions */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                    <h4 className="text-xs font-bold text-foreground">3. Conditions</h4>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                          <th className="py-1.5 px-1">#</th>
-                          <th className="py-1.5 px-1">Condition</th>
-                          <th className="py-1.5 px-1">Field</th>
-                          <th className="py-1.5 px-1">Operator</th>
-                          <th className="py-1.5 px-1">Value</th>
-                          <th className="py-1.5 px-1">Logic</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/50 text-[11px]">
-                        {MATRIX_CONDITIONS_DATA.map((c) => (
-                          <tr key={c.id} className="hover:bg-muted/30 transition-colors">
-                            <td className="py-1.5 px-1 font-mono text-muted-foreground">{c.id.replace("CND-", "")}</td>
-                            <td className="py-1.5 px-1 font-medium text-foreground">{c.name}</td>
-                            <td className="py-1.5 px-1 text-muted-foreground font-mono text-[10px]">{c.field}</td>
-                            <td className="py-1.5 px-1 text-muted-foreground">{c.operator}</td>
-                            <td className="py-1.5 px-1 font-mono font-bold text-foreground">{c.value}</td>
-                            <td className="py-1.5 px-1 font-bold text-primary">{c.logic}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Add Condition modal opened.")}
-                    className="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline cursor-pointer pt-1"
-                  >
-                    <Plus className="h-3 w-3" />
-                    Add Condition
-                  </button>
-                </div>
-
-                {/* 4. Transaction Definition */}
+                {/* 2. Matrix Parameters */}
                 <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                   <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    4. Transaction Definition
+                    2. Approval Matrix Parameters
                   </h4>
 
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Transaction Code</span>
-                      <span className="font-bold text-foreground font-mono">PO</span>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Governing Module:</span>
+                      <span className="font-semibold text-foreground">{matrixMaster.module}</span>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Transaction Description</span>
-                      <span className="font-semibold text-foreground">Purchase Order</span>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Transaction Type:</span>
+                      <span className="font-semibold text-foreground">{matrixMaster.transactionType}</span>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Initiator Role</span>
-                      <span className="font-medium text-foreground">Purchase Executive</span>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Organizational Scope:</span>
+                      <span className="font-semibold text-foreground">{matrixMaster.orgScope}</span>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Currency</span>
-                      <span className="font-mono text-foreground font-bold">INR</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Criticality</span>
-                      <span className="rounded bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-600 border border-amber-500/20">
-                        Medium
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Approval Required</span>
-                      <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                        Yes
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                      <span className="text-muted-foreground">Status</span>
-                      <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                        Active
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">SoD Policy Enforcement:</span>
+                      <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold">
+                        Zero Conflict Enforced
                       </span>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Row 2: 5. Routing & Sequence | 6. Escalation Matrix | 7. Delegation | 8. SLA & Reminders */}
-              <div className="grid gap-4 lg:grid-cols-4">
-                {/* 5. Routing & Sequence */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    5. Routing & Sequence
-                  </h4>
-
-                  {/* Flow Steps Diagram */}
-                  <div className="flex items-center justify-between gap-1 bg-muted/20 p-2 rounded-lg text-center text-[9px]">
-                    <div className="rounded border border-border bg-card p-1.5">
-                      <span className="font-bold text-foreground block">1. Dept Appr</span>
-                      <span className="text-muted-foreground">Sequential</span>
-                    </div>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground shrink-0" />
-                    <div className="rounded border border-border bg-card p-1.5">
-                      <span className="font-bold text-foreground block">2. Finance</span>
-                      <span className="text-muted-foreground">Sequential</span>
-                    </div>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground shrink-0" />
-                    <div className="rounded border border-border bg-card p-1.5">
-                      <span className="font-bold text-foreground block">3. BU Head</span>
-                      <span className="text-muted-foreground">Sequential</span>
-                    </div>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground shrink-0" />
-                    <div className="rounded border border-primary/40 bg-primary/10 p-1.5 text-primary">
-                      <span className="font-bold block">4. CFO</span>
-                      <span>Final</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5 text-xs pt-1 border-t border-border/50">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Sequence Type</span>
-                      <span className="font-bold text-foreground">Sequential</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Parallel Levels</span>
-                      <span className="text-muted-foreground">-</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Auto Skip</span>
-                      <span className="text-muted-foreground">Disabled</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 6. Escalation Matrix */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+                {/* 3. Visual Workflow Routing */}
+                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs lg:col-span-2">
                   <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                    <h4 className="text-xs font-bold text-foreground">6. Escalation Matrix</h4>
+                    <h4 className="text-xs font-bold text-foreground">3. Visual Workflow Routing Path</h4>
+                    <span className="text-[10px] text-muted-foreground font-mono">Sequential Chain</span>
                   </div>
 
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                          <th className="py-1 px-1">Lvl</th>
-                          <th className="py-1 px-1">Trigger</th>
-                          <th className="py-1 px-1">After</th>
-                          <th className="py-1 px-1">Escalate To</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/50 text-[10px]">
-                        {ESCALATION_RULES_DATA.map((e) => (
-                          <tr key={e.id} className="hover:bg-muted/30 transition-colors">
-                            <td className="py-1 px-1 font-mono font-bold text-primary">{e.level}</td>
-                            <td className="py-1 px-1 font-medium text-foreground">{e.trigger}</td>
-                            <td className="py-1 px-1 font-mono text-muted-foreground">{e.time}</td>
-                            <td className="py-1 px-1 text-foreground">{e.escalateTo}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Add Escalation Rule modal opened.")}
-                    className="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline cursor-pointer pt-1"
-                  >
-                    <Plus className="h-3 w-3" />
-                    Add Escalation Rule
-                  </button>
-                </div>
-
-                {/* 7. Delegation */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      7. Delegation
-                    </h4>
-
-                    <div className="space-y-2 pt-1 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Delegation Allowed</span>
-                        <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                          Yes
-                        </span>
+                  <div className="grid grid-cols-4 gap-2 pt-2 text-center text-xs">
+                    {levelsList.map((lvl, idx) => (
+                      <div key={lvl.id} className="relative flex flex-col items-center p-3 rounded-xl border border-border bg-muted/20">
+                        <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center font-mono font-bold text-primary mb-2">
+                          L{lvl.level}
+                        </div>
+                        <span className="font-bold text-foreground block text-[11px] truncate w-full">{lvl.name}</span>
+                        <span className="text-[10px] text-muted-foreground truncate w-full mt-0.5">{lvl.approver}</span>
+                        <span className="text-[9px] font-mono text-emerald-600 font-bold mt-1">{lvl.limit}</span>
+                        {idx < levelsList.length - 1 && (
+                          <div className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-muted-foreground font-bold">
+                            →
+                          </div>
+                        )}
                       </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Active Delegations</span>
-                        <span className="font-bold text-foreground font-mono">1</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Delegation Scope</span>
-                        <span className="font-medium text-foreground">Full Authority</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Valid From</span>
-                        <span className="font-mono text-muted-foreground text-[10px]">01 May 2024</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Valid To</span>
-                        <span className="font-mono text-muted-foreground text-[10px]">31 May 2024</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Delegations directory opened.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View Delegations
-                  </button>
-                </div>
-
-                {/* 8. SLA & Reminders */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      8. SLA & Reminders
-                    </h4>
-
-                    <div className="space-y-2 pt-1 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">SLA for Each Level</span>
-                        <span className="font-mono font-bold text-foreground">24 Hours</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Reminder After</span>
-                        <span className="font-mono text-muted-foreground">12 Hours</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Escalation After</span>
-                        <span className="font-mono text-muted-foreground">24 Hours</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Auto Escalation</span>
-                        <span className="font-semibold text-emerald-600">Enabled</span>
-                      </div>
-
-                      <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                        <span className="text-muted-foreground">SLA Status</span>
-                        <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                          Compliant
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("SLA analytics report opened.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View SLA Details
-                  </button>
-                </div>
-              </div>
-
-              {/* Row 3: 9. Recent Approval Requests | 10. Approval Matrix Workflow */}
-              <div className="grid gap-4 lg:grid-cols-12">
-                {/* 9. Recent Approval Requests */}
-                <div className="lg:col-span-8 rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                    <h4 className="text-xs font-bold text-foreground">9. Recent Approval Requests (This Matrix)</h4>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                          <th className="py-1.5 px-1">Request ID</th>
-                          <th className="py-1.5 px-1">Transaction</th>
-                          <th className="py-1.5 px-1 text-right">Amount (INR)</th>
-                          <th className="py-1.5 px-1">Initiator</th>
-                          <th className="py-1.5 px-1">Current Level</th>
-                          <th className="py-1.5 px-1">Current Approver</th>
-                          <th className="py-1.5 px-1">Status</th>
-                          <th className="py-1.5 px-1">SLA Due</th>
-                          <th className="py-1.5 px-1">Age</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/50 text-[11px]">
-                        {RECENT_APPROVAL_REQUESTS.map((req) => (
-                          <tr key={req.id} className="hover:bg-muted/30 transition-colors">
-                            <td className="py-1.5 px-1 font-mono font-medium text-primary">{req.id}</td>
-                            <td className="py-1.5 px-1 font-medium text-foreground">{req.tx}</td>
-                            <td className="py-1.5 px-1 text-right font-mono font-bold text-foreground">{req.amount}</td>
-                            <td className="py-1.5 px-1 text-muted-foreground">{req.initiator}</td>
-                            <td className="py-1.5 px-1 font-medium">{req.level}</td>
-                            <td className="py-1.5 px-1 font-medium text-foreground">{req.approver}</td>
-                            <td className="py-1.5 px-1">
-                              <span className={cn("rounded px-1.5 py-0.5 text-[9px] font-bold border", req.badge)}>
-                                {req.status}
-                              </span>
-                            </td>
-                            <td className="py-1.5 px-1 font-mono text-[10px] text-muted-foreground">{req.due}</td>
-                            <td className="py-1.5 px-1 font-mono text-[10px]">{req.age}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("All requests view loaded.")}
-                    className="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline cursor-pointer pt-1"
-                  >
-                    View All Requests
-                  </button>
-                </div>
-
-                {/* 10. Approval Matrix Workflow */}
-                <div className="lg:col-span-4 rounded-xl border border-border bg-card p-4 space-y-4 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      10. Approval Matrix Workflow
-                    </h4>
-
-                    {/* Step Sequence Icons */}
-                    <div className="flex items-center justify-between gap-1 py-3 text-center text-[9px] border-b border-border/50">
-                      <div>
-                        <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center mx-auto mb-1 text-muted-foreground font-bold">1</div>
-                        <span>Draft</span>
-                      </div>
-                      <ChevronRight className="h-3 w-3 text-muted-foreground" />
-                      <div>
-                        <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center mx-auto mb-1 text-muted-foreground font-bold">2</div>
-                        <span>Define Rules</span>
-                      </div>
-                      <ChevronRight className="h-3 w-3 text-muted-foreground" />
-                      <div>
-                        <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center mx-auto mb-1 text-muted-foreground font-bold">3</div>
-                        <span>Approvers</span>
-                      </div>
-                      <ChevronRight className="h-3 w-3 text-muted-foreground" />
-                      <div>
-                        <div className="h-6 w-6 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center mx-auto mb-1 font-bold border border-emerald-500/40">✓</div>
-                        <span className="font-bold text-emerald-600">Active</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2 pt-2 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Next Review Date</span>
-                        <span className="font-mono text-foreground">01 Jan 2025</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Approved By</span>
-                        <span className="font-semibold text-foreground">Rahul Sharma</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Approved On</span>
-                        <span className="font-mono text-muted-foreground text-[10px]">15 May 2024</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Last Reviewed</span>
-                        <span className="font-semibold text-foreground">Rahul Sharma</span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* OTHER TABS PLACEHOLDER */}
-          {activeTab !== "overview" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <h4 className="text-sm font-bold text-foreground capitalize">{activeTab} Workspace</h4>
-                <span className="text-xs text-muted-foreground">Matrix ID: MAT-2024-00078</span>
+          {/* APPROVAL LEVELS WORKSPACE */}
+          {activeTab === "levels" && (
+            <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                <h4 className="text-xs font-bold text-foreground">Configured Approval Tier Architecture ({levelsList.length} Levels)</h4>
+                <button
+                  onClick={() => setShowAddLevelModal(true)}
+                  className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                >
+                  + Add Approval Tier
+                </button>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Detailed rule settings for <span className="font-semibold text-foreground capitalize">{activeTab}</span> adhering to MAICW specification.
-              </p>
-              <div className="grid gap-4 sm:grid-cols-3 pt-2">
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Active Matrix Rules</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">4 Level Rules</span>
-                  <p className="text-[11px] text-muted-foreground">100% SLA compliance rate.</p>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2.5 px-3">Level #</th>
+                      <th className="py-2.5 px-3">Level Name</th>
+                      <th className="py-2.5 px-3">Approver Role / Identity</th>
+                      <th className="py-2.5 px-3">Threshold Limit</th>
+                      <th className="py-2.5 px-3 text-center">Mandatory</th>
+                      <th className="py-2.5 px-3">SLA Turnaround</th>
+                      <th className="py-2.5 px-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/60 text-foreground text-[11px]">
+                    {levelsList.map((lvl) => (
+                      <tr key={lvl.id} className="hover:bg-muted/30 transition-colors">
+                        <td className="py-2 px-3 font-mono font-bold text-primary">Level {lvl.level}</td>
+                        <td className="py-2 px-3 font-semibold">{lvl.name}</td>
+                        <td className="py-2 px-3 text-muted-foreground">{lvl.approver} ({lvl.type})</td>
+                        <td className="py-2 px-3 font-mono font-bold text-emerald-600">{lvl.limit}</td>
+                        <td className="py-2 px-3 text-center">
+                          <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold">
+                            {lvl.mandatory ? "Required" : "Optional"}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3 font-mono">{lvl.time} Days</td>
+                        <td className="py-2 px-3 text-right">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setLevelsList((prev) => prev.filter((item) => item.id !== lvl.id));
+                              showNotification(`Approval Level ${lvl.level} removed.`);
+                            }}
+                            className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* CONDITIONAL ROUTING WORKSPACE */}
+          {activeTab === "routing" && (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                  <h4 className="text-xs font-bold text-foreground">Dynamic Business Logic Conditions & Triggers</h4>
+                  <span className="text-[10px] text-muted-foreground font-mono">Evaluated Pre-Routing</span>
                 </div>
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">SoD Conflict Check</span>
-                  <span className="text-xl font-bold font-mono text-blue-600">0 Conflicts</span>
-                  <p className="text-[11px] text-muted-foreground">Compliant with internal financial controls.</p>
-                </div>
+                <div className="space-y-3">
+                  {conditionsList.map((cnd, idx) => (
+                    <div key={cnd.id} className="flex items-center justify-between p-3 rounded-lg border border-border bg-muted/15 text-xs">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-foreground">{cnd.name}</span>
+                          <span className="rounded bg-primary/10 text-primary px-1.5 py-0.5 text-[9px] font-mono font-bold">
+                            {cnd.logic}
+                          </span>
+                        </div>
+                        <p className="text-muted-foreground text-[11px] font-mono">
+                          IF <span className="text-foreground font-semibold">{cnd.field}</span> {cnd.operator} <span className="text-primary font-semibold font-mono">"{cnd.value}"</span>
+                        </p>
+                      </div>
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Audit Readiness</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">Verified</span>
-                  <p className="text-[11px] text-muted-foreground">Complete digital signatures logged.</p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setConditionsList((prev) => prev.map((c, i) => i === idx ? { ...c, active: !c.active } : c));
+                        }}
+                        className={cn(
+                          "px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer border",
+                          cnd.active ? "bg-emerald-500/15 text-emerald-600 border-emerald-500/30" : "bg-muted text-muted-foreground border-border"
+                        )}
+                      >
+                        {cnd.active ? "Active Rule" : "Disabled"}
+                      </button>
+                    </div>
+                  ))}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* LIVE REQUESTS WORKSPACE */}
+          {activeTab === "requests" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
+                  Live Purchase Approval Queue & Execution Log
+                </h4>
+                <span className="text-[11px] font-mono text-muted-foreground">Real-time Transaction Gateway</span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2 px-2">Request ID</th>
+                      <th className="py-2 px-2">Transaction</th>
+                      <th className="py-2 px-2">Total Amount</th>
+                      <th className="py-2 px-2">Initiator</th>
+                      <th className="py-2 px-2">Current Tier</th>
+                      <th className="py-2 px-2">Approver</th>
+                      <th className="py-2 px-2">Status</th>
+                      <th className="py-2 px-2 text-right">Quick Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 text-[11px]">
+                    {requestsList.map((req) => (
+                      <tr key={req.id} className="hover:bg-muted/30 transition-colors">
+                        <td className="py-2 px-2 font-mono font-bold text-primary">{req.id}</td>
+                        <td className="py-2 px-2 font-medium">{req.tx}</td>
+                        <td className="py-2 px-2 font-mono font-bold text-foreground">{req.amount}</td>
+                        <td className="py-2 px-2 text-muted-foreground">{req.initiator}</td>
+                        <td className="py-2 px-2 font-mono">{req.level}</td>
+                        <td className="py-2 px-2 text-foreground font-medium">{req.approver}</td>
+                        <td className="py-2 px-2">
+                          <span
+                            className={cn(
+                              "rounded px-2 py-0.5 text-[10px] font-bold",
+                              req.status === "Approved" ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
+                            )}
+                          >
+                            {req.status}
+                          </span>
+                        </td>
+                        <td className="py-2 px-2 text-right">
+                          {req.status === "Pending" ? (
+                            <div className="flex justify-end gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setRequestsList((prev) => prev.map((r) => r.id === req.id ? { ...r, status: "Approved" } : r));
+                                  showNotification(`Request ${req.id} approved.`);
+                                }}
+                                className="px-2 py-0.5 rounded bg-emerald-500 text-white font-bold text-[10px] hover:bg-emerald-600 cursor-pointer"
+                              >
+                                Approve
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setRequestsList((prev) => prev.map((r) => r.id === req.id ? { ...r, status: "Rejected" } : r));
+                                  showNotification(`Request ${req.id} rejected.`);
+                                }}
+                                className="px-2 py-0.5 rounded bg-rose-500 text-white font-bold text-[10px] hover:bg-rose-600 cursor-pointer"
+                              >
+                                Reject
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground font-mono text-[10px]">Processed</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
         </div>
+
+        {/* --- ADD APPROVAL LEVEL MODAL --- */}
+        {showAddLevelModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+            <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <UserCheck className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Add Approval Level</h3>
+                </div>
+                <button onClick={() => setShowAddLevelModal(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Level Name *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Managing Director Sign-off"
+                    value={newLevelForm.name}
+                    onChange={(e) => setNewLevelForm({ ...newLevelForm, name: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Approver Role</label>
+                    <input
+                      type="text"
+                      value={newLevelForm.approver}
+                      onChange={(e) => setNewLevelForm({ ...newLevelForm, approver: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Threshold Limit</label>
+                    <input
+                      type="text"
+                      value={newLevelForm.limit}
+                      onChange={(e) => setNewLevelForm({ ...newLevelForm, limit: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-mono text-foreground"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowAddLevelModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newLevelForm.name) {
+                      alert("Please provide level name.");
+                      return;
+                    }
+                    setLevelsList((prev) => [
+                      ...prev,
+                      {
+                        id: `LVL-${prev.length + 1}`,
+                        level: prev.length + 1,
+                        name: newLevelForm.name,
+                        type: newLevelForm.type,
+                        approver: newLevelForm.approver,
+                        limit: newLevelForm.limit,
+                        mandatory: true,
+                        time: Number(newLevelForm.time) || 2,
+                      },
+                    ]);
+                    setShowAddLevelModal(false);
+                    showNotification(`Approval Tier Level ${levelsList.length + 1} added.`);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Save Tier
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer Classification & Modification Strip */}
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card p-3 text-[11px] text-muted-foreground font-mono">

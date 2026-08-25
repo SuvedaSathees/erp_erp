@@ -8,6 +8,7 @@ const TAB_BASE =
 const TAB_ACTIVE = "border-primary text-primary hover:text-primary font-bold";
 
 export const ADMIN_MANAGEMENT_TABS = [
+  { to: "/management/administration-management/overview", label: "Overview" },
   { to: "/management/administration-management/organization-structure", label: "Organization Structure" },
   { to: "/management/administration-management/branch-management", label: "Branch Management" },
   { to: "/management/administration-management/department-management", label: "Department Management" },

@@ -31,13 +31,13 @@ import {
   ChevronRight,
   Zap,
   CreditCard,
+  Phone,
 } from "lucide-react";
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip as RechartsTooltip } from "recharts";
 
 export const Route = createFileRoute("/management/crm-management/account-management")({
   head: () => ({
     meta: [
-      { title: "Account Management Form ⭐ · CRM Management · Magnertia ERP" },
+      { title: "Account Management Form · CRM Management · Magnertia ERP" },
       {
         name: "description",
         content:
@@ -165,7 +165,12 @@ const FUNNEL_STAGES = [
 
 export function AccountManagementPage() {
   const [account, setAccount] = useState<AccountRecord>(INITIAL_ACCOUNT);
-  const [activeTab, setActiveTab] = useState<string>("overview");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   // Modal States
   const [isNewAccountModalOpen, setIsNewAccountModalOpen] = useState(false);
@@ -175,82 +180,65 @@ export function AccountManagementPage() {
   };
 
   const handleSaveAccount = () => {
-    alert(`Account ${account.accountName} (${account.accountNumber}) saved successfully!`);
+    showNotification(`Account ${account.accountName} (${account.accountNumber}) saved successfully!`);
   };
 
   return (
     <AppShell
-      title="Account Management Form ⭐"
+      title="Account Management Form"
       breadcrumb="Management > CRM Management > Account Management > Account Management Form"
       description="The Account Management Form is the central CRM record for managing the complete business relationship with an organization—from account creation → classification → contacts → ownership → opportunities → orders → contracts → support → customer success → financial relationship → retention → expansion → analytics."
       tabs={<CrmManagementTabBar />}
     >
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <div className="flex flex-col min-h-screen text-slate-800 space-y-6">
         {/* Top Header Action Bar */}
-        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-2xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-base font-bold tracking-tight text-slate-900 flex items-center gap-1.5">
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-2xs">
+          <div className="flex items-center justify-between gap-3 flex-nowrap overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 flex items-center gap-1.5 whitespace-nowrap">
                 <span>Account Management Form</span>
-                <span className="text-amber-500 text-sm">⭐</span>
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap font-mono">
                 {account.accountNumber}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300">
-                ● {account.status}
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 whitespace-nowrap flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 inline-block" />
+                <span>{account.status}</span>
               </span>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center flex-wrap gap-2">
+            <div className="flex items-center gap-2.5 shrink-0 flex-nowrap">
               <button
                 onClick={() => setIsNewAccountModalOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Plus className="h-3.5 w-3.5" />
                 <span>New Account</span>
               </button>
 
               <button
-                onClick={() => window.print()}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Printer className="h-3.5 w-3.5 text-slate-600" />
-                <span>Print</span>
-              </button>
-
-              <button
-                onClick={() => alert("Opening Email composer for Account...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Mail className="h-3.5 w-3.5 text-blue-600" />
-                <span>Send Email</span>
-              </button>
-
-              <button
                 onClick={handleSaveAccount}
-                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save</span>
               </button>
 
-              <button
-                onClick={() => alert("More options...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 flex items-center gap-1 transition-colors cursor-pointer"
-              >
-                <span>More</span>
-                <MoreHorizontal className="h-3.5 w-3.5" />
-              </button>
-
-              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs">
-                  RS
+              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1 shrink-0 whitespace-nowrap">
+                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs shrink-0">
+                  VS
                 </div>
-                <div className="text-left hidden sm:block">
-                  <div className="text-xs font-semibold text-slate-800 leading-none">Rahul Sharma</div>
-                  <div className="text-[10px] text-slate-500">CRM Manager</div>
+                <div className="text-left hidden sm:block whitespace-nowrap">
+                  <div className="text-xs font-semibold text-slate-800 leading-none">Vikram Singh</div>
+                  <div className="text-[10px] text-slate-500">VP, Sales</div>
                 </div>
               </div>
             </div>
@@ -495,268 +483,246 @@ export function AccountManagementPage() {
           </div>
         </div>
 
-        {/* Inner Sub-Tabs Header */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-1.5 overflow-x-auto scrollbar-none">
-            {[
-              { id: "overview", label: "Overview", icon: Layers },
-              { id: "contacts", label: "Contacts", icon: Users },
-              { id: "opportunities", label: "Opportunities", icon: TrendingUp },
-              { id: "orders", label: "Orders", icon: ShoppingCart },
-              { id: "contracts", label: "Contracts", icon: FileText },
-              { id: "support", label: "Support", icon: HelpCircle },
-              { id: "success", label: "Success", icon: Heart },
-              { id: "financials", label: "Financials", icon: DollarSign },
-              { id: "activities", label: "Activities", icon: Activity },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "notes", label: "Notes", icon: FileCheck },
-              { id: "history", label: "History", icon: Clock },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer",
-                    active
-                      ? "bg-white text-primary shadow-2xs border border-slate-200/80"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                  )}
-                >
-                  <Icon className={cn("h-3.5 w-3.5", active ? "text-primary" : "text-slate-400")} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* TAB CONTENT AREA */}
-          <div className="p-5">
-            {activeTab === "overview" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Left & Center Columns (Sections 2 to 12) */}
-                <div className="lg:col-span-2 space-y-6">
+        {/* Main Account Management Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left & Center Columns (Sections 2 to 12) */}
+          <div className="lg:col-span-2 space-y-6">
                   {/* Grid Row 1: Account Health, Revenue Overview, Opportunity Pipeline, Recent Activities */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
                     {/* Card 2: Account Health */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        2. Account Health
-                      </h3>
-
-                      <div className="flex flex-col items-center justify-center">
-                        <div className="relative w-24 h-24 flex items-center justify-center">
-                          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                            <path
-                              className="text-slate-200 stroke-current"
-                              strokeWidth="3.5"
-                              fill="none"
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                            />
-                            <path
-                              className="text-emerald-500 stroke-current"
-                              strokeDasharray="82, 100"
-                              strokeWidth="3.5"
-                              strokeLinecap="round"
-                              fill="none"
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                            />
-                          </svg>
-                          <div className="absolute inset-0 flex flex-col items-center justify-center">
-                            <span className="text-xl font-extrabold text-slate-900 leading-none">82</span>
-                            <span className="text-[9px] font-bold text-slate-400">/100</span>
-                          </div>
-                        </div>
-                        <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded mt-2">
-                          Healthy
-                        </span>
+                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/90 dark:border-slate-800 p-4 space-y-3.5 shadow-2xs hover:shadow-xs transition-all duration-200 relative overflow-hidden group">
+                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-2.5">
+                        <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider whitespace-nowrap">
+                          2. Account Health
+                        </h3>
                       </div>
 
-                      <div className="space-y-1 text-[10px] pt-1 border-t border-slate-200">
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Adoption</span>
-                          <span className="font-bold text-slate-800">80</span>
+                      <div className="space-y-2.5 text-[11px] pt-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500 dark:text-slate-400 text-[10px] font-medium">Overall Score</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-14 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                              <div className="h-full bg-emerald-500 rounded-full" style={{ width: "82%" }} />
+                            </div>
+                            <span className="font-mono font-bold text-emerald-700 dark:text-emerald-300 text-[11px] w-7 text-right">82%</span>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Engagement</span>
-                          <span className="font-bold text-slate-800">85</span>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500 dark:text-slate-400 text-[10px] font-medium">Adoption</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-12 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                              <div className="h-full bg-emerald-500 rounded-full" style={{ width: "80%" }} />
+                            </div>
+                            <span className="font-mono font-bold text-slate-800 dark:text-slate-200 text-[11px] w-7 text-right">80%</span>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Support</span>
-                          <span className="font-bold text-slate-800">78</span>
+
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500 dark:text-slate-400 text-[10px] font-medium">Engagement</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-12 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                              <div className="h-full bg-emerald-500 rounded-full" style={{ width: "85%" }} />
+                            </div>
+                            <span className="font-mono font-bold text-slate-800 dark:text-slate-200 text-[11px] w-7 text-right">85%</span>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">Risk Score</span>
-                          <span className="font-bold text-emerald-700">Low</span>
+
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500 dark:text-slate-400 text-[10px] font-medium">Support</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-12 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                              <div className="h-full bg-emerald-500 rounded-full" style={{ width: "78%" }} />
+                            </div>
+                            <span className="font-mono font-bold text-slate-800 dark:text-slate-200 text-[11px] w-7 text-right">78%</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-0.5">
+                          <span className="text-slate-500 dark:text-slate-400 text-[10px] font-medium">Risk Score</span>
+                          <span className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold text-[10px] rounded border border-emerald-200/60 dark:border-emerald-800/50">
+                            Low
+                          </span>
                         </div>
                       </div>
                     </div>
 
                     {/* Card 3: Revenue Overview */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        3. Revenue Overview
-                      </h3>
-
-                      <div className="space-y-2 text-xs">
-                        <div>
-                          <div className="text-[10px] text-slate-500 font-semibold">Total Revenue (FY 2023-24)</div>
-                          <div className="text-sm font-extrabold text-blue-900">₹ 2,48,00,000</div>
+                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/90 dark:border-slate-800 p-4 space-y-3.5 shadow-2xs hover:shadow-xs transition-all duration-200 flex flex-col justify-between">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-2">
+                          <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider whitespace-nowrap">
+                            3. Revenue Overview
+                          </h3>
                         </div>
 
-                        <div className="pt-2 border-t border-slate-200 space-y-1 text-[11px]">
-                          <div>
-                            <div className="text-[10px] text-slate-500 font-semibold">YTD Revenue</div>
-                            <div className="font-bold text-slate-900">₹ 1,32,50,000</div>
-                            <span className="text-[9px] text-emerald-700 font-bold">▲ 18% vs Last Year</span>
+                        <div className="bg-slate-50/80 dark:bg-slate-800/50 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800">
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Total Revenue (FY 2023-24)</div>
+                          <div className="text-base font-black text-blue-900 dark:text-blue-400 tracking-tight mt-0.5">₹ 2,48,00,000</div>
+                        </div>
+
+                        <div className="space-y-2 text-[11px] pt-1">
+                          <div className="flex items-start justify-between gap-1">
+                            <div>
+                              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">YTD Revenue</div>
+                              <div className="font-bold text-slate-900 dark:text-slate-200 font-mono text-xs">₹ 1,32,50,000</div>
+                            </div>
+                            <span className="text-[9px] text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded font-bold whitespace-nowrap mt-1">
+                              ▲ 18%
+                            </span>
                           </div>
-                          <div className="pt-1">
-                            <div className="text-[10px] text-slate-500 font-semibold">Potential Revenue</div>
-                            <div className="font-bold text-slate-900">₹ 76,50,000</div>
-                            <span className="text-[9px] text-blue-700 font-bold">▲ 24% Pipeline Value</span>
+
+                          <div className="flex items-start justify-between gap-1 pt-1 border-t border-slate-100 dark:border-slate-800">
+                            <div>
+                              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Potential Revenue</div>
+                              <div className="font-bold text-slate-900 dark:text-slate-200 font-mono text-xs">₹ 76,50,000</div>
+                            </div>
+                            <span className="text-[9px] text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 rounded font-bold whitespace-nowrap mt-1">
+                              ▲ 24%
+                            </span>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     {/* Card 4: Opportunity Pipeline */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        4. Opportunity Pipeline
-                      </h3>
+                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/90 dark:border-slate-800 p-4 space-y-3 shadow-2xs hover:shadow-xs transition-all duration-200 flex flex-col justify-between">
+                      <div className="space-y-2.5">
+                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-2">
+                          <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider whitespace-nowrap">
+                            4. Pipeline Funnel
+                          </h3>
+                        </div>
 
-                      <div className="space-y-1.5 text-[10px]">
-                        {FUNNEL_STAGES.map((st, idx) => (
-                          <div key={idx} className="space-y-0.5">
-                            <div className="flex justify-between font-semibold">
-                              <span>{st.stage}</span>
-                              <span className="font-mono">{st.val}</span>
+                        <div className="space-y-2 text-[10px]">
+                          {FUNNEL_STAGES.map((st, idx) => (
+                            <div key={idx} className="space-y-1">
+                              <div className="flex items-center justify-between font-semibold gap-1">
+                                <span className="text-slate-700 dark:text-slate-300 truncate">{st.stage}</span>
+                                <span className="font-mono text-slate-900 dark:text-slate-100 shrink-0">{st.val}</span>
+                              </div>
+                              <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                <div className={cn("h-full rounded-full", st.bg, st.width)} />
+                              </div>
                             </div>
-                            <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                              <div className={cn("h-full rounded-full", st.bg, st.width)} />
-                            </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
 
-                      <div className="pt-2 border-t border-slate-200 flex justify-between text-[11px] font-bold">
-                        <span className="text-slate-600">Total Pipeline</span>
-                        <span className="text-blue-900 font-mono">₹ 1,10,00,000</span>
+                      <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] gap-2">
+                        <span className="text-slate-500 dark:text-slate-400 text-[10px] font-semibold truncate">Total Pipeline</span>
+                        <span className="text-blue-900 dark:text-blue-400 font-mono font-extrabold text-xs shrink-0">₹ 1,10,00,000</span>
                       </div>
                     </div>
 
                     {/* Card 5: Recent Activities */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
-                      <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          5. Recent Activities
-                        </h3>
-                        <button onClick={() => alert("Viewing All Activities...")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer">
-                          View All
-                        </button>
-                      </div>
+                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/90 dark:border-slate-800 p-4 space-y-2.5 text-xs shadow-2xs hover:shadow-xs transition-all duration-200 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800/80 pb-2 mb-2">
+                          <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider whitespace-nowrap">
+                            5. Activities
+                          </h3>
+                          <button onClick={() => showNotification("Viewing All Activities...")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer">
+                            View All
+                          </button>
+                        </div>
 
-                      <div className="space-y-1.5 text-[10px]">
-                        {RECENT_ACTIVITIES.map((act, idx) => {
-                          const Icon = act.icon;
-                          return (
-                            <div key={idx} className="flex items-center gap-2 p-1.5 bg-white rounded border border-slate-200">
-                              <Icon className="h-3 w-3 text-slate-500 shrink-0" />
-                              <div className="truncate">
-                                <div className="font-bold text-slate-800 truncate">{act.title}</div>
-                                <div className="text-[9px] text-slate-400">{act.date} · {act.by}</div>
+                        <div className="space-y-1.5 text-[10px]">
+                          {RECENT_ACTIVITIES.slice(0, 3).map((act, idx) => {
+                            const Icon = act.icon;
+                            return (
+                              <div key={idx} className="flex items-center gap-2 p-1.5 bg-slate-50 dark:bg-slate-800/60 rounded border border-slate-100 dark:border-slate-800">
+                                <Icon className="h-3 w-3 text-slate-500 shrink-0" />
+                                <div className="min-w-0 flex-1 truncate">
+                                  <div className="font-bold text-slate-800 dark:text-slate-200 truncate">{act.title}</div>
+                                  <div className="text-[9px] text-slate-400">{act.date} · {act.by}</div>
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Grid Row 2: Contracts & Renewals & Support Summary */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Card 6: Contracts & Renewals */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                          6. Contracts & Renewals
-                        </h3>
-                        <button onClick={() => alert("Viewing All Contracts...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View All Contracts
-                        </button>
-                      </div>
+                  {/* Card 6: Contracts & Renewals (Full Width) */}
+                  <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3 shadow-2xs">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                        6. Contracts & Renewals
+                      </h3>
+                      <button onClick={() => showNotification("Viewing All Contracts...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        View All Contracts
+                      </button>
+                    </div>
 
-                      <div className="overflow-x-auto text-[11px]">
-                        <table className="w-full text-left">
-                          <thead>
-                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                              <th className="py-1.5 px-2">Contract No</th>
-                              <th className="py-1.5 px-2">Type</th>
-                              <th className="py-1.5 px-2">Start - End</th>
-                              <th className="py-1.5 px-2">Value</th>
-                              <th className="py-1.5 px-2 text-center">Status</th>
+                    <div className="w-full">
+                      <table className="w-full text-left text-xs border-collapse table-fixed">
+                        <thead>
+                          <tr className="bg-slate-50/80 text-slate-600 text-[11px] font-semibold border-b border-slate-200">
+                            <th className="py-2 px-2.5 w-[24%]">Contract No</th>
+                            <th className="py-2 px-2 w-[22%]">Type</th>
+                            <th className="py-2 px-2.5 w-[26%]">Start - End</th>
+                            <th className="py-2 px-2 w-[16%]">Value</th>
+                            <th className="py-2 px-2 w-[12%] text-center">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {CONTRACTS_LIST.map((ct, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="py-2 px-2.5 font-mono font-bold text-slate-800 truncate">{ct.number}</td>
+                              <td className="py-2 px-2 text-slate-700 font-medium truncate">{ct.type}</td>
+                              <td className="py-2 px-2.5 text-slate-500 font-medium truncate">{ct.start} - {ct.end}</td>
+                              <td className="py-2 px-2 font-mono font-bold text-slate-900 truncate">{ct.value}</td>
+                              <td className="py-2 px-2 text-center">
+                                <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 whitespace-nowrap inline-block">
+                                  {ct.status}
+                                </span>
+                              </td>
                             </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {CONTRACTS_LIST.map((ct, idx) => (
-                              <tr key={idx} className="hover:bg-slate-50/80">
-                                <td className="py-1.5 px-2 font-mono font-bold text-slate-800">{ct.number}</td>
-                                <td className="py-1.5 px-2 text-slate-700 font-medium">{ct.type}</td>
-                                <td className="py-1.5 px-2 text-slate-500 text-[10px]">{ct.start} - {ct.end}</td>
-                                <td className="py-1.5 px-2 font-mono font-bold text-blue-900">{ct.value}</td>
-                                <td className="py-1.5 px-2 text-center">
-                                  <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-100 text-emerald-800">
-                                    {ct.status}
-                                  </span>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Card 7: Support Summary (Full Width) */}
+                  <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 shadow-2xs">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                        7. Support Summary
+                      </h3>
+                      <button onClick={() => showNotification("Viewing All Support Tickets...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        View All Tickets
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                      <div className="p-3 bg-slate-50/80 rounded-lg border border-slate-200">
+                        <div className="text-[11px] text-slate-500 font-semibold">Total Tickets</div>
+                        <div className="text-xl font-extrabold text-slate-900 mt-1">18</div>
+                      </div>
+                      <div className="p-3 bg-amber-50/80 rounded-lg border border-amber-200">
+                        <div className="text-[11px] text-amber-700 font-semibold">Open Tickets</div>
+                        <div className="text-xl font-extrabold text-amber-900 mt-1">3</div>
+                      </div>
+                      <div className="p-3 bg-emerald-50/80 rounded-lg border border-emerald-200">
+                        <div className="text-[11px] text-emerald-700 font-semibold">Closed Tickets</div>
+                        <div className="text-xl font-extrabold text-emerald-900 mt-1">15</div>
                       </div>
                     </div>
 
-                    {/* Card 7: Support Summary */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                          7. Support Summary
-                        </h3>
-                        <button onClick={() => alert("Viewing All Support Tickets...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View All Tickets
-                        </button>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-2 border-t border-slate-100">
+                      <div className="text-center p-2 bg-slate-50/50 rounded">
+                        <div className="text-[10px] text-slate-500">Avg Response</div>
+                        <div className="font-bold text-slate-800 text-sm mt-0.5">4.6 hrs</div>
                       </div>
-
-                      <div className="grid grid-cols-3 gap-2 text-center">
-                        <div className="p-2 bg-slate-50 rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold">Total Tickets</div>
-                          <div className="text-lg font-extrabold text-slate-900">18</div>
-                        </div>
-                        <div className="p-2 bg-amber-50 rounded border border-amber-200">
-                          <div className="text-[10px] text-amber-700 font-semibold">Open Tickets</div>
-                          <div className="text-lg font-extrabold text-amber-900">3</div>
-                        </div>
-                        <div className="p-2 bg-emerald-50 rounded border border-emerald-200">
-                          <div className="text-[10px] text-emerald-700 font-semibold">Closed Tickets</div>
-                          <div className="text-lg font-extrabold text-emerald-900">15</div>
-                        </div>
+                      <div className="text-center p-2 bg-slate-50/50 rounded">
+                        <div className="text-[10px] text-slate-500">Avg Resolution</div>
+                        <div className="font-bold text-slate-800 text-sm mt-0.5">18.3 hrs</div>
                       </div>
-
-                      <div className="grid grid-cols-3 gap-2 text-xs pt-1 border-t border-slate-100">
-                        <div className="text-center">
-                          <div className="text-[10px] text-slate-500">Avg Response</div>
-                          <div className="font-bold text-slate-800">4.6 hrs</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-[10px] text-slate-500">Avg Resolution</div>
-                          <div className="font-bold text-slate-800">18.3 hrs</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-[10px] text-slate-500">CSAT Score</div>
-                          <div className="font-bold text-amber-600">4.2 / 5 ⭐</div>
-                        </div>
+                      <div className="text-center p-2 bg-slate-50/50 rounded">
+                        <div className="text-[10px] text-slate-500">CSAT Score</div>
+                        <div className="font-bold text-amber-600 text-sm mt-0.5">4.2 / 5.0</div>
                       </div>
                     </div>
                   </div>
@@ -764,37 +730,71 @@ export function AccountManagementPage() {
                   {/* Grid Row 3: Key Contacts & Loyalty & Renewal */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Card 8: Key Contacts */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs md:col-span-2">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/90 dark:border-slate-800 p-4 space-y-3.5 shadow-2xs hover:shadow-xs transition-all md:col-span-2">
+                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-2.5">
+                        <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider whitespace-nowrap">
                           8. Key Contacts
                         </h3>
-                        <button onClick={() => alert("Viewing All Contacts...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button
+                          onClick={() => showNotification("Viewing All Contacts...")}
+                          className="text-[11px] font-semibold text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                        >
                           View All Contacts
+                          <ChevronRight className="h-3 w-3" />
                         </button>
                       </div>
 
-                      <div className="overflow-x-auto text-[11px]">
-                        <table className="w-full text-left">
+                      <div className="w-full">
+                        <table className="w-full text-left text-xs border-collapse table-fixed">
                           <thead>
-                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                              <th className="py-1.5 px-2">Contact Name</th>
-                              <th className="py-1.5 px-2">Designation</th>
-                              <th className="py-1.5 px-2">Department</th>
-                              <th className="py-1.5 px-2">Mobile</th>
-                              <th className="py-1.5 px-2">Email</th>
+                            <tr className="bg-slate-50/80 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 text-[11px] font-semibold border-b border-slate-100 dark:border-slate-800">
+                              <th className="py-2.5 px-3 w-[36%]">Contact Name & Title</th>
+                              <th className="py-2.5 px-2.5 w-[20%]">Department</th>
+                              <th className="py-2.5 px-3 w-[44%]">Contact Info</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {KEY_CONTACTS.map((kc, idx) => (
-                              <tr key={idx} className="hover:bg-slate-50/80">
-                                <td className="py-1.5 px-2 font-bold text-slate-900">{kc.name}</td>
-                                <td className="py-1.5 px-2 text-slate-600">{kc.title}</td>
-                                <td className="py-1.5 px-2 text-slate-500">{kc.dept}</td>
-                                <td className="py-1.5 px-2 font-mono text-slate-600">{kc.mobile}</td>
-                                <td className="py-1.5 px-2 text-blue-600 underline">{kc.email}</td>
-                              </tr>
-                            ))}
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-[11px]">
+                            {KEY_CONTACTS.map((kc, idx) => {
+                              const initials = kc.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("");
+                              return (
+                                <tr key={idx} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+                                  <td className="py-2.5 px-3">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                      <div className="w-7 h-7 rounded-full bg-blue-50 dark:bg-blue-950/70 border border-blue-200/60 dark:border-blue-800/50 flex items-center justify-center text-[10px] font-bold text-blue-700 dark:text-blue-300 shrink-0">
+                                        {initials}
+                                      </div>
+                                      <div className="min-w-0 truncate">
+                                        <div className="font-bold text-slate-900 dark:text-slate-100 text-xs truncate leading-tight">{kc.name}</div>
+                                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate leading-tight">{kc.title}</div>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="py-2.5 px-2.5">
+                                    <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-semibold inline-block whitespace-nowrap">
+                                      {kc.dept}
+                                    </span>
+                                  </td>
+                                  <td className="py-2.5 px-3">
+                                    <div className="space-y-0.5 min-w-0">
+                                      <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-mono text-[11px] truncate">
+                                        <Phone className="h-3 w-3 text-slate-400 shrink-0" />
+                                        <span className="truncate">{kc.mobile}</span>
+                                      </div>
+                                      <a
+                                        href={`mailto:${kc.email}`}
+                                        className="text-primary hover:underline flex items-center gap-1.5 text-[10px] font-medium truncate"
+                                      >
+                                        <Mail className="h-3 w-3 text-slate-400 shrink-0" />
+                                        <span className="truncate">{kc.email}</span>
+                                      </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>
@@ -808,7 +808,7 @@ export function AccountManagementPage() {
                           <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                             9. Loyalty & Engagement
                           </h3>
-                          <button onClick={() => alert("Viewing Loyalty Details...")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer">
+                          <button onClick={() => showNotification("Viewing Loyalty Details...")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer">
                             Details
                           </button>
                         </div>
@@ -838,7 +838,7 @@ export function AccountManagementPage() {
                           <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                             10. Renewal & Expansion
                           </h3>
-                          <button onClick={() => alert("Viewing Renewal Pipeline...")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer">
+                          <button onClick={() => showNotification("Viewing Renewal Pipeline...")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer">
                             Pipeline
                           </button>
                         </div>
@@ -868,7 +868,7 @@ export function AccountManagementPage() {
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                           11. Documents
                         </h3>
-                        <button onClick={() => alert("Viewing All Documents...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Viewing All Documents...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           View All
                         </button>
                       </div>
@@ -912,22 +912,22 @@ export function AccountManagementPage() {
                       </h3>
 
                       <div className="grid grid-cols-3 gap-2">
-                        <button onClick={() => alert("Add Contact...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
+                        <button onClick={() => showNotification("Add Contact...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
                           + Add Contact
                         </button>
-                        <button onClick={() => alert("Log Activity...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
+                        <button onClick={() => showNotification("Log Activity...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
                           + Log Activity
                         </button>
-                        <button onClick={() => alert("Create Opportunity...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
+                        <button onClick={() => showNotification("Create Opportunity...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
                           + Opportunity
                         </button>
-                        <button onClick={() => alert("Create Order...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
+                        <button onClick={() => showNotification("Create Order...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
                           + Create Order
                         </button>
-                        <button onClick={() => alert("Create Contract...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
+                        <button onClick={() => showNotification("Create Contract...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
                           + Contract
                         </button>
-                        <button onClick={() => alert("Create Ticket...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
+                        <button onClick={() => showNotification("Create Ticket...")} className="p-2 bg-white border border-slate-200 rounded text-center text-[10px] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer">
                           + Create Ticket
                         </button>
                       </div>
@@ -987,8 +987,27 @@ export function AccountManagementPage() {
                       </div>
 
                       <div className="p-2 bg-emerald-50 rounded-lg border border-emerald-200 flex justify-between items-center">
-                        <span className="text-[10px] font-semibold text-emerald-800">Customer Health Score</span>
-                        <span className="font-extrabold text-emerald-900 text-xs">82 / 100 Healthy</span>
+                        <div>
+                          <span className="text-[10px] font-semibold text-emerald-800 block">Customer Health Score</span>
+                          <span className="font-extrabold text-emerald-900 text-xs font-mono">82 / 100 (Healthy)</span>
+                        </div>
+                        <div className="relative inline-flex items-center justify-center shrink-0">
+                          <svg width="38" height="38" className="transform -rotate-90">
+                            <circle cx="19" cy="19" r="14" stroke="currentColor" strokeWidth="3" className="text-emerald-200" fill="transparent" />
+                            <circle
+                              cx="19"
+                              cy="19"
+                              r="14"
+                              stroke="#059669"
+                              strokeWidth="3"
+                              strokeDasharray={2 * Math.PI * 14}
+                              strokeDashoffset={2 * Math.PI * 14 * (1 - 0.82)}
+                              strokeLinecap="round"
+                              fill="transparent"
+                            />
+                          </svg>
+                          <span className="absolute text-[9px] font-bold font-mono text-emerald-700">82%</span>
+                        </div>
                       </div>
 
                       <div className="p-2 bg-amber-50 rounded-lg border border-amber-200 flex justify-between items-center">
@@ -999,9 +1018,6 @@ export function AccountManagementPage() {
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
 
         {/* Modal: New Account */}
         {isNewAccountModalOpen && (
@@ -1040,7 +1056,7 @@ export function AccountManagementPage() {
                       accountName: name,
                     }));
                     setIsNewAccountModalOpen(false);
-                    alert("Account created successfully!");
+                    showNotification("Account created successfully!");
                   }}
                   className="px-4 py-1.5 text-xs bg-primary text-white font-bold rounded shadow-xs"
                 >

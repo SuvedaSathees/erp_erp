@@ -96,22 +96,7 @@ const RECENT_POLICY_VERSIONS = [
 ];
 
 export function PolicyManagementPage() {
-  const [activeTab, setActiveTab] = useState<
-    | "summary"
-    | "classification"
-    | "purpose"
-    | "ownership"
-    | "framework"
-    | "draft"
-    | "review"
-    | "versions"
-    | "communication"
-    | "acknowledgement"
-    | "implementation"
-    | "attachments"
-    | "audit"
-    | "history"
-  >("summary");
+  const [activeTab, setActiveTab] = useState<"summary" | "directory" | "governance" | "audit">("summary");
 
   // Master Form State
   const [policyMaster, setPolicyMaster] = useState({
@@ -132,6 +117,34 @@ export function PolicyManagementPage() {
     currentVersion: "v1.2",
     description: "This policy defines the guidelines and rules for official travel, allowable expenses, reimbursements and related approvals.",
     objective: "Ensure standardization, cost control and compliance in all employee travel and expense claims.",
+  });
+
+  // Dynamic Enterprise Policies
+  const [policiesList, setPoliciesList] = useState([
+    { id: "POL-001", num: "FIN-POL-005", title: "Travel & Expense Policy", type: "Operational Policy", dept: "Human Resources", ver: "v1.2", status: "Published", owner: "Neha Kapoor", date: "15 Apr 2024" },
+    { id: "POL-002", num: "SEC-POL-001", title: "Information Security Policy", type: "IT Policy", dept: "Cybersecurity", ver: "v2.0", status: "Published", owner: "Anita Deshmukh", date: "10 Apr 2024" },
+    { id: "POL-003", num: "HR-POL-012", title: "Remote Working & Hybrid Policy", type: "HR Policy", dept: "Human Resources", ver: "v1.1", status: "Under Review", owner: "Pooja Mehta", date: "08 Apr 2024" },
+    { id: "POL-004", num: "GOV-POL-003", title: "Anti-Bribery & Whistleblower Policy", type: "Compliance Policy", dept: "Legal & Compliance", ver: "v3.0", status: "Published", owner: "Rahul Sharma", date: "01 Apr 2024" },
+    { id: "POL-005", num: "OPS-POL-007", title: "Procurement Delegation Policy", type: "Financial Policy", dept: "Procurement", ver: "v1.0", status: "Draft", owner: "Karan Malhotra", date: "28 Mar 2024" },
+  ]);
+
+  const [reviewSteps, setReviewSteps] = useState([
+    { level: 1, type: "Functional Review", person: "Rahul Sharma", status: "Approved", date: "08 Apr 2024", comments: "Operational feasibility verified." },
+    { level: 2, type: "Compliance Review", person: "Pooja Mehta", status: "Approved", date: "09 Apr 2024", comments: "Statutory checks passed." },
+    { level: 3, type: "Risk Assessment", person: "Anita Deshmukh", status: "Approved", date: "10 Apr 2024", comments: "Zero enterprise risk flag." },
+    { level: 4, type: "Management Review", person: "Neha Kapoor", status: "Approved", date: "11 Apr 2024", comments: "Budget impacts aligned." },
+    { level: 5, type: "Final Approval", person: "Sanjay Gupta", status: "Approved", date: "12 Apr 2024", comments: "Approved for organization." },
+    { level: 6, type: "Publication", person: "Amit Verma", status: "Published", date: "15 Apr 2024", comments: "Distributed enterprise-wide." },
+  ]);
+
+  const [showCreatePolicyModal, setShowCreatePolicyModal] = useState(false);
+  const [newPolicyForm, setNewPolicyForm] = useState({
+    num: "",
+    title: "",
+    type: "Operational Policy",
+    dept: "Human Resources",
+    ver: "v1.0",
+    owner: "Neha Kapoor",
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -222,13 +235,6 @@ export function PolicyManagementPage() {
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <span className="text-primary">1.</span> Policy Master
               </h3>
-              <span className="text-[11px] text-muted-foreground font-medium">
-                MAICW Fields: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
-                <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
-                <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-                <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
-                <span className="text-rose-500 font-bold">W</span> (Workflow)
-              </span>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -522,31 +528,35 @@ export function PolicyManagementPage() {
                 <span className="text-xs font-medium text-muted-foreground block">Compliance Score</span>
                 <span className="text-[10px] text-emerald-600 font-semibold">Excellent</span>
               </div>
-              <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-emerald-500 text-xs font-bold font-mono text-emerald-600">
-                94%
+              <div className="relative inline-flex items-center justify-center">
+                <svg width="48" height="48" className="transform -rotate-90">
+                  <circle cx="24" cy="24" r="19" stroke="currentColor" strokeWidth="3.5" className="text-muted/30" fill="transparent" />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="19"
+                    stroke="#10b981"
+                    strokeWidth="3.5"
+                    strokeDasharray={2 * Math.PI * 19}
+                    strokeDashoffset={2 * Math.PI * 19 * (1 - 0.94)}
+                    strokeLinecap="round"
+                    fill="transparent"
+                  />
+                </svg>
+                <span className="absolute text-[11px] font-bold font-mono text-emerald-600">94%</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 2. Workspace Navigation Tabs */}
+        {/* 2. Workspace Navigation Tabs (Centered & Streamlined) */}
         <div className="space-y-4">
-          <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
+          <div className="flex items-center justify-center gap-2 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
             {[
-              { key: "summary", label: "Summary", icon: Layers },
-              { key: "classification", label: "Classification", icon: Shield },
-              { key: "purpose", label: "Purpose & Scope", icon: FileText },
-              { key: "ownership", label: "Ownership", icon: UserCheck },
-              { key: "framework", label: "Framework", icon: FolderTree },
-              { key: "draft", label: "Draft", icon: File },
-              { key: "review", label: "Review & Approval", icon: CheckCircle2 },
-              { key: "versions", label: "Versions", icon: History },
-              { key: "communication", label: "Communication", icon: Megaphone },
-              { key: "acknowledgement", label: "Acknowledgement", icon: Users },
-              { key: "implementation", label: "Implementation", icon: Sliders },
-              { key: "attachments", label: "Attachments", icon: File },
-              { key: "audit", label: "Audit Trail", icon: Activity },
-              { key: "history", label: "History", icon: Clock },
+              { key: "summary", label: "Policy Overview & Framework", icon: Layers },
+              { key: "directory", label: "Enterprise Policy Directory", icon: FolderTree },
+              { key: "governance", label: "Governance & Review Workflow", icon: CheckCircle2 },
+              { key: "audit", label: "Acknowledgement & Audit Logs", icon: Clock },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
@@ -555,7 +565,7 @@ export function PolicyManagementPage() {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key as typeof activeTab)}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
+                    "flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
                     isActive
                       ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -568,443 +578,61 @@ export function PolicyManagementPage() {
             })}
           </div>
 
-          {/* SUMMARY / OVERVIEW TAB CONTENT (Matching attached screenshot layout) */}
+          {/* SUMMARY TAB CONTENT */}
           {activeTab === "summary" && (
             <div className="space-y-6">
-              {/* Row 1: 2. Classification | 3. Ownership | 4. Review & Approval Status */}
-              <div className="grid gap-4 lg:grid-cols-3">
-                {/* 2. Classification */}
+              {/* Row 1: Policy Governance Framework | Purpose & Scope */}
+              <div className="grid gap-4 lg:grid-cols-2">
+                {/* 2. Policy Governance Framework */}
                 <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                   <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    2. Classification
+                    2. Policy Governance Framework & Scope
                   </h4>
 
-                  <div className="space-y-2 text-xs">
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Classification Level</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Level 2 - Department</option>
-                      </select>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Policy Code:</span>
+                      <span className="font-mono font-bold text-primary">{policyMaster.policyNumber}</span>
                     </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Confidentiality</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Internal</option>
-                      </select>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Policy Classification:</span>
+                      <span className="font-semibold text-foreground">{policyMaster.policyType}</span>
                     </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Business Criticality</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>High</option>
-                      </select>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Governing Standard:</span>
+                      <span className="font-semibold text-foreground">ISO 27001 / SOX Compliance</span>
                     </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Regulatory Category</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Internal Policy</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Compliance Category</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>HR Compliance</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Risk Category</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Operational Risk</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Security Classification</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Internal</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Applicability</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>All Employees</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Classification Owner</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Pooja Mehta"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                      <span className="text-muted-foreground text-[11px]">Classification Status</span>
-                      <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                        Active
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Enforcement Level:</span>
+                      <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold">
+                        Mandatory Enterprise Compliance
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* 3. Ownership */}
+                {/* 3. Objective & Ownership */}
                 <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                   <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    3. Ownership
+                    3. Policy Objective & Custodianship
                   </h4>
 
-                  <div className="grid grid-cols-2 gap-3 text-xs pt-1">
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Policy Owner</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-primary/10 text-primary font-bold text-[10px] flex items-center justify-center font-mono">
-                          NK
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Neha Kapoor</span>
-                          <span className="text-[10px] text-muted-foreground">HR Director</span>
-                        </div>
-                      </div>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Policy Owner:</span>
+                      <span className="font-semibold text-foreground">{policyMaster.policyOwner}</span>
                     </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Department Owner</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-primary/10 text-primary font-bold text-[10px] flex items-center justify-center font-mono">
-                          NK
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Neha Kapoor</span>
-                          <span className="text-[10px] text-muted-foreground">HR Director</span>
-                        </div>
-                      </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Custodian Department:</span>
+                      <span className="font-semibold text-foreground">{policyMaster.department}</span>
                     </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Process Owner</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-blue-500/10 text-blue-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          VS
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Vikram Singh</span>
-                          <span className="text-[10px] text-muted-foreground">HR Operations Head</span>
-                        </div>
-                      </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Effective Validity:</span>
+                      <span className="font-mono text-muted-foreground">{policyMaster.effectiveDate} to {policyMaster.expiryDate}</span>
                     </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Reviewer</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-amber-500/10 text-amber-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          RS
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Rahul Sharma</span>
-                          <span className="text-[10px] text-muted-foreground">Senior HR Analyst</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Author</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-emerald-500/10 text-emerald-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          AV
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Amit Verma</span>
-                          <span className="text-[10px] text-muted-foreground">HR Manager</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Approver</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-rose-500/10 text-rose-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          SG
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Sanjay Gupta</span>
-                          <span className="text-[10px] text-muted-foreground">Chief HR Officer</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Compliance Owner</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-purple-500/10 text-purple-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          PM
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Pooja Mehta</span>
-                          <span className="text-[10px] text-muted-foreground">Compliance Manager</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Risk Owner</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-indigo-500/10 text-indigo-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          AD
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Anita Deshmukh</span>
-                          <span className="text-[10px] text-muted-foreground">Risk Manager</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center pt-2 border-t border-border/50 text-xs">
-                    <span className="text-muted-foreground">Ownership Status</span>
-                    <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                      Active
-                    </span>
-                  </div>
-                </div>
-
-                {/* 4. Review & Approval Status */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      4. Review & Approval Status
-                    </h4>
-
-                    <div className="overflow-x-auto mt-2">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                            <th className="py-1 px-1">Lvl</th>
-                            <th className="py-1 px-1">Review / Approval</th>
-                            <th className="py-1 px-1">Person</th>
-                            <th className="py-1 px-1">Status</th>
-                            <th className="py-1 px-1">Date</th>
-                            <th className="py-1 px-1">Comments</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 text-[10px]">
-                          {POLICY_REVIEW_APPROVAL_STEPS.map((s) => (
-                            <tr key={s.level} className="hover:bg-muted/30 transition-colors">
-                              <td className="py-1 px-1 font-mono font-bold text-primary">{s.level}</td>
-                              <td className="py-1 px-1 font-medium text-foreground">{s.type}</td>
-                              <td className="py-1 px-1 text-muted-foreground">{s.person}</td>
-                              <td className="py-1 px-1">
-                                <span className="rounded bg-emerald-500/10 px-1 py-0.2 text-[9px] font-bold text-emerald-600">
-                                  {s.status}
-                                </span>
-                              </td>
-                              <td className="py-1 px-1 font-mono text-[9px] text-muted-foreground">{s.date}</td>
-                              <td className="py-1 px-1 text-muted-foreground truncate max-w-[80px]">{s.comments}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Full policy approval workflow diagram opened.")}
-                    className="text-[11px] font-bold text-primary hover:underline cursor-pointer pt-1"
-                  >
-                    View Full Workflow
-                  </button>
-                </div>
-              </div>
-
-              {/* Row 2: 5. Policy Framework Overview | 6. Communications & Acknowledgement | 7. Quick Actions */}
-              <div className="grid gap-4 lg:grid-cols-3">
-                {/* 5. Policy Framework Overview */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      5. Policy Framework Overview
-                    </h4>
-
-                    <div className="grid grid-cols-2 gap-2 text-xs pt-1">
-                      {[
-                        "Policy Statement",
-                        "Authority",
-                        "Principles",
-                        "Controls",
-                        "Rules",
-                        "Exceptions",
-                        "Requirements",
-                        "Enforcement",
-                        "Responsibilities",
-                        "Monitoring",
-                      ].map((item) => (
-                        <div key={item} className="flex items-center gap-1.5 text-[11px]">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                          <span className="text-foreground">{item}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="mt-3 flex items-center justify-between bg-muted/20 p-2 rounded-lg text-xs">
-                      <div>
-                        <span className="text-muted-foreground block text-[10px]">Total Sections</span>
-                        <span className="font-bold text-foreground font-mono text-sm">10</span>
-                      </div>
-                      <div className="text-right text-[10px] text-muted-foreground">
-                        Last Updated: <span className="font-mono text-foreground font-medium">10 Apr 2024</span>
-                        <span className="block">by Amit Verma</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Policy Framework details opened.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View Framework
-                  </button>
-                </div>
-
-                {/* 6. Communications & Acknowledgement */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      6. Communications & Acknowledgement
-                    </h4>
-
-                    {/* Donut Chart Graphic */}
-                    <div className="flex items-center justify-center gap-6 py-3">
-                      <div className="relative h-24 w-24 rounded-full border-8 border-emerald-500 border-t-amber-500 border-r-rose-500 flex flex-col items-center justify-center">
-                        <span className="text-lg font-bold font-mono text-foreground">102</span>
-                        <span className="text-[9px] text-muted-foreground">Total Users</span>
-                      </div>
-
-                      <div className="space-y-1.5 text-xs">
-                        <div className="flex items-center gap-2">
-                          <div className="h-2.5 w-2.5 rounded-full bg-emerald-500 shrink-0" />
-                          <span className="text-muted-foreground text-[11px]">Acknowledged (82)</span>
-                          <span className="font-mono font-bold text-foreground ml-auto">80.39%</span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <div className="h-2.5 w-2.5 rounded-full bg-amber-500 shrink-0" />
-                          <span className="text-muted-foreground text-[11px]">Pending (16)</span>
-                          <span className="font-mono font-bold text-foreground ml-auto">15.69%</span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <div className="h-2.5 w-2.5 rounded-full bg-rose-500 shrink-0" />
-                          <span className="text-muted-foreground text-[11px]">Overdue (4)</span>
-                          <span className="font-mono font-bold text-foreground ml-auto">3.92%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Acknowledgement details opened.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View Details
-                  </button>
-                </div>
-
-                {/* 7. Quick Actions & Recent Versions */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-4 shadow-xs">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      7. Quick Actions
-                    </h4>
-
-                    <div className="grid grid-cols-3 gap-2 pt-2 text-center text-[10px]">
-                      <button
-                        onClick={() => showNotification("Review request sent.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <UserCheck className="h-4 w-4 text-primary" />
-                        <span>Request Review</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Approval request sent.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                        <span>Request Approval</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Policy publication triggered.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <Megaphone className="h-4 w-4 text-purple-600" />
-                        <span>Publish Policy</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Policy broadcast notice sent.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <Send className="h-4 w-4 text-blue-600" />
-                        <span>Communicate Policy</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Training program setup opened.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <GraduationCap className="h-4 w-4 text-amber-600" />
-                        <span>Manage Training</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Policy change request form opened.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <RefreshCw className="h-4 w-4 text-indigo-600" />
-                        <span>Change Request</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="border-t border-border/60 pt-3">
-                    <h4 className="text-xs font-bold text-foreground mb-2">Recent Versions</h4>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                            <th className="py-1 px-1">Version</th>
-                            <th className="py-1 px-1">Effective Date</th>
-                            <th className="py-1 px-1">Published On</th>
-                            <th className="py-1 px-1">Change Type</th>
-                            <th className="py-1 px-1">Changed By</th>
-                            <th className="py-1 px-1">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 text-[10px]">
-                          {RECENT_POLICY_VERSIONS.map((v) => (
-                            <tr key={v.id} className="hover:bg-muted/30 transition-colors">
-                              <td className="py-1 px-1 font-mono font-bold text-foreground">{v.version}</td>
-                              <td className="py-1 px-1 font-mono text-muted-foreground">{v.effectiveDate}</td>
-                              <td className="py-1 px-1 font-mono text-muted-foreground">{v.publishedOn}</td>
-                              <td className="py-1 px-1 font-medium">{v.changeType}</td>
-                              <td className="py-1 px-1 text-muted-foreground">{v.changedBy}</td>
-                              <td className="py-1 px-1">
-                                <span className={cn("rounded px-1 py-0.2 text-[9px] font-bold border", v.badge)}>
-                                  {v.status}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Mandatory Review Cycle:</span>
+                      <span className="font-semibold text-foreground">Annual (Next: {policyMaster.reviewDate})</span>
                     </div>
                   </div>
                 </div>
@@ -1012,38 +640,286 @@ export function PolicyManagementPage() {
             </div>
           )}
 
-          {/* OTHER TABS PLACEHOLDER */}
-          {activeTab !== "summary" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <h4 className="text-sm font-bold text-foreground capitalize">{activeTab} Workspace</h4>
-                <span className="text-xs text-muted-foreground">Policy ID: POL-2024-00057</span>
+          {/* ENTERPRISE POLICY DIRECTORY WORKSPACE */}
+          {activeTab === "directory" && (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-4">
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Total Policies</span>
+                  <div className="text-xl font-bold font-mono text-foreground">{policiesList.length} Policies</div>
+                  <p className="text-[10px] text-emerald-600 font-medium">100% Governance Active</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Published Policies</span>
+                  <div className="text-xl font-bold font-mono text-foreground">
+                    {policiesList.filter((p) => p.status === "Published").length} Active
+                  </div>
+                  <p className="text-[10px] text-blue-600 font-medium">Enterprise binding</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Under Review</span>
+                  <div className="text-xl font-bold font-mono text-foreground">
+                    {policiesList.filter((p) => p.status !== "Published").length} Pending
+                  </div>
+                  <p className="text-[10px] text-amber-600 font-medium">Committee stage</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Acknowledgement Rate</span>
+                  <div className="text-xl font-bold font-mono text-foreground">94.2%</div>
+                  <p className="text-[10px] text-purple-600 font-medium">All active staff</p>
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Detailed settings for <span className="font-semibold text-foreground capitalize">{activeTab}</span> adhering to MAICW specification.
-              </p>
-              <div className="grid gap-4 sm:grid-cols-3 pt-2">
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Active Policy Version</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">v1.2 Published</span>
-                  <p className="text-[11px] text-muted-foreground">Effective across all corporate entities.</p>
+
+              <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                  <h4 className="text-xs font-bold text-foreground">Enterprise Policy Register ({policiesList.length} Policies)</h4>
+                  <button
+                    onClick={() => setShowCreatePolicyModal(true)}
+                    className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                  >
+                    + Create Policy
+                  </button>
                 </div>
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Compliance Score</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">94.0%</span>
-                  <p className="text-[11px] text-muted-foreground">Verified against HR regulatory standards.</p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                        <th className="py-2.5 px-3">Policy #</th>
+                        <th className="py-2.5 px-3">Policy Title</th>
+                        <th className="py-2.5 px-3">Type</th>
+                        <th className="py-2.5 px-3">Department</th>
+                        <th className="py-2.5 px-3">Owner</th>
+                        <th className="py-2.5 px-3">Version</th>
+                        <th className="py-2.5 px-3">Status</th>
+                        <th className="py-2.5 px-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/60 text-[11px]">
+                      {policiesList.map((pol) => (
+                        <tr key={pol.id} className="hover:bg-muted/30 transition-colors">
+                          <td className="py-2 px-3 font-mono font-bold text-primary">{pol.num}</td>
+                          <td className="py-2 px-3 font-semibold text-foreground">{pol.title}</td>
+                          <td className="py-2 px-3 text-muted-foreground">{pol.type}</td>
+                          <td className="py-2 px-3 text-muted-foreground">{pol.dept}</td>
+                          <td className="py-2 px-3 text-foreground">{pol.owner}</td>
+                          <td className="py-2 px-3 font-mono">{pol.ver}</td>
+                          <td className="py-2 px-3">
+                            <span
+                              className={cn(
+                                "rounded px-2 py-0.5 text-[10px] font-bold",
+                                pol.status === "Published" ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
+                              )}
+                            >
+                              {pol.status}
+                            </span>
+                          </td>
+                          <td className="py-2 px-3 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setPoliciesList((prev) => prev.filter((p) => p.id !== pol.id));
+                                showNotification(`Policy ${pol.num} removed.`);
+                              }}
+                              className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
+                            >
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
+              </div>
+            </div>
+          )}
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Acknowledgement Rate</span>
-                  <span className="text-xl font-bold font-mono text-primary">80.39%</span>
-                  <p className="text-[11px] text-muted-foreground">82 of 102 target employees confirmed.</p>
-                </div>
+          {/* GOVERNANCE & REVIEW WORKFLOW WORKSPACE */}
+          {activeTab === "governance" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  Policy Review, Statutory Validation & Approval Stages
+                </h4>
+                <span className="text-[11px] font-mono text-muted-foreground">Governance Stage-Gate</span>
+              </div>
+
+              <div className="space-y-3">
+                {reviewSteps.map((step) => (
+                  <div key={step.level} className="flex items-start gap-3 p-3 rounded-lg border border-border bg-muted/15 text-xs">
+                    <div className="h-6 w-6 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-bold text-emerald-600 shrink-0 mt-0.5">
+                      ✓
+                    </div>
+                    <div className="flex-1 space-y-0.5">
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-foreground">{step.type}</span>
+                        <span className="text-[10px] font-mono text-muted-foreground">{step.date}</span>
+                      </div>
+                      <p className="text-muted-foreground">Sign-off by <span className="font-semibold text-foreground">{step.person}</span>: "{step.comments}"</p>
+                    </div>
+                    <span className="rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold shrink-0">
+                      {step.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ACKNOWLEDGEMENT & AUDIT LOGS WORKSPACE */}
+          {activeTab === "audit" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
+                  Employee Acknowledgement Tracking & Version Audit Log
+                </h4>
+                <span className="text-[11px] font-mono text-muted-foreground">Compliance Verification</span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2 px-2">Timestamp</th>
+                      <th className="py-2 px-2">Auditor / Author</th>
+                      <th className="py-2 px-2">Governance Event</th>
+                      <th className="py-2 px-2">Policy Version</th>
+                      <th className="py-2 px-2">Compliance Check</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 text-[11px]">
+                    {[
+                      { time: "15 Apr 2024, 10:30 AM", user: "Amit Verma (Policy Admin)", act: "Published revised version v1.2 enterprise-wide", ver: "v1.2", status: "100% Compliant" },
+                      { time: "12 Apr 2024, 04:00 PM", user: "Sanjay Gupta (Director)", act: "Approved executive review and sign-off", ver: "v1.2", status: "100% Compliant" },
+                      { time: "10 Apr 2024, 02:00 PM", user: "Anita Deshmukh (Risk Lead)", act: "Conducted enterprise risk evaluation", ver: "v1.2", status: "100% Compliant" },
+                      { time: "01 Apr 2023, 09:00 AM", user: "Amit Verma (Admin)", act: "Baseline version v1.0 promulgated", ver: "v1.0", status: "100% Compliant" },
+                    ].map((log, idx) => (
+                      <tr key={idx} className="hover:bg-muted/30 transition-colors">
+                        <td className="py-2 px-2 font-mono text-muted-foreground">{log.time}</td>
+                        <td className="py-2 px-2 font-semibold text-foreground">{log.user}</td>
+                        <td className="py-2 px-2 text-foreground">{log.act}</td>
+                        <td className="py-2 px-2 font-mono font-bold text-primary">{log.ver}</td>
+                        <td className="py-2 px-2">
+                          <span className="rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold">
+                            {log.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
         </div>
+
+        {/* --- CREATE POLICY MODAL --- */}
+        {showCreatePolicyModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+            <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Create Policy Master</h3>
+                </div>
+                <button onClick={() => setShowCreatePolicyModal(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Policy Number *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. FIN-POL-008"
+                    value={newPolicyForm.num}
+                    onChange={(e) => setNewPolicyForm({ ...newPolicyForm, num: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Policy Title *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Fixed Asset Depreciation & Governance Policy"
+                    value={newPolicyForm.title}
+                    onChange={(e) => setNewPolicyForm({ ...newPolicyForm, title: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Policy Type</label>
+                    <select
+                      value={newPolicyForm.type}
+                      onChange={(e) => setNewPolicyForm({ ...newPolicyForm, type: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                    >
+                      <option value="Operational Policy">Operational Policy</option>
+                      <option value="HR Policy">HR Policy</option>
+                      <option value="Financial Policy">Financial Policy</option>
+                      <option value="Compliance Policy">Compliance Policy</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Department</label>
+                    <input
+                      type="text"
+                      value={newPolicyForm.dept}
+                      onChange={(e) => setNewPolicyForm({ ...newPolicyForm, dept: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowCreatePolicyModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newPolicyForm.num || !newPolicyForm.title) {
+                      alert("Please provide policy number and title.");
+                      return;
+                    }
+                    setPoliciesList((prev) => [
+                      ...prev,
+                      {
+                        id: `POL-${prev.length + 1}`,
+                        num: newPolicyForm.num.toUpperCase(),
+                        title: newPolicyForm.title,
+                        type: newPolicyForm.type,
+                        dept: newPolicyForm.dept,
+                        ver: newPolicyForm.ver,
+                        status: "Published",
+                        owner: newPolicyForm.owner,
+                        date: "Today",
+                      },
+                    ]);
+                    setShowCreatePolicyModal(false);
+                    showNotification(`Policy ${newPolicyForm.num.toUpperCase()} successfully created.`);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Save Policy
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer Classification & Modification Strip */}
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card p-3 text-[11px] text-muted-foreground font-mono">

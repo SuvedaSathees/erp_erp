@@ -52,7 +52,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip as RechartsTooltip } 
 export const Route = createFileRoute("/management/crm-management/customer-success")({
   head: () => ({
     meta: [
-      { title: "Customer Success Form ⭐ · Customer Support · Magnertia ERP" },
+      { title: "Customer Success Form · Customer Support · Magnertia ERP" },
       {
         name: "description",
         content:
@@ -246,94 +246,83 @@ const ADOPTION_DONUT = [
 
 export function CustomerSuccessPage() {
   const [success, setSuccess] = useState<CustomerSuccessRecord>(INITIAL_SUCCESS);
-  const [activeTab, setActiveTab] = useState<string>("overview");
+  const [activeTab, setActiveTab] = useState<string>("health");
 
   // Modals
   const [isNewRecordOpen, setIsNewRecordOpen] = useState(false);
   const [isAddEngagementOpen, setIsAddEngagementOpen] = useState(false);
   const [isAddRiskOpen, setIsAddRiskOpen] = useState(false);
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const handleInputChange = (field: keyof CustomerSuccessRecord, value: any) => {
     setSuccess((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSaveSuccess = () => {
-    alert(`Customer Success Record ${success.successNumber} saved successfully!`);
+    showNotification(`Customer Success Record ${success.successNumber} saved successfully!`);
   };
 
   return (
     <AppShell
-      title="Customer Success Form ⭐"
+      title="Customer Success Form"
       breadcrumb="Management > CRM Management > Customer Success > Customer Success Form"
       description="The Customer Success Form manages the complete post-sale relationship lifecycle focused on customer adoption, value realization, retention, expansion, health monitoring, renewals, risks, and advocacy."
       tabs={<CrmManagementTabBar />}
     >
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <div className="flex flex-col min-h-screen text-slate-800 space-y-6">
-        {/* Customer Success Master Action Bar */}
-        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-2xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-base font-bold tracking-tight text-slate-900 flex items-center gap-1.5">
-                <span>Customer Success Form</span>
-                <span className="text-amber-500 text-sm">⭐</span>
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-2xs">
+          <div className="flex items-center justify-between gap-3 flex-nowrap overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 whitespace-nowrap">
+                Customer Success Form
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap font-mono">
                 {success.successNumber}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300">
-                ● {success.status}
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 whitespace-nowrap flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 inline-block" />
+                <span>{success.status}</span>
               </span>
             </div>
 
-            {/* Header Action Buttons */}
-            <div className="flex items-center flex-wrap gap-2">
+            {/* Quick Actions Header */}
+            <div className="flex items-center gap-2.5 shrink-0 flex-nowrap">
               <button
                 onClick={() => setIsNewRecordOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Plus className="h-3.5 w-3.5" />
                 <span>New Success Record</span>
               </button>
 
               <button
-                onClick={() => window.print()}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Printer className="h-3.5 w-3.5 text-slate-600" />
-                <span>Print</span>
-              </button>
-
-              <button
-                onClick={() => alert("Opening Email Composer for Customer Success Update...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Mail className="h-3.5 w-3.5 text-blue-600" />
-                <span>Send Email</span>
-              </button>
-
-              <button
                 onClick={handleSaveSuccess}
-                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save</span>
               </button>
 
-              <button
-                onClick={() => alert("More options...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 flex items-center gap-1 transition-colors cursor-pointer"
-              >
-                <span>More</span>
-                <MoreHorizontal className="h-3.5 w-3.5" />
-              </button>
-
-              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs">
-                  RS
+              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1 shrink-0 whitespace-nowrap">
+                <div className="h-7 w-7 rounded-full bg-emerald-600 text-white flex items-center justify-center font-semibold text-xs shadow-2xs shrink-0">
+                  NK
                 </div>
-                <div className="text-left hidden sm:block">
-                  <div className="text-xs font-semibold text-slate-800 leading-none">Rahul Sharma</div>
-                  <div className="text-[10px] text-slate-500">Customer Success Manager</div>
+                <div className="text-left hidden sm:block whitespace-nowrap">
+                  <div className="text-xs font-semibold text-slate-800 leading-none">Neha Kapoor</div>
+                  <div className="text-[10px] text-slate-500">CS Lead</div>
                 </div>
               </div>
             </div>
@@ -527,18 +516,10 @@ export function CustomerSuccessPage() {
         <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-1.5 overflow-x-auto scrollbar-none">
             {[
-              { id: "overview", label: "Overview", icon: Layers },
-              { id: "onboarding", label: "Onboarding", icon: UserCheck },
-              { id: "adoption", label: "Adoption", icon: Zap },
-              { id: "health", label: "Health", icon: Activity },
-              { id: "objectives", label: "Objectives", icon: Target },
-              { id: "engagement", label: "Engagement", icon: Users },
-              { id: "risks", label: "Risks", icon: ShieldAlert },
-              { id: "value", label: "Value Realization", icon: TrendingUp },
+              { id: "health", label: "Onboarding & Health", icon: UserCheck },
+              { id: "objectives", label: "Success Objectives & QBR", icon: Target },
+              { id: "risks", label: "Churn Risks & Mitigation", icon: ShieldAlert },
               { id: "renewal", label: "Renewal & Expansion", icon: RefreshCw },
-              { id: "advocacy", label: "Advocacy", icon: Heart },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "history", label: "History", icon: Clock },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -562,153 +543,219 @@ export function CustomerSuccessPage() {
 
           {/* TAB CONTENT AREA */}
           <div className="p-5">
-            {activeTab === "overview" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Left & Center Columns (Sections 2 to 10) */}
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Grid Row 1: Customer Health Score, Adoption Summary, Key Objectives Progress, Upcoming Renewal */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Card 2: Customer Health Score */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        2. Customer Health Score
-                      </h3>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left & Center Columns */}
+              <div className="lg:col-span-2 space-y-6">
+                {activeTab === "health" && (
+                  <div className="space-y-6">
+                    {/* Grid Row 1: Customer Health Score & Adoption Summary */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Card 2: Customer Health Score */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
+                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
+                          2. Customer Health Score
+                        </h3>
 
-                      <div className="flex items-center justify-between gap-4">
-                        <div className="text-center shrink-0">
-                          <div className="w-24 h-24 rounded-full border-4 border-emerald-500 bg-white flex flex-col items-center justify-center shadow-2xs">
-                            <span className="text-2xl font-extrabold text-slate-900">{success.overallHealthScore}</span>
-                            <span className="text-[10px] text-slate-400 font-bold">/100</span>
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="text-center shrink-0 flex flex-col items-center">
+                            <div className="relative w-24 h-24 flex items-center justify-center">
+                              <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                {/* Track Background */}
+                                <circle
+                                  cx="50"
+                                  cy="50"
+                                  r="40"
+                                  className="text-slate-100"
+                                  strokeWidth="8"
+                                  stroke="currentColor"
+                                  fill="transparent"
+                                />
+                                {/* Health Score Arc */}
+                                <circle
+                                  cx="50"
+                                  cy="50"
+                                  r="40"
+                                  stroke="#10b981"
+                                  strokeWidth="8"
+                                  strokeDasharray={2 * Math.PI * 40}
+                                  strokeDashoffset={2 * Math.PI * 40 * (1 - (success.overallHealthScore || 82) / 100)}
+                                  strokeLinecap="round"
+                                  fill="transparent"
+                                />
+                              </svg>
+                              <div className="absolute inset-0 flex flex-col items-center justify-center select-none text-center">
+                                <span className="text-2xl font-black text-slate-900 dark:text-white font-mono tracking-tight leading-none">
+                                  {success.overallHealthScore}%
+                                </span>
+                                <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mt-1">
+                                  Score
+                                </span>
+                              </div>
+                            </div>
+                            <span className="mt-1.5 px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px] rounded-full inline-block">
+                              Healthy
+                            </span>
                           </div>
-                          <span className="mt-1 px-2.5 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold text-[11px] rounded-full inline-block">
-                            Healthy
-                          </span>
+
+                          <div className="space-y-1 text-[11px] w-full">
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Product Usage</span>
+                              <span className="font-bold text-slate-800">{success.productUsageScore}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Adoption</span>
+                              <span className="font-bold text-slate-800">{success.adoptionScore}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Support Experience</span>
+                              <span className="font-bold text-slate-800">{success.supportExperienceScore}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Satisfaction (CSAT)</span>
+                              <span className="font-bold text-slate-800">{success.csatScore}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Engagement</span>
+                              <span className="font-bold text-slate-800">{success.engagementScore}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Renewal Likelihood</span>
+                              <span className="font-bold text-slate-800">{success.renewalLikelihoodScore}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Payment Health</span>
+                              <span className="font-bold text-slate-800">{success.paymentHealthScore}</span>
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="space-y-1 text-[11px] w-full">
-                          <div className="flex justify-between">
-                            <span className="text-slate-600">Product Usage</span>
-                            <span className="font-bold text-slate-800">{success.productUsageScore}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-slate-600">Adoption</span>
-                            <span className="font-bold text-slate-800">{success.adoptionScore}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-slate-600">Support Experience</span>
-                            <span className="font-bold text-slate-800">{success.supportExperienceScore}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-slate-600">Satisfaction (CSAT)</span>
-                            <span className="font-bold text-slate-800">{success.csatScore}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-slate-600">Engagement</span>
-                            <span className="font-bold text-slate-800">{success.engagementScore}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-slate-600">Renewal Likelihood</span>
-                            <span className="font-bold text-slate-800">{success.renewalLikelihoodScore}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-slate-600">Payment Health</span>
-                            <span className="font-bold text-slate-800">{success.paymentHealthScore}</span>
-                          </div>
+                        <div className="text-[11px] text-emerald-700 font-bold text-center border-t border-slate-200 pt-2">
+                          {success.healthTrendText}
                         </div>
                       </div>
 
-                      <div className="text-[11px] text-emerald-700 font-bold text-center border-t border-slate-200 pt-2">
-                        {success.healthTrendText}
+                      {/* Card 3: Adoption Summary */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
+                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
+                          3. Adoption Summary
+                        </h3>
+
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="w-24 h-24 relative shrink-0">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <PieChart>
+                                <Pie
+                                  data={ADOPTION_DONUT}
+                                  cx="50%"
+                                  cy="50%"
+                                  innerRadius={24}
+                                  outerRadius={38}
+                                  paddingAngle={3}
+                                  dataKey="value"
+                                >
+                                  {ADOPTION_DONUT.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                  ))}
+                                </Pie>
+                                <RechartsTooltip formatter={(val: number) => `${val}%`} />
+                              </PieChart>
+                            </ResponsiveContainer>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                              <span className="text-sm font-extrabold text-blue-700">78%</span>
+                              <span className="text-[8px] font-bold text-slate-400">Adoption</span>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1 text-xs w-full">
+                            <div className="flex justify-between">
+                              <span className="text-slate-500 font-medium">Active Users</span>
+                              <span className="font-bold text-slate-800">156 / 200</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-500 font-medium">Feature Utilization</span>
+                              <span className="font-bold text-slate-800">78%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-500 font-medium">Usage Frequency</span>
+                              <span className="font-bold text-slate-800">High</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-500 font-medium">Last Active</span>
+                              <span className="font-semibold text-slate-800">15 Apr 2024</span>
+                            </div>
+                            <div className="flex justify-between items-center border-t border-slate-200 pt-1">
+                              <span className="text-slate-500 font-medium">Onboarding Score</span>
+                              <span className="text-emerald-700 font-bold text-xs">4.2 / 5.0</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Card 3: Adoption Summary */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
+                    {/* Card 8: Value Realization (YTD) */}
+                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3 text-xs">
                       <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        3. Adoption Summary
+                        Value Realization (YTD)
                       </h3>
 
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="w-24 h-24 relative shrink-0">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                              <Pie
-                                data={ADOPTION_DONUT}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={24}
-                                outerRadius={38}
-                                paddingAngle={3}
-                                dataKey="value"
-                              >
-                                {ADOPTION_DONUT.map((entry, index) => (
-                                  <Cell key={`cell-${index}`} fill={entry.color} />
-                                ))}
-                              </Pie>
-                              <RechartsTooltip formatter={(val: number) => `${val}%`} />
-                            </PieChart>
-                          </ResponsiveContainer>
-                          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                            <span className="text-sm font-extrabold text-blue-700">78%</span>
-                            <span className="text-[8px] font-bold text-slate-400">Adoption</span>
-                          </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                        <div className="p-2.5 bg-white rounded-lg border border-slate-200">
+                          <div className="text-[10px] text-slate-500 font-semibold">Uptime</div>
+                          <div className="text-base font-extrabold text-emerald-700">96%</div>
+                          <div className="text-[9px] text-slate-400">Target: 98%</div>
                         </div>
-
-                        <div className="space-y-1 text-xs w-full">
-                          <div className="flex justify-between">
-                            <span className="text-slate-500 font-medium">Active Users</span>
-                            <span className="font-bold text-slate-800">156 / 200</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-slate-500 font-medium">Feature Utilization</span>
-                            <span className="font-bold text-slate-800">78%</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-slate-500 font-medium">Usage Frequency</span>
-                            <span className="font-bold text-slate-800">High</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-slate-500 font-medium">Last Active</span>
-                            <span className="font-semibold text-slate-800">15 Apr 2024</span>
-                          </div>
-                          <div className="flex justify-between items-center border-t border-slate-200 pt-1">
-                            <span className="text-slate-500 font-medium">Onboarding Score</span>
-                            <span className="text-amber-500 font-bold text-xs">★★★★☆ 4.2 / 5</span>
-                          </div>
+                        <div className="p-2.5 bg-white rounded-lg border border-slate-200">
+                          <div className="text-[10px] text-slate-500 font-semibold">Energy Savings</div>
+                          <div className="text-base font-extrabold text-emerald-700">₹ 8.4 Lakhs</div>
+                          <div className="text-[9px] text-slate-400">Target: ₹ 12 L</div>
+                        </div>
+                        <div className="p-2.5 bg-white rounded-lg border border-slate-200">
+                          <div className="text-[10px] text-slate-500 font-semibold">OPEX Reduction</div>
+                          <div className="text-base font-extrabold text-amber-700">11%</div>
+                          <div className="text-[9px] text-slate-400">Target: 15%</div>
+                        </div>
+                        <div className="p-2.5 bg-white rounded-lg border border-slate-200">
+                          <div className="text-[10px] text-slate-500 font-semibold">User CSAT</div>
+                          <div className="text-base font-extrabold text-emerald-700">4.2 / 5.0</div>
+                          <div className="text-[9px] text-slate-400">Target: 4.5 / 5.0</div>
                         </div>
                       </div>
                     </div>
+                  </div>
+                )}
 
+                {activeTab === "objectives" && (
+                  <div className="space-y-6">
                     {/* Card 4: Key Objectives Progress */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
+                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3 text-xs">
                       <div className="flex justify-between items-center border-b border-slate-200 pb-2">
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          4. Key Objectives Progress
+                          Key Objectives & Milestones
                         </h3>
-                        <span className="font-extrabold text-primary text-sm">74%</span>
+                        <span className="font-extrabold text-primary text-sm">74% Complete</span>
                       </div>
 
                       <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
                         <div className="bg-primary h-full rounded-full" style={{ width: "74%" }} />
                       </div>
 
-                      <div className="overflow-x-auto text-[11px] pt-1">
-                        <table className="w-full text-left">
+                      <div className="w-full pt-1">
+                        <table className="w-full text-left text-[11px] table-fixed">
                           <thead>
                             <tr className="text-slate-500 font-semibold border-b border-slate-200">
-                              <th className="py-1">Objective</th>
-                              <th className="py-1 text-center">Target</th>
-                              <th className="py-1 text-center">Progress</th>
-                              <th className="py-1 text-center">Status</th>
+                              <th className="py-1.5 px-2 w-[45%]">Objective</th>
+                              <th className="py-1.5 px-2 w-[20%] text-center">Target</th>
+                              <th className="py-1.5 px-2 w-[15%] text-center">Progress</th>
+                              <th className="py-1.5 px-2 w-[20%] text-center">Status</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100">
                             {OBJECTIVES_DATA.map((row, idx) => (
-                              <tr key={idx}>
-                                <td className="py-1 font-medium text-slate-800">{row.obj}</td>
-                                <td className="py-1 text-center text-slate-600">{row.target}</td>
-                                <td className="py-1 text-center font-bold text-slate-900">{row.progress}</td>
-                                <td className="py-1 text-center">
+                              <tr key={idx} className="hover:bg-slate-50/80">
+                                <td className="py-1.5 px-2 font-medium text-slate-800 truncate">{row.obj}</td>
+                                <td className="py-1.5 px-2 text-center text-slate-600">{row.target}</td>
+                                <td className="py-1.5 px-2 text-center font-bold text-slate-900">{row.progress}</td>
+                                <td className="py-1.5 px-2 text-center">
                                   <span className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", row.color)}>
                                     {row.status}
                                   </span>
@@ -720,110 +767,108 @@ export function CustomerSuccessPage() {
                       </div>
                     </div>
 
-                    {/* Card 5: Upcoming Renewal */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3 text-xs">
-                      <div className="flex justify-between border-b border-slate-200 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          5. Upcoming Renewal
-                        </h3>
-                        <button onClick={() => alert("Viewing Renewal Pipeline...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View Renewal Pipeline
-                        </button>
+                    {/* Engagements & Actions Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Recent Engagements */}
+                      <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs overflow-hidden">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                          <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                            Recent Engagements
+                          </h3>
+                          <button onClick={() => showNotification("Viewing All Engagements...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                            View All
+                          </button>
+                        </div>
+
+                        <div className="w-full">
+                          <table className="w-full text-left text-[11px] table-fixed">
+                            <thead>
+                              <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                                <th className="py-1.5 px-2 w-[25%] whitespace-nowrap">Date</th>
+                                <th className="py-1.5 px-1.5 w-[25%] whitespace-nowrap">Type</th>
+                                <th className="py-1.5 px-1.5 w-[50%] whitespace-nowrap">Outcome</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                              {RECENT_ENGAGEMENTS.map((row, idx) => (
+                                <tr key={idx} className="hover:bg-slate-50/80">
+                                  <td className="py-1.5 px-2 text-slate-500 whitespace-nowrap text-[10px]">{row.date}</td>
+                                  <td className="py-1.5 px-1.5 font-bold text-slate-800 text-[10px] truncate">{row.type}</td>
+                                  <td className="py-1.5 px-1.5 font-semibold text-emerald-700 text-[10px] truncate">{row.outcome}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-3 bg-white p-3 rounded-lg border border-slate-200">
-                        <div className="h-10 w-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold shrink-0">
-                          <Calendar className="h-5 w-5" />
+                      {/* Open Success Actions */}
+                      <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs overflow-hidden">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                          <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                            Open Success Actions
+                          </h3>
+                          <button onClick={() => showNotification("Viewing All Actions...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                            View All
+                          </button>
                         </div>
-                        <div>
-                          <div className="text-[10px] text-slate-500 font-semibold">Renewal Date</div>
-                          <div className="text-sm font-extrabold text-slate-900">{success.renewalDate}</div>
-                        </div>
-                        <div className="ml-auto text-right">
-                          <div className="text-[10px] text-slate-500 font-semibold">Days to Renewal</div>
-                          <div className="text-base font-extrabold text-blue-700">199 Days</div>
-                        </div>
-                      </div>
 
-                      <div className="space-y-1 text-xs">
-                        <div className="flex justify-between">
-                          <span className="text-slate-500 font-medium">Renewal Likelihood</span>
-                          <span className="font-extrabold text-emerald-700">88%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500 font-medium">Renewal Value</span>
-                          <span className="font-mono font-bold text-slate-900">₹ 48,00,000.00</span>
+                        <div className="w-full">
+                          <table className="w-full text-left text-[11px] table-fixed">
+                            <thead>
+                              <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                                <th className="py-1.5 px-2 w-[45%] whitespace-nowrap">Action</th>
+                                <th className="py-1.5 px-1.5 w-[30%] whitespace-nowrap">Due</th>
+                                <th className="py-1.5 px-1.5 w-[25%] text-center whitespace-nowrap">Status</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                              {OPEN_SUCCESS_ACTIONS.map((row, idx) => (
+                                <tr key={idx} className="hover:bg-slate-50/80">
+                                  <td className="py-1.5 px-2 font-bold text-slate-800 text-[10px] truncate">{row.action}</td>
+                                  <td className="py-1.5 px-1.5 text-slate-500 whitespace-nowrap text-[10px]">{row.due}</td>
+                                  <td className="py-1.5 px-1.5 text-center">
+                                    <span className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", row.color)}>
+                                      {row.status}
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
                   </div>
+                )}
 
-                  {/* Grid Row 2: Recent Engagements & Open Success Actions */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Card 6: Recent Engagements Table */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                          6. Recent Engagements
+                {activeTab === "risks" && (
+                  <div className="space-y-6">
+                    {/* Card 9: Risks & Recovery */}
+                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3 text-xs">
+                      <div className="flex justify-between border-b border-slate-200 pb-2">
+                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                          Active Churn Risks & Mitigations
                         </h3>
-                        <button onClick={() => alert("Viewing All Engagements...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View All Engagements
+                        <button onClick={() => setIsAddRiskOpen(true)} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                          + Log Risk
                         </button>
                       </div>
 
-                      <div className="overflow-x-auto text-[11px]">
-                        <table className="w-full text-left">
+                      <div className="w-full">
+                        <table className="w-full text-left text-[11px] table-fixed">
                           <thead>
-                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                              <th className="py-1.5 px-2">Date</th>
-                              <th className="py-1.5 px-2">Type</th>
-                              <th className="py-1.5 px-2">Topic</th>
-                              <th className="py-1.5 px-2">By</th>
-                              <th className="py-1.5 px-2">Outcome</th>
+                            <tr className="text-slate-500 font-semibold border-b border-slate-200">
+                              <th className="py-1.5 px-2 w-[55%]">Risk Factor</th>
+                              <th className="py-1.5 px-2 w-[20%] text-center">Severity Score</th>
+                              <th className="py-1.5 px-2 w-[25%] text-center">Mitigation Status</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100">
-                            {RECENT_ENGAGEMENTS.map((row, idx) => (
+                            {RISKS_DATA.map((row, idx) => (
                               <tr key={idx} className="hover:bg-slate-50/80">
-                                <td className="py-1.5 px-2 text-slate-500 whitespace-nowrap">{row.date}</td>
-                                <td className="py-1.5 px-2 font-bold text-slate-800">{row.type}</td>
-                                <td className="py-1.5 px-2 text-slate-700">{row.topic}</td>
-                                <td className="py-1.5 px-2 text-slate-600">{row.by}</td>
-                                <td className="py-1.5 px-2 font-semibold text-emerald-700">{row.outcome}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-
-                    {/* Card 7: Open Success Actions */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                          7. Open Success Actions
-                        </h3>
-                        <button onClick={() => alert("Viewing All Actions...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View All Actions
-                        </button>
-                      </div>
-
-                      <div className="overflow-x-auto text-[11px]">
-                        <table className="w-full text-left">
-                          <thead>
-                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                              <th className="py-1.5 px-2">Action</th>
-                              <th className="py-1.5 px-2">Owner</th>
-                              <th className="py-1.5 px-2">Due Date</th>
-                              <th className="py-1.5 px-2 text-center">Status</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {OPEN_SUCCESS_ACTIONS.map((row, idx) => (
-                              <tr key={idx} className="hover:bg-slate-50/80">
-                                <td className="py-1.5 px-2 font-bold text-slate-800">{row.action}</td>
-                                <td className="py-1.5 px-2 text-slate-600">{row.owner}</td>
-                                <td className="py-1.5 px-2 text-slate-500 whitespace-nowrap">{row.due}</td>
+                                <td className="py-1.5 px-2 font-medium text-slate-800 truncate">{row.risk}</td>
+                                <td className="py-1.5 px-2 text-center font-bold text-slate-900">{row.score}</td>
                                 <td className="py-1.5 px-2 text-center">
                                   <span className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", row.color)}>
                                     {row.status}
@@ -836,247 +881,199 @@ export function CustomerSuccessPage() {
                       </div>
                     </div>
                   </div>
+                )}
 
-                  {/* Grid Row 3: Value Realization YTD, Risks & Recovery, Customer Advocacy */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Card 8: Value Realization (YTD) */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3 text-xs">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
-                        8. Value Realization (YTD)
-                      </h3>
+                {activeTab === "renewal" && (
+                  <div className="space-y-6">
+                    {/* Upcoming Renewal & Expansion */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Card 5: Upcoming Renewal */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3 text-xs">
+                        <div className="flex justify-between border-b border-slate-200 pb-2">
+                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                            Upcoming Renewal
+                          </h3>
+                          <button onClick={() => showNotification("Viewing Renewal Pipeline...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                            View Pipeline
+                          </button>
+                        </div>
 
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold">Uptime</div>
-                          <div className="text-base font-extrabold text-emerald-700">96%</div>
-                          <div className="text-[9px] text-slate-400">Target: 98%</div>
+                        <div className="flex items-center gap-3 bg-white p-3 rounded-lg border border-slate-200">
+                          <div className="h-10 w-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold shrink-0">
+                            <Calendar className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <div className="text-[10px] text-slate-500 font-semibold">Renewal Date</div>
+                            <div className="text-sm font-extrabold text-slate-900">{success.renewalDate}</div>
+                          </div>
+                          <div className="ml-auto text-right">
+                            <div className="text-[10px] text-slate-500 font-semibold">Days to Renewal</div>
+                            <div className="text-base font-extrabold text-blue-700">199 Days</div>
+                          </div>
                         </div>
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold">Energy Savings</div>
-                          <div className="text-base font-extrabold text-emerald-700">₹ 8.4 Lakhs</div>
-                          <div className="text-[9px] text-slate-400">Target: ₹ 12 Lakhs</div>
+
+                        <div className="space-y-1 text-xs">
+                          <div className="flex justify-between">
+                            <span className="text-slate-500 font-medium">Renewal Likelihood</span>
+                            <span className="font-extrabold text-emerald-700">88%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-slate-500 font-medium">Renewal Value</span>
+                            <span className="font-mono font-bold text-slate-900">₹ 48,00,000.00</span>
+                          </div>
                         </div>
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold">OPEX Reduction</div>
-                          <div className="text-base font-extrabold text-amber-700">11%</div>
-                          <div className="text-[9px] text-slate-400">Target: 15%</div>
+                      </div>
+
+                      {/* Card 10: Customer Advocacy */}
+                      <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3 text-xs">
+                        <div className="flex justify-between border-b border-slate-200 pb-2">
+                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                            Customer Advocacy & Referrals
+                          </h3>
+                          <button onClick={() => showNotification("Managing Customer Advocacy...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                            Manage
+                          </button>
                         </div>
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold">User Satisfaction</div>
-                          <div className="text-base font-extrabold text-emerald-700">4.2 / 5</div>
-                          <div className="text-[9px] text-slate-400">Target: 4.5 / 5</div>
+
+                        <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                          <div className="p-2 bg-white rounded border border-slate-200">
+                            <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-center gap-1">
+                              <Heart className="h-3.5 w-3.5 text-emerald-600 fill-emerald-600" /> NPS Score
+                            </div>
+                            <div className="text-lg font-extrabold text-emerald-700">+{success.npsScore}</div>
+                          </div>
+                          <div className="p-2 bg-white rounded border border-slate-200">
+                            <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-center gap-1">
+                              <Plane className="h-3.5 w-3.5 text-blue-600" /> References
+                            </div>
+                            <div className="text-lg font-extrabold text-slate-900">{success.referencesCount}</div>
+                          </div>
+                          <div className="p-2 bg-white rounded border border-slate-200">
+                            <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-center gap-1">
+                              <Quote className="h-3.5 w-3.5 text-purple-600" /> Testimonials
+                            </div>
+                            <div className="text-lg font-extrabold text-slate-900">{success.testimonialsCount}</div>
+                          </div>
+                          <div className="p-2 bg-white rounded border border-slate-200">
+                            <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-center gap-1">
+                              <Briefcase className="h-3.5 w-3.5 text-amber-600" /> Case Studies
+                            </div>
+                            <div className="text-lg font-extrabold text-slate-900">{success.caseStudiesCount}</div>
+                          </div>
                         </div>
                       </div>
                     </div>
+                  </div>
+                )}
+              </div>
 
-                    {/* Card 9: Risks & Recovery */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
-                      <div className="flex justify-between border-b border-slate-200 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          9. Risks & Recovery
-                        </h3>
-                        <button onClick={() => alert("Viewing All Risks...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View All Risks
-                        </button>
+              {/* Right Column: Sidebar Panels */}
+              <div className="space-y-6">
+                {/* Success Summary Widget (8 Stat Tiles) */}
+                <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-3">
+                  <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                      Success Summary
+                    </h3>
+                    <button onClick={() => showNotification("Opening Customer Success Dashboard...")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer">
+                      View Dashboard
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200">
+                      <div className="text-[10px] text-blue-700 font-semibold">Total Customers</div>
+                      <div className="text-lg font-extrabold text-blue-900">128</div>
+                    </div>
+                    <div className="p-2.5 bg-emerald-50/60 rounded-lg border border-emerald-200">
+                      <div className="text-[10px] text-emerald-700 font-semibold">Healthy Customers</div>
+                      <div className="text-lg font-extrabold text-emerald-900">86 (67%)</div>
+                    </div>
+                    <div className="p-2.5 bg-amber-50/60 rounded-lg border border-amber-200">
+                      <div className="text-[10px] text-amber-700 font-semibold">At Risk Customers</div>
+                      <div className="text-lg font-extrabold text-amber-900">22 (17%)</div>
+                    </div>
+                    <div className="p-2.5 bg-rose-50/60 rounded-lg border border-rose-200">
+                      <div className="text-[10px] text-rose-700 font-semibold">Critical Customers</div>
+                      <div className="text-lg font-extrabold text-rose-900">6 (5%)</div>
+                    </div>
+                    <div className="p-2.5 bg-purple-50/60 rounded-lg border border-purple-200">
+                      <div className="text-[10px] text-purple-700 font-semibold">Renewals Due (90d)</div>
+                      <div className="text-lg font-extrabold text-purple-900">14</div>
+                    </div>
+                    <div className="p-2.5 bg-teal-50/60 rounded-lg border border-teal-200">
+                      <div className="text-[10px] text-teal-700 font-semibold">Expansion Opps</div>
+                      <div className="text-lg font-extrabold text-teal-900">9</div>
+                    </div>
+                    <div className="p-2.5 bg-indigo-50/60 rounded-lg border border-indigo-200 flex justify-between items-center">
+                      <div>
+                        <div className="text-[10px] text-indigo-700 font-semibold">Avg. Health Score</div>
+                        <div className="text-sm font-extrabold text-indigo-900 font-mono">82 / 100</div>
                       </div>
-
-                      <div className="overflow-x-auto text-[11px]">
-                        <table className="w-full text-left">
-                          <thead>
-                            <tr className="text-slate-500 font-semibold border-b border-slate-200">
-                              <th className="py-1">Risk</th>
-                              <th className="py-1 text-center">Score</th>
-                              <th className="py-1 text-center">Status</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {RISKS_DATA.map((row, idx) => (
-                              <tr key={idx}>
-                                <td className="py-1 font-medium text-slate-800">{row.risk}</td>
-                                <td className="py-1 text-center font-bold text-slate-900">{row.score}</td>
-                                <td className="py-1 text-center">
-                                  <span className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", row.color)}>
-                                    {row.status}
-                                  </span>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                      <div className="relative inline-flex items-center justify-center shrink-0">
+                        <svg width="34" height="34" className="transform -rotate-90">
+                          <circle cx="17" cy="17" r="12" stroke="currentColor" strokeWidth="2.5" className="text-indigo-200" fill="transparent" />
+                          <circle
+                            cx="17"
+                            cy="17"
+                            r="12"
+                            stroke="#4f46e5"
+                            strokeWidth="2.5"
+                            strokeDasharray={2 * Math.PI * 12}
+                            strokeDashoffset={2 * Math.PI * 12 * (1 - 0.82)}
+                            strokeLinecap="round"
+                            fill="transparent"
+                          />
+                        </svg>
+                        <span className="absolute text-[8px] font-bold font-mono text-indigo-700">82%</span>
                       </div>
                     </div>
-
-                    {/* Card 10: Customer Advocacy */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3 text-xs">
-                      <div className="flex justify-between border-b border-slate-200 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          10. Customer Advocacy
-                        </h3>
-                        <button onClick={() => alert("Managing Customer Advocacy...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          Manage Advocacy
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-center gap-1">
-                            <Heart className="h-3.5 w-3.5 text-emerald-600 fill-emerald-600" /> NPS Score
-                          </div>
-                          <div className="text-lg font-extrabold text-emerald-700">+{success.npsScore}</div>
-                        </div>
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-center gap-1">
-                            <Plane className="h-3.5 w-3.5 text-blue-600" /> References
-                          </div>
-                          <div className="text-lg font-extrabold text-slate-900">{success.referencesCount}</div>
-                        </div>
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-center gap-1">
-                            <Quote className="h-3.5 w-3.5 text-purple-600" /> Testimonials
-                          </div>
-                          <div className="text-lg font-extrabold text-slate-900">{success.testimonialsCount}</div>
-                        </div>
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-center gap-1">
-                            <Briefcase className="h-3.5 w-3.5 text-amber-600" /> Case Studies
-                          </div>
-                          <div className="text-lg font-extrabold text-slate-900">{success.caseStudiesCount}</div>
-                        </div>
-                      </div>
+                    <div className="p-2.5 bg-slate-100 rounded-lg border border-slate-300">
+                      <div className="text-[10px] text-slate-600 font-semibold">NRR (Retention)</div>
+                      <div className="text-sm font-extrabold text-slate-900">112%</div>
                     </div>
                   </div>
                 </div>
 
-                {/* Right Column: Sidebar Panels (Matching Mockup Image) */}
-                <div className="space-y-6">
-                  {/* Success Summary Widget (8 Stat Tiles) */}
-                  <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-3">
-                    <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                        Success Summary
-                      </h3>
-                      <button onClick={() => alert("Opening Customer Success Dashboard...")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer">
-                        View Dashboard
-                      </button>
-                    </div>
+                {/* Quick Actions Panel */}
+                <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-3">
+                  <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2">
+                    Quick Actions
+                  </h3>
 
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200">
-                        <div className="text-[10px] text-blue-700 font-semibold">Total Customers</div>
-                        <div className="text-lg font-extrabold text-blue-900">128</div>
-                      </div>
-                      <div className="p-2.5 bg-emerald-50/60 rounded-lg border border-emerald-200">
-                        <div className="text-[10px] text-emerald-700 font-semibold">Healthy Customers</div>
-                        <div className="text-lg font-extrabold text-emerald-900">86 (67%)</div>
-                      </div>
-                      <div className="p-2.5 bg-amber-50/60 rounded-lg border border-amber-200">
-                        <div className="text-[10px] text-amber-700 font-semibold">At Risk Customers</div>
-                        <div className="text-lg font-extrabold text-amber-900">22 (17%)</div>
-                      </div>
-                      <div className="p-2.5 bg-rose-50/60 rounded-lg border border-rose-200">
-                        <div className="text-[10px] text-rose-700 font-semibold">Critical Customers</div>
-                        <div className="text-lg font-extrabold text-rose-900">6 (5%)</div>
-                      </div>
-                      <div className="p-2.5 bg-purple-50/60 rounded-lg border border-purple-200">
-                        <div className="text-[10px] text-purple-700 font-semibold">Renewals Due (90d)</div>
-                        <div className="text-lg font-extrabold text-purple-900">14</div>
-                      </div>
-                      <div className="p-2.5 bg-teal-50/60 rounded-lg border border-teal-200">
-                        <div className="text-[10px] text-teal-700 font-semibold">Expansion Opps</div>
-                        <div className="text-lg font-extrabold text-teal-900">9</div>
-                      </div>
-                      <div className="p-2.5 bg-indigo-50/60 rounded-lg border border-indigo-200">
-                        <div className="text-[10px] text-indigo-700 font-semibold">Avg. Health Score</div>
-                        <div className="text-sm font-extrabold text-indigo-900">82 / 100</div>
-                      </div>
-                      <div className="p-2.5 bg-slate-100 rounded-lg border border-slate-300">
-                        <div className="text-[10px] text-slate-600 font-semibold">NRR (Retention)</div>
-                        <div className="text-sm font-extrabold text-slate-900">112%</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Quick Actions Panel */}
-                  <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-3">
-                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2">
-                      Quick Actions
-                    </h3>
-
-                    <div className="grid grid-cols-3 gap-2">
-                      <button
-                        onClick={() => setIsAddEngagementOpen(true)}
-                        className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
-                      >
-                        <Users className="h-4 w-4 text-blue-600" />
-                        <span>Add Engagement</span>
-                      </button>
-                      <button
-                        onClick={() => alert("Adding objective...")}
-                        className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
-                      >
-                        <Target className="h-4 w-4 text-emerald-600" />
-                        <span>Add Objective</span>
-                      </button>
-                      <button
-                        onClick={() => alert("Scheduling review...")}
-                        className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
-                      >
-                        <Calendar className="h-4 w-4 text-purple-600" />
-                        <span>Schedule Review</span>
-                      </button>
-                      <button
-                        onClick={() => setIsAddRiskOpen(true)}
-                        className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
-                      >
-                        <ShieldAlert className="h-4 w-4 text-rose-600" />
-                        <span>Add Risk</span>
-                      </button>
-                      <button
-                        onClick={() => alert("Adding action...")}
-                        className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
-                      >
-                        <CheckSquare className="h-4 w-4 text-slate-600" />
-                        <span>Add Action</span>
-                      </button>
-                      <button
-                        onClick={() => alert("Uploading document...")}
-                        className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
-                      >
-                        <Paperclip className="h-4 w-4 text-indigo-600" />
-                        <span>Add Document</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Latest Engagement Widget */}
-                  <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-3">
-                    <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                        Latest Engagement
-                      </h3>
-                      <button onClick={() => alert("Viewing All Engagements...")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer">
-                        View All
-                      </button>
-                    </div>
-
-                    <div className="space-y-2 text-xs">
-                      {RECENT_ENGAGEMENTS.map((eng, idx) => (
-                        <div key={idx} className="flex items-center justify-between bg-slate-50 p-2 rounded border border-slate-200">
-                          <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                            <div>
-                              <div className="font-bold text-slate-800 text-[11px]">{eng.type}</div>
-                              <div className="text-[10px] text-slate-500">{eng.topic}</div>
-                            </div>
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-mono">{eng.date}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => setIsAddEngagementOpen(true)}
+                      className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-blue-300"
+                    >
+                      <Users className="h-4 w-4 text-blue-600" />
+                      <span className="font-semibold text-slate-800">Add Engagement</span>
+                    </button>
+                    <button
+                      onClick={() => setIsAddRiskOpen(true)}
+                      className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-rose-300"
+                    >
+                      <ShieldAlert className="h-4 w-4 text-rose-600" />
+                      <span className="font-semibold text-slate-800">Log Risk</span>
+                    </button>
+                    <button
+                      onClick={() => showNotification("Follow-up action item added to client success plan.")}
+                      className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-emerald-300"
+                    >
+                      <CheckSquare className="h-4 w-4 text-emerald-600" />
+                      <span className="font-semibold text-slate-800">Add Action</span>
+                    </button>
+                    <button
+                      onClick={() => showNotification("QBR document attachment window ready.")}
+                      className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-indigo-300"
+                    >
+                      <Paperclip className="h-4 w-4 text-indigo-600" />
+                      <span className="font-semibold text-slate-800">Add Document</span>
+                    </button>
                   </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
 
@@ -1117,7 +1114,7 @@ export function CustomerSuccessPage() {
                       customerName: cust,
                     }));
                     setIsNewRecordOpen(false);
-                    alert("Customer Success Record created!");
+                    showNotification("Customer Success Record created!");
                   }}
                   className="px-4 py-1.5 text-xs bg-primary text-white font-bold rounded shadow-xs"
                 >

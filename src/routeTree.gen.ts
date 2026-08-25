@@ -36,6 +36,22 @@ import { Route as ManufacturingDevelopmentLeanManufacturingIdRouteImport } from 
 import { Route as ManufacturingDevelopmentAutomationDevelopmentNewRouteImport } from './routes/manufacturing-development.automation-development.new'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentIdRouteImport } from './routes/manufacturing-development.automation-development.$id'
 import { Route as ManagementSalesManagementCustomerOrdersManagementRouteImport } from './routes/management.sales-management.customer-orders-management'
+import { Route as ManagementHrmManagementWorkforcePlanningRouteImport } from './routes/management.hrm-management.workforce-planning'
+import { Route as ManagementHrmManagementTravelExpenseRouteImport } from './routes/management.hrm-management.travel-expense'
+import { Route as ManagementHrmManagementRecruitmentManagementRouteImport } from './routes/management.hrm-management.recruitment-management'
+import { Route as ManagementHrmManagementPerformanceManagementRouteImport } from './routes/management.hrm-management.performance-management'
+import { Route as ManagementHrmManagementPayrollManagementRouteImport } from './routes/management.hrm-management.payroll-management'
+import { Route as ManagementHrmManagementOverviewRouteImport } from './routes/management.hrm-management.overview'
+import { Route as ManagementHrmManagementOnboardingManagementRouteImport } from './routes/management.hrm-management.onboarding-management'
+import { Route as ManagementHrmManagementLeaveManagementRouteImport } from './routes/management.hrm-management.leave-management'
+import { Route as ManagementHrmManagementLearningDevelopmentRouteImport } from './routes/management.hrm-management.learning-development'
+import { Route as ManagementHrmManagementHrAnalyticsRouteImport } from './routes/management.hrm-management.hr-analytics'
+import { Route as ManagementHrmManagementExpenseClaimsRouteImport } from './routes/management.hrm-management.expense-claims'
+import { Route as ManagementHrmManagementExitManagementRouteImport } from './routes/management.hrm-management.exit-management'
+import { Route as ManagementHrmManagementEmployeeWelfareRouteImport } from './routes/management.hrm-management.employee-welfare'
+import { Route as ManagementHrmManagementEmployeeManagementRouteImport } from './routes/management.hrm-management.employee-management'
+import { Route as ManagementHrmManagementCareerDevelopmentRouteImport } from './routes/management.hrm-management.career-development'
+import { Route as ManagementHrmManagementAttendanceManagementRouteImport } from './routes/management.hrm-management.attendance-management'
 import { Route as ManagementFinanceTaxRouteImport } from './routes/management.finance.tax'
 import { Route as ManagementFinanceSetupRouteImport } from './routes/management.finance.setup'
 import { Route as ManagementFinanceReportsRouteImport } from './routes/management.finance.reports'
@@ -52,6 +68,7 @@ import { Route as ManagementFinanceAuditRouteImport } from './routes/management.
 import { Route as ManagementFinanceAssetsRouteImport } from './routes/management.finance.assets'
 import { Route as ManagementCrmManagementSalesPipelineManagementRouteImport } from './routes/management.crm-management.sales-pipeline-management'
 import { Route as ManagementCrmManagementQuotationsManagementRouteImport } from './routes/management.crm-management.quotations-management'
+import { Route as ManagementCrmManagementOverviewRouteImport } from './routes/management.crm-management.overview'
 import { Route as ManagementCrmManagementOpportunityManagementRouteImport } from './routes/management.crm-management.opportunity-management'
 import { Route as ManagementCrmManagementLoyaltyManagementRouteImport } from './routes/management.crm-management.loyalty-management'
 import { Route as ManagementCrmManagementLeadManagementRouteImport } from './routes/management.crm-management.lead-management'
@@ -65,6 +82,7 @@ import { Route as ManagementCrmManagementAccountsRouteImport } from './routes/ma
 import { Route as ManagementCrmManagementAccountManagementRouteImport } from './routes/management.crm-management.account-management'
 import { Route as ManagementAdministrationManagementUserRoleManagementRouteImport } from './routes/management.administration-management.user-role-management'
 import { Route as ManagementAdministrationManagementPolicyManagementRouteImport } from './routes/management.administration-management.policy-management'
+import { Route as ManagementAdministrationManagementOverviewRouteImport } from './routes/management.administration-management.overview'
 import { Route as ManagementAdministrationManagementOrganizationStructureRouteImport } from './routes/management.administration-management.organization-structure'
 import { Route as ManagementAdministrationManagementNotificationsManagementRouteImport } from './routes/management.administration-management.notifications-management'
 import { Route as ManagementAdministrationManagementMasterDataManagementRouteImport } from './routes/management.administration-management.master-data-management'
@@ -214,6 +232,7 @@ import { Route as DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentInde
 import { Route as DevelopmentIpDevelopmentPatentManagementIndexRouteImport } from './routes/development.ip-development.patent-management.index'
 import { Route as DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRouteImport } from './routes/development.business-development.value-proposition-development.index'
 import { Route as DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport } from './routes/development.business-development.business-model-development.index'
+import { Route as ManagementHrmManagementPerformanceManagementCompetencyFormRouteImport } from './routes/management.hrm-management.performance-management.competency-form'
 import { Route as ManagementCrmManagementCustomerSupportCustomerFeedbackRouteImport } from './routes/management.crm-management.customer-support.customer-feedback'
 import { Route as ManagementCrmManagementCustomerSupportComplaintManagementRouteImport } from './routes/management.crm-management.customer-support.complaint-management'
 import { Route as DevelopmentResearchInnovationWorkInstructionDevelopmentNewRouteImport } from './routes/development.research-innovation.work-instruction-development.new'
@@ -432,6 +451,102 @@ const ManagementSalesManagementCustomerOrdersManagementRoute =
     path: '/management/sales-management/customer-orders-management',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementHrmManagementWorkforcePlanningRoute =
+  ManagementHrmManagementWorkforcePlanningRouteImport.update({
+    id: '/management/hrm-management/workforce-planning',
+    path: '/management/hrm-management/workforce-planning',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementTravelExpenseRoute =
+  ManagementHrmManagementTravelExpenseRouteImport.update({
+    id: '/management/hrm-management/travel-expense',
+    path: '/management/hrm-management/travel-expense',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementRecruitmentManagementRoute =
+  ManagementHrmManagementRecruitmentManagementRouteImport.update({
+    id: '/management/hrm-management/recruitment-management',
+    path: '/management/hrm-management/recruitment-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementPerformanceManagementRoute =
+  ManagementHrmManagementPerformanceManagementRouteImport.update({
+    id: '/management/hrm-management/performance-management',
+    path: '/management/hrm-management/performance-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementPayrollManagementRoute =
+  ManagementHrmManagementPayrollManagementRouteImport.update({
+    id: '/management/hrm-management/payroll-management',
+    path: '/management/hrm-management/payroll-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementOverviewRoute =
+  ManagementHrmManagementOverviewRouteImport.update({
+    id: '/management/hrm-management/overview',
+    path: '/management/hrm-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementOnboardingManagementRoute =
+  ManagementHrmManagementOnboardingManagementRouteImport.update({
+    id: '/management/hrm-management/onboarding-management',
+    path: '/management/hrm-management/onboarding-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementLeaveManagementRoute =
+  ManagementHrmManagementLeaveManagementRouteImport.update({
+    id: '/management/hrm-management/leave-management',
+    path: '/management/hrm-management/leave-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementLearningDevelopmentRoute =
+  ManagementHrmManagementLearningDevelopmentRouteImport.update({
+    id: '/management/hrm-management/learning-development',
+    path: '/management/hrm-management/learning-development',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementHrAnalyticsRoute =
+  ManagementHrmManagementHrAnalyticsRouteImport.update({
+    id: '/management/hrm-management/hr-analytics',
+    path: '/management/hrm-management/hr-analytics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementExpenseClaimsRoute =
+  ManagementHrmManagementExpenseClaimsRouteImport.update({
+    id: '/management/hrm-management/expense-claims',
+    path: '/management/hrm-management/expense-claims',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementExitManagementRoute =
+  ManagementHrmManagementExitManagementRouteImport.update({
+    id: '/management/hrm-management/exit-management',
+    path: '/management/hrm-management/exit-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementEmployeeWelfareRoute =
+  ManagementHrmManagementEmployeeWelfareRouteImport.update({
+    id: '/management/hrm-management/employee-welfare',
+    path: '/management/hrm-management/employee-welfare',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementEmployeeManagementRoute =
+  ManagementHrmManagementEmployeeManagementRouteImport.update({
+    id: '/management/hrm-management/employee-management',
+    path: '/management/hrm-management/employee-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementCareerDevelopmentRoute =
+  ManagementHrmManagementCareerDevelopmentRouteImport.update({
+    id: '/management/hrm-management/career-development',
+    path: '/management/hrm-management/career-development',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementAttendanceManagementRoute =
+  ManagementHrmManagementAttendanceManagementRouteImport.update({
+    id: '/management/hrm-management/attendance-management',
+    path: '/management/hrm-management/attendance-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementFinanceTaxRoute = ManagementFinanceTaxRouteImport.update({
   id: '/management/finance/tax',
   path: '/management/finance/tax',
@@ -523,6 +638,12 @@ const ManagementCrmManagementQuotationsManagementRoute =
     path: '/management/crm-management/quotations-management',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementCrmManagementOverviewRoute =
+  ManagementCrmManagementOverviewRouteImport.update({
+    id: '/management/crm-management/overview',
+    path: '/management/crm-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementCrmManagementOpportunityManagementRoute =
   ManagementCrmManagementOpportunityManagementRouteImport.update({
     id: '/management/crm-management/opportunity-management',
@@ -599,6 +720,12 @@ const ManagementAdministrationManagementPolicyManagementRoute =
   ManagementAdministrationManagementPolicyManagementRouteImport.update({
     id: '/management/administration-management/policy-management',
     path: '/management/administration-management/policy-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAdministrationManagementOverviewRoute =
+  ManagementAdministrationManagementOverviewRouteImport.update({
+    id: '/management/administration-management/overview',
+    path: '/management/administration-management/overview',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementAdministrationManagementOrganizationStructureRoute =
@@ -1539,6 +1666,12 @@ const DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute =
         DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute,
     } as any,
   )
+const ManagementHrmManagementPerformanceManagementCompetencyFormRoute =
+  ManagementHrmManagementPerformanceManagementCompetencyFormRouteImport.update({
+    id: '/competency-form',
+    path: '/competency-form',
+    getParentRoute: () => ManagementHrmManagementPerformanceManagementRoute,
+  } as any)
 const ManagementCrmManagementCustomerSupportCustomerFeedbackRoute =
   ManagementCrmManagementCustomerSupportCustomerFeedbackRouteImport.update({
     id: '/customer-feedback',
@@ -1979,6 +2112,7 @@ export interface FileRoutesByFullPath {
   '/management/administration-management/master-data-management': typeof ManagementAdministrationManagementMasterDataManagementRoute
   '/management/administration-management/notifications-management': typeof ManagementAdministrationManagementNotificationsManagementRoute
   '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
+  '/management/administration-management/overview': typeof ManagementAdministrationManagementOverviewRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
@@ -1992,6 +2126,7 @@ export interface FileRoutesByFullPath {
   '/management/crm-management/lead-management': typeof ManagementCrmManagementLeadManagementRoute
   '/management/crm-management/loyalty-management': typeof ManagementCrmManagementLoyaltyManagementRoute
   '/management/crm-management/opportunity-management': typeof ManagementCrmManagementOpportunityManagementRoute
+  '/management/crm-management/overview': typeof ManagementCrmManagementOverviewRoute
   '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
   '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
@@ -2008,6 +2143,22 @@ export interface FileRoutesByFullPath {
   '/management/finance/reports': typeof ManagementFinanceReportsRoute
   '/management/finance/setup': typeof ManagementFinanceSetupRoute
   '/management/finance/tax': typeof ManagementFinanceTaxRoute
+  '/management/hrm-management/attendance-management': typeof ManagementHrmManagementAttendanceManagementRoute
+  '/management/hrm-management/career-development': typeof ManagementHrmManagementCareerDevelopmentRoute
+  '/management/hrm-management/employee-management': typeof ManagementHrmManagementEmployeeManagementRoute
+  '/management/hrm-management/employee-welfare': typeof ManagementHrmManagementEmployeeWelfareRoute
+  '/management/hrm-management/exit-management': typeof ManagementHrmManagementExitManagementRoute
+  '/management/hrm-management/expense-claims': typeof ManagementHrmManagementExpenseClaimsRoute
+  '/management/hrm-management/hr-analytics': typeof ManagementHrmManagementHrAnalyticsRoute
+  '/management/hrm-management/learning-development': typeof ManagementHrmManagementLearningDevelopmentRoute
+  '/management/hrm-management/leave-management': typeof ManagementHrmManagementLeaveManagementRoute
+  '/management/hrm-management/onboarding-management': typeof ManagementHrmManagementOnboardingManagementRoute
+  '/management/hrm-management/overview': typeof ManagementHrmManagementOverviewRoute
+  '/management/hrm-management/payroll-management': typeof ManagementHrmManagementPayrollManagementRoute
+  '/management/hrm-management/performance-management': typeof ManagementHrmManagementPerformanceManagementRouteWithChildren
+  '/management/hrm-management/recruitment-management': typeof ManagementHrmManagementRecruitmentManagementRoute
+  '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
+  '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -2089,6 +2240,7 @@ export interface FileRoutesByFullPath {
   '/development/research-innovation/work-instruction-development/new': typeof DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute
   '/management/crm-management/customer-support/complaint-management': typeof ManagementCrmManagementCustomerSupportComplaintManagementRoute
   '/management/crm-management/customer-support/customer-feedback': typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRoute
+  '/management/hrm-management/performance-management/competency-form': typeof ManagementHrmManagementPerformanceManagementCompetencyFormRoute
   '/development/business-development/business-model-development/': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
   '/development/business-development/value-proposition-development/': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management/': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
@@ -2245,6 +2397,7 @@ export interface FileRoutesByTo {
   '/management/administration-management/master-data-management': typeof ManagementAdministrationManagementMasterDataManagementRoute
   '/management/administration-management/notifications-management': typeof ManagementAdministrationManagementNotificationsManagementRoute
   '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
+  '/management/administration-management/overview': typeof ManagementAdministrationManagementOverviewRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
@@ -2258,6 +2411,7 @@ export interface FileRoutesByTo {
   '/management/crm-management/lead-management': typeof ManagementCrmManagementLeadManagementRoute
   '/management/crm-management/loyalty-management': typeof ManagementCrmManagementLoyaltyManagementRoute
   '/management/crm-management/opportunity-management': typeof ManagementCrmManagementOpportunityManagementRoute
+  '/management/crm-management/overview': typeof ManagementCrmManagementOverviewRoute
   '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
   '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
@@ -2274,6 +2428,22 @@ export interface FileRoutesByTo {
   '/management/finance/reports': typeof ManagementFinanceReportsRoute
   '/management/finance/setup': typeof ManagementFinanceSetupRoute
   '/management/finance/tax': typeof ManagementFinanceTaxRoute
+  '/management/hrm-management/attendance-management': typeof ManagementHrmManagementAttendanceManagementRoute
+  '/management/hrm-management/career-development': typeof ManagementHrmManagementCareerDevelopmentRoute
+  '/management/hrm-management/employee-management': typeof ManagementHrmManagementEmployeeManagementRoute
+  '/management/hrm-management/employee-welfare': typeof ManagementHrmManagementEmployeeWelfareRoute
+  '/management/hrm-management/exit-management': typeof ManagementHrmManagementExitManagementRoute
+  '/management/hrm-management/expense-claims': typeof ManagementHrmManagementExpenseClaimsRoute
+  '/management/hrm-management/hr-analytics': typeof ManagementHrmManagementHrAnalyticsRoute
+  '/management/hrm-management/learning-development': typeof ManagementHrmManagementLearningDevelopmentRoute
+  '/management/hrm-management/leave-management': typeof ManagementHrmManagementLeaveManagementRoute
+  '/management/hrm-management/onboarding-management': typeof ManagementHrmManagementOnboardingManagementRoute
+  '/management/hrm-management/overview': typeof ManagementHrmManagementOverviewRoute
+  '/management/hrm-management/payroll-management': typeof ManagementHrmManagementPayrollManagementRoute
+  '/management/hrm-management/performance-management': typeof ManagementHrmManagementPerformanceManagementRouteWithChildren
+  '/management/hrm-management/recruitment-management': typeof ManagementHrmManagementRecruitmentManagementRoute
+  '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
+  '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -2355,6 +2525,7 @@ export interface FileRoutesByTo {
   '/development/research-innovation/work-instruction-development/new': typeof DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute
   '/management/crm-management/customer-support/complaint-management': typeof ManagementCrmManagementCustomerSupportComplaintManagementRoute
   '/management/crm-management/customer-support/customer-feedback': typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRoute
+  '/management/hrm-management/performance-management/competency-form': typeof ManagementHrmManagementPerformanceManagementCompetencyFormRoute
   '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
   '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
@@ -2517,6 +2688,7 @@ export interface FileRoutesById {
   '/management/administration-management/master-data-management': typeof ManagementAdministrationManagementMasterDataManagementRoute
   '/management/administration-management/notifications-management': typeof ManagementAdministrationManagementNotificationsManagementRoute
   '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
+  '/management/administration-management/overview': typeof ManagementAdministrationManagementOverviewRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
@@ -2530,6 +2702,7 @@ export interface FileRoutesById {
   '/management/crm-management/lead-management': typeof ManagementCrmManagementLeadManagementRoute
   '/management/crm-management/loyalty-management': typeof ManagementCrmManagementLoyaltyManagementRoute
   '/management/crm-management/opportunity-management': typeof ManagementCrmManagementOpportunityManagementRoute
+  '/management/crm-management/overview': typeof ManagementCrmManagementOverviewRoute
   '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
   '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
@@ -2546,6 +2719,22 @@ export interface FileRoutesById {
   '/management/finance/reports': typeof ManagementFinanceReportsRoute
   '/management/finance/setup': typeof ManagementFinanceSetupRoute
   '/management/finance/tax': typeof ManagementFinanceTaxRoute
+  '/management/hrm-management/attendance-management': typeof ManagementHrmManagementAttendanceManagementRoute
+  '/management/hrm-management/career-development': typeof ManagementHrmManagementCareerDevelopmentRoute
+  '/management/hrm-management/employee-management': typeof ManagementHrmManagementEmployeeManagementRoute
+  '/management/hrm-management/employee-welfare': typeof ManagementHrmManagementEmployeeWelfareRoute
+  '/management/hrm-management/exit-management': typeof ManagementHrmManagementExitManagementRoute
+  '/management/hrm-management/expense-claims': typeof ManagementHrmManagementExpenseClaimsRoute
+  '/management/hrm-management/hr-analytics': typeof ManagementHrmManagementHrAnalyticsRoute
+  '/management/hrm-management/learning-development': typeof ManagementHrmManagementLearningDevelopmentRoute
+  '/management/hrm-management/leave-management': typeof ManagementHrmManagementLeaveManagementRoute
+  '/management/hrm-management/onboarding-management': typeof ManagementHrmManagementOnboardingManagementRoute
+  '/management/hrm-management/overview': typeof ManagementHrmManagementOverviewRoute
+  '/management/hrm-management/payroll-management': typeof ManagementHrmManagementPayrollManagementRoute
+  '/management/hrm-management/performance-management': typeof ManagementHrmManagementPerformanceManagementRouteWithChildren
+  '/management/hrm-management/recruitment-management': typeof ManagementHrmManagementRecruitmentManagementRoute
+  '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
+  '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -2627,6 +2816,7 @@ export interface FileRoutesById {
   '/development/research-innovation/work-instruction-development/new': typeof DevelopmentResearchInnovationWorkInstructionDevelopmentNewRoute
   '/management/crm-management/customer-support/complaint-management': typeof ManagementCrmManagementCustomerSupportComplaintManagementRoute
   '/management/crm-management/customer-support/customer-feedback': typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRoute
+  '/management/hrm-management/performance-management/competency-form': typeof ManagementHrmManagementPerformanceManagementCompetencyFormRoute
   '/development/business-development/business-model-development/': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
   '/development/business-development/value-proposition-development/': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management/': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
@@ -2790,6 +2980,7 @@ export interface FileRouteTypes {
     | '/management/administration-management/master-data-management'
     | '/management/administration-management/notifications-management'
     | '/management/administration-management/organization-structure'
+    | '/management/administration-management/overview'
     | '/management/administration-management/policy-management'
     | '/management/administration-management/user-role-management'
     | '/management/crm-management/account-management'
@@ -2803,6 +2994,7 @@ export interface FileRouteTypes {
     | '/management/crm-management/lead-management'
     | '/management/crm-management/loyalty-management'
     | '/management/crm-management/opportunity-management'
+    | '/management/crm-management/overview'
     | '/management/crm-management/quotations-management'
     | '/management/crm-management/sales-pipeline-management'
     | '/management/finance/assets'
@@ -2819,6 +3011,22 @@ export interface FileRouteTypes {
     | '/management/finance/reports'
     | '/management/finance/setup'
     | '/management/finance/tax'
+    | '/management/hrm-management/attendance-management'
+    | '/management/hrm-management/career-development'
+    | '/management/hrm-management/employee-management'
+    | '/management/hrm-management/employee-welfare'
+    | '/management/hrm-management/exit-management'
+    | '/management/hrm-management/expense-claims'
+    | '/management/hrm-management/hr-analytics'
+    | '/management/hrm-management/learning-development'
+    | '/management/hrm-management/leave-management'
+    | '/management/hrm-management/onboarding-management'
+    | '/management/hrm-management/overview'
+    | '/management/hrm-management/payroll-management'
+    | '/management/hrm-management/performance-management'
+    | '/management/hrm-management/recruitment-management'
+    | '/management/hrm-management/travel-expense'
+    | '/management/hrm-management/workforce-planning'
     | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
@@ -2900,6 +3108,7 @@ export interface FileRouteTypes {
     | '/development/research-innovation/work-instruction-development/new'
     | '/management/crm-management/customer-support/complaint-management'
     | '/management/crm-management/customer-support/customer-feedback'
+    | '/management/hrm-management/performance-management/competency-form'
     | '/development/business-development/business-model-development/'
     | '/development/business-development/value-proposition-development/'
     | '/development/ip-development/patent-management/'
@@ -3056,6 +3265,7 @@ export interface FileRouteTypes {
     | '/management/administration-management/master-data-management'
     | '/management/administration-management/notifications-management'
     | '/management/administration-management/organization-structure'
+    | '/management/administration-management/overview'
     | '/management/administration-management/policy-management'
     | '/management/administration-management/user-role-management'
     | '/management/crm-management/account-management'
@@ -3069,6 +3279,7 @@ export interface FileRouteTypes {
     | '/management/crm-management/lead-management'
     | '/management/crm-management/loyalty-management'
     | '/management/crm-management/opportunity-management'
+    | '/management/crm-management/overview'
     | '/management/crm-management/quotations-management'
     | '/management/crm-management/sales-pipeline-management'
     | '/management/finance/assets'
@@ -3085,6 +3296,22 @@ export interface FileRouteTypes {
     | '/management/finance/reports'
     | '/management/finance/setup'
     | '/management/finance/tax'
+    | '/management/hrm-management/attendance-management'
+    | '/management/hrm-management/career-development'
+    | '/management/hrm-management/employee-management'
+    | '/management/hrm-management/employee-welfare'
+    | '/management/hrm-management/exit-management'
+    | '/management/hrm-management/expense-claims'
+    | '/management/hrm-management/hr-analytics'
+    | '/management/hrm-management/learning-development'
+    | '/management/hrm-management/leave-management'
+    | '/management/hrm-management/onboarding-management'
+    | '/management/hrm-management/overview'
+    | '/management/hrm-management/payroll-management'
+    | '/management/hrm-management/performance-management'
+    | '/management/hrm-management/recruitment-management'
+    | '/management/hrm-management/travel-expense'
+    | '/management/hrm-management/workforce-planning'
     | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
@@ -3166,6 +3393,7 @@ export interface FileRouteTypes {
     | '/development/research-innovation/work-instruction-development/new'
     | '/management/crm-management/customer-support/complaint-management'
     | '/management/crm-management/customer-support/customer-feedback'
+    | '/management/hrm-management/performance-management/competency-form'
     | '/development/business-development/business-model-development'
     | '/development/business-development/value-proposition-development'
     | '/development/ip-development/patent-management'
@@ -3327,6 +3555,7 @@ export interface FileRouteTypes {
     | '/management/administration-management/master-data-management'
     | '/management/administration-management/notifications-management'
     | '/management/administration-management/organization-structure'
+    | '/management/administration-management/overview'
     | '/management/administration-management/policy-management'
     | '/management/administration-management/user-role-management'
     | '/management/crm-management/account-management'
@@ -3340,6 +3569,7 @@ export interface FileRouteTypes {
     | '/management/crm-management/lead-management'
     | '/management/crm-management/loyalty-management'
     | '/management/crm-management/opportunity-management'
+    | '/management/crm-management/overview'
     | '/management/crm-management/quotations-management'
     | '/management/crm-management/sales-pipeline-management'
     | '/management/finance/assets'
@@ -3356,6 +3586,22 @@ export interface FileRouteTypes {
     | '/management/finance/reports'
     | '/management/finance/setup'
     | '/management/finance/tax'
+    | '/management/hrm-management/attendance-management'
+    | '/management/hrm-management/career-development'
+    | '/management/hrm-management/employee-management'
+    | '/management/hrm-management/employee-welfare'
+    | '/management/hrm-management/exit-management'
+    | '/management/hrm-management/expense-claims'
+    | '/management/hrm-management/hr-analytics'
+    | '/management/hrm-management/learning-development'
+    | '/management/hrm-management/leave-management'
+    | '/management/hrm-management/onboarding-management'
+    | '/management/hrm-management/overview'
+    | '/management/hrm-management/payroll-management'
+    | '/management/hrm-management/performance-management'
+    | '/management/hrm-management/recruitment-management'
+    | '/management/hrm-management/travel-expense'
+    | '/management/hrm-management/workforce-planning'
     | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
@@ -3437,6 +3683,7 @@ export interface FileRouteTypes {
     | '/development/research-innovation/work-instruction-development/new'
     | '/management/crm-management/customer-support/complaint-management'
     | '/management/crm-management/customer-support/customer-feedback'
+    | '/management/hrm-management/performance-management/competency-form'
     | '/development/business-development/business-model-development/'
     | '/development/business-development/value-proposition-development/'
     | '/development/ip-development/patent-management/'
@@ -3576,6 +3823,7 @@ export interface RootRouteChildren {
   ManagementAdministrationManagementMasterDataManagementRoute: typeof ManagementAdministrationManagementMasterDataManagementRoute
   ManagementAdministrationManagementNotificationsManagementRoute: typeof ManagementAdministrationManagementNotificationsManagementRoute
   ManagementAdministrationManagementOrganizationStructureRoute: typeof ManagementAdministrationManagementOrganizationStructureRoute
+  ManagementAdministrationManagementOverviewRoute: typeof ManagementAdministrationManagementOverviewRoute
   ManagementAdministrationManagementPolicyManagementRoute: typeof ManagementAdministrationManagementPolicyManagementRoute
   ManagementAdministrationManagementUserRoleManagementRoute: typeof ManagementAdministrationManagementUserRoleManagementRoute
   ManagementCrmManagementAccountManagementRoute: typeof ManagementCrmManagementAccountManagementRoute
@@ -3589,6 +3837,7 @@ export interface RootRouteChildren {
   ManagementCrmManagementLeadManagementRoute: typeof ManagementCrmManagementLeadManagementRoute
   ManagementCrmManagementLoyaltyManagementRoute: typeof ManagementCrmManagementLoyaltyManagementRoute
   ManagementCrmManagementOpportunityManagementRoute: typeof ManagementCrmManagementOpportunityManagementRoute
+  ManagementCrmManagementOverviewRoute: typeof ManagementCrmManagementOverviewRoute
   ManagementCrmManagementQuotationsManagementRoute: typeof ManagementCrmManagementQuotationsManagementRoute
   ManagementCrmManagementSalesPipelineManagementRoute: typeof ManagementCrmManagementSalesPipelineManagementRoute
   ManagementFinanceAssetsRoute: typeof ManagementFinanceAssetsRoute
@@ -3605,6 +3854,22 @@ export interface RootRouteChildren {
   ManagementFinanceReportsRoute: typeof ManagementFinanceReportsRoute
   ManagementFinanceSetupRoute: typeof ManagementFinanceSetupRoute
   ManagementFinanceTaxRoute: typeof ManagementFinanceTaxRoute
+  ManagementHrmManagementAttendanceManagementRoute: typeof ManagementHrmManagementAttendanceManagementRoute
+  ManagementHrmManagementCareerDevelopmentRoute: typeof ManagementHrmManagementCareerDevelopmentRoute
+  ManagementHrmManagementEmployeeManagementRoute: typeof ManagementHrmManagementEmployeeManagementRoute
+  ManagementHrmManagementEmployeeWelfareRoute: typeof ManagementHrmManagementEmployeeWelfareRoute
+  ManagementHrmManagementExitManagementRoute: typeof ManagementHrmManagementExitManagementRoute
+  ManagementHrmManagementExpenseClaimsRoute: typeof ManagementHrmManagementExpenseClaimsRoute
+  ManagementHrmManagementHrAnalyticsRoute: typeof ManagementHrmManagementHrAnalyticsRoute
+  ManagementHrmManagementLearningDevelopmentRoute: typeof ManagementHrmManagementLearningDevelopmentRoute
+  ManagementHrmManagementLeaveManagementRoute: typeof ManagementHrmManagementLeaveManagementRoute
+  ManagementHrmManagementOnboardingManagementRoute: typeof ManagementHrmManagementOnboardingManagementRoute
+  ManagementHrmManagementOverviewRoute: typeof ManagementHrmManagementOverviewRoute
+  ManagementHrmManagementPayrollManagementRoute: typeof ManagementHrmManagementPayrollManagementRoute
+  ManagementHrmManagementPerformanceManagementRoute: typeof ManagementHrmManagementPerformanceManagementRouteWithChildren
+  ManagementHrmManagementRecruitmentManagementRoute: typeof ManagementHrmManagementRecruitmentManagementRoute
+  ManagementHrmManagementTravelExpenseRoute: typeof ManagementHrmManagementTravelExpenseRoute
+  ManagementHrmManagementWorkforcePlanningRoute: typeof ManagementHrmManagementWorkforcePlanningRoute
   ManagementSalesManagementCustomerOrdersManagementRoute: typeof ManagementSalesManagementCustomerOrdersManagementRoute
   ManufacturingDevelopmentAutomationDevelopmentIdRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   ManufacturingDevelopmentAutomationDevelopmentNewRoute: typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -3977,6 +4242,118 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementSalesManagementCustomerOrdersManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/hrm-management/workforce-planning': {
+      id: '/management/hrm-management/workforce-planning'
+      path: '/management/hrm-management/workforce-planning'
+      fullPath: '/management/hrm-management/workforce-planning'
+      preLoaderRoute: typeof ManagementHrmManagementWorkforcePlanningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/travel-expense': {
+      id: '/management/hrm-management/travel-expense'
+      path: '/management/hrm-management/travel-expense'
+      fullPath: '/management/hrm-management/travel-expense'
+      preLoaderRoute: typeof ManagementHrmManagementTravelExpenseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/recruitment-management': {
+      id: '/management/hrm-management/recruitment-management'
+      path: '/management/hrm-management/recruitment-management'
+      fullPath: '/management/hrm-management/recruitment-management'
+      preLoaderRoute: typeof ManagementHrmManagementRecruitmentManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/performance-management': {
+      id: '/management/hrm-management/performance-management'
+      path: '/management/hrm-management/performance-management'
+      fullPath: '/management/hrm-management/performance-management'
+      preLoaderRoute: typeof ManagementHrmManagementPerformanceManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/payroll-management': {
+      id: '/management/hrm-management/payroll-management'
+      path: '/management/hrm-management/payroll-management'
+      fullPath: '/management/hrm-management/payroll-management'
+      preLoaderRoute: typeof ManagementHrmManagementPayrollManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/overview': {
+      id: '/management/hrm-management/overview'
+      path: '/management/hrm-management/overview'
+      fullPath: '/management/hrm-management/overview'
+      preLoaderRoute: typeof ManagementHrmManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/onboarding-management': {
+      id: '/management/hrm-management/onboarding-management'
+      path: '/management/hrm-management/onboarding-management'
+      fullPath: '/management/hrm-management/onboarding-management'
+      preLoaderRoute: typeof ManagementHrmManagementOnboardingManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/leave-management': {
+      id: '/management/hrm-management/leave-management'
+      path: '/management/hrm-management/leave-management'
+      fullPath: '/management/hrm-management/leave-management'
+      preLoaderRoute: typeof ManagementHrmManagementLeaveManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/learning-development': {
+      id: '/management/hrm-management/learning-development'
+      path: '/management/hrm-management/learning-development'
+      fullPath: '/management/hrm-management/learning-development'
+      preLoaderRoute: typeof ManagementHrmManagementLearningDevelopmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/hr-analytics': {
+      id: '/management/hrm-management/hr-analytics'
+      path: '/management/hrm-management/hr-analytics'
+      fullPath: '/management/hrm-management/hr-analytics'
+      preLoaderRoute: typeof ManagementHrmManagementHrAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/expense-claims': {
+      id: '/management/hrm-management/expense-claims'
+      path: '/management/hrm-management/expense-claims'
+      fullPath: '/management/hrm-management/expense-claims'
+      preLoaderRoute: typeof ManagementHrmManagementExpenseClaimsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/exit-management': {
+      id: '/management/hrm-management/exit-management'
+      path: '/management/hrm-management/exit-management'
+      fullPath: '/management/hrm-management/exit-management'
+      preLoaderRoute: typeof ManagementHrmManagementExitManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/employee-welfare': {
+      id: '/management/hrm-management/employee-welfare'
+      path: '/management/hrm-management/employee-welfare'
+      fullPath: '/management/hrm-management/employee-welfare'
+      preLoaderRoute: typeof ManagementHrmManagementEmployeeWelfareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/employee-management': {
+      id: '/management/hrm-management/employee-management'
+      path: '/management/hrm-management/employee-management'
+      fullPath: '/management/hrm-management/employee-management'
+      preLoaderRoute: typeof ManagementHrmManagementEmployeeManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/career-development': {
+      id: '/management/hrm-management/career-development'
+      path: '/management/hrm-management/career-development'
+      fullPath: '/management/hrm-management/career-development'
+      preLoaderRoute: typeof ManagementHrmManagementCareerDevelopmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/attendance-management': {
+      id: '/management/hrm-management/attendance-management'
+      path: '/management/hrm-management/attendance-management'
+      fullPath: '/management/hrm-management/attendance-management'
+      preLoaderRoute: typeof ManagementHrmManagementAttendanceManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/finance/tax': {
       id: '/management/finance/tax'
       path: '/management/finance/tax'
@@ -4089,6 +4466,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementCrmManagementQuotationsManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/crm-management/overview': {
+      id: '/management/crm-management/overview'
+      path: '/management/crm-management/overview'
+      fullPath: '/management/crm-management/overview'
+      preLoaderRoute: typeof ManagementCrmManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/crm-management/opportunity-management': {
       id: '/management/crm-management/opportunity-management'
       path: '/management/crm-management/opportunity-management'
@@ -4178,6 +4562,13 @@ declare module '@tanstack/react-router' {
       path: '/management/administration-management/policy-management'
       fullPath: '/management/administration-management/policy-management'
       preLoaderRoute: typeof ManagementAdministrationManagementPolicyManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/overview': {
+      id: '/management/administration-management/overview'
+      path: '/management/administration-management/overview'
+      fullPath: '/management/administration-management/overview'
+      preLoaderRoute: typeof ManagementAdministrationManagementOverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/administration-management/organization-structure': {
@@ -5223,6 +5614,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport
       parentRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute
     }
+    '/management/hrm-management/performance-management/competency-form': {
+      id: '/management/hrm-management/performance-management/competency-form'
+      path: '/competency-form'
+      fullPath: '/management/hrm-management/performance-management/competency-form'
+      preLoaderRoute: typeof ManagementHrmManagementPerformanceManagementCompetencyFormRouteImport
+      parentRoute: typeof ManagementHrmManagementPerformanceManagementRoute
+    }
     '/management/crm-management/customer-support/customer-feedback': {
       id: '/management/crm-management/customer-support/customer-feedback'
       path: '/customer-feedback'
@@ -5839,6 +6237,21 @@ const ManagementCrmManagementCustomerSupportRouteWithChildren =
     ManagementCrmManagementCustomerSupportRouteChildren,
   )
 
+interface ManagementHrmManagementPerformanceManagementRouteChildren {
+  ManagementHrmManagementPerformanceManagementCompetencyFormRoute: typeof ManagementHrmManagementPerformanceManagementCompetencyFormRoute
+}
+
+const ManagementHrmManagementPerformanceManagementRouteChildren: ManagementHrmManagementPerformanceManagementRouteChildren =
+  {
+    ManagementHrmManagementPerformanceManagementCompetencyFormRoute:
+      ManagementHrmManagementPerformanceManagementCompetencyFormRoute,
+  }
+
+const ManagementHrmManagementPerformanceManagementRouteWithChildren =
+  ManagementHrmManagementPerformanceManagementRoute._addFileChildren(
+    ManagementHrmManagementPerformanceManagementRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ExpensesRoute: ExpensesRoute,
@@ -5885,6 +6298,8 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementAdministrationManagementNotificationsManagementRoute,
   ManagementAdministrationManagementOrganizationStructureRoute:
     ManagementAdministrationManagementOrganizationStructureRoute,
+  ManagementAdministrationManagementOverviewRoute:
+    ManagementAdministrationManagementOverviewRoute,
   ManagementAdministrationManagementPolicyManagementRoute:
     ManagementAdministrationManagementPolicyManagementRoute,
   ManagementAdministrationManagementUserRoleManagementRoute:
@@ -5910,6 +6325,7 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementCrmManagementLoyaltyManagementRoute,
   ManagementCrmManagementOpportunityManagementRoute:
     ManagementCrmManagementOpportunityManagementRoute,
+  ManagementCrmManagementOverviewRoute: ManagementCrmManagementOverviewRoute,
   ManagementCrmManagementQuotationsManagementRoute:
     ManagementCrmManagementQuotationsManagementRoute,
   ManagementCrmManagementSalesPipelineManagementRoute:
@@ -5928,6 +6344,37 @@ const rootRouteChildren: RootRouteChildren = {
   ManagementFinanceReportsRoute: ManagementFinanceReportsRoute,
   ManagementFinanceSetupRoute: ManagementFinanceSetupRoute,
   ManagementFinanceTaxRoute: ManagementFinanceTaxRoute,
+  ManagementHrmManagementAttendanceManagementRoute:
+    ManagementHrmManagementAttendanceManagementRoute,
+  ManagementHrmManagementCareerDevelopmentRoute:
+    ManagementHrmManagementCareerDevelopmentRoute,
+  ManagementHrmManagementEmployeeManagementRoute:
+    ManagementHrmManagementEmployeeManagementRoute,
+  ManagementHrmManagementEmployeeWelfareRoute:
+    ManagementHrmManagementEmployeeWelfareRoute,
+  ManagementHrmManagementExitManagementRoute:
+    ManagementHrmManagementExitManagementRoute,
+  ManagementHrmManagementExpenseClaimsRoute:
+    ManagementHrmManagementExpenseClaimsRoute,
+  ManagementHrmManagementHrAnalyticsRoute:
+    ManagementHrmManagementHrAnalyticsRoute,
+  ManagementHrmManagementLearningDevelopmentRoute:
+    ManagementHrmManagementLearningDevelopmentRoute,
+  ManagementHrmManagementLeaveManagementRoute:
+    ManagementHrmManagementLeaveManagementRoute,
+  ManagementHrmManagementOnboardingManagementRoute:
+    ManagementHrmManagementOnboardingManagementRoute,
+  ManagementHrmManagementOverviewRoute: ManagementHrmManagementOverviewRoute,
+  ManagementHrmManagementPayrollManagementRoute:
+    ManagementHrmManagementPayrollManagementRoute,
+  ManagementHrmManagementPerformanceManagementRoute:
+    ManagementHrmManagementPerformanceManagementRouteWithChildren,
+  ManagementHrmManagementRecruitmentManagementRoute:
+    ManagementHrmManagementRecruitmentManagementRoute,
+  ManagementHrmManagementTravelExpenseRoute:
+    ManagementHrmManagementTravelExpenseRoute,
+  ManagementHrmManagementWorkforcePlanningRoute:
+    ManagementHrmManagementWorkforcePlanningRoute,
   ManagementSalesManagementCustomerOrdersManagementRoute:
     ManagementSalesManagementCustomerOrdersManagementRoute,
   ManufacturingDevelopmentAutomationDevelopmentIdRoute:

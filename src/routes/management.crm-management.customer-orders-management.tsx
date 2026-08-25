@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CustomerOrdersManagementPage } from "@/routes/management.sales-management.customer-orders-management";
+import { CustomerOrdersManagementPage } from "./management.sales-management.customer-orders-management";
 
 export const Route = createFileRoute("/management/crm-management/customer-orders-management")({
   head: () => ({

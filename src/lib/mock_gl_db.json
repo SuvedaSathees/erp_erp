@@ -447,105 +447,6 @@
       "userId": "Priya Sharma",
       "role": "CEO",
       "pages": {
-        "dashboard": {
-          "instances": [
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-kpi-revenue",
-              "widgetId": "kpi.total-revenue",
-              "size": "sm"
-            },
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-kpi-net-profit",
-              "widgetId": "kpi.net-profit",
-              "size": "sm"
-            },
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-kpi-expenses",
-              "widgetId": "kpi.total-expenses",
-              "size": "sm"
-            },
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-kpi-cash",
-              "widgetId": "kpi.cash-balance",
-              "size": "sm"
-            },
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-kpi-current-ratio",
-              "widgetId": "kpi.current-ratio",
-              "size": "sm"
-            },
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-trend",
-              "widgetId": "chart.revenue-expense-trend",
-              "size": "lg"
-            },
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-cash-flow",
-              "widgetId": "list.cash-flow-summary",
-              "size": "md",
-              "spanOverride": {
-                "xl": 15,
-                "lg": 3,
-                "md": 3
-              }
-            },
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-expense-donut",
-              "widgetId": "chart.expense-donut",
-              "size": "md",
-              "spanOverride": {
-                "xl": 15,
-                "lg": 3,
-                "md": 3
-              }
-            },
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-aging-ar",
-              "widgetId": "chart.aging-receivable",
-              "size": "md"
-            },
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-recent-txn",
-              "widgetId": "table.recent-transactions",
-              "size": "md"
-            },
-            {
-              "theme": "default",
-              "pinned": false,
-              "id": "dash-insights",
-              "widgetId": "insight.quick-financial",
-              "size": "full"
-            },
-            {
-              "id": "95ac4f30-35b2-4426-8d76-d2328e3e8179",
-              "widgetId": "kpi.total-cash-balance",
-              "size": "sm",
-              "theme": "default",
-              "pinned": false
-            }
-          ],
-          "updatedAt": "2026-08-19T14:29:23.989Z"
-        },
         "finance-cash-bank": {
           "instances": [
             {
@@ -681,12 +582,129 @@
             }
           ],
           "updatedAt": "2026-08-19T14:29:24.910Z"
+        },
+        "crm-overview": {
+          "instances": [
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-leads",
+              "widgetId": "kpi.crm.total-leads",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-hot-leads",
+              "widgetId": "kpi.crm.hot-leads",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-pipeline-val",
+              "widgetId": "kpi.crm.pipeline-value",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-weighted-pipe",
+              "widgetId": "kpi.crm.weighted-pipeline",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-win-rate",
+              "widgetId": "kpi.crm.win-rate",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-accounts",
+              "widgetId": "kpi.crm.active-accounts",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-health",
+              "widgetId": "kpi.crm.account-health",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-tickets",
+              "widgetId": "kpi.crm.open-tickets",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-sla",
+              "widgetId": "kpi.crm.sla-compliance",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-csat",
+              "widgetId": "kpi.crm.csat-score",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-funnel",
+              "widgetId": "chart.crm.pipeline-funnel",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-sources",
+              "widgetId": "chart.crm.lead-source",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-forecast",
+              "widgetId": "chart.crm.sales-forecast",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-critical-acc",
+              "widgetId": "table.crm.critical-accounts",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-top-opps",
+              "widgetId": "table.crm.top-opportunities",
+              "size": "full"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "crm-ovw-ai",
+              "widgetId": "ai.crm.intelligence",
+              "size": "full"
+            }
+          ],
+          "updatedAt": "2026-08-23T15:12:31.884Z"
         }
       },
       "favorites": [],
       "recentlyUsed": [],
       "templates": [],
-      "updatedAt": "2026-08-19T14:29:35.046Z"
+      "updatedAt": "2026-08-23T15:12:31.901Z"
     }
   ]
 }

@@ -57,7 +57,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip as RechartsTooltip, L
 export const Route = createFileRoute("/management/crm-management/loyalty-management")({
   head: () => ({
     meta: [
-      { title: "Loyalty Management Form ⭐ · CRM Management · Magnertia ERP" },
+      { title: "Loyalty Management Form · CRM Management · Magnertia ERP" },
       {
         name: "description",
         content:
@@ -213,92 +213,99 @@ const TIER_DISTRIBUTION = [
 
 export function LoyaltyManagementPage() {
   const [loyalty, setLoyalty] = useState<LoyaltyRecord>(INITIAL_LOYALTY);
-  const [activeTab, setActiveTab] = useState<string>("overview");
 
   // Modals
   const [isNewRecordOpen, setIsNewRecordOpen] = useState(false);
+  const [transactions, setTransactions] = useState(TRANSACTIONS_LEDGER);
+  const [redemptions, setRedemptions] = useState(REDEMPTION_HISTORY);
+  const [campaigns, setCampaigns] = useState(ACTIVE_CAMPAIGNS);
+
   const [isAddPointsOpen, setIsAddPointsOpen] = useState(false);
   const [isRedeemModalOpen, setIsRedeemModalOpen] = useState(false);
+  const [isUpgradeTierModalOpen, setIsUpgradeTierModalOpen] = useState(false);
+  const [isCreateCampaignModalOpen, setIsCreateCampaignModalOpen] = useState(false);
+
+  const [addPtsAmount, setAddPtsAmount] = useState("1000");
+  const [addPtsReason, setAddPtsReason] = useState("Purchase");
+  const [addPtsRef, setAddPtsRef] = useState("INV-2024-02100");
+
+  const [redeemRewardSelected, setRedeemRewardSelected] = useState("₹500 Discount Voucher");
+  const [redeemPtsCost, setRedeemPtsCost] = useState("2000");
+
+  const [upgradeTierSelected, setUpgradeTierSelected] = useState("Platinum VIP");
+
+  const [campaignTitle, setCampaignTitle] = useState("Flash Double Points");
+  const [campaignMultiplier, setCampaignMultiplier] = useState("2X");
+
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const handleInputChange = (field: keyof LoyaltyRecord, value: any) => {
     setLoyalty((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSaveLoyalty = () => {
-    alert(`Loyalty Record ${loyalty.loyaltyNumber} saved successfully!`);
+    showNotification(`Loyalty Record ${loyalty.loyaltyNumber} saved successfully!`);
   };
 
   return (
     <AppShell
-      title="Loyalty Management Form ⭐"
+      title="Loyalty Management Form"
       breadcrumb="Management > CRM Management > Loyalty Management > Loyalty Management Form"
       description="The Loyalty Management Form manages the complete customer loyalty lifecycle from customer enrollment → program assignment → earning → points balance → rewards → redemption → tier progression → engagement → retention → advocacy → analytics."
       tabs={<CrmManagementTabBar />}
     >
-      <div className="flex flex-col min-h-screen text-slate-800 space-y-6">
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      <div className="flex flex-col min-h-screen space-y-6">
         {/* Loyalty Master Action Bar */}
-        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-2xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-base font-bold tracking-tight text-slate-900 flex items-center gap-1.5">
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-2xs">
+          <div className="flex items-center justify-between gap-3 flex-nowrap overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 flex items-center gap-1.5 whitespace-nowrap">
                 <span>Loyalty Management Form</span>
-                <span className="text-amber-500 text-sm">⭐</span>
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap font-mono">
                 {loyalty.loyaltyNumber}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300">
-                ● {loyalty.status}
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 whitespace-nowrap flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 inline-block" />
+                <span>{loyalty.status}</span>
               </span>
             </div>
 
             {/* Header Action Buttons */}
-            <div className="flex items-center flex-wrap gap-2">
+            <div className="flex items-center gap-2.5 shrink-0 flex-nowrap">
               <button
                 onClick={() => setIsNewRecordOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Plus className="h-3.5 w-3.5" />
                 <span>New Loyalty Record</span>
               </button>
 
               <button
-                onClick={() => window.print()}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Printer className="h-3.5 w-3.5 text-slate-600" />
-                <span>Print</span>
-              </button>
-
-              <button
-                onClick={() => alert("Opening Email Composer for Loyalty Update...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Mail className="h-3.5 w-3.5 text-blue-600" />
-                <span>Send Email</span>
-              </button>
-
-              <button
                 onClick={handleSaveLoyalty}
-                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save</span>
               </button>
 
-              <button
-                onClick={() => alert("More options...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 flex items-center gap-1 transition-colors cursor-pointer"
-              >
-                <span>More</span>
-                <MoreHorizontal className="h-3.5 w-3.5" />
-              </button>
-
-              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs">
+              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1 shrink-0 whitespace-nowrap">
+                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs shrink-0">
                   RS
                 </div>
-                <div className="text-left hidden sm:block">
+                <div className="text-left hidden sm:block whitespace-nowrap">
                   <div className="text-xs font-semibold text-slate-800 leading-none">Rahul Sharma</div>
                   <div className="text-[10px] text-slate-500">CRM Manager</div>
                 </div>
@@ -474,50 +481,14 @@ export function LoyaltyManagementPage() {
           </div>
         </div>
 
-        {/* Inner Sub-Tabs Header */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-1.5 overflow-x-auto scrollbar-none">
-            {[
-              { id: "overview", label: "Overview", icon: Layers },
-              { id: "transactions", label: "Transactions", icon: CreditCard },
-              { id: "rewards", label: "Rewards", icon: Gift },
-              { id: "tiers", label: "Tiers", icon: Trophy },
-              { id: "engagement", label: "Engagement", icon: Activity },
-              { id: "campaigns", label: "Campaigns", icon: Sparkles },
-              { id: "referrals", label: "Referrals", icon: Users },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "history", label: "History", icon: Clock },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer",
-                    active
-                      ? "bg-white text-primary shadow-2xs border border-slate-200/80"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                  )}
-                >
-                  <Icon className={cn("h-3.5 w-3.5", active ? "text-primary" : "text-slate-400")} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* TAB CONTENT AREA */}
-          <div className="p-5">
-            {activeTab === "overview" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Left & Center Columns (Sections 2 to 12) */}
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Grid Row 1: Points Summary, Tier Progress, Recent Activity */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Card 2: Points Summary */}
-                    <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
+        {/* Main Loyalty Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left & Center Columns (Sections 2 to 12) */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Grid Row 1: Points Summary, Tier Progress, Recent Activity */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Card 2: Points Summary */}
+              <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3">
                       <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
                         2. Points Summary
                       </h3>
@@ -597,11 +568,11 @@ export function LoyaltyManagementPage() {
                           You are <span className="font-bold text-slate-900">21,750 points</span> away from <span className="font-bold text-blue-700">PLATINUM Tier</span>
                         </div>
                         <div className="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-                          <div className="bg-emerald-500 h-full rounded-full" style={{ width: "78%" }} />
+                          <div className="bg-emerald-500 h-full rounded-full" style={{ width: "78.25%" }} />
                         </div>
                         <div className="flex justify-between text-[10px] text-slate-500 font-semibold">
                           <span>78,250 / 100,000 pts</span>
-                          <span className="font-bold text-emerald-700">78%</span>
+                          <span className="font-bold text-emerald-700">78.25%</span>
                         </div>
                       </div>
                     </div>
@@ -612,7 +583,7 @@ export function LoyaltyManagementPage() {
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                           4. Recent Activity
                         </h3>
-                        <button onClick={() => alert("Viewing All Activity...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Viewing All Activity...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           View All
                         </button>
                       </div>
@@ -621,15 +592,17 @@ export function LoyaltyManagementPage() {
                         {RECENT_ACTIVITY_FEED.map((row, idx) => {
                           const Icon = row.icon;
                           return (
-                            <div key={idx} className="flex items-center justify-between bg-white p-2 rounded border border-slate-200">
-                              <div className="flex items-center gap-2">
-                                <Icon className="h-3.5 w-3.5 text-slate-500" />
-                                <div>
-                                  <div className="font-bold text-slate-800 text-[11px]">{row.title}</div>
-                                  <div className="text-[9px] text-slate-400">{row.date}</div>
+                            <div key={idx} className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200 gap-2">
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div className="h-7 w-7 rounded-md bg-slate-100 flex items-center justify-center shrink-0">
+                                  <Icon className="h-3.5 w-3.5 text-slate-600" />
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="font-bold text-slate-800 text-[11px] truncate whitespace-nowrap">{row.title}</div>
+                                  <div className="text-[10px] text-slate-400 whitespace-nowrap">{row.date}</div>
                                 </div>
                               </div>
-                              <span className={cn("font-bold text-xs", row.isPositive ? "text-emerald-700" : "text-rose-600")}>
+                              <span className={cn("font-bold text-xs shrink-0 whitespace-nowrap font-mono", row.isPositive ? "text-emerald-700" : "text-rose-600")}>
                                 {row.points}
                               </span>
                             </div>
@@ -660,8 +633,12 @@ export function LoyaltyManagementPage() {
                               <div className="text-[10px] font-mono text-emerald-700 font-semibold">{r.pts}</div>
                             </div>
                             <button
-                              onClick={() => setIsRedeemModalOpen(true)}
-                              className="px-2.5 py-1 text-[10px] font-bold bg-primary/10 text-primary hover:bg-primary/20 rounded cursor-pointer"
+                              onClick={() => {
+                                setRedeemRewardSelected(r.title);
+                                setRedeemPtsCost(r.pts.replace(/[^0-9]/g, ""));
+                                setIsRedeemModalOpen(true);
+                              }}
+                              className="px-2.5 py-1 text-[10px] font-bold bg-primary/10 text-primary hover:bg-primary/20 rounded cursor-pointer whitespace-nowrap"
                             >
                               Redeem
                             </button>
@@ -675,24 +652,52 @@ export function LoyaltyManagementPage() {
                       <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
                         6. Engagement Overview
                       </h3>
-
                       <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold">Engagement Score</div>
-                          <div className="text-base font-extrabold text-emerald-700">86 / 100</div>
-                          <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[9px] rounded">High</span>
+                        <div className="p-2.5 bg-white rounded-lg border border-slate-200 flex flex-col justify-between">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] text-slate-500 font-semibold truncate">Score</span>
+                            <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800">High</span>
+                          </div>
+                          <div className="flex items-center justify-between mt-1">
+                            <div className="text-base font-extrabold text-slate-900 font-mono">
+                              86<span className="text-[10px] text-slate-400 font-normal">/100</span>
+                            </div>
+                            <div className="relative inline-flex items-center justify-center shrink-0">
+                              <svg width="28" height="28" className="-rotate-90">
+                                <circle cx="14" cy="14" r="10" stroke="currentColor" strokeWidth="2.5" className="text-emerald-100" fill="transparent" />
+                                <circle
+                                  cx="14"
+                                  cy="14"
+                                  r="10"
+                                  stroke="#10b981"
+                                  strokeWidth="2.5"
+                                  strokeDasharray={2 * Math.PI * 10}
+                                  strokeDashoffset={2 * Math.PI * 10 * (1 - 0.86)}
+                                  strokeLinecap="round"
+                                  fill="transparent"
+                                />
+                              </svg>
+                              <span className="absolute text-[7px] font-bold font-mono text-emerald-700">86%</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold">Transactions (Year)</div>
-                          <div className="text-base font-extrabold text-slate-900">18</div>
+
+                        <div className="p-2.5 bg-white rounded-lg border border-slate-200 flex flex-col justify-between">
+                          <div className="text-[10px] text-slate-500 font-semibold truncate">Transactions (Yr)</div>
+                          <div className="text-base font-extrabold text-slate-900 mt-1">18</div>
+                          <div className="text-[9px] text-slate-400">Total verified</div>
                         </div>
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold">Last Interaction</div>
-                          <div className="text-xs font-bold text-slate-800">15 Apr 2024</div>
+
+                        <div className="p-2.5 bg-white rounded-lg border border-slate-200 flex flex-col justify-between">
+                          <div className="text-[10px] text-slate-500 font-semibold truncate">Last Interaction</div>
+                          <div className="text-xs font-bold text-slate-900 mt-1 truncate">15 Apr 2024</div>
+                          <div className="text-[9px] text-slate-400">Via Web Portal</div>
                         </div>
-                        <div className="p-2 bg-white rounded border border-slate-200">
-                          <div className="text-[10px] text-slate-500 font-semibold">Engagement Streak</div>
-                          <div className="text-base font-extrabold text-emerald-700">6 Months</div>
+
+                        <div className="p-2.5 bg-white rounded-lg border border-slate-200 flex flex-col justify-between">
+                          <div className="text-[10px] text-slate-500 font-semibold truncate">Engagement Streak</div>
+                          <div className="text-xs font-bold text-emerald-700 mt-1 truncate">6 Months</div>
+                          <div className="text-[9px] text-slate-400">Consecutive active</div>
                         </div>
                       </div>
                     </div>
@@ -717,35 +722,39 @@ export function LoyaltyManagementPage() {
                   {/* Grid Row 3: Transactions Ledger & Redemption History */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Card 8: Transactions Ledger */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
+                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs overflow-hidden">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                         <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                           8. Transactions Ledger
                         </h3>
-                        <button onClick={() => alert("Viewing Full Ledger...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Viewing Full Ledger...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           View Full Ledger
                         </button>
                       </div>
 
-                      <div className="overflow-x-auto text-[11px]">
-                        <table className="w-full text-left">
+                      <div className="w-full">
+                        <table className="w-full text-left table-fixed">
                           <thead>
-                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                              <th className="py-1.5 px-2">Date</th>
-                              <th className="py-1.5 px-2">Type</th>
-                              <th className="py-1.5 px-2">Reference</th>
-                              <th className="py-1.5 px-2">Earned</th>
-                              <th className="py-1.5 px-2">Redeemed</th>
+                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 text-[11px]">
+                              <th className="py-1.5 px-2 w-[24%] whitespace-nowrap">Date</th>
+                              <th className="py-1.5 px-1.5 w-[16%] whitespace-nowrap">Type</th>
+                              <th className="py-1.5 px-1.5 w-[32%] whitespace-nowrap">Reference</th>
+                              <th className="py-1.5 px-1.5 w-[14%] text-right whitespace-nowrap">Earned</th>
+                              <th className="py-1.5 px-1.5 w-[14%] text-right whitespace-nowrap">Redeemed</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {TRANSACTIONS_LEDGER.map((row, idx) => (
+                          <tbody className="divide-y divide-slate-100 text-[11px]">
+                            {transactions.map((row, idx) => (
                               <tr key={idx} className="hover:bg-slate-50/80">
-                                <td className="py-1.5 px-2 text-slate-500 whitespace-nowrap">{row.date}</td>
-                                <td className="py-1.5 px-2 font-bold text-slate-800">{row.type}</td>
-                                <td className="py-1.5 px-2 font-mono text-slate-600">{row.ref}</td>
-                                <td className="py-1.5 px-2 font-bold text-emerald-700">{row.earned}</td>
-                                <td className="py-1.5 px-2 font-bold text-rose-600">{row.redeemed}</td>
+                                <td className="py-1.5 px-2 text-slate-500 whitespace-nowrap text-[10px]">{row.date}</td>
+                                <td className="py-1.5 px-1.5 whitespace-nowrap">
+                                  <span className={cn("px-1.5 py-0.5 rounded text-[9px] font-bold", row.type === "Earn" ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700")}>
+                                    {row.type}
+                                  </span>
+                                </td>
+                                <td className="py-1.5 px-1.5 font-mono font-medium text-slate-700 whitespace-nowrap text-[10px] truncate">{row.ref}</td>
+                                <td className="py-1.5 px-1.5 font-bold text-emerald-700 text-right whitespace-nowrap text-[10px]">{row.earned}</td>
+                                <td className="py-1.5 px-1.5 font-bold text-rose-600 text-right whitespace-nowrap text-[10px]">{row.redeemed}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -754,33 +763,33 @@ export function LoyaltyManagementPage() {
                     </div>
 
                     {/* Card 9: Redemption History */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
+                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs overflow-hidden">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                         <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                           9. Redemption History
                         </h3>
-                        <button onClick={() => alert("Viewing All Redemptions...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Viewing All Redemptions...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           View All Redemptions
                         </button>
                       </div>
 
-                      <div className="overflow-x-auto text-[11px]">
-                        <table className="w-full text-left">
+                      <div className="w-full">
+                        <table className="w-full text-left table-fixed">
                           <thead>
-                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                              <th className="py-1.5 px-2">Date</th>
-                              <th className="py-1.5 px-2">Reward</th>
-                              <th className="py-1.5 px-2">Points</th>
-                              <th className="py-1.5 px-2 text-center">Status</th>
+                            <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 text-[11px]">
+                              <th className="py-1.5 px-2 w-[25%] whitespace-nowrap">Date</th>
+                              <th className="py-1.5 px-2 w-[45%] whitespace-nowrap">Reward</th>
+                              <th className="py-1.5 px-2 w-[15%] text-right whitespace-nowrap">Points</th>
+                              <th className="py-1.5 px-2 w-[15%] text-center whitespace-nowrap">Status</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {REDEMPTION_HISTORY.map((row, idx) => (
+                          <tbody className="divide-y divide-slate-100 text-[11px]">
+                            {redemptions.map((row, idx) => (
                               <tr key={idx} className="hover:bg-slate-50/80">
-                                <td className="py-1.5 px-2 text-slate-500 whitespace-nowrap">{row.date}</td>
-                                <td className="py-1.5 px-2 font-bold text-slate-800">{row.reward}</td>
-                                <td className="py-1.5 px-2 font-mono font-bold text-rose-600">{row.pts}</td>
-                                <td className="py-1.5 px-2 text-center">
+                                <td className="py-1.5 px-2 text-slate-500 whitespace-nowrap text-[10px]">{row.date}</td>
+                                <td className="py-1.5 px-2 font-bold text-slate-800 whitespace-nowrap text-[10px] truncate">{row.reward}</td>
+                                <td className="py-1.5 px-2 font-mono font-bold text-rose-600 text-right whitespace-nowrap text-[10px]">{row.pts}</td>
+                                <td className="py-1.5 px-2 text-center whitespace-nowrap">
                                   <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-100 text-emerald-800">
                                     {row.status}
                                   </span>
@@ -801,17 +810,17 @@ export function LoyaltyManagementPage() {
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                           10. Active Campaigns
                         </h3>
-                        <button onClick={() => alert("Viewing All Campaigns...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View All
+                        <button onClick={() => setIsCreateCampaignModalOpen(true)} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                          + Add
                         </button>
                       </div>
 
                       <div className="space-y-2 text-xs">
-                        {ACTIVE_CAMPAIGNS.map((c, idx) => (
+                        {campaigns.map((c, idx) => (
                           <div key={idx} className="p-2 bg-white rounded border border-slate-200 space-y-1">
                             <div className="flex justify-between items-center">
-                              <span className="font-bold text-slate-900 text-[11px]">{c.title}</span>
-                              <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[9px] rounded">
+                              <span className="font-bold text-slate-900 text-[11px] whitespace-nowrap">{c.title}</span>
+                              <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[9px] rounded whitespace-nowrap">
                                 {c.status}
                               </span>
                             </div>
@@ -827,149 +836,94 @@ export function LoyaltyManagementPage() {
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                           11. Referral Summary
                         </h3>
-                        <button onClick={() => alert("Viewing Referral Details...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Viewing Referral Details...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           View Details
                         </button>
                       </div>
 
                       <div className="space-y-2 text-xs">
-                        <div className="flex justify-between">
-                          <span className="text-slate-500 font-medium">Total Referrals</span>
-                          <span className="font-bold text-slate-800">24</span>
+                        <div className="p-2 bg-white rounded border border-slate-200 flex justify-between items-center">
+                          <span className="text-slate-600 font-medium">Total Referred</span>
+                          <span className="font-bold text-slate-900">4 Customers</span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500 font-medium">Successful Referrals</span>
-                          <span className="font-bold text-emerald-700">12</span>
+                        <div className="p-2 bg-white rounded border border-slate-200 flex justify-between items-center">
+                          <span className="text-slate-600 font-medium">Referral Points Earned</span>
+                          <span className="font-bold text-emerald-700 font-mono">+12,000 pts</span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-500 font-medium">Referral Points Earned</span>
-                          <span className="font-bold text-slate-900">36,000</span>
-                        </div>
-                        <div className="flex justify-between border-t border-slate-200 pt-1">
-                          <span className="text-slate-500 font-medium">Referral Revenue (₹)</span>
-                          <span className="font-mono font-extrabold text-blue-900">₹ 8,75,000</span>
+                        <div className="p-2 bg-white rounded border border-slate-200 flex justify-between items-center">
+                          <span className="text-slate-600 font-medium">Referral Code</span>
+                          <span className="font-bold font-mono text-primary bg-primary/10 px-2 py-0.5 rounded text-[10px]">
+                            NEXUS-REF-2024
+                          </span>
                         </div>
                       </div>
                     </div>
 
                     {/* Card 12: Loyalty Insights */}
                     <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-3 text-xs">
-                      <div className="flex justify-between border-b border-slate-200 pb-2">
-                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          12. Loyalty Insights
-                        </h3>
-                        <button onClick={() => alert("Viewing Loyalty Dashboard...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View Dashboard
-                        </button>
-                      </div>
+                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-2">
+                        12. Loyalty Insights
+                      </h3>
 
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="w-24 h-24 relative">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                              <Pie
-                                data={TIER_DISTRIBUTION}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={20}
-                                outerRadius={36}
-                                paddingAngle={2}
-                                dataKey="value"
-                              >
-                                {TIER_DISTRIBUTION.map((entry, index) => (
-                                  <Cell key={`cell-${index}`} fill={entry.color} />
-                                ))}
-                              </Pie>
-                            </PieChart>
-                          </ResponsiveContainer>
-                          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                            <span className="text-xs font-extrabold text-slate-800">128</span>
-                            <span className="text-[8px] text-slate-400 font-bold">Members</span>
-                          </div>
+                      <div className="space-y-2 text-xs">
+                        <div className="p-2 bg-white rounded border border-slate-200 flex justify-between items-center">
+                          <span className="text-slate-600 font-medium">Avg Order Value</span>
+                          <span className="font-bold text-slate-900">₹ 8,45,000</span>
                         </div>
-
-                        <div className="space-y-1 text-[10px]">
-                          <div className="flex items-center gap-1.5">
-                            <span className="h-2 w-2 rounded-full bg-blue-500" />
-                            <span>Platinum: 8 (6%)</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="h-2 w-2 rounded-full bg-amber-500" />
-                            <span>Gold: 32 (25%)</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="h-2 w-2 rounded-full bg-slate-400" />
-                            <span>Silver: 56 (44%)</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="h-2 w-2 rounded-full bg-slate-300" />
-                            <span>Basic: 32 (25%)</span>
-                          </div>
+                        <div className="p-2 bg-white rounded border border-slate-200 flex justify-between items-center">
+                          <span className="text-slate-600 font-medium">Points Velocity</span>
+                          <span className="font-bold text-emerald-700 font-mono">+3,400 pts/mo</span>
+                        </div>
+                        <div className="p-2 bg-white rounded border border-slate-200 flex justify-between items-center">
+                          <span className="text-slate-600 font-medium">Retention Probability</span>
+                          <span className="font-bold text-emerald-700">94%</span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Right Column: Sidebar Panels (Matching Mockup Image) */}
+                {/* Right Column: Cards 13, 14, Quick Actions */}
                 <div className="space-y-6">
-                  {/* Loyalty Summary Widget (8 Stat Tiles) */}
-                  <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-3">
+                  {/* Card 13: Points Trend Chart */}
+                  <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-4">
                     <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2">
-                      Loyalty Summary
+                      Points Trend (6 Months)
                     </h3>
 
-                    <div className="space-y-2 text-xs">
-                      <div className="p-2.5 bg-emerald-50/60 rounded-lg border border-emerald-200 flex justify-between items-center">
-                        <div>
-                          <div className="text-[10px] text-emerald-700 font-semibold">Points Balance</div>
-                          <div className="text-lg font-extrabold text-emerald-900">12,450</div>
-                        </div>
-                        <Gift className="h-5 w-5 text-emerald-600" />
+                    <div className="h-44 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={TREND_LINE_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                          <XAxis dataKey="month" stroke="#94a3b8" fontSize={10} />
+                          <YAxis stroke="#94a3b8" fontSize={10} />
+                          <RechartsTooltip />
+                          <Line type="monotone" dataKey="earned" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} name="Earned" />
+                          <Line type="monotone" dataKey="redeemed" stroke="#f43f5e" strokeWidth={2} dot={{ r: 3 }} name="Redeemed" />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Card 14: Member Details */}
+                  <div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 space-y-3 text-xs">
+                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2">
+                      Member Profile Summary
+                    </h3>
+
+                    <div className="space-y-2">
+                      <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
+                        <span className="text-[10px] text-slate-500 font-semibold">Primary Contact</span>
+                        <span className="font-bold text-slate-800 text-xs">Amit Verma</span>
                       </div>
 
-                      <div className="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200 flex justify-between items-center">
-                        <div>
-                          <div className="text-[10px] text-blue-700 font-semibold">Lifetime Points</div>
-                          <div className="text-base font-extrabold text-blue-900">78,250</div>
-                        </div>
-                        <Trophy className="h-5 w-5 text-blue-600" />
-                      </div>
-
-                      <div className="p-2.5 bg-rose-50/60 rounded-lg border border-rose-200 flex justify-between items-center">
-                        <div>
-                          <div className="text-[10px] text-rose-700 font-semibold">Redeemed Points</div>
-                          <div className="text-base font-extrabold text-rose-900">65,800</div>
-                        </div>
-                        <CreditCard className="h-5 w-5 text-rose-600" />
-                      </div>
-
-                      <div className="p-2.5 bg-purple-50/60 rounded-lg border border-purple-200 flex justify-between items-center">
-                        <div>
-                          <div className="text-[10px] text-purple-700 font-semibold">Available Value (₹)</div>
-                          <div className="text-base font-extrabold text-purple-900">₹ 48,600.00</div>
-                        </div>
-                        <DollarSign className="h-5 w-5 text-purple-600" />
-                      </div>
-
-                      <div className="p-2 bg-amber-50 rounded-lg border border-amber-200 flex justify-between items-center">
-                        <span className="text-[10px] font-semibold text-amber-800">Current Tier</span>
-                        <span className="font-extrabold text-amber-900 text-xs">GOLD</span>
-                      </div>
-
-                      <div className="p-2 bg-blue-50 rounded-lg border border-blue-200 flex justify-between items-center">
-                        <span className="text-[10px] font-semibold text-blue-800">Next Tier</span>
-                        <span className="font-bold text-blue-900 text-[10px]">PLATINUM (21,750 pts to go)</span>
+                      <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
+                        <span className="text-[10px] text-slate-500 font-semibold">Email Address</span>
+                        <span className="font-bold text-slate-800 text-xs">amit.v@tatasteel.com</span>
                       </div>
 
                       <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
                         <span className="text-[10px] text-slate-500 font-semibold">Member Since</span>
                         <span className="font-bold text-slate-800 text-xs">01 Jan 2024</span>
-                      </div>
-
-                      <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
-                        <span className="text-[10px] text-slate-500 font-semibold">Membership Expiry</span>
-                        <span className="font-bold text-slate-800 text-xs">31 Dec 2025</span>
                       </div>
                     </div>
                   </div>
@@ -983,42 +937,39 @@ export function LoyaltyManagementPage() {
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         onClick={() => setIsAddPointsOpen(true)}
-                        className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
+                        className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-emerald-300"
                       >
                         <Plus className="h-4 w-4 text-emerald-600" />
-                        <span>Add Points</span>
+                        <span className="font-semibold text-slate-800">Add Points</span>
                       </button>
 
                       <button
                         onClick={() => setIsRedeemModalOpen(true)}
-                        className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
+                        className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-purple-300"
                       >
                         <Gift className="h-4 w-4 text-purple-600" />
-                        <span>Redeem Reward</span>
+                        <span className="font-semibold text-slate-800">Redeem Reward</span>
                       </button>
 
                       <button
-                        onClick={() => alert("Upgrading Tier...")}
-                        className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
+                        onClick={() => setIsUpgradeTierModalOpen(true)}
+                        className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-amber-300"
                       >
                         <Trophy className="h-4 w-4 text-amber-600" />
-                        <span>Upgrade Tier</span>
+                        <span className="font-semibold text-slate-800">Upgrade Tier</span>
                       </button>
 
                       <button
-                        onClick={() => alert("Creating Campaign...")}
-                        className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
+                        onClick={() => setIsCreateCampaignModalOpen(true)}
+                        className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-blue-300"
                       >
                         <Sparkles className="h-4 w-4 text-blue-600" />
-                        <span>Create Campaign</span>
+                        <span className="font-semibold text-slate-800">Create Campaign</span>
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
 
         {/* MODAL 1: NEW LOYALTY RECORD */}
         {isNewRecordOpen && (
@@ -1026,7 +977,7 @@ export function LoyaltyManagementPage() {
             <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
               <div className="flex items-center justify-between border-b pb-3">
                 <h3 className="text-sm font-bold text-slate-900">Create New Loyalty Membership</h3>
-                <button onClick={() => setIsNewRecordOpen(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold">
+                <button onClick={() => setIsNewRecordOpen(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">
                   ✕
                 </button>
               </div>
@@ -1041,7 +992,7 @@ export function LoyaltyManagementPage() {
                 </div>
               </div>
               <div className="flex justify-end gap-2 border-t pt-3">
-                <button onClick={() => setIsNewRecordOpen(false)} className="px-3 py-1.5 text-xs bg-slate-100 rounded font-semibold text-slate-600">
+                <button onClick={() => setIsNewRecordOpen(false)} className="px-3 py-1.5 text-xs bg-slate-100 rounded font-semibold text-slate-600 cursor-pointer">
                   Cancel
                 </button>
                 <button
@@ -1053,11 +1004,306 @@ export function LoyaltyManagementPage() {
                       customerName: cust,
                     }));
                     setIsNewRecordOpen(false);
-                    alert("Loyalty Record created!");
+                    showNotification("Loyalty Record created!");
                   }}
-                  className="px-4 py-1.5 text-xs bg-primary text-white font-bold rounded shadow-xs"
+                  className="px-4 py-1.5 text-xs bg-primary text-white font-bold rounded shadow-xs cursor-pointer"
                 >
                   Create Record
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 2: ADD POINTS (QUICK ACTION 1) */}
+        {isAddPointsOpen && (
+          <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
+              <div className="flex items-center justify-between border-b pb-3">
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Plus className="h-4 w-4 text-emerald-600" />
+                  <span>Credit / Add Loyalty Points</span>
+                </h3>
+                <button onClick={() => setIsAddPointsOpen(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">
+                  ✕
+                </button>
+              </div>
+              <div className="space-y-3 text-xs">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Points to Credit *</label>
+                  <input
+                    type="number"
+                    value={addPtsAmount}
+                    onChange={(e) => setAddPtsAmount(e.target.value)}
+                    className="w-full h-8 px-2.5 border rounded font-mono font-bold text-emerald-700 text-sm bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Transaction Reason</label>
+                  <select
+                    value={addPtsReason}
+                    onChange={(e) => setAddPtsReason(e.target.value)}
+                    className="w-full h-8 px-2 border rounded text-xs bg-white"
+                  >
+                    <option value="Purchase">Product Purchase</option>
+                    <option value="AMC Renewal">AMC Renewal</option>
+                    <option value="Special Promotion">Special Promotion Campaign</option>
+                    <option value="Referral Bonus">Referral Bonus</option>
+                    <option value="Customer Goodwill">Goodwill Adjustment</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Invoice / Ref Number</label>
+                  <input
+                    type="text"
+                    value={addPtsRef}
+                    onChange={(e) => setAddPtsRef(e.target.value)}
+                    className="w-full h-8 px-2.5 border rounded font-mono text-xs bg-white"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 border-t pt-3">
+                <button onClick={() => setIsAddPointsOpen(false)} className="px-3 py-1.5 text-xs bg-slate-100 rounded font-semibold text-slate-600 cursor-pointer">
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    const pts = parseInt(addPtsAmount) || 0;
+                    const newBal = (loyalty.pointsBalance + pts).toLocaleString();
+                    const newRow = {
+                      date: "25 Apr 2024",
+                      type: "Earn",
+                      ref: addPtsRef || `INV-2024-${Math.floor(Math.random() * 9000 + 1000)}`,
+                      desc: addPtsReason,
+                      earned: `+${pts.toLocaleString()}`,
+                      redeemed: "-",
+                      balance: newBal,
+                    };
+                    setTransactions((prev) => [newRow, ...prev]);
+                    setLoyalty((prev) => ({
+                      ...prev,
+                      pointsBalance: prev.pointsBalance + pts,
+                      lifetimeEarned: prev.lifetimeEarned + pts,
+                    }));
+                    setIsAddPointsOpen(false);
+                    showNotification(`Successfully credited +${pts.toLocaleString()} points to ${loyalty.customerName}!`);
+                  }}
+                  className="px-4 py-1.5 text-xs bg-emerald-600 text-white font-bold rounded shadow-xs hover:bg-emerald-700 cursor-pointer"
+                >
+                  Credit Points
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 3: REDEEM REWARD (QUICK ACTION 2) */}
+        {isRedeemModalOpen && (
+          <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
+              <div className="flex items-center justify-between border-b pb-3">
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Gift className="h-4 w-4 text-purple-600" />
+                  <span>Redeem Loyalty Reward</span>
+                </h3>
+                <button onClick={() => setIsRedeemModalOpen(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">
+                  ✕
+                </button>
+              </div>
+              <div className="space-y-3 text-xs">
+                <div className="p-3 bg-purple-50 rounded-lg border border-purple-200 flex justify-between items-center">
+                  <span className="text-purple-700 font-medium">Available Balance:</span>
+                  <span className="font-bold text-purple-900 font-mono text-sm">{loyalty.pointsBalance.toLocaleString()} pts</span>
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Select Reward Voucher</label>
+                  <select
+                    value={redeemRewardSelected}
+                    onChange={(e) => {
+                      setRedeemRewardSelected(e.target.value);
+                      if (e.target.value.includes("500")) setRedeemPtsCost("2000");
+                      else if (e.target.value.includes("10%")) setRedeemPtsCost("3500");
+                      else if (e.target.value.includes("Service")) setRedeemPtsCost("5000");
+                      else setRedeemPtsCost("2500");
+                    }}
+                    className="w-full h-8 px-2 border rounded text-xs bg-white"
+                  >
+                    <option value="₹500 Discount Voucher">₹500 Service Voucher (2,000 pts)</option>
+                    <option value="10% AMC Discount Voucher">10% AMC Discount Voucher (3,500 pts)</option>
+                    <option value="Free Annual Preventive Maintenance">Free PM Service Voucher (5,000 pts)</option>
+                    <option value="₹1000 Hardware Accessory Voucher">₹1,000 Hardware Voucher (2,500 pts)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Points Deducted</label>
+                  <input
+                    type="text"
+                    readOnly
+                    value={`${redeemPtsCost} pts`}
+                    className="w-full h-8 px-2.5 bg-slate-50 border rounded font-mono font-bold text-rose-600 text-xs"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 border-t pt-3">
+                <button onClick={() => setIsRedeemModalOpen(false)} className="px-3 py-1.5 text-xs bg-slate-100 rounded font-semibold text-slate-600 cursor-pointer">
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    const cost = parseInt(redeemPtsCost) || 0;
+                    if (loyalty.pointsBalance < cost) {
+                      showNotification("Insufficient points balance for this redemption!");
+                      return;
+                    }
+                    const newBal = (loyalty.pointsBalance - cost).toLocaleString();
+                    const newRedeemRow = {
+                      date: "25 Apr 2024",
+                      reward: redeemRewardSelected,
+                      pts: `${cost.toLocaleString()}`,
+                      ref: `RD-2024-00${Math.floor(Math.random() * 90 + 10)}`,
+                      status: "Completed",
+                    };
+                    const newLedgerRow = {
+                      date: "25 Apr 2024",
+                      type: "Redeem",
+                      ref: newRedeemRow.ref,
+                      desc: redeemRewardSelected,
+                      earned: "-",
+                      redeemed: `${cost.toLocaleString()}`,
+                      balance: newBal,
+                    };
+                    setRedemptions((prev) => [newRedeemRow, ...prev]);
+                    setTransactions((prev) => [newLedgerRow, ...prev]);
+                    setLoyalty((prev) => ({
+                      ...prev,
+                      pointsBalance: prev.pointsBalance - cost,
+                      lifetimeRedeemed: prev.lifetimeRedeemed + cost,
+                    }));
+                    setIsRedeemModalOpen(false);
+                    showNotification(`Redemption successful! Generated voucher code ${newRedeemRow.ref}`);
+                  }}
+                  className="px-4 py-1.5 text-xs bg-purple-600 text-white font-bold rounded shadow-xs hover:bg-purple-700 cursor-pointer"
+                >
+                  Confirm Redemption
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 4: UPGRADE TIER (QUICK ACTION 3) */}
+        {isUpgradeTierModalOpen && (
+          <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
+              <div className="flex items-center justify-between border-b pb-3">
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Trophy className="h-4 w-4 text-amber-600" />
+                  <span>Upgrade Membership Tier</span>
+                </h3>
+                <button onClick={() => setIsUpgradeTierModalOpen(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">
+                  ✕
+                </button>
+              </div>
+              <div className="space-y-3 text-xs">
+                <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 flex justify-between items-center">
+                  <span className="text-amber-700 font-medium">Current Active Tier:</span>
+                  <span className="font-bold text-amber-900 uppercase font-mono">{loyalty.currentTier}</span>
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Select New Target Tier</label>
+                  <select
+                    value={upgradeTierSelected}
+                    onChange={(e) => setUpgradeTierSelected(e.target.value)}
+                    className="w-full h-8 px-2 border rounded text-xs bg-white font-semibold"
+                  >
+                    <option value="GOLD Tier">GOLD Tier (Standard Enterprise)</option>
+                    <option value="Platinum VIP">Platinum VIP (Priority SLA & 10% Benefits)</option>
+                    <option value="Diamond Elite">Diamond Elite (Executive Concierge & 15% Benefits)</option>
+                  </select>
+                </div>
+                <div className="text-[11px] text-slate-500">
+                  Upgrading tier will automatically unlock higher earning multipliers and priority concierge benefits.
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 border-t pt-3">
+                <button onClick={() => setIsUpgradeTierModalOpen(false)} className="px-3 py-1.5 text-xs bg-slate-100 rounded font-semibold text-slate-600 cursor-pointer">
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setLoyalty((prev) => ({ ...prev, currentTier: upgradeTierSelected }));
+                    setIsUpgradeTierModalOpen(false);
+                    showNotification(`Member tier successfully updated to ${upgradeTierSelected}!`);
+                  }}
+                  className="px-4 py-1.5 text-xs bg-amber-600 text-white font-bold rounded shadow-xs hover:bg-amber-700 cursor-pointer"
+                >
+                  Upgrade Tier
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 5: CREATE CAMPAIGN (QUICK ACTION 4) */}
+        {isCreateCampaignModalOpen && (
+          <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
+              <div className="flex items-center justify-between border-b pb-3">
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-blue-600" />
+                  <span>Create Loyalty Promo Campaign</span>
+                </h3>
+                <button onClick={() => setIsCreateCampaignModalOpen(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">
+                  ✕
+                </button>
+              </div>
+              <div className="space-y-3 text-xs">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Campaign Title *</label>
+                  <input
+                    type="text"
+                    value={campaignTitle}
+                    onChange={(e) => setCampaignTitle(e.target.value)}
+                    className="w-full h-8 px-2.5 border rounded text-xs bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Points Multiplier</label>
+                  <select
+                    value={campaignMultiplier}
+                    onChange={(e) => setCampaignMultiplier(e.target.value)}
+                    className="w-full h-8 px-2 border rounded text-xs bg-white font-mono font-bold text-blue-700"
+                  >
+                    <option value="1.5X">1.5X Bonus Points</option>
+                    <option value="2X">2X Double Points</option>
+                    <option value="3X">3X Triple Points</option>
+                    <option value="5,000 Fixed Bonus">5,000 Flat Bonus Points</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Target Segment</label>
+                  <input type="text" defaultValue="All Enterprise & Strategic Members" className="w-full h-8 px-2.5 border rounded text-xs bg-slate-50 text-slate-600" />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 border-t pt-3">
+                <button onClick={() => setIsCreateCampaignModalOpen(false)} className="px-3 py-1.5 text-xs bg-slate-100 rounded font-semibold text-slate-600 cursor-pointer">
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    const newCamp = {
+                      title: campaignTitle || "Bonus Loyalty Campaign",
+                      desc: `Earn ${campaignMultiplier} points on eligible orders`,
+                      date: "25 Apr 2024 - 15 May 2024",
+                      status: "Active",
+                    };
+                    setCampaigns((prev) => [newCamp, ...prev]);
+                    setIsCreateCampaignModalOpen(false);
+                    showNotification(`Campaign "${newCamp.title}" launched successfully!`);
+                  }}
+                  className="px-4 py-1.5 text-xs bg-blue-600 text-white font-bold rounded shadow-xs hover:bg-blue-700 cursor-pointer"
+                >
+                  Launch Campaign
                 </button>
               </div>
             </div>

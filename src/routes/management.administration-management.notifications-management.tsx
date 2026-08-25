@@ -106,21 +106,7 @@ const RECENT_NOTIFICATIONS_DATA = [
 ];
 
 export function NotificationsManagementPage() {
-  const [activeTab, setActiveTab] = useState<
-    | "overview"
-    | "trigger"
-    | "rule"
-    | "template"
-    | "audience"
-    | "channel"
-    | "schedule"
-    | "priority"
-    | "actions"
-    | "escalation"
-    | "preferences"
-    | "tracking"
-    | "audit"
-  >("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "templates" | "audience" | "logs">("overview");
 
   // Master Form State
   const [notifMaster, setNotifMaster] = useState({
@@ -140,6 +126,30 @@ export function NotificationsManagementPage() {
     status: "Active",
     effectiveFrom: "2024-04-01",
     effectiveTo: "2026-03-31",
+  });
+
+  // Dynamic Templates State
+  const [templatesList, setTemplatesList] = useState([
+    { id: "TMP-1", code: "INV-DUE-EML", name: "Invoice Due Reminder (Email)", channel: "Email", subject: "Payment Due: Invoice #{{invoice_no}}", status: "Active" },
+    { id: "TMP-2", code: "INV-DUE-APP", name: "Invoice Due Push/In-App", channel: "In-App", subject: "Invoice #{{invoice_no}} due in 3 days", status: "Active" },
+    { id: "TMP-3", code: "INV-DUE-SMS", name: "Invoice Due SMS Urgent", channel: "SMS", subject: "Dear {{customer}}, your invoice is due on {{due_date}}.", status: "Active" },
+    { id: "TMP-4", code: "PO-APPR-EML", name: "PO Approval Notification", channel: "Email", subject: "Action Required: PO #{{po_no}} Pending Approval", status: "Active" },
+  ]);
+
+  // Dynamic Dispatch Logs
+  const [dispatchLogs, setDispatchLogs] = useState([
+    { id: "NTF-0003487", recipient: "Rahul Sharma (Finance)", channel: "Email", event: "Invoice Due Alert", status: "Delivered", sentAt: "15 Apr 2024 09:00 AM" },
+    { id: "NTF-0003488", recipient: "Neha Kapoor (Head Sales)", channel: "In-App", event: "PO Approval Request", status: "Read", sentAt: "15 Apr 2024 09:01 AM" },
+    { id: "NTF-0003489", recipient: "Amit Verma (Admin)", channel: "Email", event: "Daily Digest", status: "Delivered", sentAt: "15 Apr 2024 09:02 AM" },
+    { id: "NTF-0003490", recipient: "Pooja Mehta (Compliance)", channel: "SMS", event: "Audit Warning", status: "Sent", sentAt: "15 Apr 2024 09:03 AM" },
+  ]);
+
+  const [showAddTemplateModal, setShowAddTemplateModal] = useState(false);
+  const [newTemplateForm, setNewTemplateForm] = useState({
+    name: "",
+    code: "",
+    channel: "Email",
+    subject: "",
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -227,13 +237,6 @@ export function NotificationsManagementPage() {
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <span className="text-primary">1.</span> Notification Master
               </h3>
-              <span className="text-[11px] text-muted-foreground font-medium">
-                MAICW Fields: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
-                <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
-                <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-                <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
-                <span className="text-rose-500 font-bold">W</span> (Workflow)
-              </span>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -532,30 +535,35 @@ export function NotificationsManagementPage() {
                 <span className="text-xs font-medium text-muted-foreground block">Acknowledgement Rate</span>
                 <span className="text-[10px] text-emerald-600 font-semibold">Good</span>
               </div>
-              <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-emerald-500 text-xs font-bold font-mono text-emerald-600">
-                72%
+              <div className="relative inline-flex items-center justify-center">
+                <svg width="48" height="48" className="transform -rotate-90">
+                  <circle cx="24" cy="24" r="19" stroke="currentColor" strokeWidth="3.5" className="text-muted/30" fill="transparent" />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="19"
+                    stroke="#10b981"
+                    strokeWidth="3.5"
+                    strokeDasharray={2 * Math.PI * 19}
+                    strokeDashoffset={2 * Math.PI * 19 * (1 - 0.72)}
+                    strokeLinecap="round"
+                    fill="transparent"
+                  />
+                </svg>
+                <span className="absolute text-[11px] font-bold font-mono text-emerald-600">72%</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 2. Workspace Navigation Tabs */}
+        {/* 2. Workspace Navigation Tabs (Centered & Streamlined) */}
         <div className="space-y-4">
-          <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
+          <div className="flex items-center justify-center gap-2 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
             {[
-              { key: "overview", label: "Overview", icon: Layers },
-              { key: "trigger", label: "Trigger", icon: Zap },
-              { key: "rule", label: "Rule", icon: Sliders },
-              { key: "template", label: "Template", icon: FileText },
-              { key: "audience", label: "Audience", icon: Users },
-              { key: "channel", label: "Channel", icon: Radio },
-              { key: "schedule", label: "Schedule", icon: Clock },
-              { key: "priority", label: "Priority & Severity", icon: AlertTriangle },
-              { key: "actions", label: "Actions", icon: CheckCircle2 },
-              { key: "escalation", label: "Escalation", icon: TrendingUp },
-              { key: "preferences", label: "Preferences", icon: Lock },
-              { key: "tracking", label: "Tracking", icon: Activity },
-              { key: "audit", label: "Audit Trail", icon: History },
+              { key: "overview", label: "Notification Parameters & Triggers", icon: Layers },
+              { key: "templates", label: "Templates & Channel Gateways", icon: FileText },
+              { key: "audience", label: "Audience & Escalation Path", icon: Users },
+              { key: "logs", label: "Dispatch Logs & Delivery Audit", icon: Clock },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
@@ -564,7 +572,7 @@ export function NotificationsManagementPage() {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key as typeof activeTab)}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
+                    "flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
                     isActive
                       ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -577,479 +585,370 @@ export function NotificationsManagementPage() {
             })}
           </div>
 
-          {/* OVERVIEW TAB CONTENT (Matching attached screenshot layout) */}
+          {/* OVERVIEW TAB CONTENT */}
           {activeTab === "overview" && (
             <div className="space-y-6">
-              {/* Row 1: 2. Trigger Summary | 3. Template Preview | 4. Audience Summary | 5. Channel Configuration */}
-              <div className="grid gap-4 lg:grid-cols-4">
-                {/* 2. Trigger Summary */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      2. Trigger Summary
-                    </h4>
+              {/* Row 1: Trigger Summary & Source Event | Priority & Routing */}
+              <div className="grid gap-4 lg:grid-cols-2">
+                {/* 2. Trigger Specification */}
+                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
+                    2. Event Trigger & Firing Condition
+                  </h4>
 
-                    <div className="space-y-2 pt-1 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Trigger Type</span>
-                        <span className="font-semibold text-foreground">Deadline Approaching</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Source Module</span>
-                        <span className="font-semibold text-foreground">Finance</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Source Transaction</span>
-                        <span className="font-medium text-foreground">Customer Invoice</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Event</span>
-                        <span className="font-medium text-foreground">Invoice Due Date</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Condition</span>
-                        <span className="font-mono text-primary font-bold">Due Date ≤ 3 Days</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Trigger Frequency</span>
-                        <span className="font-medium text-foreground">Daily</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Delay</span>
-                        <span className="font-mono text-muted-foreground">00:00</span>
-                      </div>
-
-                      <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                        <span className="text-muted-foreground">Trigger Status</span>
-                        <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                          Active
-                        </span>
-                      </div>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Trigger Code:</span>
+                      <span className="font-mono font-bold text-primary">{notifMaster.notifCode}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Source Module:</span>
+                      <span className="font-semibold text-foreground">{notifMaster.module} &gt; {notifMaster.submodule}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Firing Event:</span>
+                      <span className="font-semibold text-foreground">{notifMaster.eventType}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Threshold Condition:</span>
+                      <span className="font-mono font-bold text-primary">Due Date &le; 3 Days (Daily Evaluation)</span>
                     </div>
                   </div>
-
-                  <button
-                    onClick={() => showNotification("Trigger configuration rule editor opened.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View Trigger Details
-                  </button>
                 </div>
 
-                {/* 3. Template Preview */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      3. Template Preview
-                    </h4>
+                {/* 3. Priority & Governance */}
+                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
+                    3. Dispatch Priority & Owner
+                  </h4>
 
-                    <div className="space-y-2 text-xs">
-                      <div>
-                        <span className="text-[10px] font-semibold text-muted-foreground block">Subject</span>
-                        <p className="font-mono text-xs font-bold text-foreground truncate bg-muted/20 p-1.5 rounded border border-border/50">
-                          Reminder: Invoice {"{{DocumentNumber}}"} is Due on {"{{DueDate}}"}
-                        </p>
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] font-semibold text-muted-foreground block">Message</span>
-                        <div className="mt-0.5 rounded-md border border-border bg-muted/20 p-2 text-[11px] text-foreground space-y-1 font-mono">
-                          <p>Hello {"{{UserName}}"},</p>
-                          <p className="text-[10px]">
-                            This is a reminder that invoice {"{{DocumentNumber}}"} for {"{{Amount}}"} is due on {"{{DueDate}}"}.
-                          </p>
-                          <p className="text-[10px]">Please make the payment on time to avoid late fees.</p>
-                          <p className="text-[10px]">You can view the invoice details using the link below:</p>
-                          <p className="text-primary text-[10px]">{"{{RecordLink}}"}</p>
-                          <p className="text-[10px] pt-1">Thank you,</p>
-                          <p className="text-[10px]">{"{{CompanyName}}"} Finance Team</p>
-                        </div>
-                      </div>
-
-                      <div className="text-[9px] text-muted-foreground font-mono">
-                        Variables: <span className="text-primary">{"{{UserName}}, {{DocumentNumber}}, {{Amount}}, {{DueDate}}, {{RecordLink}}, {{CompanyName}}"}</span>
-                      </div>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">System Priority:</span>
+                      <span className="rounded bg-rose-500/10 text-rose-600 px-2 py-0.5 text-[10px] font-bold">
+                        {notifMaster.priority} Priority / {notifMaster.severity}
+                      </span>
                     </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Template editor opened.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    Edit Template
-                  </button>
-                </div>
-
-                {/* 4. Audience Summary */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      4. Audience Summary
-                    </h4>
-
-                    <div className="overflow-x-auto mt-1">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                            <th className="py-1 px-1">Audience Type</th>
-                            <th className="py-1 px-1 text-center">Count</th>
-                            <th className="py-1 px-1">Rule</th>
-                            <th className="py-1 px-1">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 text-[10px]">
-                          {AUDIENCE_SUMMARY_DATA.map((aud) => (
-                            <tr key={aud.id} className="hover:bg-muted/30 transition-colors">
-                              <td className="py-1 px-1 font-medium text-foreground">{aud.type}</td>
-                              <td className="py-1 px-1 text-center font-mono font-bold text-primary">{aud.count}</td>
-                              <td className="py-1 px-1 text-muted-foreground truncate max-w-[80px]">{aud.rule}</td>
-                              <td className="py-1 px-1">
-                                <span className="rounded bg-emerald-500/10 px-1 py-0.2 text-[9px] font-bold text-emerald-600">
-                                  {aud.status}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Notification Owner:</span>
+                      <span className="font-semibold text-foreground">{notifMaster.owner}</span>
                     </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Audience directory opened.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View Audience Details
-                  </button>
-                </div>
-
-                {/* 5. Channel Configuration */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      5. Channel Configuration
-                    </h4>
-
-                    <div className="overflow-x-auto mt-1">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                            <th className="py-1 px-1">Channel</th>
-                            <th className="py-1 px-1 text-center">Primary</th>
-                            <th className="py-1 px-1 text-center">Priority</th>
-                            <th className="py-1 px-1">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 text-[10px]">
-                          {CHANNEL_CONFIG_DATA.map((chn) => (
-                            <tr key={chn.id} className="hover:bg-muted/30 transition-colors">
-                              <td className="py-1 px-1 font-medium text-foreground">{chn.name}</td>
-                              <td className="py-1 px-1 text-center">
-                                {chn.primary ? (
-                                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 inline" />
-                                ) : (
-                                  <span className="text-muted-foreground">-</span>
-                                )}
-                              </td>
-                              <td className="py-1 px-1 text-center font-mono font-bold">{chn.priority}</td>
-                              <td className="py-1 px-1">
-                                <span
-                                  className={cn(
-                                    "rounded px-1 py-0.2 text-[9px] font-bold",
-                                    chn.status === "Active"
-                                      ? "bg-emerald-500/10 text-emerald-600"
-                                      : "bg-muted text-muted-foreground"
-                                  )}
-                                >
-                                  {chn.status}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Validity Period:</span>
+                      <span className="font-mono text-muted-foreground">{notifMaster.effectiveFrom} to {notifMaster.effectiveTo}</span>
                     </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Manage Channels gateway opened.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    Manage Channels
-                  </button>
-                </div>
-              </div>
-
-              {/* Row 2: 8. Priority & Severity | 7. Acknowledgement Summary | 9. Quick Actions */}
-              <div className="grid gap-4 lg:grid-cols-3">
-                {/* 8. Priority & Severity */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      8. Priority & Severity
-                    </h4>
-
-                    <div className="space-y-2 pt-1 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Priority</span>
-                        <span className="rounded bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-600 border border-amber-500/20">
-                          High
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Severity</span>
-                        <span className="rounded bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-600 border border-amber-500/20">
-                          Warning
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Response Required</span>
-                        <span className="font-bold text-foreground">Yes</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Response SLA</span>
-                        <span className="font-mono text-foreground font-bold">1 Day</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Escalation Required</span>
-                        <span className="font-semibold text-primary">3 Levels</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("SLA & Escalation matrix details opened.")}
-                    className="text-[11px] font-bold text-primary hover:underline cursor-pointer pt-1"
-                  >
-                    View Details
-                  </button>
-                </div>
-
-                {/* 7. Acknowledgement Summary */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      7. Acknowledgement Summary
-                    </h4>
-
-                    {/* Donut Ring Chart Graphic */}
-                    <div className="flex items-center justify-center gap-6 py-3">
-                      <div className="relative h-24 w-24 rounded-full border-8 border-emerald-500 border-t-amber-500 border-r-rose-500 flex flex-col items-center justify-center">
-                        <span className="text-lg font-bold font-mono text-foreground">128</span>
-                        <span className="text-[9px] text-muted-foreground">Total Sent</span>
-                      </div>
-
-                      <div className="space-y-1.5 text-xs">
-                        <div className="flex items-center gap-2">
-                          <div className="h-2.5 w-2.5 rounded-full bg-emerald-500 shrink-0" />
-                          <span className="text-muted-foreground text-[11px]">Acknowledged (92)</span>
-                          <span className="font-mono font-bold text-foreground ml-auto">72%</span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <div className="h-2.5 w-2.5 rounded-full bg-amber-500 shrink-0" />
-                          <span className="text-muted-foreground text-[11px]">Pending (36)</span>
-                          <span className="font-mono font-bold text-foreground ml-auto">28%</span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <div className="h-2.5 w-2.5 rounded-full bg-rose-500 shrink-0" />
-                          <span className="text-muted-foreground text-[11px]">Overdue (8)</span>
-                          <span className="font-mono font-bold text-foreground ml-auto">6%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Acknowledgement breakdown report loaded.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View Acknowledgement Details
-                  </button>
-                </div>
-
-                {/* 9. Quick Actions & Recent Notifications */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-4 shadow-xs">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      9. Quick Actions
-                    </h4>
-
-                    <div className="grid grid-cols-5 gap-1.5 pt-2 text-center text-[9px]">
-                      <button
-                        onClick={() => showNotification("Test notification sent.")}
-                        className="p-1.5 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <Send className="h-3.5 w-3.5 text-primary" />
-                        <span>Send Test</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Notification template copied.")}
-                        className="p-1.5 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <Copy className="h-3.5 w-3.5 text-blue-600" />
-                        <span>Copy Notif</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Notification cloned.")}
-                        className="p-1.5 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <Plus className="h-3.5 w-3.5 text-purple-600" />
-                        <span>Clone</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Notification deactivated.")}
-                        className="p-1.5 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer text-rose-600"
-                      >
-                        <Power className="h-3.5 w-3.5" />
-                        <span>Deactivate</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Analytics dashboard loaded.")}
-                        className="p-1.5 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <BarChart2 className="h-3.5 w-3.5 text-emerald-600" />
-                        <span>Analytics</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Recipients exported.")}
-                        className="p-1.5 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <Download className="h-3.5 w-3.5 text-emerald-600" />
-                        <span>Export</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Notification logs opened.")}
-                        className="p-1.5 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <FileText className="h-3.5 w-3.5 text-blue-600" />
-                        <span>Logs</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Delivery report loaded.")}
-                        className="p-1.5 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                        <span>Delivery</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Escalation log loaded.")}
-                        className="p-1.5 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
-                        <span>Escalation</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Audit trail loaded.")}
-                        className="p-1.5 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <ShieldCheck className="h-3.5 w-3.5 text-purple-600" />
-                        <span>Audit</span>
-                      </button>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Do-Not-Disturb Override:</span>
+                      <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold">
+                        Enabled for Critical Overdue
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          )}
 
-              {/* Row 3: 8. Recent Notifications */}
+          {/* TEMPLATES WORKSPACE */}
+          {activeTab === "templates" && (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-4">
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Active Gateways</span>
+                  <div className="text-xl font-bold font-mono text-foreground">3 Live</div>
+                  <p className="text-[10px] text-emerald-600 font-medium">Email, In-App, SMS</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Delivery Success</span>
+                  <div className="text-xl font-bold font-mono text-foreground">99.4%</div>
+                  <p className="text-[10px] text-blue-600 font-medium">Over last 30 days</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Templates Configured</span>
+                  <div className="text-xl font-bold font-mono text-foreground">{templatesList.length} Templates</div>
+                  <p className="text-[10px] text-purple-600 font-medium">Multi-lingual enabled</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Avg Dispatch Latency</span>
+                  <div className="text-xl font-bold font-mono text-foreground">&lt; 350ms</div>
+                  <p className="text-[10px] text-amber-600 font-medium">Real-time queue</p>
+                </div>
+              </div>
+
               <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                 <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                  <h4 className="text-xs font-bold text-foreground">8. Recent Notifications</h4>
+                  <h4 className="text-xs font-bold text-foreground">Notification Message Templates ({templatesList.length})</h4>
+                  <button
+                    onClick={() => setShowAddTemplateModal(true)}
+                    className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                  >
+                    + Create Template
+                  </button>
                 </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                        <th className="py-1.5 px-1">Notification ID</th>
-                        <th className="py-1.5 px-1">Recipient</th>
-                        <th className="py-1.5 px-1">Channel</th>
-                        <th className="py-1.5 px-1">Status</th>
-                        <th className="py-1.5 px-1">Sent At</th>
-                        <th className="py-1.5 px-1">Acknowledged At</th>
+                      <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                        <th className="py-2.5 px-3">Template Code</th>
+                        <th className="py-2.5 px-3">Template Name</th>
+                        <th className="py-2.5 px-3">Channel Gateway</th>
+                        <th className="py-2.5 px-3">Subject / Body Snippet</th>
+                        <th className="py-2.5 px-3">Status</th>
+                        <th className="py-2.5 px-3 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-border/50 text-[11px]">
-                      {RECENT_NOTIFICATIONS_DATA.map((n) => (
-                        <tr key={n.id} className="hover:bg-muted/30 transition-colors">
-                          <td className="py-1.5 px-1 font-mono font-medium text-primary">{n.id}</td>
-                          <td className="py-1.5 px-1 font-medium text-foreground">{n.recipient}</td>
-                          <td className="py-1.5 px-1 text-muted-foreground">{n.channel}</td>
-                          <td className="py-1.5 px-1">
-                            <span className={cn("rounded px-1.5 py-0.5 text-[9px] font-bold border", n.badge)}>
-                              {n.status}
+                    <tbody className="divide-y divide-border/60 text-[11px]">
+                      {templatesList.map((tpl) => (
+                        <tr key={tpl.id} className="hover:bg-muted/30 transition-colors">
+                          <td className="py-2 px-3 font-mono font-bold text-primary">{tpl.code}</td>
+                          <td className="py-2 px-3 font-semibold text-foreground">{tpl.name}</td>
+                          <td className="py-2 px-3 text-muted-foreground">{tpl.channel}</td>
+                          <td className="py-2 px-3 font-mono text-muted-foreground truncate max-w-[240px]">{tpl.subject}</td>
+                          <td className="py-2 px-3">
+                            <span className="rounded bg-emerald-500/10 text-emerald-600 px-2 py-0.5 text-[10px] font-bold">
+                              {tpl.status}
                             </span>
                           </td>
-                          <td className="py-1.5 px-1 font-mono text-[10px] text-muted-foreground">{n.sentAt}</td>
-                          <td className="py-1.5 px-1 font-mono text-[10px] text-muted-foreground">{n.ackAt}</td>
+                          <td className="py-2 px-3 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setTemplatesList((prev) => prev.filter((t) => t.id !== tpl.id));
+                                showNotification(`Template ${tpl.code} removed.`);
+                              }}
+                              className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
+                            >
+                              Remove
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-
-                <button
-                  onClick={() => showNotification("All notifications list loaded.")}
-                  className="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline cursor-pointer pt-1"
-                >
-                  View All Notifications
-                </button>
               </div>
             </div>
           )}
 
-          {/* OTHER TABS PLACEHOLDER */}
-          {activeTab !== "overview" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <h4 className="text-sm font-bold text-foreground capitalize">{activeTab} Workspace</h4>
-                <span className="text-xs text-muted-foreground">Notification ID: NTF-2024-00087</span>
+          {/* AUDIENCE & ESCALATION WORKSPACE */}
+          {activeTab === "audience" && (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-border bg-card p-5 space-y-3 shadow-xs">
+                <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
+                  Target Audience Resolution Rules
+                </h4>
+
+                <div className="space-y-2 text-xs">
+                  {AUDIENCE_SUMMARY_DATA.map((aud) => (
+                    <div key={aud.id} className="flex items-center justify-between p-3 rounded-lg border border-border bg-muted/15">
+                      <div className="space-y-0.5">
+                        <span className="font-bold text-foreground">{aud.rule}</span>
+                        <p className="text-muted-foreground text-[11px]">Type: {aud.type} &middot; Dynamic resolution target</p>
+                      </div>
+                      <span className="font-mono font-bold text-primary bg-primary/10 px-2.5 py-1 rounded text-xs">
+                        ~{aud.count} recipients
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Detailed settings for <span className="font-semibold text-foreground capitalize">{activeTab}</span> adhering to MAICW specification.
-              </p>
-              <div className="grid gap-4 sm:grid-cols-3 pt-2">
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Active Gateways</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">Email, In-App, Push</span>
-                  <p className="text-[11px] text-muted-foreground">99.2% delivery success rate.</p>
-                </div>
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Escalation Path</span>
-                  <span className="text-xl font-bold font-mono text-blue-600">3 Levels Configured</span>
-                  <p className="text-[11px] text-muted-foreground">Level 1 User → Level 2 Manager → Level 3 Head.</p>
-                </div>
+              <div className="rounded-xl border border-border bg-card p-5 space-y-3 shadow-xs">
+                <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
+                  Multi-Tier Escalation Path Matrix
+                </h4>
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Acknowledgement Rate</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">72.0%</span>
-                  <p className="text-[11px] text-muted-foreground">92 of 128 recipients confirmed.</p>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="p-3 rounded-lg border border-border bg-muted/10 space-y-1">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase">Stage 1 (Immediate)</span>
+                    <p className="text-xs font-bold text-foreground">Direct Assignee / Invoice Owner</p>
+                    <p className="text-[11px] text-muted-foreground">Delivered via In-App & Email</p>
+                  </div>
+                  <div className="p-3 rounded-lg border border-border bg-muted/10 space-y-1">
+                    <span className="text-[10px] font-bold text-amber-600 uppercase">Stage 2 (+24 Hours Inactive)</span>
+                    <p className="text-xs font-bold text-foreground">Department Lead / Approver</p>
+                    <p className="text-[11px] text-muted-foreground">High priority Email & SMS reminder</p>
+                  </div>
+                  <div className="p-3 rounded-lg border border-border bg-muted/10 space-y-1">
+                    <span className="text-[10px] font-bold text-rose-600 uppercase">Stage 3 (+48 Hours Overdue)</span>
+                    <p className="text-xs font-bold text-foreground">Finance Director / Admin</p>
+                    <p className="text-[11px] text-muted-foreground">Direct escalation alert & audit flag</p>
+                  </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* DISPATCH LOGS WORKSPACE */}
+          {activeTab === "logs" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
+                  <h4 className="text-sm font-bold text-foreground">Live Dispatch Queue & Delivery Audit Trail</h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newLog = {
+                      id: `NTF-000${Math.floor(1000 + Math.random() * 9000)}`,
+                      recipient: "Self (Current User)",
+                      channel: "In-App",
+                      event: "Test Trigger Dispatch",
+                      status: "Delivered",
+                      sentAt: "Just now",
+                    };
+                    setDispatchLogs((prev) => [newLog, ...prev]);
+                    showNotification("Test notification dispatched successfully.");
+                  }}
+                  className="px-3 py-1 text-xs font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 cursor-pointer shadow-xs"
+                >
+                  ⚡ Send Test Alert
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2 px-2">Dispatch ID</th>
+                      <th className="py-2 px-2">Recipient</th>
+                      <th className="py-2 px-2">Gateway Channel</th>
+                      <th className="py-2 px-2">Trigger Event</th>
+                      <th className="py-2 px-2">Delivery Status</th>
+                      <th className="py-2 px-2 text-right">Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 text-[11px]">
+                    {dispatchLogs.map((log) => (
+                      <tr key={log.id} className="hover:bg-muted/30 transition-colors">
+                        <td className="py-2 px-2 font-mono font-bold text-primary">{log.id}</td>
+                        <td className="py-2 px-2 font-semibold text-foreground">{log.recipient}</td>
+                        <td className="py-2 px-2 text-muted-foreground">{log.channel}</td>
+                        <td className="py-2 px-2 text-foreground">{log.event}</td>
+                        <td className="py-2 px-2">
+                          <span
+                            className={cn(
+                              "rounded px-2 py-0.5 text-[10px] font-bold border",
+                              log.status === "Delivered" || log.status === "Read"
+                                ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                                : "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                            )}
+                          >
+                            {log.status}
+                          </span>
+                        </td>
+                        <td className="py-2 px-2 text-right font-mono text-muted-foreground">{log.sentAt}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
         </div>
+
+        {/* --- CREATE TEMPLATE MODAL --- */}
+        {showAddTemplateModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+            <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Create Notification Template</h3>
+                </div>
+                <button onClick={() => setShowAddTemplateModal(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Template Code *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. SHIP-DISPATCH-EML"
+                    value={newTemplateForm.code}
+                    onChange={(e) => setNewTemplateForm({ ...newTemplateForm, code: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Template Name *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Shipment Dispatch Notice"
+                    value={newTemplateForm.name}
+                    onChange={(e) => setNewTemplateForm({ ...newTemplateForm, name: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Channel Gateway</label>
+                  <select
+                    value={newTemplateForm.channel}
+                    onChange={(e) => setNewTemplateForm({ ...newTemplateForm, channel: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                  >
+                    <option value="Email">Email</option>
+                    <option value="In-App">In-App</option>
+                    <option value="SMS">SMS</option>
+                    <option value="Push">Push Notification</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Subject / Body Template *</label>
+                  <textarea
+                    rows={3}
+                    placeholder="e.g. Shipment {{shipment_id}} has been dispatched to {{customer}}."
+                    value={newTemplateForm.subject}
+                    onChange={(e) => setNewTemplateForm({ ...newTemplateForm, subject: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background p-2.5 text-xs text-foreground font-mono resize-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowAddTemplateModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newTemplateForm.name || !newTemplateForm.code || !newTemplateForm.subject) {
+                      alert("Please fill in all template fields.");
+                      return;
+                    }
+                    setTemplatesList((prev) => [
+                      ...prev,
+                      {
+                        id: `TMP-${prev.length + 1}`,
+                        name: newTemplateForm.name,
+                        code: newTemplateForm.code.toUpperCase(),
+                        channel: newTemplateForm.channel,
+                        subject: newTemplateForm.subject,
+                        status: "Active",
+                      },
+                    ]);
+                    setShowAddTemplateModal(false);
+                    showNotification(`Template ${newTemplateForm.code.toUpperCase()} created successfully.`);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Save Template
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer Classification & Modification Strip */}
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card p-3 text-[11px] text-muted-foreground font-mono">

@@ -95,21 +95,7 @@ const RECENT_DOCUMENTS_DATA = [
 ];
 
 export function DocumentControlManagementPage() {
-  const [activeTab, setActiveTab] = useState<
-    | "summary"
-    | "classification"
-    | "ownership"
-    | "creation"
-    | "review"
-    | "versions"
-    | "distribution"
-    | "access"
-    | "acknowledgement"
-    | "retention"
-    | "attachments"
-    | "audit"
-    | "history"
-  >("summary");
+  const [activeTab, setActiveTab] = useState<"summary" | "repository" | "lifecycle" | "audit">("summary");
 
   // Master Form State
   const [docMaster, setDocMaster] = useState({
@@ -129,6 +115,33 @@ export function DocumentControlManagementPage() {
     expiryDate: "2026-03-31",
     currentVersion: "v1.2",
     description: "Defines the policy for financial approvals including limits, authority levels, escalation path and compliance requirements for all financial transactions.",
+  });
+
+  // Dynamic Document Repository
+  const [documentsList, setDocumentsList] = useState([
+    { id: "DOC-001", num: "FIN-POL-001", name: "Financial Approval Policy", type: "Policy", dept: "Finance & Accounts", ver: "v1.2", status: "Published", date: "15 Apr 2024", owner: "Vikram Singh" },
+    { id: "DOC-002", num: "PRC-POL-002", name: "Procurement & Vendor Policy", type: "Policy", dept: "Procurement", ver: "v2.0", status: "Published", date: "12 Apr 2024", owner: "Neha Kapoor" },
+    { id: "DOC-003", num: "FIN-SOP-003", name: "Expense Claim SOP & Guidelines", type: "SOP", dept: "Finance", ver: "v1.3", status: "Under Review", date: "10 Apr 2024", owner: "Pooja Mehta" },
+    { id: "DOC-004", num: "OPS-PRC-004", name: "Vendor Onboarding Procedure", type: "Procedure", dept: "Operations", ver: "v1.1", status: "Draft", date: "08 Apr 2024", owner: "Karan Malhotra" },
+    { id: "DOC-005", num: "SEC-POL-005", name: "Information Security Policy", type: "Policy", dept: "Cybersecurity", ver: "v3.0", status: "Published", date: "01 Apr 2024", owner: "Anita Deshmukh" },
+  ]);
+
+  const [reviewSteps, setReviewSteps] = useState([
+    { level: 1, type: "Technical Review", person: "Pooja Mehta", status: "Approved", date: "10 Apr 2024", comments: "Verified standard compliance." },
+    { level: 2, type: "Functional Review", person: "Neha Kapoor", status: "Approved", date: "11 Apr 2024", comments: "Aligned with procurement matrix." },
+    { level: 3, type: "Compliance Review", person: "Anita Deshmukh", status: "Approved", date: "12 Apr 2024", comments: "Statutory requirements verified." },
+    { level: 4, type: "Management Approval", person: "Rahul Sharma", status: "Approved", date: "15 Apr 2024", comments: "Approved for enterprise rollout." },
+    { level: 5, type: "Publication", person: "Amit Verma", status: "Published", date: "15 Apr 2024", comments: "Published to employee portal." },
+  ]);
+
+  const [showUploadDocModal, setShowUploadDocModal] = useState(false);
+  const [newDocForm, setNewDocForm] = useState({
+    num: "",
+    name: "",
+    type: "Policy",
+    dept: "Finance & Accounts",
+    ver: "v1.0",
+    owner: "Vikram Singh",
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -219,13 +232,6 @@ export function DocumentControlManagementPage() {
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <span className="text-primary">1.</span> Document Master
               </h3>
-              <span className="text-[11px] text-muted-foreground font-medium">
-                MAICW Fields: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
-                <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
-                <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-                <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
-                <span className="text-rose-500 font-bold">W</span> (Workflow)
-              </span>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -514,30 +520,35 @@ export function DocumentControlManagementPage() {
                 <span className="text-xs font-medium text-muted-foreground block">SLA Compliance</span>
                 <span className="text-[10px] text-emerald-600 font-semibold">Excellent</span>
               </div>
-              <div className="grid h-12 w-12 place-items-center rounded-full border-4 border-emerald-500 text-xs font-bold font-mono text-emerald-600">
-                96%
+              <div className="relative inline-flex items-center justify-center">
+                <svg width="48" height="48" className="transform -rotate-90">
+                  <circle cx="24" cy="24" r="19" stroke="currentColor" strokeWidth="3.5" className="text-muted/30" fill="transparent" />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="19"
+                    stroke="#10b981"
+                    strokeWidth="3.5"
+                    strokeDasharray={2 * Math.PI * 19}
+                    strokeDashoffset={2 * Math.PI * 19 * (1 - 0.96)}
+                    strokeLinecap="round"
+                    fill="transparent"
+                  />
+                </svg>
+                <span className="absolute text-[11px] font-bold font-mono text-emerald-600">96%</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 2. Workspace Navigation Tabs */}
+        {/* 2. Workspace Navigation Tabs (Centered & Streamlined) */}
         <div className="space-y-4">
-          <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
+          <div className="flex items-center justify-center gap-2 overflow-x-auto border-b border-border/80 pb-2 scrollbar-none">
             {[
-              { key: "summary", label: "Summary", icon: Layers },
-              { key: "classification", label: "Classification", icon: Shield },
-              { key: "ownership", label: "Ownership", icon: UserCheck },
-              { key: "creation", label: "Creation", icon: FileText },
-              { key: "review", label: "Review & Approval", icon: CheckCircle2 },
-              { key: "versions", label: "Versions", icon: History },
-              { key: "distribution", label: "Distribution", icon: Share2 },
-              { key: "access", label: "Access Control", icon: Lock },
-              { key: "acknowledgement", label: "Acknowledgement", icon: Users },
-              { key: "retention", label: "Retention", icon: Archive },
-              { key: "attachments", label: "Attachments", icon: File },
-              { key: "audit", label: "Audit Trail", icon: Activity },
-              { key: "history", label: "History", icon: Clock },
+              { key: "summary", label: "Document Profile & Summary", icon: Layers },
+              { key: "repository", label: "Enterprise Repository", icon: FolderTree },
+              { key: "lifecycle", label: "Lifecycle & Review Stages", icon: CheckCircle2 },
+              { key: "audit", label: "Audit Trail & History", icon: Clock },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.key;
@@ -546,7 +557,7 @@ export function DocumentControlManagementPage() {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key as typeof activeTab)}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
+                    "flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-medium transition-all shrink-0 cursor-pointer",
                     isActive
                       ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -557,421 +568,61 @@ export function DocumentControlManagementPage() {
                 </button>
               );
             })}
-          </div>
-
-          {/* SUMMARY / OVERVIEW TAB CONTENT (Matching attached screenshot layout) */}
+          </div>          {/* SUMMARY TAB CONTENT */}
           {activeTab === "summary" && (
             <div className="space-y-6">
-              {/* Row 1: 2. Classification | 3. Ownership | 4. Review & Approval Status */}
-              <div className="grid gap-4 lg:grid-cols-3">
-                {/* 2. Classification */}
+              {/* Row 1: Document Classification | Ownership & Scope */}
+              <div className="grid gap-4 lg:grid-cols-2">
+                {/* 2. Document Classification */}
                 <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                   <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    2. Classification
+                    2. Document Classification & Security
                   </h4>
 
-                  <div className="space-y-2 text-xs">
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Classification Level</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Level 2 - Department</option>
-                      </select>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Document Number:</span>
+                      <span className="font-mono font-bold text-primary">{docMaster.docNumber}</span>
                     </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Confidentiality</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Confidential</option>
-                      </select>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Document Type:</span>
+                      <span className="font-semibold text-foreground">{docMaster.docType}</span>
                     </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Business Criticality</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>High</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Information Category</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Management Information</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Regulatory Category</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Internal Policy</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Security Classification</label>
-                      <select className="mt-0.5 w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground">
-                        <option>Medium Term</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] text-muted-foreground block">Classification Owner</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="Anita Deshmukh"
-                        className="mt-0.5 w-full rounded-md border border-border bg-muted/30 px-2 py-1 text-xs text-foreground"
-                      />
-                    </div>
-
-                    <div className="flex justify-between items-center pt-1 border-t border-border/50">
-                      <span className="text-muted-foreground text-[11px]">Classification Status</span>
-                      <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                        Active
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Security Classification:</span>
+                      <span className="rounded bg-amber-500/10 text-amber-600 px-2 py-0.5 text-[10px] font-bold border border-amber-500/20">
+                        Confidential
                       </span>
                     </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Access Scope:</span>
+                      <span className="font-semibold text-foreground">Organization-wide (Role Bound)</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* 3. Ownership */}
+                {/* 3. Ownership & Governance */}
                 <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                   <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    3. Ownership
+                    3. Document Governance & Ownership
                   </h4>
 
-                  <div className="grid grid-cols-2 gap-3 text-xs pt-1">
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Document Owner</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-primary/10 text-primary font-bold text-[10px] flex items-center justify-center font-mono">
-                          VS
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Vikram Singh</span>
-                          <span className="text-[10px] text-muted-foreground">Finance Manager</span>
-                        </div>
-                      </div>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Author / Process Owner:</span>
+                      <span className="font-semibold text-foreground">{docMaster.processOwner}</span>
                     </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Author</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-blue-500/10 text-blue-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          KM
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Karan Malhotra</span>
-                          <span className="text-[10px] text-muted-foreground">Senior Analyst</span>
-                        </div>
-                      </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Department:</span>
+                      <span className="font-semibold text-foreground">{docMaster.department}</span>
                     </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Process Owner</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-purple-500/10 text-purple-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          NK
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Neha Kapoor</span>
-                          <span className="text-[10px] text-muted-foreground">Finance Controller</span>
-                        </div>
-                      </div>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Effective Validity:</span>
+                      <span className="font-mono text-muted-foreground">{docMaster.effectiveDate} to {docMaster.expiryDate}</span>
                     </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Reviewer</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-amber-500/10 text-amber-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          PM
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Pooja Mehta</span>
-                          <span className="text-[10px] text-muted-foreground">Senior Manager</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Custodian</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-emerald-500/10 text-emerald-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          AV
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Amit Verma</span>
-                          <span className="text-[10px] text-muted-foreground">Document Controller</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[11px] text-muted-foreground block">Approver</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-rose-500/10 text-rose-600 font-bold text-[10px] flex items-center justify-center font-mono">
-                          RS
-                        </div>
-                        <div>
-                          <span className="font-bold text-foreground block">Rahul Sharma</span>
-                          <span className="text-[10px] text-muted-foreground">CFO</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center pt-2 border-t border-border/50 text-xs">
-                    <span className="text-muted-foreground">Ownership Status</span>
-                    <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
-                      Active
-                    </span>
-                  </div>
-                </div>
-
-                {/* 4. Review & Approval Status */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      4. Review & Approval Status
-                    </h4>
-
-                    <div className="overflow-x-auto mt-2">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                            <th className="py-1 px-1">Lvl</th>
-                            <th className="py-1 px-1">Review / Approval</th>
-                            <th className="py-1 px-1">Person</th>
-                            <th className="py-1 px-1">Status</th>
-                            <th className="py-1 px-1">Date</th>
-                            <th className="py-1 px-1">Comments</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 text-[10px]">
-                          {REVIEW_APPROVAL_STEPS.map((s) => (
-                            <tr key={s.level} className="hover:bg-muted/30 transition-colors">
-                              <td className="py-1 px-1 font-mono font-bold text-primary">{s.level}</td>
-                              <td className="py-1 px-1 font-medium text-foreground">{s.type}</td>
-                              <td className="py-1 px-1 text-muted-foreground">{s.person}</td>
-                              <td className="py-1 px-1">
-                                <span className="rounded bg-emerald-500/10 px-1 py-0.2 text-[9px] font-bold text-emerald-600">
-                                  {s.status}
-                                </span>
-                              </td>
-                              <td className="py-1 px-1 font-mono text-[9px] text-muted-foreground">{s.date}</td>
-                              <td className="py-1 px-1 text-muted-foreground truncate max-w-[80px]">{s.comments}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Full approval audit workflow graph loaded.")}
-                    className="text-[11px] font-bold text-primary hover:underline cursor-pointer pt-1"
-                  >
-                    View Full Workflow
-                  </button>
-                </div>
-              </div>
-
-              {/* Row 2: 5. Latest Version Details | 6. Distribution & Acknowledgement | 7. Quick Actions */}
-              <div className="grid gap-4 lg:grid-cols-3">
-                {/* 5. Latest Version Details */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
-                  <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                    5. Latest Version Details
-                  </h4>
-
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Version</span>
-                      <span className="font-bold text-foreground font-mono">v1.2</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Published On</span>
-                      <span className="font-mono text-muted-foreground text-[10px]">15 Apr 2024 10:30 AM</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Published By</span>
-                      <span className="font-semibold text-foreground">Amit Verma</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Effective From</span>
-                      <span className="font-mono text-muted-foreground text-[10px]">15 Apr 2024</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Effective To</span>
-                      <span className="font-mono text-muted-foreground text-[10px]">31 Mar 2026</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Change Type</span>
-                      <span className="font-medium text-foreground">Minor Revision</span>
-                    </div>
-
-                    <div>
-                      <span className="text-muted-foreground block text-[11px]">Change Description</span>
-                      <p className="text-[11px] text-foreground mt-0.5 bg-muted/20 p-1.5 rounded border border-border/50">
-                        Updated approval limits and escalation matrix.
-                      </p>
-                    </div>
-
-                    {/* File Attachment Download Box */}
-                    <div className="flex items-center justify-between bg-primary/5 p-2 rounded-lg border border-primary/20 pt-2">
-                      <div className="flex items-center gap-2 truncate">
-                        <FileText className="h-4 w-4 text-primary shrink-0" />
-                        <span className="font-mono text-xs font-bold text-foreground truncate">
-                          FIN-POL-001_v1.2.pdf
-                        </span>
-                        <span className="text-[10px] text-muted-foreground font-mono">(238 KB)</span>
-                      </div>
-                      <button
-                        onClick={() => showNotification("File download initiated.")}
-                        className="p-1 rounded bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
-                      >
-                        <Download className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-
-                    <div className="text-[10px] text-muted-foreground font-mono pt-1">
-                      File Location: <span className="text-foreground">/Finance/Policies/FIN-POL-001/v1.2/</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 6. Distribution & Acknowledgement */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      6. Distribution & Acknowledgement
-                    </h4>
-
-                    {/* Ring Chart Metric Graphic */}
-                    <div className="flex items-center justify-center gap-6 py-3">
-                      <div className="relative h-24 w-24 rounded-full border-8 border-emerald-500 border-t-amber-500 border-r-rose-500 flex flex-col items-center justify-center">
-                        <span className="text-lg font-bold font-mono text-foreground">102</span>
-                        <span className="text-[9px] text-muted-foreground">Total Recipients</span>
-                      </div>
-
-                      <div className="space-y-1.5 text-xs">
-                        <div className="flex items-center gap-2">
-                          <div className="h-2.5 w-2.5 rounded-full bg-emerald-500 shrink-0" />
-                          <span className="text-muted-foreground text-[11px]">Acknowledged (86)</span>
-                          <span className="font-mono font-bold text-foreground ml-auto">84.3%</span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <div className="h-2.5 w-2.5 rounded-full bg-amber-500 shrink-0" />
-                          <span className="text-muted-foreground text-[11px]">Pending (14)</span>
-                          <span className="font-mono font-bold text-foreground ml-auto">13.7%</span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <div className="h-2.5 w-2.5 rounded-full bg-rose-500 shrink-0" />
-                          <span className="text-muted-foreground text-[11px]">Overdue (2)</span>
-                          <span className="font-mono font-bold text-foreground ml-auto">2.0%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => showNotification("Acknowledgement breakdown report loaded.")}
-                    className="w-full text-center py-1.5 rounded-lg border border-border text-xs font-bold text-primary hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    View Details
-                  </button>
-                </div>
-
-                {/* 7. Quick Actions & Recent Documents */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-4 shadow-xs">
-                  <div>
-                    <h4 className="text-xs font-bold text-foreground border-b border-border/60 pb-2">
-                      7. Quick Actions
-                    </h4>
-
-                    <div className="grid grid-cols-3 gap-2 pt-2 text-center text-[10px]">
-                      <button
-                        onClick={() => showNotification("Upload new version modal opened.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <Upload className="h-4 w-4 text-primary" />
-                        <span>Upload Version</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Review request sent.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <UserCheck className="h-4 w-4 text-purple-600" />
-                        <span>Request Review</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Approval request sent.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                        <span>Request Approval</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Distribution modal opened.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <Share2 className="h-4 w-4 text-blue-600" />
-                        <span>Distribute</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Access permissions updated.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer"
-                      >
-                        <Lock className="h-4 w-4 text-amber-600" />
-                        <span>Edit Access</span>
-                      </button>
-
-                      <button
-                        onClick={() => showNotification("Archive confirmation requested.")}
-                        className="p-2 rounded-lg border border-border bg-muted/20 hover:bg-muted font-medium flex flex-col items-center gap-1 cursor-pointer text-rose-600"
-                      >
-                        <Archive className="h-4 w-4" />
-                        <span>Archive</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="border-t border-border/60 pt-3">
-                    <h4 className="text-xs font-bold text-foreground mb-2">Recent Documents</h4>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold text-[10px]">
-                            <th className="py-1 px-1">Document</th>
-                            <th className="py-1 px-1">Ver</th>
-                            <th className="py-1 px-1">Status</th>
-                            <th className="py-1 px-1">Updated</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/50 text-[10px]">
-                          {RECENT_DOCUMENTS_DATA.slice(0, 4).map((d) => (
-                            <tr key={d.id} className="hover:bg-muted/30 transition-colors">
-                              <td className="py-1 px-1 font-medium text-foreground truncate max-w-[100px]">{d.name}</td>
-                              <td className="py-1 px-1 font-mono text-muted-foreground">{d.version}</td>
-                              <td className="py-1 px-1">
-                                <span className={cn("rounded px-1 py-0.2 text-[9px] font-bold border", d.badge)}>
-                                  {d.status}
-                                </span>
-                              </td>
-                              <td className="py-1 px-1 font-mono text-[9px] text-muted-foreground">{d.updatedOn}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                    <div className="flex justify-between items-center py-1 border-b border-border/40">
+                      <span className="text-muted-foreground">Retention Policy:</span>
+                      <span className="font-semibold text-foreground">7 Years (Statutory Archive)</span>
                     </div>
                   </div>
                 </div>
@@ -979,38 +630,286 @@ export function DocumentControlManagementPage() {
             </div>
           )}
 
-          {/* OTHER TABS PLACEHOLDER */}
-          {activeTab !== "summary" && (
-            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <h4 className="text-sm font-bold text-foreground capitalize">{activeTab} Workspace</h4>
-                <span className="text-xs text-muted-foreground">Document ID: DOC-2024-000256</span>
+          {/* ENTERPRISE REPOSITORY WORKSPACE */}
+          {activeTab === "repository" && (
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-4">
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Controlled Documents</span>
+                  <div className="text-xl font-bold font-mono text-foreground">{documentsList.length} Docs</div>
+                  <p className="text-[10px] text-emerald-600 font-medium">100% Version Controlled</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Published Policies</span>
+                  <div className="text-xl font-bold font-mono text-foreground">
+                    {documentsList.filter((d) => d.status === "Published").length} Published
+                  </div>
+                  <p className="text-[10px] text-blue-600 font-medium">Available across hubs</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Under Review</span>
+                  <div className="text-xl font-bold font-mono text-foreground">
+                    {documentsList.filter((d) => d.status !== "Published").length} In Progress
+                  </div>
+                  <p className="text-[10px] text-amber-600 font-medium">Pending workflow sign-off</p>
+                </div>
+                <div className="rounded-xl border border-border bg-card p-4 space-y-1">
+                  <span className="text-xs text-muted-foreground">Compliance Rating</span>
+                  <div className="text-xl font-bold font-mono text-foreground">98.4%</div>
+                  <p className="text-[10px] text-purple-600 font-medium">ISO 9001 / 27001</p>
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Detailed settings for <span className="font-semibold text-foreground capitalize">{activeTab}</span> adhering to MAICW specification.
-              </p>
-              <div className="grid gap-4 sm:grid-cols-3 pt-2">
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Active Version</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">v1.2 Published</span>
-                  <p className="text-[11px] text-muted-foreground">Controlled distribution active.</p>
+
+              <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                  <h4 className="text-xs font-bold text-foreground">Controlled Document Register ({documentsList.length} Documents)</h4>
+                  <button
+                    onClick={() => setShowUploadDocModal(true)}
+                    className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
+                  >
+                    + Upload Document
+                  </button>
                 </div>
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Security Rating</span>
-                  <span className="text-xl font-bold font-mono text-amber-600">Confidential</span>
-                  <p className="text-[11px] text-muted-foreground">Restricted to Finance & Accounts department.</p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                        <th className="py-2.5 px-3">Doc #</th>
+                        <th className="py-2.5 px-3">Document Title</th>
+                        <th className="py-2.5 px-3">Type</th>
+                        <th className="py-2.5 px-3">Department</th>
+                        <th className="py-2.5 px-3">Owner</th>
+                        <th className="py-2.5 px-3">Version</th>
+                        <th className="py-2.5 px-3">Status</th>
+                        <th className="py-2.5 px-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/60 text-[11px]">
+                      {documentsList.map((doc) => (
+                        <tr key={doc.id} className="hover:bg-muted/30 transition-colors">
+                          <td className="py-2 px-3 font-mono font-bold text-primary">{doc.num}</td>
+                          <td className="py-2 px-3 font-semibold text-foreground">{doc.name}</td>
+                          <td className="py-2 px-3 text-muted-foreground">{doc.type}</td>
+                          <td className="py-2 px-3 text-muted-foreground">{doc.dept}</td>
+                          <td className="py-2 px-3 text-foreground">{doc.owner}</td>
+                          <td className="py-2 px-3 font-mono">{doc.ver}</td>
+                          <td className="py-2 px-3">
+                            <span
+                              className={cn(
+                                "rounded px-2 py-0.5 text-[10px] font-bold",
+                                doc.status === "Published" ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
+                              )}
+                            >
+                              {doc.status}
+                            </span>
+                          </td>
+                          <td className="py-2 px-3 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setDocumentsList((prev) => prev.filter((d) => d.id !== doc.id));
+                                showNotification(`Document ${doc.num} removed.`);
+                              }}
+                              className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
+                            >
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
+              </div>
+            </div>
+          )}
 
-                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
-                  <span className="text-xs font-bold text-foreground block">Compliance Verification</span>
-                  <span className="text-xl font-bold font-mono text-emerald-600">Passed</span>
-                  <p className="text-[11px] text-muted-foreground">Audit retention schedule set to 7 Years.</p>
-                </div>
+          {/* LIFECYCLE & REVIEW STAGES WORKSPACE */}
+          {activeTab === "lifecycle" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  Document Review & Approval Sign-off Stages
+                </h4>
+                <span className="text-[11px] font-mono text-muted-foreground">Multi-Stage Quality Gate</span>
+              </div>
+
+              <div className="space-y-3">
+                {reviewSteps.map((step) => (
+                  <div key={step.level} className="flex items-start gap-3 p-3 rounded-lg border border-border bg-muted/15 text-xs">
+                    <div className="h-6 w-6 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-bold text-emerald-600 shrink-0 mt-0.5">
+                      ✓
+                    </div>
+                    <div className="flex-1 space-y-0.5">
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-foreground">{step.type}</span>
+                        <span className="text-[10px] font-mono text-muted-foreground">{step.date}</span>
+                      </div>
+                      <p className="text-muted-foreground">Sign-off by <span className="font-semibold text-foreground">{step.person}</span>: "{step.comments}"</p>
+                    </div>
+                    <span className="rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold shrink-0">
+                      {step.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* AUDIT TRAIL WORKSPACE */}
+          {activeTab === "audit" && (
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
+                  Document Revision History & Download Logs
+                </h4>
+                <span className="text-[11px] font-mono text-muted-foreground">Immutable Audit Register</span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                      <th className="py-2 px-2">Timestamp</th>
+                      <th className="py-2 px-2">User Identity</th>
+                      <th className="py-2 px-2">Action / Event</th>
+                      <th className="py-2 px-2">Version</th>
+                      <th className="py-2 px-2">Integrity Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 text-[11px]">
+                    {[
+                      { time: "15 Apr 2024, 10:30 AM", user: "Amit Verma (Publish Lead)", act: "Published revision v1.2 to production portal", ver: "v1.2", status: "Verified SHA-256" },
+                      { time: "12 Apr 2024, 04:15 PM", user: "Anita Deshmukh (Compliance)", act: "Approved legal compliance review stage", ver: "v1.2", status: "Verified SHA-256" },
+                      { time: "10 Apr 2024, 02:00 PM", user: "Vikram Singh (Author)", act: "Drafted minor updates to financial approval limits", ver: "v1.2", status: "Verified SHA-256" },
+                      { time: "01 Jan 2024, 09:00 AM", user: "Rahul Sharma (Admin)", act: "Published baseline version v1.0", ver: "v1.0", status: "Verified SHA-256" },
+                    ].map((log, idx) => (
+                      <tr key={idx} className="hover:bg-muted/30 transition-colors">
+                        <td className="py-2 px-2 font-mono text-muted-foreground">{log.time}</td>
+                        <td className="py-2 px-2 font-semibold text-foreground">{log.user}</td>
+                        <td className="py-2 px-2 text-foreground">{log.act}</td>
+                        <td className="py-2 px-2 font-mono font-bold text-primary">{log.ver}</td>
+                        <td className="py-2 px-2">
+                          <span className="rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold">
+                            {log.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
         </div>
+
+        {/* --- UPLOAD DOCUMENT MODAL --- */}
+        {showUploadDocModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+            <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Upload Controlled Document</h3>
+                </div>
+                <button onClick={() => setShowUploadDocModal(false)} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Document Number *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. FIN-POL-006"
+                    value={newDocForm.num}
+                    onChange={(e) => setNewDocForm({ ...newDocForm, num: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Document Title *</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Capital Expenditure Governance Policy"
+                    value={newDocForm.name}
+                    onChange={(e) => setNewDocForm({ ...newDocForm, name: e.target.value })}
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Document Type</label>
+                    <select
+                      value={newDocForm.type}
+                      onChange={(e) => setNewDocForm({ ...newDocForm, type: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                    >
+                      <option value="Policy">Policy</option>
+                      <option value="SOP">SOP</option>
+                      <option value="Procedure">Procedure</option>
+                      <option value="Guideline">Guideline</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Department</label>
+                    <input
+                      type="text"
+                      value={newDocForm.dept}
+                      onChange={(e) => setNewDocForm({ ...newDocForm, dept: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowUploadDocModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newDocForm.num || !newDocForm.name) {
+                      alert("Please provide document number and title.");
+                      return;
+                    }
+                    setDocumentsList((prev) => [
+                      ...prev,
+                      {
+                        id: `DOC-${prev.length + 1}`,
+                        num: newDocForm.num.toUpperCase(),
+                        name: newDocForm.name,
+                        type: newDocForm.type,
+                        dept: newDocForm.dept,
+                        ver: newDocForm.ver,
+                        status: "Published",
+                        date: "Today",
+                        owner: newDocForm.owner,
+                      },
+                    ]);
+                    setShowUploadDocModal(false);
+                    showNotification(`Document ${newDocForm.num.toUpperCase()} successfully uploaded.`);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Upload Document
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer Classification & Modification Strip */}
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card p-3 text-[11px] text-muted-foreground font-mono">

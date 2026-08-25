@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -242,19 +242,25 @@ const LINKED_DOCUMENTS = [
 
 export function CustomerSupportPage() {
   const [ticket, setTicket] = useState<SupportTicketRecord>(INITIAL_TICKET);
-  const [activeTab, setActiveTab] = useState<string>("overview");
 
   // Modals
   const [isNewTicketOpen, setIsNewTicketOpen] = useState(false);
   const [isAddPartOpen, setIsAddPartOpen] = useState(false);
   const [isEscalateOpen, setIsEscalateOpen] = useState(false);
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const handleInputChange = (field: keyof SupportTicketRecord, value: any) => {
     setTicket((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSaveTicket = () => {
-    alert(`Support Ticket ${ticket.ticketNumber} saved successfully!`);
+    showNotification(`Support Ticket ${ticket.ticketNumber} saved successfully!`);
   };
 
   return (
@@ -264,67 +270,51 @@ export function CustomerSupportPage() {
       description="The Customer Support Form is the central CRM record for managing customer issues, service requests, complaints, technical support, warranty cases, and service communication from ticket creation → classification → assignment → diagnosis → resolution → customer confirmation → closure → feedback → analytics."
       tabs={<CrmManagementTabBar />}
     >
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <div className="flex flex-col min-h-screen text-slate-800 space-y-6">
         {/* Support Ticket Master Action Bar */}
-        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-2xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-base font-bold tracking-tight text-slate-900">Support Ticket Master Form</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-2xs">
+          <div className="flex items-center justify-between gap-3 flex-nowrap overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 whitespace-nowrap">Support Ticket Master Form</h2>
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap font-mono">
                 {ticket.ticketNumber}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-300">
-                ● {ticket.status}
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-300 whitespace-nowrap flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-600 inline-block" />
+                <span>{ticket.status}</span>
               </span>
             </div>
 
             {/* Top Toolbar Action Buttons */}
-            <div className="flex items-center flex-wrap gap-2">
+            <div className="flex items-center gap-2.5 shrink-0 flex-nowrap">
               <button
                 onClick={() => setIsNewTicketOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Plus className="h-3.5 w-3.5" />
                 <span>New Ticket</span>
               </button>
 
               <button
-                onClick={() => window.print()}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Printer className="h-3.5 w-3.5 text-slate-600" />
-                <span>Print</span>
-              </button>
-
-              <button
-                onClick={() => alert("Opening Email Composer for Ticket Communication...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Mail className="h-3.5 w-3.5 text-blue-600" />
-                <span>Send Email</span>
-              </button>
-
-              <button
                 onClick={handleSaveTicket}
-                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save</span>
               </button>
 
-              <button
-                onClick={() => alert("More options...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 flex items-center gap-1 transition-colors cursor-pointer"
-              >
-                <span>More</span>
-                <MoreHorizontal className="h-3.5 w-3.5" />
-              </button>
-
-              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs">
+              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1 shrink-0 whitespace-nowrap">
+                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs shrink-0">
                   RS
                 </div>
-                <div className="text-left hidden sm:block">
+                <div className="text-left hidden sm:block whitespace-nowrap">
                   <div className="text-xs font-semibold text-slate-800 leading-none">Rahul Sharma</div>
                   <div className="text-[10px] text-slate-500">Support Manager</div>
                 </div>
@@ -566,45 +556,8 @@ export function CustomerSupportPage() {
           </div>
         </div>
 
-        {/* Inner Sub-Tabs Header */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-1.5 overflow-x-auto scrollbar-none">
-            {[
-              { id: "overview", label: "Overview", icon: Layers },
-              { id: "diagnosis", label: "Diagnosis", icon: Laptop },
-              { id: "activities", label: "Activities", icon: Calendar },
-              { id: "parts", label: "Parts & Service", icon: Wrench },
-              { id: "communication", label: "Communication", icon: MessageSquare },
-              { id: "sla", label: "SLA & Timeline", icon: Clock },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "resolution", label: "Resolution", icon: CheckCircle2 },
-              { id: "feedback", label: "Feedback", icon: Star },
-              { id: "history", label: "History", icon: Clock },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer",
-                    active
-                      ? "bg-white text-primary shadow-2xs border border-slate-200/80"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                  )}
-                >
-                  <Icon className={cn("h-3.5 w-3.5", active ? "text-primary" : "text-slate-400")} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* TAB CONTENT AREA */}
-          <div className="p-5">
-            {activeTab === "overview" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Support Ticket Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left & Center Columns (Sections 2 to 9) */}
                 <div className="lg:col-span-2 space-y-6">
                   {/* Service Ticket & Live SLA Countdown Banner (Distinct Service Context) */}
@@ -826,35 +779,42 @@ export function CustomerSupportPage() {
                       <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                         6. Recent Activities
                       </h3>
-                      <button onClick={() => alert("Viewing All Activities...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                      <button onClick={() => showNotification("Viewing All Activities...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                         View All Activities
                       </button>
                     </div>
 
-                    <div className="overflow-x-auto text-xs">
-                      <table className="w-full text-left">
+                    <div className="w-full">
+                      <table className="w-full text-left text-xs border-collapse table-fixed">
                         <thead>
-                          <tr className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                            <th className="py-2 px-2">Date & Time</th>
-                            <th className="py-2 px-2">Activity Type</th>
-                            <th className="py-2 px-2">Description</th>
-                            <th className="py-2 px-2">By</th>
-                            <th className="py-2 px-2">Outcome</th>
-                            <th className="py-2 px-2">Next Action</th>
-                            <th className="py-2 px-2 text-center">Status</th>
+                          <tr className="bg-slate-50 text-slate-600 text-[11px] font-semibold border-b border-slate-200">
+                            <th className="py-2 px-2.5 w-[24%]">Date & Time</th>
+                            <th className="py-2 px-2 w-[14%]">Type</th>
+                            <th className="py-2 px-2.5 w-[36%]">Description & Next Step</th>
+                            <th className="py-2 px-2 w-[14%]">Outcome</th>
+                            <th className="py-2 px-2 w-[12%] text-right">Status</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                           {RECENT_ACTIVITIES.map((act, idx) => (
-                            <tr key={idx} className="hover:bg-slate-50/80">
-                              <td className="py-2 px-2 text-slate-500 whitespace-nowrap">{act.time}</td>
-                              <td className="py-2 px-2 font-bold text-slate-800">{act.type}</td>
-                              <td className="py-2 px-2 text-slate-700">{act.desc}</td>
-                              <td className="py-2 px-2 text-slate-600">{act.by}</td>
-                              <td className="py-2 px-2 font-medium text-slate-700">{act.outcome}</td>
-                              <td className="py-2 px-2 text-slate-700">{act.next}</td>
-                              <td className="py-2 px-2 text-center">
-                                <span className={cn("px-2 py-0.5 text-[10px] font-bold rounded", act.status === "Completed" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800")}>
+                            <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="py-2 px-2.5">
+                                <div className="text-slate-600 font-mono text-[11px] truncate leading-tight">{act.time}</div>
+                              </td>
+                              <td className="py-2 px-2">
+                                <span className="font-semibold text-slate-800 text-xs">{act.type}</span>
+                              </td>
+                              <td className="py-2 px-2.5">
+                                <div className="font-medium text-slate-800 text-xs truncate leading-tight">{act.desc}</div>
+                                <div className="text-[10px] text-slate-500 truncate leading-tight mt-0.5">
+                                  Next: <span className="font-medium text-slate-700">{act.next}</span> · By: <span className="text-slate-600">{act.by}</span>
+                                </div>
+                              </td>
+                              <td className="py-2 px-2">
+                                <span className="font-medium text-slate-700 text-xs truncate block">{act.outcome}</span>
+                              </td>
+                              <td className="py-2 px-2 text-right">
+                                <span className={cn("px-2 py-0.5 text-[10px] font-bold rounded-full inline-block whitespace-nowrap", act.status === "Completed" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-amber-50 text-amber-700 border border-amber-200")}>
                                   {act.status}
                                 </span>
                               </td>
@@ -880,26 +840,29 @@ export function CustomerSupportPage() {
                           + Add Part
                         </button>
                       </div>
-                      <div className="overflow-x-auto text-xs">
-                        <table className="w-full text-left">
+                      <div className="w-full">
+                        <table className="w-full text-left text-xs border-collapse table-fixed">
                           <thead>
-                            <tr className="text-slate-500 font-semibold border-b border-slate-200">
-                              <th className="py-1">Part / Service</th>
-                              <th className="py-1">Part No.</th>
-                              <th className="py-1 text-center">Req Qty</th>
-                              <th className="py-1 text-center">Issued</th>
-                              <th className="py-1 text-center">Status</th>
+                            <tr className="text-slate-500 text-[11px] font-semibold border-b border-slate-200">
+                              <th className="py-1.5 px-1 w-[48%]">Part / Service</th>
+                              <th className="py-1.5 px-1 w-[24%] text-center">Qty (Req/Iss)</th>
+                              <th className="py-1.5 px-1 w-[28%] text-right">Status</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100">
                             {PARTS_SERVICE_DATA.map((p, idx) => (
-                              <tr key={idx}>
-                                <td className="py-1.5 font-bold text-slate-800">{p.part}</td>
-                                <td className="py-1.5 font-mono text-slate-600">{p.partNo}</td>
-                                <td className="py-1.5 text-center font-semibold">{p.reqQty}</td>
-                                <td className="py-1.5 text-center font-semibold">{p.issuedQty}</td>
-                                <td className="py-1.5 text-center">
-                                  <span className={cn("px-1.5 py-0.5 text-[10px] font-bold rounded", p.color)}>
+                              <tr key={idx} className="hover:bg-slate-50/60 transition-colors">
+                                <td className="py-2 px-1">
+                                  <div className="font-bold text-slate-800 text-xs truncate leading-tight">{p.part}</div>
+                                  <div className="font-mono text-[10px] text-slate-400 truncate">{p.partNo}</div>
+                                </td>
+                                <td className="py-2 px-1 text-center font-mono text-xs text-slate-700">
+                                  <span className="font-bold text-slate-900">{p.reqQty}</span>
+                                  <span className="text-slate-400"> / </span>
+                                  <span className="text-slate-600">{p.issuedQty}</span>
+                                </td>
+                                <td className="py-2 px-1 text-right">
+                                  <span className={cn("px-2 py-0.5 text-[10px] font-bold rounded-full inline-block whitespace-nowrap", p.color)}>
                                     {p.status}
                                   </span>
                                 </td>
@@ -935,7 +898,7 @@ export function CustomerSupportPage() {
                           <span className="font-bold text-amber-700">In Progress</span>
                         </div>
                         <button
-                          onClick={() => alert("Marking Ticket as Resolved...")}
+                          onClick={() => showNotification("Marking Ticket as Resolved...")}
                           className="w-full mt-2 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded shadow-xs cursor-pointer"
                         >
                           Resolve Ticket
@@ -949,7 +912,7 @@ export function CustomerSupportPage() {
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                           9. Customer Feedback
                         </h3>
-                        <button onClick={() => alert("Sending CSAT Survey...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        <button onClick={() => showNotification("Sending CSAT Survey...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                           Request Feedback
                         </button>
                       </div>
@@ -1059,35 +1022,35 @@ export function CustomerSupportPage() {
 
                     <div className="grid grid-cols-3 gap-2">
                       <button
-                        onClick={() => alert("Reassigning ticket...")}
+                        onClick={() => showNotification("Ticket assigned to Senior Diagnostics Engineer.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <UserPlus className="h-4 w-4 text-blue-600" />
                         <span>Assign Ticket</span>
                       </button>
                       <button
-                        onClick={() => alert("Adding support activity...")}
+                        onClick={() => showNotification("Activity logged into support thread.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Calendar className="h-4 w-4 text-purple-600" />
                         <span>Add Activity</span>
                       </button>
                       <button
-                        onClick={() => alert("Uploading document...")}
+                        onClick={() => showNotification("Document upload window active.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Paperclip className="h-4 w-4 text-indigo-600" />
                         <span>Upload Doc</span>
                       </button>
                       <button
-                        onClick={() => alert("Scheduling field service visit...")}
+                        onClick={() => showNotification("Field service visit booked for customer site.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <Wrench className="h-4 w-4 text-amber-600" />
                         <span>Schedule Visit</span>
                       </button>
                       <button
-                        onClick={() => alert("Creating task...")}
+                        onClick={() => showNotification("Follow-up task created in maintenance queue.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
                         <CheckSquare className="h-4 w-4 text-slate-600" />
@@ -1109,7 +1072,7 @@ export function CustomerSupportPage() {
                       <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                         Linked Documents
                       </h3>
-                      <button onClick={() => alert("Viewing All Documents...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                      <button onClick={() => showNotification("Viewing All Documents...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
                         View All
                       </button>
                     </div>
@@ -1122,7 +1085,7 @@ export function CustomerSupportPage() {
                             <div className="text-[10px] text-slate-400">{doc.date}</div>
                           </div>
                           <button
-                            onClick={() => alert(`Downloading ${doc.name}...`)}
+                            onClick={() => showNotification(`Downloading ${doc.name}...`)}
                             className="text-primary hover:text-primary/80 p-1 cursor-pointer"
                           >
                             <Download className="h-4 w-4" />
@@ -1133,9 +1096,6 @@ export function CustomerSupportPage() {
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
 
         {/* MODAL 1: NEW TICKET */}
         {isNewTicketOpen && (
@@ -1191,7 +1151,7 @@ export function CustomerSupportPage() {
                       status: "New",
                     }));
                     setIsNewTicketOpen(false);
-                    alert("New Support Ticket created!");
+                    showNotification("New Support Ticket created!");
                   }}
                   className="px-4 py-1.5 text-xs bg-primary text-white font-bold rounded shadow-xs"
                 >
@@ -1230,8 +1190,9 @@ export function CustomerSupportPage() {
                 </button>
                 <button
                   onClick={() => {
+                    setTicket((prev) => ({ ...prev, status: "Escalated - L3" }));
                     setIsEscalateOpen(false);
-                    alert("Ticket escalated to Level 3 Support!");
+                    showNotification("Ticket escalated to Level 3 Support!");
                   }}
                   className="px-4 py-1.5 text-xs bg-rose-600 text-white font-bold rounded shadow-xs"
                 >
@@ -1241,6 +1202,7 @@ export function CustomerSupportPage() {
             </div>
           </div>
         )}
+        <Outlet />
       </div>
     </AppShell>
   );

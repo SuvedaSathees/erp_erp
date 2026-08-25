@@ -15,6 +15,7 @@ import {
   CheckSquare,
   Award,
   Plus,
+  Printer,
   Save,
   Upload,
   RefreshCw,
@@ -187,11 +188,16 @@ const PIPELINE_BY_OWNER_DATA = [
 export function SalesPipelineManagementPage() {
   const [pipelines, setPipelines] = useState<PipelineRecord[]>(INITIAL_PIPELINES);
   const [selectedPipeId, setSelectedPipeId] = useState<string>("PIPE-001");
-  const [activeTab, setActiveTab] = useState<string>("overview");
 
   // Modal Dialogs
   const [isNewPipeOpen, setIsNewPipeOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const currentPipe = useMemo(() => {
     return pipelines.find((p) => p.id === selectedPipeId) || pipelines[0];
@@ -205,7 +211,7 @@ export function SalesPipelineManagementPage() {
 
   const handleSavePipeline = () => {
     setPipelines((prev) => prev.map((p) => (p.id === formState.id ? formState : p)));
-    alert(`Sales Pipeline ${formState.pipelineNumber} (${formState.pipelineName}) saved successfully!`);
+    showNotification(`Sales Pipeline ${formState.pipelineNumber} saved successfully!`);
   };
 
   return (
@@ -215,68 +221,53 @@ export function SalesPipelineManagementPage() {
       description="The Sales Pipeline Form manages the complete progression of opportunities through defined sales stages, providing a single control system for pipeline creation → stage progression → value → probability → activities → forecasting → risk → conversion → closure → analytics."
       tabs={<CrmManagementTabBar />}
     >
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 border border-primary/40 px-4 py-3 text-sm text-white shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <div className="flex flex-col min-h-screen text-slate-800 space-y-6">
         {/* Sales Pipeline Master Action Bar */}
-        <div className="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-2xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-base font-bold tracking-tight text-slate-900">Sales Pipeline Master Form</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-2xs">
+          <div className="flex items-center justify-between gap-3 flex-nowrap overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-2.5 shrink-0 whitespace-nowrap">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 whitespace-nowrap">Sales Pipeline Master Form</h2>
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap font-mono">
                 {formState.pipelineNumber}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300">
-                ● {formState.status}
+              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 whitespace-nowrap flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 inline-block" />
+                <span>{formState.status}</span>
               </span>
             </div>
 
-            {/* Top Toolbar Action Buttons */}
-            <div className="flex items-center flex-wrap gap-2">
+            {/* Top Header Buttons */}
+            <div className="flex items-center gap-2.5 shrink-0 flex-nowrap">
               <button
                 onClick={() => setIsNewPipeOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-3 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
-                <Plus className="h-3.5 w-3.5 text-primary" />
+                <Plus className="h-3.5 w-3.5" />
                 <span>New Pipeline</span>
               </button>
 
               <button
-                onClick={() => setIsImportOpen(true)}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Upload className="h-3.5 w-3.5 text-purple-600" />
-                <span>Import Pipeline</span>
-              </button>
-
-              <button
                 onClick={handleSavePipeline}
-                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="h-8 px-4 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save</span>
               </button>
 
-              <button
-                onClick={() => alert("Pipeline saved as new revision!")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md border border-slate-300 flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <span>Save & New</span>
-              </button>
-
-              <button
-                onClick={() => alert("More pipeline options...")}
-                className="h-8 px-3 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-300 flex items-center gap-1 transition-colors cursor-pointer"
-              >
-                <span>More</span>
-                <MoreHorizontal className="h-3.5 w-3.5" />
-              </button>
-
-              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs">
-                  RS
+              <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1 shrink-0 whitespace-nowrap">
+                <div className="h-7 w-7 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-xs shadow-2xs shrink-0">
+                  VS
                 </div>
-                <div className="text-left hidden sm:block">
-                  <div className="text-xs font-semibold text-slate-800 leading-none">Rahul Sharma</div>
-                  <div className="text-[10px] text-slate-500">Sales Manager</div>
+                <div className="text-left hidden sm:block whitespace-nowrap">
+                  <div className="text-xs font-semibold text-slate-800 leading-none">Vikram Singh</div>
+                  <div className="text-[10px] text-slate-500">Sales Director</div>
                 </div>
               </div>
             </div>
@@ -451,45 +442,8 @@ export function SalesPipelineManagementPage() {
           </div>
         </div>
 
-        {/* Inner Sub-Tabs Bar */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-          <div className="flex items-center gap-1 border-b border-slate-200 bg-slate-50/70 p-1.5 overflow-x-auto scrollbar-none">
-            {[
-              { id: "overview", label: "Overview", icon: Layers },
-              { id: "stages", label: "Stages", icon: TrendingUp },
-              { id: "opportunities", label: "Opportunities", icon: Target },
-              { id: "activities", label: "Activities", icon: Activity },
-              { id: "forecast", label: "Forecast", icon: PieIcon },
-              { id: "proposals", label: "Proposals", icon: FileText },
-              { id: "risks", label: "Risks", icon: ShieldCheck },
-              { id: "approvals", label: "Approvals", icon: Award },
-              { id: "documents", label: "Documents", icon: Paperclip },
-              { id: "dashboard", label: "Dashboard", icon: BarChart3 },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer",
-                    active
-                      ? "bg-white text-primary shadow-2xs border border-slate-200/80"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                  )}
-                >
-                  <Icon className={cn("h-3.5 w-3.5", active ? "text-primary" : "text-slate-400")} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* TAB CONTENT AREA */}
-          <div className="p-5">
-            {activeTab === "overview" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Pipeline Content Area */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left & Center Columns (Sections 2 to 7) */}
                 <div className="lg:col-span-2 space-y-6">
                   {/* Card 2: Pipeline Stages Overview (11 Horizontal Stage Cards) */}
@@ -522,105 +476,102 @@ export function SalesPipelineManagementPage() {
                     </div>
                   </div>
 
-                  {/* Grid Row 2: Pipeline by Forecast Category & Top Opportunities */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Card 3: Pipeline by Forecast Category (Recharts Donut) */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs flex flex-col justify-between">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                          3. Pipeline by Forecast Category
-                        </h3>
-                        <span className="text-[11px] font-semibold text-slate-500">Total: ₹ 2,48,50,000</span>
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
-                        {/* Donut Chart */}
-                        <div className="w-36 h-36 relative shrink-0">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                              <Pie
-                                data={FORECAST_DONUT_DATA}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={36}
-                                outerRadius={56}
-                                paddingAngle={3}
-                                dataKey="value"
-                              >
-                                {FORECAST_DONUT_DATA.map((entry, index) => (
-                                  <Cell key={`cell-${index}`} fill={entry.color} />
-                                ))}
-                              </Pie>
-                              <RechartsTooltip formatter={(val: number) => `₹ ${val.toLocaleString("en-IN")}`} />
-                            </PieChart>
-                          </ResponsiveContainer>
-                          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                            <span className="text-[9px] font-bold text-slate-400">Total</span>
-                            <span className="text-[11px] font-extrabold text-slate-900">₹ 2.48 Cr</span>
-                          </div>
-                        </div>
-
-                        {/* Category Legend List */}
-                        <div className="space-y-1 text-xs w-full">
-                          {FORECAST_DONUT_DATA.map((cat, idx) => (
-                            <div key={idx} className="flex items-center justify-between text-[11px]">
-                              <div className="flex items-center gap-1.5">
-                                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
-                                <span className="font-medium text-slate-700">{cat.name}</span>
-                              </div>
-                              <div className="font-mono font-semibold text-slate-900">
-                                ₹ {(cat.value).toLocaleString("en-IN")} <span className="text-slate-400 font-normal">({cat.pct})</span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                  {/* Card 3: Pipeline by Forecast Category (Recharts Donut) */}
+                  <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3 shadow-2xs">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                        3. Pipeline by Forecast Category
+                      </h3>
+                      <span className="text-[11px] font-semibold text-slate-500">Total: ₹ 2,48,50,000</span>
                     </div>
 
-                    {/* Card 4: Top Opportunities in Pipeline */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                          4. Top Opportunities in Pipeline
-                        </h3>
-                        <button onClick={() => alert("Viewing All Opportunities...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View All Opportunities
-                        </button>
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-6 py-2">
+                      {/* Donut Chart */}
+                      <div className="w-40 h-40 relative shrink-0">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={FORECAST_DONUT_DATA}
+                              cx="50%"
+                              cy="50%"
+                              innerRadius={40}
+                              outerRadius={65}
+                              paddingAngle={3}
+                              dataKey="value"
+                            >
+                              {FORECAST_DONUT_DATA.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Pie>
+                            <RechartsTooltip formatter={(val: number) => `₹ ${val.toLocaleString("en-IN")}`} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                          <span className="text-[10px] font-bold text-slate-400">Total</span>
+                          <span className="text-xs font-extrabold text-slate-900">₹ 2.48 Cr</span>
+                        </div>
                       </div>
 
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs border-collapse">
-                          <thead>
-                            <tr className="text-slate-500 font-semibold border-b border-slate-200 pb-1">
-                              <th className="py-1 px-1">Opportunity</th>
-                              <th className="py-1 px-1">Account</th>
-                              <th className="py-1 px-1">Stage</th>
-                              <th className="py-1 px-1">Value (INR)</th>
-                              <th className="py-1 px-1">Prob.</th>
-                              <th className="py-1 px-1">Weighted Value</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {TOP_OPPORTUNITIES.map((opp, idx) => (
-                              <tr key={idx} className="hover:bg-slate-50/80">
-                                <td className="py-1.5 px-1 font-bold text-slate-800">
-                                  <div className="font-mono text-[10px] text-slate-500">{opp.num}</div>
-                                  <div className="truncate max-w-[110px]">{opp.name}</div>
-                                </td>
-                                <td className="py-1.5 px-1 text-slate-700 truncate max-w-[90px]">{opp.account}</td>
-                                <td className="py-1.5 px-1">
-                                  <span className={cn("px-1.5 py-0.5 text-[10px] font-semibold rounded truncate max-w-[90px] inline-block", opp.stageColor)}>
-                                    {opp.stage}
-                                  </span>
-                                </td>
-                                <td className="py-1.5 px-1 font-mono font-semibold text-slate-900">{opp.value}</td>
-                                <td className="py-1.5 px-1 font-bold text-amber-600">{opp.prob}</td>
-                                <td className="py-1.5 px-1 font-mono font-bold text-emerald-700">{opp.weighted}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                      {/* Category Legend List */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs w-full">
+                        {FORECAST_DONUT_DATA.map((cat, idx) => (
+                          <div key={idx} className="flex items-center justify-between text-xs p-2 bg-slate-50/60 rounded border border-slate-100">
+                            <div className="flex items-center gap-2">
+                              <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+                              <span className="font-medium text-slate-700 truncate">{cat.name}</span>
+                            </div>
+                            <div className="font-mono font-bold text-slate-900 shrink-0 ml-2">
+                              ₹ {(cat.value).toLocaleString("en-IN")} <span className="text-slate-400 font-normal">({cat.pct})</span>
+                            </div>
+                          </div>
+                        ))}
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Card 4: Top Opportunities in Pipeline (Full Width) */}
+                  <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3 shadow-2xs">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                        4. Top Opportunities in Pipeline
+                      </h3>
+                      <button onClick={() => showNotification("Viewing All Opportunities...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        View All Opportunities
+                      </button>
+                    </div>
+
+                    <div className="w-full">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead>
+                          <tr className="text-slate-500 font-semibold border-b border-slate-200">
+                            <th className="py-2 px-2 whitespace-nowrap">Opportunity</th>
+                            <th className="py-2 px-2 whitespace-nowrap">Account</th>
+                            <th className="py-2 px-2 whitespace-nowrap">Stage</th>
+                            <th className="py-2 px-2 whitespace-nowrap">Value (INR)</th>
+                            <th className="py-2 px-2 whitespace-nowrap">Prob.</th>
+                            <th className="py-2 px-2 whitespace-nowrap">Weighted Value</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {TOP_OPPORTUNITIES.map((opp, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="py-2 px-2 font-bold text-slate-800">
+                                <div className="font-mono text-[10px] text-slate-400">{opp.num}</div>
+                                <div className="font-medium text-slate-900">{opp.name}</div>
+                              </td>
+                              <td className="py-2 px-2 text-slate-700 font-medium">{opp.account}</td>
+                              <td className="py-2 px-2">
+                                <span className={cn("px-2 py-0.5 text-[11px] font-bold rounded inline-block", opp.stageColor)}>
+                                  {opp.stage}
+                                </span>
+                              </td>
+                              <td className="py-2 px-2 font-mono font-bold text-slate-900 whitespace-nowrap">{opp.value}</td>
+                              <td className="py-2 px-2 font-bold text-amber-600 whitespace-nowrap">{opp.prob}</td>
+                              <td className="py-2 px-2 font-mono font-bold text-emerald-700 whitespace-nowrap">{opp.weighted}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
 
@@ -675,75 +626,81 @@ export function SalesPipelineManagementPage() {
                     </div>
                   </div>
 
-                  {/* Grid Row 4: Recent Pipeline Activities & Pipeline by Owner */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Card 6: Recent Pipeline Activities */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                          6. Recent Pipeline Activities
-                        </h3>
-                        <button onClick={() => alert("Viewing All Activities...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View All Activities
-                        </button>
-                      </div>
-
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs border-collapse">
-                          <thead>
-                            <tr className="text-slate-500 font-semibold border-b border-slate-200 pb-1">
-                              <th className="py-1 px-1">Date & Time</th>
-                              <th className="py-1 px-1">Opportunity</th>
-                              <th className="py-1 px-1">Type</th>
-                              <th className="py-1 px-1">Subject</th>
-                              <th className="py-1 px-1">Outcome</th>
-                              <th className="py-1 px-1">Next Action</th>
-                              <th className="py-1 px-1">Assigned To</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {RECENT_ACTIVITIES.map((act, idx) => (
-                              <tr key={idx} className="hover:bg-slate-50/80">
-                                <td className="py-1.5 px-1 text-slate-500 whitespace-nowrap">{act.time}</td>
-                                <td className="py-1.5 px-1 font-mono font-bold text-slate-800">{act.opp}</td>
-                                <td className="py-1.5 px-1 font-semibold text-slate-700">{act.type}</td>
-                                <td className="py-1.5 px-1 text-slate-700 truncate max-w-[120px]">{act.subject}</td>
-                                <td className="py-1.5 px-1">
-                                  <span className={cn("px-1.5 py-0.5 text-[10px] font-semibold rounded", act.color)}>
-                                    {act.outcome}
-                                  </span>
-                                </td>
-                                <td className="py-1.5 px-1 text-slate-700 truncate max-w-[100px]">{act.nextAction}</td>
-                                <td className="py-1.5 px-1 text-slate-600">{act.owner}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                  {/* Grid Row 4: Recent Pipeline Activities (Full Width) */}
+                  <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3 shadow-2xs">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                        6. Recent Pipeline Activities
+                      </h3>
+                      <button onClick={() => showNotification("Viewing All Activities...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        View All Activities
+                      </button>
                     </div>
 
-                    {/* Card 7: Pipeline by Owner (Horizontal Bar Chart) */}
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-2xs flex flex-col justify-between">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                          7. Pipeline by Owner
-                        </h3>
-                        <button onClick={() => alert("Viewing Detailed Report...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          View Detailed Report
-                        </button>
-                      </div>
+                    <div className="w-full">
+                      <table className="w-full text-left text-xs border-collapse table-fixed">
+                        <thead>
+                          <tr className="bg-slate-50 text-slate-600 text-[11px] font-semibold border-b border-slate-200">
+                            <th className="py-2 px-2.5 w-[22%]">Date & Time</th>
+                            <th className="py-2 px-2 w-[12%]">Type</th>
+                            <th className="py-2 px-2.5 w-[36%]">Opportunity & Subject</th>
+                            <th className="py-2 px-2 w-[16%]">Outcome</th>
+                            <th className="py-2 px-2 w-[14%] text-right">Owner</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {RECENT_ACTIVITIES.map((act, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="py-2 px-2.5">
+                                <div className="text-slate-600 font-mono text-[11px] truncate leading-tight">{act.time}</div>
+                              </td>
+                              <td className="py-2 px-2">
+                                <span className="font-semibold text-slate-800 text-xs">{act.type}</span>
+                              </td>
+                              <td className="py-2 px-2.5">
+                                <div className="font-semibold text-slate-800 text-xs truncate leading-tight">{act.subject}</div>
+                                <div className="text-[10px] text-slate-500 truncate leading-tight mt-0.5">
+                                  <span className="font-mono text-slate-600">{act.opp}</span> · Next: <span className="text-slate-700 font-medium">{act.nextAction}</span>
+                                </div>
+                              </td>
+                              <td className="py-2 px-2">
+                                <span className={cn("inline-flex items-center px-2 py-0.5 text-[10px] font-semibold rounded-full border whitespace-nowrap", act.color)}>
+                                  {act.outcome}
+                                </span>
+                              </td>
+                              <td className="py-2 px-2 text-right">
+                                <span className="text-slate-700 font-medium text-xs truncate block" title={act.owner}>
+                                  {act.owner}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
 
-                      <div className="h-44 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={PIPELINE_BY_OWNER_DATA} layout="vertical" margin={{ top: 5, right: 20, left: 40, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-                            <XAxis type="number" tickFormatter={(val) => `₹${val / 100000}L`} textAnchor="end" tick={{ fontSize: 10 }} />
-                            <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fontWeight: 600 }} />
-                            <RechartsTooltip formatter={(val: number) => `₹ ${val.toLocaleString("en-IN")}`} />
-                            <Bar dataKey="value" fill="#0284c7" radius={[0, 4, 4, 0]} />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
+                  {/* Grid Row 5: Pipeline by Owner (Horizontal Bar Chart) */}
+                  <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3 shadow-2xs">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                        7. Pipeline by Owner
+                      </h3>
+                      <button onClick={() => showNotification("Viewing Detailed Report...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
+                        View Detailed Report
+                      </button>
+                    </div>
+
+                    <div className="h-52 w-full pt-2">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={PIPELINE_BY_OWNER_DATA} layout="vertical" margin={{ top: 5, right: 30, left: 50, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                          <XAxis type="number" tickFormatter={(val) => `₹${val / 100000}L`} textAnchor="end" tick={{ fontSize: 11 }} />
+                          <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fontWeight: 600 }} />
+                          <RechartsTooltip formatter={(val: number) => `₹ ${val.toLocaleString("en-IN")}`} />
+                          <Bar dataKey="value" fill="#0284c7" radius={[0, 4, 4, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
                     </div>
                   </div>
                 </div>
@@ -757,10 +714,52 @@ export function SalesPipelineManagementPage() {
                     </h3>
 
                     {/* Circular Total Pipeline Value Gauge */}
-                    <div className="relative flex flex-col items-center justify-center pt-1 pb-1">
-                      <div className="w-40 h-40 rounded-full border-8 border-slate-100 border-t-emerald-500 border-r-blue-500 border-b-blue-600 flex flex-col items-center justify-center shadow-inner text-center">
-                        <span className="text-xl font-extrabold text-slate-900">₹ 2,48,50,000</span>
-                        <span className="text-xs font-semibold text-slate-400 mt-0.5">Total Pipeline Value</span>
+                    <div className="relative flex flex-col items-center justify-center py-2">
+                      <div className="relative w-44 h-44 flex items-center justify-center">
+                        <svg className="w-full h-full -rotate-90" viewBox="0 0 160 160">
+                          {/* Background Track */}
+                          <circle
+                            cx="80"
+                            cy="80"
+                            r="64"
+                            className="text-slate-100"
+                            strokeWidth="10"
+                            stroke="currentColor"
+                            fill="transparent"
+                          />
+                          {/* Segment 1: Active Deals (Blue) */}
+                          <circle
+                            cx="80"
+                            cy="80"
+                            r="64"
+                            stroke="#2563eb"
+                            strokeWidth="10"
+                            strokeDasharray={2 * Math.PI * 64}
+                            strokeDashoffset={2 * Math.PI * 64 * (1 - 0.75)}
+                            strokeLinecap="round"
+                            fill="transparent"
+                          />
+                          {/* Segment 2: Closed / Won (Emerald) */}
+                          <circle
+                            cx="80"
+                            cy="80"
+                            r="64"
+                            stroke="#10b981"
+                            strokeWidth="10"
+                            strokeDasharray={2 * Math.PI * 64}
+                            strokeDashoffset={2 * Math.PI * 64 * (1 - 0.35)}
+                            strokeLinecap="round"
+                            fill="transparent"
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
+                          <span className="text-lg font-extrabold text-slate-900 font-mono tracking-tight whitespace-nowrap">
+                            ₹ 2,48,50,000
+                          </span>
+                          <span className="text-[11px] font-semibold text-slate-500 mt-0.5 whitespace-nowrap">
+                            Total Pipeline Value
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -796,7 +795,7 @@ export function SalesPipelineManagementPage() {
                     </div>
 
                     <button
-                      onClick={() => alert("Viewing Pipeline Analytics...")}
+                      onClick={() => showNotification("Viewing Pipeline Analytics...")}
                       className="w-full py-2.5 bg-primary hover:bg-primary/90 text-white font-bold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
                     >
                       <BarChart3 className="h-4 w-4" />
@@ -805,9 +804,6 @@ export function SalesPipelineManagementPage() {
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
 
         {/* MODAL 1: NEW PIPELINE */}
         {isNewPipeOpen && (
@@ -885,7 +881,7 @@ export function SalesPipelineManagementPage() {
                 <button
                   onClick={() => {
                     setIsImportOpen(false);
-                    alert("Pipeline opportunities imported successfully!");
+                    showNotification("Pipeline opportunities imported successfully!");
                   }}
                   className="px-4 py-1.5 text-xs bg-purple-600 text-white font-bold rounded shadow-xs"
                 >

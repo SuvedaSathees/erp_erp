@@ -250,7 +250,7 @@ class MockCollection {
     return results[0] || null;
   }
 
-  async insertOne(doc: any): Promise<{ insertedId: ObjectId }> {
+  async insertOne(doc: any): Promise<{ insertedId: any }> {
     const copy = { ...doc };
     let idStr: string;
     if (!copy._id) {

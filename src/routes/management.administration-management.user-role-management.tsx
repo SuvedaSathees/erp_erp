@@ -87,7 +87,7 @@ const RECENT_USER_ACTIVITY = [
   { id: "ACT-105", datetime: "14 May 2024 05:30 PM", module: "Settings", action: "View", ip: "103.21.45.67", status: "Success" },
 ];
 
-export function UserRoleManagementPage() {
+function UserRoleManagementPage() {
   const [activeTab, setActiveTab] = useState<"profile" | "directory" | "roles" | "activity">("profile");
 
   // Master Form State

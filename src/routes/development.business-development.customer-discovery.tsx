@@ -104,7 +104,7 @@ function ScoreGauge({ label, score, max = 100, sub }: { label: string; score: nu
   );
 }
 
-export function CustomerDiscoveryPage() {
+function CustomerDiscoveryPage() {
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [activeSubTab, setActiveSubTab] = useState("Overview");
 

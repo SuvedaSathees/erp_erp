@@ -128,9 +128,9 @@ const DEFAULT_EXCELLENCE_RECORD: ManufacturingExcellenceRecord = {
   cto: "Devraj Nair",
   ceo: "Siddharth Rao",
   reviewers: [
-    { id: "rev-1", role: "Plant Head", person: "Karan Mehta", decision: "Approved", date: "10 May 2024" },
-    { id: "rev-2", role: "Quality Manager", person: "Sneha Iyer", decision: "Approved", date: "12 May 2024" },
-    { id: "rev-3", role: "Operations Manager", person: "Rohan Varma", decision: "Approved", date: "15 May 2024" },
+    { id: "rev-1", role: "Plant Head", person: "Karan Mehta", decision: "Approved", date: "10 May 2024", comments: "" },
+    { id: "rev-2", role: "Quality Manager", person: "Sneha Iyer", decision: "Approved", date: "12 May 2024", comments: "" },
+    { id: "rev-3", role: "Operations Manager", person: "Rohan Varma", decision: "Approved", date: "15 May 2024", comments: "" },
   ],
   approvalDecision: "Approved",
   reviewComments: "Approved with condition to monitor soldering variance monthly.",

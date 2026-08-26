@@ -117,7 +117,7 @@ const RECENT_MASTER_VERSIONS = [
   { id: "VER-201", version: "v1.0", effectiveFrom: "01 Jan 2023", effectiveTo: "31 Dec 2023", changeType: "Initial Version", changedBy: "Amit Verma", status: "Superseded", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
 ];
 
-export function MasterDataManagementPage() {
+function MasterDataManagementPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "attributes" | "governance" | "audit">("overview");
 
   // Master Form State

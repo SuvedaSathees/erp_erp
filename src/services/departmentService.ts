@@ -1,5 +1,6 @@
+import { getDepartmentBudgetsFn } from "@/lib/budgetingFns.server";
 import { apiRequest } from "./apiClient";
-import { mockDepartmentBudgets, mockDepartmentsMaster } from "@/lib/mock-data";
+import { mockDepartmentsMaster } from "@/lib/mock-data";
 import type {
   DepartmentBudget,
   DepartmentRecord,
@@ -7,11 +8,10 @@ import type {
   DashboardQuery,
 } from "./types";
 
-export function fetchDepartmentBudgets(query: DashboardQuery): Promise<DepartmentBudget[]> {
-  return apiRequest(
-    `/api/financial/departments/budgets?fy=${query.fiscalYear}`,
-    () => mockDepartmentBudgets,
-  );
+export async function fetchDepartmentBudgets(query: DashboardQuery): Promise<DepartmentBudget[]> {
+  const res = await getDepartmentBudgetsFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }
 
 // Master-data list (Administration module) — distinct from the budget-context

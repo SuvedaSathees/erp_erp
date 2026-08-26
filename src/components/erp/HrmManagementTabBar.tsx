@@ -7,7 +7,7 @@ const TAB_BASE =
   "shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent bg-transparent px-0.5 pb-3 text-[13px] font-semibold text-muted-foreground shadow-none transition-colors hover:text-foreground focus-visible:outline-none";
 const TAB_ACTIVE = "border-primary text-primary hover:text-primary font-bold";
 
-export const HRM_TABS = [
+export const HRM_TABS: { to: string; label: string; disabled?: boolean }[] = [
   { to: "/management/hrm-management/overview", label: "Overview" },
   { to: "/management/hrm-management/workforce-planning", label: "Workforce Planning" },
   { to: "/management/hrm-management/recruitment-management", label: "Recruitment Management" },

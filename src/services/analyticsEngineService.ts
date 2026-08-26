@@ -110,56 +110,92 @@ export function generateAccountDistribution(
   );
 }
 
-// Page-scoped semantic palette (see mock-data.ts's apAgingSummary comment) —
-// deliberately not the same aging function/colors used by the Dashboard's
-// fetchOutstandingPayables.
-export function generateApAgingSummary(query: DashboardQuery): Promise<AgingReport> {
-  return apiRequest(
-    `/api/financial/analytics/accounts-payable/aging?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => apAgingSummary,
-  );
+// Page-scoped semantic palette — computed from PostgreSQL live invoices
+export async function generateApAgingSummary(query: DashboardQuery): Promise<AgingReport> {
+  try {
+    const { getPayableAgingReportFn } = await import("@/lib/accountsPayableFns.server");
+    const res = await getPayableAgingReportFn({ data: query });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to generate AP aging summary from server:", err);
+  }
+  return { total: 0, buckets: [] };
 }
 
-export function calculateTopVendors(query: DashboardQuery): Promise<TopVendor[]> {
-  return apiRequest(
-    `/api/financial/analytics/accounts-payable/top-vendors?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => apTopVendors,
-  );
+export async function calculateTopVendors(query: DashboardQuery): Promise<TopVendor[]> {
+  try {
+    const { getTopVendorsFn } = await import("@/lib/accountsPayableFns.server");
+    const res = await getTopVendorsFn({ data: query });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to calculate top vendors from server:", err);
+  }
+  return [];
 }
 
-export function generatePaymentSummary(query: DashboardQuery): Promise<PaymentSummary> {
-  return apiRequest(
-    `/api/financial/analytics/accounts-payable/payment-summary?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => apPaymentSummary,
-  );
+export async function generatePaymentSummary(query: DashboardQuery): Promise<PaymentSummary> {
+  try {
+    const { getPayablePaymentSummaryFn } = await import("@/lib/accountsPayableFns.server");
+    const res = await getPayablePaymentSummaryFn({ data: query });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to generate payment summary from server:", err);
+  }
+  return {
+    totalPaid: 0,
+    averagePayment: 0,
+    totalPayments: 0,
+    discountsTaken: 0,
+  };
 }
 
-export function generateArAgingSummary(query: DashboardQuery): Promise<AgingReport> {
-  return apiRequest(
-    `/api/financial/analytics/accounts-receivable/aging?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => arAgingSummary,
-  );
+export async function generateArAgingSummary(query: DashboardQuery): Promise<AgingReport> {
+  try {
+    const { getReceivableAgingReportFn } = await import("@/lib/accountsReceivableFns.server");
+    const res = await getReceivableAgingReportFn({ data: query });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to generate AR aging summary from server:", err);
+  }
+  return { total: 0, buckets: [] };
 }
 
-export function generateReceivableTrend(query: DashboardQuery): Promise<ReceivableTrendPoint[]> {
-  return apiRequest(
-    `/api/financial/analytics/accounts-receivable/trend?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => receivableTrend,
-  );
+export async function generateReceivableTrend(query: DashboardQuery): Promise<ReceivableTrendPoint[]> {
+  try {
+    const { getReceivableTrendFn } = await import("@/lib/accountsReceivableFns.server");
+    const res = await getReceivableTrendFn({ data: query });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to generate receivable trend from server:", err);
+  }
+  return [];
 }
 
-export function calculateTopCustomers(query: DashboardQuery): Promise<TopCustomer[]> {
-  return apiRequest(
-    `/api/financial/analytics/accounts-receivable/top-customers?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => arTopCustomers,
-  );
+export async function calculateTopCustomers(query: DashboardQuery): Promise<TopCustomer[]> {
+  try {
+    const { getTopCustomersFn } = await import("@/lib/accountsReceivableFns.server");
+    const res = await getTopCustomersFn({ data: query });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to calculate top customers from server:", err);
+  }
+  return [];
 }
 
-export function generateCollectionSummary(query: DashboardQuery): Promise<CollectionSummary> {
-  return apiRequest(
-    `/api/financial/analytics/accounts-receivable/collection-summary?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => arCollectionSummary,
-  );
+export async function generateCollectionSummary(query: DashboardQuery): Promise<CollectionSummary> {
+  try {
+    const { getCollectionSummaryFn } = await import("@/lib/accountsReceivableFns.server");
+    const res = await getCollectionSummaryFn({ data: query });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to generate collection summary from server:", err);
+  }
+  return {
+    billedAmount: 0,
+    collectedAmount: 0,
+    collectionPct: 0,
+    avgDaysToCollect: 0,
+  };
 }
 
 function toPercentMetric(

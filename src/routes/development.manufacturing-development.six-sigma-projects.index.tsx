@@ -9,7 +9,7 @@ export const Route = createFileRoute("/development/manufacturing-development/six
   component: SixSigmaProjectsPage,
 });
 
-export function SixSigmaProjectsPage({
+function SixSigmaProjectsPage({
   breadcrumb = "Development > Manufacturing Development",
   tabs = <ManufacturingDevelopmentTabBar />,
 }: {

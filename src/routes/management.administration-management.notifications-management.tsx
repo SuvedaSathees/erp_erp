@@ -105,7 +105,7 @@ const RECENT_NOTIFICATIONS_DATA = [
   { id: "NTF-0003491", recipient: "Vikram Singh", channel: "Email", status: "Failed", sentAt: "15 Apr 2024 09:03 AM", ackAt: "-", badge: "bg-rose-500/10 text-rose-600 border-rose-500/20" },
 ];
 
-export function NotificationsManagementPage() {
+function NotificationsManagementPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "templates" | "audience" | "logs">("overview");
 
   // Master Form State

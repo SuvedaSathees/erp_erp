@@ -1,41 +1,55 @@
 import { apiRequest } from "./apiClient";
 import {
   mockProfitabilityProducts,
-  mockProfitabilityCustomers,
-  mockProfitabilityAllocationRules,
   mockDrilldownTransactions,
 } from "@/lib/mock-data";
+import {
+  getCostAllocationRulesFn,
+  saveCostAllocationRulesFn,
+} from "@/lib/costCentersFns.server";
+import {
+  getProfitabilityDataFn,
+  getCustomerProfitabilityFn,
+} from "@/lib/profitabilityFns.server";
 import type { ProfitabilityRecord, CostAllocationRule, DashboardQuery } from "./types";
 
-export function fetchProfitabilityByDimension(
+export async function fetchProfitabilityByDimension(
   query: DashboardQuery,
   dimension: string,
 ): Promise<ProfitabilityRecord[]> {
-  return apiRequest(
-    `/api/financial/profitability/dimension?dim=${dimension}&fy=${query.fiscalYear}`,
-    () => {
-      if (dimension === "Customer") return mockProfitabilityCustomers;
-      // Default / Product / Region etc returns product splits
-      return mockProfitabilityProducts;
-    },
-  );
+  if (dimension === "Customer") {
+    try {
+      const res = await getCustomerProfitabilityFn({ data: query });
+      if (res.success && res.data) return res.data;
+    } catch (err) {
+      console.error("Failed to fetch customer profitability:", err);
+    }
+    return [];
+  }
+
+  // Product dimension left as mock (no Product/Item model in schema)
+  return mockProfitabilityProducts;
 }
 
-export function fetchPeriodComparison(
+export async function fetchPeriodComparison(
   query: DashboardQuery,
 ): Promise<
   { dimension: string; currentYTD: number; priorYTD: number; changePercentage: number }[]
 > {
-  return apiRequest(`/api/financial/profitability/comparison?fy=${query.fiscalYear}`, () => [
-    { dimension: "Revenue", currentYTD: 48753920.0, priorYTD: 43356000.0, changePercentage: 12.45 },
-    {
-      dimension: "Gross Profit",
-      currentYTD: 18245630.0,
-      priorYTD: 16553000.0,
-      changePercentage: 10.23,
-    },
-    { dimension: "Net Profit", currentYTD: 7856410.0, priorYTD: 7229000.0, changePercentage: 8.67 },
-  ]);
+  try {
+    const res = await getProfitabilityDataFn({ data: query });
+    if (res.success && res.data?.comparison) {
+      return res.data.comparison;
+    }
+  } catch (err) {
+    console.error("Failed to fetch period comparison:", err);
+  }
+
+  return [
+    { dimension: "Revenue", currentYTD: 0, priorYTD: 0, changePercentage: 0 },
+    { dimension: "Gross Profit", currentYTD: 0, priorYTD: 0, changePercentage: 0 },
+    { dimension: "Net Profit", currentYTD: 0, priorYTD: 0, changePercentage: 0 },
+  ];
 }
 
 export function fetchDrilldownAnalysis(
@@ -49,14 +63,16 @@ export function fetchDrilldownAnalysis(
   );
 }
 
-export function saveAllocationRules(
+export async function fetchAllocationRules(): Promise<CostAllocationRule[]> {
+  const res = await getCostAllocationRulesFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
+}
+
+export async function saveAllocationRules(
   rules: CostAllocationRule[],
 ): Promise<{ success: boolean; updatedRulesCount: number }> {
-  return apiRequest(`/api/financial/profitability/allocation-rules`, () => {
-    mockProfitabilityAllocationRules.length = 0;
-    rules.forEach((rule) => {
-      mockProfitabilityAllocationRules.push(rule);
-    });
-    return { success: true, updatedRulesCount: rules.length };
-  });
+  const res = await saveCostAllocationRulesFn({ data: rules });
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data;
 }

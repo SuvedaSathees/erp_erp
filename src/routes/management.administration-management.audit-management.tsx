@@ -45,7 +45,7 @@ const AUDIT_TIMELINE_DATA = [
   { id: "TL-5", time: "15 Apr 2024 10:16:05 AM", type: "System", action: "Log", by: "System", module: "Finance", record: "INV-000458", status: "Success", desc: "System updated invoice totals", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
 ];
 
-export function AuditManagementPage() {
+function AuditManagementPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "changes" | "security" | "timeline">("overview");
 
   // Master Form State

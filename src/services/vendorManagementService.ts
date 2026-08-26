@@ -1,26 +1,25 @@
-import { apiRequest } from "./apiClient";
-import { apVendorDirectory, payableInvoices } from "@/lib/mock-data";
+import { getVendorProfileFn } from "@/lib/accountsPayableFns.server";
+import { apVendorDirectory } from "@/lib/mock-data";
 import type { VendorProfile } from "./types";
 
-export function fetchVendorInformation(vendorName: string): Promise<VendorProfile | null> {
-  return apiRequest(
-    `/api/financial/vendor-management/vendors/${encodeURIComponent(vendorName)}`,
-    () => {
-      const record = apVendorDirectory[vendorName];
-      if (!record) return null;
-      const outstandingBalance = payableInvoices
-        .filter((inv) => inv.vendor === vendorName)
-        .reduce((sum, inv) => sum + inv.dueAmount, 0);
-      return {
-        id: record.id,
-        name: vendorName,
-        category: record.category,
-        email: record.email,
-        phone: record.phone,
-        paymentTerms: record.paymentTerms,
-        outstandingBalance,
-        status: record.status,
-      };
-    },
-  );
+export async function fetchVendorInformation(vendorName: string): Promise<VendorProfile | null> {
+  try {
+    const res = await getVendorProfileFn({ data: vendorName });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch vendor info from server:", err);
+  }
+
+  const record = apVendorDirectory[vendorName];
+  if (!record) return null;
+  return {
+    id: record.id,
+    name: vendorName,
+    category: record.category,
+    email: record.email,
+    phone: record.phone,
+    paymentTerms: record.paymentTerms,
+    outstandingBalance: 0,
+    status: record.status,
+  };
 }

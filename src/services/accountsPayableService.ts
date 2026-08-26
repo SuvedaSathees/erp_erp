@@ -1,5 +1,13 @@
-import { apiRequest } from "./apiClient";
-import { agingPayable, allTransactions, apKpisRaw, payableInvoices } from "@/lib/mock-data";
+import {
+  getPayableInvoicesFn,
+  getPayableInvoiceDetailsFn,
+  createPayableInvoiceFn,
+  updatePayableApprovalStatusFn,
+  getPayableAgingReportFn,
+  getPayableKpisFn,
+  getPayablePaymentInfoFn,
+} from "@/lib/accountsPayableFns.server";
+import { agingPayable, apKpisRaw } from "@/lib/mock-data";
 import type {
   AgingReport,
   DashboardQuery,
@@ -10,139 +18,112 @@ import type {
   PaymentDetail,
 } from "./types";
 
-export function fetchOutstandingPayables(query: DashboardQuery): Promise<AgingReport> {
-  return apiRequest(
-    `/api/financial/accounts-payable/aging?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => agingPayable,
-  );
+export async function fetchOutstandingPayables(query: DashboardQuery): Promise<AgingReport> {
+  try {
+    const res = await getPayableAgingReportFn({ data: query });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch payable aging report from server:", err);
+  }
+  return agingPayable;
 }
 
-// Matches the sequence diagram's [Payment] branch — also used for the Bill
-// type, since a bill is just an obligation owed against AP.
-export function retrievePaymentInformation(ref: string): Promise<PaymentDetail | null> {
-  return apiRequest(`/api/financial/accounts-payable/payments/${ref}`, () => {
-    const row = allTransactions.find((t) => t.ref === ref);
-    if (!row) return null;
-
-    const totalAmount = Math.abs(row.amount);
-    const subtotal = Math.round((totalAmount / 1.08) * 100) / 100;
-    const tax = Math.round((totalAmount - subtotal) * 100) / 100;
-    const amountPaid = row.status === "Posted" ? totalAmount : 0;
-    return {
-      source: "payment",
-      ref: row.ref,
-      type: row.type,
-      date: row.date,
-      description: row.description,
-      account: row.account,
-      amount: row.amount,
-      status: row.status,
-      vendor: row.counterparty ?? "—",
-      dueDate: row.dueDate ?? row.date,
-      subtotal,
-      tax,
-      taxRate: 8,
-      totalAmount,
-      amountPaid,
-      balanceDue: totalAmount - amountPaid,
-    };
-  });
+export async function retrievePaymentInformation(ref: string): Promise<PaymentDetail | null> {
+  try {
+    const res = await getPayablePaymentInfoFn({ data: ref });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to retrieve payment info from server:", err);
+  }
+  return null;
 }
 
 // -- Accounts Payable dashboard KPIs --
 
-export function calculateTotalPayables(query: DashboardQuery): Promise<number> {
-  return apiRequest(
-    `/api/financial/accounts-payable/total?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => apKpisRaw.totalPayables,
-  );
+export async function calculateTotalPayables(query: DashboardQuery): Promise<number> {
+  try {
+    const res = await getPayableKpisFn({ data: query });
+    if (res.success && res.data) return res.data.totalPayables;
+  } catch (err) {
+    console.error("Failed to calculate total payables from server:", err);
+  }
+  return apKpisRaw.totalPayables;
 }
 
-export function calculateOverdueAmount(
+export async function calculateOverdueAmount(
   query: DashboardQuery,
 ): Promise<{ amount: number; pctOfTotal: number }> {
-  return apiRequest(
-    `/api/financial/accounts-payable/overdue?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => ({ amount: apKpisRaw.overdueAmount, pctOfTotal: apKpisRaw.overduePctOfTotal }),
-  );
+  try {
+    const res = await getPayableKpisFn({ data: query });
+    if (res.success && res.data) {
+      return { amount: res.data.overdueAmount, pctOfTotal: res.data.overduePctOfTotal };
+    }
+  } catch (err) {
+    console.error("Failed to calculate overdue amount from server:", err);
+  }
+  return { amount: apKpisRaw.overdueAmount, pctOfTotal: apKpisRaw.overduePctOfTotal };
 }
 
-export function calculateDueWithin30Days(
+export async function calculateDueWithin30Days(
   query: DashboardQuery,
 ): Promise<{ amount: number; pctOfTotal: number }> {
-  return apiRequest(
-    `/api/financial/accounts-payable/due-within-30?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => ({ amount: apKpisRaw.dueWithin30Days, pctOfTotal: apKpisRaw.dueWithin30PctOfTotal }),
-  );
+  try {
+    const res = await getPayableKpisFn({ data: query });
+    if (res.success && res.data) {
+      return { amount: res.data.dueWithin30Days, pctOfTotal: res.data.dueWithin30PctOfTotal };
+    }
+  } catch (err) {
+    console.error("Failed to calculate due within 30 days from server:", err);
+  }
+  return { amount: apKpisRaw.dueWithin30Days, pctOfTotal: apKpisRaw.dueWithin30PctOfTotal };
 }
 
-export function countOpenInvoices(query: DashboardQuery): Promise<number> {
-  return apiRequest(
-    `/api/financial/accounts-payable/open-invoices?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => apKpisRaw.openInvoices,
-  );
+export async function countOpenInvoices(query: DashboardQuery): Promise<number> {
+  try {
+    const res = await getPayableKpisFn({ data: query });
+    if (res.success && res.data) return res.data.openInvoices;
+  } catch (err) {
+    console.error("Failed to count open invoices from server:", err);
+  }
+  return apKpisRaw.openInvoices;
 }
 
 // -- Invoice list & detail --
 
-export function retrieveInvoiceList(
+export async function retrieveInvoiceList(
   query: DashboardQuery,
   filters: InvoiceFilters,
 ): Promise<InvoiceSearchResult> {
-  return apiRequest(
-    `/api/financial/accounts-payable/invoices?fy=${query.fiscalYear}&company=${query.companyId}` +
-      `&status=${filters.status}&q=${encodeURIComponent(filters.search)}`,
-    () => {
-      let rows = payableInvoices;
-      if (filters.status !== "All") rows = rows.filter((r) => r.status === filters.status);
-      if (filters.search.trim()) {
-        const needle = filters.search.trim().toLowerCase();
-        rows = rows.filter(
-          (r) =>
-            r.invoiceNo.toLowerCase().includes(needle) ||
-            r.vendor.toLowerCase().includes(needle) ||
-            String(r.amount).includes(needle),
-        );
-      }
-      const total = rows.length;
-      const start = (filters.page - 1) * filters.pageSize;
-      return { rows: rows.slice(start, start + filters.pageSize), total };
-    },
-  );
+  try {
+    const res = await getPayableInvoicesFn({ data: { query, filters } });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to retrieve invoice list from server:", err);
+  }
+  return { rows: [], total: 0 };
 }
 
-export function retrieveInvoiceDetails(invoiceNo: string): Promise<PayableInvoice | null> {
-  return apiRequest(
-    `/api/financial/accounts-payable/invoices/${invoiceNo}`,
-    () => payableInvoices.find((i) => i.invoiceNo === invoiceNo) ?? null,
-  );
+export async function retrieveInvoiceDetails(invoiceNo: string): Promise<PayableInvoice | null> {
+  try {
+    const res = await getPayableInvoiceDetailsFn({ data: invoiceNo });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to retrieve invoice details from server:", err);
+  }
+  return null;
 }
 
-export function saveInvoice(input: NewInvoiceInput): Promise<PayableInvoice> {
-  return apiRequest("/api/financial/accounts-payable/invoices", () => {
-    const invoice: PayableInvoice = {
-      invoiceNo: input.invoiceNo,
-      vendor: input.vendor,
-      invoiceDate: input.invoiceDate,
-      dueDate: input.dueDate,
-      amount: input.amount,
-      status: "Due Soon",
-      dueAmount: input.amount,
-      approved: false,
-    };
-    payableInvoices.unshift(invoice);
-    return invoice;
-  });
+export async function saveInvoice(input: NewInvoiceInput): Promise<PayableInvoice> {
+  const res = await createPayableInvoiceFn({ data: input });
+  if (res.success && res.data) return res.data;
+  throw new Error(res.error || "Failed to save invoice");
 }
 
-export function updateApprovalStatus(
+export async function updateApprovalStatus(
   invoiceNo: string,
   approved: boolean,
 ): Promise<PayableInvoice> {
-  return apiRequest(`/api/financial/accounts-payable/invoices/${invoiceNo}/approval`, () => {
-    const invoice = payableInvoices.find((i) => i.invoiceNo === invoiceNo);
-    if (!invoice) throw new Error(`Invoice ${invoiceNo} not found`);
-    invoice.approved = approved;
-    return invoice;
-  });
+  const res = await updatePayableApprovalStatusFn({ data: { invoiceNo, approved } });
+  if (res.success && res.data) return res.data;
+  throw new Error(res.error || `Failed to update approval status for ${invoiceNo}`);
 }

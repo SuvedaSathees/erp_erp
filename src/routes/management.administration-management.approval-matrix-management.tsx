@@ -93,7 +93,7 @@ const RECENT_APPROVAL_REQUESTS = [
   { id: "APR-2024-01572", tx: "Purchase Order", amount: "5,75,000", initiator: "Karan Malhotra", level: "Level 2", approver: "Finance Manager", status: "Rejected", due: "14 May 2024 01:00 PM", age: "-", badge: "bg-rose-500/10 text-rose-600 border-rose-500/20" },
 ];
 
-export function ApprovalMatrixManagementPage() {
+function ApprovalMatrixManagementPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "levels" | "routing" | "requests">("overview");
 
   // Master Form State

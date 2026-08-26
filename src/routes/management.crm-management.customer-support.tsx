@@ -85,7 +85,8 @@ export type TicketStatus =
   | "Customer Confirmation"
   | "Closed"
   | "On Hold"
-  | "Cancelled";
+  | "Cancelled"
+  | "Escalated - L3";
 
 export interface SupportTicketRecord {
   id: string;
@@ -240,7 +241,7 @@ const LINKED_DOCUMENTS = [
   { name: "Warranty_Certificate.pdf", date: "10 Mar 2024" },
 ];
 
-export function CustomerSupportPage() {
+function CustomerSupportPage() {
   const [ticket, setTicket] = useState<SupportTicketRecord>(INITIAL_TICKET);
 
   // Modals

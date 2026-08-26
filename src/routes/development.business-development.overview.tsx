@@ -35,7 +35,7 @@ async function loadBdOverview() {
   };
 }
 
-export function BusinessDevelopmentOverview() {
+function BusinessDevelopmentOverview() {
   const q = useQuery({ queryKey: ["business-development", "overview"], queryFn: loadBdOverview });
 
   const funnel = useMemo(

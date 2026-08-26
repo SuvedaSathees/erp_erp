@@ -59,7 +59,7 @@ interface OrgTreeNode {
   children?: OrgTreeNode[];
 }
 
-export function OrganizationStructurePage() {
+function OrganizationStructurePage() {
   const [activeTab, setActiveTab] = useState<string>("Hierarchy");
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const [searchQuery, setSearchQuery] = useState<string>("");

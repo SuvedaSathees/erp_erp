@@ -906,7 +906,943 @@ model SopAiAssessment {
   updatedAt               DateTime        @updatedAt
 }
 
+// ==========================================
+// Fixed Assets & Depreciation Engine Models
+// ==========================================
 
+enum FixedAssetCategory {
+  Building
+  Machinery
+  IT_Equipment
+  Vehicles
+  Furniture
+  Others
+}
 
+enum FixedAssetStatus {
+  Active
+  Maintenance
+  FullyDepreciated
+  Disposed
+}
 
+enum DepreciationRunStatus {
+  Posted
+  Draft
+}
 
+model FixedAsset {
+  id                      String                    @id @default(cuid())
+  assetId                 String                    @default(cuid())
+  assetCode               String                    @unique
+  name                    String
+  category                FixedAssetCategory        @default(Machinery)
+  location                String
+  purchaseDate            DateTime
+  cost                    Decimal                   @default(0) @db.Decimal(18, 2)
+  salvageValue            Decimal                   @default(0) @db.Decimal(18, 2)
+  usefulLifeYears         Int                       @default(5)
+  depreciationMethod      String                    @default("Straight Line")
+  accumulatedDepreciation Decimal                   @default(0) @db.Decimal(18, 2)
+  netBookValue            Decimal                   @default(0) @db.Decimal(18, 2)
+  status                  FixedAssetStatus          @default(Active)
+
+  companyId               String?
+  departmentId            String?
+  costCenterId            String?
+
+  depreciationRuns        DepreciationRun[]
+  disposals               FixedAssetDisposal[]
+  transfers               FixedAssetTransfer[]
+  revaluations            FixedAssetRevaluation[]
+  attachments             FixedAssetAttachment[]
+  approvals               FixedAssetApprovalStep[]
+  activities              FixedAssetActivityLog[]
+
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+}
+
+model DepreciationRun {
+  id                String                @id @default(cuid())
+  runNumber         String                @unique
+  date              DateTime
+  period            String
+  assetsCount       Int                   @default(0)
+  totalDepreciation Decimal               @default(0) @db.Decimal(18, 2)
+  method            String                @default("Straight Line")
+  status            DepreciationRunStatus @default(Posted)
+  executedBy        String
+
+  fixedAssetId      String?
+  fixedAsset        FixedAsset?           @relation(fields: [fixedAssetId], references: [id], onDelete: Cascade)
+
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+}
+
+model FixedAssetDisposal {
+  id                      String        @id @default(cuid())
+  assetId                 String
+  asset                   FixedAsset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  disposalDate            DateTime
+  saleProceeds            Decimal       @default(0) @db.Decimal(18, 2)
+  accumulatedDepreciation Decimal       @default(0) @db.Decimal(18, 2)
+  gainLoss                Decimal       @default(0) @db.Decimal(18, 2)
+  disposalReason          String
+  status                  String        @default("Disposed")
+
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+}
+
+model FixedAssetTransfer {
+  id                  String        @id @default(cuid())
+  assetId             String
+  asset               FixedAsset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  transferDate        DateTime
+  sourceLocation      String
+  destinationLocation String
+  authorizedBy        String
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+}
+
+model FixedAssetRevaluation {
+  id              String        @id @default(cuid())
+  assetId         String
+  asset           FixedAsset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  revaluationDate DateTime
+  oldNBV          Decimal       @default(0) @db.Decimal(18, 2)
+  newNBV          Decimal       @default(0) @db.Decimal(18, 2)
+  adjustment      Decimal       @default(0) @db.Decimal(18, 2)
+  reason          String
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model FixedAssetAttachment {
+  id           String     @id @default(cuid())
+  assetId      String
+  asset        FixedAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  fileName     String
+  fileType     String
+  documentType String
+  version      String     @default("v1.0")
+  uploadedBy   String
+  uploadedDate DateTime   @default(now())
+  fileSize     String
+  status       String     @default("Active")
+  downloadUrl  String?
+  createdAt    DateTime   @default(now())
+}
+
+model FixedAssetApprovalStep {
+  id        String     @id @default(cuid())
+  assetId   String
+  asset     FixedAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  role      String
+  person    String
+  decision  String     @default("Pending")
+  date      DateTime?
+  comments  String?
+  status    String     @default("Pending")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model FixedAssetActivityLog {
+  id          String     @id @default(cuid())
+  assetId     String
+  asset       FixedAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  user        String
+  action      String
+  description String
+  prevStatus  String?
+  newStatus   String?
+  timestamp   DateTime   @default(now())
+}
+
+// ==========================================
+// Budgeting Module Models
+// ==========================================
+
+enum BudgetVersionType {
+  Original
+  Revision
+  Forecast
+}
+
+enum BudgetVersionStatus {
+  Active
+  Draft
+  Archived
+}
+
+model BudgetVersion {
+  id                String                    @id @default(cuid())
+  versionCode       String                    @unique
+  name              String
+  type              BudgetVersionType         @default(Original)
+  status            BudgetVersionStatus       @default(Active)
+  totalBudget       Decimal                   @default(0) @db.Decimal(18, 2)
+  createdBy         String
+
+  parentVersionId   String?
+  parentVersion     BudgetVersion?            @relation("BudgetVersionHierarchy", fields: [parentVersionId], references: [id], onDelete: Cascade)
+  childVersions     BudgetVersion[]           @relation("BudgetVersionHierarchy")
+
+  departmentBudgets DepartmentBudgetRecord[]
+  costCenterBudgets CostCenterBudgetRecord[]
+  projectBudgets    ProjectBudgetRecord[]
+  attachments       BudgetAttachment[]
+  approvals         BudgetApprovalStep[]
+  activities        BudgetActivityLog[]
+
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+}
+
+model DepartmentBudgetRecord {
+  id           String        @id @default(cuid())
+  budgetId     String
+  budget       BudgetVersion @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  department   String
+  budgetAmount Decimal       @default(0) @db.Decimal(18, 2)
+  actualAmount Decimal       @default(0) @db.Decimal(18, 2)
+  variance     Decimal       @default(0) @db.Decimal(18, 2)
+  variancePct  Float         @default(0.0)
+  utilization  Float         @default(0.0)
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model CostCenterBudgetRecord {
+  id           String        @id @default(cuid())
+  budgetId     String
+  budget       BudgetVersion @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  costCenter   String
+  code         String
+  budgetAmount Decimal       @default(0) @db.Decimal(18, 2)
+  actualAmount Decimal       @default(0) @db.Decimal(18, 2)
+  variance     Decimal       @default(0) @db.Decimal(18, 2)
+  variancePct  Float         @default(0.0)
+  utilization  Float         @default(0.0)
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model ProjectBudgetRecord {
+  id           String        @id @default(cuid())
+  budgetId     String
+  budget       BudgetVersion @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  project      String
+  manager      String
+  budgetAmount Decimal       @default(0) @db.Decimal(18, 2)
+  actualAmount Decimal       @default(0) @db.Decimal(18, 2)
+  variance     Decimal       @default(0) @db.Decimal(18, 2)
+  utilization  Float         @default(0.0)
+  status       String        @default("On Track")
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model BudgetAttachment {
+  id           String        @id @default(cuid())
+  budgetId     String
+  budget       BudgetVersion @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  fileName     String
+  fileType     String
+  documentType String
+  version      String        @default("v1.0")
+  uploadedBy   String
+  uploadedDate DateTime      @default(now())
+  fileSize     String
+  status       String        @default("Active")
+  downloadUrl  String?
+  createdAt    DateTime      @default(now())
+}
+
+model BudgetApprovalStep {
+  id        String        @id @default(cuid())
+  budgetId  String
+  budget    BudgetVersion @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  role      String
+  person    String
+  decision  String        @default("Pending")
+  date      DateTime?
+  comments  String?
+  status    String        @default("Pending")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model BudgetActivityLog {
+  id          String        @id @default(cuid())
+  budgetId    String
+  budget      BudgetVersion @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  user        String
+  action      String
+  description String
+  prevStatus  String?
+  newStatus   String?
+  timestamp   DateTime      @default(now())
+}
+
+// ==========================================
+// Cost Center & Profitability Models
+// ==========================================
+
+enum CostCenterStatus {
+  Active
+  Inactive
+}
+
+enum CostCenterType {
+  Operational
+  Support
+  Administrative
+  Revenue_Generating
+}
+
+enum CostAllocationKey {
+  Headcount
+  SquareFootage
+  DirectRevenue
+  DirectExpense
+}
+
+model CostCenterRecord {
+  id              String                 @id @default(cuid())
+  costCenterId    String                 @default(cuid())
+  code            String                 @unique
+  name            String
+  department      String
+  manager         String
+  budget          Decimal                @default(0) @db.Decimal(18, 2)
+  actual          Decimal                @default(0) @db.Decimal(18, 2)
+  variance        Decimal                @default(0) @db.Decimal(18, 2)
+  utilization     Float                  @default(0.0)
+  status          CostCenterStatus       @default(Active)
+  type            CostCenterType         @default(Operational)
+
+  parentId        String?
+  parent          CostCenterRecord?      @relation("CostCenterHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children        CostCenterRecord[]     @relation("CostCenterHierarchy")
+
+  allocationRules CostAllocationRule[]
+  commitments     CostCenterCommitment[]
+  attachments     CostCenterAttachment[]
+  approvals       CostCenterApprovalStep[]
+  activities      CostCenterActivityLog[]
+
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+}
+
+model CostAllocationRule {
+  id            String            @id @default(cuid())
+  ruleCode      String            @unique
+  costCenterId  String
+  costCenter    CostCenterRecord  @relation(fields: [costCenterId], references: [id], onDelete: Cascade)
+  allocationKey CostAllocationKey @default(Headcount)
+  weight        Float             @default(0.0)
+
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model CostCenterCommitment {
+  id               String           @id @default(cuid())
+  commitmentId     String
+  costCenterId     String
+  costCenter       CostCenterRecord @relation(fields: [costCenterId], references: [id], onDelete: Cascade)
+  description      String
+  commitmentAmount Decimal          @default(0) @db.Decimal(18, 2)
+  status           String           @default("Active")
+
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+model CostCenterAttachment {
+  id           String           @id @default(cuid())
+  costCenterId String
+  costCenter   CostCenterRecord @relation(fields: [costCenterId], references: [id], onDelete: Cascade)
+  fileName     String
+  fileType     String
+  documentType String
+  version      String           @default("v1.0")
+  uploadedBy   String
+  uploadedDate DateTime         @default(now())
+  fileSize     String
+  status       String           @default("Active")
+  downloadUrl  String?
+  createdAt    DateTime         @default(now())
+}
+
+model CostCenterApprovalStep {
+  id           String           @id @default(cuid())
+  costCenterId String
+  costCenter   CostCenterRecord @relation(fields: [costCenterId], references: [id], onDelete: Cascade)
+  role         String
+  person       String
+  decision     String           @default("Pending")
+  date         DateTime?
+  comments     String?
+  status       String           @default("Pending")
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model CostCenterActivityLog {
+  id           String           @id @default(cuid())
+  costCenterId String
+  costCenter   CostCenterRecord @relation(fields: [costCenterId], references: [id], onDelete: Cascade)
+  user         String
+  action       String
+  description  String
+  prevStatus   String?
+  newStatus    String?
+  timestamp    DateTime         @default(now())
+}
+
+// ==========================================
+// Cash & Bank Management Models
+// ==========================================
+
+enum BankAccountType {
+  Operating
+  Payroll
+  Collections
+  PettyCash
+  Savings
+}
+
+enum BankAccountStatus {
+  Active
+  Inactive
+}
+
+enum ReconciliationStatus {
+  Reconciled
+  PartiallyReconciled
+  NotReconciled
+}
+
+model BankAccount {
+  id                   String                    @id @default(cuid())
+  bankAccountId        String                    @default(cuid())
+  name                 String
+  bankName             String
+  type                 BankAccountType           @default(Operating)
+  accountNo            String                    @unique
+  currency             String                    @default("INR")
+  currentBalance       Decimal                   @default(0) @db.Decimal(18, 2)
+  status               BankAccountStatus         @default(Active)
+  reconciliationStatus ReconciliationStatus      @default(NotReconciled)
+  unreconciledAmount   Decimal                   @default(0) @db.Decimal(18, 2)
+
+  transactions         BankTransaction[]
+  cheques              BankCheque[]
+  deposits             BankDeposit[]
+  reconciliations      BankReconciliationRecord[]
+  attachments          BankAccountAttachment[]
+  activities           BankAccountActivityLog[]
+
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+}
+
+model BankTransaction {
+  id            String      @id @default(cuid())
+  transactionId String      @unique
+  bankAccountId String
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+  date          DateTime
+  description   String
+  type          String
+  amount        Decimal     @default(0) @db.Decimal(18, 2)
+  reference     String?
+  category      String?
+  status        String      @default("Posted")
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model BankCheque {
+  id            String      @id @default(cuid())
+  chequeNo      String      @unique
+  bankAccountId String
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+  issueDate     DateTime
+  payee         String
+  amount        Decimal     @default(0) @db.Decimal(18, 2)
+  status        String      @default("Pending")
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model BankDeposit {
+  id            String      @id @default(cuid())
+  depositNo     String      @unique
+  bankAccountId String
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+  depositDate   DateTime
+  source        String
+  amount        Decimal     @default(0) @db.Decimal(18, 2)
+  status        String      @default("Pending")
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model BankReconciliationRecord {
+  id                 String      @id @default(cuid())
+  reconId            String      @unique
+  bankAccountId      String
+  bankAccount        BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+  statementDate      DateTime
+  statementBalance   Decimal     @default(0) @db.Decimal(18, 2)
+  ledgerBalance      Decimal     @default(0) @db.Decimal(18, 2)
+  unreconciledAmount Decimal     @default(0) @db.Decimal(18, 2)
+  status             String      @default("Not Reconciled")
+  lastReconciledAt   DateTime?
+
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+}
+
+model BankAccountAttachment {
+  id            String      @id @default(cuid())
+  bankAccountId String
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+  fileName      String
+  fileType      String
+  documentType  String
+  version       String      @default("v1.0")
+  uploadedBy    String
+  uploadedDate  DateTime    @default(now())
+  fileSize      String
+  status        String      @default("Active")
+  downloadUrl   String?
+  createdAt     DateTime    @default(now())
+}
+
+model BankAccountActivityLog {
+  id            String      @id @default(cuid())
+  bankAccountId String
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+  user          String
+  action        String
+  description   String
+  prevStatus    String?
+  newStatus     String?
+  timestamp     DateTime    @default(now())
+}
+
+// ==========================================
+// Tax Management Models
+// ==========================================
+
+enum TaxObligationStatus {
+  Paid
+  PartiallyPaid
+  DueSoon
+  Pending
+}
+
+enum TaxFilingStatus {
+  Filed
+  Draft
+  Rejected
+}
+
+enum TaxPaymentStatus {
+  Cleared
+  Processing
+}
+
+enum TaxReconStatus {
+  Reconciled
+  Mismatched
+}
+
+model TaxObligation {
+  id              String               @id @default(cuid())
+  obligationId    String               @unique
+  taxType         String
+  jurisdiction    String
+  period          String
+  dueDate         DateTime
+  taxLiability    Decimal              @default(0) @db.Decimal(18, 2)
+  paid            Decimal              @default(0) @db.Decimal(18, 2)
+  payable         Decimal              @default(0) @db.Decimal(18, 2)
+  status          TaxObligationStatus  @default(Pending)
+
+  filings         TaxFiling[]
+  payments        TaxPayment[]
+  reconciliations TaxReconciliation[]
+  attachments     TaxAttachment[]
+  approvals       TaxApprovalStep[]
+  activities      TaxActivityLog[]
+
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+}
+
+model TaxFiling {
+  id                String          @id @default(cuid())
+  filingId          String          @unique
+  taxType           String
+  period            String
+  filingDate        DateTime
+  filedBy           String
+  returnAmount      Decimal         @default(0) @db.Decimal(18, 2)
+  acknowledgementNo String
+  status            TaxFilingStatus @default(Draft)
+
+  obligationId      String?
+  obligation        TaxObligation?  @relation(fields: [obligationId], references: [id], onDelete: Cascade)
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+model TaxPayment {
+  id             String           @id @default(cuid())
+  paymentId      String           @unique
+  taxType        String
+  period         String
+  paymentDate    DateTime
+  bankAccount    String
+  amount         Decimal          @default(0) @db.Decimal(18, 2)
+  transactionRef String
+  status         TaxPaymentStatus @default(Processing)
+
+  obligationId   String?
+  obligation     TaxObligation?   @relation(fields: [obligationId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model TaxReconciliation {
+  id               String         @id @default(cuid())
+  reconId          String         @unique
+  taxType          String
+  period           String
+  returnsLiability Decimal        @default(0) @db.Decimal(18, 2)
+  booksLiability   Decimal        @default(0) @db.Decimal(18, 2)
+  difference       Decimal        @default(0) @db.Decimal(18, 2)
+  status           TaxReconStatus @default(Reconciled)
+
+  obligationId     String?
+  obligation       TaxObligation? @relation(fields: [obligationId], references: [id], onDelete: Cascade)
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model TaxAuthority {
+  id            String   @id @default(cuid())
+  authorityId   String   @unique
+  name          String
+  jurisdiction  String
+  taxType       String
+  portalUrl     String?
+  contactPerson String?
+  email         String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model TaxAttachment {
+  id           String        @id @default(cuid())
+  obligationId String
+  obligation   TaxObligation @relation(fields: [obligationId], references: [id], onDelete: Cascade)
+  fileName     String
+  fileType     String
+  documentType String
+  version      String        @default("v1.0")
+  uploadedBy   String
+  uploadedDate DateTime      @default(now())
+  fileSize     String
+  status       String        @default("Active")
+  downloadUrl  String?
+  createdAt    DateTime      @default(now())
+}
+
+model TaxApprovalStep {
+  id           String        @id @default(cuid())
+  obligationId String
+  obligation   TaxObligation @relation(fields: [obligationId], references: [id], onDelete: Cascade)
+  role         String
+  person       String
+  decision     String        @default("Pending")
+  date         DateTime?
+  comments     String?
+  status       String        @default("Pending")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model TaxActivityLog {
+  id           String        @id @default(cuid())
+  obligationId String
+  obligation   TaxObligation @relation(fields: [obligationId], references: [id], onDelete: Cascade)
+  user         String
+  action       String
+  description  String
+  prevStatus   String?
+  newStatus    String?
+  timestamp    DateTime      @default(now())
+}
+
+// ==========================================
+// Accounts Payable & Receivable Models
+// ==========================================
+
+enum VendorStatus {
+  Active
+  Inactive
+}
+
+enum CustomerStatus {
+  Active
+  Inactive
+}
+
+enum PayableInvoiceStatus {
+  Paid
+  DueSoon
+  Overdue
+  Canceled
+}
+
+enum ReceivableInvoiceStatus {
+  Paid
+  PartiallyPaid
+  DueSoon
+  Overdue
+  Canceled
+  CreditMemo
+}
+
+model Vendor {
+  id                 String           @id @default(cuid())
+  vendorCode         String           @unique
+  name               String           @unique
+  category           String
+  email              String?
+  phone              String?
+  paymentTerms       String           @default("Net 30")
+  status             VendorStatus     @default(Active)
+
+  invoices           PayableInvoice[]
+
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model Customer {
+  id                 String              @id @default(cuid())
+  customerCode       String              @unique
+  name               String              @unique
+  category           String
+  email              String?
+  phone              String?
+  paymentTerms       String              @default("Net 30")
+  status             CustomerStatus      @default(Active)
+
+  invoices           ReceivableInvoice[]
+
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+}
+
+model PayableInvoice {
+  id                 String                 @id @default(cuid())
+  invoiceNo          String                 @unique
+
+  vendorId           String?
+  vendor             Vendor?                @relation(fields: [vendorId], references: [id], onDelete: SetNull)
+  vendorName         String                 // Denormalized for fast listing & filtering
+
+  invoiceDate        DateTime
+  dueDate            DateTime
+  amount             Decimal                @default(0) @db.Decimal(18, 2)
+  dueAmount          Decimal                @default(0) @db.Decimal(18, 2)
+  status             PayableInvoiceStatus   @default(DueSoon)
+  approved           Boolean                @default(false)
+
+  // GL & Ledger references
+  accountCode        String?                @default("2110")
+  companyId          String?
+  fiscalYear         String?
+
+  subtotal           Decimal?               @db.Decimal(18, 2)
+  taxAmount          Decimal?               @db.Decimal(18, 2)
+  taxRate            Float?                 @default(0.0)
+
+  payments           PayablePayment[]
+  attachments        PayableAttachment[]
+  approvals          PayableApprovalStep[]
+  activities         PayableActivityLog[]
+
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+}
+
+model PayablePayment {
+  id                 String         @id @default(cuid())
+  paymentId          String         @unique @default(cuid())
+  invoiceId          String
+  invoice            PayableInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  paymentDate        DateTime
+  amount             Decimal        @default(0) @db.Decimal(18, 2)
+  paymentMethod      String         @default("Bank Transfer")
+  reference          String?
+  notes              String?
+
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+}
+
+model PayableAttachment {
+  id                 String         @id @default(cuid())
+  invoiceId          String
+  invoice            PayableInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  fileName           String
+  fileType           String
+  documentType       String
+  version            String         @default("v1.0")
+  uploadedBy         String
+  uploadedDate       DateTime       @default(now())
+  fileSize           String
+  status             String         @default("Active")
+  downloadUrl        String?
+  createdAt          DateTime       @default(now())
+}
+
+model PayableApprovalStep {
+  id                 String         @id @default(cuid())
+  invoiceId          String
+  invoice            PayableInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  role               String
+  person             String
+  decision           String         @default("Pending")
+  date               DateTime?
+  comments           String?
+  status             String         @default("Pending")
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+}
+
+model PayableActivityLog {
+  id                 String         @id @default(cuid())
+  invoiceId          String
+  invoice            PayableInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  user               String
+  action             String
+  description        String
+  prevStatus         String?
+  newStatus          String?
+  timestamp          DateTime       @default(now())
+}
+
+model ReceivableInvoice {
+  id                 String                  @id @default(cuid())
+  invoiceNo          String                  @unique
+
+  customerId         String?
+  customer           Customer?               @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerName       String                  // Denormalized for fast listing & filtering
+
+  invoiceDate        DateTime
+  dueDate            DateTime
+  amount             Decimal                 @default(0) @db.Decimal(18, 2)
+  dueAmount          Decimal                 @default(0) @db.Decimal(18, 2)
+  status             ReceivableInvoiceStatus @default(DueSoon)
+
+  // Credit memo support
+  isCreditMemo       Boolean                 @default(false)
+  creditMemoReason   String?
+
+  // GL & Ledger references
+  accountCode        String?                 @default("1120")
+  companyId          String?
+  fiscalYear         String?
+
+  subtotal           Decimal?                @db.Decimal(18, 2)
+  taxAmount          Decimal?                @db.Decimal(18, 2)
+  taxRate            Float?                  @default(0.0)
+
+  receipts           ReceivableReceipt[]
+  attachments        ReceivableAttachment[]
+  activities         ReceivableActivityLog[]
+
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+}
+
+model ReceivableReceipt {
+  id                 String            @id @default(cuid())
+  receiptId          String            @unique @default(cuid())
+  invoiceId          String
+  invoice            ReceivableInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  receiptDate        DateTime
+  amount             Decimal           @default(0) @db.Decimal(18, 2)
+  paymentMethod      String            @default("Bank Transfer")
+  reference          String?
+  notes              String?
+
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+}
+
+model ReceivableAttachment {
+  id                 String            @id @default(cuid())
+  invoiceId          String
+  invoice            ReceivableInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  fileName           String
+  fileType           String
+  documentType       String
+  version            String            @default("v1.0")
+  uploadedBy         String
+  uploadedDate       DateTime          @default(now())
+  fileSize           String
+  status             String            @default("Active")
+  downloadUrl        String?
+  createdAt          DateTime          @default(now())
+}
+
+model ReceivableActivityLog {
+  id                 String            @id @default(cuid())
+  invoiceId          String
+  invoice            ReceivableInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  user               String
+  action             String
+  description        String
+  prevStatus         String?
+  newStatus          String?
+  timestamp          DateTime          @default(now())
+}
+
+// ==========================================
+// Finance Integration Settings
+// ==========================================
+
+model FinanceIntegrationSetting {
+  module    String   @id
+  status    String
+  updatedAt DateTime @updatedAt
+}

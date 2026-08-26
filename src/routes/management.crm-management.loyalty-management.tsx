@@ -211,7 +211,7 @@ const TIER_DISTRIBUTION = [
   { name: "Basic", value: 32, color: "#cbd5e1" },
 ];
 
-export function LoyaltyManagementPage() {
+function LoyaltyManagementPage() {
   const [loyalty, setLoyalty] = useState<LoyaltyRecord>(INITIAL_LOYALTY);
 
   // Modals
@@ -1083,7 +1083,7 @@ export function LoyaltyManagementPage() {
                     setLoyalty((prev) => ({
                       ...prev,
                       pointsBalance: prev.pointsBalance + pts,
-                      lifetimeEarned: prev.lifetimeEarned + pts,
+                      lifetimePoints: prev.lifetimePoints + pts,
                     }));
                     setIsAddPointsOpen(false);
                     showNotification(`Successfully credited +${pts.toLocaleString()} points to ${loyalty.customerName}!`);
@@ -1177,7 +1177,7 @@ export function LoyaltyManagementPage() {
                     setLoyalty((prev) => ({
                       ...prev,
                       pointsBalance: prev.pointsBalance - cost,
-                      lifetimeRedeemed: prev.lifetimeRedeemed + cost,
+                      redeemedPoints: prev.redeemedPoints + cost,
                     }));
                     setIsRedeemModalOpen(false);
                     showNotification(`Redemption successful! Generated voucher code ${newRedeemRow.ref}`);
@@ -1207,7 +1207,7 @@ export function LoyaltyManagementPage() {
               <div className="space-y-3 text-xs">
                 <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 flex justify-between items-center">
                   <span className="text-amber-700 font-medium">Current Active Tier:</span>
-                  <span className="font-bold text-amber-900 uppercase font-mono">{loyalty.currentTier}</span>
+                  <span className="font-bold text-amber-900 uppercase font-mono">{loyalty.customerTier}</span>
                 </div>
                 <div>
                   <label className="block font-semibold text-slate-700 mb-1">Select New Target Tier</label>

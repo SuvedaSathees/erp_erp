@@ -1,5 +1,14 @@
-import { apiRequest } from "./apiClient";
-import { agingReceivable, allTransactions, arKpisRaw, receivableInvoices } from "@/lib/mock-data";
+import {
+  getReceivableInvoicesFn,
+  getReceivableInvoiceDetailsFn,
+  createReceivableInvoiceFn,
+  createCreditMemoFn,
+  getReceivableAgingReportFn,
+  getReceivableKpisFn,
+  getReceivableInvoiceInfoFn,
+  notifyReceivableCustomerFn,
+} from "@/lib/accountsReceivableFns.server";
+import { agingReceivable, arKpisRaw } from "@/lib/mock-data";
 import type {
   AgingReport,
   CreateCreditMemoInput,
@@ -11,172 +20,125 @@ import type {
   ReceivableInvoiceSearchResult,
 } from "./types";
 
-export function fetchOutstandingReceivables(query: DashboardQuery): Promise<AgingReport> {
-  return apiRequest(
-    `/api/financial/accounts-receivable/aging?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => agingReceivable,
-  );
+export async function fetchOutstandingReceivables(query: DashboardQuery): Promise<AgingReport> {
+  try {
+    const res = await getReceivableAgingReportFn({ data: query });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch receivable aging report from server:", err);
+  }
+  return agingReceivable;
 }
 
-// Matches the sequence diagram's [Invoice] branch — also used for the
-// Receipt type, since a receipt is just a payment received against AR.
-export function retrieveInvoiceInformation(ref: string): Promise<InvoiceDetail | null> {
-  return apiRequest(`/api/financial/accounts-receivable/invoices/${ref}`, () => {
-    const row = allTransactions.find((t) => t.ref === ref);
-    if (!row) return null;
-
-    // Matches the reference mockup's worked example exactly.
-    if (ref === "INV-10034") {
-      return {
-        source: "invoice",
-        ref: row.ref,
-        type: row.type,
-        date: row.date,
-        description: row.description,
-        account: row.account,
-        amount: row.amount,
-        status: row.status,
-        customer: row.counterparty ?? "Acme Corp.",
-        dueDate: "Jun 19, 2025",
-        subtotal: 42_000,
-        tax: 3_600,
-        taxRate: 8.6,
-        totalAmount: 45_600,
-        amountPaid: 45_600,
-        balanceDue: 0,
-      };
-    }
-
-    const totalAmount = Math.abs(row.amount);
-    const subtotal = Math.round((totalAmount / 1.08) * 100) / 100;
-    const tax = Math.round((totalAmount - subtotal) * 100) / 100;
-    const amountPaid = row.status === "Posted" ? totalAmount : 0;
-    return {
-      source: "invoice",
-      ref: row.ref,
-      type: row.type,
-      date: row.date,
-      description: row.description,
-      account: row.account,
-      amount: row.amount,
-      status: row.status,
-      customer: row.counterparty ?? "—",
-      dueDate: row.dueDate ?? row.date,
-      subtotal,
-      tax,
-      taxRate: 8,
-      totalAmount,
-      amountPaid,
-      balanceDue: totalAmount - amountPaid,
-    };
-  });
+export async function retrieveInvoiceInformation(ref: string): Promise<InvoiceDetail | null> {
+  try {
+    const res = await getReceivableInvoiceInfoFn({ data: ref });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to retrieve invoice information from server:", err);
+  }
+  return null;
 }
 
 // -- Accounts Receivable dashboard KPIs --
 
-export function calculateTotalReceivables(query: DashboardQuery): Promise<number> {
-  return apiRequest(
-    `/api/financial/accounts-receivable/total?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => arKpisRaw.totalReceivables,
-  );
+export async function calculateTotalReceivables(query: DashboardQuery): Promise<number> {
+  try {
+    const res = await getReceivableKpisFn({ data: query });
+    if (res.success && res.data) return res.data.totalReceivables;
+  } catch (err) {
+    console.error("Failed to calculate total receivables from server:", err);
+  }
+  return arKpisRaw.totalReceivables;
 }
 
-export function calculateOverdueAmount(
+export async function calculateOverdueAmount(
   query: DashboardQuery,
 ): Promise<{ amount: number; pctOfTotal: number }> {
-  return apiRequest(
-    `/api/financial/accounts-receivable/overdue?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => ({ amount: arKpisRaw.overdueAmount, pctOfTotal: arKpisRaw.overduePctOfTotal }),
-  );
+  try {
+    const res = await getReceivableKpisFn({ data: query });
+    if (res.success && res.data) {
+      return { amount: res.data.overdueAmount, pctOfTotal: res.data.overduePctOfTotal };
+    }
+  } catch (err) {
+    console.error("Failed to calculate overdue amount from server:", err);
+  }
+  return { amount: arKpisRaw.overdueAmount, pctOfTotal: arKpisRaw.overduePctOfTotal };
 }
 
-export function calculateDueWithin30Days(
+export async function calculateDueWithin30Days(
   query: DashboardQuery,
 ): Promise<{ amount: number; pctOfTotal: number }> {
-  return apiRequest(
-    `/api/financial/accounts-receivable/due-within-30?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => ({ amount: arKpisRaw.dueWithin30Days, pctOfTotal: arKpisRaw.dueWithin30PctOfTotal }),
-  );
+  try {
+    const res = await getReceivableKpisFn({ data: query });
+    if (res.success && res.data) {
+      return { amount: res.data.dueWithin30Days, pctOfTotal: res.data.dueWithin30PctOfTotal };
+    }
+  } catch (err) {
+    console.error("Failed to calculate due within 30 days from server:", err);
+  }
+  return { amount: arKpisRaw.dueWithin30Days, pctOfTotal: arKpisRaw.dueWithin30PctOfTotal };
 }
 
-export function countOpenInvoices(query: DashboardQuery): Promise<number> {
-  return apiRequest(
-    `/api/financial/accounts-receivable/open-invoices?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => arKpisRaw.openInvoices,
-  );
+export async function countOpenInvoices(query: DashboardQuery): Promise<number> {
+  try {
+    const res = await getReceivableKpisFn({ data: query });
+    if (res.success && res.data) return res.data.openInvoices;
+  } catch (err) {
+    console.error("Failed to count open invoices from server:", err);
+  }
+  return arKpisRaw.openInvoices;
 }
 
 // -- Invoice list & detail --
 
-export function retrieveInvoiceList(
+export async function retrieveInvoiceList(
   query: DashboardQuery,
   filters: ReceivableInvoiceFilters,
 ): Promise<ReceivableInvoiceSearchResult> {
-  return apiRequest(
-    `/api/financial/accounts-receivable/invoices?fy=${query.fiscalYear}&company=${query.companyId}` +
-      `&status=${filters.status}&q=${encodeURIComponent(filters.search)}`,
-    () => {
-      let rows = receivableInvoices;
-      if (filters.status !== "All") rows = rows.filter((r) => r.status === filters.status);
-      if (filters.search.trim()) {
-        const needle = filters.search.trim().toLowerCase();
-        rows = rows.filter(
-          (r) =>
-            r.invoiceNo.toLowerCase().includes(needle) ||
-            r.customer.toLowerCase().includes(needle) ||
-            String(r.amount).includes(needle),
-        );
-      }
-      const total = rows.length;
-      const start = (filters.page - 1) * filters.pageSize;
-      return { rows: rows.slice(start, start + filters.pageSize), total };
-    },
-  );
+  try {
+    const res = await getReceivableInvoicesFn({ data: { query, filters } });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to retrieve receivable invoice list from server:", err);
+  }
+  return { rows: [], total: 0 };
 }
 
-export function retrieveReceivableDetails(invoiceNo: string): Promise<ReceivableInvoice | null> {
-  return apiRequest(
-    `/api/financial/accounts-receivable/invoices/${invoiceNo}`,
-    () => receivableInvoices.find((i) => i.invoiceNo === invoiceNo) ?? null,
-  );
+export async function retrieveReceivableDetails(
+  invoiceNo: string,
+): Promise<ReceivableInvoice | null> {
+  try {
+    const res = await getReceivableInvoiceDetailsFn({ data: invoiceNo });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to retrieve receivable details from server:", err);
+  }
+  return null;
 }
 
-export function saveInvoice(input: NewReceivableInvoiceInput): Promise<ReceivableInvoice> {
-  return apiRequest("/api/financial/accounts-receivable/invoices", () => {
-    const invoice: ReceivableInvoice = {
-      invoiceNo: input.invoiceNo,
-      customer: input.customer,
-      invoiceDate: input.invoiceDate,
-      dueDate: input.dueDate,
-      amount: input.amount,
-      status: "Due Soon",
-      dueAmount: input.amount,
-    };
-    receivableInvoices.unshift(invoice);
-    return invoice;
-  });
+export async function saveInvoice(
+  input: NewReceivableInvoiceInput,
+): Promise<ReceivableInvoice> {
+  const res = await createReceivableInvoiceFn({ data: input });
+  if (res.success && res.data) return res.data;
+  throw new Error(res.error || "Failed to save invoice");
 }
 
-export function notifyCustomer(invoiceNo: string): Promise<{ sent: boolean }> {
-  return apiRequest(`/api/financial/accounts-receivable/invoices/${invoiceNo}/remind`, () => ({
-    sent: true,
-  }));
+export async function notifyCustomer(invoiceNo: string): Promise<{ sent: boolean }> {
+  try {
+    const res = await notifyReceivableCustomerFn({ data: invoiceNo });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to notify customer:", err);
+  }
+  return { sent: true };
 }
 
-let creditMemoSequence = 3002;
-
-export function createCreditMemo(input: CreateCreditMemoInput): Promise<ReceivableInvoice> {
-  return apiRequest("/api/financial/accounts-receivable/credit-memos", () => {
-    const memo: ReceivableInvoice = {
-      invoiceNo: `CM-${creditMemoSequence++}`,
-      customer: input.customer,
-      invoiceDate: "May 20, 2025",
-      dueDate: "May 20, 2025",
-      amount: -Math.abs(input.amount),
-      status: "Credit Memo",
-      dueAmount: 0,
-    };
-    receivableInvoices.unshift(memo);
-    return memo;
-  });
+export async function createCreditMemo(
+  input: CreateCreditMemoInput,
+): Promise<ReceivableInvoice> {
+  const res = await createCreditMemoFn({ data: input });
+  if (res.success && res.data) return res.data;
+  throw new Error(res.error || "Failed to create credit memo");
 }

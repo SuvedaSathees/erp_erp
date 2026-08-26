@@ -185,7 +185,7 @@ const PIPELINE_BY_OWNER_DATA = [
   { name: "Pooja Mehta", value: 3290000 },
 ];
 
-export function SalesPipelineManagementPage() {
+function SalesPipelineManagementPage() {
   const [pipelines, setPipelines] = useState<PipelineRecord[]>(INITIAL_PIPELINES);
   const [selectedPipeId, setSelectedPipeId] = useState<string>("PIPE-001");
 

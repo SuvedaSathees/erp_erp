@@ -1,11 +1,10 @@
-import { apiRequest } from "./apiClient";
 import {
-  mockBankAccounts,
-  mockCashTransactions,
-  mockCheques,
-  mockDeposits,
-  dashKpis,
-} from "@/lib/mock-data";
+  getBankAccountsFn,
+  getCashTransactionsFn,
+  createCashTransactionFn,
+  getChequesFn,
+  getDepositsFn,
+} from "@/lib/cashBankFns.server";
 import type {
   CashPosition,
   DashboardQuery,
@@ -15,79 +14,59 @@ import type {
   DepositRecord,
 } from "./types";
 
-export function fetchCashBalance(query: DashboardQuery): Promise<CashPosition> {
-  return apiRequest(
-    `/api/financial/cash-bank/balance?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => {
-      // Sum balances of all accounts
-      const total = mockBankAccounts.reduce((sum, acc) => sum + acc.currentBalance, 0);
-      return { cashBalance: total };
-    },
-  );
+export async function fetchCashBalance(query: DashboardQuery): Promise<CashPosition> {
+  const res = await getBankAccountsFn();
+  const list = res?.data || [];
+  const total = list.reduce((sum, acc) => sum + (Number(acc.currentBalance) || 0), 0);
+  return { cashBalance: total };
 }
 
-export function calculateOperatingCash(query: DashboardQuery): Promise<number> {
-  return apiRequest(`/api/financial/cash-bank/operating-cash?fy=${query.fiscalYear}`, () => {
-    // Sum balances of accounts with type === "Operating"
-    return mockBankAccounts
-      .filter((acc) => acc.type === "Operating")
-      .reduce((sum, acc) => sum + acc.currentBalance, 0);
-  });
+export async function calculateOperatingCash(query: DashboardQuery): Promise<number> {
+  const res = await getBankAccountsFn();
+  const list = res?.data || [];
+  return list
+    .filter((acc) => acc.type === "Operating")
+    .reduce((sum, acc) => sum + (Number(acc.currentBalance) || 0), 0);
 }
 
-export function calculateCashFlowMtd(
+export async function calculateCashFlowMtd(
   query: DashboardQuery,
 ): Promise<{ inflow: number; outflow: number; netFlow: number }> {
-  return apiRequest(`/api/financial/cash-bank/mtd-flow?fy=${query.fiscalYear}`, () => {
-    // Return fixed mockup values or aggregate from mockTransactions
-    return {
-      inflow: 8945320.0,
-      outflow: 6781240.0,
-      netFlow: 2164080.0,
-    };
-  });
+  const res = await getCashTransactionsFn();
+  const list = res?.data || [];
+  let inflow = 0;
+  let outflow = 0;
+  for (const t of list) {
+    if (t.type === "Inflow") inflow += Number(t.amount) || 0;
+    else outflow += Number(t.amount) || 0;
+  }
+  return {
+    inflow: inflow || 0,
+    outflow: outflow || 0,
+    netFlow: inflow - outflow,
+  };
 }
 
-export function fetchCashTransactions(query: DashboardQuery): Promise<CashTransaction[]> {
-  return apiRequest(
-    `/api/financial/cash-transactions?fy=${query.fiscalYear}`,
-    () => mockCashTransactions,
-  );
+export async function fetchCashTransactions(query: DashboardQuery): Promise<CashTransaction[]> {
+  const res = await getCashTransactionsFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }
 
-export function saveCashTransaction(input: NewCashTransactionInput): Promise<CashTransaction> {
-  return apiRequest(`/api/financial/cash-transactions`, () => {
-    const newTx: CashTransaction = {
-      id: `CT-0${mockCashTransactions.length + 1}`,
-      date: input.date,
-      description: input.description,
-      type: input.type,
-      amount: Number(input.amount),
-      bankAccountNo: input.bankAccountNo,
-      reference: input.reference,
-      category: input.category,
-      status: "Posted" as const,
-    };
-
-    // Update bank account balance
-    const account = mockBankAccounts.find((a) => a.accountNo === input.bankAccountNo);
-    if (account) {
-      if (input.type === "Inflow") {
-        account.currentBalance += Number(input.amount);
-      } else {
-        account.currentBalance -= Number(input.amount);
-      }
-    }
-
-    mockCashTransactions.unshift(newTx);
-    return newTx;
-  });
+export async function saveCashTransaction(input: NewCashTransactionInput): Promise<CashTransaction> {
+  const res = await createCashTransactionFn({ data: input });
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data;
 }
 
-export function fetchCheques(query: DashboardQuery): Promise<ChequeRecord[]> {
-  return apiRequest(`/api/financial/cash-bank/cheques?fy=${query.fiscalYear}`, () => mockCheques);
+export async function fetchCheques(query: DashboardQuery): Promise<ChequeRecord[]> {
+  const res = await getChequesFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }
 
-export function fetchDeposits(query: DashboardQuery): Promise<DepositRecord[]> {
-  return apiRequest(`/api/financial/cash-bank/deposits?fy=${query.fiscalYear}`, () => mockDeposits);
+export async function fetchDeposits(query: DashboardQuery): Promise<DepositRecord[]> {
+  const res = await getDepositsFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }

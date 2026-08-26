@@ -214,7 +214,7 @@ export const ADMIN_KPI_WIDGETS: WidgetDefinition[] = [
     },
     (d) => ({
       value: d?.kpis?.unreadNotifications ? String(d.kpis.unreadNotifications) : "8",
-      delta: { label: "2 high priority", direction: "neutral", tone: "neutral" },
+      delta: { label: "2 high priority", direction: "up", tone: "positive" },
     }),
   ),
 ];

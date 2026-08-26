@@ -1,21 +1,20 @@
-import { apiRequest } from "./apiClient";
-import { apKpisRaw, payableInvoices } from "@/lib/mock-data";
+import { getPayableKpisFn, recordPayablePaymentFn } from "@/lib/accountsPayableFns.server";
+import { apKpisRaw } from "@/lib/mock-data";
 import type { DashboardQuery, PayableInvoice, RecordPaymentInput } from "./types";
 
 // Matches the diagram's "Retrieve Paid Amount" step.
-export function retrievePaidAmount(query: DashboardQuery): Promise<number> {
-  return apiRequest(
-    `/api/financial/payments/paid-this-month?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => apKpisRaw.paidThisMonth,
-  );
+export async function retrievePaidAmount(query: DashboardQuery): Promise<number> {
+  try {
+    const res = await getPayableKpisFn({ data: query });
+    if (res.success && res.data) return res.data.paidThisMonth;
+  } catch (err) {
+    console.error("Failed to retrieve paid amount from server:", err);
+  }
+  return apKpisRaw.paidThisMonth;
 }
 
-export function processPayment(input: RecordPaymentInput): Promise<PayableInvoice> {
-  return apiRequest(`/api/financial/payments/${input.invoiceNo}`, () => {
-    const invoice = payableInvoices.find((i) => i.invoiceNo === input.invoiceNo);
-    if (!invoice) throw new Error(`Invoice ${input.invoiceNo} not found`);
-    invoice.dueAmount = Math.max(0, invoice.dueAmount - input.amount);
-    if (invoice.dueAmount === 0) invoice.status = "Paid";
-    return invoice;
-  });
+export async function processPayment(input: RecordPaymentInput): Promise<PayableInvoice> {
+  const res = await recordPayablePaymentFn({ data: input });
+  if (res.success && res.data) return res.data;
+  throw new Error(res.error || `Invoice ${input.invoiceNo} not found`);
 }

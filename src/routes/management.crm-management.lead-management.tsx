@@ -430,7 +430,7 @@ const RECENT_ACTIVITIES = [
   },
 ];
 
-export function LeadManagementPage() {
+function LeadManagementPage() {
   const [leads, setLeads] = useState<LeadRecord[]>(INITIAL_LEADS);
   const [selectedLeadId, setSelectedLeadId] = useState<string>("LEAD-0000578");
   const [activeTab, setActiveTab] = useState<string>("contact");

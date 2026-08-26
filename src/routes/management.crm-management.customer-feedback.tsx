@@ -98,7 +98,7 @@ const INITIAL_FEEDBACKS: FeedbackRecord[] = [
   },
 ];
 
-export function CustomerFeedbackPage() {
+function CustomerFeedbackPage() {
   const [feedbacks, setFeedbacks] = useState<FeedbackRecord[]>(INITIAL_FEEDBACKS);
   const [selectedId, setSelectedId] = useState<string>("FDB-001");
   const [activeTab, setActiveTab] = useState<"ratings" | "sentiment" | "actions" | "analytics">("ratings");

@@ -171,7 +171,7 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
   );
 }
 
-export function CustomerValidationPage() {
+function CustomerValidationPage() {
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 

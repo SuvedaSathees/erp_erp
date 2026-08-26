@@ -185,6 +185,15 @@ function ReportsPage() {
     queryFn: () => reportSharingService.fetchSharedReportsLogs(QUERY),
   });
 
+  const liveReportQuery = useQuery({
+    queryKey: ["reporting", "liveReport", previewReport?.id, QUERY.fiscalYear],
+    queryFn: () =>
+      previewReport
+        ? reportManagementService.fetchLiveReportPayload(previewReport.id, QUERY)
+        : Promise.resolve({ success: true, reportType: "Mock", data: null }),
+    enabled: !!previewReport,
+  });
+
   // Mutations
   const createReportMutation = useMutation({
     mutationFn: reportManagementService.saveReportTemplate,
@@ -605,19 +614,41 @@ function ReportsPage() {
                             {
                               key: "name",
                               header: "Report Name",
-                              cell: (r) => (
-                                <div>
-                                  <button
-                                    onClick={() => setPreviewReport(r)}
-                                    className="font-semibold text-primary hover:underline text-left block"
-                                  >
-                                    {r.name}
-                                  </button>
-                                  <span className="text-xs text-muted-foreground block">
-                                    {r.description}
-                                  </span>
-                                </div>
-                              ),
+                              cell: (r) => {
+                                const isReal = [
+                                  "REP-001", // Balance Sheet
+                                  "REP-002", // Profit & Loss Statement
+                                  "REP-003", // Cash Flow Statement
+                                  "REP-005", // Trial Balance
+                                  "REP-006", // Budget vs Actual Report
+                                  "REP-008", // Aging Summary
+                                ].includes(r.id);
+
+                                return (
+                                  <div>
+                                    <div className="flex items-center gap-2">
+                                      <button
+                                        onClick={() => setPreviewReport(r)}
+                                        className="font-semibold text-primary hover:underline text-left"
+                                      >
+                                        {r.name}
+                                      </button>
+                                      {isReal ? (
+                                        <span className="inline-flex items-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 text-[10px] font-semibold border border-emerald-500/20">
+                                          ● Live Data
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center rounded-full bg-muted text-muted-foreground px-2 py-0.5 text-[10px] font-medium">
+                                          Template
+                                        </span>
+                                      )}
+                                    </div>
+                                    <span className="text-xs text-muted-foreground block">
+                                      {r.description}
+                                    </span>
+                                  </div>
+                                );
+                              },
                             },
                             {
                               key: "category",
@@ -1506,139 +1537,445 @@ function ReportsPage() {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Audit Status:</span>
-                    <span className="font-semibold text-green-600">Unconditionally Approved</span>
+                    <span className="text-muted-foreground">Data Source:</span>
+                    <span
+                      className={
+                        liveReportQuery.data?.reportType && liveReportQuery.data.reportType !== "Mock"
+                          ? "font-semibold text-emerald-600 dark:text-emerald-400"
+                          : "font-semibold text-amber-600 dark:text-amber-400"
+                      }
+                    >
+                      {liveReportQuery.data?.reportType && liveReportQuery.data.reportType !== "Mock"
+                        ? "● Live PostgreSQL Database Connected"
+                        : "Sample Template (Not Connected to Database)"}
+                    </span>
                   </div>
                 </div>
 
-                {previewReport.name.includes("Balance Sheet") ? (
-                  <div className="border border-border rounded-lg overflow-hidden text-xs">
-                    <table className="w-full text-left border-collapse">
-                      <thead className="bg-muted border-b border-border font-semibold text-muted-foreground">
-                        <tr>
-                          <th className="p-2.5">Classification</th>
-                          <th className="p-2.5 text-right">Debit (₹)</th>
-                          <th className="p-2.5 text-right">Credit (₹)</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr className="border-b border-border font-semibold text-foreground bg-secondary/10">
-                          <td className="p-2.5" colSpan={3}>
-                            ASSETS
-                          </td>
-                        </tr>
-                        <tr className="border-b border-border">
-                          <td className="p-2.5 pl-5 text-muted-foreground">
-                            Cash and Cash Equivalents
-                          </td>
-                          <td className="p-2.5 text-right tabular">18,765,430.00</td>
-                          <td className="p-2.5 text-right"></td>
-                        </tr>
-                        <tr className="border-b border-border">
-                          <td className="p-2.5 pl-5 text-muted-foreground">Trade Receivables</td>
-                          <td className="p-2.5 text-right tabular">12,450,680.00</td>
-                          <td className="p-2.5 text-right"></td>
-                        </tr>
-                        <tr className="border-b border-border">
-                          <td className="p-2.5 pl-5 text-muted-foreground">Fixed Assets NBV</td>
-                          <td className="p-2.5 text-right tabular">37,707,430.00</td>
-                          <td className="p-2.5 text-right"></td>
-                        </tr>
-                        <tr className="border-b border-border font-bold bg-muted/40">
-                          <td className="p-2.5 pl-3">Total Assets</td>
-                          <td className="p-2.5 text-right tabular">68,923,540.00</td>
-                          <td className="p-2.5 text-right"></td>
-                        </tr>
+                {/* 1. REAL: BALANCE SHEET (REP-001) */}
+                {liveReportQuery.data?.reportType === "BalanceSheet" && liveReportQuery.data.data && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between text-xs px-1">
+                      <span className="text-muted-foreground">As of: {liveReportQuery.data.data.asOfDate}</span>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 font-semibold ${
+                          liveReportQuery.data.data.isBalanced
+                            ? "bg-green-100 text-green-800"
+                            : "bg-amber-100 text-amber-800"
+                        }`}
+                      >
+                        {liveReportQuery.data.data.isBalanced ? "✓ Balanced (Assets = Liabilities + Equity)" : "Pending Balance"}
+                      </span>
+                    </div>
 
-                        <tr className="border-b border-border font-semibold text-foreground bg-secondary/10">
-                          <td className="p-2.5" colSpan={3}>
-                            LIABILITIES & EQUITY
-                          </td>
-                        </tr>
-                        <tr className="border-b border-border">
-                          <td className="p-2.5 pl-5 text-muted-foreground">Trade Payables</td>
-                          <td className="p-2.5 text-right"></td>
-                          <td className="p-2.5 text-right tabular">14,215,760.00</td>
-                        </tr>
-                        <tr className="border-b border-border">
-                          <td className="p-2.5 pl-5 text-muted-foreground">Accrued Taxes</td>
-                          <td className="p-2.5 text-right"></td>
-                          <td className="p-2.5 text-right tabular">14,100,000.00</td>
-                        </tr>
-                        <tr className="border-b border-border font-bold bg-muted/40">
-                          <td className="p-2.5 pl-3">Total Liabilities</td>
-                          <td className="p-2.5 text-right"></td>
-                          <td className="p-2.5 text-right tabular">28,315,760.00</td>
-                        </tr>
-                        <tr className="border-b border-border">
-                          <td className="p-2.5 pl-5 text-muted-foreground">Paid Up Capital</td>
-                          <td className="p-2.5 text-right"></td>
-                          <td className="p-2.5 text-right tabular">32,751,370.00</td>
-                        </tr>
-                        <tr className="border-b border-border">
-                          <td className="p-2.5 pl-5 text-muted-foreground">
-                            Retained Earnings (YTD)
-                          </td>
-                          <td className="p-2.5 text-right"></td>
-                          <td className="p-2.5 text-right tabular">7,856,410.00</td>
-                        </tr>
-                        <tr className="border-b border-border font-bold bg-primary/10 text-primary">
-                          <td className="p-2.5 pl-3">Total Equity & Liabilities</td>
-                          <td className="p-2.5 text-right"></td>
-                          <td className="p-2.5 text-right tabular">68,923,540.00</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div className="border border-border rounded-lg overflow-hidden text-xs">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="bg-muted border-b border-border font-semibold text-muted-foreground">
+                          <tr>
+                            <th className="p-2.5">Classification</th>
+                            <th className="p-2.5 text-right">Amount (₹)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-border font-bold text-foreground bg-secondary/20">
+                            <td className="p-2.5" colSpan={2}>1. ASSETS</td>
+                          </tr>
+                          {liveReportQuery.data.data.assets.map((line: any, idx: number) => (
+                            <tr key={idx} className="border-b border-border">
+                              <td className="p-2.5 pl-6 text-muted-foreground">{line.classification}</td>
+                              <td className="p-2.5 text-right tabular">{formatCurrency(line.amount)}</td>
+                            </tr>
+                          ))}
+                          <tr className="border-b border-border font-bold bg-muted/40">
+                            <td className="p-2.5 pl-3">Total Assets</td>
+                            <td className="p-2.5 text-right tabular font-bold text-foreground">
+                              {formatCurrency(liveReportQuery.data.data.totalAssets)}
+                            </td>
+                          </tr>
+
+                          <tr className="border-b border-border font-bold text-foreground bg-secondary/20">
+                            <td className="p-2.5" colSpan={2}>2. LIABILITIES</td>
+                          </tr>
+                          {liveReportQuery.data.data.liabilities.map((line: any, idx: number) => (
+                            <tr key={idx} className="border-b border-border">
+                              <td className="p-2.5 pl-6 text-muted-foreground">{line.classification}</td>
+                              <td className="p-2.5 text-right tabular">{formatCurrency(line.amount)}</td>
+                            </tr>
+                          ))}
+                          <tr className="border-b border-border font-bold bg-muted/40">
+                            <td className="p-2.5 pl-3">Total Liabilities</td>
+                            <td className="p-2.5 text-right tabular font-bold text-foreground">
+                              {formatCurrency(liveReportQuery.data.data.totalLiabilities)}
+                            </td>
+                          </tr>
+
+                          <tr className="border-b border-border font-bold text-foreground bg-secondary/20">
+                            <td className="p-2.5" colSpan={2}>3. EQUITY & RETAINED EARNINGS</td>
+                          </tr>
+                          {liveReportQuery.data.data.equity.map((line: any, idx: number) => (
+                            <tr key={idx} className="border-b border-border">
+                              <td className="p-2.5 pl-6 text-muted-foreground">{line.classification}</td>
+                              <td className="p-2.5 text-right tabular">{formatCurrency(line.amount)}</td>
+                            </tr>
+                          ))}
+                          <tr className="border-b border-border font-bold bg-muted/40">
+                            <td className="p-2.5 pl-3">Total Equity</td>
+                            <td className="p-2.5 text-right tabular font-bold text-foreground">
+                              {formatCurrency(liveReportQuery.data.data.totalEquity)}
+                            </td>
+                          </tr>
+
+                          <tr className="border-b border-border font-bold bg-primary/10 text-primary">
+                            <td className="p-2.5 pl-3">Total Equity & Liabilities</td>
+                            <td className="p-2.5 text-right tabular font-bold">
+                              {formatCurrency(liveReportQuery.data.data.totalEquityAndLiabilities)}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                ) : (
-                  <div className="border border-border rounded-lg overflow-hidden text-xs">
-                    <table className="w-full text-left border-collapse">
-                      <thead className="bg-muted border-b border-border font-semibold text-muted-foreground">
-                        <tr>
-                          <th className="p-2.5">Line Item</th>
-                          <th className="p-2.5 text-right">YTD Value (₹)</th>
-                          <th className="p-2.5 text-right">Prior Year (₹)</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr className="border-b border-border font-bold bg-secondary/10">
-                          <td className="p-2.5">Revenue / Turnover</td>
-                          <td className="p-2.5 text-right tabular">48,753,920.00</td>
-                          <td className="p-2.5 text-right tabular">43,354,210.00</td>
-                        </tr>
-                        <tr className="border-b border-border">
-                          <td className="p-2.5 pl-5 text-muted-foreground">
-                            Cost of Goods Sold (COGS)
-                          </td>
-                          <td className="p-2.5 text-right tabular">(30,508,290.00)</td>
-                          <td className="p-2.5 text-right tabular">(27,100,000.00)</td>
-                        </tr>
-                        <tr className="border-b border-border font-bold bg-muted/40">
-                          <td className="p-2.5 pl-3">Gross Profit</td>
-                          <td className="p-2.5 text-right tabular">18,245,630.00</td>
-                          <td className="p-2.5 text-right tabular">16,254,210.00</td>
-                        </tr>
-                        <tr className="border-b border-border">
-                          <td className="p-2.5 pl-5 text-muted-foreground">
-                            Operational Admin Expenses
-                          </td>
-                          <td className="p-2.5 text-right tabular">(8,254,120.00)</td>
-                          <td className="p-2.5 text-right tabular">(7,354,000.00)</td>
-                        </tr>
-                        <tr className="border-b border-border">
-                          <td className="p-2.5 pl-5 text-muted-foreground">
-                            Selling & Distribution Costs
-                          </td>
-                          <td className="p-2.5 text-right tabular">(2,135,100.00)</td>
-                          <td className="p-2.5 text-right tabular">(1,900,000.00)</td>
-                        </tr>
-                        <tr className="border-b border-border font-bold bg-primary/10 text-primary">
-                          <td className="p-2.5 pl-3">Net Operating Income</td>
-                          <td className="p-2.5 text-right tabular">7,856,410.00</td>
-                          <td className="p-2.5 text-right tabular">7,000,210.00</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                )}
+
+                {/* 2. REAL: PROFIT & LOSS STATEMENT (REP-002) */}
+                {liveReportQuery.data?.reportType === "ProfitAndLoss" && liveReportQuery.data.data && (
+                  <div className="space-y-4">
+                    <div className="border border-border rounded-lg overflow-hidden text-xs">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="bg-muted border-b border-border font-semibold text-muted-foreground">
+                          <tr>
+                            <th className="p-2.5">Line Item</th>
+                            <th className="p-2.5 text-right">Current Period (₹)</th>
+                            <th className="p-2.5 text-right">Prior Year (₹)</th>
+                            <th className="p-2.5 text-right">Change (%)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-border font-bold bg-secondary/10">
+                            <td className="p-2.5">Revenue / Turnover</td>
+                            <td className="p-2.5 text-right tabular">{formatCurrency(liveReportQuery.data.data.summary.revenue)}</td>
+                            <td className="p-2.5 text-right tabular">{formatCurrency(liveReportQuery.data.data.comparison[0]?.priorYTD || 0)}</td>
+                            <td className="p-2.5 text-right tabular text-[#22C55E]">
+                              {liveReportQuery.data.data.comparison[0]?.changePercentage > 0 ? "+" : ""}
+                              {liveReportQuery.data.data.comparison[0]?.changePercentage}%
+                            </td>
+                          </tr>
+                          <tr className="border-b border-border">
+                            <td className="p-2.5 pl-6 text-muted-foreground">Cost of Goods Sold (COGS)</td>
+                            <td className="p-2.5 text-right tabular">({formatCurrency(liveReportQuery.data.data.summary.cogs)})</td>
+                            <td className="p-2.5 text-right tabular">—</td>
+                            <td className="p-2.5 text-right tabular">—</td>
+                          </tr>
+                          <tr className="border-b border-border font-bold bg-muted/40">
+                            <td className="p-2.5 pl-3">Gross Profit (Margin: {liveReportQuery.data.data.kpis.grossMarginYTD}%)</td>
+                            <td className="p-2.5 text-right tabular">{formatCurrency(liveReportQuery.data.data.summary.grossProfit)}</td>
+                            <td className="p-2.5 text-right tabular">{formatCurrency(liveReportQuery.data.data.comparison[1]?.priorYTD || 0)}</td>
+                            <td className="p-2.5 text-right tabular">
+                              {liveReportQuery.data.data.comparison[1]?.changePercentage > 0 ? "+" : ""}
+                              {liveReportQuery.data.data.comparison[1]?.changePercentage}%
+                            </td>
+                          </tr>
+                          <tr className="border-b border-border">
+                            <td className="p-2.5 pl-6 text-muted-foreground">Operational Admin & Overhead Expenses</td>
+                            <td className="p-2.5 text-right tabular">
+                              ({formatCurrency(Math.max(0, liveReportQuery.data.data.summary.revenue - liveReportQuery.data.data.summary.netProfit - liveReportQuery.data.data.summary.cogs))})
+                            </td>
+                            <td className="p-2.5 text-right tabular">—</td>
+                            <td className="p-2.5 text-right tabular">—</td>
+                          </tr>
+                          <tr className="border-b border-border font-bold bg-primary/10 text-primary">
+                            <td className="p-2.5 pl-3">Net Operating Income (Margin: {liveReportQuery.data.data.kpis.netMarginYTD}%)</td>
+                            <td className="p-2.5 text-right tabular">{formatCurrency(liveReportQuery.data.data.summary.netProfit)}</td>
+                            <td className="p-2.5 text-right tabular">{formatCurrency(liveReportQuery.data.data.comparison[2]?.priorYTD || 0)}</td>
+                            <td className="p-2.5 text-right tabular">
+                              {liveReportQuery.data.data.comparison[2]?.changePercentage > 0 ? "+" : ""}
+                              {liveReportQuery.data.data.comparison[2]?.changePercentage}%
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. REAL: CASH FLOW STATEMENT (REP-003) */}
+                {liveReportQuery.data?.reportType === "CashFlow" && liveReportQuery.data.data && (
+                  <div className="space-y-4">
+                    <div className="border border-border rounded-lg overflow-hidden text-xs">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="bg-muted border-b border-border font-semibold text-muted-foreground">
+                          <tr>
+                            <th className="p-2.5">Cash Flow Component</th>
+                            <th className="p-2.5 text-right">Amount (₹)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-border font-bold bg-secondary/20">
+                            <td className="p-2.5">Opening Cash & Bank Balance</td>
+                            <td className="p-2.5 text-right tabular font-bold">{formatCurrency(liveReportQuery.data.data.openingBalance)}</td>
+                          </tr>
+
+                          <tr className="border-b border-border font-semibold text-foreground bg-secondary/10">
+                            <td className="p-2.5" colSpan={2}>Operating Cash Inflows</td>
+                          </tr>
+                          {liveReportQuery.data.data.operatingInflows.map((line: any, idx: number) => (
+                            <tr key={idx} className="border-b border-border">
+                              <td className="p-2.5 pl-6 text-muted-foreground">{line.item}</td>
+                              <td className="p-2.5 text-right tabular text-[#22C55E]">+{formatCurrency(line.amount)}</td>
+                            </tr>
+                          ))}
+
+                          <tr className="border-b border-border font-semibold text-foreground bg-secondary/10">
+                            <td className="p-2.5" colSpan={2}>Operating Cash Outflows</td>
+                          </tr>
+                          {liveReportQuery.data.data.operatingOutflows.map((line: any, idx: number) => (
+                            <tr key={idx} className="border-b border-border">
+                              <td className="p-2.5 pl-6 text-muted-foreground">{line.item}</td>
+                              <td className="p-2.5 text-right tabular text-[#EF4444]">-{formatCurrency(line.amount)}</td>
+                            </tr>
+                          ))}
+
+                          <tr className="border-b border-border font-bold bg-muted/40">
+                            <td className="p-2.5 pl-3">Net Cash Flow from Operations</td>
+                            <td className="p-2.5 text-right tabular font-bold">
+                              {formatCurrency(liveReportQuery.data.data.netOperatingCashFlow)}
+                            </td>
+                          </tr>
+
+                          <tr className="border-b border-border font-bold bg-primary/10 text-primary">
+                            <td className="p-2.5 pl-3">Closing Cash & Bank Balance</td>
+                            <td className="p-2.5 text-right tabular font-bold">
+                              {formatCurrency(liveReportQuery.data.data.closingBalance)}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. REAL: BUDGET VS ACTUAL (REP-006) */}
+                {liveReportQuery.data?.reportType === "BudgetVsActual" && Array.isArray(liveReportQuery.data.data) && (
+                  <div className="space-y-4">
+                    <div className="border border-border rounded-lg overflow-hidden text-xs">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="bg-muted border-b border-border font-semibold text-muted-foreground">
+                          <tr>
+                            <th className="p-2.5">Department</th>
+                            <th className="p-2.5 text-right">Allocated Budget (₹)</th>
+                            <th className="p-2.5 text-right">Actual Spend (₹)</th>
+                            <th className="p-2.5 text-right">Variance (₹)</th>
+                            <th className="p-2.5 text-right">Utilization (%)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {liveReportQuery.data.data.map((dept: any) => (
+                            <tr key={dept.id} className="border-b border-border hover:bg-muted/20">
+                              <td className="p-2.5 font-semibold text-foreground">{dept.department}</td>
+                              <td className="p-2.5 text-right tabular">{formatCurrency(dept.budget)}</td>
+                              <td className="p-2.5 text-right tabular">{formatCurrency(dept.actual)}</td>
+                              <td className={`p-2.5 text-right tabular font-semibold ${dept.variance >= 0 ? "text-[#22C55E]" : "text-[#EF4444]"}`}>
+                                {dept.variance >= 0 ? "+" : ""}{formatCurrency(dept.variance)}
+                              </td>
+                              <td className="p-2.5 text-right tabular font-bold">
+                                {dept.utilization}%
+                              </td>
+                            </tr>
+                          ))}
+                          <tr className="border-b border-border font-bold bg-muted/40">
+                            <td className="p-2.5 pl-3">Total Department Budgets</td>
+                            <td className="p-2.5 text-right tabular font-bold">
+                              {formatCurrency(liveReportQuery.data.data.reduce((s: number, d: any) => s + d.budget, 0))}
+                            </td>
+                            <td className="p-2.5 text-right tabular font-bold">
+                              {formatCurrency(liveReportQuery.data.data.reduce((s: number, d: any) => s + d.actual, 0))}
+                            </td>
+                            <td className="p-2.5 text-right tabular font-bold">
+                              {formatCurrency(liveReportQuery.data.data.reduce((s: number, d: any) => s + d.variance, 0))}
+                            </td>
+                            <td className="p-2.5 text-right tabular font-bold">
+                              {liveReportQuery.data.data.length > 0
+                                ? Math.round(
+                                    (liveReportQuery.data.data.reduce((s: number, d: any) => s + d.actual, 0) /
+                                      (liveReportQuery.data.data.reduce((s: number, d: any) => s + d.budget, 0) || 1)) *
+                                      10000,
+                                  ) / 100
+                                : 0}
+                              %
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* 5. REAL: AGING SUMMARY (REP-008) */}
+                {liveReportQuery.data?.reportType === "AgingSummary" && liveReportQuery.data.data && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* AR Aging */}
+                      <div className="border border-border rounded-lg overflow-hidden text-xs">
+                        <div className="bg-muted p-2.5 border-b border-border font-bold flex justify-between">
+                          <span>Accounts Receivable Aging</span>
+                          <span className="text-primary">{formatCurrency(liveReportQuery.data.data.ar?.total || 0)}</span>
+                        </div>
+                        <table className="w-full text-left border-collapse">
+                          <thead className="bg-secondary/40 border-b border-border text-[11px] text-muted-foreground">
+                            <tr>
+                              <th className="p-2">Bucket</th>
+                              <th className="p-2 text-right">Amount (₹)</th>
+                              <th className="p-2 text-right">%</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {(liveReportQuery.data.data.ar?.buckets || []).map((b: any, idx: number) => (
+                              <tr key={idx} className="border-b border-border">
+                                <td className="p-2 text-muted-foreground">{b.bucket}</td>
+                                <td className="p-2 text-right tabular">{formatCurrency(b.amount)}</td>
+                                <td className="p-2 text-right tabular">{b.pct}%</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* AP Aging */}
+                      <div className="border border-border rounded-lg overflow-hidden text-xs">
+                        <div className="bg-muted p-2.5 border-b border-border font-bold flex justify-between">
+                          <span>Accounts Payable Aging</span>
+                          <span className="text-primary">{formatCurrency(liveReportQuery.data.data.ap?.total || 0)}</span>
+                        </div>
+                        <table className="w-full text-left border-collapse">
+                          <thead className="bg-secondary/40 border-b border-border text-[11px] text-muted-foreground">
+                            <tr>
+                              <th className="p-2">Bucket</th>
+                              <th className="p-2 text-right">Amount (₹)</th>
+                              <th className="p-2 text-right">%</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {(liveReportQuery.data.data.ap?.buckets || []).map((b: any, idx: number) => (
+                              <tr key={idx} className="border-b border-border">
+                                <td className="p-2 text-muted-foreground">{b.bucket}</td>
+                                <td className="p-2 text-right tabular">{formatCurrency(b.amount)}</td>
+                                <td className="p-2 text-right tabular">{b.pct}%</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 6. REAL: TRIAL BALANCE (REP-005) */}
+                {liveReportQuery.data?.reportType === "TrialBalance" && liveReportQuery.data.data && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between text-xs px-1">
+                      <span className="text-muted-foreground">Chart of Accounts Trial Balance</span>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 font-semibold ${
+                          liveReportQuery.data.data.isBalanced
+                            ? "bg-green-100 text-green-800"
+                            : "bg-amber-100 text-amber-800"
+                        }`}
+                      >
+                        {liveReportQuery.data.data.isBalanced ? "✓ Balanced" : "Mismatch"}
+                      </span>
+                    </div>
+
+                    <div className="border border-border rounded-lg overflow-hidden text-xs max-h-96 overflow-y-auto">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="bg-muted border-b border-border font-semibold text-muted-foreground sticky top-0">
+                          <tr>
+                            <th className="p-2.5">Code & Account Name</th>
+                            <th className="p-2.5">Type</th>
+                            <th className="p-2.5 text-right">Debit (₹)</th>
+                            <th className="p-2.5 text-right">Credit (₹)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {liveReportQuery.data.data.lines.map((acc: any) => (
+                            <tr key={acc.code} className="border-b border-border hover:bg-muted/20">
+                              <td className="p-2.5 font-medium text-foreground">
+                                <span className="font-mono text-xs text-primary mr-1.5">{acc.code}</span>
+                                {acc.name}
+                              </td>
+                              <td className="p-2.5 text-muted-foreground text-[11px]">{acc.type}</td>
+                              <td className="p-2.5 text-right tabular">
+                                {acc.debit > 0 ? formatCurrency(acc.debit) : "—"}
+                              </td>
+                              <td className="p-2.5 text-right tabular">
+                                {acc.credit > 0 ? formatCurrency(acc.credit) : "—"}
+                              </td>
+                            </tr>
+                          ))}
+                          <tr className="border-b border-border font-bold bg-muted/40 sticky bottom-0">
+                            <td className="p-2.5 pl-3" colSpan={2}>
+                              Total Trial Balance
+                            </td>
+                            <td className="p-2.5 text-right tabular font-bold text-foreground">
+                              {formatCurrency(liveReportQuery.data.data.totalDebit)}
+                            </td>
+                            <td className="p-2.5 text-right tabular font-bold text-foreground">
+                              {formatCurrency(liveReportQuery.data.data.totalCredit)}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* 7. STATIC FALLBACK (Remaining 20 mock reports) */}
+                {(!liveReportQuery.data || liveReportQuery.data.reportType === "Mock") && (
+                  <div className="space-y-3">
+                    <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-900 dark:text-amber-200">
+                      <p className="font-semibold mb-0.5">⚠️ Template Preview (Placeholder)</p>
+                      <p className="text-muted-foreground">
+                        This report ({previewReport.name}) is a static mock template. It is not connected to PostgreSQL ledger or transaction tables.
+                      </p>
+                    </div>
+
+                    <div className="border border-border rounded-lg overflow-hidden text-xs">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="bg-muted border-b border-border font-semibold text-muted-foreground">
+                          <tr>
+                            <th className="p-2.5">Sample Schedule Metric</th>
+                            <th className="p-2.5 text-right">Sample Period (₹)</th>
+                            <th className="p-2.5 text-right">Sample Baseline (₹)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-border font-bold bg-secondary/10">
+                            <td className="p-2.5">Gross Benchmark Activity</td>
+                            <td className="p-2.5 text-right tabular">48,753,920.00</td>
+                            <td className="p-2.5 text-right tabular">43,354,210.00</td>
+                          </tr>
+                          <tr className="border-b border-border">
+                            <td className="p-2.5 pl-5 text-muted-foreground">Direct Operational Cost Benchmark</td>
+                            <td className="p-2.5 text-right tabular">(30,508,290.00)</td>
+                            <td className="p-2.5 text-right tabular">(27,100,000.00)</td>
+                          </tr>
+                          <tr className="border-b border-border font-bold bg-muted/40">
+                            <td className="p-2.5 pl-3">Gross Benchmark Margin</td>
+                            <td className="p-2.5 text-right tabular">18,245,630.00</td>
+                            <td className="p-2.5 text-right tabular">16,254,210.00</td>
+                          </tr>
+                          <tr className="border-b border-border">
+                            <td className="p-2.5 pl-5 text-muted-foreground">Overhead & Indirect Allocation</td>
+                            <td className="p-2.5 text-right tabular">(8,254,120.00)</td>
+                            <td className="p-2.5 text-right tabular">(7,354,000.00)</td>
+                          </tr>
+                          <tr className="border-b border-border font-bold bg-primary/10 text-primary">
+                            <td className="p-2.5 pl-3">Net Benchmark Output</td>
+                            <td className="p-2.5 text-right tabular">7,856,410.00</td>
+                            <td className="p-2.5 text-right tabular">7,000,210.00</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 )}
               </div>

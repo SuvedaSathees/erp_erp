@@ -305,16 +305,10 @@ export function CertificationReadinessNewPage({
   const handleSaveDraft = () => {
     saveDraftMutation.mutate({
       certificationProjectName: safeRecord.certificationProjectName,
-      targetMarkets: safeRecord.targetMarkets,
-      regulatoryAuthorities: safeRecord.regulatoryAuthorities,
-      standards: safeRecord.standards,
-      documentationReadiness: safeRecord.documentationReadiness,
-      testingComplianceScore: safeRecord.testingComplianceScore,
-      gapAnalysisScore: safeRecord.gapAnalysisScore,
-      aiAssessmentScore: safeRecord.aiAssessmentScore,
-      overallReadinessScore: safeRecord.overallReadinessScore,
-      approvalDecision: safeRecord.approvalDecision,
-      reviewComments: safeRecord.reviewComments,
+      certificationObjective: safeRecord.certificationObjective,
+      targetMarket: safeRecord.targetMarkets?.[0] || "",
+      regulatoryAuthority: safeRecord.regulatoryAuthorities?.[0] || "",
+      priority: safeRecord.priority,
     });
   };
 

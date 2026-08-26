@@ -1,5 +1,8 @@
-import { apiRequest } from "./apiClient";
-import { mockCostCenters, mockCostCenterBudgets, mockCostCenterHierarchy } from "@/lib/mock-data";
+import {
+  getCostCentersFn,
+  getCostCenterBudgetsFn,
+  createCostCenterFn,
+} from "@/lib/costCentersFns.server";
 import type {
   CostCenterRecord,
   CostCenterBudget,
@@ -8,61 +11,36 @@ import type {
   DashboardQuery,
 } from "./types";
 
-export function fetchCostCenterBudgets(query: DashboardQuery): Promise<CostCenterBudget[]> {
-  return apiRequest(
-    `/api/financial/cost-centers/budgets?fy=${query.fiscalYear}`,
-    () => mockCostCenterBudgets,
-  );
+export async function fetchCostCenterBudgets(query: DashboardQuery): Promise<CostCenterBudget[]> {
+  const res = await getCostCenterBudgetsFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }
 
-export function fetchCostCenters(query: DashboardQuery): Promise<CostCenterRecord[]> {
-  return apiRequest(`/api/financial/cost-centers?fy=${query.fiscalYear}`, () => mockCostCenters);
+export async function fetchCostCenters(query: DashboardQuery): Promise<CostCenterRecord[]> {
+  const res = await getCostCentersFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }
 
-export function createCostCenter(input: NewCostCenterInput): Promise<CostCenterRecord> {
-  return apiRequest(`/api/financial/cost-centers`, () => {
-    const nextId = `CC-0${mockCostCenters.length + 1}`;
-    const newCC: CostCenterRecord = {
-      id: nextId,
+export async function createCostCenter(input: NewCostCenterInput): Promise<CostCenterRecord> {
+  const res = await createCostCenterFn({ data: input });
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data;
+}
+
+export async function createSubCostCenter(input: NewSubCostCenterInput): Promise<CostCenterRecord> {
+  const res = await createCostCenterFn({
+    data: {
       code: input.code,
       name: input.name,
       department: input.department,
       manager: input.manager,
-      budget: Number(input.budget),
-      actual: 0.0,
-      variance: Number(input.budget),
-      utilization: 0.0,
-      status: "Active" as const,
-      type: input.type,
+      budget: input.budget,
+      type: "Support",
       parentId: input.parentId,
-    };
-
-    // Add to hierarchy structure
-    if (input.parentId === "Administration") {
-      mockCostCenterHierarchy.children[0].children?.push({ name: input.name });
-    } else if (input.parentId === "Operations") {
-      mockCostCenterHierarchy.children[2].children?.push({ name: input.name });
-    } else if (input.parentId === "Commercial") {
-      mockCostCenterHierarchy.children[3].children?.push({ name: input.name });
-    } else if (input.parentId === "Technology") {
-      mockCostCenterHierarchy.children[4].children?.push({ name: input.name });
-    } else {
-      mockCostCenterHierarchy.children.push({ name: input.name });
-    }
-
-    mockCostCenters.push(newCC);
-    return newCC;
+    },
   });
-}
-
-export function createSubCostCenter(input: NewSubCostCenterInput): Promise<CostCenterRecord> {
-  return createCostCenter({
-    code: input.code,
-    name: input.name,
-    department: input.department,
-    manager: input.manager,
-    budget: input.budget,
-    type: "Support",
-    parentId: input.parentId,
-  });
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data;
 }

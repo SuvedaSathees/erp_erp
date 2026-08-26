@@ -75,7 +75,8 @@ export type QuotationStatus =
   | "Sales Order"
   | "Rejected"
   | "Expired"
-  | "Cancelled";
+  | "Cancelled"
+  | "Converted to Order";
 
 export interface QuotationItem {
   id: string;
@@ -245,7 +246,7 @@ const RECENT_ACTIVITIES = [
   { time: "15 Apr 2024 11:15 AM", type: "Approval", subject: "Sales manager approval completed", outcome: "Approved", color: "bg-emerald-100 text-emerald-800", performedBy: "Vikram Singh" },
 ];
 
-export function QuotationsManagementPage() {
+function QuotationsManagementPage() {
   const [quotation, setQuotation] = useState<QuotationRecord>(INITIAL_QUOTATION);
   const [items, setItems] = useState<QuotationItem[]>(INITIAL_ITEMS);
   const [activeTab, setActiveTab] = useState<string>("items");
@@ -284,6 +285,7 @@ export function QuotationsManagementPage() {
       totalDiscountAmount,
       discountPct: ((totalDiscountAmount / rawSubtotal) * 100).toFixed(2),
       netItemSubtotal,
+      grossTotalWithFreight,
       taxableValue,
       cgstTax: totalTaxAmount / 2,
       sgstTax: totalTaxAmount / 2,

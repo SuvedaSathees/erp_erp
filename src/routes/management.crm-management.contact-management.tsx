@@ -448,7 +448,7 @@ const RECENT_ACTIVITIES = [
   },
 ];
 
-export function ContactManagementPage() {
+function ContactManagementPage() {
   const [contacts, setContacts] = useState<ContactRecord[]>(INITIAL_CONTACTS);
   const [selectedContactId, setSelectedContactId] = useState<string>("CONT-0002458");
 

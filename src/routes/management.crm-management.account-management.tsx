@@ -163,7 +163,7 @@ const FUNNEL_STAGES = [
   { stage: "Closed Won (1)", val: "₹ 15,00,000", width: "w-2/5", bg: "bg-purple-600" },
 ];
 
-export function AccountManagementPage() {
+function AccountManagementPage() {
   const [account, setAccount] = useState<AccountRecord>(INITIAL_ACCOUNT);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 

@@ -51,3 +51,18 @@ export function manageReport(
     throw new Error("Report not found");
   });
 }
+
+export async function fetchLiveReportPayload(
+  reportId: string,
+  query: DashboardQuery,
+): Promise<{ success: boolean; reportType: string; data: any }> {
+  try {
+    const { getLiveReportPayloadFn } = await import("@/lib/financialReportsFns.server");
+    const res = await getLiveReportPayloadFn({ data: { reportId, query } });
+    if (res.success) return res;
+  } catch (err) {
+    console.error("Failed to fetch live report payload:", err);
+  }
+  return { success: true, reportType: "Mock", data: null };
+}
+

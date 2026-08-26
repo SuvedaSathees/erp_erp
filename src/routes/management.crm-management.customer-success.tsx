@@ -244,7 +244,7 @@ const ADOPTION_DONUT = [
   { name: "Unused", value: 22, color: "#cbd5e1" },
 ];
 
-export function CustomerSuccessPage() {
+function CustomerSuccessPage() {
   const [success, setSuccess] = useState<CustomerSuccessRecord>(INITIAL_SUCCESS);
   const [activeTab, setActiveTab] = useState<string>("health");
 

@@ -143,6 +143,9 @@ function AccountsPayablePage() {
       setCreateOpen(false);
       invalidateAll();
     },
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to create invoice");
+    },
   });
 
   const paymentMutation = useMutation({
@@ -152,6 +155,9 @@ function AccountsPayablePage() {
       setPaymentInvoiceNo(null);
       invalidateAll();
     },
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to record payment");
+    },
   });
 
   const approveMutation = useMutation({
@@ -159,6 +165,9 @@ function AccountsPayablePage() {
     onSuccess: (invoice) => {
       toast.success(`${invoice.invoiceNo} approved`);
       invalidateAll();
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to approve invoice");
     },
   });
 
@@ -802,17 +811,20 @@ function CreateInvoiceDialog({
   }) => void;
   submitting: boolean;
 }) {
+  const today = new Date().toISOString().slice(0, 10);
+  const in30Days = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
   const [vendor, setVendor] = useState("");
   const [invoiceNo, setInvoiceNo] = useState("");
-  const [invoiceDate, setInvoiceDate] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState(today);
+  const [dueDate, setDueDate] = useState(in30Days);
   const [amount, setAmount] = useState("");
 
   function reset() {
     setVendor("");
     setInvoiceNo("");
-    setInvoiceDate("");
-    setDueDate("");
+    setInvoiceDate(today);
+    setDueDate(in30Days);
     setAmount("");
   }
 
@@ -834,7 +846,7 @@ function CreateInvoiceDialog({
               value={vendor}
               onChange={(e) => setVendor(e.target.value)}
               className={inputClass}
-              placeholder="Vendor name"
+              placeholder="Vendor name (e.g. Acme Corp.)"
             />
           </FormField>
           <FormField label="Invoice No.">
@@ -847,25 +859,29 @@ function CreateInvoiceDialog({
           </FormField>
           <FormField label="Invoice Date">
             <input
+              type="date"
+              required
               value={invoiceDate}
               onChange={(e) => setInvoiceDate(e.target.value)}
               className={inputClass}
-              placeholder="May 21, 2025"
             />
           </FormField>
           <FormField label="Due Date">
             <input
+              type="date"
+              required
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               className={inputClass}
-              placeholder="Jun 20, 2025"
             />
           </FormField>
-          <FormField label="Amount">
+          <FormField label="Amount (INR)">
             <input
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               type="number"
+              min="0"
+              step="any"
               className={inputClass}
               placeholder="0.00"
             />

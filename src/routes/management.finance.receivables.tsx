@@ -171,6 +171,9 @@ function AccountsReceivablePage() {
       setCreateOpen(false);
       invalidateAll();
     },
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to create invoice");
+    },
   });
 
   const receiptMutation = useMutation({
@@ -180,11 +183,18 @@ function AccountsReceivablePage() {
       setPaymentInvoiceNo(null);
       invalidateAll();
     },
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to record payment receipt");
+    },
   });
 
   const reminderMutation = useMutation({
     mutationFn: (invoiceNo: string) => accountsReceivableService.notifyCustomer(invoiceNo),
-    onSuccess: (_result, invoiceNo) => toast.success(`Reminder sent for ${invoiceNo}`),
+    onSuccess: (_result, invoiceNo) =>
+      toast.success(`Reminder logged for ${invoiceNo} (Email delivery pending SMTP configuration)`),
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to log reminder");
+    },
   });
 
   const creditMemoMutation = useMutation({
@@ -193,6 +203,9 @@ function AccountsReceivablePage() {
       toast.success(`${memo.invoiceNo} created`);
       setCreditMemoOpen(false);
       invalidateAll();
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to create credit memo");
     },
   });
 
@@ -948,17 +961,20 @@ function CreateInvoiceDialog({
   }) => void;
   submitting: boolean;
 }) {
+  const today = new Date().toISOString().slice(0, 10);
+  const in30Days = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
   const [customer, setCustomer] = useState("");
   const [invoiceNo, setInvoiceNo] = useState("");
-  const [invoiceDate, setInvoiceDate] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState(today);
+  const [dueDate, setDueDate] = useState(in30Days);
   const [amount, setAmount] = useState("");
 
   function reset() {
     setCustomer("");
     setInvoiceNo("");
-    setInvoiceDate("");
-    setDueDate("");
+    setInvoiceDate(today);
+    setDueDate(in30Days);
     setAmount("");
   }
 
@@ -976,14 +992,11 @@ function CreateInvoiceDialog({
         </DialogHeader>
         <div className="space-y-3">
           <FormField label="Customer">
-            <FilterSelect
+            <input
               value={customer}
-              onChange={setCustomer}
-              options={[
-                { label: "Select a customer…", value: "" },
-                ...CUSTOMER_NAMES.map((c) => ({ label: c, value: c })),
-              ]}
-              className="w-full"
+              onChange={(e) => setCustomer(e.target.value)}
+              className={inputClass}
+              placeholder="Customer name (e.g. Acme Corp.)"
             />
           </FormField>
           <FormField label="Invoice No.">
@@ -996,25 +1009,29 @@ function CreateInvoiceDialog({
           </FormField>
           <FormField label="Invoice Date">
             <input
+              type="date"
+              required
               value={invoiceDate}
               onChange={(e) => setInvoiceDate(e.target.value)}
               className={inputClass}
-              placeholder="May 21, 2025"
             />
           </FormField>
           <FormField label="Due Date">
             <input
+              type="date"
+              required
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               className={inputClass}
-              placeholder="Jun 20, 2025"
             />
           </FormField>
-          <FormField label="Amount">
+          <FormField label="Amount (INR)">
             <input
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               type="number"
+              min="0"
+              step="any"
               className={inputClass}
               placeholder="0.00"
             />

@@ -1,10 +1,3 @@
-import { apiRequest } from "./apiClient";
-import {
-  mockAuditLogs,
-  mockSensitiveChanges,
-  mockSecurityEvents,
-  mockConfigurationLogs,
-} from "@/lib/mock-data";
 import type {
   AuditLogEntry,
   SensitiveChangeRecord,
@@ -13,36 +6,42 @@ import type {
   DashboardQuery,
 } from "./types";
 
-export function fetchAuditLogs(query: DashboardQuery): Promise<AuditLogEntry[]> {
-  return apiRequest(`/api/financial/audit/logs?fy=${query.fiscalYear}`, () => mockAuditLogs);
+export async function fetchAuditLogs(query: DashboardQuery): Promise<AuditLogEntry[]> {
+  const { getAuditTrailDashboardFn } = await import("@/lib/auditTrailFns.server");
+  const res = await getAuditTrailDashboardFn({ data: { fiscalYear: query.fiscalYear, companyId: query.companyId } });
+  if (res?.success && res.data) {
+    return res.data.logs;
+  }
+  return [];
 }
 
-export function fetchLogDetails(id: string): Promise<AuditLogEntry | null> {
-  return apiRequest(
-    `/api/financial/audit/logs/${id}`,
-    () => mockAuditLogs.find((l) => l.id === id) || null,
-  );
+export async function fetchLogDetails(id: string): Promise<AuditLogEntry | null> {
+  const { getAuditLogDetailFn } = await import("@/lib/auditTrailFns.server");
+  const res = await getAuditLogDetailFn({ data: { id } });
+  if (res?.success) {
+    return res.data;
+  }
+  return null;
 }
 
-export function fetchSecurityEvents(query: DashboardQuery): Promise<SecurityEventEntry[]> {
-  return apiRequest(
-    `/api/financial/audit/security?fy=${query.fiscalYear}`,
-    () => mockSecurityEvents,
-  );
+export function fetchSecurityEvents(_query: DashboardQuery): Promise<SecurityEventEntry[]> {
+  // Security events table is not in schema; return honest empty state
+  return Promise.resolve([]);
 }
 
-export function fetchConfigurationLogs(query: DashboardQuery): Promise<ConfigurationLogEntry[]> {
-  return apiRequest(
-    `/api/financial/audit/config?fy=${query.fiscalYear}`,
-    () => mockConfigurationLogs,
-  );
+export function fetchConfigurationLogs(_query: DashboardQuery): Promise<ConfigurationLogEntry[]> {
+  // Configuration logs table is not in schema; return honest empty state
+  return Promise.resolve([]);
 }
 
-export function fetchRecentSensitiveChanges(
+export async function fetchRecentSensitiveChanges(
   query: DashboardQuery,
 ): Promise<SensitiveChangeRecord[]> {
-  return apiRequest(
-    `/api/financial/audit/sensitive?fy=${query.fiscalYear}`,
-    () => mockSensitiveChanges,
-  );
+  const { getAuditTrailDashboardFn } = await import("@/lib/auditTrailFns.server");
+  const res = await getAuditTrailDashboardFn({ data: { fiscalYear: query.fiscalYear, companyId: query.companyId } });
+  if (res?.success && res.data) {
+    return res.data.sensitiveChanges;
+  }
+  return [];
 }
+

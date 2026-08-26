@@ -92,7 +92,7 @@ const RECENT_ACTIVITIES = [
   { id: "ACT-005", title: "Tax Compliance return filed", by: "Rohit Verma", date: "05 May 2024", icon: FileCheck, color: "text-purple-500" },
 ];
 
-export function DepartmentManagementPage() {
+function DepartmentManagementPage() {
   const [activeTab, setActiveTab] = useState<
     "organization" | "people" | "positions" | "budget" | "kpis" | "compliance"
   >("organization");

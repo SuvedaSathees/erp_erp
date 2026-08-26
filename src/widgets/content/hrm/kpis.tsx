@@ -109,7 +109,7 @@ export const HRM_KPI_WIDGETS: WidgetDefinition[] = [
     },
     (d) => ({
       value: d?.kpis?.monthlyPayroll ? formatCurrency(d.kpis.monthlyPayroll) : "₹1,84,50,000",
-      delta: { label: "On budget · Disbursed", direction: "neutral", tone: "neutral" },
+      delta: { label: "On budget · Disbursed", direction: "up", tone: "positive" },
     }),
   ),
   widget(

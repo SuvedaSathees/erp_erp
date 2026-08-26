@@ -1,11 +1,15 @@
-import { apiRequest } from "./apiClient";
 import {
-  mockFixedAssets,
-  mockAssetCategories,
-  mockAssetDisposals,
-  mockAssetRevaluations,
-  mockAssetTransfers,
-} from "@/lib/mock-data";
+  getFixedAssetsFn,
+  getFixedAssetFn,
+  createFixedAssetFn,
+  transferFixedAssetFn,
+  disposeFixedAssetFn,
+  revalueFixedAssetFn,
+  getAssetCategoriesFn,
+  getAssetDisposalsFn,
+  getAssetRevaluationsFn,
+  getAssetTransfersFn,
+} from "@/lib/fixedAssetsFns.server";
 import type {
   FixedAsset,
   FixedAssetFilters,
@@ -17,179 +21,86 @@ import type {
   AssetTransferRecord,
 } from "./types";
 
-export function fetchFixedAssets(
+export async function fetchFixedAssets(
   query: DashboardQuery,
   filters: FixedAssetFilters,
 ): Promise<FixedAsset[]> {
-  return apiRequest(
-    `/api/financial/fixed-assets?search=${encodeURIComponent(filters.search)}&category=${filters.category}&status=${filters.status}&location=${filters.location}`,
-    () => {
-      let list = [...mockFixedAssets];
-      if (filters.search) {
-        const s = filters.search.toLowerCase();
-        list = list.filter(
-          (a) =>
-            a.name.toLowerCase().includes(s) ||
-            a.assetCode.toLowerCase().includes(s) ||
-            a.location.toLowerCase().includes(s),
-        );
-      }
-      if (filters.category !== "All Categories") {
-        list = list.filter((a) => a.category === filters.category);
-      }
-      if (filters.status !== "All Statuses") {
-        list = list.filter((a) => a.status === filters.status);
-      }
-      if (filters.location !== "All Locations") {
-        list = list.filter((a) => a.location === filters.location);
-      }
-      return list;
-    },
-  );
+  const res = await getFixedAssetsFn({ data: filters });
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }
 
-export function retrieveFixedAssetDetails(assetCode: string): Promise<FixedAsset | undefined> {
-  return apiRequest(`/api/financial/fixed-assets/${assetCode}`, () =>
-    mockFixedAssets.find((a) => a.assetCode === assetCode),
-  );
+export async function retrieveFixedAssetDetails(assetCode: string): Promise<FixedAsset | undefined> {
+  const res = await getFixedAssetFn({ data: assetCode });
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data;
 }
 
-export function saveFixedAsset(input: NewFixedAssetInput): Promise<FixedAsset> {
-  return apiRequest(`/api/financial/fixed-assets`, () => {
-    const code = `FA-0${mockFixedAssets.length + 10}`;
-    const cost = Number(input.cost);
-    const newAsset: FixedAsset = {
-      id: `AST-0${mockFixedAssets.length + 1}`,
-      assetCode: code,
-      name: input.name,
-      category: input.category,
-      location: input.location,
-      purchaseDate: input.purchaseDate,
-      cost,
-      accumulatedDepreciation: 0,
-      netBookValue: cost,
-      status: "Active" as const,
-    };
-    mockFixedAssets.push(newAsset);
-    return newAsset;
-  });
+export async function saveFixedAsset(input: NewFixedAssetInput): Promise<FixedAsset> {
+  const res = await createFixedAssetFn({ data: input });
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data;
 }
 
-export function transferFixedAsset(
+export async function transferFixedAsset(
   assetCode: string,
   destinationLocation: string,
   transferDate: string,
   authorizedBy: string,
 ): Promise<boolean> {
-  return apiRequest(`/api/financial/fixed-assets/transfer`, () => {
-    const asset = mockFixedAssets.find((a) => a.assetCode === assetCode);
-    if (asset) {
-      const sourceLocation = asset.location;
-      asset.location = destinationLocation;
-      mockAssetTransfers.unshift({
-        id: `TRF-0${mockAssetTransfers.length + 1}`,
-        assetCode,
-        name: asset.name,
-        date: transferDate,
-        sourceLocation,
-        destinationLocation,
-        authorizedBy,
-      });
-      return true;
-    }
-    return false;
+  const res = await transferFixedAssetFn({
+    data: { assetCode, destinationLocation, transferDate, authorizedBy },
   });
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return Boolean(res.data);
 }
 
-export function disposeFixedAsset(
+export async function disposeFixedAsset(
   assetCode: string,
   saleProceeds: number,
   disposalReason: string,
   disposalDate: string,
 ): Promise<boolean> {
-  return apiRequest(`/api/financial/fixed-assets/dispose`, () => {
-    const asset = mockFixedAssets.find((a) => a.assetCode === assetCode);
-    if (asset) {
-      asset.status = "Disposed";
-      const gainLoss = saleProceeds - asset.netBookValue;
-
-      mockAssetDisposals.unshift({
-        id: `DSP-0${mockAssetDisposals.length + 1}`,
-        assetCode,
-        name: asset.name,
-        disposalDate,
-        cost: asset.cost,
-        accumulatedDepreciation: asset.accumulatedDepreciation,
-        proceeds: saleProceeds,
-        gainLoss,
-        status: "Approved",
-      });
-
-      asset.netBookValue = 0;
-      return true;
-    }
-    return false;
+  const res = await disposeFixedAssetFn({
+    data: { assetCode, saleProceeds, disposalReason, disposalDate },
   });
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return Boolean(res.data);
 }
 
-export function revalueFixedAsset(
+export async function revalueFixedAsset(
   assetCode: string,
   newMarketValue: number,
   reason: string,
   revaluationDate: string,
 ): Promise<boolean> {
-  return apiRequest(`/api/financial/fixed-assets/revalue`, () => {
-    const asset = mockFixedAssets.find((a) => a.assetCode === assetCode);
-    if (asset) {
-      const oldNBV = asset.netBookValue;
-      const adjustment = newMarketValue - oldNBV;
-      asset.netBookValue = newMarketValue;
-      if (adjustment > 0) {
-        asset.cost += adjustment;
-      } else {
-        asset.accumulatedDepreciation += Math.abs(adjustment);
-      }
-
-      mockAssetRevaluations.unshift({
-        id: `REV-0${mockAssetRevaluations.length + 1}`,
-        assetCode,
-        name: asset.name,
-        date: revaluationDate,
-        oldNBV,
-        newNBV: newMarketValue,
-        adjustment,
-        reason,
-      });
-      return true;
-    }
-    return false;
+  const res = await revalueFixedAssetFn({
+    data: { assetCode, newMarketValue, reason, revaluationDate },
   });
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return Boolean(res.data);
 }
 
-export function fetchAssetCategories(query: DashboardQuery): Promise<AssetCategoryRecord[]> {
-  return apiRequest(
-    `/api/financial/fixed-assets/categories?fy=${query.fiscalYear}`,
-    () => mockAssetCategories,
-  );
+export async function fetchAssetCategories(query: DashboardQuery): Promise<AssetCategoryRecord[]> {
+  const res = await getAssetCategoriesFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }
 
-export function fetchAssetDisposals(query: DashboardQuery): Promise<AssetDisposalRecord[]> {
-  return apiRequest(
-    `/api/financial/fixed-assets/disposals?fy=${query.fiscalYear}`,
-    () => mockAssetDisposals,
-  );
+export async function fetchAssetDisposals(query: DashboardQuery): Promise<AssetDisposalRecord[]> {
+  const res = await getAssetDisposalsFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }
 
-export function fetchAssetRevaluations(query: DashboardQuery): Promise<AssetRevaluationRecord[]> {
-  return apiRequest(
-    `/api/financial/fixed-assets/revaluations?fy=${query.fiscalYear}`,
-    () => mockAssetRevaluations,
-  );
+export async function fetchAssetRevaluations(query: DashboardQuery): Promise<AssetRevaluationRecord[]> {
+  const res = await getAssetRevaluationsFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }
 
-export function fetchAssetTransfers(query: DashboardQuery): Promise<AssetTransferRecord[]> {
-  return apiRequest(
-    `/api/financial/fixed-assets/transfers?fy=${query.fiscalYear}`,
-    () => mockAssetTransfers,
-  );
+export async function fetchAssetTransfers(query: DashboardQuery): Promise<AssetTransferRecord[]> {
+  const res = await getAssetTransfersFn();
+  if (res && "success" in res && !res.success) throw new Error(res.error);
+  return res.data || [];
 }

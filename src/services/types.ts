@@ -1459,8 +1459,8 @@ export type AuditLogEntry = {
   status: "Success" | "Failed" | "Warning";
   ipAddress: string;
   details?: {
-    before?: Record<string, unknown>;
-    after?: Record<string, unknown>;
+    before?: Record<string, string | number | boolean | null | undefined>;
+    after?: Record<string, string | number | boolean | null | undefined>;
     metadata?: Record<string, string | undefined>;
   };
 };

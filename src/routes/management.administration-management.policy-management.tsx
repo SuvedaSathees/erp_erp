@@ -95,7 +95,7 @@ const RECENT_POLICY_VERSIONS = [
   { id: "VER-101", version: "v1.0", effectiveDate: "01 Apr 2023", publishedOn: "01 Apr 2023", changeType: "Initial Version", changedBy: "Amit Verma", status: "Superseded", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
 ];
 
-export function PolicyManagementPage() {
+function PolicyManagementPage() {
   const [activeTab, setActiveTab] = useState<"summary" | "directory" | "governance" | "audit">("summary");
 
   // Master Form State

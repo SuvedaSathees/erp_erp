@@ -22,7 +22,6 @@ const FINANCE_TABS = [
   { to: "/management/finance/profitability", label: "Profitability" },
   { to: "/management/finance/setup", label: "Setup & Integrations" },
   { to: "/management/finance/tax", label: "Tax Management" },
-  { to: "/settings", label: "Settings" },
 ];
 
 export function FinanceTabBar() {

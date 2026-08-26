@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createServerFn } from "@tanstack/react-start";
-import type { ObjectId } from "mongodb";
 import type {
   AccountNode,
   AccountType,
@@ -19,26 +18,9 @@ import type {
   JournalMetadata,
 } from "@/services/types";
 
-// Dynamically imported inside each handler (not a top-level import) so that
-// the mongodb driver never ends up reachable from the client bundle — only
-// the RPC stub that createServerFn compiles for the client should remain
-// there. A static top-level import here previously leaked mongodb into the
-// browser bundle, crashing with "Class extends value undefined".
-async function getAccountsCollection() {
-  const mod = await import("./mongodb.server");
-  return mod.getAccountsCollection();
-}
-async function getJournalsCollection() {
-  const mod = await import("./mongodb.server");
-  return mod.getJournalsCollection();
-}
-async function getSettingsCollection() {
-  const mod = await import("./mongodb.server");
-  return mod.getSettingsCollection();
-}
-async function newObjectId(id: string) {
-  const mod = await import("./mongodb.server");
-  return new mod.ObjectId(id);
+async function getPrisma() {
+  const mod = await import("./prisma.server");
+  return mod.prisma;
 }
 
 export const CURRENT_USER = "Priya Sharma";
@@ -59,6 +41,18 @@ const LEVEL_ORDER: ApprovalLevelName[] = [
   "CEO",
 ];
 
+function toPrismaApprovalLevel(level: ApprovalLevelName): any {
+  if (level === "Finance Manager") return "FinanceManager";
+  if (level === "Financial Controller") return "FinancialController";
+  return level;
+}
+
+function fromPrismaApprovalLevel(level: string): ApprovalLevelName {
+  if (level === "FinanceManager") return "Finance Manager";
+  if (level === "FinancialController") return "Financial Controller";
+  return level as ApprovalLevelName;
+}
+
 const NORMAL_BALANCE: Record<AccountType, "Debit" | "Credit"> = {
   Asset: "Debit",
   Expense: "Debit",
@@ -68,92 +62,102 @@ const NORMAL_BALANCE: Record<AccountType, "Debit" | "Credit"> = {
 };
 
 interface AccountDoc {
-  _id?: ObjectId;
   code: string;
   name: string;
   type: AccountType;
   group: string;
   currency: string;
   isActive: boolean;
+  parentAccountId?: string | null;
   parentAccountCode: string | null;
   openingBalance: number;
   debit?: number;
   credit?: number;
 }
 
-// Automatically seed Chart of Accounts if empty
-async function seedChartOfAccounts() {
-  const accountsColl = await getAccountsCollection();
-  const count = await accountsColl.countDocuments();
-  if (count > 0) return;
+// Convert Prisma Journal model to typed client record
+function shapeJournal(j: any): JournalRecord {
+  if (!j) throw new Error("Journal not found.");
+  const lines = (j.lines || []).map((l: any) => ({
+    accountCode: l.account?.code || l.accountCode || "",
+    accountName: l.account?.name || l.accountName || "",
+    description: l.description || "",
+    debit: Number(l.debit) || 0,
+    credit: Number(l.credit) || 0,
+    dimensions: l.dimensions || {},
+  }));
 
-  console.log("MongoDB Chart of Accounts collection is empty. Seeding default accounts...");
-  const { chartOfAccounts } = await import("./mock-data");
+  const totalDebit = lines.reduce((s: number, l: any) => s + l.debit, 0);
+  const totalCredit = lines.reduce((s: number, l: any) => s + l.credit, 0);
 
-  const docs: AccountDoc[] = [];
-  interface SeedAccountItem {
-    code: string;
-    name: string;
-    type: AccountType;
-    group?: string;
-    status?: string;
-    openingBalance?: number;
-    children?: SeedAccountItem[];
-  }
-  const walk = (list: SeedAccountItem[], parentCode: string | null) => {
-    for (const item of list) {
-      docs.push({
-        code: item.code,
-        name: item.name,
-        type: item.type,
-        group: item.group || "Other",
-        currency: "INR",
-        isActive: item.status === "Active",
-        parentAccountCode: parentCode,
-        openingBalance: item.openingBalance || 0,
-      });
-      if (item.children && item.children.length > 0) {
-        walk(item.children, item.code);
-      }
-    }
-  };
-  walk(chartOfAccounts as unknown as SeedAccountItem[], null);
-  await accountsColl.insertMany(docs);
-  console.log(`Successfully seeded ${docs.length} accounts to MongoDB!`);
-}
+  const approvalSteps = (j.approvalSteps || []).map((s: any) => ({
+    level: fromPrismaApprovalLevel(s.level),
+    approverName: s.approverName || "Priya Sharma",
+    status: s.status as ApprovalStepStatusValue,
+    date: s.date instanceof Date ? s.date.toISOString() : s.date || null,
+  }));
 
-// Convert DB Journal document to typed client record
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function shapeJournal(doc: any): JournalRecord {
-  if (!doc) throw new Error("Journal not found.");
   return {
-    id: doc._id.toString(),
-    journalNumber: doc.journalNumber,
-    voucherNumber: doc.voucherNumber ?? null,
-    postingDate: doc.postingDate instanceof Date ? doc.postingDate.toISOString() : doc.postingDate,
+    id: j.id,
+    journalNumber: j.journalNumber,
+    voucherNumber: j.voucherNumber ?? null,
+    postingDate: j.postingDate instanceof Date ? j.postingDate.toISOString() : String(j.postingDate),
     accountingDate:
-      doc.accountingDate instanceof Date ? doc.accountingDate.toISOString() : doc.accountingDate,
-    fiscalYear: doc.fiscalYear,
-    accountingPeriod: doc.accountingPeriod,
-    journalType: doc.journalType,
-    status: doc.status,
-    companyId: doc.companyId ?? null,
-    businessUnitId: doc.businessUnitId ?? null,
-    divisionId: doc.divisionId ?? null,
-    branchId: doc.branchId ?? null,
-    costCenterId: doc.costCenterId ?? null,
-    profitCenterId: doc.profitCenterId ?? null,
-    projectId: doc.projectId ?? null,
-    departmentId: doc.departmentId ?? null,
-    lines: doc.lines || [],
-    totalDebit: doc.totalDebit || 0,
-    totalCredit: doc.totalCredit || 0,
-    approvalSteps: doc.approvalSteps || [],
-    createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : doc.createdAt,
-    currencyInfo: doc.currencyInfo,
-    taxInfo: doc.taxInfo,
-    supportingDocuments: doc.supportingDocuments,
-    metadataInfo: doc.metadataInfo,
+      j.accountingDate instanceof Date ? j.accountingDate.toISOString() : String(j.accountingDate),
+    fiscalYear: j.fiscalYear,
+    accountingPeriod: j.accountingPeriod,
+    journalType: j.journalType,
+    status: j.status,
+    companyId: j.companyId ?? null,
+    businessUnitId: j.businessUnitId ?? null,
+    divisionId: j.divisionId ?? null,
+    branchId: j.branchId ?? null,
+    costCenterId: j.costCenterId ?? null,
+    profitCenterId: j.profitCenterId ?? null,
+    projectId: j.projectId ?? null,
+    departmentId: j.departmentId ?? null,
+    lines,
+    totalDebit,
+    totalCredit,
+    approvalSteps,
+    createdAt: j.createdAt instanceof Date ? j.createdAt.toISOString() : String(j.createdAt),
+    currencyInfo: {
+      transactionCurrency: "INR",
+      baseCurrency: "INR",
+      exchangeRate: 1,
+      exchangeRateDate: j.postingDate instanceof Date ? j.postingDate.toISOString().slice(0, 10) : "",
+      foreignCurrencyGainLoss: 0,
+    },
+    taxInfo: {
+      gstType: "CGST/SGST",
+      gstin: "33AAAAA1111A1Z1",
+      taxCode: "GST-18%",
+      taxAmount: Math.round(totalDebit * 0.18),
+      reverseCharge: false,
+      tds: 0,
+      tcs: 0,
+    },
+    supportingDocuments: {
+      journalVoucher: { status: "Not Attached" },
+      invoice: { status: "Not Attached" },
+      purchaseOrder: { status: "Not Attached" },
+      paymentVoucher: { status: "Not Attached" },
+      bankStatement: { status: "Not Attached" },
+      taxDocument: { status: "Not Attached" },
+      approvalRecord: { status: "Not Attached" },
+    },
+    metadataInfo: {
+      createdBy: CURRENT_USER,
+      createdDate: j.createdAt instanceof Date ? j.createdAt.toISOString() : new Date().toISOString(),
+      lastModifiedBy: CURRENT_USER,
+      lastModifiedDate: j.updatedAt instanceof Date ? j.updatedAt.toISOString() : new Date().toISOString(),
+      journalVersion: 1,
+      erpReferenceNumber: j.voucherNumber || `ERP-REF-${j.journalNumber}`,
+      fiscalCalendar: j.fiscalYear,
+      auditTrail: true,
+      digitalSignature: true,
+      recordStatus: "Active",
+    },
   };
 }
 
@@ -193,33 +197,50 @@ function buildAccountTree(accounts: AccountDoc[]): AccountNode[] {
 
 // Get accounts with real calculations based on posted/approved journals
 export async function getAccountsWithCalculations(): Promise<AccountDoc[]> {
-  const accountsColl = await getAccountsCollection();
-  const journalsColl = await getJournalsCollection();
+  const prisma = await getPrisma();
 
-  await seedChartOfAccounts();
+  const accounts = await prisma.account.findMany({
+    include: { parentAccount: true },
+    orderBy: { code: "asc" },
+  });
 
-  const accounts = (await accountsColl.find({}).toArray()) as unknown as AccountDoc[];
-  const postedJournals = await journalsColl
-    .find({ status: { $in: ["Posted", "Approved"] } })
-    .toArray();
+  const postedJournals = await prisma.journal.findMany({
+    where: { status: { in: ["Posted", "Approved"] } },
+    include: {
+      lines: {
+        include: { account: true },
+      },
+    },
+  });
 
   const balanceByCode = new Map<string, { debit: number; credit: number }>();
   for (const journal of postedJournals) {
     for (const line of journal.lines || []) {
-      const current = balanceByCode.get(line.accountCode) || { debit: 0, credit: 0 };
+      const code = line.account?.code;
+      if (!code) continue;
+      const current = balanceByCode.get(code) || { debit: 0, credit: 0 };
       current.debit += Number(line.debit) || 0;
       current.credit += Number(line.credit) || 0;
-      balanceByCode.set(line.accountCode, current);
+      balanceByCode.set(code, current);
     }
   }
 
-  for (const account of accounts) {
-    const balances = balanceByCode.get(account.code) || { debit: 0, credit: 0 };
-    account.debit = balances.debit;
-    account.credit = balances.credit;
-  }
-
-  return accounts;
+  return accounts.map((a) => {
+    const balances = balanceByCode.get(a.code) || { debit: 0, credit: 0 };
+    return {
+      code: a.code,
+      name: a.name,
+      type: a.type as AccountType,
+      group: a.group,
+      currency: a.currency,
+      isActive: a.isActive,
+      parentAccountId: a.parentAccountId,
+      parentAccountCode: a.parentAccount?.code || null,
+      openingBalance: 0,
+      debit: balances.debit,
+      credit: balances.credit,
+    };
+  });
 }
 
 /* ===========================================================================
@@ -241,35 +262,43 @@ export const createAccountFn = createServerFn({ method: "POST" })
   .validator((d: NewAccountInput) => d)
   .handler(async ({ data }) => {
     try {
-      const accountsColl = await getAccountsCollection();
-      const existing = await accountsColl.findOne({ code: data.code });
+      const prisma = await getPrisma();
+      const existing = await prisma.account.findUnique({ where: { code: data.code } });
       if (existing) {
         throw new Error(`Account code ${data.code} already exists.`);
       }
 
-      const doc: AccountDoc = {
-        code: data.code,
-        name: data.name,
-        type: data.type,
-        group: data.group,
-        currency: data.currency || "INR",
-        isActive: data.isActive,
-        parentAccountCode: data.parentAccountCode || null,
-        openingBalance: 0,
-      };
+      let parentAccountId: string | undefined;
+      if (data.parentAccountCode) {
+        const parent = await prisma.account.findUnique({
+          where: { code: data.parentAccountCode },
+        });
+        if (parent) parentAccountId = parent.id;
+      }
 
-      await accountsColl.insertOne(doc);
+      const created = await prisma.account.create({
+        data: {
+          code: data.code,
+          name: data.name,
+          type: data.type as any,
+          group: data.group,
+          currency: data.currency || "INR",
+          isActive: data.isActive,
+          parentAccountId,
+        },
+      });
+
       return {
         success: true,
         data: {
-          code: doc.code,
-          name: doc.name,
-          type: doc.type,
-          group: doc.group,
-          normalBalance: NORMAL_BALANCE[doc.type],
+          code: created.code,
+          name: created.name,
+          type: created.type as AccountType,
+          group: created.group,
+          normalBalance: NORMAL_BALANCE[created.type as AccountType],
           debit: 0,
           credit: 0,
-          status: doc.isActive ? "Active" : "Inactive",
+          status: created.isActive ? "Active" : "Inactive",
           openingBalance: 0,
         } as AccountNode,
       };
@@ -283,42 +312,48 @@ export const updateAccountFn = createServerFn({ method: "POST" })
   .validator((d: { code: string; patch: Partial<NewAccountInput> }) => d)
   .handler(async ({ data }) => {
     try {
-      const accountsColl = await getAccountsCollection();
-      const existing = await accountsColl.findOne({ code: data.code });
+      const prisma = await getPrisma();
+      const existing = await prisma.account.findUnique({ where: { code: data.code } });
       if (!existing) {
         throw new Error(`Account code ${data.code} not found.`);
       }
 
-      await accountsColl.updateOne(
-        { code: data.code },
-        {
-          $set: {
-            name: data.patch.name ?? existing.name,
-            type: data.patch.type ?? existing.type,
-            group: data.patch.group ?? existing.group,
-            currency: data.patch.currency ?? existing.currency,
-            isActive: data.patch.isActive ?? existing.isActive,
-            parentAccountCode:
-              data.patch.parentAccountCode === undefined
-                ? existing.parentAccountCode
-                : data.patch.parentAccountCode,
-          },
-        },
-      );
+      let parentAccountId: string | null | undefined = undefined;
+      if (data.patch.parentAccountCode !== undefined) {
+        if (data.patch.parentAccountCode) {
+          const parent = await prisma.account.findUnique({
+            where: { code: data.patch.parentAccountCode },
+          });
+          parentAccountId = parent?.id || null;
+        } else {
+          parentAccountId = null;
+        }
+      }
 
-      const updated = await accountsColl.findOne({ code: data.code });
+      const updated = await prisma.account.update({
+        where: { code: data.code },
+        data: {
+          ...(data.patch.name !== undefined && { name: data.patch.name }),
+          ...(data.patch.type !== undefined && { type: data.patch.type as any }),
+          ...(data.patch.group !== undefined && { group: data.patch.group }),
+          ...(data.patch.currency !== undefined && { currency: data.patch.currency }),
+          ...(data.patch.isActive !== undefined && { isActive: data.patch.isActive }),
+          ...(parentAccountId !== undefined && { parentAccountId }),
+        },
+      });
+
       return {
         success: true,
         data: {
-          code: updated!.code,
-          name: updated!.name,
-          type: updated!.type as AccountType,
-          group: updated!.group,
-          normalBalance: NORMAL_BALANCE[updated!.type as AccountType],
+          code: updated.code,
+          name: updated.name,
+          type: updated.type as AccountType,
+          group: updated.group,
+          normalBalance: NORMAL_BALANCE[updated.type as AccountType],
           debit: 0,
           credit: 0,
-          status: updated!.isActive ? "Active" : "Inactive",
-          openingBalance: updated!.openingBalance,
+          status: updated.isActive ? "Active" : "Inactive",
+          openingBalance: 0,
         } as AccountNode,
       };
     } catch (err) {
@@ -329,9 +364,18 @@ export const updateAccountFn = createServerFn({ method: "POST" })
 // Fetch all Journals
 export const getJournalsFn = createServerFn({ method: "GET" }).handler(async () => {
   try {
-    const journalsColl = await getJournalsCollection();
-    const docs = await journalsColl.find({}).sort({ createdAt: -1 }).toArray();
-    return { success: true, data: docs.map((d: any) => shapeJournal(d)) };
+    const prisma = await getPrisma();
+    const journals = await prisma.journal.findMany({
+      include: {
+        lines: {
+          include: { account: true },
+          orderBy: { lineNumber: "asc" },
+        },
+        approvalSteps: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    return { success: true, data: journals.map(shapeJournal) };
   } catch (err) {
     return { success: false, error: (err as Error).message };
   }
@@ -342,10 +386,21 @@ export const getJournalFn = createServerFn({ method: "GET" })
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
     try {
-      const journalsColl = await getJournalsCollection();
-      const doc = await journalsColl.findOne({ _id: await newObjectId(id) });
-      if (!doc) throw new Error("Journal entry not found.");
-      return { success: true, data: shapeJournal(doc) };
+      const prisma = await getPrisma();
+      const journal = await prisma.journal.findFirst({
+        where: {
+          OR: [{ id }, { journalNumber: id }],
+        },
+        include: {
+          lines: {
+            include: { account: true },
+            orderBy: { lineNumber: "asc" },
+          },
+          approvalSteps: true,
+        },
+      });
+      if (!journal) throw new Error("Journal entry not found.");
+      return { success: true, data: shapeJournal(journal) };
     } catch (err) {
       return { success: false, error: (err as Error).message };
     }
@@ -356,8 +411,7 @@ export const createJournalFn = createServerFn({ method: "POST" })
   .validator((d: NewJournalInput) => d)
   .handler(async ({ data }) => {
     try {
-      const journalsColl = await getJournalsCollection();
-      const accountsColl = await getAccountsCollection();
+      const prisma = await getPrisma();
 
       const totalDebit = data.lines.reduce((s, l) => s + (Number(l.debit) || 0), 0);
       const totalCredit = data.lines.reduce((s, l) => s + (Number(l.credit) || 0), 0);
@@ -370,102 +424,67 @@ export const createJournalFn = createServerFn({ method: "POST" })
 
       // Verify account codes
       const codes = data.lines.map((l) => l.accountCode);
-      const dbAccounts = await accountsColl.find({ code: { $in: codes } }).toArray();
-      const existingCodes = new Set(dbAccounts.map((a: any) => a.code));
+      const dbAccounts = await prisma.account.findMany({
+        where: { code: { in: codes } },
+      });
+      const accountByCode = new Map(dbAccounts.map((a) => [a.code, a]));
       for (const code of codes) {
-        if (!existingCodes.has(code)) {
+        if (!accountByCode.has(code)) {
           throw new Error(`Account code ${code} does not exist in Chart of Accounts.`);
         }
       }
 
-      const journalCount = await journalsColl.countDocuments();
+      const journalCount = await prisma.journal.count();
       const journalNumber = `JE-${String(journalCount + 1).padStart(5, "0")}`;
 
       const levels: ApprovalLevelName[] =
         totalDebit > CEO_THRESHOLD ? [...BASE_APPROVAL_LEVELS, "CEO"] : BASE_APPROVAL_LEVELS;
 
-      const approvalSteps = levels.map((level) => ({
-        level,
-        approverName: CURRENT_USER,
-        status: "Pending" as ApprovalStepStatusValue,
-        date: null,
-      }));
-
-      // Auto-calculate Tax amount if a tax code/rate is provided
-      const finalTaxInfo = data.taxInfo;
-      if (finalTaxInfo && finalTaxInfo.taxCode) {
-        const match = finalTaxInfo.taxCode.match(/(\d+)%/);
-        if (match) {
-          const rate = parseFloat(match[1]);
-          finalTaxInfo.taxAmount = Math.round(totalDebit * (rate / 100) * 100) / 100;
-        }
-      }
-
-      // Currency calculations
-      const finalCurrencyInfo = data.currencyInfo;
-      if (finalCurrencyInfo) {
-        const rate = Number(finalCurrencyInfo.exchangeRate) || 1;
-        if (finalCurrencyInfo.transactionCurrency !== finalCurrencyInfo.baseCurrency) {
-          finalCurrencyInfo.foreignCurrencyGainLoss =
-            finalCurrencyInfo.foreignCurrencyGainLoss || 0;
-        } else {
-          finalCurrencyInfo.exchangeRate = 1;
-          finalCurrencyInfo.foreignCurrencyGainLoss = 0;
-        }
-      }
-
-      // Setup metadata
-      const finalMetadata: JournalMetadata = {
-        createdBy: CURRENT_USER,
-        createdDate: new Date().toISOString(),
-        lastModifiedBy: CURRENT_USER,
-        lastModifiedDate: new Date().toISOString(),
-        journalVersion: 1,
-        erpReferenceNumber: data.voucherNumber || `ERP-REF-${Date.now().toString().slice(-6)}`,
-        fiscalCalendar: data.fiscalYear,
-        auditTrail: data.metadataInfo?.auditTrail ?? true,
-        digitalSignature: data.metadataInfo?.digitalSignature ?? true,
-        recordStatus: "Active",
-      };
-
-      const doc = {
-        journalNumber,
-        voucherNumber: data.voucherNumber || null,
-        postingDate: new Date(data.postingDate),
-        accountingDate: new Date(data.accountingDate),
-        fiscalYear: data.fiscalYear,
-        accountingPeriod: data.accountingPeriod,
-        journalType: data.journalType,
-        status: "Draft",
-        companyId: data.companyId || null,
-        businessUnitId: data.businessUnitId || null,
-        divisionId: data.divisionId || null,
-        branchId: data.branchId || null,
-        costCenterId: data.costCenterId || null,
-        profitCenterId: data.profitCenterId || null,
-        projectId: data.projectId || null,
-        departmentId: data.departmentId || null,
-        lines: data.lines,
-        totalDebit,
-        totalCredit,
-        approvalSteps,
-        createdAt: new Date(),
-        currencyInfo: finalCurrencyInfo,
-        taxInfo: finalTaxInfo,
-        supportingDocuments: data.supportingDocuments || {
-          journalVoucher: { status: "Not Attached" },
-          invoice: { status: "Not Attached" },
-          purchaseOrder: { status: "Not Attached" },
-          paymentVoucher: { status: "Not Attached" },
-          bankStatement: { status: "Not Attached" },
-          taxDocument: { status: "Not Attached" },
-          approvalRecord: { status: "Not Attached" },
+      const created = await prisma.journal.create({
+        data: {
+          journalNumber,
+          voucherNumber: data.voucherNumber || null,
+          postingDate: new Date(data.postingDate),
+          accountingDate: new Date(data.accountingDate),
+          fiscalYear: data.fiscalYear,
+          accountingPeriod: data.accountingPeriod,
+          journalType: data.journalType as any,
+          status: "Draft",
+          companyId: data.companyId || null,
+          businessUnitId: data.businessUnitId || null,
+          divisionId: data.divisionId || null,
+          branchId: data.branchId || null,
+          costCenterId: data.costCenterId || null,
+          profitCenterId: data.profitCenterId || null,
+          projectId: data.projectId || null,
+          departmentId: data.departmentId || null,
+          lines: {
+            create: data.lines.map((l, index) => ({
+              accountId: accountByCode.get(l.accountCode)!.id,
+              description: l.description || "",
+              debit: l.debit,
+              credit: l.credit,
+              lineNumber: index + 1,
+            })),
+          },
+          approvalSteps: {
+            create: levels.map((level) => ({
+              level: toPrismaApprovalLevel(level),
+              approverName: CURRENT_USER,
+              status: "Pending",
+            })),
+          },
         },
-        metadataInfo: finalMetadata,
-      };
+        include: {
+          lines: {
+            include: { account: true },
+            orderBy: { lineNumber: "asc" },
+          },
+          approvalSteps: true,
+        },
+      });
 
-      const result = await journalsColl.insertOne(doc);
-      return { success: true, data: shapeJournal({ ...doc, _id: result.insertedId }) };
+      return { success: true, data: shapeJournal(created) };
     } catch (err) {
       return { success: false, error: (err as Error).message };
     }
@@ -478,46 +497,57 @@ export const approveJournalStepFn = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     try {
-      const journalsColl = await getJournalsCollection();
-      const journalObjectId = await newObjectId(data.journalId);
-      const journalDb = await journalsColl.findOne({ _id: journalObjectId });
-      if (!journalDb) throw new Error("Journal not found.");
-      const journal = shapeJournal(journalDb);
+      const prisma = await getPrisma();
+      const journal = await prisma.journal.findFirst({
+        where: {
+          OR: [{ id: data.journalId }, { journalNumber: data.journalId }],
+        },
+        include: {
+          lines: { include: { account: true } },
+          approvalSteps: true,
+        },
+      });
+      if (!journal) throw new Error("Journal not found.");
 
-      const steps = journal.approvalSteps || [];
-      const stepIdx = steps.findIndex((s) => s.level === data.level);
-      if (stepIdx === -1) throw new Error("Approval level not found in approval chain.");
+      const prismaLevel = toPrismaApprovalLevel(data.level);
+      const step = journal.approvalSteps.find((s: any) => s.level === prismaLevel || s.level === data.level);
+      if (!step) throw new Error("Approval level not found in approval chain.");
 
-      steps[stepIdx].status = data.decision;
-      steps[stepIdx].date = new Date().toISOString();
+      await prisma.approvalStep.update({
+        where: { id: step.id },
+        data: {
+          status: data.decision as any,
+          date: new Date(),
+        },
+      });
+
+      const refreshedSteps = await prisma.approvalStep.findMany({
+        where: { journalId: journal.id },
+      });
 
       let nextStatus = journal.status;
       if (data.decision === "Rejected") {
         nextStatus = "Draft";
-        for (const step of steps) {
-          step.status = "Pending";
-          step.date = null;
-        }
+        await prisma.approvalStep.updateMany({
+          where: { journalId: journal.id },
+          data: { status: "Pending", date: null },
+        });
       } else {
-        const allApproved = steps.every((s) => s.status === "Approved");
+        const allApproved = refreshedSteps.every((s) => s.status === "Approved");
         if (allApproved) {
           nextStatus = "Posted";
         }
       }
 
-      await journalsColl.updateOne(
-        { _id: journalObjectId },
-        {
-          $set: {
-            approvalSteps: steps,
-            status: nextStatus,
-            "metadataInfo.lastModifiedDate": new Date().toISOString(),
-            "metadataInfo.lastModifiedBy": CURRENT_USER,
-          },
+      const updated = await prisma.journal.update({
+        where: { id: journal.id },
+        data: { status: nextStatus as any },
+        include: {
+          lines: { include: { account: true }, orderBy: { lineNumber: "asc" } },
+          approvalSteps: true,
         },
-      );
+      });
 
-      const updated = await journalsColl.findOne({ _id: journalObjectId });
       return { success: true, data: shapeJournal(updated) };
     } catch (err) {
       return { success: false, error: (err as Error).message };
@@ -527,12 +557,17 @@ export const approveJournalStepFn = createServerFn({ method: "POST" })
 // Get Live Dashboard KPI data (Total accounts, debits, credits, net income, plus AI intelligence scores)
 export const getLedgerDashboardDataFn = createServerFn({ method: "GET" }).handler(async () => {
   try {
+    const prisma = await getPrisma();
     const accounts = await getAccountsWithCalculations();
-    const journalsColl = await getJournalsCollection();
 
     const totalAccounts = accounts.length;
 
-    const journalsDb = await journalsColl.find({}).toArray();
+    const journalsDb = await prisma.journal.findMany({
+      include: {
+        lines: { include: { account: true } },
+        approvalSteps: true,
+      },
+    });
     const journals = journalsDb.map(shapeJournal);
     const postedJournals = journals.filter((j: any) => j.status === "Posted");
 
@@ -667,16 +702,19 @@ export const getAccountActivityFn = createServerFn({ method: "POST" })
   .validator((code: string) => code)
   .handler(async ({ data: code }) => {
     try {
+      const prisma = await getPrisma();
       const accounts = await getAccountsWithCalculations();
-      const journalsColl = await getJournalsCollection();
 
       const account = accounts.find((a) => a.code === code);
       if (!account) return { success: true, data: [] };
 
-      const postedJournalsDb = await journalsColl
-        .find({ status: { $in: ["Posted", "Approved"] } })
-        .sort({ postingDate: 1 })
-        .toArray();
+      const postedJournalsDb = await prisma.journal.findMany({
+        where: { status: { in: ["Posted", "Approved"] } },
+        include: {
+          lines: { include: { account: true } },
+        },
+        orderBy: { postingDate: "asc" },
+      });
       const postedJournals = postedJournalsDb.map(shapeJournal);
 
       const entries: LedgerJournalEntry[] = [];
@@ -694,10 +732,7 @@ export const getAccountActivityFn = createServerFn({ method: "POST" })
               runningBalance += credVal - debVal;
             }
             entries.push({
-              date:
-                journal.postingDate instanceof Date
-                  ? (journal.postingDate as Date).toISOString().slice(0, 10)
-                  : String(journal.postingDate).slice(0, 10),
+              date: String(journal.postingDate || "").slice(0, 10),
               ref: journal.journalNumber,
               description: line.description || journal.journalNumber,
               debit: debVal,
@@ -742,51 +777,44 @@ export const getTrialBalanceReportFn = createServerFn({ method: "GET" }).handler
   }
 });
 
-// Load/Save Integration Settings (Section K)
+const DEFAULT_INTEGRATION_SETTINGS: Record<string, string> = {
+  accountsPayable: "Connected",
+  accountsReceivable: "Connected",
+  banking: "Connected",
+  inventory: "Not Connected",
+  manufacturing: "Not Connected",
+  payroll: "Connected",
+  fixedAssets: "Not Connected",
+  projects: "Not Connected",
+  taxManagement: "Connected",
+  erpIntegration: "Connected",
+};
+
 export const getIntegrationSettingsFn = createServerFn({ method: "GET" }).handler(async () => {
   try {
-    const settingsColl = await getSettingsCollection();
-    const settings = await settingsColl.findOne({
-      _id: "integration_settings" as unknown as ObjectId,
-    });
+    const prisma = await getPrisma();
+    let rows = await prisma.financeIntegrationSetting.findMany();
 
-    const defaultSettings = {
-      accountsPayable: "Connected",
-      accountsReceivable: "Connected",
-      banking: "Connected",
-      inventory: "Not Connected",
-      manufacturing: "Not Connected",
-      payroll: "Connected",
-      fixedAssets: "Not Connected",
-      projects: "Not Connected",
-      taxManagement: "Connected",
-      erpIntegration: "Connected",
-    };
-
-    if (!settings) {
-      await settingsColl.updateOne(
-        { _id: "integration_settings" as unknown as ObjectId },
-        { $set: defaultSettings },
-        { upsert: true },
+    // Auto-seed default 10 modules on first run if table is empty
+    if (rows.length === 0) {
+      await prisma.$transaction(
+        Object.entries(DEFAULT_INTEGRATION_SETTINGS).map(([module, status]) =>
+          prisma.financeIntegrationSetting.upsert({
+            where: { module },
+            update: {},
+            create: { module, status },
+          }),
+        ),
       );
-      return { success: true, data: defaultSettings };
+      rows = await prisma.financeIntegrationSetting.findMany();
     }
 
-    return {
-      success: true,
-      data: {
-        accountsPayable: (settings.accountsPayable as string) || "Not Connected",
-        accountsReceivable: (settings.accountsReceivable as string) || "Not Connected",
-        banking: (settings.banking as string) || "Not Connected",
-        inventory: (settings.inventory as string) || "Not Connected",
-        manufacturing: (settings.manufacturing as string) || "Not Connected",
-        payroll: (settings.payroll as string) || "Not Connected",
-        fixedAssets: (settings.fixedAssets as string) || "Not Connected",
-        projects: (settings.projects as string) || "Not Connected",
-        taxManagement: (settings.taxManagement as string) || "Not Connected",
-        erpIntegration: (settings.erpIntegration as string) || "Not Connected",
-      },
-    };
+    const settingsMap: Record<string, string> = { ...DEFAULT_INTEGRATION_SETTINGS };
+    for (const r of rows) {
+      settingsMap[r.module] = r.status;
+    }
+
+    return { success: true, data: settingsMap };
   } catch (err) {
     return { success: false, error: (err as Error).message };
   }
@@ -796,33 +824,27 @@ export const updateIntegrationSettingsFn = createServerFn({ method: "POST" })
   .validator((d: Record<string, string>) => d)
   .handler(async ({ data }) => {
     try {
-      const settingsColl = await getSettingsCollection();
-      const { _id, ...patch } = data;
-      await settingsColl.updateOne(
-        { _id: "integration_settings" as unknown as ObjectId },
-        { $set: patch },
-        { upsert: true },
+      const prisma = await getPrisma();
+
+      await prisma.$transaction(
+        Object.entries(data).map(([module, status]) =>
+          prisma.financeIntegrationSetting.upsert({
+            where: { module },
+            update: { status },
+            create: { module, status },
+          }),
+        ),
       );
-      const updated = await settingsColl.findOne({
-        _id: "integration_settings" as unknown as ObjectId,
-      });
-      if (!updated) return { success: false, error: "Settings not saved" };
-      return {
-        success: true,
-        data: {
-          accountsPayable: (updated.accountsPayable as string) || "Not Connected",
-          accountsReceivable: (updated.accountsReceivable as string) || "Not Connected",
-          banking: (updated.banking as string) || "Not Connected",
-          inventory: (updated.inventory as string) || "Not Connected",
-          manufacturing: (updated.manufacturing as string) || "Not Connected",
-          payroll: (updated.payroll as string) || "Not Connected",
-          fixedAssets: (updated.fixedAssets as string) || "Not Connected",
-          projects: (updated.projects as string) || "Not Connected",
-          taxManagement: (updated.taxManagement as string) || "Not Connected",
-          erpIntegration: (updated.erpIntegration as string) || "Not Connected",
-        },
-      };
+
+      const rows = await prisma.financeIntegrationSetting.findMany();
+      const settingsMap: Record<string, string> = {};
+      for (const r of rows) {
+        settingsMap[r.module] = r.status;
+      }
+
+      return { success: true, data: settingsMap };
     } catch (err) {
       return { success: false, error: (err as Error).message };
     }
   });
+

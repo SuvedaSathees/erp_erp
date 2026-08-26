@@ -101,7 +101,7 @@ const INITIAL_COMPLAINTS: ComplaintRecord[] = [
   },
 ];
 
-export function ComplaintManagementPage() {
+function ComplaintManagementPage() {
   const [complaints, setComplaints] = useState<ComplaintRecord[]>(INITIAL_COMPLAINTS);
   const [selectedId, setSelectedId] = useState<string>("CMP-001");
   const [activeTab, setActiveTab] = useState<"investigation" | "rca" | "capa" | "sla" | "history">("investigation");

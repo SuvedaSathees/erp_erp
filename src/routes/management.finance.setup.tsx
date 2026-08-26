@@ -25,7 +25,7 @@ function SetupPage() {
     mutationFn: (settings: Record<string, string>) =>
       generalLedgerService.updateIntegrationSettings(settings),
     onSuccess: () => {
-      toast.success("Integration settings saved to MongoDB successfully!");
+      toast.success("Integration settings saved successfully!");
       queryClient.invalidateQueries({ queryKey: ["ledger", "integrations"] });
     },
     onError: (err: Error) => toast.error(err.message || "Failed to save settings."),
@@ -59,8 +59,8 @@ function SetupPage() {
                   ERP Workflow Integrations
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  Toggle other system modules connection statuses to General Ledger. Saved in
-                  MongoDB.
+                  Toggle other system modules connection statuses to General Ledger. Persisted in
+                  PostgreSQL.
                 </p>
               </div>
             </div>

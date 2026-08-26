@@ -54,7 +54,7 @@ const BRANCH_KPIS_DATA = [
   { id: "KPI-006", name: "Compliance Score", target: "100%", actual: "92%", achievement: "92.00%", status: "At Risk", statusClass: "bg-rose-500/10 text-rose-600 border border-rose-500/20" },
 ];
 
-export function BranchManagementPage() {
+function BranchManagementPage() {
   const [activeTab, setActiveTab] = useState<"directory" | "facilities" | "operations" | "financials" | "compliance">("directory");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 

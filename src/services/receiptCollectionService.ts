@@ -1,21 +1,20 @@
-import { apiRequest } from "./apiClient";
-import { arKpisRaw, receivableInvoices } from "@/lib/mock-data";
+import { getReceivableKpisFn, recordReceivableReceiptFn } from "@/lib/accountsReceivableFns.server";
+import { arKpisRaw } from "@/lib/mock-data";
 import type { DashboardQuery, ReceivableInvoice, ReceivePaymentInput } from "./types";
 
 // Matches the diagram's "Retrieve Collection Summary" step for the KPI row.
-export function retrieveCollectionAmount(query: DashboardQuery): Promise<number> {
-  return apiRequest(
-    `/api/financial/receipt-collection/collected-this-month?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => arKpisRaw.collectedThisMonth,
-  );
+export async function retrieveCollectionAmount(query: DashboardQuery): Promise<number> {
+  try {
+    const res = await getReceivableKpisFn({ data: query });
+    if (res.success && res.data) return res.data.collectedThisMonth;
+  } catch (err) {
+    console.error("Failed to retrieve collection amount from server:", err);
+  }
+  return arKpisRaw.collectedThisMonth;
 }
 
-export function recordReceipt(input: ReceivePaymentInput): Promise<ReceivableInvoice> {
-  return apiRequest(`/api/financial/receipt-collection/receipts/${input.invoiceNo}`, () => {
-    const invoice = receivableInvoices.find((i) => i.invoiceNo === input.invoiceNo);
-    if (!invoice) throw new Error(`Invoice ${input.invoiceNo} not found`);
-    invoice.dueAmount = Math.max(0, invoice.dueAmount - input.amount);
-    invoice.status = invoice.dueAmount === 0 ? "Paid" : "Partially Paid";
-    return invoice;
-  });
+export async function recordReceipt(input: ReceivePaymentInput): Promise<ReceivableInvoice> {
+  const res = await recordReceivableReceiptFn({ data: input });
+  if (res.success && res.data) return res.data;
+  throw new Error(res.error || `Invoice ${input.invoiceNo} not found`);
 }

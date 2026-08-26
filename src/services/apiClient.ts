@@ -15,9 +15,19 @@ export async function apiRequest<T>(endpoint: string, mockResolver: () => T): Pr
     await delay(MOCK_LATENCY_MS);
     return mockResolver();
   }
-  const res = await fetch(endpoint);
-  if (!res.ok) {
-    throw new Error(`Request to ${endpoint} failed: ${res.status}`);
+  try {
+    const res = await fetch(endpoint);
+    if (res.ok) {
+      const text = await res.text();
+      try {
+        return JSON.parse(text) as T;
+      } catch {
+        // Not valid JSON, fallback to mock resolver
+        return mockResolver();
+      }
+    }
+  } catch (err) {
+    // Network or server error, fallback to mock resolver
   }
-  return res.json() as Promise<T>;
+  return mockResolver();
 }

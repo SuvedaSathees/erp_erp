@@ -984,7 +984,7 @@ function GeneralLedgerPage() {
       </div>
 
       <div className="mt-4 flex justify-center text-[11px] text-muted-foreground">
-        All amounts are in INR &nbsp;|&nbsp; Data powered by Live MongoDB Cluster
+        All amounts are in INR &nbsp;|&nbsp; Data powered by PostgreSQL
       </div>
 
       {/* ==========================================

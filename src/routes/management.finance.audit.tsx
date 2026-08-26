@@ -217,7 +217,7 @@ function AuditTrailPage() {
             <StatCard
               label="Total Activities (YTD)"
               value={data.kpis.totalActivitiesYTD.toLocaleString()}
-              neutralText={`▲ ${data.kpis.totalActivitiesYTDDelta}% vs PYTD`}
+              neutralText="All logged operations"
               icon={<Layers className="h-5 w-5" />}
               iconBg="bg-primary/10"
               iconColor="text-primary"
@@ -225,7 +225,7 @@ function AuditTrailPage() {
             <StatCard
               label="Unique Users"
               value={data.kpis.uniqueUsersCount.toString()}
-              neutralText={`▲ ${data.kpis.uniqueUsersDelta}% vs PYTD`}
+              neutralText="Active system actors"
               icon={<User className="h-5 w-5" />}
               iconBg="bg-blue-500/10"
               iconColor="text-blue-500"
@@ -233,7 +233,7 @@ function AuditTrailPage() {
             <StatCard
               label="Successful Activities"
               value={data.kpis.successfulActivitiesCount.toLocaleString()}
-              neutralText={`▲ ${data.kpis.successfulActivitiesDelta}% vs PYTD`}
+              neutralText="100% of recorded activities"
               icon={<CheckCircle className="h-5 w-5" />}
               iconBg="bg-green-500/10"
               iconColor="text-green-500"
@@ -241,7 +241,7 @@ function AuditTrailPage() {
             <StatCard
               label="Failed Activities"
               value={data.kpis.failedActivitiesCount.toString()}
-              neutralText={`${data.kpis.failedActivitiesDelta}% vs PYTD`}
+              neutralText="0 errors recorded"
               icon={<AlertTriangle className="h-5 w-5" />}
               iconBg="bg-amber-500/10"
               iconColor="text-amber-500"
@@ -249,7 +249,7 @@ function AuditTrailPage() {
             <StatCard
               label="Sensitive Changes"
               value={data.kpis.sensitiveChangesCount.toLocaleString()}
-              neutralText={`▲ ${data.kpis.sensitiveChangesDelta}% vs PYTD`}
+              neutralText="Keyword-based detection"
               icon={<Shield className="h-5 w-5" />}
               iconBg="bg-purple-500/10"
               iconColor="text-purple-500"
@@ -472,91 +472,119 @@ function AuditTrailPage() {
                   />
                 </div>
               ) : activeTab === "security" ? (
-                /* Security Events Tab Table */
-                <div className="card-soft overflow-hidden">
-                  <DataTable<SecurityEventEntry>
-                    data={data.securityEvents}
-                    columns={[
-                      {
-                        key: "timestamp",
-                        header: "Timestamp",
-                        cell: (r) => <span className="text-muted-foreground">{r.timestamp}</span>,
-                      },
-                      {
-                        key: "eventName",
-                        header: "Security Event",
-                        cell: (r) => (
-                          <span className="font-bold text-destructive">{r.eventName}</span>
-                        ),
-                      },
-                      {
-                        key: "user",
-                        header: "Target User",
-                        cell: (r) => <span className="font-semibold">{r.user}</span>,
-                      },
-                      {
-                        key: "severity",
-                        header: "Severity",
-                        cell: (r) => (
-                          <span
-                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                              r.severity === "Critical"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-orange-100 text-orange-800"
-                            }`}
-                          >
-                            {r.severity}
-                          </span>
-                        ),
-                      },
-                      {
-                        key: "status",
-                        header: "Mitigation",
-                        cell: (r) => <span className="font-semibold text-primary">{r.status}</span>,
-                      },
-                      {
-                        key: "ipAddress",
-                        header: "IP Address",
-                        cell: (r) => <span className="font-mono">{r.ipAddress}</span>,
-                      },
-                    ]}
-                    mobileCard={(r) => <div>{r.eventName}</div>}
-                  />
+                /* Security Events Tab Table / Empty State */
+                <div className="card-soft overflow-hidden p-6 text-center">
+                  {data.securityEvents.length > 0 ? (
+                    <DataTable<SecurityEventEntry>
+                      data={data.securityEvents}
+                      columns={[
+                        {
+                          key: "timestamp",
+                          header: "Timestamp",
+                          cell: (r) => <span className="text-muted-foreground">{r.timestamp}</span>,
+                        },
+                        {
+                          key: "eventName",
+                          header: "Security Event",
+                          cell: (r) => (
+                            <span className="font-bold text-destructive">{r.eventName}</span>
+                          ),
+                        },
+                        {
+                          key: "user",
+                          header: "Target User",
+                          cell: (r) => <span className="font-semibold">{r.user}</span>,
+                        },
+                        {
+                          key: "severity",
+                          header: "Severity",
+                          cell: (r) => (
+                            <span
+                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                                r.severity === "Critical"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-orange-100 text-orange-800"
+                              }`}
+                            >
+                              {r.severity}
+                            </span>
+                          ),
+                        },
+                        {
+                          key: "status",
+                          header: "Mitigation",
+                          cell: (r) => <span className="font-semibold text-primary">{r.status}</span>,
+                        },
+                        {
+                          key: "ipAddress",
+                          header: "IP Address",
+                          cell: (r) => <span className="font-mono">{r.ipAddress}</span>,
+                        },
+                      ]}
+                      mobileCard={(r) => <div>{r.eventName}</div>}
+                    />
+                  ) : (
+                    <div className="py-12 space-y-3 max-w-md mx-auto">
+                      <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+                        <Shield className="h-6 w-6" />
+                      </div>
+                      <h4 className="font-semibold text-foreground text-sm">
+                        Security Events Not Tracked
+                      </h4>
+                      <p className="text-xs text-muted-foreground">
+                        Dedicated security event auditing (such as failed authentication attempts, IP blacklists, and firewall blocks) is not currently stored in the database schema.
+                      </p>
+                    </div>
+                  )}
                 </div>
               ) : (
-                /* Configuration Changes Tab Table */
-                <div className="card-soft overflow-hidden">
-                  <DataTable<ConfigurationLogEntry>
-                    data={data.configLogs}
-                    columns={[
-                      {
-                        key: "timestamp",
-                        header: "Timestamp",
-                        cell: (r) => <span className="text-muted-foreground">{r.timestamp}</span>,
-                      },
-                      {
-                        key: "parameter",
-                        header: "System Parameter",
-                        cell: (r) => <span className="font-bold">{r.parameter}</span>,
-                      },
-                      {
-                        key: "beforeValue",
-                        header: "Before Value",
-                        cell: (r) => <span className="text-muted-foreground">{r.beforeValue}</span>,
-                      },
-                      {
-                        key: "afterValue",
-                        header: "After Value",
-                        cell: (r) => <span className="font-bold text-primary">{r.afterValue}</span>,
-                      },
-                      {
-                        key: "user",
-                        header: "Modified By",
-                        cell: (r) => <span className="font-semibold">{r.user}</span>,
-                      },
-                    ]}
-                    mobileCard={(r) => <div>{r.parameter}</div>}
-                  />
+                /* Configuration Changes Tab Table / Empty State */
+                <div className="card-soft overflow-hidden p-6 text-center">
+                  {data.configLogs.length > 0 ? (
+                    <DataTable<ConfigurationLogEntry>
+                      data={data.configLogs}
+                      columns={[
+                        {
+                          key: "timestamp",
+                          header: "Timestamp",
+                          cell: (r) => <span className="text-muted-foreground">{r.timestamp}</span>,
+                        },
+                        {
+                          key: "parameter",
+                          header: "System Parameter",
+                          cell: (r) => <span className="font-bold">{r.parameter}</span>,
+                        },
+                        {
+                          key: "beforeValue",
+                          header: "Before Value",
+                          cell: (r) => <span className="text-muted-foreground">{r.beforeValue}</span>,
+                        },
+                        {
+                          key: "afterValue",
+                          header: "After Value",
+                          cell: (r) => <span className="font-bold text-primary">{r.afterValue}</span>,
+                        },
+                        {
+                          key: "user",
+                          header: "Modified By",
+                          cell: (r) => <span className="font-semibold">{r.user}</span>,
+                        },
+                      ]}
+                      mobileCard={(r) => <div>{r.parameter}</div>}
+                    />
+                  ) : (
+                    <div className="py-12 space-y-3 max-w-md mx-auto">
+                      <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+                        <Settings className="h-6 w-6" />
+                      </div>
+                      <h4 className="font-semibold text-foreground text-sm">
+                        Configuration Changes Not Tracked
+                      </h4>
+                      <p className="text-xs text-muted-foreground">
+                        System parameter adjustments and environment configuration history are not currently stored in the database schema.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -567,27 +595,27 @@ function AuditTrailPage() {
                   {[
                     {
                       label: "Data Changes",
-                      count: 6842,
+                      count: data.logs.filter((l) => ["Create", "Update", "Delete"].includes(l.activityType)).length,
                       icon: <Layers className="h-4 w-4 text-primary" />,
                     },
                     {
                       label: "User Logins",
-                      count: 3124,
+                      count: data.logs.filter((l) => l.activityType === "Login").length,
                       icon: <User className="h-4 w-4 text-blue-500" />,
                     },
                     {
                       label: "Failed Activities",
-                      count: 476,
+                      count: data.kpis.failedActivitiesCount,
                       icon: <AlertTriangle className="h-4 w-4 text-amber-500" />,
                     },
                     {
                       label: "Sensitive Changes",
-                      count: 2184,
+                      count: data.kpis.sensitiveChangesCount,
                       icon: <Shield className="h-4 w-4 text-purple-500" />,
                     },
                     {
                       label: "System Events",
-                      count: 1832,
+                      count: data.logs.filter((l) => l.activityType === "Run").length,
                       icon: <Settings className="h-4 w-4 text-green-500" />,
                     },
                   ].map((filter) => (
@@ -678,7 +706,7 @@ function AuditTrailPage() {
                     <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
                       <div>
                         <div className="font-display text-[14px] font-bold text-foreground">
-                          12,458
+                          {data.kpis.totalActivitiesYTD.toLocaleString()}
                         </div>
                         <div className="text-[8px] text-muted-foreground uppercase tracking-wider">
                           Total Activities
@@ -708,41 +736,52 @@ function AuditTrailPage() {
 
               {/* Recent Sensitive Changes alerts list */}
               <div className="card-soft p-5 space-y-3">
-                <CardHeader title="Recent Sensitive Changes" />
+                <div className="flex items-center justify-between">
+                  <CardHeader title="Sensitive Changes" />
+                  <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                    Action Keyword Match
+                  </span>
+                </div>
 
                 <div className="space-y-3 mt-3">
-                  {data.sensitiveChanges.map((change) => (
-                    <div
-                      key={change.id}
-                      className="flex gap-2.5 text-xs border-b border-border/40 pb-2.5 last:border-0 last:pb-0"
-                    >
+                  {data.sensitiveChanges.length > 0 ? (
+                    data.sensitiveChanges.map((change) => (
                       <div
-                        className={`mt-0.5 grid place-items-center h-5 w-5 rounded-full shrink-0 ${
-                          change.severity === "Critical"
-                            ? "bg-red-100 text-red-700"
-                            : change.severity === "High"
-                              ? "bg-orange-100 text-orange-700"
-                              : "bg-blue-100 text-blue-700"
-                        }`}
+                        key={change.id}
+                        className="flex gap-2.5 text-xs border-b border-border/40 pb-2.5 last:border-0 last:pb-0"
                       >
-                        <Shield className="h-3 w-3" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-start">
-                          <span className="font-bold text-foreground truncate">
-                            {change.description}
-                          </span>
-                          <span className="text-[10px] text-muted-foreground font-mono shrink-0 ml-1">
-                            {change.referenceId}
-                          </span>
+                        <div
+                          className={`mt-0.5 grid place-items-center h-5 w-5 rounded-full shrink-0 ${
+                            change.severity === "Critical"
+                              ? "bg-red-100 text-red-700"
+                              : change.severity === "High"
+                                ? "bg-orange-100 text-orange-700"
+                                : "bg-blue-100 text-blue-700"
+                          }`}
+                        >
+                          <Shield className="h-3 w-3" />
                         </div>
-                        <div className="flex items-center justify-between text-[10px] text-muted-foreground mt-0.5">
-                          <span>{change.user}</span>
-                          <span>{change.timestamp}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-start">
+                            <span className="font-bold text-foreground truncate">
+                              {change.description}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground font-mono shrink-0 ml-1">
+                              {change.referenceId}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between text-[10px] text-muted-foreground mt-0.5">
+                            <span>{change.user}</span>
+                            <span>{change.timestamp}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-xs text-muted-foreground text-center py-4">
+                      No sensitive actions (Delete, Void, Write-off) recorded.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

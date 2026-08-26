@@ -383,7 +383,7 @@ const RECENT_ACTIVITIES = [
   },
 ];
 
-export function OpportunityManagementPage() {
+function OpportunityManagementPage() {
   const [opportunities, setOpportunities] = useState<OpportunityRecord[]>(INITIAL_OPPORTUNITIES);
   const [selectedOppId, setSelectedOppId] = useState<string>("OPP-001");
 
@@ -1405,7 +1405,7 @@ export function OpportunityManagementPage() {
                     handleInputChange("stage", "Closed Won");
                     handleInputChange("status", "Closed Won");
                     setIsConvertOrderOpen(false);
-                    setFormState((prev) => ({ ...prev, stage: "Closed Won", probability: "100%" }));
+                    setFormState((prev) => ({ ...prev, stage: "Closed Won", probability: 100 }));
                     showNotification(`Opportunity ${formState.opportunityNumber} converted to Closed Won Sales Order!`);
                   }}
                   className="px-4 py-1.5 text-xs bg-emerald-600 text-white font-bold rounded shadow-xs"

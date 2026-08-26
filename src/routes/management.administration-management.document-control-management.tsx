@@ -94,7 +94,7 @@ const RECENT_DOCUMENTS_DATA = [
   { id: "DOC-005", name: "Investment Approval Policy", version: "v1.0", status: "Published", updatedOn: "05 Apr 2024", updatedBy: "Rahul Sharma", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
 ];
 
-export function DocumentControlManagementPage() {
+function DocumentControlManagementPage() {
   const [activeTab, setActiveTab] = useState<"summary" | "repository" | "lifecycle" | "audit">("summary");
 
   // Master Form State

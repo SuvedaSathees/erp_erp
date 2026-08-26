@@ -1159,15 +1159,19 @@ export default function WorkforcePlanningPage() {
     }
     const newDemand: DemandForecastItem = {
       id: `DF-00${demandList.length + 1}`,
+      businessUnit: master.businessUnit || "Autonomous EV Charging",
       department: newDemandDept,
       demandDriver: newDemandDriver,
       forecastMetric: newDemandMetric || `${newDemandDriver} Capacity Target`,
-      currentValue: newDemandCurrent,
-      forecastValue: newDemandForecast,
+      currentValue: Number(newDemandCurrent) || 0,
+      forecastValue: Number(newDemandForecast) || 0,
       growthRate: Number(newDemandGrowth) || 25,
+      period: "2024-04-01 to 2025-03-31",
+      demandVolume: Math.max(0, (Number(newDemandForecast) || 0) - (Number(newDemandCurrent) || 0)),
+      productivityAssumption: 0.9,
       forecastMethod: "Driver-Based",
       confidenceLevel: 85,
-      status: "Active",
+      status: "Approved",
     };
     setDemandList([newDemand, ...demandList]);
     setIsDemandModalOpen(false);

@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -83,13 +82,11 @@ import {
   CalendarDays,
   Timer,
   LogIn,
-  LogOut,
   Coffee,
   CheckCheck,
   FileDown,
   Heart,
   Landmark,
-  CreditCard,
   ArrowDownCircle,
   Banknote,
   Coins,
@@ -153,7 +150,7 @@ const CLEARANCE_ITEMS = [
   { name: "Security Clearance", status: "Pending" },
 ];
 
-export default function ExitManagementPage() {
+export function ExitManagementPage() {
   const [activeTab, setActiveTab] = useState<string>("overview");
 
   // Modals
@@ -228,67 +225,38 @@ export default function ExitManagementPage() {
           </div>
         </div>
 
-        {/* 1. Employee Header & Exit Master Metadata (Exact match to reference screenshot) */}
+        {/* 1. Exit Requisition Header (Clean enterprise layout, no profile photos, no stars) */}
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-5">
-          {/* Top Row: Employee Profile + Top Meta Strip */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            {/* Left Photo & Identity */}
-            <div className="flex items-center gap-3.5">
-              <div className="relative shrink-0">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&auto=format&fit=crop&q=80"
-                  alt="employee"
-                  className="h-16 w-16 rounded-full object-cover ring-2 ring-slate-100 shadow-2xs"
-                />
-                <span className="absolute -bottom-1 -right-1 flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-600 text-white shadow-xs">
-                  Active
-                </span>
-              </div>
-              <div className="space-y-0.5">
-                <h3 className="text-base font-bold text-slate-900">Sankaranarayanan R</h3>
-                <div className="font-mono text-xs font-semibold text-slate-700">EMP-000125</div>
-                <div className="text-xs text-muted-foreground font-medium">
-                  Senior Mechanical Engineer • Engineering Department
-                </div>
-                <div className="flex items-center gap-3 text-[11px] text-slate-500 pt-0.5">
-                  <span className="flex items-center gap-1"><Mail className="h-3 w-3 text-slate-400" /> sankar.r@magnertia.com</span>
-                  <span className="flex items-center gap-1"><Phone className="h-3 w-3 text-slate-400" /> +91 98765 43210</span>
-                  <span className="flex items-center gap-1"><MapPin className="h-3 w-3 text-slate-400" /> Coimbatore, Tamil Nadu, India</span>
-                </div>
-              </div>
+          {/* Top Row Meta Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Exit Number</span>
+              <div className="font-mono font-bold text-slate-900 text-sm truncate">EX-2024-00125</div>
             </div>
 
-            {/* Top Row Meta Fields */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs divide-x divide-slate-100">
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Exit Number</span>
-                <div className="font-bold text-slate-900 font-mono mt-0.5">EX-2024-00125</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Exit Type</span>
+              <div className="font-semibold text-slate-900 text-sm truncate">Voluntary Resignation</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Exit Type</span>
-                <div className="font-bold text-slate-900 mt-0.5">Resignation</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Exit Reason</span>
+              <div className="font-semibold text-slate-900 text-sm truncate">Career Growth / Opportunity</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Exit Reason</span>
-                <div className="font-bold text-slate-900 mt-0.5">Better Opportunity</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Notice Period</span>
+              <div className="font-bold text-slate-900 text-sm truncate">30 Days</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Request Date</span>
-                <div className="font-bold text-slate-900 mt-0.5">01 Jun 2024</div>
-              </div>
+            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
+              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Request Date</span>
+              <div className="font-mono font-semibold text-slate-900 text-sm truncate">01 Jun 2024</div>
+            </div>
 
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Last Working Date</span>
-                <div className="font-bold text-slate-900 mt-0.5 font-mono">30 Jun 2024</div>
-              </div>
-
-              <div className="px-2">
-                <span className="text-[10px] text-muted-foreground">Exit Effective Date</span>
-                <div className="font-bold text-slate-900 mt-0.5 font-mono">30 Jun 2024</div>
-              </div>
+            <div className="p-3 rounded-xl bg-rose-50/60 border border-rose-200/80 space-y-0.5">
+              <span className="text-[10px] text-rose-800 font-semibold uppercase tracking-wider">Last Working Day</span>
+              <div className="font-mono font-bold text-rose-700 text-sm truncate">30 Jun 2024</div>
             </div>
           </div>
 
@@ -330,43 +298,38 @@ export default function ExitManagementPage() {
           </div>
         </div>
 
-        {/* 10-Stage Milestone Progress Tracker (Exact match to reference screenshot) */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4">
+        {/* 6-Stage Milestone Progress Tracker */}
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5">
           <div className="py-2">
-            <div className="flex items-center justify-between relative">
-              {/* Connecting Line */}
-              <div className="absolute top-1/2 left-3 right-3 -translate-y-1/2 h-0.5 bg-slate-200 z-0" />
-              <div className="absolute top-1/2 left-3 w-1/3 -translate-y-1/2 h-0.5 bg-emerald-600 z-0" />
+            <div className="flex items-start justify-between relative">
+              <div className="absolute top-3 left-6 right-6 h-0.5 bg-slate-200 z-0" />
+              <div className="absolute top-3 left-6 w-1/3 h-0.5 bg-emerald-600 z-0" />
 
               {[
                 { step: "1", title: "Exit Initiated", date: "01 Jun 2024", done: true },
-                { step: "2", title: "Manager Review", date: "02 Jun 2024", done: true },
-                { step: "3", title: "HR Review", date: "03 Jun 2024", done: true },
-                { step: "4", title: "Notice Period", date: "03 Jun - 30 Jun", active: true },
-                { step: "5", title: "Handover", date: "", future: true },
-                { step: "6", title: "Clearance", date: "", future: true },
-                { step: "7", title: "Exit Interview", date: "", future: true },
-                { step: "8", title: "Final Settlement", date: "", future: true },
-                { step: "9", title: "Access Deactivation", date: "", future: true },
-                { step: "10", title: "Closed", date: "", future: true },
+                { step: "2", title: "Notice Period", date: "01 - 30 Jun", active: true },
+                { step: "3", title: "Handover & KT", date: "Pending", future: true },
+                { step: "4", title: "Clearance", date: "Pending", future: true },
+                { step: "5", title: "Exit Interview", date: "Pending", future: true },
+                { step: "6", title: "Final Settlement", date: "30 Jun 2024", future: true },
               ].map((s) => (
-                <div key={s.step} className="flex flex-col items-center relative z-10">
+                <div key={s.step} className="flex flex-col items-center relative z-10 max-w-[85px] text-center">
                   <div
                     className={cn(
-                      "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-xs",
+                      "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-xs shrink-0",
                       s.done
-                        ? "bg-emerald-600 text-white"
+                        ? "bg-emerald-600 text-white ring-4 ring-white"
                         : s.active
-                          ? "bg-blue-600 text-white ring-4 ring-blue-100"
-                          : "bg-white border-2 border-slate-300 text-slate-400",
+                          ? "bg-blue-600 text-white ring-4 ring-blue-100 ring-offset-2 ring-offset-white"
+                          : "bg-white border-2 border-slate-300 text-slate-400 ring-4 ring-white",
                     )}
                   >
                     {s.done ? "✓" : s.step}
                   </div>
-                  <div className="text-[8px] font-bold text-slate-900 mt-1 text-center truncate max-w-[55px]">
+                  <div className="text-[10px] font-bold text-slate-900 mt-2.5 text-center leading-tight">
                     {s.title}
                   </div>
-                  {s.date && <div className="text-[7px] text-muted-foreground text-center font-mono">{s.date}</div>}
+                  {s.date && <div className="text-[8px] text-muted-foreground text-center font-mono mt-0.5">{s.date}</div>}
                 </div>
               ))}
             </div>
@@ -699,7 +662,7 @@ export default function ExitManagementPage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-slate-400">Overall Experience</span>
-                  <span className="text-amber-400 text-xs">★★★★☆</span>
+                  <span className="font-mono font-bold text-slate-800 text-xs">4.0 / 5.0</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Would Recommend Company</span>
@@ -1058,3 +1021,6 @@ export default function ExitManagementPage() {
     </AppShell>
   );
 }
+
+export default ExitManagementPage;
+

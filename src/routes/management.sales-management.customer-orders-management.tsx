@@ -1265,3 +1265,5 @@ export function CustomerOrdersManagementPage() {
     </AppShell>
   );
 }
+
+export default CustomerOrdersManagementPage;

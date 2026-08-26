@@ -18,7 +18,7 @@ export const HRM_TABS: { to: string; label: string; disabled?: boolean }[] = [
   { to: "/management/hrm-management/payroll-management", label: "Payroll Management" },
   { to: "/management/hrm-management/performance-management", label: "Performance Management" },
   { to: "/management/hrm-management/learning-development", label: "Training & Development" },
-  { to: "/management/hrm-management/performance-management/competency-form", label: "Competency Form" },
+  { to: "/management/hrm-management/competency-form", label: "Competency Form" },
   { to: "/management/hrm-management/career-development", label: "Career Development" },
   { to: "/management/hrm-management/travel-expense", label: "Travel & Expense" },
   { to: "/management/hrm-management/expense-claims", label: "Expense Claims" },
@@ -94,7 +94,9 @@ export function HrmManagementTabBar() {
         className="flex items-center gap-6 overflow-x-auto border-b border-border/40 pb-0 scrollbar-none no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth w-full px-2"
       >
         {HRM_TABS.map((tab) => {
-          const active = pathname.startsWith(tab.to);
+          const isExact = pathname === tab.to;
+          const isParentOfAnother = HRM_TABS.some((other) => other.to !== tab.to && other.to.startsWith(tab.to));
+          const active = isParentOfAnother ? isExact : (isExact || pathname.startsWith(tab.to));
 
           if (tab.disabled) {
             return (

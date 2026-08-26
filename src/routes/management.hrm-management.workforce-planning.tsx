@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -61,21 +60,6 @@ import {
   Compass,
   Zap,
 } from "lucide-react";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip as RechartsTooltip,
-  PieChart as RePieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-  CartesianGrid,
-  Legend,
-} from "recharts";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/management/hrm-management/workforce-planning")({
@@ -1100,69 +1084,15 @@ const INITIAL_DOCS: DocumentItem[] = [
   },
 ];
 
-// Charts Data
-const HEADCOUNT_BY_DEPT_PIE = [
-  { name: "Executive", value: 18, color: "#2563EB", percentage: "7%" },
-  { name: "Management", value: 46, color: "#06B6D4", percentage: "17%" },
-  { name: "Engineering", value: 98, color: "#8B5CF6", percentage: "37%" },
-  { name: "Operations", value: 72, color: "#EC4899", percentage: "27%" },
-  { name: "Support", value: 34, color: "#F97316", percentage: "12%" },
-];
-
-const HEADCOUNT_TREND = [
-  { month: "Apr", actual: 230, planned: 312 },
-  { month: "May", actual: 235, planned: 312 },
-  { month: "Jun", actual: 240, planned: 312 },
-  { month: "Jul", actual: 238, planned: 312 },
-  { month: "Aug", actual: 248, planned: 312 },
-  { month: "Sep", actual: 252, planned: 312 },
-  { month: "Oct", actual: 258, planned: 312 },
-  { month: "Nov", actual: 262, planned: 312 },
-  { month: "Dec", actual: 265, planned: 312 },
-  { month: "Jan", actual: 268, planned: 312 },
-  { month: "Feb", actual: 268, planned: 312 },
-  { month: "Mar", actual: 268, planned: 312 },
-];
-
-const GAP_SUMMARY_BAR = [
-  { category: "Total Positions", count: 312, fill: "#2563EB" },
-  { category: "Current Filled", count: 268, fill: "#10B981" },
-  { category: "Open Positions", count: 37, fill: "#F59E0B" },
-  { category: "Future Demand", count: 44, fill: "#8B5CF6" },
-  { category: "Surplus Positions", count: 7, fill: "#EF4444" },
-];
-
-const SKILL_GAPS_PIE = [
-  { name: "Technical", value: 14, color: "#2563EB", percentage: "44%" },
-  { name: "Functional", value: 8, color: "#10B981", percentage: "25%" },
-  { name: "Behavioral", value: 6, color: "#F59E0B", percentage: "19%" },
-  { name: "Digital", value: 4, color: "#06B6D4", percentage: "12%" },
-];
-
-const DEPT_SUMMARY_TABLE = [
-  { department: "R&D Engineering", current: 102, planned: 118, gap: 16, gapFte: 14.5, utilization: "82%", priority: "High" },
-  { department: "Operations", current: 72, planned: 86, gap: 14, gapFte: 13.0, utilization: "76%", priority: "High" },
-  { department: "Sales & Marketing", current: 34, planned: 40, gap: 6, gapFte: 6.0, utilization: "71%", priority: "Medium" },
-  { department: "Customer Support", current: 28, planned: 32, gap: 4, gapFte: 4.0, utilization: "89%", priority: "Medium" },
-  { department: "Finance & Accounts", current: 12, planned: 13, gap: 1, gapFte: 1.0, utilization: "90%", priority: "Low" },
-  { department: "HR & Admin", current: 10, planned: 11, gap: 1, gapFte: 1.0, utilization: "88%", priority: "Low" },
-];
-
 // Main Component
 export default function WorkforcePlanningPage() {
-  const [activeTab, setActiveTab] = useState<string>("overview");
+  const [activeTab, setActiveTab] = useState<string>("demand");
   const [master, setMaster] = useState<MasterPlan>(INITIAL_MASTER);
   const [demandList, setDemandList] = useState<DemandForecastItem[]>(INITIAL_DEMAND_FORECAST);
   const [workforceList, setWorkforceList] = useState<CurrentWorkforceItem[]>(INITIAL_CURRENT_WORKFORCE);
-  const [capacityList, setCapacityList] = useState<WorkforceCapacityItem[]>(INITIAL_CAPACITY);
   const [gapList, setGapList] = useState<GapAnalysisItem[]>(INITIAL_GAP_ANALYSIS);
   const [hiringList, setHiringList] = useState<HiringPlanItem[]>(INITIAL_HIRING_PLAN);
   const [skillsList, setSkillsList] = useState<SkillPlanItem[]>(INITIAL_SKILLS);
-  const [successionList, setSuccessionList] = useState<SuccessionItem[]>(INITIAL_SUCCESSION);
-  const [scenarioList, setScenarioList] = useState<ScenarioItem[]>(INITIAL_SCENARIOS);
-  const [actionList, setActionList] = useState<ActionPlanItem[]>(INITIAL_ACTIONS);
-  const [approvalsList, setApprovalsList] = useState<ApprovalLevelItem[]>(INITIAL_APPROVALS);
-  const [docsList, setDocsList] = useState<DocumentItem[]>(INITIAL_DOCS);
 
   // Search & Filter state
   const [searchTerm, setSearchTerm] = useState("");
@@ -1174,6 +1104,15 @@ export default function WorkforcePlanningPage() {
   const [newHiringVacancies, setNewHiringVacancies] = useState(1);
   const [newHiringPriority, setNewHiringPriority] = useState<"High" | "Medium" | "Low">("High");
   const [newHiringDate, setNewHiringDate] = useState("2024-07-31");
+
+  // Demand Driver Modal
+  const [isDemandModalOpen, setIsDemandModalOpen] = useState(false);
+  const [newDemandDept, setNewDemandDept] = useState("R&D Engineering");
+  const [newDemandDriver, setNewDemandDriver] = useState("");
+  const [newDemandMetric, setNewDemandMetric] = useState("");
+  const [newDemandCurrent, setNewDemandCurrent] = useState("10");
+  const [newDemandForecast, setNewDemandForecast] = useState("15");
+  const [newDemandGrowth, setNewDemandGrowth] = useState("50");
 
   const handleSavePlan = () => {
     toast.success("Workforce Plan WFPL-2024-0001 saved successfully", {
@@ -1210,6 +1149,31 @@ export default function WorkforcePlanningPage() {
     setIsModalOpen(false);
     setNewHiringRole("");
     toast.success(`Hiring requirement created for ${newHiringRole}`);
+  };
+
+  const handleAddNewDemand = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newDemandDriver) {
+      toast.error("Please enter a demand driver name");
+      return;
+    }
+    const newDemand: DemandForecastItem = {
+      id: `DF-00${demandList.length + 1}`,
+      department: newDemandDept,
+      demandDriver: newDemandDriver,
+      forecastMetric: newDemandMetric || `${newDemandDriver} Capacity Target`,
+      currentValue: newDemandCurrent,
+      forecastValue: newDemandForecast,
+      growthRate: Number(newDemandGrowth) || 25,
+      forecastMethod: "Driver-Based",
+      confidenceLevel: 85,
+      status: "Active",
+    };
+    setDemandList([newDemand, ...demandList]);
+    setIsDemandModalOpen(false);
+    setNewDemandDriver("");
+    setNewDemandMetric("");
+    toast.success(`Demand driver "${newDemandDriver}" added successfully`);
   };
 
   const handleExportData = (type: "excel" | "pdf") => {
@@ -1459,15 +1423,17 @@ export default function WorkforcePlanningPage() {
                 <label className="block text-[11px] font-semibold text-slate-600 mb-1">
                   Plan Owner <span className="text-rose-500">*</span>
                 </label>
-                <div className="flex items-center gap-2 h-8 px-2 rounded-md border border-slate-200 bg-white">
-                  <img
-                    src={master.planOwner.avatar}
-                    alt={master.planOwner.name}
-                    className="h-5 w-5 rounded-full object-cover"
-                  />
-                  <span className="text-xs font-medium text-slate-800 truncate">{master.planOwner.name}</span>
-                  <span className="text-[10px] text-muted-foreground ml-auto">Lead HR</span>
-                </div>
+                <input
+                  type="text"
+                  value={master.planOwner.name}
+                  onChange={(e) =>
+                    setMaster({
+                      ...master,
+                      planOwner: { ...master.planOwner, name: e.target.value },
+                    })
+                  }
+                  className="w-full h-8 px-2.5 rounded-md border border-slate-200 text-xs font-medium text-slate-800 focus:border-primary focus:outline-hidden"
+                />
               </div>
 
               {/* Approver */}
@@ -1475,15 +1441,17 @@ export default function WorkforcePlanningPage() {
                 <label className="block text-[11px] font-semibold text-slate-600 mb-1">
                   Approver <span className="text-rose-500">*</span>
                 </label>
-                <div className="flex items-center gap-2 h-8 px-2 rounded-md border border-slate-200 bg-white">
-                  <img
-                    src={master.approver.avatar}
-                    alt={master.approver.name}
-                    className="h-5 w-5 rounded-full object-cover"
-                  />
-                  <span className="text-xs font-medium text-slate-800 truncate">{master.approver.name}</span>
-                  <span className="text-[10px] text-muted-foreground ml-auto">VP HR</span>
-                </div>
+                <input
+                  type="text"
+                  value={master.approver.name}
+                  onChange={(e) =>
+                    setMaster({
+                      ...master,
+                      approver: { ...master.approver, name: e.target.value },
+                    })
+                  }
+                  className="w-full h-8 px-2.5 rounded-md border border-slate-200 text-xs font-medium text-slate-800 focus:border-primary focus:outline-hidden"
+                />
               </div>
 
               {/* Plan Status Workflow selection */}
@@ -1639,17 +1607,12 @@ export default function WorkforcePlanningPage() {
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-1.5">
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth">
             {[
-              { id: "overview", label: "Overview", icon: BarChart3 },
               { id: "demand", label: "Demand Forecast", icon: TrendingUp },
               { id: "workforce", label: "Current Workforce", icon: Users },
-              { id: "capacity", label: "Capacity Plan", icon: Zap },
               { id: "gap", label: "Gap Analysis", icon: Scale },
               { id: "hiring", label: "Hiring Plan", icon: UserPlus },
               { id: "skills", label: "Skills & Development", icon: GraduationCap },
               { id: "budget", label: "Cost & Budget", icon: DollarSign },
-              { id: "scenarios", label: "Scenarios & Succession", icon: Compass },
-              { id: "actions", label: "Action Plan & Approval", icon: Workflow },
-              { id: "monitoring", label: "Monitoring & Docs", icon: FileText },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -1672,539 +1635,7 @@ export default function WorkforcePlanningPage() {
           </div>
         </div>
 
-        {/* TAB 1: OVERVIEW DASHBOARD */}
-        {activeTab === "overview" && (
-          <div className="space-y-6">
-            {/* Row 1: Charts */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {/* 2. Headcount Overview */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs flex flex-col justify-between">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      2
-                    </span>
-                    Headcount Overview
-                  </h4>
-                </div>
 
-                <div className="h-44 relative flex items-center justify-center">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RePieChart>
-                      <Pie
-                        data={HEADCOUNT_BY_DEPT_PIE}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={45}
-                        outerRadius={65}
-                        paddingAngle={3}
-                        dataKey="value"
-                      >
-                        {HEADCOUNT_BY_DEPT_PIE.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <RechartsTooltip />
-                    </RePieChart>
-                  </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-xl font-extrabold text-slate-900 font-mono">268</span>
-                    <span className="text-[10px] text-muted-foreground font-medium">Current</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-1.5 text-[11px] pt-2 border-t border-slate-100">
-                  {HEADCOUNT_BY_DEPT_PIE.map((item) => (
-                    <div key={item.name} className="flex items-center justify-between">
-                      <span className="flex items-center gap-1 text-slate-600 truncate">
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
-                        {item.name}
-                      </span>
-                      <span className="font-semibold text-slate-800 font-mono">
-                        {item.value} ({item.percentage})
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 3. Headcount Trend */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs flex flex-col justify-between">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      3
-                    </span>
-                    Headcount Trend
-                  </h4>
-                  <div className="flex items-center gap-2 text-[10px] font-medium">
-                    <span className="flex items-center gap-1 text-blue-600">
-                      <span className="h-2 w-2 rounded-full bg-blue-600" /> Actual
-                    </span>
-                    <span className="flex items-center gap-1 text-emerald-600">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500" /> Planned
-                    </span>
-                  </div>
-                </div>
-
-                <div className="h-44">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={HEADCOUNT_TREND} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                      <XAxis dataKey="month" tick={{ fontSize: 10 }} />
-                      <YAxis domain={[150, 350]} tick={{ fontSize: 10 }} />
-                      <RechartsTooltip />
-                      <Line
-                        type="monotone"
-                        dataKey="actual"
-                        stroke="#2563EB"
-                        strokeWidth={2}
-                        dot={{ r: 2 }}
-                        activeDot={{ r: 4 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="planned"
-                        stroke="#10B981"
-                        strokeDasharray="4 4"
-                        strokeWidth={1.5}
-                        dot={false}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-
-                <div className="text-[10px] text-muted-foreground text-center pt-2 border-t border-slate-100">
-                  Target: 312 Headcount by Q4 FY25
-                </div>
-              </div>
-
-              {/* 4. Gap Analysis Summary */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs flex flex-col justify-between">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      4
-                    </span>
-                    Gap Analysis Summary
-                  </h4>
-                </div>
-
-                <div className="h-44">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={GAP_SUMMARY_BAR} layout="vertical" margin={{ top: 5, right: 15, left: 45, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="2 2" stroke="#f1f5f9" horizontal={false} />
-                      <XAxis type="number" tick={{ fontSize: 10 }} />
-                      <YAxis type="category" dataKey="category" tick={{ fontSize: 9 }} width={65} />
-                      <RechartsTooltip />
-                      <Bar dataKey="count" radius={[0, 4, 4, 0]}>
-                        {GAP_SUMMARY_BAR.map((entry, index) => (
-                          <Cell key={`bar-${index}`} fill={entry.fill} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-
-                <div className="flex items-center justify-between text-[11px] pt-2 border-t border-slate-100 font-medium text-slate-600">
-                  <span>Critical Gaps: <strong className="text-rose-600">44 Positions</strong></span>
-                  <span>Surplus: <strong className="text-emerald-600">7 Roles</strong></span>
-                </div>
-              </div>
-
-              {/* 5. Skills Gap Overview */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs flex flex-col justify-between">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      5
-                    </span>
-                    Skills Gap Overview
-                  </h4>
-                </div>
-
-                <div className="h-44 relative flex items-center justify-center">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RePieChart>
-                      <Pie
-                        data={SKILL_GAPS_PIE}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={45}
-                        outerRadius={65}
-                        paddingAngle={3}
-                        dataKey="value"
-                      >
-                        {SKILL_GAPS_PIE.map((entry, index) => (
-                          <Cell key={`skill-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <RechartsTooltip />
-                    </RePieChart>
-                  </ResponsiveContainer>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-xl font-extrabold text-rose-600 font-mono">32</span>
-                    <span className="text-[10px] text-muted-foreground font-medium">Critical Gaps</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-1 text-[11px] pt-2 border-t border-slate-100">
-                  {SKILL_GAPS_PIE.map((item) => (
-                    <div key={item.name} className="flex items-center justify-between">
-                      <span className="flex items-center gap-1 text-slate-600 truncate">
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
-                        {item.name}
-                      </span>
-                      <span className="font-semibold text-slate-800 font-mono">
-                        {item.value} ({item.percentage})
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Row 2: Department Summary & Hiring Plan Summary & Budget Overview */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-              {/* 6. Department Headcount Summary */}
-              <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      6
-                    </span>
-                    Department Headcount Summary
-                  </h4>
-                  <button
-                    onClick={() => setActiveTab("workforce")}
-                    className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
-                  >
-                    View All
-                  </button>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-[11px] text-left">
-                    <thead>
-                      <tr className="border-b border-slate-100 text-slate-500 font-semibold">
-                        <th className="pb-1.5">Department</th>
-                        <th className="pb-1.5 text-center">Current</th>
-                        <th className="pb-1.5 text-center">Planned</th>
-                        <th className="pb-1.5 text-center">Gap</th>
-                        <th className="pb-1.5 text-center">Util %</th>
-                        <th className="pb-1.5 text-right">Priority</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {DEPT_SUMMARY_TABLE.map((row) => (
-                        <tr key={row.department} className="hover:bg-slate-50/60 transition">
-                          <td className="py-2 font-medium text-slate-800 truncate max-w-[130px]">{row.department}</td>
-                          <td className="py-2 text-center font-mono">{row.current}</td>
-                          <td className="py-2 text-center font-mono">{row.planned}</td>
-                          <td className="py-2 text-center font-mono font-bold text-rose-600">+{row.gap}</td>
-                          <td className="py-2 text-center font-mono text-slate-600">{row.utilization}</td>
-                          <td className="py-2 text-right">
-                            <span
-                              className={cn(
-                                "px-1.5 py-0.5 rounded-full text-[10px] font-semibold",
-                                row.priority === "High"
-                                  ? "bg-rose-50 text-rose-700 border border-rose-200"
-                                  : row.priority === "Medium"
-                                    ? "bg-amber-50 text-amber-700 border border-amber-200"
-                                    : "bg-emerald-50 text-emerald-700 border border-emerald-200",
-                              )}
-                            >
-                              {row.priority}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* 7. Hiring Plan Summary */}
-              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      7
-                    </span>
-                    Hiring Plan Summary
-                  </h4>
-                  <button
-                    onClick={() => setActiveTab("hiring")}
-                    className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
-                  >
-                    View Hiring Plan
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                    <div className="text-[10px] text-muted-foreground">Total Open Positions</div>
-                    <div className="text-lg font-bold text-slate-900 font-mono">37</div>
-                  </div>
-                  <div className="bg-amber-50/50 p-2.5 rounded-lg border border-amber-100">
-                    <div className="text-[10px] text-amber-700 font-medium">Critical Hires</div>
-                    <div className="text-lg font-bold text-amber-800 font-mono">12</div>
-                  </div>
-                  <div className="bg-blue-50/50 p-2.5 rounded-lg border border-blue-100">
-                    <div className="text-[10px] text-blue-700 font-medium">Hiring This Quarter</div>
-                    <div className="text-lg font-bold text-blue-800 font-mono">18</div>
-                  </div>
-                  <div className="bg-emerald-50/50 p-2.5 rounded-lg border border-emerald-100">
-                    <div className="text-[10px] text-emerald-700 font-medium">Target Fill Date</div>
-                    <div className="text-xs font-bold text-emerald-800">30 Jun 2024</div>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 pt-1">
-                  {hiringList.slice(0, 4).map((role) => (
-                    <div
-                      key={role.id}
-                      className="flex items-center justify-between p-1.5 rounded-md hover:bg-slate-50 text-[11px] border border-slate-100"
-                    >
-                      <div>
-                        <div className="font-semibold text-slate-800">{role.jobRole}</div>
-                        <div className="text-[10px] text-muted-foreground">{role.department}</div>
-                      </div>
-                      <div className="text-right">
-                        <span className="font-mono font-bold text-slate-900">{role.vacancies} Open</span>
-                        <div className="text-[10px] text-rose-600 font-medium">{role.hiringPriority}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 8. Budget Overview */}
-              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                      8
-                    </span>
-                    Budget Overview
-                  </h4>
-                </div>
-
-                <div className="my-2 flex flex-col items-center justify-center">
-                  <div className="relative flex items-center justify-center h-28 w-28 rounded-full border-8 border-primary/10 border-t-primary border-r-primary">
-                    <div className="text-center">
-                      <span className="text-xl font-extrabold text-slate-900 font-mono">93%</span>
-                      <div className="text-[10px] text-muted-foreground">Utilized</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-1 text-[11px] pt-2 border-t border-slate-100">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Budgeted Cost</span>
-                    <span className="font-semibold text-slate-800 font-mono">₹ 20,00,00,000</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Planned Cost</span>
-                    <span className="font-semibold text-blue-600 font-mono">₹ 18,75,00,000</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Actual Cost</span>
-                    <span className="font-semibold text-emerald-600 font-mono">₹ 18,60,00,000</span>
-                  </div>
-                  <div className="flex justify-between font-bold pt-1 border-t border-slate-100">
-                    <span className="text-emerald-700">Variance Reserve</span>
-                    <span className="text-emerald-700 font-mono">₹ 1,25,00,000</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Row 3: Attrition, Succession, Capacity Utilization, Plan Progress */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {/* 9. Attrition & Retention */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3">
-                <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                    9
-                  </span>
-                  Attrition & Retention
-                </h4>
-
-                <div className="grid grid-cols-2 gap-2 text-center">
-                  <div className="p-2 bg-slate-50 rounded-lg">
-                    <div className="text-[10px] text-muted-foreground">Historical Attrition</div>
-                    <div className="text-base font-bold text-slate-900 font-mono">14.2%</div>
-                  </div>
-                  <div className="p-2 bg-blue-50/50 rounded-lg">
-                    <div className="text-[10px] text-blue-700 font-medium">Forecast Attrition</div>
-                    <div className="text-base font-bold text-blue-800 font-mono">12.5%</div>
-                  </div>
-                  <div className="p-2 bg-rose-50/50 rounded-lg">
-                    <div className="text-[10px] text-rose-700 font-medium">Expected Exits</div>
-                    <div className="text-base font-bold text-rose-800 font-mono">34</div>
-                  </div>
-                  <div className="p-2 bg-amber-50/50 rounded-lg">
-                    <div className="text-[10px] text-amber-700 font-medium">Retention Risk (High)</div>
-                    <div className="text-base font-bold text-amber-800 font-mono">18</div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setActiveTab("scenarios")}
-                  className="w-full text-center text-[11px] font-semibold text-primary hover:underline pt-1 cursor-pointer"
-                >
-                  View Attrition Report →
-                </button>
-              </div>
-
-              {/* 10. Succession Summary */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3">
-                <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                    10
-                  </span>
-                  Succession Summary
-                </h4>
-
-                <div className="grid grid-cols-2 gap-2 text-center">
-                  <div className="p-2 bg-slate-50 rounded-lg">
-                    <div className="text-[10px] text-muted-foreground">Critical Positions</div>
-                    <div className="text-base font-bold text-slate-900 font-mono">22</div>
-                  </div>
-                  <div className="p-2 bg-emerald-50/50 rounded-lg">
-                    <div className="text-[10px] text-emerald-700 font-medium">Ready Now</div>
-                    <div className="text-base font-bold text-emerald-800 font-mono">6</div>
-                  </div>
-                  <div className="p-2 bg-blue-50/50 rounded-lg">
-                    <div className="text-[10px] text-blue-700 font-medium">Ready &lt; 1 Year</div>
-                    <div className="text-base font-bold text-blue-800 font-mono">8</div>
-                  </div>
-                  <div className="p-2 bg-rose-50/50 rounded-lg">
-                    <div className="text-[10px] text-rose-700 font-medium">Not Ready</div>
-                    <div className="text-base font-bold text-rose-800 font-mono">8</div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setActiveTab("scenarios")}
-                  className="w-full text-center text-[11px] font-semibold text-primary hover:underline pt-1 cursor-pointer"
-                >
-                  View Succession Plan →
-                </button>
-              </div>
-
-              {/* 11. Capacity Utilization */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                    11
-                  </span>
-                  Capacity Utilization
-                </h4>
-
-                <div className="flex flex-col items-center justify-center">
-                  <div className="text-2xl font-extrabold text-amber-600 font-mono">78%</div>
-                  <div className="text-[10px] text-muted-foreground">Grid Utilization</div>
-                </div>
-
-                <div className="space-y-1 text-[10px]">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Available Capacity (FTE)</span>
-                    <span className="font-semibold font-mono">276.5</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Required Capacity (FTE)</span>
-                    <span className="font-semibold font-mono">355.0</span>
-                  </div>
-                  <div className="flex justify-between font-bold text-rose-600 border-t border-slate-100 pt-1">
-                    <span>Capacity Gap (FTE)</span>
-                    <span className="font-mono">78.5</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setActiveTab("capacity")}
-                  className="w-full text-center text-[11px] font-semibold text-primary hover:underline cursor-pointer"
-                >
-                  View Capacity Plan →
-                </button>
-              </div>
-
-              {/* 12. Plan Progress */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2.5">
-                <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">
-                    12
-                  </span>
-                  Plan Progress
-                </h4>
-
-                <div className="space-y-2 text-[11px]">
-                  <div>
-                    <div className="flex justify-between text-[10px] mb-0.5">
-                      <span className="text-slate-600 font-medium">Demand Analysis</span>
-                      <span className="font-bold text-emerald-600 font-mono">100%</span>
-                    </div>
-                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="bg-emerald-500 h-full w-full" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[10px] mb-0.5">
-                      <span className="text-slate-600 font-medium">Gap Analysis</span>
-                      <span className="font-bold text-emerald-600 font-mono">100%</span>
-                    </div>
-                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="bg-emerald-500 h-full w-full" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[10px] mb-0.5">
-                      <span className="text-slate-600 font-medium">Hiring Plan</span>
-                      <span className="font-bold text-blue-600 font-mono">75%</span>
-                    </div>
-                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="bg-blue-600 h-full w-[75%]" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[10px] mb-0.5">
-                      <span className="text-slate-600 font-medium">Budget Planning</span>
-                      <span className="font-bold text-indigo-600 font-mono">90%</span>
-                    </div>
-                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="bg-indigo-600 h-full w-[90%]" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[10px] mb-0.5">
-                      <span className="text-slate-600 font-medium">Approval</span>
-                      <span className="font-bold text-emerald-600 font-mono">100%</span>
-                    </div>
-                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="bg-emerald-500 h-full w-full" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[10px] mb-0.5">
-                      <span className="text-slate-600 font-medium">Execution</span>
-                      <span className="font-bold text-amber-600 font-mono">40%</span>
-                    </div>
-                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="bg-amber-500 h-full w-[40%]" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* TAB 2: DEMAND FORECAST */}
         {activeTab === "demand" && (
@@ -2221,8 +1652,8 @@ export default function WorkforcePlanningPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.info("New Demand Driver model dialog initialized")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer"
+                onClick={() => setIsDemandModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Add Demand Driver
@@ -2320,7 +1751,15 @@ export default function WorkforcePlanningPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {workforceList.map((emp) => (
+                  {workforceList
+                    .filter(
+                      (emp) =>
+                        emp.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        emp.jobRole.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        emp.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        emp.employeeId.toLowerCase().includes(searchTerm.toLowerCase()),
+                    )
+                    .map((emp) => (
                     <tr key={emp.id} className="hover:bg-slate-50/70 transition">
                       <td className="py-3 px-3 font-semibold text-slate-900">{emp.employeeName}</td>
                       <td className="py-3 px-3 font-mono text-slate-600">{emp.employeeId}</td>
@@ -2334,7 +1773,7 @@ export default function WorkforcePlanningPage() {
                       <td className="py-3 px-3 text-slate-600">{emp.location}</td>
                       <td className="py-3 px-3 text-center font-mono font-medium">{emp.fte}</td>
                       <td className="py-3 px-3 text-center">
-                        <span className="font-mono font-bold text-amber-500">★ {emp.skillLevel}.0</span>
+                        <span className="font-mono font-bold text-slate-800">{emp.skillLevel}.0 / 5.0</span>
                       </td>
                       <td className="py-3 px-3 text-center">
                         {emp.criticalRole ? (
@@ -2358,97 +1797,7 @@ export default function WorkforcePlanningPage() {
           </div>
         )}
 
-        {/* TAB 4: CAPACITY PLAN */}
-        {activeTab === "capacity" && (
-          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-5">
-            <div className="border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Zap className="h-4 w-4 text-amber-500" />
-                Workforce Capacity & Utilization Logic
-              </h3>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Available Workforce → Working Hours → Productive Hours → Utilization → Available Capacity → Required Capacity → Capacity Gap
-              </p>
-            </div>
 
-            <div className="p-4 bg-slate-50/80 rounded-xl border border-slate-200/80">
-              <div className="flex items-center justify-between overflow-x-auto gap-2 text-center text-xs no-scrollbar py-1">
-                <div className="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs min-w-[120px]">
-                  <div className="text-[10px] text-muted-foreground font-semibold">Available Headcount</div>
-                  <div className="text-base font-bold text-slate-900 font-mono">268 Staff</div>
-                </div>
-                <ArrowRight className="h-4 w-4 text-slate-400 shrink-0" />
-                <div className="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs min-w-[120px]">
-                  <div className="text-[10px] text-muted-foreground font-semibold">Annual Work Hours</div>
-                  <div className="text-base font-bold text-slate-900 font-mono">2,000 Hrs/Emp</div>
-                </div>
-                <ArrowRight className="h-4 w-4 text-slate-400 shrink-0" />
-                <div className="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs min-w-[120px]">
-                  <div className="text-[10px] text-muted-foreground font-semibold">Productive Hours</div>
-                  <div className="text-base font-bold text-blue-600 font-mono">1,620 Hrs Avg</div>
-                </div>
-                <ArrowRight className="h-4 w-4 text-slate-400 shrink-0" />
-                <div className="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs min-w-[120px]">
-                  <div className="text-[10px] text-muted-foreground font-semibold">Utilization Rate</div>
-                  <div className="text-base font-bold text-amber-600 font-mono">78% Target</div>
-                </div>
-                <ArrowRight className="h-4 w-4 text-slate-400 shrink-0" />
-                <div className="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs min-w-[120px]">
-                  <div className="text-[10px] text-muted-foreground font-semibold">Capacity Gap</div>
-                  <div className="text-base font-bold text-rose-600 font-mono">-78.5 FTE</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left">
-                <thead>
-                  <tr className="bg-slate-50 border-y border-slate-200 text-slate-600 font-semibold">
-                    <th className="py-2.5 px-3">Department</th>
-                    <th className="py-2.5 px-3">Job Role Group</th>
-                    <th className="py-2.5 px-3 text-center">Headcount</th>
-                    <th className="py-2.5 px-3 text-center">FTE</th>
-                    <th className="py-2.5 px-3 text-center">Util %</th>
-                    <th className="py-2.5 px-3 text-center">Capacity Hours</th>
-                    <th className="py-2.5 px-3 text-center">Required Hours</th>
-                    <th className="py-2.5 px-3 text-center">Gap Hours</th>
-                    <th className="py-2.5 px-3 text-right">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {capacityList.map((cap) => (
-                    <tr key={cap.id} className="hover:bg-slate-50/70 transition">
-                      <td className="py-3 px-3 font-semibold text-slate-900">{cap.department}</td>
-                      <td className="py-3 px-3 text-slate-600">{cap.jobRole}</td>
-                      <td className="py-3 px-3 text-center font-mono">{cap.availableHeadcount}</td>
-                      <td className="py-3 px-3 text-center font-mono">{cap.availableFTE.toFixed(1)}</td>
-                      <td className="py-3 px-3 text-center font-mono font-bold text-amber-600">
-                        {cap.utilizationRate}%
-                      </td>
-                      <td className="py-3 px-3 text-center font-mono">{cap.capacityHours.toLocaleString()}</td>
-                      <td className="py-3 px-3 text-center font-mono font-medium">{cap.requiredHours.toLocaleString()}</td>
-                      <td className="py-3 px-3 text-center font-mono font-bold text-rose-600">
-                        {cap.capacityGap.toLocaleString()}
-                      </td>
-                      <td className="py-3 px-3 text-right">
-                        <span
-                          className={cn(
-                            "px-2 py-0.5 rounded-full text-[10px] font-semibold",
-                            cap.status === "Deficit"
-                              ? "bg-rose-50 text-rose-700 border border-rose-200"
-                              : "bg-emerald-50 text-emerald-700 border border-emerald-200",
-                          )}
-                        >
-                          {cap.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
 
         {/* TAB 5: GAP ANALYSIS */}
         {activeTab === "gap" && (
@@ -2631,8 +1980,8 @@ export default function WorkforcePlanningPage() {
                       <td className="py-3 px-3 font-mono font-semibold text-blue-600">{skill.id}</td>
                       <td className="py-3 px-3 font-medium text-slate-700">{skill.category}</td>
                       <td className="py-3 px-3 font-semibold text-slate-900">{skill.skill}</td>
-                      <td className="py-3 px-3 text-center font-mono">★ {skill.currentLevel}.0</td>
-                      <td className="py-3 px-3 text-center font-mono font-bold text-primary">★ {skill.requiredLevel}.0</td>
+                      <td className="py-3 px-3 text-center font-mono">{skill.currentLevel}.0</td>
+                      <td className="py-3 px-3 text-center font-mono font-bold text-primary">{skill.requiredLevel}.0</td>
                       <td className="py-3 px-3 text-center font-mono font-bold text-rose-600">-{skill.skillGap}</td>
                       <td className="py-3 px-3 text-center font-mono font-semibold">{skill.employeesAffected}</td>
                       <td className="py-3 px-3 text-center">
@@ -2690,250 +2039,9 @@ export default function WorkforcePlanningPage() {
           </div>
         )}
 
-        {/* TAB 9: SCENARIOS & SUCCESSION */}
-        {activeTab === "scenarios" && (
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
-              <div className="border-b border-slate-100 pb-3">
-                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <Compass className="h-4 w-4 text-primary" />
-                  Workforce Scenario Planning (Base Case vs Growth vs Downside)
-                </h3>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {scenarioList.map((scn) => (
-                  <div
-                    key={scn.id}
-                    className={cn(
-                      "p-4 rounded-xl border shadow-2xs space-y-3",
-                      scn.scenarioType === "Base Case"
-                        ? "border-blue-300 bg-blue-50/30 ring-2 ring-blue-100"
-                        : scn.scenarioType === "Growth Case"
-                          ? "border-emerald-200 bg-emerald-50/20"
-                          : "border-slate-200 bg-slate-50/50",
-                    )}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-sm text-slate-900">{scn.scenarioName}</span>
-                      <span
-                        className={cn(
-                          "px-2 py-0.5 rounded-full text-[10px] font-bold",
-                          scn.scenarioType === "Base Case"
-                            ? "bg-blue-100 text-blue-800"
-                            : scn.scenarioType === "Growth Case"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : "bg-slate-200 text-slate-700",
-                        )}
-                      >
-                        {scn.scenarioType}
-                      </span>
-                    </div>
 
-                    <div className="space-y-1 text-xs divide-y divide-slate-100">
-                      <div className="flex justify-between pt-1">
-                        <span className="text-slate-500">Revenue Assumption</span>
-                        <span className="font-mono font-semibold text-slate-800">+{scn.revenueAssumption}%</span>
-                      </div>
-                      <div className="flex justify-between pt-1">
-                        <span className="text-slate-500">Headcount Req.</span>
-                        <span className="font-mono font-bold text-primary">{scn.headcountReq} Staff</span>
-                      </div>
-                      <div className="flex justify-between pt-1">
-                        <span className="text-slate-500">Workforce Cost</span>
-                        <span className="font-mono font-semibold text-slate-800">{formatCurrency(scn.workforceCost)}</span>
-                      </div>
-                    </div>
 
-                    <p className="text-[11px] text-slate-600 bg-white/80 p-2 rounded-md border border-slate-200/50">
-                      {scn.businessImpact}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
-              <div className="border-b border-slate-100 pb-3">
-                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <UserCheck className="h-4 w-4 text-emerald-600" />
-                  Key Roles Succession & Leadership Readiness
-                </h3>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left">
-                  <thead>
-                    <tr className="bg-slate-50 border-y border-slate-200 text-slate-600 font-semibold">
-                      <th className="py-2.5 px-3">Critical Position</th>
-                      <th className="py-2.5 px-3">Incumbent</th>
-                      <th className="py-2.5 px-3">Identified Successor</th>
-                      <th className="py-2.5 px-3">Readiness Level</th>
-                      <th className="py-2.5 px-3">Development Action</th>
-                      <th className="py-2.5 px-3">Target Date</th>
-                      <th className="py-2.5 px-3 text-right">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {successionList.map((suc) => (
-                      <tr key={suc.id} className="hover:bg-slate-50/70 transition">
-                        <td className="py-3 px-3 font-semibold text-slate-900">{suc.criticalPosition}</td>
-                        <td className="py-3 px-3 text-slate-600">{suc.currentEmployee}</td>
-                        <td className="py-3 px-3 font-semibold text-primary">{suc.successor}</td>
-                        <td className="py-3 px-3">
-                          <span
-                            className={cn(
-                              "px-2 py-0.5 rounded-full text-[10px] font-bold",
-                              suc.readinessLevel === "Ready Now"
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                                : suc.readinessLevel === "Ready < 1 Year"
-                                  ? "bg-blue-50 text-blue-700 border border-blue-200"
-                                  : "bg-rose-50 text-rose-700 border border-rose-200",
-                            )}
-                          >
-                            {suc.readinessLevel}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3 text-slate-700 max-w-[200px] truncate">{suc.developmentPlan}</td>
-                        <td className="py-3 px-3 text-slate-600 font-mono">{suc.expectedReadinessDate}</td>
-                        <td className="py-3 px-3 text-right">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700">
-                            {suc.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 10: ACTION PLAN & APPROVAL */}
-        {activeTab === "actions" && (
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
-              <div className="border-b border-slate-100 pb-3">
-                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <Workflow className="h-4 w-4 text-primary" />
-                  Workforce Strategic Action Plan
-                </h3>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left">
-                  <thead>
-                    <tr className="bg-slate-50 border-y border-slate-200 text-slate-600 font-semibold">
-                      <th className="py-2.5 px-3">Action Type</th>
-                      <th className="py-2.5 px-3">Action Description</th>
-                      <th className="py-2.5 px-3">Owner</th>
-                      <th className="py-2.5 px-3">Department</th>
-                      <th className="py-2.5 px-3">Due Date</th>
-                      <th className="py-2.5 px-3 text-center">Budget</th>
-                      <th className="py-2.5 px-3 text-right">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {actionList.map((act) => (
-                      <tr key={act.id} className="hover:bg-slate-50/70 transition">
-                        <td className="py-3 px-3">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                            {act.actionType}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3 font-medium text-slate-900">{act.actionDescription}</td>
-                        <td className="py-3 px-3 text-slate-700">{act.owner}</td>
-                        <td className="py-3 px-3 text-slate-600">{act.department}</td>
-                        <td className="py-3 px-3 font-mono text-slate-600">{act.dueDate}</td>
-                        <td className="py-3 px-3 text-center font-mono">{formatCurrency(act.budget)}</td>
-                        <td className="py-3 px-3 text-right">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            {act.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
-              <div className="border-b border-slate-100 pb-3">
-                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-emerald-600" />
-                  Multi-Level Approval Matrix Flow
-                </h3>
-              </div>
-
-              <div className="space-y-3">
-                {approvalsList.map((apv) => (
-                  <div
-                    key={apv.id}
-                    className="flex items-center justify-between p-3 rounded-lg border border-slate-200/80 bg-slate-50/40 text-xs"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 font-bold font-mono">
-                        L{apv.level}
-                      </div>
-                      <div>
-                        <div className="font-bold text-slate-900">{apv.role}</div>
-                        <div className="text-[11px] text-muted-foreground">{apv.approver} • {apv.decisionDate}</div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        {apv.decision}
-                      </span>
-                      <div className="text-[10px] text-slate-500 mt-1 max-w-[280px] truncate">{apv.comments}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 11: MONITORING & DOCS */}
-        {activeTab === "monitoring" && (
-          <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
-            <div className="border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Paperclip className="h-4 w-4 text-primary" />
-                Workforce Governance & Document Repository
-              </h3>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {docsList.map((doc) => (
-                <div
-                  key={doc.id}
-                  className="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 bg-white hover:border-primary/50 transition shadow-2xs"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-lg bg-blue-50 text-blue-600">
-                      <FileText className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <div className="font-bold text-xs text-slate-900">{doc.fileName}</div>
-                      <div className="text-[10px] text-muted-foreground">
-                        {doc.documentType} • {doc.version} • {doc.fileSize}
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => toast.success(`Downloading ${doc.fileName}`)}
-                    className="p-2 rounded-lg text-slate-500 hover:text-primary hover:bg-slate-100 cursor-pointer"
-                  >
-                    <Download className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Modal: New Hiring Requirement */}
@@ -3031,9 +2139,121 @@ export default function WorkforcePlanningPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer shadow-xs"
                 >
                   Add to Plan
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: New Demand Driver */}
+      {isDemandModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-primary" />
+                Add Business Demand Driver
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsDemandModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              >
+                <XCircle className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddNewDemand} className="space-y-3.5 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Demand Driver Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. EV Powertrain Program Expansion"
+                  value={newDemandDriver}
+                  onChange={(e) => setNewDemandDriver(e.target.value)}
+                  className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Department</label>
+                  <select
+                    value={newDemandDept}
+                    onChange={(e) => setNewDemandDept(e.target.value)}
+                    className="w-full h-9 px-2.5 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden bg-white"
+                  >
+                    <option value="R&D Engineering">R&D Engineering</option>
+                    <option value="Operations">Operations</option>
+                    <option value="Sales & Marketing">Sales & Marketing</option>
+                    <option value="Customer Support">Customer Support</option>
+                    <option value="Finance & Accounts">Finance & Accounts</option>
+                    <option value="HR & Admin">HR & Admin</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Growth %</label>
+                  <input
+                    type="number"
+                    value={newDemandGrowth}
+                    onChange={(e) => setNewDemandGrowth(e.target.value)}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Forecast Metric / Target</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 50,000 Units Annual Output"
+                  value={newDemandMetric}
+                  onChange={(e) => setNewDemandMetric(e.target.value)}
+                  className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Current Metric</label>
+                  <input
+                    type="text"
+                    value={newDemandCurrent}
+                    onChange={(e) => setNewDemandCurrent(e.target.value)}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Forecast Metric</label>
+                  <input
+                    type="text"
+                    value={newDemandForecast}
+                    onChange={(e) => setNewDemandForecast(e.target.value)}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsDemandModalOpen(false)}
+                  className="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer shadow-xs"
+                >
+                  Add Demand Driver
                 </button>
               </div>
             </form>

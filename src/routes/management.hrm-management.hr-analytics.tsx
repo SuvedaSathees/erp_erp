@@ -39,7 +39,6 @@ import {
   Globe,
   MapPin,
   Briefcase,
-  Star,
   CheckSquare,
   Sparkles,
   ArrowRight,
@@ -109,7 +108,6 @@ import {
   Hospital,
   Stethoscope,
   Smile,
-  LogOut as ExitIcon,
   UserMinus,
   Info,
   SlidersHorizontal,
@@ -122,6 +120,10 @@ import {
   Tooltip as RechartsTooltip,
   LineChart,
   Line,
+  BarChart,
+  Bar,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -184,6 +186,22 @@ const DEMOGRAPHICS_PIE = [
   { name: "Prefer not to say", value: 0, percentage: "0.0%", color: "#94A3B8" },
 ];
 
+const RECRUITMENT_SOURCES_PIE = [
+  { name: "Campus Drives", value: 35, color: "#2563EB" },
+  { name: "Employee Referrals", value: 30, color: "#10B981" },
+  { name: "Direct Job Portals", value: 25, color: "#F59E0B" },
+  { name: "Staffing Agencies", value: 10, color: "#8B5CF6" },
+];
+
+const LEAVE_MONTHLY_TREND = [
+  { month: "Nov", casual: 140, sick: 95, earned: 210 },
+  { month: "Dec", casual: 210, sick: 110, earned: 380 },
+  { month: "Jan", casual: 160, sick: 130, earned: 190 },
+  { month: "Feb", casual: 130, sick: 85, earned: 160 },
+  { month: "Mar", casual: 175, sick: 105, earned: 240 },
+  { month: "Apr", casual: 190, sick: 115, earned: 290 },
+];
+
 const KPI_ROWS = [
   { kpi: "Attrition Rate", actual: "8.4%", target: "< 7%", variance: "+1.4%", status: "red" },
   { kpi: "Attendance Rate", actual: "94.6%", target: "> 95%", variance: "-0.4%", status: "orange" },
@@ -192,8 +210,8 @@ const KPI_ROWS = [
   { kpi: "Engagement Score", actual: "82%", target: "> 80%", variance: "+2%", status: "green" },
 ];
 
-export default function HrAnalyticsPage() {
-  const [activeTab, setActiveTab] = useState<string>("overview");
+export function HrAnalyticsPage() {
+  const [activeTab, setActiveTab] = useState<string>("workforce");
 
   return (
     <AppShell
@@ -349,22 +367,14 @@ export default function HrAnalyticsPage() {
           </div>
         </div>
 
-        {/* Sub-Tabs Bar (Matching screenshot) */}
+        {/* Sub-Tabs Bar (4 Core Workable Tabs) */}
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-1.5">
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth">
             {[
-              { id: "overview", label: "Overview", icon: BarChart3 },
-              { id: "workforce", label: "Workforce", icon: Users },
-              { id: "recruitment", label: "Recruitment", icon: UserPlus },
-              { id: "attendance", label: "Attendance", icon: Calendar },
-              { id: "leave", label: "Leave", icon: Clock },
-              { id: "performance", label: "Performance", icon: Award },
-              { id: "training", label: "Training", icon: GraduationCap },
-              { id: "compensation", label: "Compensation", icon: DollarSign },
-              { id: "attrition", label: "Attrition", icon: UserMinus },
-              { id: "welfare", label: "Welfare", icon: HeartHandshake },
-              { id: "predictive", label: "Predictive", icon: BrainCircuit },
-              { id: "reports", label: "Reports", icon: FileSpreadsheet },
+              { id: "workforce", label: "Workforce & Headcount", icon: Users },
+              { id: "recruitment", label: "Recruitment & Hiring", icon: UserPlus },
+              { id: "attendance", label: "Attendance & Leave Trends", icon: Calendar },
+              { id: "performance", label: "Performance & Retention", icon: Award },
             ].map((tab) => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -387,50 +397,51 @@ export default function HrAnalyticsPage() {
           </div>
         </div>
 
-        {/* TAB 1: OVERVIEW DASHBOARD (Exact match to reference screenshot) */}
-        {activeTab === "overview" && (
+        {/* TAB 1: WORKFORCE & HEADCOUNT */}
+        {activeTab === "workforce" && (
           <div className="space-y-6">
-            {/* Row 1: Headcount Trend, Headcount by Department, Attrition Trend */}
+            {/* Row 1: Headcount Trend & Dept Breakdown */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
-              {/* 1. Headcount Trend (5 Cols) */}
-              <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
+              {/* 1. Headcount Trend */}
+              <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Headcount Trend</h4>
-                  <div className="inline-flex items-center gap-1 text-[10px] text-slate-500 bg-slate-50 px-2 py-0.5 rounded-md border border-slate-200 cursor-pointer">
-                    <span>Last 12 Months</span>
-                    <ChevronDown className="h-3 w-3 text-slate-400" />
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-800">Headcount Growth Trend (12 Months)</h4>
+                    <span className="text-[10px] text-muted-foreground">From 182 in May '23 to 248 in Apr '24 (+36.2% Growth)</span>
                   </div>
+                  <span className="text-xs font-extrabold text-blue-700 font-mono">248 Employees</span>
                 </div>
 
-                <div className="h-36">
+                <div className="h-48">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={HEADCOUNT_TREND_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                    <LineChart data={HEADCOUNT_TREND_DATA} margin={{ top: 10, right: 15, left: -20, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="month" tick={{ fontSize: 8 }} />
-                      <YAxis domain={[150, 270]} tick={{ fontSize: 8 }} />
+                      <XAxis dataKey="month" tick={{ fontSize: 9 }} />
+                      <YAxis domain={[170, 260]} tick={{ fontSize: 9 }} />
                       <RechartsTooltip />
-                      <Line type="monotone" dataKey="count" stroke="#2563EB" strokeWidth={2} dot={{ r: 2.5, fill: "#2563EB" }} />
+                      <Line type="monotone" dataKey="count" stroke="#2563EB" strokeWidth={2.5} dot={{ r: 3, fill: "#2563EB" }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
-              {/* 2. Headcount by Department (3.5 Cols) */}
-              <div className="lg:col-span-3.5 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
+              {/* 2. Headcount by Department */}
+              <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Headcount by Department</h4>
+                  <h4 className="text-xs font-bold text-slate-800">Department Distribution</h4>
+                  <span className="text-xs font-mono font-bold text-slate-900">Total: 248</span>
                 </div>
 
-                <div className="flex items-center justify-between gap-2">
-                  <div className="h-28 w-28 relative shrink-0 flex items-center justify-center">
+                <div className="flex items-center justify-between gap-4 h-48">
+                  <div className="h-36 w-36 relative shrink-0 flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
                       <RePieChart>
                         <Pie
                           data={DEPT_HEADCOUNT_PIE}
                           cx="50%"
                           cy="50%"
-                          innerRadius={28}
-                          outerRadius={44}
+                          innerRadius={32}
+                          outerRadius={52}
                           paddingAngle={2}
                           dataKey="value"
                         >
@@ -442,16 +453,16 @@ export default function HrAnalyticsPage() {
                       </RePieChart>
                     </ResponsiveContainer>
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                      <span className="text-xs font-extrabold text-slate-900 font-mono">248</span>
-                      <span className="text-[7px] text-muted-foreground">Total</span>
+                      <span className="text-sm font-extrabold text-slate-900 font-mono">248</span>
+                      <span className="text-[7px] text-muted-foreground uppercase">Staff</span>
                     </div>
                   </div>
 
-                  <div className="space-y-0.5 text-[8.5px] flex-1">
+                  <div className="space-y-1 text-[9.5px] flex-1">
                     {DEPT_HEADCOUNT_PIE.map((d) => (
-                      <div key={d.name} className="flex justify-between items-center">
-                        <span className="flex items-center gap-1 text-slate-600 truncate">
-                          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: d.color }} />
+                      <div key={d.name} className="flex justify-between items-center py-0.5 border-b border-slate-50">
+                        <span className="flex items-center gap-1.5 text-slate-600 truncate">
+                          <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
                           {d.name}
                         </span>
                         <span className="font-mono font-bold text-slate-800">{d.value} ({d.percentage})</span>
@@ -459,101 +470,32 @@ export default function HrAnalyticsPage() {
                     ))}
                   </div>
                 </div>
-
-                <button onClick={() => toast.info("Department headcount report")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
-                  View Department Report →
-                </button>
-              </div>
-
-              {/* 3. Attrition Trend (3.5 Cols) */}
-              <div className="lg:col-span-3.5 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Attrition Trend</h4>
-                  <div className="inline-flex items-center gap-1 text-[10px] text-slate-500 bg-slate-50 px-2 py-0.5 rounded-md border border-slate-200 cursor-pointer">
-                    <span>Last 6 Months</span>
-                    <ChevronDown className="h-3 w-3 text-slate-400" />
-                  </div>
-                </div>
-
-                <div className="h-28">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={ATTRITION_TREND_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="month" tick={{ fontSize: 8 }} />
-                      <YAxis domain={[0, 12]} tick={{ fontSize: 8 }} />
-                      <RechartsTooltip />
-                      <Line type="monotone" dataKey="rate" stroke="#EF4444" strokeWidth={2} dot={{ r: 2.5, fill: "#EF4444" }} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-
-                <button onClick={() => toast.info("Attrition analysis breakdown")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
-                  View Attrition Report →
-                </button>
               </div>
             </div>
 
-            {/* Row 2: Recruitment Funnel, Employee Demographics, Leave Utilization, Workforce Cost Summary */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {/* 1. Recruitment Funnel */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
+            {/* Row 2: Demographics & Workforce Cost */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+              {/* Demographics */}
+              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Recruitment Funnel</h4>
-                  <div className="inline-flex items-center gap-1 text-[9px] text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200">
-                    <span>This Period</span>
-                    <ChevronDown className="h-2.5 w-2.5 text-slate-400" />
-                  </div>
+                  <h4 className="text-xs font-bold text-slate-800">Gender & Diversity Demographics</h4>
                 </div>
 
-                <div className="space-y-1.5 text-[9px]">
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600">Applications</span>
-                    <span className="font-mono font-bold text-slate-900">1,248</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600">Shortlisted</span>
-                    <span className="font-mono font-bold text-slate-900">284 (22.8%)</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600">Interviews</span>
-                    <span className="font-mono font-bold text-slate-900">142 (11.4%)</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600">Offers</span>
-                    <span className="font-mono font-bold text-slate-900">68 (5.4%)</span>
-                  </div>
-                  <div className="flex justify-between items-center font-bold text-emerald-700">
-                    <span>Joined</span>
-                    <span className="font-mono">18 (1.4%)</span>
-                  </div>
-                </div>
-
-                <button onClick={() => toast.info("Full recruitment funnel metrics")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
-                  View Recruitment Report →
-                </button>
-              </div>
-
-              {/* 2. Employee Demographics */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Employee Demographics</h4>
-                </div>
-
-                <div className="flex items-center justify-between gap-2">
-                  <div className="h-24 w-24 relative shrink-0 flex items-center justify-center">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="h-32 w-32 relative shrink-0 flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
                       <RePieChart>
                         <Pie
                           data={DEMOGRAPHICS_PIE}
                           cx="50%"
                           cy="50%"
-                          innerRadius={24}
-                          outerRadius={38}
+                          innerRadius={28}
+                          outerRadius={46}
                           paddingAngle={2}
                           dataKey="value"
                         >
                           {DEMOGRAPHICS_PIE.map((entry, index) => (
-                            <Cell key={`demopie-${index}`} fill={entry.color} />
+                            <Cell key={`demopie2-${index}`} fill={entry.color} />
                           ))}
                         </Pie>
                         <RechartsTooltip />
@@ -564,130 +506,253 @@ export default function HrAnalyticsPage() {
                     </div>
                   </div>
 
-                  <div className="space-y-1 text-[9px] flex-1">
-                    {DEMOGRAPHICS_PIE.map((dm) => (
-                      <div key={dm.name} className="flex justify-between items-center">
-                        <span className="flex items-center gap-1 text-slate-600 truncate">
-                          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: dm.color }} />
+                  <div className="space-y-1.5 text-xs flex-1">
+                    {DEMOGRAPHICS_PIE.filter((dm) => dm.value > 0).map((dm) => (
+                      <div key={dm.name} className="flex justify-between items-center py-0.5 border-b border-slate-50">
+                        <span className="flex items-center gap-1.5 text-slate-600">
+                          <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: dm.color }} />
                           {dm.name}
                         </span>
-                        <span className="font-mono font-bold text-slate-800">{dm.value} ({dm.percentage})</span>
+                        <span className="font-mono font-bold text-slate-900">{dm.value} ({dm.percentage})</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Workforce Cost Summary */}
+              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <h4 className="text-xs font-bold text-slate-800">Monthly Workforce Cost Breakdown</h4>
+                  <span className="text-xs font-extrabold text-blue-700 font-mono">Total: ₹ 2.84 Cr / mo</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                    <span className="text-slate-400 text-[10px]">Base Payroll</span>
+                    <div className="font-mono font-bold text-slate-900 mt-0.5">₹ 2.10 Cr</div>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                    <span className="text-slate-400 text-[10px]">Employee Benefits</span>
+                    <div className="font-mono font-bold text-slate-900 mt-0.5">₹ 31.50 L</div>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                    <span className="text-slate-400 text-[10px]">Overtime & Allowances</span>
+                    <div className="font-mono font-bold text-slate-900 mt-0.5">₹ 12.30 L</div>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                    <span className="text-slate-400 text-[10px]">Training & Development</span>
+                    <div className="font-mono font-bold text-slate-900 mt-0.5">₹ 12.20 L</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: RECRUITMENT & HIRING */}
+        {activeTab === "recruitment" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+              {/* Recruitment Funnel */}
+              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+                <div className="border-b border-slate-100 pb-2 flex justify-between items-center">
+                  <h4 className="text-xs font-bold text-slate-900">Recruitment Funnel Throughput (Current Cycle)</h4>
+                  <span className="text-xs font-mono font-bold text-emerald-700">18 Joined</span>
+                </div>
+
+                <div className="space-y-2.5 text-xs">
+                  {[
+                    { stage: "Applications Received", count: "1,248", pct: "100%", w: "100%", color: "bg-blue-600" },
+                    { stage: "Shortlisted Profiles", count: "284", pct: "22.8%", w: "65%", color: "bg-blue-500" },
+                    { stage: "Interviews Completed", count: "142", pct: "11.4%", w: "45%", color: "bg-amber-500" },
+                    { stage: "Offers Released", count: "68", pct: "5.4%", w: "30%", color: "bg-purple-500" },
+                    { stage: "Candidates Joined", count: "18", pct: "1.4%", w: "18%", color: "bg-emerald-600" },
+                  ].map((s) => (
+                    <div key={s.stage} className="space-y-1">
+                      <div className="flex justify-between font-medium text-slate-700">
+                        <span>{s.stage}</span>
+                        <span className="font-mono font-bold text-slate-900">{s.count} ({s.pct})</span>
+                      </div>
+                      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div className={cn("h-full rounded-full", s.color)} style={{ width: s.w }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Source of Hire & Metrics */}
+              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+                <div className="border-b border-slate-100 pb-2">
+                  <h4 className="text-xs font-bold text-slate-900">Sourcing Channels & Velocity Metrics</h4>
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <div className="h-32 w-32 relative shrink-0 flex items-center justify-center">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RePieChart>
+                        <Pie
+                          data={RECRUITMENT_SOURCES_PIE}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={26}
+                          outerRadius={44}
+                          paddingAngle={2}
+                          dataKey="value"
+                        >
+                          {RECRUITMENT_SOURCES_PIE.map((entry, index) => (
+                            <Cell key={`srcpie-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <RechartsTooltip />
+                      </RePieChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="space-y-1 text-xs flex-1">
+                    {RECRUITMENT_SOURCES_PIE.map((sc) => (
+                      <div key={sc.name} className="flex justify-between items-center py-0.5 border-b border-slate-50">
+                        <span className="flex items-center gap-1 text-slate-600">
+                          <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: sc.color }} />
+                          {sc.name}
+                        </span>
+                        <span className="font-mono font-bold text-slate-800">{sc.value}%</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <button onClick={() => toast.info("Demographics report breakdown")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
-                  View Demographics Report →
-                </button>
-              </div>
-
-              {/* 3. Leave Utilization */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1">
-                    Leave Utilization <ArrowRight className="h-3 w-3 text-slate-400" />
-                  </h4>
-                  <div className="inline-flex items-center gap-1 text-[9px] text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200">
-                    <span>This Period</span>
-                    <ChevronDown className="h-2.5 w-2.5 text-slate-400" />
+                <div className="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-slate-100">
+                  <div className="p-2.5 rounded-lg bg-emerald-50/50 border border-emerald-100">
+                    <span className="text-emerald-800 text-[10px]">Avg Time-to-Fill</span>
+                    <div className="font-mono font-bold text-emerald-950 text-sm mt-0.5">24 Days</div>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-blue-50/50 border border-blue-100">
+                    <span className="text-blue-800 text-[10px]">Offer Acceptance</span>
+                    <div className="font-mono font-bold text-blue-950 text-sm mt-0.5">76%</div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
 
-                <div className="flex items-center justify-between gap-2">
-                  <div className="space-y-1 text-[9px] flex-1">
+        {/* TAB 3: ATTENDANCE & LEAVE TRENDS */}
+        {activeTab === "attendance" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+              {/* Monthly Leave Trends Bar Chart */}
+              <div className="lg:col-span-8 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-800">Monthly Leave Utilization by Category</h4>
+                    <span className="text-[10px] text-muted-foreground">Casual Leave (CL), Sick Leave (SL), Earned Leave (EL)</span>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-700 font-mono">65.4% Utilized</span>
+                </div>
+
+                <div className="h-52">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={LEAVE_MONTHLY_TREND} margin={{ top: 10, right: 15, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                      <XAxis dataKey="month" tick={{ fontSize: 9 }} />
+                      <YAxis tick={{ fontSize: 9 }} />
+                      <RechartsTooltip />
+                      <Bar dataKey="casual" fill="#2563EB" name="Casual Leave" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="sick" fill="#F59E0B" name="Sick Leave" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="earned" fill="#10B981" name="Earned Leave" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Leave Balances Gauge & Attendance Summary */}
+              <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+                <div className="border-b border-slate-100 pb-2">
+                  <h4 className="text-xs font-bold text-slate-900">Attendance & Leave Balances</h4>
+                </div>
+
+                <div className="flex items-center justify-center gap-4 py-2">
+                  <div className="h-24 w-24 relative shrink-0 flex items-center justify-center">
+                    <svg className="h-24 w-24 -rotate-90" viewBox="0 0 36 36">
+                      <path className="text-slate-100" strokeWidth="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                      <path className="text-emerald-600" strokeDasharray="65.4, 100" strokeWidth="3.5" strokeLinecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <div className="absolute flex flex-col items-center justify-center">
+                      <span className="font-mono text-sm font-bold text-slate-900">65.4%</span>
+                      <span className="text-[7px] text-muted-foreground">Leave Used</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5 text-xs flex-1">
                     <div>
-                      <span className="text-slate-400">Total Entitlement</span>
+                      <span className="text-slate-400 text-[10px]">Total Entitlement</span>
                       <div className="font-mono font-bold text-slate-900">6,240 Days</div>
                     </div>
                     <div>
-                      <span className="text-slate-400">Total Avail. Balance</span>
-                      <div className="font-mono font-bold text-slate-900">2,156 Days</div>
-                    </div>
-                    <div>
-                      <span className="text-slate-400">Total Taken</span>
-                      <div className="font-mono font-bold text-slate-900">4,084 Days</div>
-                    </div>
-                  </div>
-
-                  <div className="h-16 w-16 relative shrink-0 flex items-center justify-center">
-                    <svg className="h-16 w-16 -rotate-90" viewBox="0 0 36 36">
-                      <path className="text-slate-100" strokeWidth="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                      <path className="text-emerald-600" strokeDasharray="65.4, 100" strokeWidth="4" strokeLinecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    </svg>
-                    <div className="absolute flex flex-col items-center justify-center">
-                      <span className="font-mono text-[9px] font-bold text-slate-900">65.4%</span>
-                      <span className="text-[6px] text-muted-foreground">Utilized</span>
+                      <span className="text-slate-400 text-[10px]">Available Balance</span>
+                      <div className="font-mono font-bold text-emerald-700">2,156 Days</div>
                     </div>
                   </div>
                 </div>
 
-                <button onClick={() => toast.info("Leave analytics report")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
-                  View Leave Report →
-                </button>
-              </div>
-
-              {/* 4. Workforce Cost Summary */}
-              <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Workforce Cost Summary</h4>
-                  <div className="inline-flex items-center gap-1 text-[9px] text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200">
-                    <span>This Period</span>
-                    <ChevronDown className="h-2.5 w-2.5 text-slate-400" />
+                <div className="p-3 rounded-lg bg-slate-50 border border-slate-100 space-y-1 text-xs">
+                  <div className="flex justify-between font-semibold text-slate-800">
+                    <span>On-Time Attendance</span>
+                    <span className="font-mono text-emerald-700 font-bold">94.6%</span>
+                  </div>
+                  <div className="flex justify-between font-semibold text-slate-800">
+                    <span>Unplanned Absenteeism</span>
+                    <span className="font-mono text-rose-600 font-bold">1.8%</span>
                   </div>
                 </div>
-
-                <div className="space-y-1 text-[9px]">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Payroll Cost</span>
-                    <span className="font-mono font-bold text-slate-900">₹ 2.10 Cr</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Benefits Cost</span>
-                    <span className="font-mono font-bold text-slate-900">₹ 31.50 L</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Overtime Cost</span>
-                    <span className="font-mono font-bold text-slate-900">₹ 12.30 L</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Recruitment Cost</span>
-                    <span className="font-mono font-bold text-slate-900">₹ 8.10 L</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Training Cost</span>
-                    <span className="font-mono font-bold text-slate-900">₹ 12.20 L</span>
-                  </div>
-                  <div className="flex justify-between font-extrabold text-blue-700 pt-1 border-t border-slate-100 text-[10px]">
-                    <span>Total HR Cost</span>
-                    <span className="font-mono">₹ 2.84 Cr</span>
-                  </div>
-                </div>
-
-                <button onClick={() => toast.info("Cost analytics statement")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
-                  View Cost Report →
-                </button>
               </div>
             </div>
+          </div>
+        )}
 
-            {/* Row 3: Top 5 Attrition Reasons, KPI Performance, Training Overview, Alerts & Insights */}
+        {/* TAB 4: PERFORMANCE & RETENTION */}
+        {activeTab === "performance" && (
+          <div className="space-y-6">
+            {/* Row 1: Attrition Trend & Reasons */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
-              {/* 1. Top 5 Attrition Reasons (3 Cols) */}
-              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
+              {/* Attrition Trend Line Chart */}
+              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Top 5 Attrition Reasons</h4>
+                  <h4 className="text-xs font-bold text-slate-800">Monthly Attrition Rate (%)</h4>
+                  <span className="text-xs font-bold text-rose-600 font-mono">Current: 8.4%</span>
                 </div>
 
-                <div className="space-y-1.5 text-[10px]">
+                <div className="h-44">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={ATTRITION_TREND_DATA} margin={{ top: 10, right: 15, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                      <XAxis dataKey="month" tick={{ fontSize: 9 }} />
+                      <YAxis domain={[0, 12]} tick={{ fontSize: 9 }} />
+                      <RechartsTooltip />
+                      <Line type="monotone" dataKey="rate" stroke="#EF4444" strokeWidth={2.5} dot={{ r: 3, fill: "#EF4444" }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Top 5 Attrition Reasons */}
+              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-3">
+                <div className="border-b border-slate-100 pb-2">
+                  <h4 className="text-xs font-bold text-slate-900">Exit Interview Reasons Breakdown</h4>
+                </div>
+
+                <div className="space-y-2 text-xs">
                   {[
-                    { reason: "Better Opportunity", count: "24 (32.0%)", color: "bg-rose-500", w: "80%" },
-                    { reason: "Compensation", count: "16 (21.3%)", color: "bg-orange-500", w: "60%" },
-                    { reason: "Career Growth", count: "11 (14.7%)", color: "bg-amber-500", w: "45%" },
-                    { reason: "Work Environment", count: "9 (12.0%)", color: "bg-emerald-500", w: "35%" },
-                    { reason: "Personal Reasons", count: "6 (8.0%)", color: "bg-blue-500", w: "25%" },
+                    { reason: "Higher Compensation / Market Pay", count: "24 (32.0%)", color: "bg-rose-500", w: "80%" },
+                    { reason: "Career Growth / Progression", count: "16 (21.3%)", color: "bg-orange-500", w: "60%" },
+                    { reason: "Relocation / Family", count: "11 (14.7%)", color: "bg-amber-500", w: "45%" },
+                    { reason: "Work Environment / Culture", count: "9 (12.0%)", color: "bg-emerald-500", w: "35%" },
+                    { reason: "Higher Studies / Skill Shift", count: "6 (8.0%)", color: "bg-blue-500", w: "25%" },
                   ].map((r) => (
-                    <div key={r.reason} className="space-y-0.5">
-                      <div className="flex justify-between text-slate-700">
+                    <div key={r.reason} className="space-y-1">
+                      <div className="flex justify-between text-slate-700 font-medium">
                         <span>{r.reason}</span>
                         <span className="font-mono font-bold text-slate-900">{r.count}</span>
                       </div>
@@ -697,44 +762,43 @@ export default function HrAnalyticsPage() {
                     </div>
                   ))}
                 </div>
-
-                <button onClick={() => toast.info("Complete attrition survey analysis")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 border-t border-slate-100">
-                  View Full Report →
-                </button>
               </div>
+            </div>
 
-              {/* 2. KPI Performance (3 Cols) */}
-              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">KPI Performance</h4>
+            {/* Row 2: KPI Scorecard & L&D Training Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+              {/* KPI Scorecard */}
+              <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-3">
+                <div className="border-b border-slate-100 pb-2">
+                  <h4 className="text-xs font-bold text-slate-900">Executive HR KPI Performance Scorecard</h4>
                 </div>
 
                 <div className="overflow-x-auto">
-                  <table className="w-full text-[9px] text-left">
+                  <table className="w-full text-xs text-left">
                     <thead>
-                      <tr className="border-b border-slate-100 text-slate-400 font-semibold">
-                        <th className="pb-1">KPI</th>
-                        <th className="pb-1">Actual</th>
-                        <th className="pb-1">Target</th>
-                        <th className="pb-1">Variance</th>
-                        <th className="pb-1 text-center">Status</th>
+                      <tr className="border-b border-slate-200 text-slate-400 font-semibold">
+                        <th className="pb-2">HR Metric / KPI</th>
+                        <th className="pb-2">Actual</th>
+                        <th className="pb-2">Target</th>
+                        <th className="pb-2">Variance</th>
+                        <th className="pb-2 text-center">Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                       {KPI_ROWS.map((k) => (
                         <tr key={k.kpi} className="hover:bg-slate-50/60">
-                          <td className="py-1 font-medium text-slate-900">{k.kpi}</td>
-                          <td className="py-1 font-mono font-bold">{k.actual}</td>
-                          <td className="py-1 font-mono text-slate-500">{k.target}</td>
-                          <td className="py-1 font-mono font-bold">
+                          <td className="py-2 font-semibold text-slate-900">{k.kpi}</td>
+                          <td className="py-2 font-mono font-bold text-slate-800">{k.actual}</td>
+                          <td className="py-2 font-mono text-slate-500">{k.target}</td>
+                          <td className="py-2 font-mono font-bold">
                             <span className={cn(k.status === "red" ? "text-rose-600" : k.status === "orange" ? "text-amber-600" : "text-emerald-700")}>
                               {k.variance}
                             </span>
                           </td>
-                          <td className="py-1 text-center">
+                          <td className="py-2 text-center">
                             <span
                               className={cn(
-                                "inline-block h-2 w-2 rounded-full",
+                                "inline-block h-2.5 w-2.5 rounded-full",
                                 k.status === "red" ? "bg-rose-500" : k.status === "orange" ? "bg-amber-500" : "bg-emerald-500",
                               )}
                             />
@@ -744,90 +808,30 @@ export default function HrAnalyticsPage() {
                     </tbody>
                   </table>
                 </div>
-
-                <button onClick={() => toast.info("Detailed KPI performance scorecard")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 border-t border-slate-100">
-                  View All KPIs →
-                </button>
               </div>
 
-              {/* 3. Training Overview (3 Cols) */}
-              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Training Overview</h4>
-                  <div className="inline-flex items-center gap-1 text-[9px] text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200">
-                    <span>This Period</span>
-                    <ChevronDown className="h-2.5 w-2.5 text-slate-400" />
-                  </div>
+              {/* L&D Training Overview */}
+              <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-3">
+                <div className="border-b border-slate-100 pb-2">
+                  <h4 className="text-xs font-bold text-slate-900">Training & Skill Development Overview</h4>
                 </div>
 
-                <div className="space-y-1 text-[10px]">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Employees Trained</span>
-                    <span className="font-mono font-bold text-slate-900">142</span>
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                    <span className="text-slate-400 text-[10px]">Employees Trained</span>
+                    <div className="font-mono font-bold text-slate-900 text-sm mt-0.5">142</div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Training Hours</span>
-                    <span className="font-mono font-bold text-slate-900">3,842</span>
+                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                    <span className="text-slate-400 text-[10px]">Training Hours</span>
+                    <div className="font-mono font-bold text-slate-900 text-sm mt-0.5">3,842 hrs</div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Completion Rate</span>
-                    <span className="font-mono font-bold text-emerald-700">91%</span>
+                  <div className="p-2.5 rounded-lg bg-emerald-50/50 border border-emerald-100">
+                    <span className="text-emerald-800 text-[10px]">Completion Rate</span>
+                    <div className="font-mono font-bold text-emerald-950 text-sm mt-0.5">91%</div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Avg Assessment Score</span>
-                    <span className="font-mono font-bold text-slate-900">84%</span>
-                  </div>
-                  <div className="flex justify-between font-bold pt-1 border-t border-slate-100 text-slate-900">
-                    <span>Cost per Employee</span>
-                    <span className="font-mono">₹ 1,210</span>
-                  </div>
-                </div>
-
-                <button onClick={() => toast.info("L&D training effectiveness metrics")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 border-t border-slate-100">
-                  View Training Report →
-                </button>
-              </div>
-
-              {/* 4. Alerts & Insights (3 Cols) */}
-              <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h4 className="text-xs font-bold text-slate-800">Alerts & Insights</h4>
-                  <button onClick={() => toast.info("All HR alerts and recommendations")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
-                    View All
-                  </button>
-                </div>
-
-                <div className="space-y-1.5 text-[9px]">
-                  <div className="flex items-start gap-1.5 p-1.5 rounded-md bg-rose-50/50 border border-rose-100">
-                    <span className="h-2 w-2 rounded-full bg-rose-600 mt-1 shrink-0" />
-                    <div>
-                      <div className="text-slate-800 font-medium leading-tight">Attrition rate is 1.4% above target in Engineering Department.</div>
-                      <div className="text-[8px] text-slate-400 font-mono">2h ago</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-1.5 p-1.5 rounded-md bg-amber-50/50 border border-amber-100">
-                    <span className="h-2 w-2 rounded-full bg-amber-500 mt-1 shrink-0" />
-                    <div>
-                      <div className="text-slate-800 font-medium leading-tight">Production department has a headcount gap of 8 positions.</div>
-                      <div className="text-[8px] text-slate-400 font-mono">5h ago</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-1.5 p-1.5 rounded-md bg-amber-50/50 border border-amber-100">
-                    <span className="h-2 w-2 rounded-full bg-amber-500 mt-1 shrink-0" />
-                    <div>
-                      <div className="text-slate-800 font-medium leading-tight">Training completion rate is below target in Sales Department.</div>
-                      <div className="text-[8px] text-slate-400 font-mono">1d ago</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-1.5 p-1.5 rounded-md bg-blue-50/50 border border-blue-100">
-                    <span className="h-2 w-2 rounded-full bg-blue-600 mt-1 shrink-0" />
-                    <div>
-                      <div className="text-slate-800 font-medium leading-tight">Engagement score improved by 3% compared to last month.</div>
-                      <div className="text-[8px] text-slate-400 font-mono">2d ago</div>
-                    </div>
+                  <div className="p-2.5 rounded-lg bg-blue-50/50 border border-blue-100">
+                    <span className="text-blue-800 text-[10px]">Avg Assessment Score</span>
+                    <div className="font-mono font-bold text-blue-950 text-sm mt-0.5">84%</div>
                   </div>
                 </div>
               </div>
@@ -847,3 +851,6 @@ export default function HrAnalyticsPage() {
     </AppShell>
   );
 }
+
+export default HrAnalyticsPage;
+

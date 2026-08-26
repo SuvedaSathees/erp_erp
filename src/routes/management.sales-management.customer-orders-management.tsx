@@ -337,8 +337,8 @@ export function CustomerOrdersManagementPage() {
 
   return (
     <AppShell
-      title="Customer Orders Form"
-      breadcrumb="Management > CRM Management > Customer Orders Management > Customer Orders Form"
+      title="Customer Orders Management"
+      breadcrumb="Management > CRM Management > Customer Orders Management"
       description="The Customer Orders Form manages the complete order lifecycle from quotation acceptance → customer PO → sales order creation → validation → approval → fulfilment → delivery → invoicing → payment → closure."
       tabs={<CrmManagementTabBar />}
     >

@@ -162,7 +162,7 @@ function NotificationsManagementPage() {
   return (
     <AppShell
       title="Notifications Management"
-      breadcrumb="Management > Administration Management > Notifications Management > Notifications Form"
+      breadcrumb="Management > Administration Management > Notifications Management"
       description="Manage system & business notifications—from event triggers, dynamic templates, audience resolution, channels, delivery, to acknowledgement and escalation."
       tabs={<AdminManagementTabBar />}
     >

@@ -85,8 +85,8 @@ function AuditManagementPage() {
 
   return (
     <AppShell
-      title="Audit Trail Form"
-      breadcrumb="Management > Administration Management > Audit Management > Audit Trail Form"
+      title="Audit Management"
+      breadcrumb="Management > Administration Management > Audit Management"
       description="Records the complete immutable history of actions, changes, approvals, transactions, system events, and security activities across Magnertia ERP."
       tabs={<AdminManagementTabBar />}
     >

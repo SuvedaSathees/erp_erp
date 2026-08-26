@@ -254,8 +254,8 @@ function LoyaltyManagementPage() {
 
   return (
     <AppShell
-      title="Loyalty Management Form"
-      breadcrumb="Management > CRM Management > Loyalty Management > Loyalty Management Form"
+      title="Loyalty Management"
+      breadcrumb="Management > CRM Management > Loyalty Management"
       description="The Loyalty Management Form manages the complete customer loyalty lifecycle from customer enrollment → program assignment → earning → points balance → rewards → redemption → tier progression → engagement → retention → advocacy → analytics."
       tabs={<CrmManagementTabBar />}
     >

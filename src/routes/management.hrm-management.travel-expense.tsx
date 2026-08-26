@@ -114,7 +114,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/management/hrm-management/travel-expense")({
   head: () => ({
     meta: [
-      { title: "Travel Form · Employee Administration · Magnertia ERP" },
+      { title: "Travel & Expense · HRM Management · Magnertia ERP" },
       {
         name: "description",
         content:
@@ -166,8 +166,8 @@ export function TravelManagementPage() {
 
   return (
     <AppShell
-      title="Travel Form"
-      breadcrumb="Management > HRM Management > Employee Administration > Travel Form"
+      title="Travel & Expense"
+      breadcrumb="Management > HRM Management > Travel & Expense"
       description="The Travel Form manages the complete employee/business travel lifecycle from travel request → purpose → itinerary → approval → booking → advance → travel execution → expenses → settlement → reimbursement → compliance → analytics."
       tabs={<HrmManagementTabBar />}
     >

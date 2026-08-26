@@ -118,7 +118,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/management/hrm-management/exit-management")({
   head: () => ({
     meta: [
-      { title: "Exit Management Form · Employee Administration · Magnertia ERP" },
+      { title: "Exit Management · HRM Management · Magnertia ERP" },
       {
         name: "description",
         content:
@@ -164,8 +164,8 @@ export function ExitManagementPage() {
 
   return (
     <AppShell
-      title="Exit Management Form"
-      breadcrumb="Management > HRM Management > Employee Administration > Exit Management > EX-2024-00125"
+      title="Exit Management"
+      breadcrumb="Management > HRM Management > Exit Management"
       description="The Exit Management Form manages the complete employee separation lifecycle from resignation / termination → exit initiation → notice period → handover → clearance → exit interview → asset return → knowledge transfer → final settlement → access deactivation → relieving documents → closure → alumni management → analytics."
       tabs={<HrmManagementTabBar />}
     >

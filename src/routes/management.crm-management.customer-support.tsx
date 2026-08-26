@@ -266,8 +266,8 @@ function CustomerSupportPage() {
 
   return (
     <AppShell
-      title="Customer Support Form"
-      breadcrumb="Management > CRM Management > Customer Support > Customer Support Form"
+      title="Customer Support"
+      breadcrumb="Management > CRM Management > Customer Support"
       description="The Customer Support Form is the central CRM record for managing customer issues, service requests, complaints, technical support, warranty cases, and service communication from ticket creation → classification → assignment → diagnosis → resolution → customer confirmation → closure → feedback → analytics."
       tabs={<CrmManagementTabBar />}
     >

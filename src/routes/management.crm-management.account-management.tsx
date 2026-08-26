@@ -185,8 +185,8 @@ function AccountManagementPage() {
 
   return (
     <AppShell
-      title="Account Management Form"
-      breadcrumb="Management > CRM Management > Account Management > Account Management Form"
+      title="Account Management"
+      breadcrumb="Management > CRM Management > Account Management"
       description="The Account Management Form is the central CRM record for managing the complete business relationship with an organization—from account creation → classification → contacts → ownership → opportunities → orders → contracts → support → customer success → financial relationship → retention → expansion → analytics."
       tabs={<CrmManagementTabBar />}
     >

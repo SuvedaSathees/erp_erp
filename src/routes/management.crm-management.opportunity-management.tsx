@@ -443,8 +443,8 @@ function OpportunityManagementPage() {
 
   return (
     <AppShell
-      title="Opportunity Management Form"
-      breadcrumb="Management > CRM Management > Opportunity Management > Opportunity Form"
+      title="Opportunity Management"
+      breadcrumb="Management > CRM Management > Opportunity Management"
       description="The Opportunity Management Form is the central CRM record for managing revenue-generating deals—from lead conversion/creation → qualification → solution mapping → competitor strategy → stage progression → revenue forecasting → proposal/quoting → discount approvals → closing → win/loss analysis."
       tabs={<CrmManagementTabBar />}
     >

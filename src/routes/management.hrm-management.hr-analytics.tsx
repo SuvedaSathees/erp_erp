@@ -216,7 +216,7 @@ export function HrAnalyticsPage() {
   return (
     <AppShell
       title="HR Analytics"
-      breadcrumb="Management > HRM Management > HR Analytics > HR Analytics Form"
+      breadcrumb="Management > HRM Management > HR Analytics"
       description="The HR Analytics Form is the central analytical workspace for converting HR data into workforce insights, KPI monitoring, trend analysis, predictive indicators, and management decisions."
       tabs={<HrmManagementTabBar />}
     >

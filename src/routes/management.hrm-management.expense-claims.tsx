@@ -109,7 +109,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/management/hrm-management/expense-claims")({
   head: () => ({
     meta: [
-      { title: "Expense Claims Form · Employee Administration · Magnertia ERP" },
+      { title: "Expense Claims · HRM Management · Magnertia ERP" },
       {
         name: "description",
         content:
@@ -166,8 +166,8 @@ export function ExpenseClaimsPage() {
 
   return (
     <AppShell
-      title="Expense Claims Form"
-      breadcrumb="Management > HRM Management > Employee Administration > Expense Claims > EXP-2024-00482"
+      title="Expense Claims"
+      breadcrumb="Management > HRM Management > Expense Claims"
       description="The Expense Claims Form manages employee expense reimbursement from expense capture → claim preparation → receipt verification → policy validation → approval → finance review → settlement → reimbursement/recovery → closure → analytics."
       tabs={<HrmManagementTabBar />}
     >

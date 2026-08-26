@@ -126,7 +126,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/management/hrm-management/employee-welfare")({
   head: () => ({
     meta: [
-      { title: "Employee Welfare Form · Employee Administration · Magnertia ERP" },
+      { title: "Employee Welfare · HRM Management · Magnertia ERP" },
       {
         name: "description",
         content:
@@ -185,8 +185,8 @@ export function EmployeeWelfarePage() {
 
   return (
     <AppShell
-      title="Employee Welfare Form"
-      breadcrumb="Management > HRM Management > Employee Administration > Employee Welfare > WEL-2024-00521"
+      title="Employee Welfare"
+      breadcrumb="Management > HRM Management > Employee Welfare"
       description="The Employee Welfare Form manages employee welfare from welfare need identification → eligibility → benefit/program allocation → request → approval → support delivery → utilization → feedback → impact evaluation → closure → analytics."
       tabs={<HrmManagementTabBar />}
     >

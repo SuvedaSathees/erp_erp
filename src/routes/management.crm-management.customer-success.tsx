@@ -270,8 +270,8 @@ function CustomerSuccessPage() {
 
   return (
     <AppShell
-      title="Customer Success Form"
-      breadcrumb="Management > CRM Management > Customer Success > Customer Success Form"
+      title="Customer Success"
+      breadcrumb="Management > CRM Management > Customer Success"
       description="The Customer Success Form manages the complete post-sale relationship lifecycle focused on customer adoption, value realization, retention, expansion, health monitoring, renewals, risks, and advocacy."
       tabs={<CrmManagementTabBar />}
     >

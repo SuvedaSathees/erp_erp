@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import React, { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import {
   Activity,
@@ -101,6 +101,57 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { AppShell } from "@/components/erp/AppShell";
+import { cn } from "@/lib/utils";
+
+/* ===========================================================================
+   Circular Score Gauge Component
+   =========================================================================== */
+function CircularScoreGauge({
+  score,
+  label = "OVERALL SCORE",
+}: {
+  score: number;
+  label?: string;
+}) {
+  const circumference = 2 * Math.PI * 42;
+  const strokeDashoffset = circumference - (score / 100) * circumference;
+
+  let scoreColor = "text-blue-600 stroke-blue-600 dark:text-blue-400 dark:stroke-blue-400";
+  if (score < 60) scoreColor = "text-amber-500 stroke-amber-500";
+  if (score < 40) scoreColor = "text-rose-500 stroke-rose-500";
+
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      <svg className="w-28 h-28 transform -rotate-90">
+        <circle
+          cx="56"
+          cy="56"
+          r="42"
+          className="stroke-slate-100 dark:stroke-slate-800 fill-none"
+          strokeWidth="8"
+        />
+        <circle
+          cx="56"
+          cy="56"
+          r="42"
+          className={cn(
+            "fill-none transition-all duration-1000 ease-out",
+            scoreColor,
+          )}
+          strokeWidth="8"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center text-center">
+        <span className="text-2xl font-bold tracking-tight text-foreground">
+          {score}%
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export const Route = createFileRoute(
   "/development/research-innovation/simulation-analysis/new",
@@ -111,12 +162,20 @@ export const Route = createFileRoute(
   component: SimulationAnalysisNewPage,
 });
 
+export function SimulationAnalysisFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <SimulationAnalysisNewPage {...props} />;
+}
+
+export function SimulationAnalysisPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <SimulationAnalysisNewPage {...props} />;
+}
+
 export function SimulationAnalysisNewPage({
   breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -222,7 +281,7 @@ export function SimulationAnalysisNewPage({
     return (
       <AppShell
         title="Simulation & Analysis"
-        breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+        breadcrumb={breadcrumb ?? "Development > Research & Innovation > Simulation & Analysis"}
         tabs={tabs ?? <ResearchInnovationTabBar />}
       >
         <div className="p-8 space-y-6">
@@ -240,47 +299,51 @@ export function SimulationAnalysisNewPage({
   return (
     <AppShell
       title="Simulation & Analysis"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Simulation & Analysis"}
       description="Execute multi-physics FEA/CFD CAE simulations, structural mesh validation, and thermal analyses."
       tabs={tabs ?? <ResearchInnovationTabBar />}
     >
       <div className="space-y-6 pb-16">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <Activity className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              {record.simulationProjectName}
-            </h1>
-                <Badge
-                  variant="outline"
-                  className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-mono text-xs"
-                >
+        {/* Top Header Card */}
+        <div className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs p-4 sm:p-5 transition-all">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="space-y-1.5">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 dark:text-white flex items-center gap-2.5">
+                  <Activity className="h-6 w-6 text-blue-600 shrink-0" />
+                  {record.simulationProjectName}
+                </h1>
+                <Badge variant="outline" className="bg-blue-50/80 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 font-mono text-xs font-semibold px-2.5 py-0.5">
                   {record.simulationVersion}
                 </Badge>
                 <Badge
                   className={
                     record.workflowStatus === "Approved"
-                      ? "bg-emerald-600 text-white"
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold"
                       : record.workflowStatus === "In Review"
-                      ? "bg-amber-500 text-white"
-                      : "bg-blue-600 text-white"
+                      ? "bg-purple-50 text-purple-700 border border-purple-200 font-semibold"
+                      : "bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
                   }
                 >
+                  <Workflow className="mr-1 h-3 w-3 inline" />
                   {record.workflowStatus}
                 </Badge>
               </div>
+              <p className="text-xs text-muted-foreground max-w-3xl">
+                {record.simulationObjective || "Execute multi-physics FEA/CFD CAE simulations, structural mesh validation, and thermal analyses."}
+              </p>
             </div>
 
-            {/* Header Actions */}
-            <div className="flex items-center gap-2.5 shrink-0">
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => saveDraftMutation.mutate({})}
                 disabled={saveDraftMutation.isPending}
-                className="gap-1.5"
+                className="h-8 px-3 text-xs gap-1.5 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium"
               >
-                <Save className="h-4 w-4 text-slate-500" />
+                <Save className="h-3.5 w-3.5 text-slate-500" />
                 Save Draft
               </Button>
 
@@ -288,35 +351,31 @@ export function SimulationAnalysisNewPage({
                 size="sm"
                 onClick={() => submitForReviewMutation.mutate()}
                 disabled={submitForReviewMutation.isPending}
-                className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-sm"
+                className="h-8 px-4 text-xs font-bold gap-1.5 bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-3.5 w-3.5" />
                 Submit for Review
               </Button>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon" className="h-9 w-9">
-                    <MoreHorizontal className="h-4 w-4" />
+                  <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200">
+                    <MoreHorizontal className="h-4 w-4 text-slate-600" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-56 text-xs">
                   <DropdownMenuItem onClick={() => setIsRunSolverOpen(true)}>
-                    <Play className="h-4 w-4 mr-2 text-blue-500" />
-                    Run ANSYS Solver
+                    <Play className="h-3.5 w-3.5 mr-2 text-blue-600" /> Run ANSYS Solver
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsCompareScenariosOpen(true)}>
-                    <Sliders className="h-4 w-4 mr-2 text-purple-500" />
-                    Compare FEA Scenarios
+                    <Sliders className="h-3.5 w-3.5 mr-2 text-purple-600" /> Compare FEA Scenarios
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsDigitalTwinSyncOpen(true)}>
-                    <Globe className="h-4 w-4 mr-2 text-emerald-500" />
-                    Sync Digital Twin
+                    <Globe className="h-3.5 w-3.5 mr-2 text-emerald-600" /> Sync Digital Twin
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => window.print()}>
-                    <Printer className="h-4 w-4 mr-2" />
-                    Print Report
+                    <Printer className="h-3.5 w-3.5 mr-2" /> Print Report
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
@@ -324,71 +383,53 @@ export function SimulationAnalysisNewPage({
                       toast.success("Link copied to clipboard!");
                     }}
                   >
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share Project
+                    <Share2 className="h-3.5 w-3.5 mr-2" /> Share Project
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
           </div>
 
-          {/* Linked Entities Bar (Matching Screenshot) */}
-          <div className="max-w-7xl mx-auto mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 text-xs">
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Simulation ID</span>
-              <span className="font-mono font-semibold text-foreground">
-                {record.simulationId}
+          {/* Reference Badges Strip */}
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Simulation ID</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-100 font-mono">{record.simulationId}</span>
+            </div>
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Form Code</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-100 font-mono">{record.formCode}</span>
+            </div>
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Linked Product</span>
+              <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                {record.linkedProductId || "Autonomous W-EVSE"} <ExternalLink className="h-3 w-3" />
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Form Code</span>
-              <span className="font-mono font-semibold text-foreground">
-                {record.formCode}
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Mechanical Design</span>
+              <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                {record.linkedMechanicalDevId} <ExternalLink className="h-3 w-3" />
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Linked Product</span>
-              <span className="font-medium text-blue-600 dark:text-blue-400 flex items-center gap-1 cursor-pointer truncate">
-                {record.linkedProductId}
-                <ExternalLink className="h-3 w-3 shrink-0" />
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Electrical Design</span>
+              <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                {record.linkedElectricalDevId} <ExternalLink className="h-3 w-3" />
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Mechanical Design</span>
-              <span className="font-mono text-muted-foreground truncate">
-                {record.linkedMechanicalDevId}
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Electronics Design</span>
+              <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                {record.linkedElectronicsDevId} <ExternalLink className="h-3 w-3" />
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Electrical Design</span>
-              <span className="font-mono text-muted-foreground truncate">
-                {record.linkedElectricalDevId}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Electronics Design</span>
-              <span className="font-mono text-muted-foreground truncate">
-                {record.linkedElectronicsDevId}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Embedded Systems</span>
-              <span className="font-mono text-muted-foreground truncate">
-                {record.linkedEmbeddedDevId}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Simulation Engineer</span>
-              <div className="flex items-center gap-1 font-medium text-foreground truncate">
-                <img
-                  src={record.simulationEngineerAvatar}
-                  alt={record.simulationEngineerName}
-                  className="h-3.5 w-3.5 rounded-full object-cover shrink-0"
-                />
-                <span className="truncate">{record.simulationEngineerName}</span>
-              </div>
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Simulation Engineer</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-100 truncate block">{record.simulationEngineerName}</span>
             </div>
           </div>
+        </div>
 
         {/* =========================================================================
             2. MAIN CONTENT AREA (LAYOUT: LEFT CONTENT + RIGHT SIDEBAR)
@@ -396,60 +437,39 @@ export function SimulationAnalysisNewPage({
         <div className="max-w-7xl mx-auto px-6 py-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main 9-column content */}
           <div className="lg:col-span-9 space-y-6">
-            {/* WORKFLOW STAGE TIMELINE / OVERALL PROGRESS BANNER */}
+            {/* WORKFLOW STAGE TIMELINE BANNER */}
             <Card className="border-border/80 shadow-xs bg-gradient-to-br from-white via-slate-50 to-blue-50/30 dark:from-slate-900 dark:via-slate-900/90 dark:to-blue-950/20 overflow-hidden">
-              <CardContent className="p-5">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                  {/* Score Radial Visual */}
-                  <div className="flex items-center gap-4 shrink-0">
-                    <div className="relative flex items-center justify-center h-20 w-20 rounded-full border-4 border-blue-600/20 bg-blue-600/5 dark:bg-blue-500/10">
-                      <div className="text-center">
-                        <span className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
-                          {record.overallSimulationScore}
-                        </span>
-                        <span className="text-[10px] block text-muted-foreground font-semibold">
-                          /100
-                        </span>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-xs uppercase font-semibold tracking-wider text-muted-foreground">
-                        Overall Simulation Score
-                      </div>
-                      <div className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                        High Correlation (96.3%)
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        4-Stage CAE FEA/CFD Simulation Lifecycle
-                      </div>
-                    </div>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-3">
+                  <div className="flex items-center gap-2">
+                    <Workflow className="h-4 w-4 text-blue-600" />
+                    <span className="font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                      CAE Engineering Simulation Lifecycle
+                    </span>
                   </div>
-
-                  {/* 4-Stage Engineering Workflow */}
-                  <div className="w-full space-y-2">
-                    <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
-                      <span>CAE Engineering Simulation Lifecycle</span>
-                      <span className="text-blue-600 dark:text-blue-400">
-                        Stage 2: Engineering Simulation
-                      </span>
+                  <span className="text-blue-600 dark:text-blue-400 font-medium">
+                    Current Stage: <strong className="font-bold">Stage 2: Engineering Simulation</strong>
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  {[
+                    { stage: "1. Model Prep", status: "Completed", score: record.modelReadinessScore, color: "bg-emerald-500" },
+                    { stage: "2. Simulation", status: "In Progress", score: record.configurationScore, color: "bg-blue-600" },
+                    { stage: "3. Validation", status: "Upcoming", score: record.validationScore, color: "bg-purple-500" },
+                    { stage: "4. Review", status: "Pending", score: record.optimizationScore, color: "bg-amber-500" },
+                  ].map((stg, idx) => (
+                    <div key={idx} className="p-2.5 rounded-lg border border-border/60 bg-white/80 dark:bg-slate-900/80 space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-semibold text-slate-800 dark:text-slate-200">{stg.stage}</span>
+                        <Badge variant="outline" className="text-[10px] font-mono font-bold">
+                          {stg.score}/100
+                        </Badge>
+                      </div>
+                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div className={`h-full ${stg.color}`} style={{ width: `${stg.score}%` }} />
+                      </div>
                     </div>
-                    <div className="grid grid-cols-4 gap-2">
-                      {[
-                        { stage: "1. Model Prep", status: "Completed", score: record.modelReadinessScore, color: "bg-emerald-500" },
-                        { stage: "2. Simulation", status: "In Progress", score: record.configurationScore, color: "bg-blue-600" },
-                        { stage: "3. Validation", status: "Upcoming", score: record.validationScore, color: "bg-purple-500" },
-                        { stage: "4. Review", status: "Pending", score: record.optimizationScore, color: "bg-amber-500" },
-                      ].map((stg, idx) => (
-                        <div key={idx} className="space-y-1 text-center">
-                          <div className={`h-2 rounded-full ${stg.color}`} />
-                          <span className="text-[10px] block font-medium truncate text-slate-700 dark:text-slate-300">
-                            {stg.stage} ({stg.score})
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -501,24 +521,6 @@ export function SimulationAnalysisNewPage({
                           <Badge variant="secondary" className="text-[10px]">
                             {record.engineeringDomain}
                           </Badge>
-                        </div>
-                      </div>
-
-                      {/* 3D CAD Preview Card Graphic (Matching Screenshot) */}
-                      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-950 text-white flex items-center justify-between">
-                        <div className="space-y-1">
-                          <span className="text-[10px] text-slate-400 block font-mono">
-                            FEA 3D CONTOUR PREVIEW
-                          </span>
-                          <span className="text-sm font-bold block text-blue-400">
-                            {record.modelPrepConfig.cadModel}
-                          </span>
-                          <span className="text-[11px] text-slate-300">
-                            {record.modelPrepConfig.materialLibrary} • {record.modelPrepConfig.totalElements} Elements
-                          </span>
-                        </div>
-                        <div className="h-16 w-20 rounded-md bg-gradient-to-tr from-blue-600 via-emerald-500 to-amber-500 flex items-center justify-center font-bold text-white text-xs shadow-inner">
-                          78.6 MPa
                         </div>
                       </div>
                     </CardContent>
@@ -576,16 +578,6 @@ export function SimulationAnalysisNewPage({
                           <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">
                             {record.modelPrepConfig.totalElements}
                           </span>
-                        </div>
-                      </div>
-
-                      {/* Mesh Preview Diagram */}
-                      <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 space-y-1 text-center">
-                        <span className="text-[10px] text-muted-foreground block">
-                          Tetrahedral Mesh Visualization Preview
-                        </span>
-                        <div className="h-14 w-full rounded border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-500 font-mono text-[11px]">
-                          [ 1,245,876 Tetrahedral FEA Nodes Verified ]
                         </div>
                       </div>
                     </CardContent>
@@ -927,68 +919,14 @@ export function SimulationAnalysisNewPage({
               </Card>
             )}
 
-            {/* TAB CONTENT 8: SUMMARY */}
-            {(activeTab === "overview" || activeTab === "summary") && (
-              <Card className="border-border/80 shadow-xs">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold flex items-center gap-2">
-                    <Target className="h-4 w-4 text-blue-600" />
-                    9. Simulation Summary & Executive Recommendation
-                  </CardTitle>
-                  <CardDescription>
-                    Consolidated scores across all CAE simulation domains
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4 text-xs">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Model Readiness
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.modelReadiness}/100
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Simulation Accuracy
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.simulationAccuracy}/100
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Validation Score
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.validationScore}/100
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Optimization Score
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.optimizationScore}/100
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* TAB CONTENT 9: ATTACHMENTS */}
+            {/* TAB CONTENT 8: ATTACHMENTS */}
             {(activeTab === "overview" || activeTab === "attachments") && (
               <Card className="border-border/80 shadow-xs">
                 <CardHeader className="pb-3 flex flex-row items-center justify-between">
                   <div>
                     <CardTitle className="text-base font-semibold flex items-center gap-2">
                       <FileText className="h-4 w-4 text-blue-600" />
-                      10. Engineering Simulation Attachments
+                      9. Engineering Simulation Attachments
                     </CardTitle>
                     <CardDescription>
                       CAD STEP models, mesh reports, and ANSYS H5 solver outputs
@@ -1043,13 +981,13 @@ export function SimulationAnalysisNewPage({
               </Card>
             )}
 
-            {/* TAB CONTENT 10: REVIEW & APPROVAL */}
+            {/* TAB CONTENT 9: REVIEW & APPROVAL */}
             {(activeTab === "overview" || activeTab === "review_approval") && (
               <Card className="border-border/80 shadow-xs">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-semibold flex items-center gap-2">
                     <Workflow className="h-4 w-4 text-blue-600" />
-                    11. Review & Approval Board Timeline
+                    10. Review & Approval Board Timeline
                   </CardTitle>
                   <CardDescription>
                     Multi-stage engineering approval committee
@@ -1074,13 +1012,8 @@ export function SimulationAnalysisNewPage({
                             <td className="p-3 font-semibold text-slate-900 dark:text-white">
                               {rev.role}
                             </td>
-                            <td className="p-3 flex items-center gap-2">
-                              <img
-                                src={rev.avatar}
-                                alt={rev.person}
-                                className="h-5 w-5 rounded-full object-cover"
-                              />
-                              <span className="font-medium">{rev.person}</span>
+                            <td className="p-3">
+                              <span className="font-medium text-foreground">{rev.person}</span>
                             </td>
                             <td className="p-3">
                               <Badge
@@ -1169,127 +1102,54 @@ export function SimulationAnalysisNewPage({
 
           {/* RIGHT SIDEBAR (3 columns) */}
           <div className="lg:col-span-3 space-y-6">
-            {/* Overall Score Radial Widget */}
-            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-              <CardHeader className="pb-2 text-center">
-                <CardTitle className="text-sm font-semibold">Overall Simulation Score</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-center">
-                <div className="relative inline-flex items-center justify-center">
-                  <div className="h-28 w-28 rounded-full border-6 border-blue-600 flex items-center justify-center bg-blue-50/30 dark:bg-blue-950/30">
-                    <div>
-                      <span className="text-3xl font-black text-blue-600 dark:text-blue-400">
-                        {record.overallSimulationScore}
-                      </span>
-                      <span className="text-[10px] block font-semibold text-muted-foreground">
-                        / 100
+            <div className="sticky top-6 space-y-4">
+              {/* Overall Score Radial Widget */}
+              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+                <CardHeader className="pb-2 text-center">
+                  <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider">
+                    Overall Simulation Score
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-center">
+                  <div className="flex justify-center items-center py-2">
+                    <CircularScoreGauge score={record.overallSimulationScore} label="Overall Score" />
+                  </div>
+
+                  <div className="space-y-2 text-xs text-left pt-3 border-t border-slate-100 dark:border-slate-800">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Model Readiness</span>
+                      <span className="font-bold text-foreground font-mono">
+                        {record.modelReadinessScore} /100
                       </span>
                     </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Simulation Accuracy</span>
+                      <span className="font-bold text-foreground font-mono">
+                        {record.configurationScore} /100
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Validation Score</span>
+                      <span className="font-bold text-foreground font-mono">
+                        {record.validationScore} /100
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Optimization Score</span>
+                      <span className="font-bold text-foreground font-mono">
+                        {record.optimizationScore} /100
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center pt-2 border-t font-bold text-blue-600 dark:text-blue-400">
+                      <span>Total Score</span>
+                      <span>{record.overallSimulationScore}%</span>
+                    </div>
                   </div>
-                </div>
+                </CardContent>
+              </Card>
 
-                <div className="space-y-2 text-xs text-left pt-2 border-t border-slate-100 dark:border-slate-800">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Model Readiness</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.modelReadinessScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Simulation Accuracy</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.configurationScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Validation Score</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.validationScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Optimization Score</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.optimizationScore}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
 
-            {/* Key Highlights */}
-            <Card className="border-border/80 shadow-xs">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 text-blue-600" />
-                  Key Highlights
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2.5 text-xs">
-                {[
-                  "Mesh quality is excellent (0.92)",
-                  "Max temperature within safe limit (78.4 °C)",
-                  "Structural stress within allowable range",
-                  "Weight optimized by 8.7%",
-                  "All critical results validated",
-                ].map((hl, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium">
-                      {hl}
-                    </span>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions Panel */}
-            <Card className="border-border/80 shadow-xs">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-xs">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => setIsRunSolverOpen(true)}
-                >
-                  <Play className="h-3.5 w-3.5 text-blue-600" />
-                  Run Simulation
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => setActiveTab("results_validation")}
-                >
-                  <BarChart3 className="h-3.5 w-3.5 text-emerald-600" />
-                  View Results
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => setIsCompareScenariosOpen(true)}
-                >
-                  <Sliders className="h-3.5 w-3.5 text-purple-600" />
-                  Compare Scenarios
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => setIsDigitalTwinSyncOpen(true)}
-                >
-                  <Globe className="h-3.5 w-3.5 text-blue-500" />
-                  Create Digital Twin
-                </Button>
-              </CardContent>
-            </Card>
+            </div>
           </div>
         </div>
 
@@ -1452,6 +1312,11 @@ export function SimulationAnalysisNewPage({
             </DialogFooter>
           </DialogContent>
         </Dialog>
+      </div>
     </AppShell>
   );
 }
+
+export default SimulationAnalysisNewPage;
+
+

@@ -496,44 +496,60 @@ function BusinessScalingDevelopmentPage() {
         )}
 
         {/* Form Header Action Strip & Top Metadata Cards */}
-        <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-3">
-            <div className="flex items-center gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary font-bold shadow-inner">
+        <div className="relative rounded-2xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Top Row: Icon + Title + Status + Action Buttons */}
+          <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-b border-border/60 pb-4">
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary border border-primary/20 shadow-2xs">
                 <Rocket className="h-6 w-6" />
               </div>
-              <div>
+              <div className="min-w-0 space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-base font-bold text-foreground tracking-tight">{formData.scalingProject}</h1>
+                  <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">{formData.scalingProject}</h1>
                   <span
                     className={cn(
-                      "rounded-full border px-2.5 py-0.5 text-[11px] font-bold tracking-wide",
-                      formData.workflowStatus === "In Progress" && "bg-blue-500/10 border-blue-500/20 text-blue-600",
-                      formData.workflowStatus === "Submitted" && "bg-amber-500/10 border-amber-500/20 text-amber-600",
-                      formData.workflowStatus === "Approved" && "bg-emerald-500/10 border-emerald-500/20 text-emerald-600"
+                      "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold tracking-wide",
+                      formData.workflowStatus === "In Progress" && "bg-blue-500/10 border-blue-500/25 text-blue-600 dark:text-blue-400",
+                      formData.workflowStatus === "Submitted" && "bg-amber-500/10 border-amber-500/25 text-amber-600 dark:text-amber-400",
+                      formData.workflowStatus === "Approved" && "bg-emerald-500/10 border-emerald-500/25 text-emerald-600 dark:text-emerald-400"
                     )}
                   >
+                    <span className="h-1.5 w-1.5 rounded-full bg-current animate-pulse"></span>
                     {formData.workflowStatus}
                   </span>
-                  <span className="rounded-full bg-muted border border-border px-2.5 py-0.5 text-[11px] font-semibold text-muted-foreground">
+                  <span className="rounded-md bg-muted px-2 py-0.5 text-[11px] font-mono font-semibold text-muted-foreground border border-border/60">
                     v{formData.version}
                   </span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Scaling ID: <span className="font-mono font-bold text-foreground">{formData.scalingId}</span> · Code:{" "}
-                  <span className="font-mono font-bold text-foreground">{formData.formCode}</span> · Number:{" "}
-                  <span className="font-mono font-bold text-foreground">{formData.scalingNumber}</span>
-                </p>
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-muted-foreground">
+                  <span className="inline-flex items-center gap-1">
+                    <span className="text-muted-foreground">Scaling ID:</span>
+                    <strong className="font-mono font-semibold text-foreground">{formData.scalingId}</strong>
+                  </span>
+                  <span className="text-border/80">·</span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="text-muted-foreground">Code:</span>
+                    <strong className="font-mono font-semibold text-foreground">{formData.formCode}</strong>
+                  </span>
+                  <span className="text-border/80">·</span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="text-muted-foreground">Number:</span>
+                    <strong className="font-mono font-semibold text-foreground">{formData.scalingNumber}</strong>
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
+            {/* Right Action Button Strip */}
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
               <button
                 type="button"
                 onClick={() => setShowMaicwLegend(!showMaicwLegend)}
                 className={cn(
-                  "flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold transition-all",
-                  showMaicwLegend ? "bg-primary/10 text-primary border-primary/30" : "bg-card text-muted-foreground hover:text-foreground hover:bg-muted"
+                  "inline-flex items-center gap-1.5 h-9 rounded-lg border px-3 text-xs font-semibold transition-all cursor-pointer shadow-2xs",
+                  showMaicwLegend
+                    ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                    : "border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 <Info className="h-3.5 w-3.5" /> MAICW Legend
@@ -541,8 +557,16 @@ function BusinessScalingDevelopmentPage() {
 
               <button
                 type="button"
+                onClick={() => setIsAiDrawerOpen(true)}
+                className="inline-flex items-center gap-1.5 h-9 rounded-lg border border-primary/30 bg-primary/10 px-3.5 text-xs font-semibold text-primary shadow-2xs hover:bg-primary/20 transition-all active:scale-[0.98] cursor-pointer"
+              >
+                <Sparkles className="h-3.5 w-3.5" /> AI Analysis
+              </button>
+
+              <button
+                type="button"
                 onClick={handleSaveDraft}
-                className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground shadow-xs hover:bg-muted transition-colors active:scale-95"
+                className="inline-flex items-center gap-1.5 h-9 rounded-lg border border-border bg-background px-3.5 text-xs font-semibold text-foreground shadow-2xs hover:bg-muted transition-all active:scale-[0.98] cursor-pointer"
               >
                 <Save className="h-3.5 w-3.5 text-muted-foreground" /> Save Draft
               </button>
@@ -550,7 +574,7 @@ function BusinessScalingDevelopmentPage() {
               <button
                 type="button"
                 onClick={() => setIsPreviewOpen(true)}
-                className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground shadow-xs hover:bg-muted transition-colors active:scale-95"
+                className="inline-flex items-center gap-1.5 h-9 rounded-lg border border-border bg-background px-3.5 text-xs font-semibold text-foreground shadow-2xs hover:bg-muted transition-all active:scale-[0.98] cursor-pointer"
               >
                 <Eye className="h-3.5 w-3.5 text-muted-foreground" /> Preview
               </button>
@@ -558,23 +582,38 @@ function BusinessScalingDevelopmentPage() {
               <button
                 type="button"
                 onClick={handleSubmitApproval}
-                className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-1.5 text-xs font-bold text-white shadow-md hover:bg-primary/90 transition-colors active:scale-95"
+                className="inline-flex items-center gap-1.5 h-9 rounded-lg bg-primary px-4 text-xs font-semibold text-primary-foreground shadow-xs hover:bg-primary/90 transition-all active:scale-[0.98] cursor-pointer"
               >
                 <Send className="h-3.5 w-3.5" /> Submit for Approval
               </button>
 
               <div className="relative group">
-                <button type="button" className="grid h-8 w-8 place-items-center rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted">
+                <button
+                  type="button"
+                  className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-background text-muted-foreground hover:text-foreground hover:bg-muted shadow-2xs transition-colors cursor-pointer"
+                >
                   <MoreVertical className="h-4 w-4" />
                 </button>
                 <div className="absolute right-0 top-full mt-1 hidden w-44 rounded-xl border border-border bg-card p-1 shadow-lg group-hover:block z-30 text-xs">
-                  <button type="button" onClick={() => window.print()} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left cursor-pointer text-foreground"
+                  >
                     <Printer className="h-3.5 w-3.5 text-muted-foreground" /> Print Report
                   </button>
-                  <button type="button" onClick={() => showToast("info", "Share Link", "Scaling Roadmap link copied to clipboard.")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button
+                    type="button"
+                    onClick={() => showToast("info", "Share Link", "Scaling Roadmap link copied to clipboard.")}
+                    className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left cursor-pointer text-foreground"
+                  >
                     <Share2 className="h-3.5 w-3.5 text-muted-foreground" /> Share Link
                   </button>
-                  <button type="button" onClick={() => showToast("info", "Export Model", "Exporting Business Scaling PDF...")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button
+                    type="button"
+                    onClick={() => showToast("info", "Export Model", "Exporting Business Scaling PDF...")}
+                    className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left cursor-pointer text-foreground"
+                  >
                     <FileText className="h-3.5 w-3.5 text-muted-foreground" /> Export PDF
                   </button>
                 </div>
@@ -583,42 +622,54 @@ function BusinessScalingDevelopmentPage() {
           </div>
 
           {/* Form Top Metadata Grid */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 text-xs">
-            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
-                Business Unit <MAICWBadge type="I" />
-              </span>
-              <span className="font-bold text-foreground block truncate mt-0.5">{formData.businessUnit}</span>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div className="rounded-xl border border-border/70 bg-muted/20 hover:bg-muted/30 p-3 shadow-2xs hover:border-primary/30 transition-all flex flex-col justify-between min-h-[64px]">
+              <div className="flex items-center justify-between gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                <span>Business Unit</span> <MAICWBadge type="I" />
+              </div>
+              <div className="text-xs sm:text-[13px] font-bold text-foreground truncate mt-1" title={formData.businessUnit}>
+                {formData.businessUnit}
+              </div>
             </div>
-            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
-                Scaling Manager <MAICWBadge type="I" />
-              </span>
-              <span className="font-bold text-foreground block truncate mt-0.5">{formData.scalingManager}</span>
+            <div className="rounded-xl border border-border/70 bg-muted/20 hover:bg-muted/30 p-3 shadow-2xs hover:border-primary/30 transition-all flex flex-col justify-between min-h-[64px]">
+              <div className="flex items-center justify-between gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                <span>Scaling Manager</span> <MAICWBadge type="I" />
+              </div>
+              <div className="text-xs sm:text-[13px] font-bold text-foreground truncate mt-1" title={formData.scalingManager}>
+                {formData.scalingManager}
+              </div>
             </div>
-            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
-                Strategic Plan <MAICWBadge type="I" />
-              </span>
-              <span className="font-bold text-primary block truncate mt-0.5">{formData.strategicPlan}</span>
+            <div className="rounded-xl border border-border/70 bg-muted/20 hover:bg-muted/30 p-3 shadow-2xs hover:border-primary/30 transition-all flex flex-col justify-between min-h-[64px]">
+              <div className="flex items-center justify-between gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                <span>Strategic Plan</span> <MAICWBadge type="I" />
+              </div>
+              <div className="text-xs sm:text-[13px] font-bold text-primary truncate mt-1" title={formData.strategicPlan}>
+                {formData.strategicPlan}
+              </div>
             </div>
-            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
-                Created Date <MAICWBadge type="A" />
-              </span>
-              <span className="font-semibold text-foreground block truncate mt-0.5">{formData.createdDate}</span>
+            <div className="rounded-xl border border-border/70 bg-muted/20 hover:bg-muted/30 p-3 shadow-2xs hover:border-primary/30 transition-all flex flex-col justify-between min-h-[64px]">
+              <div className="flex items-center justify-between gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                <span>Created Date</span> <MAICWBadge type="A" />
+              </div>
+              <div className="text-xs sm:text-[13px] font-mono font-semibold text-foreground truncate mt-1">
+                {formData.createdDate}
+              </div>
             </div>
-            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
-                Last Modified Date <MAICWBadge type="A" />
-              </span>
-              <span className="font-semibold text-foreground block truncate mt-0.5">{formData.lastModifiedDate}</span>
+            <div className="rounded-xl border border-border/70 bg-muted/20 hover:bg-muted/30 p-3 shadow-2xs hover:border-primary/30 transition-all flex flex-col justify-between min-h-[64px]">
+              <div className="flex items-center justify-between gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                <span>Last Modified</span> <MAICWBadge type="A" />
+              </div>
+              <div className="text-xs sm:text-[13px] font-mono font-semibold text-foreground truncate mt-1">
+                {formData.lastModifiedDate}
+              </div>
             </div>
-            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
-                Workflow Stage <MAICWBadge type="W" />
-              </span>
-              <span className="font-semibold text-primary block truncate mt-0.5">{formData.workflowStage}</span>
+            <div className="rounded-xl border border-border/70 bg-muted/20 hover:bg-muted/30 p-3 shadow-2xs hover:border-primary/30 transition-all flex flex-col justify-between min-h-[64px]">
+              <div className="flex items-center justify-between gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                <span>Workflow Stage</span> <MAICWBadge type="W" />
+              </div>
+              <div className="text-xs sm:text-[13px] font-bold text-primary truncate mt-1">
+                {formData.workflowStage}
+              </div>
             </div>
           </div>
         </div>
@@ -672,16 +723,14 @@ function BusinessScalingDevelopmentPage() {
           <ScoreGauge label="AI Scaling Score" score={formData.aiScalingScore} sub="Excellent" size="normal" />
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Main Form Canvas */}
+        <div className="w-full space-y-6">
 
-            {/* 1. Scaling Strategy Overview */}
+            {/* Scaling Strategy Overview */}
             <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Scaling Strategy Overview
+                  <Building2 className="h-4 w-4 text-primary" /> Scaling Strategy Overview
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Enterprise Growth Plan</span>
               </div>
@@ -808,11 +857,11 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 2. Business Expansion Planning */}
+            {/* Business Expansion Planning */}
             <div id="sec-expansion-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Globe className="h-4 w-4 text-emerald-600" /> 2. Business Expansion Planning
+                  <Globe className="h-4 w-4 text-emerald-600" /> Business Expansion Planning
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Expansion Score: <strong>{formData.expansionReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -869,11 +918,11 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 3. Operational Scaling */}
+            {/* Operational Scaling */}
             <div id="sec-operational-scaling" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Boxes className="h-4 w-4 text-blue-600" /> 3. Operational Scaling & Capacity Expansion
+                  <Boxes className="h-4 w-4 text-blue-600" /> Operational Scaling & Capacity Expansion
                 </h3>
                 <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
                   Operational Score: <strong>{formData.operationalReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -934,11 +983,11 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 4. Financial Scaling */}
+            {/* Financial Scaling */}
             <div id="sec-financial-scaling" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 4. Financial Scaling & Capital Deployment
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Financial Scaling & Capital Deployment
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Financial Score: <strong>{formData.financialReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1023,11 +1072,11 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 5. Sales & Marketing Scaling */}
+            {/* Sales & Marketing Scaling */}
             <div id="sec-sales-marketing" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Target className="h-4 w-4 text-purple-600" /> 5. Sales, Distribution & Marketing Scaling
+                  <Target className="h-4 w-4 text-purple-600" /> Sales, Distribution & Marketing Scaling
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Commercial Score: <strong>{formData.commercialReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1082,11 +1131,11 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 6. Organization Scaling */}
+            {/* Organization Scaling */}
             <div id="sec-organization-scaling" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4 text-emerald-600" /> 6. Organization Structure & Workforce Ramp-up
+                  <Users className="h-4 w-4 text-emerald-600" /> Organization Structure & Workforce Ramp-up
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Organization Score: <strong>{formData.organizationalReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1161,11 +1210,11 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 7. Technology Scaling */}
+            {/* Technology Scaling */}
             <div id="sec-technology-scaling" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Cpu className="h-4 w-4 text-purple-600" /> 7. Technology, Cloud & Digital Transformation
+                  <Cpu className="h-4 w-4 text-purple-600" /> Technology, Cloud & Digital Transformation
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Technology Score: <strong>{formData.technologyReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1205,11 +1254,11 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 8. Risk & Governance */}
+            {/* Risk & Governance */}
             <div id="sec-risk-governance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Scale className="h-4 w-4 text-amber-500" /> 8. Risk Mitigation & Corporate Governance
+                  <Scale className="h-4 w-4 text-amber-500" /> Risk Mitigation & Corporate Governance
                 </h3>
                 <span className="text-xs font-semibold text-amber-600 flex items-center gap-1">
                   Governance Score: <strong>{formData.governanceScore}/100</strong> <MAICWBadge type="C" />
@@ -1256,140 +1305,53 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 9. AI Business Scaling Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 9. AI Business Scaling Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Scaling Score: {formData.aiScalingScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> AI Growth Prediction
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiGrowthPrediction}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-blue-600" /> AI Expansion Recommendation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiExpansionRecommendation}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-purple-600" /> AI Investment Recommendation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiInvestmentRecommendation}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <Zap className="h-3.5 w-3.5" /> AI Resource Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiResourceOptimization}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Business Scaling Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 10. Business Scaling Summary */}
+            {/* Scaling Summary & Strategic Decision */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 10. Scaling Summary & Executive Recommendation
+                  <Award className="h-4 w-4 text-emerald-600" /> Scaling Summary & Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Scaling Rating: {computedOverallScore}/100 (Tier 1)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Expansion Score</span>
-                    <span className="font-mono font-bold">{formData.expansionReadinessScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Enterprise Scaling Status</span>
+                    <span className="text-emerald-600 font-bold">Approved for Multi-City Expansion</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.expansionReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Operational Score</span>
-                    <span className="font-mono font-bold">{formData.operationalReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.operationalReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Financial Score</span>
-                    <span className="font-mono font-bold">{formData.financialReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${formData.financialReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Commercial Score</span>
-                    <span className="font-mono font-bold">{formData.commercialReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.commercialReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Technology Score</span>
-                    <span className="font-mono font-bold">{formData.technologyReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.technologyReadinessScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Targeting 2.3X revenue CAGR over 3 years with 22.5% EBITDA margins, 8 new regional market entries, and team expansion to 2,500 personnel.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Readiness" score={computedOverallScore} sub="Very Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Proceed with Scaling",
-                        "Secure Funding",
-                        "Expand Operations",
-                        "Strengthen Supply Chain",
-                        "Hire Leadership Team",
-                        "Accelerate Digital Transformation",
-                        "Expand Internationally",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Proceed with Scaling",
+                      "Secure Growth Capital",
+                      "Expand Operations",
+                      "Strengthen Supply Chain Infrastructure",
+                      "Hire Executive Leadership Team",
+                      "Accelerate Digital Transformation",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 11. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 11. Business Scaling Dossier & Artifacts
+                  <FileText className="h-4 w-4 text-primary" /> Business Scaling Dossier & Artifacts
                 </h3>
                 <button
                   type="button"
@@ -1444,11 +1406,11 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 12. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 12. Executive Strategy Committee Governance Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Executive Strategy Committee Governance Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">7 Governance Roles</span>
               </div>
@@ -1513,11 +1475,11 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 13. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 13. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History Log
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1540,180 +1502,6 @@ function BusinessScalingDevelopmentPage() {
               </div>
             </div>
 
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 88</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> Strong Growth Potential
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    AI analysis shows 2.3X revenue growth potential in 3 years.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-blue-600" /> Market Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    High demand in USA, Europe and Southeast Asia.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-purple-600">
-                    <Zap className="h-3.5 w-3.5" /> Operational Efficiency
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Automation can increase productivity by up to 40%.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-amber-500">
-                    <ShieldAlert className="h-3.5 w-3.5" /> Risk Insight
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Medium financial risk due to high capital requirement.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Revenue Growth</span>
-                    <Sparkline data={[1.0, 1.4, 1.8, 2.3]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">2.3X <span className="text-xs text-muted-foreground">(3 Years)</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">EBITDA Target</span>
-                    <Sparkline data={[16, 18, 20, 22.5]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">22.5%</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Market Expansion</span>
-                    <Sparkline data={[3, 5, 6, 8]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">8 <span className="text-xs text-muted-foreground">(New Markets)</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">New Products</span>
-                    <Sparkline data={[4, 6, 9, 12]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-primary font-mono block">12</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Employee Growth</span>
-                    <Sparkline data={[850, 1200, 1800, 2500]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">850 → 2,500</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Operational Readiness</span>
-                    <Sparkline data={[75, 78, 80, 83]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">83 / 100</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Scaling KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Information Audit Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Company:</span>
-                  <span className="font-semibold text-foreground">Magnertia Industries Ltd.</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Fiscal Year:</span>
-                  <span className="font-semibold text-foreground">2024 - 25</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Base Currency:</span>
-                  <span className="font-semibold text-foreground">INR - Indian Rupee</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Timezone:</span>
-                  <span className="font-semibold text-foreground">IST (UTC +05:30)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Date Format:</span>
-                  <span className="font-semibold text-foreground">dd MMM YYYY</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Time Format:</span>
-                  <span className="font-semibold text-foreground">hh:mm:ss A</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Activity History
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 

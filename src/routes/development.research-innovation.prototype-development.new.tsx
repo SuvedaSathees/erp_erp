@@ -397,8 +397,7 @@ function ScoreTile({ label, value, tone }: { label: string; value: number; tone:
     <div className={cn("rounded-lg border p-3", tone)}>
       <div className="text-[10px] font-semibold text-muted-foreground">{label}</div>
       <div className="font-display text-lg font-bold tabular text-foreground">
-        {value}
-        <span className="text-[10px] font-normal text-muted-foreground"> /100</span>
+        {value}%
       </div>
     </div>
   );
@@ -409,7 +408,7 @@ function AIScoreRow({ label, value }: { label: string; value: number }) {
     <div className="flex items-center justify-between gap-2 text-sm">
       <span className="text-muted-foreground">{label}</span>
       <span className={cn("tabular font-bold", color)}>
-        {value} <span className="text-[10px] font-normal text-muted-foreground">/100</span>
+        {value}%
       </span>
     </div>
   );
@@ -631,7 +630,7 @@ function PrototypeFormPage() {
     return (
       <AppShell
         title="Prototype Development"
-        breadcrumb="Research & Innovation Development · Prototype Development"
+        breadcrumb="Development > Research & Innovation > Prototype Development"
         description="Engineer, manufacture, and test working prototypes."
         tabs={<InnovationAreaTabs sub={<PrototypeDevPageTabBar />} />}
       >
@@ -646,7 +645,7 @@ function PrototypeFormPage() {
   return (
     <AppShell
       title="Prototype Development"
-      breadcrumb="Research & Innovation Development · Prototype Development"
+      breadcrumb="Development > Research & Innovation > Prototype Development"
       description="Engineer, manufacture, and test working prototypes."
       tabs={<InnovationAreaTabs sub={<PrototypeDevPageTabBar />} />}
     >
@@ -1354,8 +1353,7 @@ function PrototypeFormPage() {
                       Overall Prototype Score
                     </div>
                     <div className="font-display text-2xl font-bold tabular text-foreground">
-                      {summary.overallPrototypeScore}
-                      <span className="text-sm text-muted-foreground"> /100</span>
+                      {summary.overallPrototypeScore}%
                     </div>
                   </div>
                   <Field label="Recommendation" required>
@@ -1608,58 +1606,12 @@ function PrototypeFormPage() {
                   Overall Prototype Score
                 </div>
                 <div className="font-display text-2xl font-bold tabular text-foreground">
-                  {summary?.overallPrototypeScore ?? 0}
-                  <span className="text-sm text-muted-foreground"> /100</span>
+                  {summary?.overallPrototypeScore ?? 0}%
                 </div>
               </div>
             </div>
 
-            <div className="card-soft space-y-2 p-4">
-              <h3 className="text-sm font-bold text-foreground">Quick Actions</h3>
-              <QuickAction
-                icon={<Upload className="h-4 w-4" />}
-                label="Upload Document"
-                onClick={() => {
-                  if (!editable) return toast.error("Prototype is locked in this status.");
-                  fileInputRef.current?.click();
-                }}
-                disabled={!record}
-              />
-              <QuickAction
-                icon={<FileCog className="h-4 w-4" />}
-                label="Create Engineering Change"
-                onClick={() => toast.success("Engineering change request drafted.")}
-                disabled={!record}
-              />
-              <QuickAction
-                icon={<CalendarCheck className="h-4 w-4" />}
-                label="Schedule Testing"
-                onClick={() => toast.success("Testing schedule opened.")}
-                disabled={!record}
-              />
-              <QuickAction
-                icon={<CheckCircle2 className="h-4 w-4" />}
-                label="Quality Inspection"
-                onClick={() => toast.success("Quality inspection checklist opened.")}
-                disabled={!record}
-              />
-              <QuickAction
-                icon={<FileText className="h-4 w-4" />}
-                label="Generate Prototype Report"
-                onClick={() => reportMut.mutate()}
-                disabled={!record || busy}
-              />
-              <QuickAction
-                icon={<Landmark className="h-4 w-4" />}
-                label="Request Approval"
-                onClick={() => {
-                  if (!allStagesDone)
-                    return toast.error("Complete all stages before requesting approval.");
-                  submitMut.mutate();
-                }}
-                disabled={!record || status === "engineering_review" || status === "approved"}
-              />
-            </div>
+
           </aside>
         </div>
       </div>

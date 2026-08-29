@@ -95,7 +95,7 @@ export function RoutingDevelopmentPage({
   return (
     <AppShell
       title="Routing Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Routing Development"}
       description="Define manufacturing operations, work center assignments, setup times, run times, and scrap factors."
       tabs={tabs ?? <InnovationAreaTabs sub={<RoutingTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

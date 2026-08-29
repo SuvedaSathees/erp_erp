@@ -86,7 +86,7 @@ function PocRegisterPage() {
   return (
     <AppShell
       title="Proof of Concept"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Proof of Concept"
       description="Build and validate proofs of concept before prototyping."
       tabs={<InnovationAreaTabs sub={<PocPageTabBar />} />}
       topbarActions={newButton}

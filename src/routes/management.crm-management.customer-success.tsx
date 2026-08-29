@@ -1008,7 +1008,7 @@ function CustomerSuccessPage() {
                     <div className="p-2.5 bg-indigo-50/60 rounded-lg border border-indigo-200 flex justify-between items-center">
                       <div>
                         <div className="text-[10px] text-indigo-700 font-semibold">Avg. Health Score</div>
-                        <div className="text-sm font-extrabold text-indigo-900 font-mono">82 / 100</div>
+                        <div className="text-sm font-extrabold text-indigo-900 font-mono">82%</div>
                       </div>
                       <div className="relative inline-flex items-center justify-center shrink-0">
                         <svg width="34" height="34" className="transform -rotate-90">

@@ -638,16 +638,14 @@ function SalesChannelDevelopmentPage() {
           <ScoreGauge label="AI Intelligence Score" score={formData.aiSalesIntelligenceScore} sub="Excellent" size="normal" />
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Main Form Canvas */}
+        <div className="w-full space-y-6">
 
-            {/* 1. Sales Channel Overview */}
+            {/* Sales Channel Overview */}
             <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Sales Channel Overview
+                  <Building2 className="h-4 w-4 text-primary" /> Sales Channel Overview
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Scope & Coverage</span>
               </div>
@@ -784,11 +782,11 @@ function SalesChannelDevelopmentPage() {
               </div>
             </div>
 
-            {/* 2. Channel Configuration */}
+            {/* Channel Configuration */}
             <div id="sec-channel-config" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Network className="h-4 w-4 text-emerald-600" /> 2. Channel Configuration & Territory Mapping
+                  <Network className="h-4 w-4 text-emerald-600" /> Channel Configuration & Territory Mapping
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Capacity Score: <strong>{formData.channelCapacityScore}/100</strong> <MAICWBadge type="C" />
@@ -878,11 +876,11 @@ function SalesChannelDevelopmentPage() {
               </div>
             </div>
 
-            {/* 3. Partner Development */}
+            {/* Partner Development */}
             <div id="sec-partner-dev" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4 text-purple-600" /> 3. Partner Development & Qualification
+                  <Users className="h-4 w-4 text-purple-600" /> Partner Development & Qualification
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Partner Readiness Score: <strong>{formData.partnerReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -952,11 +950,11 @@ function SalesChannelDevelopmentPage() {
               </div>
             </div>
 
-            {/* 4. Commercial Planning */}
+            {/* Commercial Planning */}
             <div id="sec-commercial-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 4. Commercial Planning & Margins
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Commercial Planning & Margins
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Commercial Score: <strong>{formData.commercialScore}/100</strong> <MAICWBadge type="C" />
@@ -1041,11 +1039,11 @@ function SalesChannelDevelopmentPage() {
               </div>
             </div>
 
-            {/* 5. Operations & Logistics */}
+            {/* Operations & Logistics */}
             <div id="sec-operations" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-blue-600" /> 5. Operations & Logistics Readiness
+                  <Truck className="h-4 w-4 text-blue-600" /> Operations & Logistics Readiness
                 </h3>
                 <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
                   Operations Score: <strong>{formData.operationsReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1103,11 +1101,11 @@ function SalesChannelDevelopmentPage() {
               </div>
             </div>
 
-            {/* 6. Performance Management */}
+            {/* Performance Management */}
             <div id="sec-performance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-purple-600" /> 6. Performance Management & Metrics
+                  <BarChart3 className="h-4 w-4 text-purple-600" /> Performance Management & Metrics
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Performance Score: <strong>{formData.performanceScore}/100</strong> <MAICWBadge type="C" />
@@ -1147,140 +1145,54 @@ function SalesChannelDevelopmentPage() {
               </div>
             </div>
 
-            {/* 7. AI Sales Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 7. AI Sales Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Intelligence Score: {formData.aiSalesIntelligenceScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> AI Channel Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiChannelOptimization}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 text-blue-600" /> AI Territory Planning
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiTerritoryPlanning}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-purple-600" /> AI Revenue Prediction
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiRevenuePrediction}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <Users className="h-3.5 w-3.5" /> AI Partner Recommendation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiPartnerRecommendation}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Sales Intelligence Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 8. Sales Channel Summary */}
+            {/* Sales Channel Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 8. Sales Channel Summary & Executive Recommendation
+                  <Award className="h-4 w-4 text-emerald-600" /> Sales Channel Summary & Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Channel Rating: {computedOverallScore}/100 (Tier 1)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Channel Capacity Score</span>
-                    <span className="font-mono font-bold">{formData.channelCapacityScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Channel Status</span>
+                    <span className="text-emerald-600 font-bold">18 Tier-1 Partners Active</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.channelCapacityScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Partner Readiness Score</span>
-                    <span className="font-mono font-bold">{formData.partnerReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.partnerReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Commercial Score</span>
-                    <span className="font-mono font-bold">{formData.commercialScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.commercialScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Operations Score</span>
-                    <span className="font-mono font-bold">{formData.operationsReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: `${formData.operationsReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>AI Intelligence Score</span>
-                    <span className="font-mono font-bold">{formData.aiSalesIntelligenceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.aiSalesIntelligenceScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Sales network covers 68.5% of target commercial logistics corridors with ₹52.5 Cr pipeline and 24.5% conversion rate.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Channel Score" score={computedOverallScore} sub="Very Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Approve Sales Channel",
-                        "Recruit Additional Partners",
-                        "Expand Geographic Coverage",
-                        "Improve Partner Training",
-                        "Optimize Incentive Program",
-                        "Increase Inventory Support",
-                        "Proceed to Commercial Launch",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Approve Sales Channel",
+                      "Recruit Additional Partners",
+                      "Expand Geographic Coverage",
+                      "Improve Partner Training",
+                      "Optimize Incentive Program",
+                      "Increase Inventory Support",
+                      "Proceed to Commercial Launch",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 9. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 9. Sales Channel Attachments & Artifacts
+                  <FileText className="h-4 w-4 text-primary" /> Sales Channel Attachments & Artifacts
                 </h3>
                 <button
                   type="button"
@@ -1335,11 +1247,11 @@ function SalesChannelDevelopmentPage() {
               </div>
             </div>
 
-            {/* 10. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 10. Governance & Executive Review Board Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Governance & Executive Review Board Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">8 Stakeholder Roles</span>
               </div>
@@ -1404,11 +1316,11 @@ function SalesChannelDevelopmentPage() {
               </div>
             </div>
 
-            {/* 11. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 11. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History Log
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1431,180 +1343,6 @@ function SalesChannelDevelopmentPage() {
               </div>
             </div>
 
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 91</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Network className="h-3.5 w-3.5 text-blue-600" /> Channel Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    North India market shows 18% growth opportunity in next 12 months.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Users className="h-3.5 w-3.5 text-emerald-600" /> Partner Potential
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    5 high potential partners identified for expansion.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-purple-600" /> Revenue Forecast
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    AI predicts ₹ 52.5 Cr revenue with 18% growth.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-rose-500">
-                    <AlertTriangle className="h-3.5 w-3.5" /> Risk Alert
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Monitor inventory levels in Rajasthan to avoid stockouts.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Revenue Forecast</span>
-                    <Sparkline data={[38, 42, 48, 52.5]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">₹ 52.5 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Partner Count</span>
-                    <Sparkline data={[10, 14, 16, 18]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">18 / 25</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Market Coverage</span>
-                    <Sparkline data={[45, 54, 62, 68.5]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-indigo-600 font-mono block">68.5 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Lead Conversion</span>
-                    <Sparkline data={[16, 19, 22, 24.5]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">24.5 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Channel Profitability</span>
-                    <Sparkline data={[5.5, 6.8, 7.9, 8.75]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">₹ 8.75 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Customer Sat.</span>
-                    <Sparkline data={[3.8, 4.0, 4.1, 4.3]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">4.3 / 5</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Sales Channel KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Audit Information Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Created By:</span>
-                  <span className="font-semibold text-foreground">{formData.channelManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Created Date:</span>
-                  <span className="font-semibold text-foreground">05 May 2024 09:20 AM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified By:</span>
-                  <span className="font-semibold text-foreground">{formData.channelManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified Date:</span>
-                  <span className="font-semibold text-foreground">{formData.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Workflow Stage:</span>
-                  <span className="font-semibold text-primary">{formData.workflowStage}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span className="font-semibold text-foreground">v{formData.version}</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 

@@ -14,5 +14,3 @@ export const Route = createFileRoute("/management/crm-management/customer-orders
   }),
   component: CustomerOrdersManagementPage,
 });
-
-export default CustomerOrdersManagementPage;

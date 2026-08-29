@@ -989,7 +989,7 @@ function AccountManagementPage() {
                       <div className="p-2 bg-emerald-50 rounded-lg border border-emerald-200 flex justify-between items-center">
                         <div>
                           <span className="text-[10px] font-semibold text-emerald-800 block">Customer Health Score</span>
-                          <span className="font-extrabold text-emerald-900 text-xs font-mono">82 / 100 (Healthy)</span>
+                          <span className="font-extrabold text-emerald-900 text-xs font-mono">82% (Healthy)</span>
                         </div>
                         <div className="relative inline-flex items-center justify-center shrink-0">
                           <svg width="38" height="38" className="transform -rotate-90">

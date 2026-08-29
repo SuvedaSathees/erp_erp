@@ -9,6 +9,11 @@ const TAB_ACTIVE = "border-primary text-primary hover:text-primary font-bold";
 
 export const BUSINESS_DEVELOPMENT_TABS = [
   {
+    to: "/development/business-development/overview",
+    label: "Overview",
+    full: "Business Development Overview",
+  },
+  {
     to: "/development/business-development/business-model-development",
     label: "Business Model Development",
     full: "Business Model Development",

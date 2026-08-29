@@ -102,7 +102,7 @@ export function SopDevelopmentNewPage({
   return (
     <AppShell
       title="SOP Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > SOP Development"}
       description="Author, review, control & distribute Standard Operating Procedures across manufacturing operations with interactive process flow diagrams & ISO compliance audits."
       tabs={tabs ?? <InnovationAreaTabs sub={<SopTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

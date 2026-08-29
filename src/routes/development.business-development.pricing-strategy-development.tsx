@@ -639,16 +639,14 @@ function PricingStrategyDevelopmentPage() {
           <ScoreGauge label="AI Pricing Score" score={formData.aiPricingScore} sub="Excellent" size="normal" />
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Main Form Canvas */}
+        <div className="w-full space-y-6">
 
-            {/* 1. Pricing Overview */}
+            {/* Pricing Overview */}
             <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Pricing Overview
+                  <Building2 className="h-4 w-4 text-primary" /> Pricing Overview
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Strategy & Scope</span>
               </div>
@@ -782,11 +780,11 @@ function PricingStrategyDevelopmentPage() {
               </div>
             </div>
 
-            {/* 2. Cost Analysis */}
+            {/* Cost Analysis */}
             <div id="sec-cost" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Calculator className="h-4 w-4 text-emerald-600" /> 2. Cost Analysis & Break-even Structure
+                  <Calculator className="h-4 w-4 text-emerald-600" /> Cost Analysis & Break-even Structure
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Cost Score: <strong>{formData.costCompetitivenessScore}/100</strong> <MAICWBadge type="C" />
@@ -843,11 +841,11 @@ function PricingStrategyDevelopmentPage() {
               </div>
             </div>
 
-            {/* 3. Market & Competitor Pricing */}
+            {/* Market & Competitor Pricing */}
             <div id="sec-market-pricing" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-purple-600" /> 3. Market & Competitor Pricing Benchmarking
+                  <BarChart3 className="h-4 w-4 text-purple-600" /> Market & Competitor Pricing Benchmarking
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Competitive Score: <strong>{formData.competitivePricingScore}/100</strong> <MAICWBadge type="C" />
@@ -912,11 +910,11 @@ function PricingStrategyDevelopmentPage() {
               </div>
             </div>
 
-            {/* 4. Pricing Model */}
+            {/* Pricing Model */}
             <div id="sec-pricing-model" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Tag className="h-4 w-4 text-emerald-600" /> 4. Pricing Model Architecture
+                  <Tag className="h-4 w-4 text-emerald-600" /> Pricing Model Architecture
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Pricing Readiness Score: <strong>{formData.pricingReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1004,11 +1002,11 @@ function PricingStrategyDevelopmentPage() {
               </div>
             </div>
 
-            {/* 5. Financial Impact */}
+            {/* Financial Impact */}
             <div id="sec-financial" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 5. Financial Impact & Margins
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Financial Impact & Margins
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Financial Score: <strong>{formData.financialScore}/100</strong> <MAICWBadge type="C" />
@@ -1048,11 +1046,11 @@ function PricingStrategyDevelopmentPage() {
               </div>
             </div>
 
-            {/* 6. Risk Assessment */}
+            {/* Risk Assessment */}
             <div id="sec-risk" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-amber-500" /> 6. Risk Assessment & Sensitivity Analysis
+                  <AlertTriangle className="h-4 w-4 text-amber-500" /> Risk Assessment & Sensitivity Analysis
                 </h3>
                 <span className="text-xs font-semibold text-amber-600 flex items-center gap-1">
                   Risk Score: <strong>{formData.riskScore}/100</strong> <MAICWBadge type="C" />
@@ -1098,140 +1096,52 @@ function PricingStrategyDevelopmentPage() {
               </div>
             </div>
 
-            {/* 7. AI Pricing Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 7. AI Pricing Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Pricing Score: {formData.aiPricingScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Tag className="h-3.5 w-3.5 text-emerald-600" /> AI Price Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiPriceOptimization}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-blue-600" /> AI Demand Forecast
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiDemandForecast}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Percent className="h-3.5 w-3.5 text-purple-600" /> AI Elasticity Analysis
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiElasticityAnalysis}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <DollarSign className="h-3.5 w-3.5" /> AI Revenue Prediction
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiRevenuePrediction}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Pricing Intelligence Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 8. Pricing Summary */}
+            {/* Pricing Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 8. Pricing Summary & Executive Recommendation
+                  <Award className="h-4 w-4 text-emerald-600" /> Pricing Summary & Executive Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Pricing Rating: {computedOverallScore}/100 (Tier 1)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Cost Score</span>
-                    <span className="font-mono font-bold">{formData.costCompetitivenessScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Commercial Pricing Status</span>
+                    <span className="text-emerald-600 font-bold">Optimized & Validated</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.costCompetitivenessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Competitive Score</span>
-                    <span className="font-mono font-bold">{formData.competitivePricingScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.competitivePricingScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Financial Score</span>
-                    <span className="font-mono font-bold">{formData.financialScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.financialScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Risk Score</span>
-                    <span className="font-mono font-bold">{formData.riskScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: `${formData.riskScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>AI Pricing Score</span>
-                    <span className="font-mono font-bold">{formData.aiPricingScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.aiPricingScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Tiered SaaS + hardware pricing model validated with 26.4% gross margin and ₹26.8 Cr annual projected revenue.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Pricing Readiness" score={computedOverallScore} sub="Very Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Approve Pricing Strategy",
-                        "Revise Selling Price",
-                        "Improve Margin",
-                        "Review Cost Structure",
-                        "Update Discount Policy",
-                        "Conduct Market Validation",
-                        "Release for Product Launch",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Approve Pricing Strategy",
+                      "Conduct Price Sensitivity Analysis",
+                      "Optimize Tiered Packaging",
+                      "Revise Partner Margins",
+                      "Proceed to Revenue Operations",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 9. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 9. Pricing Strategy Attachments & Artifacts
+                  <FileText className="h-4 w-4 text-primary" /> Pricing Strategy Attachments & Artifacts
                 </h3>
                 <button
                   type="button"
@@ -1286,11 +1196,11 @@ function PricingStrategyDevelopmentPage() {
               </div>
             </div>
 
-            {/* 10. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 10. Governance & Executive Review Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Governance & Executive Review Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">8 Stakeholder Roles</span>
               </div>
@@ -1355,11 +1265,11 @@ function PricingStrategyDevelopmentPage() {
               </div>
             </div>
 
-            {/* 11. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 11. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History Log
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1382,180 +1292,6 @@ function PricingStrategyDevelopmentPage() {
               </div>
             </div>
 
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 91</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Tag className="h-3.5 w-3.5 text-purple-600" /> Optimal Price
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    ₹ 59,900 offers the best balance of margin and demand.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-emerald-600" /> Revenue Potential
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    AI predicts ₹ 28.4 Cr revenue in Year 1.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Percent className="h-3.5 w-3.5 text-blue-600" /> Price Elasticity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Moderately elastic (-0.92). Price increase up to 7% is safe.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-indigo-600">
-                    <BarChart3 className="h-3.5 w-3.5" /> Competitor Position
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Your price is 6.0% above market average with higher value.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Gross Margin</span>
-                    <Sparkline data={[20, 22, 24, 26.4]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">26.4 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Net Margin</span>
-                    <Sparkline data={[14, 16, 17.5, 18.7]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">18.7 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Revenue Forecast</span>
-                    <Sparkline data={[18, 21, 24, 26.8]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">₹ 26.8 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Break-even Price</span>
-                    <Sparkline data={[52000, 51000, 50000, 49200]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-blue-600 font-mono block">₹ 49,200</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Payback Period</span>
-                    <Sparkline data={[24, 22, 20, 18]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-indigo-600 font-mono block">18 Months</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Price Elasticity</span>
-                    <Sparkline data={[-1.2, -1.1, -1.0, -0.92]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">-0.92</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Pricing KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Audit Information Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Created By:</span>
-                  <span className="font-semibold text-foreground">{formData.pricingManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Created Date:</span>
-                  <span className="font-semibold text-foreground">05 May 2024 09:20 AM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified By:</span>
-                  <span className="font-semibold text-foreground">{formData.pricingManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified Date:</span>
-                  <span className="font-semibold text-foreground">{formData.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Workflow Stage:</span>
-                  <span className="font-semibold text-primary">{formData.workflowStage}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span className="font-semibold text-foreground">v{formData.version}</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 

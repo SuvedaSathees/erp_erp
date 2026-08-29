@@ -466,7 +466,8 @@ function CustomerValidationPage() {
         )}
 
         {/* Form Header Action Strip & Top Metadata Cards */}
-        <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-sm">
+        <div className="relative rounded-2xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Top Row: Icon + Title + Status + Action Buttons */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-3">
             <div className="flex items-center gap-3">
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary font-bold shadow-inner">
@@ -586,9 +587,9 @@ function CustomerValidationPage() {
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
-                Version <MAICWBadge type="A" />
+                Workflow Stage <MAICWBadge type="W" />
               </span>
-              <span className="font-semibold text-foreground block truncate mt-0.5">v{formData.version}</span>
+              <span className="font-bold text-primary block truncate mt-0.5">{formData.workflowStage}</span>
             </div>
           </div>
         </div>
@@ -647,630 +648,448 @@ function CustomerValidationPage() {
           </div>
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
-
-            {/* 1. Validation Overview */}
-            <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Validation Overview
-                </h3>
-                <span className="text-xs text-muted-foreground font-medium">Strategic Intent & References</span>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Product Version</span> <MAICWBadge type="I" />
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.productVersion}
-                    onChange={(e) => updateField("productVersion", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
-                  />
+        {/* Main Focused Form Canvas */}
+        <div className="w-full space-y-6">
+          {/* Validation Overview */}
+          <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-primary" /> Validation Overview
+                  </h3>
+                  <span className="text-xs text-muted-foreground font-medium">Strategic Intent & References</span>
                 </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Validation Method</span> <MAICWBadge type="M" />
-                  </label>
-                  <select
-                    value={formData.validationMethod}
-                    onChange={(e) => updateField("validationMethod", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-emerald-600 focus:border-primary focus:outline-none"
-                  >
-                    {["Customer Interview", "Product Demonstration", "Prototype Evaluation", "MVP Validation", "Pilot Deployment", "Beta Testing", "Field Trial", "Online Survey"].map((m) => (
-                      <option key={m} value={m}>{m}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Value Proposition Ref</span> <MAICWBadge type="I" />
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.valuePropRef}
-                    onChange={(e) => updateField("valuePropRef", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-primary font-mono focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Customer Discovery Ref</span> <MAICWBadge type="I" />
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.customerDiscoveryRef}
-                    onChange={(e) => updateField("customerDiscoveryRef", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-primary font-mono focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Lifecycle Stage</span> <MAICWBadge type="W" />
-                  </label>
-                  <select
-                    value={formData.lifecycleStage}
-                    onChange={(e) => updateField("lifecycleStage", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
-                  >
-                    {["Validation Planning", "Customer Evaluation", "Pilot Validation", "Product-Market Fit", "Commercial Validation", "Launch Readiness", "Growth"].map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Priority</span> <MAICWBadge type="M" />
-                  </label>
-                  <select
-                    value={formData.priority}
-                    onChange={(e) => updateField("priority", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-rose-600 focus:border-primary focus:outline-none"
-                  >
-                    {["Critical", "High", "Medium", "Low"].map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Business Objective</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.businessObjective}
-                    onChange={(e) => updateField("businessObjective", e.target.value)}
-                    className={cn(
-                      "w-full rounded-lg border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed",
-                      validationErrors.businessObjective ? "border-rose-500" : "border-border"
-                    )}
-                  />
-                  {validationErrors.businessObjective && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.businessObjective}</p>}
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Validation Objective</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.validationObjective}
-                    onChange={(e) => updateField("validationObjective", e.target.value)}
-                    className={cn(
-                      "w-full rounded-lg border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed",
-                      validationErrors.validationObjective ? "border-rose-500" : "border-border"
-                    )}
-                  />
-                  {validationErrors.validationObjective && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.validationObjective}</p>}
-                </div>
-              </div>
-            </div>
-
-            {/* 2. Customer Validation Planning */}
-            <div id="sec-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-blue-600" /> 2. Customer Validation Planning
-                </h3>
-                <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
-                  Validation Readiness Score: <strong>{formData.validationReadinessScore}/100</strong> <MAICWBadge type="C" />
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Target Customer Group</span> <MAICWBadge type="M" />
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.targetCustomerGroup}
-                    onChange={(e) => updateField("targetCustomerGroup", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Sample Size (Customers)</span> <MAICWBadge type="M" />
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.sampleSize}
-                    onChange={(e) => updateField("sampleSize", Number(e.target.value))}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-mono font-bold text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Validation Timeline</span> <MAICWBadge type="I" />
-                  </label>
-                  <input
-                    type="text"
-                    value={`${formData.validationStartDate} - ${formData.validationEndDate}`}
-                    readOnly
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-mono font-bold text-foreground"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Success Criteria</span> <MAICWBadge type="M" />
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.successCriteria}
-                    onChange={(e) => updateField("successCriteria", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Acceptance Criteria</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.acceptanceCriteria}
-                    onChange={(e) => updateField("acceptanceCriteria", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Validation Hypothesis</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.validationHypothesis}
-                    onChange={(e) => updateField("validationHypothesis", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Customer Feedback Collection */}
-            <div id="sec-feedback" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4 text-indigo-600" /> 3. Customer Feedback Collection
-                </h3>
-                <span className="text-xs font-semibold text-indigo-600 flex items-center gap-1">
-                  Feedback Quality Score: <strong>{formData.feedbackQualityScore}/100</strong> <MAICWBadge type="C" />
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
-                  <span className="text-[11px] font-semibold text-muted-foreground block">Customer Interviews <MAICWBadge type="C" /></span>
-                  <span className="mt-1 text-lg font-bold text-foreground font-mono">{formData.customerInterviews}</span>
-                </div>
-                <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
-                  <span className="text-[11px] font-semibold text-muted-foreground block">Surveys Completed <MAICWBadge type="C" /></span>
-                  <span className="mt-1 text-lg font-bold text-foreground font-mono">{formData.surveysCompleted}</span>
-                </div>
-                <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
-                  <span className="text-[11px] font-semibold text-muted-foreground block">Prototype Demos <MAICWBadge type="C" /></span>
-                  <span className="mt-1 text-lg font-bold text-foreground font-mono">{formData.prototypeDemos}</span>
-                </div>
-                <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
-                  <span className="text-[11px] font-semibold text-muted-foreground block">Pilot Customers <MAICWBadge type="C" /></span>
-                  <span className="mt-1 text-lg font-bold text-foreground font-mono">{formData.pilotCustomers}</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Customer Satisfaction (1-5 Rating)</span> <MAICWBadge type="M" />
-                  </label>
-                  <div className="flex items-center gap-2">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Product Version</span> <MAICWBadge type="I" />
+                    </label>
                     <input
-                      type="number"
-                      step="0.1"
-                      min="1"
-                      max="5"
-                      value={formData.customerSatisfaction}
-                      onChange={(e) => updateField("customerSatisfaction", Number(e.target.value))}
-                      className="w-24 rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-emerald-600 font-mono focus:border-primary focus:outline-none"
+                      type="text"
+                      value={formData.productVersion}
+                      onChange={(e) => updateField("productVersion", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
                     />
-                    <span className="text-xs text-muted-foreground font-bold">/ 5.0 (Excellent)</span>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Validation Method</span> <MAICWBadge type="M" />
+                    </label>
+                    <select
+                      value={formData.validationMethod}
+                      onChange={(e) => updateField("validationMethod", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-emerald-600 focus:border-primary focus:outline-none"
+                    >
+                      {["Customer Interview", "Product Demonstration", "Prototype Evaluation", "MVP Validation", "Pilot Deployment", "Beta Testing", "Field Trial", "Online Survey"].map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Value Proposition Ref</span> <MAICWBadge type="I" />
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.valuePropRef}
+                      onChange={(e) => updateField("valuePropRef", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-primary font-mono focus:border-primary focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Customer Discovery Ref</span> <MAICWBadge type="I" />
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.customerDiscoveryRef}
+                      onChange={(e) => updateField("customerDiscoveryRef", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-primary font-mono focus:border-primary focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Lifecycle Stage</span> <MAICWBadge type="W" />
+                    </label>
+                    <select
+                      value={formData.lifecycleStage}
+                      onChange={(e) => updateField("lifecycleStage", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    >
+                      {["Validation Planning", "Customer Evaluation", "Pilot Validation", "Product-Market Fit", "Commercial Validation", "Launch Readiness", "Growth"].map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Priority</span> <MAICWBadge type="M" />
+                    </label>
+                    <select
+                      value={formData.priority}
+                      onChange={(e) => updateField("priority", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-rose-600 focus:border-primary focus:outline-none"
+                    >
+                      {["Critical", "High", "Medium", "Low"].map((p) => (
+                        <option key={p} value={p}>{p}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Business Objective</span> <MAICWBadge type="M" />
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.businessObjective}
+                      onChange={(e) => updateField("businessObjective", e.target.value)}
+                      className={cn(
+                        "w-full rounded-lg border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed",
+                        validationErrors.businessObjective ? "border-rose-500" : "border-border"
+                      )}
+                    />
+                    {validationErrors.businessObjective && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.businessObjective}</p>}
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Validation Objective</span> <MAICWBadge type="M" />
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.validationObjective}
+                      onChange={(e) => updateField("validationObjective", e.target.value)}
+                      className={cn(
+                        "w-full rounded-lg border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed",
+                        validationErrors.validationObjective ? "border-rose-500" : "border-border"
+                      )}
+                    />
+                    {validationErrors.validationObjective && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.validationObjective}</p>}
+                  </div>
+                </div>
+              </div>
+
+            {/* Hypotheses & Validation Planning */}
+            <div id="sec-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Target className="h-4 w-4 text-primary" /> Hypotheses & Validation Planning
+                  </h3>
+                  <span className="text-xs font-semibold text-primary">Readiness: {formData.validationReadinessScore}/100</span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Target Customer Group</span> <MAICWBadge type="M" />
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.targetCustomerGroup}
+                      onChange={(e) => updateField("targetCustomerGroup", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Validation Start Date</span> <MAICWBadge type="I" />
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.validationStartDate}
+                      onChange={(e) => updateField("validationStartDate", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Validation End Date</span> <MAICWBadge type="I" />
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.validationEndDate}
+                      onChange={(e) => updateField("validationEndDate", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-3 space-y-3">
+                    <div>
+                      <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                        <span>Validation Hypothesis</span> <MAICWBadge type="M" />
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={formData.validationHypothesis}
+                        onChange={(e) => updateField("validationHypothesis", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                          <span>Success Criteria</span> <MAICWBadge type="M" />
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={formData.successCriteria}
+                          onChange={(e) => updateField("successCriteria", e.target.value)}
+                          className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                          <span>Acceptance Criteria</span> <MAICWBadge type="M" />
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={formData.acceptanceCriteria}
+                          onChange={(e) => updateField("acceptanceCriteria", e.target.value)}
+                          className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            {/* Customer Feedback & Interviews */}
+            <div id="sec-feedback" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Users className="h-4 w-4 text-indigo-600" /> Customer Feedback & Interviews
+                  </h3>
+                  <span className="text-xs font-semibold text-indigo-600">Feedback Quality: {formData.feedbackQualityScore}/100</span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
+                    <span className="text-[11px] font-semibold text-muted-foreground block">Customer Interviews</span>
+                    <span className="mt-1 text-lg font-bold text-foreground font-mono">{formData.customerInterviews}</span>
+                  </div>
+                  <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
+                    <span className="text-[11px] font-semibold text-muted-foreground block">Surveys Completed</span>
+                    <span className="mt-1 text-lg font-bold text-foreground font-mono">{formData.surveysCompleted}</span>
+                  </div>
+                  <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
+                    <span className="text-[11px] font-semibold text-muted-foreground block">CSAT Rating</span>
+                    <span className="mt-1 text-lg font-bold text-emerald-600 font-mono">{formData.customerSatisfaction} / 5.0</span>
+                  </div>
+                  <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
+                    <span className="text-[11px] font-semibold text-muted-foreground block">NPS Score</span>
+                    <span className="mt-1 text-lg font-bold text-blue-600 font-mono">{formData.npsScore}</span>
                   </div>
                 </div>
 
                 <div>
                   <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Net Promoter Score (NPS)</span> <MAICWBadge type="M" />
-                  </label>
-                  <input
-                    type="number"
-                    min="-100"
-                    max="100"
-                    value={formData.npsScore}
-                    onChange={(e) => updateField("npsScore", Number(e.target.value))}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-blue-600 font-mono focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Customer Feedback Summary</span> <MAICWBadge type="M" />
+                    <span>Customer Feedback Synthesis</span> <MAICWBadge type="M" />
                   </label>
                   <textarea
-                    rows={2}
+                    rows={3}
                     value={formData.customerFeedback}
                     onChange={(e) => updateField("customerFeedback", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
+                    className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
                   />
                 </div>
               </div>
-            </div>
 
-            {/* 4. Product-Market Fit Validation */}
+            {/* Product-Market Fit & Adoption */}
             <div id="sec-pmf" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Target className="h-4 w-4 text-emerald-600" /> 4. Product-Market Fit Validation
-                </h3>
-                <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
-                  PMF Readiness Score: <strong>{formData.pmfReadinessScore}/100</strong> <MAICWBadge type="C" />
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/20 p-3">
-                  <input
-                    type="checkbox"
-                    id="customerProblemSolved"
-                    checked={formData.customerProblemSolved}
-                    onChange={(e) => updateField("customerProblemSolved", e.target.checked)}
-                    className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                  />
-                  <label htmlFor="customerProblemSolved" className="text-xs font-bold text-foreground cursor-pointer">
-                    Customer Problem Solved & Verified
-                  </label>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Product-Market Fit & Adoption
+                  </h3>
+                  <span className="text-xs font-semibold text-emerald-600">PMF Score: {formData.pmfScore}/100</span>
                 </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Purchase Intent</span> <MAICWBadge type="M" />
-                  </label>
-                  <select
-                    value={formData.purchaseIntent}
-                    onChange={(e) => updateField("purchaseIntent", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-emerald-600 focus:border-primary focus:outline-none"
-                  >
-                    {["Definitely Buy", "Likely to Buy", "Neutral", "Unlikely to Buy", "Will Not Buy"].map((pi) => (
-                      <option key={pi} value={pi}>{pi}</option>
-                    ))}
-                  </select>
-                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Solution Acceptance</span> <MAICWBadge type="C" />
+                    </label>
+                    <input
+                      type="text"
+                      value={`${formData.solutionAcceptance}%`}
+                      readOnly
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-foreground font-mono"
+                    />
+                  </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Solution Acceptance (%)</span> <MAICWBadge type="C" />
-                  </label>
-                  <input
-                    type="text"
-                    value={`${formData.solutionAcceptance}%`}
-                    readOnly
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-foreground font-mono"
-                  />
-                </div>
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Willingness to Pay</span> <MAICWBadge type="C" />
+                    </label>
+                    <input
+                      type="text"
+                      value={`₹ ${formData.willingnessToPay.toLocaleString("en-IN")}`}
+                      readOnly
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-emerald-600 font-mono"
+                    />
+                  </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Willingness to Pay</span> <MAICWBadge type="C" />
-                  </label>
-                  <input
-                    type="text"
-                    value={`₹ ${formData.willingnessToPay.toLocaleString("en-IN")}`}
-                    readOnly
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-foreground font-mono"
-                  />
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Retention Probability</span> <MAICWBadge type="C" />
+                    </label>
+                    <input
+                      type="text"
+                      value={`${formData.retentionProbability}%`}
+                      readOnly
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-blue-600 font-mono"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* 5. Commercial Validation */}
+            {/* Commercial & Pricing Validation */}
             <div id="sec-commercial" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 5. Commercial Validation
-                </h3>
-                <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
-                  Commercial Score: <strong>{formData.commercialScore}/100</strong> <MAICWBadge type="C" />
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/20 p-3">
-                  <input
-                    type="checkbox"
-                    id="pricingValidation"
-                    checked={formData.pricingValidation}
-                    onChange={(e) => updateField("pricingValidation", e.target.checked)}
-                    className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                  />
-                  <label htmlFor="pricingValidation" className="text-xs font-bold text-foreground cursor-pointer">
-                    Pricing Validation Approved
-                  </label>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-emerald-600" /> Commercial & Pricing Validation
+                  </h3>
+                  <span className="text-xs font-semibold text-emerald-600">Commercial Score: {formData.commercialScore}/100</span>
                 </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Revenue Potential</span> <MAICWBadge type="C" />
-                  </label>
-                  <input
-                    type="text"
-                    value={`₹ 2,48,00,000.00 (₹ 2.48 Cr)`}
-                    readOnly
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-emerald-600 font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Expected Adoption Rate</span> <MAICWBadge type="C" />
-                  </label>
-                  <input
-                    type="text"
-                    value={`${formData.expectedAdoptionRate}%`}
-                    readOnly
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-foreground font-mono"
-                  />
-                </div>
-
-                <div className="sm:col-span-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                      <span>Competitive Comparison</span> <MAICWBadge type="M" />
+                      <span>Projected Revenue Potential</span> <MAICWBadge type="C" />
                     </label>
                     <input
                       type="text"
-                      value={formData.competitiveComparison}
-                      onChange={(e) => updateField("competitiveComparison", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                      value={`₹ ${(formData.revenuePotential / 10000000).toFixed(2)} Cr`}
+                      readOnly
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-emerald-600 font-mono"
                     />
                   </div>
 
                   <div>
                     <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                      <span>Commercial Risks</span> <MAICWBadge type="M" />
+                      <span>Expected Adoption Rate</span> <MAICWBadge type="C" />
                     </label>
                     <input
                       type="text"
-                      value={formData.commercialRisks}
-                      onChange={(e) => updateField("commercialRisks", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                      value={`${formData.expectedAdoptionRate}%`}
+                      readOnly
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-foreground font-mono"
                     />
+                  </div>
+
+                  <div className="sm:col-span-2 space-y-3">
+                    <div>
+                      <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                        <span>Competitive Comparison</span> <MAICWBadge type="M" />
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.competitiveComparison}
+                        onChange={(e) => updateField("competitiveComparison", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* 6. Pilot Validation */}
+            {/* Pilot Program & Case Studies */}
             <div id="sec-pilot" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Activity className="h-4 w-4 text-purple-600" /> 6. Pilot Validation & Field Trials
-                </h3>
-                <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
-                  Pilot Success Score: <strong>{formData.pilotSuccessScore}/100</strong> <MAICWBadge type="C" />
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/20 p-3">
-                  <input
-                    type="checkbox"
-                    id="pilotProgram"
-                    checked={formData.pilotProgram}
-                    onChange={(e) => updateField("pilotProgram", e.target.checked)}
-                    className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                  />
-                  <label htmlFor="pilotProgram" className="text-xs font-bold text-foreground cursor-pointer">
-                    Pilot Program Active
-                  </label>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Activity className="h-4 w-4 text-purple-600" /> Pilot Program & Case Studies
+                  </h3>
+                  <span className="text-xs font-semibold text-purple-600">Pilot Score: {formData.pilotSuccessScore}/100</span>
                 </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Pilot Start Date</span> <MAICWBadge type="I" />
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.pilotStartDate}
-                    onChange={(e) => updateField("pilotStartDate", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Pilot End Date</span> <MAICWBadge type="I" />
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.pilotEndDate}
-                    onChange={(e) => updateField("pilotEndDate", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div className="sm:col-span-3 space-y-3">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                      <span>Pilot Results</span> <MAICWBadge type="M" />
+                      <span>Pilot Start Date</span> <MAICWBadge type="I" />
                     </label>
-                    <textarea
-                      rows={2}
-                      value={formData.pilotResults}
-                      onChange={(e) => updateField("pilotResults", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
+                    <input
+                      type="date"
+                      value={formData.pilotStartDate}
+                      onChange={(e) => updateField("pilotStartDate", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
                     />
                   </div>
 
                   <div>
                     <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                      <span>Customer Success Stories</span> <MAICWBadge type="M" />
+                      <span>Pilot End Date</span> <MAICWBadge type="I" />
                     </label>
-                    <textarea
-                      rows={2}
-                      value={formData.customerSuccessStories}
-                      onChange={(e) => updateField("customerSuccessStories", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
+                    <input
+                      type="date"
+                      value={formData.pilotEndDate}
+                      onChange={(e) => updateField("pilotEndDate", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
                     />
+                  </div>
+
+                  <div className="sm:col-span-2 space-y-3">
+                    <div>
+                      <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                        <span>Pilot Results</span> <MAICWBadge type="M" />
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={formData.pilotResults}
+                        onChange={(e) => updateField("pilotResults", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                        <span>Customer Success Stories</span> <MAICWBadge type="M" />
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={formData.customerSuccessStories}
+                        onChange={(e) => updateField("customerSuccessStories", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* 7. AI Customer Validation Assessment */}
-            <div id="sec-ai-assessment" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 7. AI Customer Validation Assessment
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Validation Score: {formData.aiValidationScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Users className="h-3.5 w-3.5 text-blue-600" /> AI Customer Insights
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiCustomerInsights}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> AI Adoption Prediction
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiAdoptionPrediction}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Target className="h-3.5 w-3.5 text-purple-600" /> AI PMF Analysis
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiPmfAnalysis}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <DollarSign className="h-3.5 w-3.5" /> AI Revenue Forecast
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiRevenueForecast}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Validation Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 8. Validation Summary */}
+            {/* Customer Validation Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 8. Customer Validation Summary
-                </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Customer Satisfaction Score</span>
-                    <span className="font-mono font-bold">{formData.customerSatisfaction * 20} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.customerSatisfaction * 20}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Product-Market Fit Score</span>
-                    <span className="font-mono font-bold">{formData.pmfScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.pmfScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Commercial Score</span>
-                    <span className="font-mono font-bold">{formData.commercialScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.commercialScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Pilot Success Score</span>
-                    <span className="font-mono font-bold">{formData.pilotSuccessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: `${formData.pilotSuccessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>AI Validation Score</span>
-                    <span className="font-mono font-bold">{formData.aiValidationScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.aiValidationScore}%` }} />
-                  </div>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Award className="h-4 w-4 text-emerald-600" /> Customer Validation Summary & Strategic Decision
+                  </h3>
+                  <span className="text-xs font-bold text-emerald-600">Validation Rating: {computedOverallScore}/100 (Tier 1)</span>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Validation Score" score={computedOverallScore} sub="Very Good" size="large" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                  <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                    <div className="font-bold text-foreground flex items-center justify-between">
+                      <span>Executive Validation Status</span>
+                      <span className="text-emerald-600 font-bold">Validated (88/100 PMF)</span>
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Pilot program verified across 12 fleet operators with 4.5/5.0 CSAT, ₹2.48 Cr revenue potential, and 68% expected adoption rate.
+                    </p>
+                  </div>
 
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
+                  <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                    <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
                     <select
                       value={formData.recommendation}
                       onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
+                      className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
                     >
                       {[
                         "Proceed to Go-to-Market",
@@ -1287,346 +1106,161 @@ function CustomerValidationPage() {
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* 9. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 9. Customer Validation Attachments & Artifacts
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setIsUploadModalOpen(true)}
-                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-colors"
-                >
-                  <Upload className="h-3.5 w-3.5" /> Upload File
-                </button>
-              </div>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" /> Customer Validation Attachments & Artifacts
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setIsUploadModalOpen(true)}
+                    className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
+                  >
+                    <Upload className="h-3.5 w-3.5" /> Upload File
+                  </button>
+                </div>
 
-              <div className="space-y-2 text-xs">
-                {attachments.map((file) => (
-                  <div key={file.id} className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-3 hover:bg-muted/40 transition-colors">
-                    <div className="flex items-center gap-3 truncate">
-                      <FileText className="h-4 w-4 text-primary shrink-0" />
-                      <div className="truncate">
-                        <span className="font-bold text-foreground block truncate">{file.name}</span>
-                        <span className="text-[10px] text-muted-foreground">
-                          {file.size} · {file.date} · Uploaded by {file.uploader}
-                        </span>
+                <div className="space-y-2 text-xs">
+                  {attachments.map((file) => (
+                    <div key={file.id} className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-3 hover:bg-muted/40 transition-colors">
+                      <div className="flex items-center gap-3 truncate">
+                        <FileText className="h-4 w-4 text-primary shrink-0" />
+                        <div className="truncate">
+                          <span className="font-bold text-foreground block truncate">{file.name}</span>
+                          <span className="text-[10px] text-muted-foreground">
+                            {file.size} · {file.date} · Uploaded by {file.uploader}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => setViewingFile(file.name)}
+                          className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"
+                          title="View File"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => showToast("info", "Download Triggered", `Downloading ${file.name}...`)}
+                          className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"
+                          title="Download File"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveAttachment(file.id, file.name)}
+                          className="rounded p-1 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 cursor-pointer"
+                          title="Delete File"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-2 shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => setViewingFile(file.name)}
-                        className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted"
-                        title="View File"
-                      >
-                        <Eye className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => showToast("info", "Download Triggered", `Downloading ${file.name}...`)}
-                        className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted"
-                        title="Download File"
-                      >
-                        <Download className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveAttachment(file.id, file.name)}
-                        className="rounded p-1 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10"
-                        title="Delete File"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* 10. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 10. Governance & Executive Review Board Matrix
-                </h3>
-                <span className="text-xs font-semibold text-primary">8 Stakeholder Roles</span>
-              </div>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-primary" /> Governance & Executive Review Board Matrix
+                  </h3>
+                  <span className="text-xs font-semibold text-primary">8 Stakeholder Roles</span>
+                </div>
 
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {formData.approvals.map((stk) => (
-                  <div key={stk.role} className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                    <span className="text-[11px] font-semibold text-muted-foreground block">{stk.role}</span>
-                    <span className="text-xs font-bold text-foreground block truncate">{stk.user}</span>
-                    <div className="flex items-center justify-between text-[10px] pt-1">
-                      <span
-                        className={cn(
-                          "font-bold px-1.5 py-0.5 rounded",
-                          stk.status === "Approved" ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
-                        )}
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  {formData.approvals.map((stk) => (
+                    <div key={stk.role} className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
+                      <span className="text-[11px] font-semibold text-muted-foreground block">{stk.role}</span>
+                      <span className="text-xs font-bold text-foreground block truncate">{stk.user}</span>
+                      <div className="flex items-center justify-between text-[10px] pt-1">
+                        <span
+                          className={cn(
+                            "font-bold px-1.5 py-0.5 rounded",
+                            stk.status === "Approved" ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
+                          )}
+                        >
+                          {stk.status}
+                        </span>
+                        <span className="text-muted-foreground">{stk.date}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-3 border-t border-border space-y-3">
+                  <h4 className="text-xs font-bold text-foreground">Record Approval Decision</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Approval Decision</label>
+                      <select
+                        value={formData.userDecision}
+                        onChange={(e) => updateField("userDecision", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
                       >
-                        {stk.status}
-                      </span>
-                      <span className="text-muted-foreground">{stk.date}</span>
+                        {["Approved", "Approved with Conditions", "Revision Required", "On Hold", "Rejected"].map((dec) => (
+                          <option key={dec} value={dec}>{dec}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Approval Date</label>
+                      <input
+                        type="date"
+                        value={formData.userApprovalDate}
+                        onChange={(e) => updateField("userApprovalDate", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                      />
                     </div>
                   </div>
-                ))}
-              </div>
-
-              <div className="pt-3 border-t border-border space-y-3">
-                <h4 className="text-xs font-bold text-foreground">Record Approval Decision</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Approval Decision</label>
-                    <select
-                      value={formData.userDecision}
-                      onChange={(e) => updateField("userDecision", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
-                    >
-                      {["Approved", "Approved with Conditions", "Revision Required", "On Hold", "Rejected"].map((dec) => (
-                        <option key={dec} value={dec}>{dec}</option>
-                      ))}
-                    </select>
-                  </div>
 
                   <div>
-                    <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Approval Date</label>
-                    <input
-                      type="date"
-                      value={formData.userApprovalDate}
-                      onChange={(e) => updateField("userApprovalDate", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Review Comments</label>
+                    <textarea
+                      rows={2}
+                      value={formData.userReviewComments}
+                      onChange={(e) => updateField("userReviewComments", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
+                      placeholder="Add executive feedback or approval conditions..."
                     />
                   </div>
                 </div>
-
-                <div>
-                  <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Review Comments</label>
-                  <textarea
-                    rows={2}
-                    value={formData.userReviewComments}
-                    onChange={(e) => updateField("userReviewComments", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
-                    placeholder="Add executive feedback or approval conditions..."
-                  />
-                </div>
               </div>
-            </div>
 
-            {/* 11. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 11. Activity History Log
-                </h3>
-                <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
-              </div>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <History className="h-4 w-4 text-primary" /> Activity History Log
+                  </h3>
+                  <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
+                </div>
 
-              <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
-                {activityHistory.map((item) => (
-                  <div key={item.id} className="relative flex items-start gap-3 text-xs">
-                    <div className="absolute -left-6 top-1 grid h-5 w-5 place-items-center rounded-full bg-card border border-primary text-primary">
-                      <CheckCircle2 className="h-3 w-3" />
-                    </div>
-                    <div className="flex-1 rounded-lg border border-border bg-muted/20 p-2.5 space-y-0.5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-foreground">{item.user}</span>
-                        <span className="text-[10px] font-mono text-muted-foreground">{item.date} · {item.time}</span>
+                <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
+                  {activityHistory.map((item) => (
+                    <div key={item.id} className="relative flex items-start gap-3 text-xs">
+                      <div className="absolute -left-6 top-1 grid h-5 w-5 place-items-center rounded-full bg-card border border-primary text-primary">
+                        <CheckCircle2 className="h-3 w-3" />
                       </div>
-                      <p className="text-muted-foreground">{item.action}</p>
+                      <div className="flex-1 rounded-lg border border-border bg-muted/20 p-2.5 space-y-0.5">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-foreground">{item.user}</span>
+                          <span className="text-[10px] font-mono text-muted-foreground">{item.date} · {item.time}</span>
+                        </div>
+                        <p className="text-muted-foreground">{item.action}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 91</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <ThumbsUp className="h-3.5 w-3.5 text-emerald-600" /> High Satisfaction
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Customers love reliability and uptime. 4.5/5 rating achieved.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-blue-600" /> Strong Purchase Intent
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    85% showed strong purchase intent during pilot demonstrations.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-purple-600" /> Pricing Validation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    68% of users accept proposed pricing model without friction.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Award className="h-3.5 w-3.5 text-emerald-600" /> Growth Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Expand in Tier 1 cities and commercial logistics fleet hubs.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-amber-600">
-                    <AlertTriangle className="h-3.5 w-3.5" /> Risk Alert
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Competition increasing in metro markets. Focus on fleet SLA response times.
-                  </p>
+                  ))}
                 </div>
               </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">PMF Score</span>
-                    <Sparkline data={[75, 80, 85, 88]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">88 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">NPS Score</span>
-                    <Sparkline data={[40, 45, 48, 52]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-blue-600 font-mono block">52 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Adoption Rate</span>
-                    <Sparkline data={[50, 58, 62, 68]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">68 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Retention Probability</span>
-                    <Sparkline data={[65, 70, 74, 78]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">78 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Revenue Potential</span>
-                    <Sparkline data={[1.2, 1.8, 2.1, 2.48]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">₹2.48 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">AI Score</span>
-                    <Sparkline data={[82, 86, 89, 91]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-indigo-600 font-mono block">91 / 100</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Customer Validation KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Audit Information Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Created By:</span>
-                  <span className="font-semibold text-foreground">{formData.validationLead}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Created Date:</span>
-                  <span className="font-semibold text-foreground">05 May 2024 09:20 AM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified By:</span>
-                  <span className="font-semibold text-foreground">{formData.validationLead}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified Date:</span>
-                  <span className="font-semibold text-foreground">{formData.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Workflow Stage:</span>
-                  <span className="font-semibold text-primary">{formData.workflowStage}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span className="font-semibold text-foreground">v{formData.version}</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 
@@ -1650,11 +1284,11 @@ function CustomerValidationPage() {
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 bg-muted/20 p-4 rounded-xl border border-border text-xs">
               <div>
                 <span className="text-muted-foreground font-medium block">Overall Validation Score</span>
-                <span className="text-lg font-bold text-emerald-600">{computedOverallScore} / 100</span>
+                <span className="text-lg font-bold text-emerald-600">{computedOverallScore}%</span>
               </div>
               <div>
                 <span className="text-muted-foreground font-medium block">Product-Market Fit Score</span>
-                <span className="text-lg font-bold text-foreground font-mono">{formData.pmfScore} / 100</span>
+                <span className="text-lg font-bold text-foreground font-mono">{formData.pmfScore}%</span>
               </div>
               <div>
                 <span className="text-muted-foreground font-medium block">Revenue Potential</span>
@@ -1668,19 +1302,19 @@ function CustomerValidationPage() {
 
             <div className="space-y-4 text-xs">
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">1. Objectives & Method</h4>
+                <h4 className="font-bold text-foreground">Objectives & Method</h4>
                 <p className="text-muted-foreground"><strong>Objective:</strong> {formData.validationObjective}</p>
                 <p className="text-muted-foreground mt-1"><strong>Method:</strong> {formData.validationMethod} | <strong>Sample Size:</strong> {formData.sampleSize} Customers</p>
               </div>
 
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">2. Customer Feedback & Metrics</h4>
+                <h4 className="font-bold text-foreground">Customer Feedback & Metrics</h4>
                 <p className="text-muted-foreground"><strong>CSAT:</strong> {formData.customerSatisfaction}/5 | <strong>NPS:</strong> {formData.npsScore} | <strong>Interviews:</strong> {formData.customerInterviews}</p>
                 <p className="text-muted-foreground mt-1"><strong>Feedback:</strong> {formData.customerFeedback}</p>
               </div>
 
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">3. Pilot & Commercial Results</h4>
+                <h4 className="font-bold text-foreground">Pilot & Commercial Results</h4>
                 <p className="text-muted-foreground"><strong>Pilot Results:</strong> {formData.pilotResults}</p>
                 <p className="text-muted-foreground mt-1"><strong>Customer Success Stories:</strong> {formData.customerSuccessStories}</p>
               </div>
@@ -1726,7 +1360,7 @@ function CustomerValidationPage() {
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-2">
               <div className="flex justify-between items-center text-xs font-bold text-primary">
                 <span>AI Validation Score</span>
-                <span>91 / 100 (Exceptional PMF Signal)</span>
+                <span>91% (Exceptional PMF Signal)</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Empirical feedback from 28 interviews and 12 pilot fleets confirms strong PMF, 85% purchase intent, and high revenue potential.

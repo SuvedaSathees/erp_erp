@@ -95,7 +95,7 @@ export function BomEngineeringPage({
   return (
     <AppShell
       title="BOM Engineering"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > BOM Engineering"}
       description="Manage manufacturing bill of materials (MBOM), Phantom BOMs, component structures, effectivity dates, and alternate parts."
       tabs={tabs ?? <InnovationAreaTabs sub={<BomEngineeringTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

@@ -659,16 +659,14 @@ function FranchiseDevelopmentPage() {
           <ScoreGauge label="AI Intelligence Score" score={formData.aiIntelligenceScore} sub="Very Good" size="normal" />
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Main Form Canvas */}
+        <div className="w-full space-y-6">
 
-            {/* 1. Franchise Overview */}
+            {/* Franchise Overview */}
             <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Franchise Overview
+                  <Building2 className="h-4 w-4 text-primary" /> Franchise Overview
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Scope & Objectives</span>
               </div>
@@ -799,11 +797,11 @@ function FranchiseDevelopmentPage() {
               </div>
             </div>
 
-            {/* 2. Franchise Model Planning */}
+            {/* Franchise Model Planning */}
             <div id="sec-model-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Store className="h-4 w-4 text-emerald-600" /> 2. Franchise Model Planning & Economics
+                  <Store className="h-4 w-4 text-emerald-600" /> Franchise Model Planning & Economics
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Model Score: <strong>{formData.modelReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -888,11 +886,11 @@ function FranchiseDevelopmentPage() {
               </div>
             </div>
 
-            {/* 3. Franchise Partner Development */}
+            {/* Franchise Partner Development */}
             <div id="sec-partner-dev" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4 text-purple-600" /> 3. Franchise Partner Development
+                  <Users className="h-4 w-4 text-purple-600" /> Franchise Partner Development
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Partner Score: <strong>{formData.partnerReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -948,11 +946,11 @@ function FranchiseDevelopmentPage() {
               </div>
             </div>
 
-            {/* 4. Commercial Planning */}
+            {/* Commercial Planning */}
             <div id="sec-commercial-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 4. Commercial Planning & Revenue Sharing
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Commercial Planning & Revenue Sharing
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Commercial Score: <strong>{formData.commercialScore}/100</strong> <MAICWBadge type="C" />
@@ -1037,11 +1035,11 @@ function FranchiseDevelopmentPage() {
               </div>
             </div>
 
-            {/* 5. Operations & Infrastructure */}
+            {/* Operations & Infrastructure */}
             <div id="sec-operations" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <CheckSquare className="h-4 w-4 text-blue-600" /> 5. Operations & Infrastructure Checklist
+                  <CheckSquare className="h-4 w-4 text-blue-600" /> Operations & Infrastructure Checklist
                 </h3>
                 <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
                   Operational Score: <strong>{formData.operationalReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1081,11 +1079,11 @@ function FranchiseDevelopmentPage() {
               </div>
             </div>
 
-            {/* 6. Legal & Compliance */}
+            {/* Legal & Compliance */}
             <div id="sec-legal-compliance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Scale className="h-4 w-4 text-purple-600" /> 6. Legal & Compliance Governance
+                  <Scale className="h-4 w-4 text-purple-600" /> Legal & Compliance Governance
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Compliance Score: <strong>{formData.complianceScore}/100</strong> <MAICWBadge type="C" />
@@ -1135,11 +1133,11 @@ function FranchiseDevelopmentPage() {
               </div>
             </div>
 
-            {/* 7. Performance Management */}
+            {/* Performance Management */}
             <div id="sec-performance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-emerald-600" /> 7. Performance Management Metrics
+                  <BarChart3 className="h-4 w-4 text-emerald-600" /> Performance Management Metrics
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Performance Score: <strong>{formData.performanceScore}/100</strong> <MAICWBadge type="C" />
@@ -1159,31 +1157,31 @@ function FranchiseDevelopmentPage() {
 
                 <div className="rounded-lg border border-border bg-muted/20 p-2.5">
                   <span className="text-[11px] text-muted-foreground font-medium block">SLA Compliance <MAICWBadge type="C" /></span>
-                  <span className="text-base font-bold text-emerald-600 font-mono mt-0.5 block">90 / 100</span>
+                  <span className="text-base font-bold text-emerald-600 font-mono mt-0.5 block">90%</span>
                 </div>
 
                 <div className="rounded-lg border border-border bg-muted/20 p-2.5">
                   <span className="text-[11px] text-muted-foreground font-medium block">Operational Efficiency <MAICWBadge type="C" /></span>
-                  <span className="text-base font-bold text-foreground font-mono mt-0.5 block">88 / 100</span>
+                  <span className="text-base font-bold text-foreground font-mono mt-0.5 block">88%</span>
                 </div>
 
                 <div className="rounded-lg border border-border bg-muted/20 p-2.5">
                   <span className="text-[11px] text-muted-foreground font-medium block">Customer Satisfaction <MAICWBadge type="C" /></span>
-                  <span className="text-base font-bold text-foreground font-mono mt-0.5 block">85 / 100</span>
+                  <span className="text-base font-bold text-foreground font-mono mt-0.5 block">85%</span>
                 </div>
 
                 <div className="rounded-lg border border-border bg-muted/20 p-2.5">
                   <span className="text-[11px] text-muted-foreground font-medium block">Legal Compliance <MAICWBadge type="C" /></span>
-                  <span className="text-base font-bold text-emerald-600 font-mono mt-0.5 block">87 / 100</span>
+                  <span className="text-base font-bold text-emerald-600 font-mono mt-0.5 block">87%</span>
                 </div>
               </div>
             </div>
 
-            {/* 8. Finance & Investment */}
+            {/* Finance & Investment */}
             <div id="sec-finance-investment" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 8. Finance & Investment Model
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Finance & Investment Model
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Finance Score: <strong>{formData.financeScore}/100</strong> <MAICWBadge type="C" />
@@ -1218,141 +1216,52 @@ function FranchiseDevelopmentPage() {
               </div>
             </div>
 
-            {/* 9. AI Franchise Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 9. AI Franchise Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Intelligence Score: {formData.aiIntelligenceScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> Market Opportunity Score
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.marketOpportunityScore}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 text-blue-600" /> Site Recommendation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.siteRecommendation}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Award className="h-3.5 w-3.5 text-purple-600" /> Franchise Success Probability
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.franchiseSuccessProbability}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <DollarSign className="h-3.5 w-3.5" /> Revenue Potential Score
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.revenuePotentialScore}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Franchise Intelligence Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 10. Franchise Development Summary */}
+            {/* Franchise Development Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 10. Franchise Summary & Executive Recommendation
+                  <Award className="h-4 w-4 text-emerald-600" /> Franchise Summary & Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Franchise Rating: {computedOverallScore}/100 (Tier 1)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Model Readiness Score</span>
-                    <span className="font-mono font-bold">{formData.modelReadinessScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Franchise Model Status</span>
+                    <span className="text-emerald-600 font-bold">Standardized & Scalable</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.modelReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Partner Readiness Score</span>
-                    <span className="font-mono font-bold">{formData.partnerReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.partnerReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Commercial Score</span>
-                    <span className="font-mono font-bold">{formData.commercialScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.commercialScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Compliance Score</span>
-                    <span className="font-mono font-bold">{formData.complianceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${formData.complianceScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>AI Intelligence Score</span>
-                    <span className="font-mono font-bold">{formData.aiIntelligenceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.aiIntelligenceScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    FOFO/FOCO operational playbook finalized across 42 onboarded stations with 28.5% average franchisee ROI and ₹25 Cr revenue projection.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Franchise Score" score={computedOverallScore} sub="Very Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Proceed to Approval",
-                        "Approve Franchise Model",
-                        "Recruit Franchise Partners",
-                        "Complete Legal Documentation",
-                        "Improve Operational Readiness",
-                        "Optimize Revenue Model",
-                        "Expand Franchise Network",
-                        "Proceed to Commercial Launch",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Approve Franchise Model",
+                      "Accelerate Franchisee Onboarding",
+                      "Expand Geographic Footprint",
+                      "Optimize Fee & Royalty Structure",
+                      "Proceed to Commercial Expansion",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 11. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 11. Franchise Attachments & Artifacts
+                  <FileText className="h-4 w-4 text-primary" /> Franchise Attachments & Artifacts
                 </h3>
                 <button
                   type="button"
@@ -1407,11 +1316,11 @@ function FranchiseDevelopmentPage() {
               </div>
             </div>
 
-            {/* 12. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 12. Governance & Executive Review Board Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Governance & Executive Review Board Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">8 Governance Roles</span>
               </div>
@@ -1476,11 +1385,11 @@ function FranchiseDevelopmentPage() {
               </div>
             </div>
 
-            {/* 13. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 13. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History Log
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1503,229 +1412,6 @@ function FranchiseDevelopmentPage() {
               </div>
             </div>
 
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Franchise Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Franchise Insights
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 86</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Building2 className="h-3.5 w-3.5 text-blue-600" /> Top Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    High demand in tier 2 and tier 3 cities.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-emerald-600" /> Revenue Potential
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Projected revenue of ₹ 25 Cr in 3 years.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-rose-500">
-                    <AlertTriangle className="h-3.5 w-3.5" /> Risk Alert
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Competition high in metro cities.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-indigo-600">
-                    <Target className="h-3.5 w-3.5" /> Recommendation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Focus on high potential emerging markets.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Franchise KPI Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Target Franchisees</span>
-                    <Sparkline data={[100, 120, 135, 150]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">150</span>
-                  <span className="text-[10px] text-emerald-600 font-bold">+25%</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Franchisees Onboarded</span>
-                    <Sparkline data={[24, 30, 36, 42]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">42</span>
-                  <span className="text-[10px] text-emerald-600 font-bold">+15%</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Revenue Forecast</span>
-                    <Sparkline data={[16, 19, 22, 25]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">₹ 25 Cr</span>
-                  <span className="text-[10px] text-emerald-600 font-bold">+28%</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Avg. ROI (Franchisees)</span>
-                    <Sparkline data={[22, 24.5, 26.8, 28.5]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">28.5%</span>
-                  <span className="text-[10px] text-emerald-600 font-bold">+5%</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Payback Period</span>
-                    <Sparkline data={[24, 22, 20, 18]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-indigo-600 font-mono block">18 Months</span>
-                  <span className="text-[10px] text-emerald-600 font-bold">-2 Months</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Operational Score</span>
-                    <Sparkline data={[68, 72, 75, 78]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">78 / 100</span>
-                  <span className="text-[10px] text-emerald-600 font-bold">+8</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Franchise KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Program Health Card */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Activity className="h-4 w-4 text-emerald-600" /> Program Health
-                </h3>
-                <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-bold text-emerald-600">Good</span>
-              </div>
-
-              <div className="flex items-center justify-center py-2">
-                <ScoreGauge label="Program Score" score={84} sub="Good" size="large" />
-              </div>
-
-              <div className="space-y-2 text-xs text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Program Start Date:</span>
-                  <span className="font-semibold text-foreground font-mono">01 Apr 2024</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Target Completion:</span>
-                  <span className="font-semibold text-foreground font-mono">31 Mar 2027</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Elapsed Duration:</span>
-                  <span className="font-semibold text-foreground">1 Year 1 Month</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Overall Status:</span>
-                  <span className="flex items-center gap-1.5 font-bold text-emerald-600">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500"></span> On Track
-                  </span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "Activity History", "Displaying full program activity timeline...")}
-                className="w-full flex items-center justify-center gap-1 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View Activity History <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Audit Information Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Created By:</span>
-                  <span className="font-semibold text-foreground">{formData.franchiseDevManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Created Date:</span>
-                  <span className="font-semibold text-foreground">05 May 2024 10:20 AM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified By:</span>
-                  <span className="font-semibold text-foreground">{formData.franchiseDevManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified Date:</span>
-                  <span className="font-semibold text-foreground">17 May 2024 04:20 PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Workflow Stage:</span>
-                  <span className="font-semibold text-primary">{formData.workflowStage}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span className="font-semibold text-foreground">v{formData.version}</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 
@@ -1749,7 +1435,7 @@ function FranchiseDevelopmentPage() {
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 bg-muted/20 p-4 rounded-xl border border-border text-xs">
               <div>
                 <span className="text-muted-foreground font-medium block">Overall Readiness Score</span>
-                <span className="text-lg font-bold text-emerald-600">{computedOverallScore} / 100</span>
+                <span className="text-lg font-bold text-emerald-600">{computedOverallScore}%</span>
               </div>
               <div>
                 <span className="text-muted-foreground font-medium block">Revenue Forecast</span>
@@ -1825,7 +1511,7 @@ function FranchiseDevelopmentPage() {
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-2">
               <div className="flex justify-between items-center text-xs font-bold text-primary">
                 <span>AI Franchise Intelligence Score</span>
-                <span>86 / 100 (Optimal Expansion Model)</span>
+                <span>86% (Optimal Expansion Model)</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Strong 28.5% franchisee ROI and 18-month payback period support opening 150 outlets with projected revenue of ₹25 Cr across India & SAARC.

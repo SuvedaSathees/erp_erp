@@ -182,7 +182,7 @@ export function SmartFactoryDevelopmentPage({
   return (
     <AppShell
       title="Smart Factory Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Smart Factory Development"}
       description="Govern Industry 4.0 transformation through IIoT, Cyber-Physical Systems, Digital Twins, AI, and MES."
       tabs={tabs ?? <InnovationAreaTabs sub={<SmartFactoryTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

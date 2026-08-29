@@ -474,7 +474,7 @@ function PortfolioFormPage() {
   return (
     <AppShell
       title="Innovation Portfolio"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Innovation Portfolio"
       description="Balance and prioritize the innovation portfolio across projects."
       tabs={<InnovationAreaTabs sub={<PortfolioPageTabBar />} />}
     >
@@ -1226,60 +1226,7 @@ function PortfolioFormPage() {
                 )}
               </div>
 
-              <div className="card-soft p-5">
-                <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Quick Actions
-                </h4>
-                <div className="space-y-1">
-                  <QuickAction
-                    icon={Briefcase}
-                    label="Add Project to Portfolio"
-                    onClick={() =>
-                      toast.message(
-                        "Projects are rolled up automatically from the pipeline modules.",
-                      )
-                    }
-                  />
-                  <QuickAction
-                    icon={Wallet}
-                    label="Allocate Budget"
-                    disabled={status !== "under_review" && status !== "active"}
-                    onClick={() =>
-                      status === "under_review"
-                        ? setReviewOpen(true)
-                        : toast.success("Budget already allocated for this active portfolio.")
-                    }
-                  />
-                  <QuickAction
-                    icon={Users2}
-                    label="Resource Planning"
-                    onClick={() => toast.message("Resource planning isn't wired to a backend yet.")}
-                  />
-                  <QuickAction
-                    icon={ShieldAlert}
-                    label="Risk Assessment"
-                    onClick={() =>
-                      toast.message("Detailed risk assessment isn't wired to a backend yet.")
-                    }
-                  />
-                  <QuickAction
-                    icon={ClipboardList}
-                    label="Generate Portfolio Report"
-                    onClick={doRefresh}
-                  />
-                  <QuickAction
-                    icon={MapIcon}
-                    label="Portfolio Roadmap"
-                    onClick={() => fileRef.current?.click()}
-                  />
-                </div>
-                <input
-                  ref={fileRef}
-                  type="file"
-                  className="hidden"
-                  onChange={() => toast.success("Roadmap attached (metadata only).")}
-                />
-              </div>
+
             </aside>
           </div>
         )}

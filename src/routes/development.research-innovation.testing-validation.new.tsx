@@ -1,5 +1,6 @@
+// Testing & Validation Form - Magnertia ERP
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import React, { useState, type ReactNode } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
@@ -40,9 +41,13 @@ import {
   UserCheck,
   Paperclip,
   Share2,
-  Printer,
   History,
   FileCheck,
+  CheckSquare,
+  Box,
+  ShieldCheck,
+  BarChart2,
+  Printer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -97,12 +102,20 @@ export const Route = createFileRoute(
   component: TestingValidationNewPage,
 });
 
+export function TestingValidationFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <TestingValidationNewPage {...props} />;
+}
+
+export function TestingValidationPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <TestingValidationNewPage {...props} />;
+}
+
 export function TestingValidationNewPage({
   breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<TestingTabKey>("overview");
@@ -217,7 +230,7 @@ export function TestingValidationNewPage({
   return (
     <AppShell
       title="Testing & Validation"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Testing & Validation"}
       description="Validate test protocols, HALT/HASS stress testing, EMC compliance, and defect tracking."
       tabs={tabs ?? <ResearchInnovationTabBar />}
     >
@@ -354,9 +367,7 @@ export function TestingValidationNewPage({
                   <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
                     <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
                       <CardTitle className="text-xs font-bold flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">
-                          1
-                        </span>
+                        <CheckSquare className="h-4 w-4 text-blue-600" />
                         Test Project Overview
                       </CardTitle>
                       <Badge variant="outline" className="text-[10px]">
@@ -385,9 +396,7 @@ export function TestingValidationNewPage({
                   <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
                     <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
                       <CardTitle className="text-xs font-bold flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">
-                          2
-                        </span>
+                        <FileText className="h-4 w-4 text-blue-600" />
                         Test Planning
                       </CardTitle>
                       <Badge className="bg-emerald-500/15 text-emerald-700 text-[10px] font-bold">
@@ -420,9 +429,7 @@ export function TestingValidationNewPage({
                   <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
                     <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
                       <CardTitle className="text-xs font-bold flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">
-                          3
-                        </span>
+                        <Box className="h-4 w-4 text-blue-600" />
                         Prototype & Equipment
                       </CardTitle>
                       <Badge className="bg-emerald-500/15 text-emerald-700 text-[10px] font-bold">
@@ -455,9 +462,7 @@ export function TestingValidationNewPage({
                   <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
                     <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
                       <CardTitle className="text-xs font-bold flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">
-                          4
-                        </span>
+                        <Zap className="h-4 w-4 text-blue-600" />
                         Functional Testing
                       </CardTitle>
                       <Badge className="bg-emerald-500/15 text-emerald-700 text-[10px] font-bold">
@@ -493,9 +498,7 @@ export function TestingValidationNewPage({
                   <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
                     <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
                       <CardTitle className="text-xs font-bold flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">
-                          5
-                        </span>
+                        <Activity className="h-4 w-4 text-blue-600" />
                         Performance & Reliability
                       </CardTitle>
                       <Badge className="bg-emerald-500/15 text-emerald-700 text-[10px] font-bold">
@@ -528,9 +531,7 @@ export function TestingValidationNewPage({
                   <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
                     <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
                       <CardTitle className="text-xs font-bold flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">
-                          6
-                        </span>
+                        <ShieldCheck className="h-4 w-4 text-emerald-600" />
                         Safety & Compliance
                       </CardTitle>
                       <Badge className="bg-emerald-500/15 text-emerald-700 text-[10px] font-bold">
@@ -563,9 +564,7 @@ export function TestingValidationNewPage({
                   <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
                     <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
                       <CardTitle className="text-xs font-bold flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">
-                          7
-                        </span>
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                         Validation Results
                       </CardTitle>
                       <Badge className="bg-emerald-500/15 text-emerald-700 text-[10px] font-bold">
@@ -598,9 +597,7 @@ export function TestingValidationNewPage({
                   <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
                     <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
                       <CardTitle className="text-xs font-bold flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">
-                          8
-                        </span>
+                        <Sparkles className="h-4 w-4 text-purple-600" />
                         AI Quality Assessment
                       </CardTitle>
                       <Badge variant="outline" className="text-[10px] text-purple-600 font-bold border-purple-300">
@@ -621,9 +618,7 @@ export function TestingValidationNewPage({
                   <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
                     <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
                       <CardTitle className="text-xs font-bold flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">
-                          9
-                        </span>
+                        <BarChart2 className="h-4 w-4 text-blue-600" />
                         Testing Summary
                       </CardTitle>
                       <Badge className="bg-primary text-white text-[10px] font-bold">
@@ -645,6 +640,137 @@ export function TestingValidationNewPage({
                     </CardContent>
                   </Card>
                 </div>
+
+                {/* Section 2: Real-Time Test Execution Run Matrix (Fills whitespace completely) */}
+                <Card className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="p-4 pb-2.5 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between">
+                    <CardTitle className="text-xs font-bold flex items-center gap-2 text-slate-900 dark:text-white">
+                      <span className="p-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 shrink-0">
+                        <Activity className="h-3.5 w-3.5" />
+                      </span>
+                      Recent Test Executions & Compliance Run Matrix
+                    </CardTitle>
+                    <div className="flex items-center gap-2">
+                      <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
+                        142/142 Tests Verified
+                      </Badge>
+                      <Button
+                        size="sm"
+                        onClick={() => setIsTestConsoleOpen(true)}
+                        className="h-7 text-xs bg-primary text-white font-medium"
+                      >
+                        <Play className="h-3 w-3 mr-1" /> Run New Test
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-4 space-y-3">
+                    <div className="rounded-lg border border-slate-200/80 dark:border-slate-800 overflow-hidden">
+                      <table className="w-full text-left text-xs">
+                        <thead className="bg-slate-50 dark:bg-slate-800/80 text-muted-foreground font-semibold border-b border-slate-100 dark:border-slate-800">
+                          <tr>
+                            <th className="p-2.5">Run ID</th>
+                            <th className="p-2.5">Test Case & Protocol</th>
+                            <th className="p-2.5">Standard</th>
+                            <th className="p-2.5">Duration</th>
+                            <th className="p-2.5">Status</th>
+                            <th className="p-2.5 text-right">Waveform / Logs</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+                          {[
+                            {
+                              id: "TR-2024-001",
+                              name: "TC-FUNC-001 Power-On & Handshake Sequence",
+                              standard: "IEC 61851-1",
+                              duration: "4.2s",
+                              status: "Passed",
+                              engineer: "Rahul Sharma",
+                            },
+                            {
+                              id: "TR-2024-002",
+                              name: "TC-THERM-008 Continuous 32A Thermal Saturation",
+                              standard: "IEC 62196-2",
+                              duration: "45.0m",
+                              status: "Passed",
+                              engineer: "Rahul Sharma",
+                            },
+                            {
+                              id: "TR-2024-003",
+                              name: "TC-EMC-014 Radiated Emissions Spectrum Scan",
+                              standard: "CISPR 25 / Class B",
+                              duration: "12.5m",
+                              status: "Passed",
+                              engineer: "Ananya Iyer",
+                            },
+                            {
+                              id: "TR-2024-004",
+                              name: "TC-SAFE-022 Ground Fault Circuit Interrupt (GFCI)",
+                              standard: "UL 2231-1",
+                              duration: "1.8s",
+                              status: "Passed",
+                              engineer: "Rahul Sharma",
+                            },
+                            {
+                              id: "TR-2024-005",
+                              name: "TC-REL-031 Accelerated Mechanical Connector Cycles",
+                              standard: "IEC 62196",
+                              duration: "2.5h",
+                              status: "Passed",
+                              engineer: "Ananya Iyer",
+                            },
+                          ].map((run) => (
+                            <tr key={run.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                              <td className="p-2.5 font-mono font-bold text-primary text-[11px]">{run.id}</td>
+                              <td className="p-2.5">
+                                <span className="font-bold text-slate-900 dark:text-white block text-[11px]">{run.name}</span>
+                                <span className="text-[10px] text-muted-foreground">Tester: {run.engineer}</span>
+                              </td>
+                              <td className="p-2.5">
+                                <Badge variant="outline" className="text-[10px] font-mono">{run.standard}</Badge>
+                              </td>
+                              <td className="p-2.5 font-mono text-[11px] text-slate-600 dark:text-slate-300">{run.duration}</td>
+                              <td className="p-2.5">
+                                <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold flex items-center gap-1 w-fit">
+                                  <CheckCircle2 className="h-3 w-3 inline text-emerald-500" /> {run.status}
+                                </Badge>
+                              </td>
+                              <td className="p-2.5 text-right">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => toast.success(`Viewing Trace Data for ${run.id}`)}
+                                  className="h-6 text-[11px] text-primary hover:bg-primary/10"
+                                >
+                                  View Trace &rarr;
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Performance Metrics Summary Bar */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                      <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
+                        <span className="text-[10px] text-muted-foreground block font-medium">Test Automation Coverage</span>
+                        <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400 font-mono">94.2%</span>
+                      </div>
+                      <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
+                        <span className="text-[10px] text-muted-foreground block font-medium">Mean Cycle Time</span>
+                        <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">4.2 min</span>
+                      </div>
+                      <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
+                        <span className="text-[10px] text-muted-foreground block font-medium">Defect Resolution Rate</span>
+                        <span className="text-sm font-extrabold text-purple-600 dark:text-purple-400 font-mono">100% Closed</span>
+                      </div>
+                      <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
+                        <span className="text-[10px] text-muted-foreground block font-medium">Lab Bench Utilization</span>
+                        <span className="text-sm font-extrabold text-slate-800 dark:text-slate-200 font-mono">88.5%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             )}
 
@@ -1039,96 +1165,43 @@ export function TestingValidationNewPage({
              RIGHT INSIGHTS PANEL (4 cols on desktop)
              ==================================================================== */}
           <div className="lg:col-span-4 space-y-6">
-            {/* Overall Score Card */}
-            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-              <CardHeader className="p-4 pb-2 border-b">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
-                  <span>Overall Quality Score</span>
-                  <Award className="h-4 w-4 text-primary" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-5 text-center space-y-4">
-                <div className="relative mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
-                  <div>
-                    <span className="text-3xl font-black text-primary dark:text-blue-400">{record.overallQualityScore}</span>
-                    <span className="block text-[10px] font-bold text-muted-foreground">/ 100</span>
+            <div className="sticky top-6 space-y-4">
+              {/* Overall Score Card */}
+              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+                <CardHeader className="p-4 pb-2 border-b">
+                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
+                    <span>Overall Quality Score</span>
+                    <Award className="h-4 w-4 text-primary" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-5 text-center space-y-4">
+                  <div className="relative mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
+                    <div>
+                      <span className="text-3xl font-black text-primary dark:text-blue-400">{record.overallQualityScore}%</span>
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-2 text-left text-xs border-t pt-3">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Functional Score</span>
-                    <span className="font-bold text-slate-900 dark:text-white">{record.functionalScore} / 100</span>
+                  <div className="space-y-2 text-left text-xs border-t pt-3">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Functional Score</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.functionalScore}%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Reliability Score</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.reliabilityScore}%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Compliance Score</span>
+                      <span className="font-bold text-emerald-600">{record.complianceScore}%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Validation Score</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.validationScore}%</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Reliability Score</span>
-                    <span className="font-bold text-slate-900 dark:text-white">{record.reliabilityScore} / 100</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Compliance Score</span>
-                    <span className="font-bold text-emerald-600">{record.complianceScore} / 100</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Validation Score</span>
-                    <span className="font-bold text-slate-900 dark:text-white">{record.validationScore} / 100</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Key Highlights */}
-            <Card className="border-border/80 shadow-xs">
-              <CardHeader className="p-4 pb-2 border-b">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Key Highlights</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 space-y-2 text-xs">
-                {[
-                  "All functional tests passed (24/24)",
-                  "Thermal performance within limits (<75°C)",
-                  "Efficiency achieved 92.4% under 7kW load",
-                  "No critical defects identified",
-                  "Compliant with IEC 61851 & IEC 61000",
-                ].map((hl, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium">{hl}</span>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card className="border-border/80 shadow-xs">
-              <CardHeader className="p-4 pb-2 border-b">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 space-y-2 text-xs">
-                <Button variant="outline" size="sm" onClick={() => setIsTestConsoleOpen(true)} className="w-full justify-start text-xs h-8">
-                  <Play className="h-3.5 w-3.5 mr-2 text-primary" /> Run New Test
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => setActiveTab("test_planning")} className="w-full justify-start text-xs h-8">
-                  <FileText className="h-3.5 w-3.5 mr-2 text-blue-600" /> View Test Plan
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => setIsTestConsoleOpen(true)} className="w-full justify-start text-xs h-8">
-                  <Plus className="h-3.5 w-3.5 mr-2 text-emerald-600" /> Create Test Case
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => setIsDefectModalOpen(true)} className="w-full justify-start text-xs h-8">
-                  <AlertTriangle className="h-3.5 w-3.5 mr-2 text-amber-600" /> Log Defect
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => toast.success("Generating Test Report")} className="w-full justify-start text-xs h-8">
-                  <FileCheck className="h-3.5 w-3.5 mr-2 text-purple-600" /> Generate Test Report
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => setActiveTab("results_validation")} className="w-full justify-start text-xs h-8">
-                  <BarChart3 className="h-3.5 w-3.5 mr-2 text-indigo-600" /> View Quality Dashboard
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => setActiveTab("prototype_equipment")} className="w-full justify-start text-xs h-8">
-                  <Cpu className="h-3.5 w-3.5 mr-2 text-rose-600" /> Schedule Equipment
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => toast.success("Requested Product Certification")} className="w-full justify-start text-xs h-8">
-                  <Award className="h-3.5 w-3.5 mr-2 text-emerald-600" /> Request Certification
-                </Button>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
 
@@ -1209,3 +1282,7 @@ export function TestingValidationNewPage({
     </AppShell>
   );
 }
+
+export default TestingValidationNewPage;
+
+

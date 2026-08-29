@@ -384,7 +384,7 @@ function CommercializationFormPage() {
 
   return (
     <AppShell
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Commercialization Planning"
       title="Commercialization Planning"
       description="Plan go-to-market, financials, and launch readiness."
       topbarActions={
@@ -2061,97 +2061,7 @@ function CommercializationFormPage() {
               </div>
             </div>
 
-            {/* Quick Actions Panel */}
-            <div className="card-soft p-4 space-y-3">
-              <h4 className="text-xs font-bold text-foreground border-b border-border pb-2">
-                Quick Actions
-              </h4>
-              <div className="space-y-1.5">
-                <button
-                  type="button"
-                  onClick={() => setActiveActionModal("report")}
-                  className="w-full flex items-center justify-between rounded-md p-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-primary" />
-                    Generate Commercialization Report
-                  </span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                </button>
 
-                <button
-                  type="button"
-                  onClick={() => setActiveActionModal("gtm")}
-                  className="w-full flex items-center justify-between rounded-md p-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <Target className="h-4 w-4 text-blue-600" />
-                    Create Go-to-Market Plan
-                  </span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveActionModal("financial")}
-                  className="w-full flex items-center justify-between rounded-md p-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <Calculator className="h-4 w-4 text-emerald-600" />
-                    Financial Projection Model
-                  </span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveActionModal("market")}
-                  className="w-full flex items-center justify-between rounded-md p-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <PieChart className="h-4 w-4 text-purple-600" />
-                    Market Research Summary
-                  </span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveActionModal("ai")}
-                  className="w-full flex items-center justify-between rounded-md p-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-amber-600" />
-                    AI Commercialization Insights
-                  </span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveActionModal("upload")}
-                  className="w-full flex items-center justify-between rounded-md p-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <Upload className="h-4 w-4 text-muted-foreground" />
-                    Upload Supporting Documents
-                  </span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveActionModal("meeting")}
-                  className="w-full flex items-center justify-between rounded-md p-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-indigo-600" />
-                    Schedule Review Meeting
-                  </span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>

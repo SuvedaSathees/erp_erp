@@ -8,7 +8,9 @@ export type ProductArchitectureTabId =
   | "security_compliance"
   | "performance"
   | "ai_assessment"
-  | "summary";
+  | "summary"
+  | "attachments"
+  | "review_approval";
 
 export function ProductArchitectureTabBar({
   activeTab = "overview",
@@ -17,17 +19,19 @@ export function ProductArchitectureTabBar({
   activeTab?: ProductArchitectureTabId;
   onTabChange?: (tabId: ProductArchitectureTabId) => void;
 }) {
-  const tabs = [
-    { id: "overview" as const, label: "Overview" },
-    { id: "system_architecture" as const, label: "System Architecture" },
-    { id: "hardware_architecture" as const, label: "Hardware Architecture" },
-    { id: "software_architecture" as const, label: "Software Architecture" },
-    { id: "data_communication" as const, label: "Data & Communication" },
-    { id: "integration" as const, label: "Integration" },
-    { id: "security_compliance" as const, label: "Security & Compliance" },
-    { id: "performance" as const, label: "Performance" },
-    { id: "ai_assessment" as const, label: "AI Assessment" },
-    { id: "summary" as const, label: "Summary" },
+  const tabs: { id: ProductArchitectureTabId; label: string }[] = [
+    { id: "overview", label: "Overview" },
+    { id: "system_architecture", label: "System Architecture" },
+    { id: "hardware_architecture", label: "Hardware Architecture" },
+    { id: "software_architecture", label: "Software Architecture" },
+    { id: "data_communication", label: "Data & Communication" },
+    { id: "integration", label: "Integration" },
+    { id: "security_compliance", label: "Security & Compliance" },
+    { id: "performance", label: "Performance" },
+    { id: "ai_assessment", label: "AI Assessment" },
+    { id: "summary", label: "Summary" },
+    { id: "attachments", label: "Attachments" },
+    { id: "review_approval", label: "Review & Approval" },
   ];
 
   return (

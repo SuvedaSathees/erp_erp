@@ -92,8 +92,8 @@ export function ProcessValidationPage({
 
   return (
     <AppShell
-      title="Process Validation & PPAP"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      title="Process Validation"
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Process Validation"}
       description="Execute Production Part Approval Process (PPAP) submissions, dimensional reports, and customer approvals."
       tabs={tabs ?? <InnovationAreaTabs sub={<ProcessValidationTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

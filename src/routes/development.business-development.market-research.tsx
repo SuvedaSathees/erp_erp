@@ -459,7 +459,8 @@ function MarketResearchPage() {
         )}
 
         {/* Form Header Action Strip & Top Metadata Cards */}
-        <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-sm">
+        <div className="relative rounded-2xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Top Row: Icon + Title + Status + Action Buttons */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-3">
             <div className="flex items-center gap-3">
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary font-bold shadow-inner">
@@ -546,7 +547,7 @@ function MarketResearchPage() {
           </div>
 
           {/* Form Top Metadata Grid */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 text-xs">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 text-xs">
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
                 Business Unit <MAICWBadge type="I" />
@@ -576,6 +577,12 @@ function MarketResearchPage() {
                 Last Modified Date <MAICWBadge type="A" />
               </span>
               <span className="font-semibold text-foreground block truncate mt-0.5">{formData.lastModifiedDate}</span>
+            </div>
+            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
+              <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
+                Workflow Stage <MAICWBadge type="W" />
+              </span>
+              <span className="font-bold text-primary block truncate mt-0.5">{formData.workflowStage}</span>
             </div>
           </div>
         </div>
@@ -633,606 +640,495 @@ function MarketResearchPage() {
           </div>
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
-
-            {/* 1. Research Overview */}
-            <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Research Overview
-                </h3>
-                <span className="text-xs text-muted-foreground font-medium">Scope & Methodology</span>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Industry</span> <MAICWBadge type="M" />
-                  </label>
-                  <select
-                    value={formData.industry}
-                    onChange={(e) => updateField("industry", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
-                  >
-                    {["Manufacturing", "Automotive", "Electric Vehicles", "Energy", "SaaS", "Healthcare", "Retail", "Logistics", "Government", "Education"].map((ind) => (
-                      <option key={ind} value={ind}>{ind}</option>
-                    ))}
-                  </select>
+        {/* Main Focused Form Canvas */}
+        <div className="w-full space-y-6">
+          {/* Research Overview */}
+          <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-primary" /> Research Overview
+                  </h3>
+                  <span className="text-xs text-muted-foreground font-medium">Scope & Methodology</span>
                 </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Market Category</span> <MAICWBadge type="M" />
-                  </label>
-                  <select
-                    value={formData.marketCategory}
-                    onChange={(e) => updateField("marketCategory", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
-                  >
-                    {["B2B", "B2C", "B2G", "B2B2C", "Marketplace", "Platform", "SaaS", "Manufacturing", "Services", "Franchise"].map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
-                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Industry</span> <MAICWBadge type="M" />
+                    </label>
+                    <select
+                      value={formData.industry}
+                      onChange={(e) => updateField("industry", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    >
+                      {["Manufacturing", "Automotive", "Electric Vehicles", "Energy", "SaaS", "Healthcare", "Retail", "Logistics", "Government", "Education"].map((ind) => (
+                        <option key={ind} value={ind}>{ind}</option>
+                      ))}
+                    </select>
+                  </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Geographic Scope</span> <MAICWBadge type="M" />
-                  </label>
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {formData.geographicScope.map((geo) => (
-                      <span key={geo} className="rounded-md bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 text-xs font-bold text-emerald-600">
-                        {geo}
-                      </span>
-                    ))}
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Market Category</span> <MAICWBadge type="M" />
+                    </label>
+                    <select
+                      value={formData.marketCategory}
+                      onChange={(e) => updateField("marketCategory", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
+                    >
+                      {["B2B", "B2C", "B2G", "B2B2C", "Marketplace", "Platform", "SaaS", "Manufacturing", "Services", "Franchise"].map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Geographic Scope</span> <MAICWBadge type="M" />
+                    </label>
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {formData.geographicScope.map((geo) => (
+                        <span key={geo} className="rounded-md bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 text-xs font-bold text-emerald-600">
+                          {geo}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Research Methodology</span> <MAICWBadge type="M" />
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.researchMethodology}
+                      onChange={(e) => updateField("researchMethodology", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Lifecycle Stage</span> <MAICWBadge type="W" />
+                    </label>
+                    <select
+                      value={formData.lifecycleStage}
+                      onChange={(e) => updateField("lifecycleStage", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-emerald-600 focus:border-primary focus:outline-none"
+                    >
+                      {["Opportunity Identification", "Market Assessment", "Validation", "Product Planning", "Go-to-Market", "Growth", "Expansion"].map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Priority</span> <MAICWBadge type="M" />
+                    </label>
+                    <select
+                      value={formData.priority}
+                      onChange={(e) => updateField("priority", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-rose-600 focus:border-primary focus:outline-none"
+                    >
+                      {["Critical", "High", "Medium", "Low"].map((p) => (
+                        <option key={p} value={p}>{p}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Business Objective</span> <MAICWBadge type="M" />
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.businessObjective}
+                      onChange={(e) => updateField("businessObjective", e.target.value)}
+                      className={cn(
+                        "w-full rounded-lg border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed",
+                        validationErrors.businessObjective ? "border-rose-500" : "border-border"
+                      )}
+                    />
+                    {validationErrors.businessObjective && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.businessObjective}</p>}
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Research Objective</span> <MAICWBadge type="M" />
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.researchObjective}
+                      onChange={(e) => updateField("researchObjective", e.target.value)}
+                      className={cn(
+                        "w-full rounded-lg border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed",
+                        validationErrors.researchObjective ? "border-rose-500" : "border-border"
+                      )}
+                    />
+                    {validationErrors.researchObjective && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.researchObjective}</p>}
                   </div>
                 </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Research Methodology</span> <MAICWBadge type="M" />
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.researchMethodology}
-                    onChange={(e) => updateField("researchMethodology", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Lifecycle Stage</span> <MAICWBadge type="W" />
-                  </label>
-                  <select
-                    value={formData.lifecycleStage}
-                    onChange={(e) => updateField("lifecycleStage", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-emerald-600 focus:border-primary focus:outline-none"
-                  >
-                    {["Opportunity Identification", "Market Assessment", "Validation", "Product Planning", "Go-to-Market", "Growth", "Expansion"].map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Priority</span> <MAICWBadge type="M" />
-                  </label>
-                  <select
-                    value={formData.priority}
-                    onChange={(e) => updateField("priority", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-rose-600 focus:border-primary focus:outline-none"
-                  >
-                    {["Critical", "High", "Medium", "Low"].map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Business Objective</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.businessObjective}
-                    onChange={(e) => updateField("businessObjective", e.target.value)}
-                    className={cn(
-                      "w-full rounded-lg border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed",
-                      validationErrors.businessObjective ? "border-rose-500" : "border-border"
-                    )}
-                  />
-                  {validationErrors.businessObjective && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.businessObjective}</p>}
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Research Objective</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.researchObjective}
-                    onChange={(e) => updateField("researchObjective", e.target.value)}
-                    className={cn(
-                      "w-full rounded-lg border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed",
-                      validationErrors.researchObjective ? "border-rose-500" : "border-border"
-                    )}
-                  />
-                  {validationErrors.researchObjective && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.researchObjective}</p>}
-                </div>
               </div>
-            </div>
 
-            {/* 2. Market Analysis */}
+            {/* Market Sizing & Attractiveness */}
             <div id="sec-market" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <PieChart className="h-4 w-4 text-emerald-600" /> 2. Market Analysis (TAM / SAM / SOM)
-                </h3>
-                <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
-                  Market Attractiveness Score: <strong>{formData.marketAttractivenessScore}/100</strong> <MAICWBadge type="C" />
-                </span>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <PieChart className="h-4 w-4 text-primary" /> Market Sizing & Attractiveness (TAM / SAM / SOM)
+                  </h3>
+                  <span className="text-xs font-semibold text-primary">Attractiveness: {formData.marketAttractivenessScore}/100</span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
+                    <span className="text-[11px] font-semibold text-muted-foreground block">TAM (Total Addressable)</span>
+                    <span className="mt-1 text-lg font-bold text-foreground font-mono">₹ {(formData.tam / 10000000).toFixed(0)} Cr</span>
+                  </div>
+
+                  <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
+                    <span className="text-[11px] font-semibold text-muted-foreground block">SAM (Serviceable Addressable)</span>
+                    <span className="mt-1 text-lg font-bold text-foreground font-mono">₹ {(formData.sam / 10000000).toFixed(0)} Cr</span>
+                  </div>
+
+                  <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
+                    <span className="text-[11px] font-semibold text-muted-foreground block">SOM (Serviceable Obtainable)</span>
+                    <span className="mt-1 text-lg font-bold text-emerald-600 font-mono">₹ {(formData.som / 10000000).toFixed(0)} Cr</span>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Market Growth Rate (CAGR)</span> <MAICWBadge type="C" />
+                    </label>
+                    <input
+                      type="text"
+                      value={`${formData.marketGrowthRate}%`}
+                      readOnly
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-blue-600 font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Industry Maturity</span> <MAICWBadge type="I" />
+                    </label>
+                    <select
+                      value={formData.industryMaturity}
+                      onChange={(e) => updateField("industryMaturity", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    >
+                      {["Emerging", "Growth", "Mature", "Consolidating"].map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Attractiveness Score</span> <MAICWBadge type="C" />
+                    </label>
+                    <input
+                      type="text"
+                      value={`${formData.marketAttractivenessScore}%`}
+                      readOnly
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-emerald-600 font-mono"
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
-                  <span className="text-[11px] font-semibold text-muted-foreground block">TAM (Total Addressable) <MAICWBadge type="C" /></span>
-                  <span className="mt-1 text-base font-bold text-foreground font-mono">₹ 48,500 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
-                  <span className="text-[11px] font-semibold text-muted-foreground block">SAM (Serviceable Available) <MAICWBadge type="C" /></span>
-                  <span className="mt-1 text-base font-bold text-foreground font-mono">₹ 12,800 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
-                  <span className="text-[11px] font-semibold text-muted-foreground block">SOM (Serviceable Obtainable) <MAICWBadge type="C" /></span>
-                  <span className="mt-1 text-base font-bold text-foreground font-mono">₹ 2,350 Cr</span>
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Market Growth Rate (%)</span> <MAICWBadge type="C" />
-                  </label>
-                  <input
-                    type="text"
-                    value={`${formData.marketGrowthRate}%`}
-                    readOnly
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-emerald-600 font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Market Size</span> <MAICWBadge type="C" />
-                  </label>
-                  <input
-                    type="text"
-                    value={`₹ 48,500 Cr`}
-                    readOnly
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-foreground font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Industry Maturity</span> <MAICWBadge type="M" />
-                  </label>
-                  <select
-                    value={formData.industryMaturity}
-                    onChange={(e) => updateField("industryMaturity", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-emerald-600 focus:border-primary focus:outline-none"
-                  >
-                    {["Emerging", "Growth", "Mature", "Saturated", "Declining"].map((m) => (
-                      <option key={m} value={m}>{m}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Customer Research */}
+            {/* Customer Segments */}
             <div id="sec-customer" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4 text-indigo-600" /> 3. Customer Research
-                </h3>
-                <span className="text-xs font-semibold text-indigo-600 flex items-center gap-1">
-                  Customer Research Score: <strong>{formData.customerResearchScore}/100</strong> <MAICWBadge type="C" />
-                </span>
-              </div>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Users className="h-4 w-4 text-indigo-600" /> Customer Segments & Demand Analysis
+                  </h3>
+                  <span className="text-xs font-semibold text-indigo-600">Research Score: {formData.customerResearchScore}/100</span>
+                </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Target Customer Segments</span> <MAICWBadge type="M" />
-                  </label>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {formData.targetCustomerSegments.map((seg) => (
-                      <span key={seg} className="rounded-md bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 text-[11px] font-bold text-blue-600">
-                        {seg}
-                      </span>
-                    ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Target Customer Segments</span> <MAICWBadge type="M" />
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.customerSegments}
+                      onChange={(e) => updateField("customerSegments", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Expected Purchase Volume</span> <MAICWBadge type="C" />
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.expectedPurchaseVolume}
+                      readOnly
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-foreground font-mono"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2 space-y-3">
+                    <div>
+                      <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                        <span>Customer Pain Points</span> <MAICWBadge type="M" />
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={formData.customerPainPoints}
+                        onChange={(e) => updateField("customerPainPoints", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                        <span>Customer Buying Behavior & Decision Drivers</span> <MAICWBadge type="M" />
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={formData.buyingBehavior}
+                        onChange={(e) => updateField("buyingBehavior", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                      />
+                    </div>
                   </div>
                 </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Customer Personas</span> <MAICWBadge type="I" />
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.customerPersonas}
-                    onChange={(e) => updateField("customerPersonas", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Customer Needs</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.customerNeeds}
-                    onChange={(e) => updateField("customerNeeds", e.target.value)}
-                    className={cn(
-                      "w-full rounded-lg border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed",
-                      validationErrors.customerNeeds ? "border-rose-500" : "border-border"
-                    )}
-                  />
-                  {validationErrors.customerNeeds && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.customerNeeds}</p>}
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Customer Pain Points</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.customerPainPoints}
-                    onChange={(e) => updateField("customerPainPoints", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Buying Behaviour</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.buyingBehaviour}
-                    onChange={(e) => updateField("buyingBehaviour", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
               </div>
-            </div>
 
-            {/* 4. Competitor Analysis */}
+            {/* Competitor Intelligence */}
             <div id="sec-competitor" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-purple-600" /> 4. Competitor Analysis
-                </h3>
-                <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
-                  Competitive Score: <strong>{formData.competitiveIntelligenceScore}/100</strong> <MAICWBadge type="C" />
-                </span>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Target className="h-4 w-4 text-rose-600" /> Competitive Landscape & Intelligence
+                  </h3>
+                  <span className="text-xs font-semibold text-rose-600">Competitor Score: {formData.competitiveIntelligenceScore}/100</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Direct Competitors</span> <MAICWBadge type="M" />
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.directCompetitors}
+                      onChange={(e) => updateField("directCompetitors", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Market Concentration</span> <MAICWBadge type="I" />
+                    </label>
+                    <select
+                      value={formData.marketConcentration}
+                      onChange={(e) => updateField("marketConcentration", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    >
+                      {["Fragmented", "Moderate Concentration", "High Concentration", "Monopolistic"].map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="sm:col-span-2 space-y-3">
+                    <div>
+                      <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                        <span>Competitive Advantage & Moat</span> <MAICWBadge type="M" />
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={formData.competitiveAdvantage}
+                        onChange={(e) => updateField("competitiveAdvantage", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Competitor Count</span> <MAICWBadge type="M" />
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.competitorCount}
-                    onChange={(e) => updateField("competitorCount", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Market Share (%)</span> <MAICWBadge type="C" />
-                  </label>
-                  <input
-                    type="text"
-                    value={`${formData.marketShare} %`}
-                    readOnly
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-foreground font-mono"
-                  />
-                </div>
-
-                <div className="sm:col-span-2 space-y-2">
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-2.5 text-xs">
-                    <span className="font-semibold text-muted-foreground flex items-center gap-1.5">
-                      <FileText className="h-4 w-4 text-primary" /> Product Comparison Matrix
-                    </span>
-                    <button type="button" onClick={() => setViewingFile(formData.productComparisonFile)} className="font-bold text-primary hover:underline flex items-center gap-1 font-mono">
-                      {formData.productComparisonFile} <Download className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-2.5 text-xs">
-                    <span className="font-semibold text-muted-foreground flex items-center gap-1.5">
-                      <FileText className="h-4 w-4 text-primary" /> Pricing Comparison Report
-                    </span>
-                    <button type="button" onClick={() => setViewingFile(formData.pricingComparisonFile)} className="font-bold text-primary hover:underline flex items-center gap-1 font-mono">
-                      {formData.pricingComparisonFile} <Download className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-2.5 text-xs">
-                    <span className="font-semibold text-muted-foreground flex items-center gap-1.5">
-                      <FileText className="h-4 w-4 text-primary" /> SWOT Analysis Document
-                    </span>
-                    <button type="button" onClick={() => setViewingFile(formData.swotAnalysisFile)} className="font-bold text-primary hover:underline flex items-center gap-1 font-mono">
-                      {formData.swotAnalysisFile} <Download className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Competitive Advantages</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.competitiveAdvantages}
-                    onChange={(e) => updateField("competitiveAdvantages", e.target.value)}
-                    className={cn(
-                      "w-full rounded-lg border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed",
-                      validationErrors.competitiveAdvantages ? "border-rose-500" : "border-border"
-                    )}
-                  />
-                  {validationErrors.competitiveAdvantages && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.competitiveAdvantages}</p>}
-                </div>
-              </div>
-            </div>
-
-            {/* 5. Industry & Technology Analysis */}
+            {/* Industry & Technology Trends */}
             <div id="sec-industry-tech" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Cpu className="h-4 w-4 text-blue-600" /> 5. Industry & Technology Analysis
-                </h3>
-                <span className="text-xs font-semibold text-blue-600">Technology Readiness: {formData.technologyReadinessScore}/100</span>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Emerging Technologies</span> <MAICWBadge type="M" />
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.emergingTechnologies}
-                    onChange={(e) => updateField("emergingTechnologies", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
-                  />
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Cpu className="h-4 w-4 text-purple-600" /> Industry & Technology Trends
+                  </h3>
+                  <span className="text-xs font-semibold text-purple-600">Trends Score: {formData.trendsScore}/100</span>
                 </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Standards & Certifications</span> <MAICWBadge type="M" />
-                  </label>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {formData.standardsCertifications.map((std) => (
-                      <span key={std} className="rounded-md bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 text-[11px] font-bold text-purple-600">
-                        {std}
-                      </span>
-                    ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Key Technology Trends</span> <MAICWBadge type="M" />
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.technologyTrends}
+                      onChange={(e) => updateField("technologyTrends", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Regulatory & Policy Drivers</span> <MAICWBadge type="M" />
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.regulatoryDrivers}
+                      onChange={(e) => updateField("regulatoryDrivers", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                    />
                   </div>
                 </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Industry Trends</span> <MAICWBadge type="M" />
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.industryTrends}
-                    onChange={(e) => updateField("industryTrends", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
-                  />
-                </div>
               </div>
-            </div>
 
-            {/* 6. Commercial Analysis */}
+            {/* Commercial & Revenue Opportunity */}
             <div id="sec-commercial" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 6. Commercial Analysis
-                </h3>
-                <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
-                  Commercial Viability: <strong>{formData.commercialViabilityScore}/100</strong> <MAICWBadge type="C" />
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Pricing Benchmark</span> <MAICWBadge type="M" />
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pricingBenchmark}
-                    onChange={(e) => updateField("pricingBenchmark", e.target.value)}
-                    className={cn(
-                      "w-full rounded-lg border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none",
-                      validationErrors.pricingBenchmark ? "border-rose-500" : "border-border"
-                    )}
-                  />
-                  {validationErrors.pricingBenchmark && <p className="text-[10px] text-rose-500 mt-1">{validationErrors.pricingBenchmark}</p>}
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-emerald-600" /> Commercial & Revenue Opportunity
+                  </h3>
+                  <span className="text-xs font-semibold text-emerald-600">Commercial Score: {formData.commercialViabilityScore}/100</span>
                 </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Revenue Opportunity</span> <MAICWBadge type="C" />
-                  </label>
-                  <input
-                    type="text"
-                    value={`₹ 2,480 Cr`}
-                    readOnly
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-emerald-600 font-mono"
-                  />
-                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Estimated Market Price</span> <MAICWBadge type="I" />
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.marketPricing}
+                      onChange={(e) => updateField("marketPricing", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
+                    />
+                  </div>
 
-                <div>
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Expected Market Share</span> <MAICWBadge type="C" />
-                  </label>
-                  <input
-                    type="text"
-                    value={`${formData.expectedMarketShare} %`}
-                    readOnly
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-foreground font-mono"
-                  />
-                </div>
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Revenue Potential (Yr 1)</span> <MAICWBadge type="C" />
+                    </label>
+                    <input
+                      type="text"
+                      value={`₹ ${(formData.revenuePotentialYear1 / 10000000).toFixed(2)} Cr`}
+                      readOnly
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-emerald-600 font-mono"
+                    />
+                  </div>
 
-                <div className="sm:col-span-3">
-                  <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
-                    <span>Distribution Channels</span> <MAICWBadge type="M" />
-                  </label>
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {formData.distributionChannels.map((ch) => (
-                      <span key={ch} className="rounded-md bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 text-xs font-bold text-emerald-600">
-                        {ch}
-                      </span>
-                    ))}
+                  <div>
+                    <label className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1">
+                      <span>Revenue Potential (Yr 3)</span> <MAICWBadge type="C" />
+                    </label>
+                    <input
+                      type="text"
+                      value={`₹ ${(formData.revenuePotentialYear3 / 10000000).toFixed(2)} Cr`}
+                      readOnly
+                      className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs font-bold text-foreground font-mono"
+                    />
                   </div>
                 </div>
-              </div>
             </div>
 
-            {/* 7. AI Market Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 7. AI Market Intelligence
+            {/* AI Market Intelligence */}
+            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-primary/15">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-primary" /> AI Market Intelligence
                 </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Intelligence Score: {formData.aiIntelligenceScore}/100
+                <span className="text-xs font-bold text-primary flex items-center gap-1.5">
+                  AI Intelligence Score: <strong className="font-mono">91/100</strong>
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
+                <div className="rounded-lg border border-border bg-card p-3.5 space-y-1">
                   <span className="font-bold text-foreground flex items-center gap-1.5">
                     <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> AI Trend Analysis
                   </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiTrendAnalysis}</p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Strong growth in smart charging and energy management.
+                  </p>
                 </div>
 
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
+                <div className="rounded-lg border border-border bg-card p-3.5 space-y-1">
                   <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <BarChart3 className="h-3.5 w-3.5 text-blue-600" /> AI Demand Forecast
+                    <Zap className="h-3.5 w-3.5 text-amber-500" /> AI Demand Forecast
                   </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiDemandForecast}</p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Market to grow at 29% CAGR over next 5 years.
+                  </p>
                 </div>
 
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
+                <div className="rounded-lg border border-border bg-card p-3.5 space-y-1">
                   <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <ShieldCheck className="h-3.5 w-3.5 text-purple-600" /> AI Competitor Insights
+                    <Target className="h-3.5 w-3.5 text-blue-600" /> AI Competitor Insights
                   </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiCompetitorInsights}</p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Competitors investing in fast charging and network expansion.
+                  </p>
                 </div>
 
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-indigo-600">
-                    <Zap className="h-3.5 w-3.5" /> AI Opportunity Mapping
+                <div className="rounded-lg border border-border bg-card p-3.5 space-y-1">
+                  <span className="font-bold text-foreground flex items-center gap-1.5">
+                    <PieChart className="h-3.5 w-3.5 text-purple-600" /> AI Opportunity Mapping
                   </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiOpportunityMapping}</p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    High opportunity in commercial fleets and urban areas.
+                  </p>
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Market Intelligence Workbench <ChevronRight className="h-4 w-4" />
-              </button>
+              <div className="pt-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsAiDrawerOpen(true)}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-all cursor-pointer"
+                >
+                  <Sparkles className="h-3.5 w-3.5" /> Open Interactive AI Market Intelligence Workbench
+                </button>
+              </div>
             </div>
 
-            {/* 8. Market Research Summary */}
+            {/* Market Research Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 8. Market Research Summary
-                </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Market Score</span>
-                    <span className="font-mono font-bold">{formData.marketAttractivenessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.marketAttractivenessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Customer Score</span>
-                    <span className="font-mono font-bold">{formData.customerResearchScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.customerResearchScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Competition Score</span>
-                    <span className="font-mono font-bold">{formData.competitiveIntelligenceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.competitiveIntelligenceScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Commercial Score</span>
-                    <span className="font-mono font-bold">{formData.commercialViabilityScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: `${formData.commercialViabilityScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>AI Intelligence Score</span>
-                    <span className="font-mono font-bold">{formData.aiIntelligenceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.aiIntelligenceScore}%` }} />
-                  </div>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Award className="h-4 w-4 text-emerald-600" /> Market Research Summary & Strategic Decision
+                  </h3>
+                  <span className="text-xs font-bold text-emerald-600">Research Rating: {computedOverallScore}/100 (Tier 1)</span>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Research Score" score={computedOverallScore} sub="Very Good" size="large" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                  <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                    <div className="font-bold text-foreground flex items-center justify-between">
+                      <span>Executive Research Status</span>
+                      <span className="text-emerald-600 font-bold">Comprehensive & Validated</span>
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Market research confirmed with ₹48,500 Cr TAM, 28.5% projected CAGR, and high commercial readiness.
+                    </p>
+                  </div>
 
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
+                  <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                    <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
                     <select
                       value={formData.recommendation}
                       onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
+                      className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
                     >
                       {[
-                        "Proceed to Business Model Development",
-                        "Approve Market Opportunity",
-                        "Conduct Additional Research",
-                        "Improve Competitive Positioning",
-                        "Validate Customer Demand",
-                        "Refine Pricing Strategy",
-                        "Expand Geographic Market",
+                        "Approve Market Research",
+                        "Conduct Deep-Dive Primary Research",
+                        "Expand Competitor Benchmarking",
+                        "Validate Regional TAM & SAM",
+                        "Proceed to Strategy Development",
                       ].map((rec) => (
                         <option key={rec} value={rec}>{rec}</option>
                       ))}
@@ -1240,346 +1136,161 @@ function MarketResearchPage() {
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* 9. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 9. Market Research Attachments & Artifacts
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setIsUploadModalOpen(true)}
-                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-colors"
-                >
-                  <Upload className="h-3.5 w-3.5" /> Upload File
-                </button>
-              </div>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" /> Market Research Attachments & Artifacts
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setIsUploadModalOpen(true)}
+                    className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
+                  >
+                    <Upload className="h-3.5 w-3.5" /> Upload File
+                  </button>
+                </div>
 
-              <div className="space-y-2 text-xs">
-                {attachments.map((file) => (
-                  <div key={file.id} className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-3 hover:bg-muted/40 transition-colors">
-                    <div className="flex items-center gap-3 truncate">
-                      <FileText className="h-4 w-4 text-primary shrink-0" />
-                      <div className="truncate">
-                        <span className="font-bold text-foreground block truncate">{file.name}</span>
-                        <span className="text-[10px] text-muted-foreground">
-                          {file.size} · {file.date} · Uploaded by {file.uploader}
-                        </span>
+                <div className="space-y-2 text-xs">
+                  {attachments.map((file) => (
+                    <div key={file.id} className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-3 hover:bg-muted/40 transition-colors">
+                      <div className="flex items-center gap-3 truncate">
+                        <FileText className="h-4 w-4 text-primary shrink-0" />
+                        <div className="truncate">
+                          <span className="font-bold text-foreground block truncate">{file.name}</span>
+                          <span className="text-[10px] text-muted-foreground">
+                            {file.size} · {file.date} · Uploaded by {file.uploader}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => setViewingFile(file.name)}
+                          className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"
+                          title="View File"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => showToast("info", "Download Triggered", `Downloading ${file.name}...`)}
+                          className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"
+                          title="Download File"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveAttachment(file.id, file.name)}
+                          className="rounded p-1 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 cursor-pointer"
+                          title="Delete File"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-2 shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => setViewingFile(file.name)}
-                        className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted"
-                        title="View File"
-                      >
-                        <Eye className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => showToast("info", "Download Triggered", `Downloading ${file.name}...`)}
-                        className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted"
-                        title="Download File"
-                      >
-                        <Download className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveAttachment(file.id, file.name)}
-                        className="rounded p-1 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10"
-                        title="Delete File"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* 10. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 10. Governance & Executive Review Matrix
-                </h3>
-                <span className="text-xs font-semibold text-primary">8 Stakeholder Roles</span>
-              </div>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-primary" /> Governance & Executive Review Matrix
+                  </h3>
+                  <span className="text-xs font-semibold text-primary">8 Stakeholder Roles</span>
+                </div>
 
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {formData.approvals.map((stk) => (
-                  <div key={stk.role} className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                    <span className="text-[11px] font-semibold text-muted-foreground block">{stk.role}</span>
-                    <span className="text-xs font-bold text-foreground block truncate">{stk.user}</span>
-                    <div className="flex items-center justify-between text-[10px] pt-1">
-                      <span
-                        className={cn(
-                          "font-bold px-1.5 py-0.5 rounded",
-                          stk.status === "Approved" ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
-                        )}
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  {formData.approvals.map((stk) => (
+                    <div key={stk.role} className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
+                      <span className="text-[11px] font-semibold text-muted-foreground block">{stk.role}</span>
+                      <span className="text-xs font-bold text-foreground block truncate">{stk.user}</span>
+                      <div className="flex items-center justify-between text-[10px] pt-1">
+                        <span
+                          className={cn(
+                            "font-bold px-1.5 py-0.5 rounded",
+                            stk.status === "Approved" ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
+                          )}
+                        >
+                          {stk.status}
+                        </span>
+                        <span className="text-muted-foreground">{stk.date}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-3 border-t border-border space-y-3">
+                  <h4 className="text-xs font-bold text-foreground">Record Approval Decision</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Approval Decision</label>
+                      <select
+                        value={formData.userDecision}
+                        onChange={(e) => updateField("userDecision", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
                       >
-                        {stk.status}
-                      </span>
-                      <span className="text-muted-foreground">{stk.date}</span>
+                        {["Approved", "Approved with Conditions", "Revision Required", "On Hold", "Rejected"].map((dec) => (
+                          <option key={dec} value={dec}>{dec}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Approval Date</label>
+                      <input
+                        type="date"
+                        value={formData.userApprovalDate}
+                        onChange={(e) => updateField("userApprovalDate", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                      />
                     </div>
                   </div>
-                ))}
-              </div>
-
-              <div className="pt-3 border-t border-border space-y-3">
-                <h4 className="text-xs font-bold text-foreground">Record Approval Decision</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Approval Decision</label>
-                    <select
-                      value={formData.userDecision}
-                      onChange={(e) => updateField("userDecision", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs font-bold text-foreground focus:border-primary focus:outline-none"
-                    >
-                      {["Approved", "Approved with Conditions", "Revision Required", "On Hold", "Rejected"].map((dec) => (
-                        <option key={dec} value={dec}>{dec}</option>
-                      ))}
-                    </select>
-                  </div>
 
                   <div>
-                    <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Approval Date</label>
-                    <input
-                      type="date"
-                      value={formData.userApprovalDate}
-                      onChange={(e) => updateField("userApprovalDate", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Review Comments</label>
+                    <textarea
+                      rows={2}
+                      value={formData.userReviewComments}
+                      onChange={(e) => updateField("userReviewComments", e.target.value)}
+                      className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
+                      placeholder="Add executive feedback or approval conditions..."
                     />
                   </div>
                 </div>
-
-                <div>
-                  <label className="text-[11px] font-semibold text-muted-foreground block mb-1">Review Comments</label>
-                  <textarea
-                    rows={2}
-                    value={formData.userReviewComments}
-                    onChange={(e) => updateField("userReviewComments", e.target.value)}
-                    className="w-full rounded-lg border border-border bg-card p-3 text-xs text-foreground focus:border-primary focus:outline-none"
-                    placeholder="Add executive feedback or approval conditions..."
-                  />
-                </div>
               </div>
-            </div>
 
-            {/* 11. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 11. Activity History Log
-                </h3>
-                <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
-              </div>
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <History className="h-4 w-4 text-primary" /> Activity History Log
+                  </h3>
+                  <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
+                </div>
 
-              <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
-                {activityHistory.map((item) => (
-                  <div key={item.id} className="relative flex items-start gap-3 text-xs">
-                    <div className="absolute -left-6 top-1 grid h-5 w-5 place-items-center rounded-full bg-card border border-primary text-primary">
-                      <CheckCircle2 className="h-3 w-3" />
-                    </div>
-                    <div className="flex-1 rounded-lg border border-border bg-muted/20 p-2.5 space-y-0.5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-foreground">{item.user}</span>
-                        <span className="text-[10px] font-mono text-muted-foreground">{item.date} · {item.time}</span>
+                <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
+                  {activityHistory.map((item) => (
+                    <div key={item.id} className="relative flex items-start gap-3 text-xs">
+                      <div className="absolute -left-6 top-1 grid h-5 w-5 place-items-center rounded-full bg-card border border-primary text-primary">
+                        <CheckCircle2 className="h-3 w-3" />
                       </div>
-                      <p className="text-muted-foreground">{item.action}</p>
+                      <div className="flex-1 rounded-lg border border-border bg-muted/20 p-2.5 space-y-0.5">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-foreground">{item.user}</span>
+                          <span className="text-[10px] font-mono text-muted-foreground">{item.date} · {item.time}</span>
+                        </div>
+                        <p className="text-muted-foreground">{item.action}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Market Growth Rate</span>
-                    <Sparkline data={[18, 22, 25, 28.5]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">28.5 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">TAM</span>
-                    <Sparkline data={[32000, 38000, 44000, 48500]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">₹ 48,500 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Revenue Opportunity</span>
-                    <Sparkline data={[1200, 1600, 2000, 2480]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">₹ 2,480 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Market Attractiveness</span>
-                    <Sparkline data={[75, 80, 84, 87]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">87 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Customer Score</span>
-                    <Sparkline data={[70, 76, 80, 84]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-blue-600 font-mono block">84 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">AI Intelligence Score</span>
-                    <Sparkline data={[82, 85, 88, 91]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-indigo-600 font-mono block">91 / 100</span>
+                  ))}
                 </div>
               </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Market Research KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 91</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> High Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Commercial fleet segment shows highest ROI potential.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <BarChart3 className="h-3.5 w-3.5 text-blue-600" /> Strong Growth
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    EV charging market expected to grow at 29% CAGR (2024-2030).
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <ShieldCheck className="h-3.5 w-3.5 text-purple-600" /> Competitive Pressure
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Major players focusing on fast charging infrastructure expansion.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-emerald-600" /> Pricing Insight
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Optimal pricing between ₹1.20L to ₹2.50L for market acceptance.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-amber-600">
-                    <AlertTriangle className="h-3.5 w-3.5" /> Risk Alert
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Regulatory and infrastructure risks require continuous monitoring.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Audit Information Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Created By:</span>
-                  <span className="font-semibold text-foreground">{formData.researchOwner}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Created Date:</span>
-                  <span className="font-semibold text-foreground">05 May 2024 09:20 AM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified By:</span>
-                  <span className="font-semibold text-foreground">{formData.researchOwner}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified Date:</span>
-                  <span className="font-semibold text-foreground">{formData.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Workflow Stage:</span>
-                  <span className="font-semibold text-primary">{formData.workflowStage}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span className="font-semibold text-foreground">v{formData.version}</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 
@@ -1603,7 +1314,7 @@ function MarketResearchPage() {
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 bg-muted/20 p-4 rounded-xl border border-border text-xs">
               <div>
                 <span className="text-muted-foreground font-medium block">Overall Research Score</span>
-                <span className="text-lg font-bold text-emerald-600">{computedOverallScore} / 100</span>
+                <span className="text-lg font-bold text-emerald-600">{computedOverallScore}%</span>
               </div>
               <div>
                 <span className="text-muted-foreground font-medium block">Total Addressable Market (TAM)</span>
@@ -1621,19 +1332,19 @@ function MarketResearchPage() {
 
             <div className="space-y-4 text-xs">
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">1. Executive Summary & Objectives</h4>
+                <h4 className="font-bold text-foreground">Executive Summary & Objectives</h4>
                 <p className="text-muted-foreground"><strong>Objective:</strong> {formData.businessObjective}</p>
                 <p className="text-muted-foreground mt-1"><strong>Research Scope:</strong> {formData.researchObjective}</p>
               </div>
 
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">2. Market Size & Growth Projections</h4>
+                <h4 className="font-bold text-foreground">Market Size & Growth Projections</h4>
                 <p className="text-muted-foreground"><strong>TAM:</strong> ₹ 48,500 Cr | <strong>SAM:</strong> ₹ 12,800 Cr | <strong>SOM:</strong> ₹ 2,350 Cr</p>
                 <p className="text-muted-foreground mt-1"><strong>Market Growth Rate:</strong> {formData.marketGrowthRate}% CAGR (Growth Stage)</p>
               </div>
 
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">3. Customer Intelligence & Competitive Edge</h4>
+                <h4 className="font-bold text-foreground">Customer Intelligence & Competitive Edge</h4>
                 <p className="text-muted-foreground"><strong>Customer Needs:</strong> {formData.customerNeeds}</p>
                 <p className="text-muted-foreground mt-1"><strong>Competitive Advantages:</strong> {formData.competitiveAdvantages}</p>
               </div>
@@ -1679,7 +1390,7 @@ function MarketResearchPage() {
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-2">
               <div className="flex justify-between items-center text-xs font-bold text-primary">
                 <span>AI Intelligence Score</span>
-                <span>91 / 100 (High Market Opportunity)</span>
+                <span>91% (High Market Opportunity)</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Market analysis indicates strong demand in commercial fleets, rapid EV adoption, and high revenue potential of ₹2,480 Cr.

@@ -80,7 +80,7 @@ function ResearchRegisterPage() {
   return (
     <AppShell
       title="Research Management"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Research Management"
       description="Plan, execute, and review applied research projects."
       tabs={<InnovationAreaTabs sub={<ResearchMgmtPageTabBar />} />}
       topbarActions={newButton}

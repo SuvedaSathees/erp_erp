@@ -657,16 +657,14 @@ function DistributorDevelopmentPage() {
           <ScoreGauge label="AI Distributor Score" score={formData.aiDistributorScore} sub="Excellent" size="normal" />
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Main Form Canvas */}
+        <div className="w-full space-y-6">
 
-            {/* 1. Distributor Overview */}
+            {/* Distributor Overview */}
             <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Distributor Overview
+                  <Building2 className="h-4 w-4 text-primary" /> Distributor Overview
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Scope & Coverage</span>
               </div>
@@ -793,11 +791,11 @@ function DistributorDevelopmentPage() {
               </div>
             </div>
 
-            {/* 2. Distributor Profile */}
+            {/* Distributor Profile */}
             <div id="sec-distributor-profile" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Warehouse className="h-4 w-4 text-emerald-600" /> 2. Distributor Organization Profile
+                  <Warehouse className="h-4 w-4 text-emerald-600" /> Distributor Organization Profile
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Capability Score: <strong>{formData.distributorCapabilityScore}/100</strong> <MAICWBadge type="C" />
@@ -908,11 +906,11 @@ function DistributorDevelopmentPage() {
               </div>
             </div>
 
-            {/* 3. Qualification & Due Diligence */}
+            {/* Qualification & Due Diligence */}
             <div id="sec-distributor-qualification" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-purple-600" /> 3. Qualification & Due Diligence
+                  <ShieldCheck className="h-4 w-4 text-purple-600" /> Qualification & Due Diligence
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Qualification Score: <strong>{formData.qualificationScore}/100</strong> <MAICWBadge type="C" />
@@ -952,11 +950,11 @@ function DistributorDevelopmentPage() {
               </div>
             </div>
 
-            {/* 4. Commercial Planning */}
+            {/* Commercial Planning */}
             <div id="sec-commercial-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 4. Commercial Planning & Margins
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Commercial Planning & Margins
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Commercial Score: <strong>{formData.commercialScore}/100</strong> <MAICWBadge type="C" />
@@ -1041,11 +1039,11 @@ function DistributorDevelopmentPage() {
               </div>
             </div>
 
-            {/* 5. Supply Chain & Operations */}
+            {/* Supply Chain & Operations */}
             <div id="sec-operations" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-blue-600" /> 5. Supply Chain & Operations Readiness
+                  <Truck className="h-4 w-4 text-blue-600" /> Supply Chain & Operations Readiness
                 </h3>
                 <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
                   Operational Score: <strong>{formData.operationalReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1085,11 +1083,11 @@ function DistributorDevelopmentPage() {
               </div>
             </div>
 
-            {/* 6. Training & Enablement */}
+            {/* Training & Enablement */}
             <div id="sec-training" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <GraduationCap className="h-4 w-4 text-purple-600" /> 6. Training & Enablement Certification
+                  <GraduationCap className="h-4 w-4 text-purple-600" /> Training & Enablement Certification
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Training Score: <strong>{formData.trainingScore}/100</strong> <MAICWBadge type="C" />
@@ -1129,11 +1127,11 @@ function DistributorDevelopmentPage() {
               </div>
             </div>
 
-            {/* 7. Performance Management */}
+            {/* Performance Management */}
             <div id="sec-performance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-emerald-600" /> 7. Performance Management Metrics
+                  <BarChart3 className="h-4 w-4 text-emerald-600" /> Performance Management Metrics
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Performance Score: <strong>{formData.performanceScore}/100</strong> <MAICWBadge type="C" />
@@ -1173,140 +1171,54 @@ function DistributorDevelopmentPage() {
               </div>
             </div>
 
-            {/* 8. AI Distributor Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 8. AI Distributor Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Distributor Score: {formData.aiDistributorScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 text-emerald-600" /> AI Territory Recommendation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiTerritoryRecommendation}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Package className="h-3.5 w-3.5 text-blue-600" /> AI Inventory Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiInventoryOptimization}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-purple-600" /> AI Revenue Prediction
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiRevenuePrediction}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <Truck className="h-3.5 w-3.5" /> AI Logistics Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiLogisticsOptimization}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Distributor Intelligence Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 9. Distributor Summary */}
+            {/* Distributor Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 9. Distributor Summary & Executive Recommendation
+                  <Award className="h-4 w-4 text-emerald-600" /> Distributor Summary & Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Distributor Rating: {computedOverallScore}/100 (Tier 1)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Capability Score</span>
-                    <span className="font-mono font-bold">{formData.distributorCapabilityScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Distribution Status</span>
+                    <span className="text-emerald-600 font-bold">Tier-1 Master Distributor</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.distributorCapabilityScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Qualification Score</span>
-                    <span className="font-mono font-bold">{formData.qualificationScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.qualificationScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Commercial Score</span>
-                    <span className="font-mono font-bold">{formData.commercialScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.commercialScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Operational Score</span>
-                    <span className="font-mono font-bold">{formData.operationalReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: `${formData.operationalReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>AI Distributor Score</span>
-                    <span className="font-mono font-bold">{formData.aiDistributorScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.aiDistributorScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Regional logistics coverage at 78% with 95% on-time fulfillment, 7.2x inventory turnover, and ₹15 Cr projected revenue.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Distributor Score" score={computedOverallScore} sub="Very Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Approve Distributor",
-                        "Improve Logistics Capability",
-                        "Increase Warehouse Capacity",
-                        "Complete ERP Integration",
-                        "Revise Commercial Terms",
-                        "Expand Territory",
-                        "Proceed to Commercial Launch",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Approve Distributor",
+                      "Improve Logistics Capability",
+                      "Complete Service Training",
+                      "Increase Credit Limit",
+                      "Revise Commission Structure",
+                      "Expand Geographic Territory",
+                      "Proceed to Commercial Launch",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 10. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 10. Distributor Attachments & Artifacts
+                  <FileText className="h-4 w-4 text-primary" /> Distributor Attachments & Artifacts
                 </h3>
                 <button
                   type="button"
@@ -1361,11 +1273,11 @@ function DistributorDevelopmentPage() {
               </div>
             </div>
 
-            {/* 11. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 11. Governance & Executive Review Board Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Governance & Executive Review Board Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">8 Governance Roles</span>
               </div>
@@ -1430,11 +1342,11 @@ function DistributorDevelopmentPage() {
               </div>
             </div>
 
-            {/* 12. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 12. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History Log
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1457,180 +1369,6 @@ function DistributorDevelopmentPage() {
               </div>
             </div>
 
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 88</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Truck className="h-3.5 w-3.5 text-blue-600" /> High Potential Distributor
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    AI analysis shows 88% potential for long term partnership.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-emerald-600" /> Revenue Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Expected additional revenue of ₹ 15 Cr in next FY.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-indigo-600">
-                    <Package className="h-3.5 w-3.5" /> Inventory Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    AI recommends increasing inventory for Top 20 SKUs.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <TrendingUp className="h-3.5 w-3.5" /> Logistics Efficiency
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Route optimization can reduce delivery time by 12%.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Projected Revenue</span>
-                    <Sparkline data={[10, 11.5, 13.2, 15.0]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">₹ 15.0 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Annual Sales Target</span>
-                    <Sparkline data={[8.5, 9.5, 10.8, 12.0]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">₹ 12.0 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Market Coverage</span>
-                    <Sparkline data={[55, 62, 70, 78]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-indigo-600 font-mono block">78 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Revenue Achievement</span>
-                    <Sparkline data={[82, 85, 88, 92]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">92 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">On-Time Delivery</span>
-                    <Sparkline data={[88, 90, 92, 95]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">95 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Inventory Turnover</span>
-                    <Sparkline data={[5.8, 6.2, 6.8, 7.2]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">7.2</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Distributor KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Audit Information Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Created By:</span>
-                  <span className="font-semibold text-foreground">{formData.distributorDevelopmentManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Created Date:</span>
-                  <span className="font-semibold text-foreground">05 May 2024 09:40 AM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified By:</span>
-                  <span className="font-semibold text-foreground">{formData.distributorDevelopmentManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified Date:</span>
-                  <span className="font-semibold text-foreground">{formData.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Workflow Stage:</span>
-                  <span className="font-semibold text-primary">{formData.workflowStage}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span className="font-semibold text-foreground">v{formData.version}</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 
@@ -1654,7 +1392,7 @@ function DistributorDevelopmentPage() {
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 bg-muted/20 p-4 rounded-xl border border-border text-xs">
               <div>
                 <span className="text-muted-foreground font-medium block">Overall Readiness Score</span>
-                <span className="text-lg font-bold text-emerald-600">{computedOverallScore} / 100</span>
+                <span className="text-lg font-bold text-emerald-600">{computedOverallScore}%</span>
               </div>
               <div>
                 <span className="text-muted-foreground font-medium block">Projected Revenue</span>
@@ -1729,7 +1467,7 @@ function DistributorDevelopmentPage() {
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-2">
               <div className="flex justify-between items-center text-xs font-bold text-primary">
                 <span>AI Distributor Score</span>
-                <span>88 / 100 (Optimal Channel Alignment)</span>
+                <span>88% (Optimal Channel Alignment)</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 GreenRide Distributors exhibits 88% overall channel fit with ₹15 Cr projected revenue across 5 North Indian states.

@@ -777,7 +777,7 @@ function ResearchFormPage() {
     return (
       <AppShell
         title="Research Management"
-        breadcrumb="Research & Innovation Development · Research Management"
+        breadcrumb="Development > Research & Innovation > Research Management"
         description="Plan, execute, and review applied research projects."
         tabs={<InnovationAreaTabs sub={<ResearchMgmtPageTabBar />} />}
       >
@@ -793,7 +793,7 @@ function ResearchFormPage() {
   return (
     <AppShell
       title="Research Management"
-      breadcrumb="Research & Innovation Development · Research Management"
+      breadcrumb="Development > Research & Innovation > Research Management"
       description="Plan, execute, and review applied research projects."
       tabs={<InnovationAreaTabs sub={<ResearchMgmtPageTabBar />} />}
     >
@@ -1694,47 +1694,7 @@ function ResearchFormPage() {
                 )}
               </div>
 
-              <div className="card-soft space-y-2 p-4">
-                <h3 className="text-sm font-bold text-foreground">Quick Actions</h3>
-                <QuickAction
-                  icon={<Upload className="h-4 w-4" />}
-                  label="Upload Research Data"
-                  onClick={() => {
-                    if (!editable) return toast.error("Project is locked in this status.");
-                    fileInputRef.current?.click();
-                  }}
-                  disabled={!record}
-                />
-                <QuickAction
-                  icon={<FileText className="h-4 w-4" />}
-                  label="Generate Research Report"
-                  onClick={() => reportMut.mutate()}
-                  disabled={!record || busy}
-                />
-                <QuickAction
-                  icon={<Landmark className="h-4 w-4" />}
-                  label="Create Patent Application"
-                  onClick={() =>
-                    toast.success(
-                      `Patent application drafted from ${record?.outputs.patentOpportunities ?? 0} opportunity(ies).`,
-                    )
-                  }
-                  disabled={!record}
-                />
-                <QuickAction
-                  icon={<Rocket className="h-4 w-4" />}
-                  label="Advance to PoC"
-                  onClick={() => {
-                    if (status !== "approved")
-                      return toast.error(
-                        "Advance to PoC is available once the project is Approved.",
-                      );
-                    toast.success("Advancing to Proof of Concept.");
-                  }}
-                  disabled={!record || status !== "approved"}
-                  highlight={status === "approved"}
-                />
-              </div>
+
             </aside>
           </div>
         )}

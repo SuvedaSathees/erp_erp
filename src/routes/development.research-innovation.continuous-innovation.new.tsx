@@ -581,7 +581,7 @@ function CIFormPage() {
     return (
       <AppShell
         title="Continuous Innovation"
-        breadcrumb="Development · Research & Innovation · Continuous Innovation"
+        breadcrumb="Development > Research & Innovation > Continuous Innovation"
         description="Drive continuous, period-over-period product improvement."
         tabs={<InnovationAreaTabs sub={<ContinuousInnovationPageTabBar />} />}
       >
@@ -601,7 +601,7 @@ function CIFormPage() {
   return (
     <AppShell
       title="Continuous Innovation"
-      breadcrumb="Development · Research & Innovation · Continuous Innovation"
+      breadcrumb="Development > Research & Innovation > Continuous Innovation"
       description="Drive continuous, period-over-period product improvement."
       tabs={<InnovationAreaTabs sub={<ContinuousInnovationPageTabBar />} />}
     >

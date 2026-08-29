@@ -130,7 +130,7 @@ export function JigDevelopmentNewPage({
   return (
     <AppShell
       title="Jig Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Jig Development"}
       description="Fabricate precision drilling, alignment, soldering, and testing jigs for shop floor operations."
       tabs={tabs ?? <InnovationAreaTabs sub={<JigDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
@@ -204,71 +204,7 @@ export function JigDevelopmentNewPage({
 
           {/* Right Column: Quick Highlights, Actions, Timeline & System Info */}
           <div className="lg:col-span-4 space-y-5">
-            {/* Key Highlights Card */}
-            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 text-amber-500" />
-                  Key Highlights
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-xs">
-                <div className="flex items-start gap-2 text-emerald-700 dark:text-emerald-400 font-semibold">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>Design review score achieved: 88%</span>
-                </div>
-                <div className="flex items-start gap-2 text-emerald-700 dark:text-emerald-400 font-semibold">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>Tool guidance accuracy: 0.025 mm</span>
-                </div>
-                <div className="flex items-start gap-2 text-emerald-700 dark:text-emerald-400 font-semibold">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>Trial jig validation successful</span>
-                </div>
-                <div className="flex items-start gap-2 text-blue-700 dark:text-blue-400 font-semibold">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>AI predicts 500,000 cycles jig life</span>
-                </div>
-                <div className="flex items-start gap-2 text-emerald-700 dark:text-emerald-400 font-semibold">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>Ready for installation & commissioning</span>
-                </div>
-              </CardContent>
-            </Card>
 
-            {/* Quick Actions Icon Grid */}
-            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Quick Actions
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-1.5 text-xs">
-                {[
-                  "Create Jig Concept",
-                  "Upload CAD Model",
-                  "Generate Manufacturing Plan",
-                  "Run Jig Validation",
-                  "Schedule Calibration",
-                  "View Jig Life Dashboard",
-                  "View Maintenance Plan",
-                  "Export Jig Report",
-                ].map((act) => (
-                  <button
-                    key={act}
-                    type="button"
-                    onClick={() => toast.info(`Action triggered: ${act}`)}
-                    className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/80 text-foreground transition-colors font-medium text-left cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2">
-                      <FileText className="h-3.5 w-3.5 text-primary" />
-                      {act}
-                    </span>
-                    <ArrowRight className="h-3 w-3 text-slate-400" />
-                  </button>
-                ))}
-              </CardContent>
-            </Card>
 
             {/* Jig Timeline Progress */}
             <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">

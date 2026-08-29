@@ -83,7 +83,7 @@ export function ApqpQualityPlanningPage({
   return (
     <AppShell
       title="Quality Planning (APQP)"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Quality Planning (APQP)"}
       description="Advanced Product Quality Planning gates, feasibility commits, and product quality timing plans."
       tabs={tabs ?? <InnovationAreaTabs sub={<ApqpTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

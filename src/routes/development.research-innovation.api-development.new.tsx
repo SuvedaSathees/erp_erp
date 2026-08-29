@@ -1,74 +1,47 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, type ReactNode } from "react";
 import { toast } from "sonner";
 import {
+  Cloud,
+  Code,
+  Lock,
+  Database,
+  FileText,
+  CheckCircle2,
+  Upload,
+  Activity,
+  Sparkles,
+  BarChart2,
+  Paperclip,
+  UserCheck,
+  History,
   Save,
   Send,
   MoreHorizontal,
   ExternalLink,
-  Calendar,
-  Building2,
-  FileText,
-  Download,
-  Upload,
-  X,
-  Sparkles,
-  CheckCircle2,
-  AlertTriangle,
-  History,
-  Activity,
-  Layers,
-  Target,
-  Zap,
-  Award,
-  Paperclip,
-  Eye,
-  Check,
-  ClipboardCheck,
-  Cpu,
-  ShieldAlert,
-  UserCheck,
-  FileCode,
-  Info,
-  Clock,
-  ChevronRight,
-  TrendingUp,
-  Maximize2,
-  Printer,
-  FileCheck,
-  User,
-  ShieldCheck,
-  Workflow,
-  Plus,
-  ArrowRight,
-  Search,
-  SlidersHorizontal,
-  ChevronDown,
-  Monitor,
-  Smartphone,
-  Grid,
-  List,
-  MessageSquare,
   RefreshCw,
-  Copy,
-  FolderDown,
+  Printer,
+  FileCode,
   Play,
-  HelpCircle,
-  BarChart3,
-  PieChart,
-  Cloud,
-  Code,
-  Lock,
-  Radio,
-  Server,
-  Database,
-  Terminal,
-  Rocket,
-  Shield,
-  Key,
-  Globe,
+  Calendar,
   Share2,
+  Copy,
+  ChevronRight,
+  Workflow,
+  Search,
+  Zap,
+  ShieldCheck,
+  Target,
+  Download,
+  Eye,
+  Plus,
+  GripVertical,
+  Move,
+  Pin,
+  PinOff,
+  Minimize2,
+  Maximize2,
 } from "lucide-react";
 
 import { apiDevelopmentService } from "@/services/apiDevelopmentService";
@@ -80,17 +53,28 @@ import type {
   ApiAttachment,
 } from "@/services/types";
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
-import { ApiDevelopmentTabBar, API_DEVELOPMENT_TABS, type ApiDevelopmentTabId } from "@/components/erp/ApiDevelopmentTabBar";
+import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export const Route = createFileRoute(
   "/development/research-innovation/api-development/new"
@@ -99,24 +83,88 @@ export const Route = createFileRoute(
   component: ApiDevelopmentNewPage,
 });
 
+export function ApiDevelopmentFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <ApiDevelopmentNewPage {...props} />;
+}
+
+export function ApiDevelopmentPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <ApiDevelopmentNewPage {...props} />;
+}
+
+/* Helper component for SVG Circular Gauge with mild styling */
+function CircularScoreGauge({
+  score,
+  size = 72,
+  strokeWidth = 6,
+  label,
+  sublabel,
+  color = "#2563eb",
+}: {
+  score: number;
+  size?: number;
+  strokeWidth?: number;
+  label?: string;
+  sublabel?: string;
+  color?: string;
+}) {
+  const normalizedScore = Math.min(100, Math.max(0, Math.round(score)));
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (normalizedScore / 100) * circumference;
+
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+        <svg width={size} height={size} className="transform -rotate-90">
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke="currentColor"
+            strokeWidth={strokeWidth}
+            className="text-slate-200 dark:text-slate-700/60"
+            fill="transparent"
+          />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke={color}
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            fill="transparent"
+            className="transition-all duration-1000 ease-out"
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center select-none">
+          <span className="text-2xl font-extrabold tracking-tight text-blue-600 dark:text-blue-400 flex items-baseline justify-center">
+            {normalizedScore}
+            <span className="text-sm font-bold ml-0.5">%</span>
+          </span>
+        </div>
+      </div>
+      {label && <span className="mt-2 text-xs font-bold text-slate-700 dark:text-slate-200">{label}</span>}
+      {sublabel && <span className="text-[11px] text-muted-foreground">{sublabel}</span>}
+    </div>
+  );
+}
+
 export function ApiDevelopmentNewPage({
   breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<ApiDevelopmentTabId>("overview");
-  const [isSkeleton, setIsSkeleton] = useState(false);
 
   // Modals & Interactive States
-  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isPostmanModalOpen, setIsPostmanModalOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
-  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [selectedAttachment, setSelectedAttachment] = useState<ApiAttachment | null>(null);
   const [selectedEndpointId, setSelectedEndpointId] = useState<string>("ep-1");
-  const [searchQuery, setSearchQuery] = useState("");
 
   // Approval Form Local State
   const [reviewDecision, setReviewDecision] = useState<ApiDevelopmentApprovalDecision>("Approved with Conditions");
@@ -134,7 +182,7 @@ export function ApiDevelopmentNewPage({
       apiDevelopmentService.saveDraft(input, record?.id),
     onSuccess: (data) => {
       queryClient.setQueryData(["apiDevelopmentRecord"], data);
-      toast.success("Draft Saved Successfully", {
+      toast.success("Draft saved successfully!", {
         description: `API Development record ${data.apiDevelopmentId} updated.`,
       });
     },
@@ -166,29 +214,16 @@ export function ApiDevelopmentNewPage({
     },
   });
 
-  // Keyboard shortcut listener (Cmd+K / Ctrl+K)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setIsCommandPaletteOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
   if (isLoading || !record) {
     return (
       <AppShell
         title="API Development"
         breadcrumb={breadcrumb ?? "Research & Innovation Development"}
-        description="Design, secure, test, deploy and monitor enterprise APIs."
-        tabs={tabs ?? <InnovationAreaTabs sub={<ApiDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+        tabs={tabs ?? <ResearchInnovationTabBar />}
       >
         <div className="flex h-[70vh] w-full flex-col items-center justify-center gap-4">
-          <RefreshCw className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm font-medium text-muted-foreground">Loading Magnertia API Development Module...</p>
+          <RefreshCw className="h-8 w-8 animate-spin text-blue-600" />
+          <p className="text-sm font-medium text-muted-foreground">Loading API Development Module...</p>
         </div>
       </AppShell>
     );
@@ -206,78 +241,116 @@ export function ApiDevelopmentNewPage({
     });
   };
 
-  const handleSubmitDecision = () => {
-    reviewDecisionMutation.mutate({
-      id: record.id,
-      decision: reviewDecision,
-      comments: reviewCommentInput || undefined,
-    });
-  };
-
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
     toast.success(`Copied ${label}`, { description: text });
   };
 
-  const handleExportPDF = () => {
-    toast.success("Exporting API Specification Report (PDF)...", { description: "Generating vector OpenAPI PDF specification." });
-  };
+  const renderSidebarWidgets = () => (
+    <Card className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+      <CardHeader className="pb-2 border-b border-slate-100 dark:border-slate-800 text-center">
+        <CardTitle className="text-sm font-bold text-slate-800 dark:text-white">
+          Overall API Score
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-4 flex flex-col items-center">
+        <CircularScoreGauge
+          score={record.overallApiScore}
+          size={110}
+          strokeWidth={10}
+          color="#2563eb"
+        />
+
+        {/* Overall API Score Breakdown with Accurate Percentages */}
+        <div className="w-full mt-4 space-y-2 text-xs border-t border-slate-100 dark:border-slate-800 pt-3">
+          <div className="flex justify-between items-center">
+            <span className="text-slate-600 dark:text-slate-400">API Design</span>
+            <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">
+              90%
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <span className="text-slate-600 dark:text-slate-400">Security & Auth</span>
+            <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">
+              90%
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <span className="text-slate-600 dark:text-slate-400">Testing & Validation</span>
+            <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">
+              88%
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <span className="text-slate-600 dark:text-slate-400">Deployment & Gateway</span>
+            <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">
+              88%
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <span className="text-slate-600 dark:text-slate-400">Operations & Telemetry</span>
+            <span className="font-bold text-emerald-600 font-mono">
+              89%
+            </span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <AppShell
       title="API Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > API Development"}
       description="Design RESTful & GraphQL endpoints, OpenAPI specs, rate-limiting policies, and gateway routes."
-      tabs={tabs ?? <InnovationAreaTabs sub={<ApiDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+      tabs={tabs ?? <ResearchInnovationTabBar />}
     >
-      <div className="min-h-screen bg-slate-50/60 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased pb-16">
+      <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 antialiased pb-16">
         <div className="mx-auto max-w-[1720px] px-4 sm:px-6 lg:px-8 pt-3 space-y-4">
-          <div className="rounded-xl border border-border/80 bg-white dark:bg-slate-900 shadow-xs p-4 sm:p-5 transition-all">
+          {/* Top Header Card */}
+          <div className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs p-4 sm:p-5 transition-all">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="space-y-1.5">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-                    <Cloud className="h-6 w-6 text-primary shrink-0" />
+                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 dark:text-white flex items-center gap-2.5">
+                    <Cloud className="h-6 w-6 text-blue-600 shrink-0" />
                     {record.apiProjectName}
                   </h1>
-                  <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-xs font-semibold px-2.5 py-0.5">
+                  <Badge variant="outline" className="bg-blue-50/80 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 font-mono text-xs font-semibold px-2.5 py-0.5">
                     {record.apiVersion}
                   </Badge>
                   <Badge
                     className={
                       record.workflowStatus === "Approved"
-                        ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold"
                         : record.workflowStatus === "In Review"
-                          ? "bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30"
-                          : "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30"
+                        ? "bg-purple-50 text-purple-700 border border-purple-200 font-semibold"
+                        : "bg-amber-50 text-amber-700 border border-amber-200 font-semibold"
                     }
                   >
                     <Workflow className="mr-1 h-3 w-3 inline" />
                     {record.workflowStatus}
                   </Badge>
                 </div>
+                <p className="text-xs text-muted-foreground max-w-3xl">
+                  {record.businessObjective}
+                </p>
               </div>
 
-              {/* Right: Primary Action Buttons */}
+              {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsSkeleton(!isSkeleton)}
-                  className="h-9 px-3 text-xs gap-1.5"
-                >
-                  <RefreshCw className={`h-3.5 w-3.5 ${isSkeleton ? "animate-spin text-primary" : ""}`} />
-                  {isSkeleton ? "Show Data" : "Skeleton Mode"}
-                </Button>
-
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handleSaveDraft}
                   disabled={saveDraftMutation.isPending}
-                  className="h-9 px-3 text-xs gap-1.5 border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  className="h-8 px-3 text-xs gap-1.5 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium"
                 >
-                  <Save className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
+                  <Save className="h-3.5 w-3.5 text-slate-500" />
                   Save Draft
                 </Button>
 
@@ -285,7 +358,7 @@ export function ApiDevelopmentNewPage({
                   size="sm"
                   onClick={() => submitReviewMutation.mutate(record.id)}
                   disabled={submitReviewMutation.isPending}
-                  className="h-9 px-4 text-xs font-semibold gap-1.5 bg-primary text-white hover:bg-primary/90 shadow-xs"
+                  className="h-8 px-4 text-xs font-bold gap-1.5 bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
                 >
                   <Send className="h-3.5 w-3.5" />
                   Submit for Review
@@ -293,865 +366,746 @@ export function ApiDevelopmentNewPage({
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" className="h-9 w-9 border-slate-300 dark:border-slate-700">
-                      <MoreHorizontal className="h-4 w-4" />
+                    <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200">
+                      <MoreHorizontal className="h-4 w-4 text-slate-600" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem onClick={handleExportPDF}>
-                      <Printer className="mr-2 h-4 w-4" /> Export OpenAPI PDF
+                  <DropdownMenuContent align="end" className="w-52 text-xs">
+                    <DropdownMenuItem onClick={() => setIsPostmanModalOpen(true)}>
+                      <Play className="mr-2 h-3.5 w-3.5 text-blue-600" /> Test in Postman Console
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => copyToClipboard(JSON.stringify(record, null, 2), "Record JSON")}>
-                      <FileCode className="mr-2 h-4 w-4" /> Copy Raw OpenAPI JSON
+                    <DropdownMenuItem onClick={() => copyToClipboard(JSON.stringify(record, null, 2), "OpenAPI JSON")}>
+                      <FileCode className="mr-2 h-3.5 w-3.5 text-purple-600" /> Copy OpenAPI JSON
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setIsCommandPaletteOpen(true)}>
-                      <Search className="mr-2 h-4 w-4" /> Quick Search (Cmd+K)
+                    <DropdownMenuItem onClick={() => setIsUploadOpen(true)}>
+                      <Upload className="mr-2 h-3.5 w-3.5 text-emerald-600" /> Upload Attachment
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setIsPostmanModalOpen(true)}>
-                      <Play className="mr-2 h-4 w-4" /> Test in Postman
+                    <DropdownMenuItem onClick={() => window.print()}>
+                      <Printer className="mr-2 h-3.5 w-3.5" /> Print Specification
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setIsScheduleModalOpen(true)}>
-                      <Calendar className="mr-2 h-4 w-4" /> Schedule API Review
+                    <DropdownMenuItem
+                      onClick={() => {
+                        navigator.clipboard.writeText(window.location.href);
+                        toast.success("Link copied to clipboard!");
+                      }}
+                    >
+                      <Share2 className="mr-2 h-3.5 w-3.5" /> Share Specification
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             </div>
 
-            {/* Metadata Grid Bar */}
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-3 border-t border-border/60 text-xs">
+            {/* Reference Badges Strip */}
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
               <div>
                 <span className="text-muted-foreground block text-[11px]">API Development ID</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">{record.apiDevelopmentId}</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-100 font-mono">{record.apiDevelopmentId}</span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[11px]">Form Code</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">{record.formCode}</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-100 font-mono">{record.formCode}</span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[11px]">Linked Product</span>
-                <span className="font-medium text-primary hover:underline flex items-center gap-1 cursor-pointer">
+                <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
                   {record.linkedProductId} <ExternalLink className="h-3 w-3" />
                 </span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[11px]">Linked Software Dev</span>
-                <span className="font-medium text-primary hover:underline flex items-center gap-1 cursor-pointer">
+                <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
                   {record.linkedSoftwareDevId} <ExternalLink className="h-3 w-3" />
                 </span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[11px]">Linked Cloud Platform</span>
-                <span className="font-medium text-primary hover:underline flex items-center gap-1 cursor-pointer">
+                <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
                   {record.linkedCloudPlatformId} <ExternalLink className="h-3 w-3" />
                 </span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[11px]">Linked Mobile App</span>
-                <span className="font-medium text-primary hover:underline flex items-center gap-1 cursor-pointer">
+                <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
                   {record.linkedMobileAppDevId} <ExternalLink className="h-3 w-3" />
                 </span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[11px]">API Architect</span>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <img src={record.apiArchitectAvatar} alt={record.apiArchitectName} className="h-4 w-4 rounded-full object-cover" />
-                  <span className="font-semibold text-slate-900 dark:text-slate-100 truncate">{record.apiArchitectName}</span>
-                </div>
+                <span className="font-semibold text-slate-800 dark:text-slate-100 truncate block">{record.apiArchitectName}</span>
               </div>
             </div>
           </div>
 
-          {/* ====================================================================
-             2. PROGRESS & WORKFLOW BANNER
-             ==================================================================== */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
-            {/* Circular Score Gauge Card */}
-            <Card className="lg:col-span-4 border-border/80 shadow-xs bg-gradient-to-br from-white via-slate-50 to-blue-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/20">
-              <CardContent className="p-4 sm:p-5 flex items-center gap-5">
-                {/* Donut Gauge */}
-                <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
-                  <div className="text-center">
-                    <span className="text-2xl font-black tracking-tight text-primary dark:text-blue-400">
-                      {record.overallApiScore}
-                    </span>
-                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                      / 100
-                    </span>
-                  </div>
-                </div>
-
-                {/* Score Breakdown */}
-                <div className="space-y-1.5 flex-1 min-w-0">
+          {/* Main Content Layout: 9 Columns Dashboard + 3 Columns Sticky Sidebar */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left 9-Column Dashboard */}
+            <div className="lg:col-span-9 space-y-6">
+              {/* SECTION: API Overview & Problem Scope */}
+              <Card id="section-overview" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">Overall API Score</h3>
-                    <Badge variant="secondary" className="text-[10px] font-bold bg-primary/10 text-primary">
-                      REST / OpenAPI 3.0
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground line-clamp-2">
-                    Aggregated quality score calculated across API Design, Security, Integration, Testing, Deployment & Monitoring.
-                  </p>
-                  <div className="grid grid-cols-3 gap-2 pt-1 text-[11px]">
-                    <div>
-                      <span className="text-muted-foreground block text-[10px]">Design</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{record.designReadinessScore}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block text-[10px]">Security</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{record.securityScore}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block text-[10px]">Testing</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{record.validationScore}</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Interactive Workflow Timeline */}
-            <Card className="lg:col-span-8 border-border/80 shadow-xs bg-white dark:bg-slate-900 flex flex-col justify-center">
-              <CardContent className="p-4 sm:p-5 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    API Development Lifecycle Stage
-                  </span>
-                  <span className="text-xs font-semibold text-primary">Stage 4 of 6: Architecture Review</span>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 pt-1">
-                  {[
-                    { step: "1", title: "API Design", status: "complete" },
-                    { step: "2", title: "Security & Auth", status: "complete" },
-                    { step: "3", title: "Data Integration", status: "complete" },
-                    { step: "4", title: "Testing & Validation", status: "current" },
-                    { step: "5", title: "Review & Approval", status: "pending" },
-                    { step: "6", title: "Production Deploy", status: "pending" },
-                  ].map((s, idx) => (
-                    <div
-                      key={idx}
-                      className={`rounded-lg p-2.5 text-center border transition-all ${
-                        s.status === "complete"
-                          ? "border-emerald-200 bg-emerald-50/50 dark:border-emerald-900/50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300"
-                          : s.status === "current"
-                            ? "border-primary bg-primary/10 text-primary dark:bg-blue-950/30 font-bold ring-1 ring-primary/40"
-                            : "border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900 text-muted-foreground"
-                      }`}
-                    >
-                      <div className="flex items-center justify-center gap-1.5 text-xs">
-                        {s.status === "complete" ? (
-                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                        ) : (
-                          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/20 text-[10px]">
-                            {s.step}
-                          </span>
-                        )}
-                        <span className="truncate text-[11px]">{s.title}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* ====================================================================
-             3. STICKY TAB NAVIGATION
-             ==================================================================== */}
-          <ApiDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />
-
-          {/* ====================================================================
-             4. MAIN CONTENT AREA & RIGHT INSIGHTS PANEL GRID
-             ==================================================================== */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Main Module Content (8 cols on desktop) */}
-            <div className="lg:col-span-8 space-y-6">
-              {/* TAB 1: OVERVIEW (The 13-Card Executive Grid matching reference screenshot) */}
-              {(activeTab === "overview" || isSkeleton) && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                      <Grid className="h-5 w-5 text-primary" /> API Lifecycle Executive Overview (13 Modules)
-                    </h2>
-                    <Badge variant="outline" className="text-xs font-semibold bg-white dark:bg-slate-900 shadow-2xs">
-                      Live Telemetry Mode
-                    </Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Card 1: API Overview */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900 flex flex-col justify-between">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">1</span>
-                          API Overview
-                        </CardTitle>
-                        <Badge variant="secondary" className="text-[10px] bg-primary/10 text-primary font-bold">In Progress</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs space-y-2">
-                        <div className="grid grid-cols-2 gap-2 text-[11px]">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">API Name</span>
-                            <span className="font-bold text-slate-900 dark:text-white">{record.apiName}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">API Category</span>
-                            <Badge variant="outline" className="text-[9px] px-1.5 py-0 bg-blue-50 text-blue-700">{record.apiCategory}</Badge>
-                          </div>
-                        </div>
-
-                        <div>
-                          <span className="text-muted-foreground block text-[10px]">Business Objective</span>
-                          <p className="text-slate-700 dark:text-slate-300 text-[11px] line-clamp-2 leading-relaxed">
-                            {record.businessObjective}
-                          </p>
-                        </div>
-
-                        <div>
-                          <span className="text-muted-foreground block text-[10px]">Functional Description</span>
-                          <p className="text-slate-700 dark:text-slate-300 text-[11px] line-clamp-2">{record.functionalDescription}</p>
-                        </div>
-
-                        <div className="flex items-center justify-between pt-1">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Consumer Apps</span>
-                            <div className="flex flex-wrap gap-1 mt-0.5">
-                              {record.consumerApplications.slice(0, 3).map((app) => (
-                                <Badge key={app} variant="outline" className="text-[9px] px-1.5 py-0 bg-slate-50 dark:bg-slate-800">
-                                  {app}
-                                </Badge>
-                              ))}
-                              {record.consumerApplications.length > 3 && (
-                                <span className="text-[9px] text-muted-foreground">+{record.consumerApplications.length - 3}</span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="relative h-12 w-16 rounded-lg bg-slate-900 p-1 flex items-center justify-center border border-slate-700 shadow-inner overflow-hidden">
-                            <Cloud className="h-6 w-6 text-primary animate-pulse" />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 2: API Design */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900 flex flex-col justify-between">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">2</span>
-                          API Design
-                        </CardTitle>
-                        <Badge variant="outline" className="text-[10px] font-bold text-primary bg-primary/5">Score: {record.designReadinessScore}/100</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs space-y-2">
-                        <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">API Style</span>
-                            <span className="font-bold text-slate-900 dark:text-white">{record.endpoints[0].method} / {record.integrationConfig.primaryDataSource}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Protocol</span>
-                            <span className="font-bold text-emerald-600">HTTPS / TLS 1.3</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Endpoint Structure</span>
-                            <span className="font-mono text-[10px] text-primary">/api/v2/{`{resources}`}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Naming</span>
-                            <span className="font-semibold">kebab-case</span>
-                          </div>
-                        </div>
-
-                        {/* Interactive Endpoint Preview Box */}
-                        <div className="rounded-lg bg-slate-950 p-2 text-white font-mono text-[10px] space-y-1 border border-slate-800">
-                          <div className="flex items-center justify-between text-slate-400 border-b border-slate-800 pb-1">
-                            <span className="text-emerald-400 font-bold">GET</span>
-                            <span className="text-[9px]">/api/v2/chargers</span>
-                          </div>
-                          <div className="text-slate-300 text-[9px] truncate">
-                            Header: Authorization Bearer ******
-                          </div>
-                          <div className="text-emerald-400 text-[9px]">
-                            Response (200 OK): {`{ "status": "success" }`}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 3: Authentication & Authorization */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900 flex flex-col justify-between">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">3</span>
-                          Authentication & Security
-                        </CardTitle>
-                        <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">Score: {record.securityScore}/100</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs space-y-1.5">
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Auth Method:</span>
-                          <span className="font-bold text-slate-900 dark:text-white">{record.securityPolicy.authMethod}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Authorization Model:</span>
-                          <span className="font-semibold text-primary">{record.securityPolicy.authorizationModel}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Token Expiry:</span>
-                          <span className="font-semibold">{record.securityPolicy.tokenExpiryMinutes} mins</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Rate Limiting:</span>
-                          <span className="font-bold text-emerald-600">{record.securityPolicy.rateLimit}</span>
-                        </div>
-                        {/* Security Shield Graphic */}
-                        <div className="pt-1 flex items-center justify-center gap-2 bg-emerald-50/50 dark:bg-slate-800 p-1.5 rounded border border-emerald-100 dark:border-slate-700">
-                          <ShieldCheck className="h-4 w-4 text-emerald-600" />
-                          <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400">OAuth 2.0 + RBAC Active</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 4: Data Integration */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">4</span>
-                          Data Integration
-                        </CardTitle>
-                        <Badge variant="outline" className="text-[10px]">Score: {record.integrationConfig.integrationScore}/100</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs space-y-1.5">
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Primary DB:</span>
-                          <span className="font-bold text-slate-900 dark:text-white">{record.integrationConfig.primaryDataSource}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">ERP Integration:</span>
-                          <span className="font-bold text-emerald-600 flex items-center gap-1"><CheckCircle2 className="h-3 w-3 inline" /> Connected</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Cloud Integration:</span>
-                          <span className="font-bold text-emerald-600 flex items-center gap-1"><CheckCircle2 className="h-3 w-3 inline" /> AWS / Azure</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 5: API Documentation */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">5</span>
-                          API Documentation
-                        </CardTitle>
-                        <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">OpenAPI 3.0</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs space-y-1.5">
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">OpenAPI Spec:</span>
-                          <span className="font-bold text-primary">{record.documentationInfo.openApiSpecName}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Error Codes:</span>
-                          <span className="font-bold">{record.documentationInfo.errorCodesCount} Documented</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">SDKs Available:</span>
-                          <span className="font-semibold text-slate-800 dark:text-slate-200">{record.documentationInfo.sdkLanguages.join(", ")}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 6: Testing & Validation */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">6</span>
-                          Testing & Validation
-                        </CardTitle>
-                        <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">{record.testSummary.testCoveragePercentage}% Coverage</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs space-y-1.5">
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Unit Testing:</span>
-                          <span className="font-bold text-emerald-600 flex items-center gap-1"><CheckCircle2 className="h-3 w-3 inline" /> Passed</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Security Testing:</span>
-                          <span className="font-bold text-emerald-600 flex items-center gap-1"><CheckCircle2 className="h-3 w-3 inline" /> Passed</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Contract Testing:</span>
-                          <span className="font-bold text-emerald-600 flex items-center gap-1"><CheckCircle2 className="h-3 w-3 inline" /> Passed</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 7: Deployment & Version Management */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">7</span>
-                          Deployment & Versioning
-                        </CardTitle>
-                        <Badge variant="secondary" className="text-[10px] bg-purple-50 text-purple-700 font-bold">Kong Gateway</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs space-y-1.5">
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">CI/CD Pipeline:</span>
-                          <span className="font-bold text-slate-900 dark:text-white">{record.deploymentConfig.cicdPipeline}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Environment:</span>
-                          <span className="font-bold text-emerald-600">{record.deploymentConfig.environment}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Version Strategy:</span>
-                          <span className="font-semibold text-primary">{record.deploymentConfig.versionStrategy}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 8: Monitoring & Analytics */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">8</span>
-                          Monitoring & Analytics
-                        </CardTitle>
-                        <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">99.95% SLA</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs space-y-1.5">
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Monitoring Engine:</span>
-                          <span className="font-bold text-slate-900 dark:text-white">{record.monitoringSummary.apiMonitoringTool}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">Request Analytics:</span>
-                          <span className="font-bold text-emerald-600 flex items-center gap-1"><CheckCircle2 className="h-3 w-3 inline" /> Enabled</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 9: AI API Assessment */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">9</span>
-                          AI API Assessment
-                        </CardTitle>
-                        <Badge variant="outline" className="text-[10px] font-bold text-purple-600 border-purple-300">
-                          AI Score: {record.aiAssessment.aiOverallScore}/100
-                        </Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs space-y-1.5">
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">AI Design Review:</span>
-                          <span className="font-bold text-slate-800 dark:text-slate-200">{record.aiAssessment.aiApiDesignScore} / 100</span>
-                        </div>
-                        <div className="flex justify-between items-center text-[11px]">
-                          <span className="text-muted-foreground text-[10px]">AI Security Review:</span>
-                          <span className="font-bold text-emerald-600">{record.aiAssessment.aiSecurityReview} / 100</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 10: API Summary */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">10</span>
-                          API Summary
-                        </CardTitle>
-                        <Badge variant="outline" className="text-[10px] font-bold">Readiness 89%</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs space-y-2">
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-[10px] font-semibold">
-                            <span>Design Readiness</span>
-                            <span>92/100</span>
-                          </div>
-                          <Progress value={92} className="h-1.5" />
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground block text-[10px]">Recommendation</span>
-                          <span className="font-bold text-primary text-[11px]">{record.readinessSummary.recommendation}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 11: Attachments */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900 md:col-span-2">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">11</span>
-                          Attachments ({record.attachments.length})
-                        </CardTitle>
-                        <Button variant="ghost" size="sm" onClick={() => setIsUploadOpen(true)} className="h-6 text-[10px] text-primary p-0">
-                          + Upload File
-                        </Button>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs">
-                        <div className="grid grid-cols-2 gap-2">
-                          {record.attachments.map((att) => (
-                            <div key={att.id} className="flex justify-between items-center p-2 rounded-lg border bg-slate-50/50 dark:bg-slate-800/40">
-                              <div className="flex items-center gap-1.5 min-w-0">
-                                <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
-                                <span className="truncate text-[10px] font-medium text-slate-900 dark:text-slate-100">{att.name}</span>
-                              </div>
-                              <span className="text-[9px] text-muted-foreground shrink-0 ml-1">{att.size}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 12: Review & Approval */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900 md:col-span-3">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">12</span>
-                          Review & Approval Workflow
-                        </CardTitle>
-                        <Badge className="bg-purple-500/15 text-purple-700 dark:text-purple-300 text-[10px] font-bold">{record.workflowStatus}</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs">
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-                          {record.reviewers.map((rev, i) => (
-                            <div key={i} className="rounded-lg border border-border/60 p-2 text-center bg-slate-50/50 dark:bg-slate-800/40">
-                              <span className="block font-bold text-[10px] truncate text-slate-900 dark:text-white">{rev.person}</span>
-                              <span className="block text-[9px] text-muted-foreground truncate">{rev.role}</span>
-                              <Badge
-                                className={`mt-1 text-[8px] px-1.5 py-0 ${
-                                  rev.decision === "Approved"
-                                    ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-bold"
-                                    : "bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold"
-                                }`}
-                              >
-                                {rev.decision}
-                              </Badge>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 13: System Information */}
-                    <Card className="border-border/80 shadow-xs hover:shadow-md transition-all bg-white dark:bg-slate-900 md:col-span-3">
-                      <CardHeader className="p-3.5 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold">13</span>
-                          System Information & Audit Trail
-                        </CardTitle>
-                        <Badge variant="outline" className="text-[10px] font-mono">v{record.apiVersion}</Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 text-xs">
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Created By</span>
-                            <span className="font-bold text-slate-900 dark:text-white">{record.apiArchitectName}</span>
-                            <span className="block text-[9px] text-muted-foreground">{record.createdOn}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Last Modified By</span>
-                            <span className="font-bold text-slate-900 dark:text-white">{record.apiArchitectName}</span>
-                            <span className="block text-[9px] text-muted-foreground">{record.lastUpdated}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Workflow Stage</span>
-                            <span className="font-semibold text-primary">{record.workflowStatus}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Audit Links</span>
-                            <div className="flex flex-wrap gap-1.5 mt-0.5 text-[10px] font-medium text-primary">
-                              <span className="hover:underline cursor-pointer">View Log &rarr;</span>
-                              <span className="hover:underline cursor-pointer">View History &rarr;</span>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 2: API DESIGN */}
-              {activeTab === "design" && (
-                <div className="space-y-4">
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 border-b border-border/40 flex flex-row items-center justify-between">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2">
-                        <Code className="h-4 w-4 text-primary" /> Endpoints Specification & Schema Designer
+                    <div className="flex items-center gap-2">
+                      <Zap className="h-5 w-5 text-blue-600" />
+                      <CardTitle className="text-base font-bold text-slate-800 dark:text-white">
+                        API Project Overview & Consumer Scope
                       </CardTitle>
-                      <Button size="sm" className="h-8 text-xs font-semibold gap-1">
-                        <Plus className="h-3.5 w-3.5" /> Add Endpoint
-                      </Button>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-4">
-                      {/* Endpoint Selection Tabs */}
-                      <div className="flex gap-2 overflow-x-auto pb-1">
-                        {record.endpoints.map((ep) => (
-                          <button
-                            key={ep.id}
-                            onClick={() => setSelectedEndpointId(ep.id)}
-                            className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-all ${
-                              selectedEndpointId === ep.id
-                                ? "border-primary bg-primary/10 text-primary font-bold"
-                                : "border-border bg-slate-50 dark:bg-slate-800 text-muted-foreground hover:text-foreground"
-                            }`}
-                          >
-                            <Badge className="bg-primary text-white text-[9px] px-1 py-0">{ep.method}</Badge>
-                            <span className="font-mono text-[11px]">{ep.path}</span>
-                          </button>
+                    </div>
+                    <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 font-semibold">
+                      {record.apiCategory}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-4 space-y-4 text-xs">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 space-y-1">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 block text-[11px]">
+                        Business Objective
+                      </span>
+                      <p className="text-slate-800 dark:text-slate-200 leading-relaxed">
+                        {record.businessObjective}
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 space-y-1">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 block text-[11px]">
+                        Functional Description
+                      </span>
+                      <p className="text-slate-800 dark:text-slate-200 leading-relaxed">
+                        {record.functionalDescription}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg bg-blue-50/40 border border-blue-100 dark:bg-blue-950/20 dark:border-blue-900/50">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">Consumer Applications:</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {record.consumerApplications.map((app) => (
+                          <Badge key={app} variant="outline" className="bg-white dark:bg-slate-800 border-blue-200 text-blue-700 dark:text-blue-300 text-[10px] font-medium">
+                            {app}
+                          </Badge>
                         ))}
                       </div>
+                    </div>
+                    <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px]">
+                      Live Status: {record.deploymentEnvironment}
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
 
-                      {/* Selected Endpoint Editor */}
-                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 p-4 space-y-3 bg-slate-900 text-white">
-                        <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                          <div className="flex items-center gap-2">
-                            <Badge className="bg-emerald-500 text-white text-xs font-bold">{selectedEndpoint.method}</Badge>
-                            <span className="font-mono text-sm font-bold text-primary-foreground">{selectedEndpoint.path}</span>
-                          </div>
-                          <Badge variant="outline" className="border-slate-700 text-slate-300 text-xs">
-                            {selectedEndpoint.status}
-                          </Badge>
-                        </div>
-                        <p className="text-xs text-slate-300">{selectedEndpoint.description}</p>
-
-                        <div className="space-y-1">
-                          <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Sample Response JSON Payload</span>
-                          <pre className="rounded-lg bg-slate-950 p-3 text-xs font-mono text-emerald-400 overflow-x-auto border border-slate-800">
-                            {selectedEndpoint.sampleResponse}
-                          </pre>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* TAB 3: SECURITY */}
-              {activeTab === "security" && (
-                <div className="space-y-4">
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 border-b border-border/40">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2">
-                        <Lock className="h-4 w-4 text-emerald-600" /> OAuth 2.0 & Role-Based Security Policies
+              {/* SECTION: API Design & Endpoint Specification */}
+              <Card id="section-design" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Code className="h-5 w-5 text-blue-600" />
+                      <CardTitle className="text-base font-bold text-slate-800 dark:text-white">
+                        API Design & Endpoint Specification
                       </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-4 text-xs">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border">
-                          <span className="font-bold text-slate-900 dark:text-white">Authentication Protocol</span>
-                          <p className="text-muted-foreground text-[11px]">OAuth 2.0 Bearer Tokens issued via Identity Provider with JWT RFC 7519 signatures.</p>
-                          <div className="pt-2 flex justify-between">
-                            <span>Token Expiry:</span>
-                            <span className="font-bold">60 minutes</span>
-                          </div>
-                        </div>
-                        <div className="space-y-2 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border">
-                          <span className="font-bold text-slate-900 dark:text-white">Rate Limiting Policy</span>
-                          <p className="text-muted-foreground text-[11px]">Kong API Gateway rate-limiting plugin enforcing token bucket throttling.</p>
-                          <div className="pt-2 flex justify-between">
-                            <span>Quota:</span>
-                            <span className="font-bold text-emerald-600">1000 req / hour per client</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
+                    </div>
+                    <Badge variant="outline" className="text-xs font-bold text-blue-700 bg-blue-50 border-blue-200">
+                      Score: {record.designReadinessScore}/100
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-4 space-y-4 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="text-muted-foreground block text-[11px]">API Style</span>
+                      <span className="font-bold text-slate-800 dark:text-white">RESTful / JSON</span>
+                    </div>
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="text-muted-foreground block text-[11px]">Protocol</span>
+                      <span className="font-bold text-emerald-700 dark:text-emerald-400">HTTPS / TLS 1.3</span>
+                    </div>
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="text-muted-foreground block text-[11px]">Endpoint Structure</span>
+                      <span className="font-mono text-blue-600 font-bold">/api/v2/{`{resources}`}</span>
+                    </div>
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="text-muted-foreground block text-[11px]">Naming Convention</span>
+                      <span className="font-semibold text-slate-800 dark:text-white">kebab-case</span>
+                    </div>
+                  </div>
 
-              {/* TAB 5: DOCUMENTATION */}
-              {activeTab === "documentation" && (
-                <Card className="border-border/80 shadow-xs">
-                  <CardHeader className="p-4 border-b border-border/40 flex flex-row items-center justify-between">
-                    <CardTitle className="text-sm font-bold flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-primary" /> OpenAPI 3.0 Specification Documentation
-                    </CardTitle>
-                    <Button size="sm" variant="outline" onClick={() => copyToClipboard("openapi: 3.0.0", "OpenAPI Spec")}>
-                      <Copy className="mr-1 h-3.5 w-3.5" /> Copy YAML
+                  {/* Mild Endpoint Preview Box */}
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 p-3.5 bg-slate-50/80 dark:bg-slate-800/50 space-y-2 text-xs">
+                    <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-2">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-emerald-600 text-white font-mono text-[10px] font-bold px-2 py-0.5">
+                          GET
+                        </Badge>
+                        <span className="font-mono font-bold text-slate-800 dark:text-slate-100">
+                          /api/v2/chargers
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-muted-foreground font-medium">Header: Authorization Bearer ******</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+                      <span className="text-slate-600 dark:text-slate-300 font-mono text-[11px]">
+                        Response (200 OK): {`{ "status": "success", "count": 142, "data": [...] }`}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyToClipboard("/api/v2/chargers", "Endpoint Path")}
+                        className="h-7 text-[11px] gap-1 shrink-0 bg-white dark:bg-slate-800 border-slate-200"
+                      >
+                        <Copy className="h-3 w-3" />
+                        Copy Path
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* SECTION: Authentication & Security Policies */}
+              <Card id="section-security" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Lock className="h-5 w-5 text-blue-600" />
+                      <CardTitle className="text-base font-bold text-slate-800 dark:text-white">
+                        Authentication & Security Policies
+                      </CardTitle>
+                    </div>
+                    <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">
+                      Security Score: {record.securityScore}/100
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-4 space-y-4 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="text-muted-foreground block text-[11px]">Auth Method</span>
+                      <span className="font-bold text-slate-800 dark:text-white">{record.securityPolicy.authMethod}</span>
+                    </div>
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="text-muted-foreground block text-[11px]">Authorization Model</span>
+                      <span className="font-bold text-blue-600">{record.securityPolicy.authorizationModel}</span>
+                    </div>
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="text-muted-foreground block text-[11px]">Token Expiry</span>
+                      <span className="font-semibold text-slate-800 dark:text-white">{record.securityPolicy.tokenExpiryMinutes} mins</span>
+                    </div>
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="text-muted-foreground block text-[11px]">Rate Limiting</span>
+                      <span className="font-bold text-emerald-700 dark:text-emerald-400">{record.securityPolicy.rateLimit}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-50/50 border border-emerald-200/80 dark:bg-emerald-950/20 dark:border-emerald-900/50">
+                    <ShieldCheck className="h-5 w-5 text-emerald-600 shrink-0" />
+                    <div>
+                      <span className="font-bold text-emerald-800 dark:text-emerald-300 block">
+                        OAuth 2.0 + Role-Based Access Control (RBAC) Active
+                      </span>
+                      <span className="text-emerald-700/80 dark:text-emerald-400 text-[11px]">
+                        JWT RFC 7519 validation enabled with Kong API Gateway token bucket throttling.
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* SECTION: Data Integration & Documentation */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Data Integration */}
+                <Card id="section-integration" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Database className="h-5 w-5 text-blue-600" />
+                        <CardTitle className="text-base font-bold text-slate-800 dark:text-white">
+                          Data Integration
+                        </CardTitle>
+                      </div>
+                      <Badge variant="outline" className="text-xs font-medium">
+                        Score: {record.integrationConfig.integrationScore}/100
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4 space-y-3 text-xs">
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-slate-50/50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800">
+                      <span className="text-muted-foreground">Primary Database:</span>
+                      <span className="font-bold text-slate-800 dark:text-white">{record.integrationConfig.primaryDataSource}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-slate-50/50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800">
+                      <span className="text-muted-foreground">ERP Integration:</span>
+                      <span className="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                        <CheckCircle2 className="h-3.5 w-3.5" /> Connected
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-slate-50/50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800">
+                      <span className="text-muted-foreground">Cloud Platform Integration:</span>
+                      <span className="font-bold text-blue-600 flex items-center gap-1">
+                        <Cloud className="h-3.5 w-3.5" /> AWS / Azure Live
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* API Documentation */}
+                <Card id="section-docs" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-blue-600" />
+                        <CardTitle className="text-base font-bold text-slate-800 dark:text-white">
+                          API Documentation
+                        </CardTitle>
+                      </div>
+                      <Badge className="bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold">
+                        OpenAPI 3.0
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4 space-y-3 text-xs">
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-slate-50/50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800">
+                      <span className="text-muted-foreground">OpenAPI Spec File:</span>
+                      <span className="font-mono font-bold text-blue-600">{record.documentationInfo.openApiSpecName}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-slate-50/50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800">
+                      <span className="text-muted-foreground">Documented Error Codes:</span>
+                      <span className="font-bold text-slate-800 dark:text-white">{record.documentationInfo.errorCodesCount} Codes</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-slate-50/50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800">
+                      <span className="text-muted-foreground">SDKs Generated:</span>
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">{record.documentationInfo.sdkLanguages.join(", ")}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* SECTION: Testing, Deployment & Monitoring */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Testing & Validation */}
+                <Card id="section-testing" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-xs font-bold flex items-center gap-1.5 text-slate-800 dark:text-white">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Testing & Validation
+                      </CardTitle>
+                      <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
+                        {record.testSummary.testCoveragePercentage}% Coverage
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-3 space-y-2 text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Unit Testing:</span>
+                      <span className="font-semibold text-emerald-700 dark:text-emerald-400">142 Passed</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Security Testing:</span>
+                      <span className="font-semibold text-emerald-700 dark:text-emerald-400">0 Vulnerabilities</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Contract Testing:</span>
+                      <span className="font-semibold text-emerald-700 dark:text-emerald-400">All Passed</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Deployment & Versioning */}
+                <Card id="section-deployment" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-xs font-bold flex items-center gap-1.5 text-slate-800 dark:text-white">
+                        <Upload className="h-4 w-4 text-blue-600" /> Deployment & Versioning
+                      </CardTitle>
+                      <Badge variant="secondary" className="text-[10px] bg-purple-50 text-purple-700 border border-purple-200 font-semibold">
+                        Kong Gateway
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-3 space-y-2 text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">CI/CD Pipeline:</span>
+                      <span className="font-bold text-slate-800 dark:text-white">{record.deploymentConfig.cicdPipeline}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Environment:</span>
+                      <span className="font-bold text-emerald-700">{record.deploymentConfig.environment}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Strategy:</span>
+                      <span className="font-semibold text-blue-600">{record.deploymentConfig.versionStrategy}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Monitoring & SLA */}
+                <Card id="section-monitoring" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-xs font-bold flex items-center gap-1.5 text-slate-800 dark:text-white">
+                        <Activity className="h-4 w-4 text-blue-600" /> Monitoring & SLA
+                      </CardTitle>
+                      <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
+                        99.95% SLA
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-3 space-y-2 text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Engine:</span>
+                      <span className="font-bold text-slate-800 dark:text-white">{record.monitoringSummary.apiMonitoringTool}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Analytics:</span>
+                      <span className="font-semibold text-emerald-700 flex items-center gap-1">
+                        <CheckCircle2 className="h-3 w-3" /> Enabled
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Daily Traffic:</span>
+                      <span className="font-bold text-blue-600">~24,500 req/day</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* SECTION: AI API Assessment & Readiness */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Card id="section-assessment" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-xs font-bold flex items-center gap-1.5 text-slate-800 dark:text-white">
+                        <Sparkles className="h-4 w-4 text-purple-600" /> AI API Assessment & Audit
+                      </CardTitle>
+                      <Badge variant="outline" className="text-[10px] font-bold text-purple-700 bg-purple-50 border-purple-200">
+                        Score: {record.aiAssessment.aiOverallScore}/100
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-3 space-y-2 text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">AI Design Review:</span>
+                      <span className="font-bold text-slate-800 dark:text-white">{record.aiAssessment.aiApiDesignScore}%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">AI Security Review:</span>
+                      <span className="font-bold text-emerald-700 dark:text-emerald-400">{record.aiAssessment.aiSecurityReview}%</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-xs font-bold flex items-center gap-1.5 text-slate-800 dark:text-white">
+                        <Target className="h-4 w-4 text-blue-600" /> API Readiness Recommendation
+                      </CardTitle>
+                      <Badge variant="outline" className="text-[10px] font-bold bg-blue-50 text-blue-700 border-blue-200">
+                        Readiness 89%
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-3 space-y-1.5 text-xs">
+                    <span className="text-muted-foreground block text-[11px]">Architect Recommendation:</span>
+                    <span className="font-bold text-blue-700 dark:text-blue-300 block text-xs">
+                      {record.readinessSummary.recommendation}
+                    </span>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* SECTION: Attachments */}
+              <Card id="section-attachments" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Paperclip className="h-5 w-5 text-blue-600" />
+                      <CardTitle className="text-base font-bold text-slate-800 dark:text-white">
+                        Attachments & Specifications ({record.attachments.length})
+                      </CardTitle>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setIsUploadOpen(true)}
+                      className="gap-1 text-xs h-8 border-slate-200"
+                    >
+                      <Upload className="h-3.5 w-3.5" />
+                      Upload File
                     </Button>
-                  </CardHeader>
-                  <CardContent className="p-4 text-xs">
-                    <pre className="rounded-lg bg-slate-950 p-4 text-xs font-mono text-slate-200 overflow-x-auto border border-slate-800">
-{`openapi: 3.0.3
-info:
-  title: EV Charging APIs
-  version: 2.1.0
-  description: Enterprise APIs for EV charging station discovery and session management.
-paths:
-  /api/v2/chargers:
-    get:
-      summary: List Charging Stations
-      security:
-        - OAuth2: [read:chargers]
-      responses:
-        '200':
-          description: Successful retrieval of available charging stations.`}
-                    </pre>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* TAB 6: TESTING */}
-              {activeTab === "testing" && (
-                <Card className="border-border/80 shadow-xs">
-                  <CardHeader className="p-4 border-b border-border/40">
-                    <CardTitle className="text-sm font-bold flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Automated Test Suite & Coverage (87.3%)
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4 space-y-3 text-xs">
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                      <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200">
-                        <span className="text-[10px] text-muted-foreground block">Unit Tests</span>
-                        <span className="font-bold text-emerald-700 dark:text-emerald-400 text-sm">142 Passed</span>
-                      </div>
-                      <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200">
-                        <span className="text-[10px] text-muted-foreground block">Integration</span>
-                        <span className="font-bold text-emerald-700 dark:text-emerald-400 text-sm">58 Passed</span>
-                      </div>
-                      <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200">
-                        <span className="text-[10px] text-muted-foreground block">Security Scans</span>
-                        <span className="font-bold text-emerald-700 dark:text-emerald-400 text-sm">0 Vulnerabilities</span>
-                      </div>
-                      <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200">
-                        <span className="text-[10px] text-muted-foreground block">Coverage</span>
-                        <span className="font-bold text-primary text-sm">87.3%</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* TAB 8: MONITORING */}
-              {activeTab === "monitoring" && (
-                <Card className="border-border/80 shadow-xs">
-                  <CardHeader className="p-4 border-b border-border/40">
-                    <CardTitle className="text-sm font-bold flex items-center gap-2">
-                      <Activity className="h-4 w-4 text-primary" /> Live Request Telemetry & SLA Analytics
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4 space-y-3 text-xs">
-                    <div className="h-48 w-full rounded-lg bg-slate-900 p-4 text-white flex items-end justify-between gap-2 border border-slate-800">
-                      {record.monitoringSummary.requestTrend7Days.map((t) => (
-                        <div key={t.day} className="flex-1 flex flex-col items-center gap-2">
-                          <div
-                            className="w-full rounded-t bg-primary transition-all hover:bg-blue-400"
-                            style={{ height: `${(t.requests / 30000) * 100}%` }}
-                          />
-                          <span className="text-[9px] text-slate-400 font-mono">{t.day}</span>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                    {record.attachments.map((att) => (
+                      <div
+                        key={att.id}
+                        className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center justify-between hover:border-blue-300 transition-colors"
+                      >
+                        <div className="flex items-center gap-2.5 overflow-hidden">
+                          <FileCode className="h-4 w-4 text-blue-600 shrink-0" />
+                          <div className="truncate">
+                            <span className="font-semibold text-slate-800 dark:text-white block truncate" title={att.name}>
+                              {att.name}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground">{att.size}</span>
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                        <div className="flex items-center gap-1 shrink-0">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => setSelectedAttachment(att)}
+                          >
+                            <Eye className="h-3.5 w-3.5 text-slate-500" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => toast.success(`Downloading ${att.name}`)}
+                          >
+                            <Download className="h-3.5 w-3.5 text-slate-500" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
 
-              {/* FALLBACK FOR OTHER TABS */}
-              {["integration", "deployment", "ai_assessment", "summary", "attachments", "review_approval", "system_info"].includes(activeTab) && (
-                <Card className="border-border/80 shadow-xs p-6 text-center text-xs text-muted-foreground">
-                  <Sparkles className="mx-auto h-8 w-8 text-primary mb-2 animate-bounce" />
-                  <h3 className="font-bold text-sm text-foreground">Interactive Module Ready</h3>
-                  <p className="mt-1">Detailed enterprise view loaded for tab: <span className="font-semibold text-primary">{activeTab}</span>.</p>
-                </Card>
-              )}
+              {/* SECTION: Review & Approval Workflow */}
+              <Card id="section-review" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <UserCheck className="h-5 w-5 text-blue-600" />
+                      <CardTitle className="text-base font-bold text-slate-800 dark:text-white">
+                        Review & Approval Workflow
+                      </CardTitle>
+                    </div>
+                    <Badge className="bg-purple-50 text-purple-700 border border-purple-200 text-xs font-semibold">
+                      {record.workflowStatus}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-4 space-y-4 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
+                    {record.reviewers.map((rev, i) => (
+                      <div key={i} className="rounded-lg border border-slate-200/80 dark:border-slate-800 p-2.5 text-center bg-slate-50/50 dark:bg-slate-800/40">
+                        <span className="block font-bold text-[11px] truncate text-slate-800 dark:text-white">{rev.person}</span>
+                        <span className="block text-[10px] text-muted-foreground truncate">{rev.role}</span>
+                        <Badge
+                          className={`mt-1.5 text-[9px] px-1.5 py-0 font-semibold ${
+                            rev.decision === "Approved"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : rev.decision === "Approved with Conditions"
+                              ? "bg-amber-50 text-amber-700 border border-amber-200"
+                              : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                          }`}
+                        >
+                          {rev.decision}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Submit Decision Form */}
+                  <div className="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 space-y-3">
+                    <h4 className="font-bold text-slate-800 dark:text-white">Submit Review Decision</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                          Approval Decision <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                          value={reviewDecision}
+                          onChange={(e) => setReviewDecision(e.target.value as ApiDevelopmentApprovalDecision)}
+                          className="w-full h-8 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                        >
+                          <option value="Approved">Approved (Production Ready)</option>
+                          <option value="Approved with Conditions">Approved with Conditions</option>
+                          <option value="Changes Requested">Changes Requested</option>
+                          <option value="Rejected">Rejected</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                          Review Comments
+                        </label>
+                        <Input
+                          value={reviewCommentInput}
+                          onChange={(e) => setReviewCommentInput(e.target.value)}
+                          placeholder="Add approval or modification remarks..."
+                          className="h-8 text-xs bg-white dark:bg-slate-900 border-slate-200"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <Button
+                        size="sm"
+                        onClick={() =>
+                          reviewDecisionMutation.mutate({
+                            id: record.id,
+                            decision: reviewDecision,
+                            comments: reviewCommentInput,
+                          })
+                        }
+                        disabled={reviewDecisionMutation.isPending}
+                        className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5 h-8 font-bold text-xs"
+                      >
+                        <CheckCircle2 className="h-4 w-4" />
+                        Save Decision
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* SECTION: System Information */}
+              <Card id="section-system" className="border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+                <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <History className="h-5 w-5 text-blue-600" />
+                      <CardTitle className="text-base font-bold text-slate-800 dark:text-white">
+                        System Information & Audit Trail
+                      </CardTitle>
+                    </div>
+                    <Badge variant="outline" className="text-xs font-mono">
+                      {record.apiVersion}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+                    <div>
+                      <span className="text-muted-foreground block text-[11px]">Created By</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200">{record.apiArchitectName}</span>
+                      <span className="block text-[10px] text-muted-foreground">{record.createdOn}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block text-[11px]">Last Modified By</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200">{record.apiArchitectName}</span>
+                      <span className="block text-[10px] text-muted-foreground">{record.lastUpdated}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block text-[11px]">Workflow Stage</span>
+                      <span className="font-semibold text-blue-600">{record.workflowStatus}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block text-[11px]">Audit Links</span>
+                      <div className="flex gap-2 mt-0.5 text-blue-600 font-medium cursor-pointer">
+                        <span className="hover:underline">View Log →</span>
+                        <span className="hover:underline">View History →</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Right Insights Panel (4 cols on desktop) */}
-            <div className="lg:col-span-4 space-y-6">
-              {/* Overall Score Card */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b border-border/40">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Overall API Score Breakdown
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 space-y-3 text-xs">
-                  <div className="flex items-center justify-between border-b pb-2">
-                    <span className="text-muted-foreground">API Design</span>
-                    <span className="font-bold text-slate-900 dark:text-white">90 / 100</span>
-                  </div>
-                  <div className="flex items-center justify-between border-b pb-2">
-                    <span className="text-muted-foreground">Security</span>
-                    <span className="font-bold text-slate-900 dark:text-white">90 / 100</span>
-                  </div>
-                  <div className="flex items-center justify-between border-b pb-2">
-                    <span className="text-muted-foreground">Testing</span>
-                    <span className="font-bold text-slate-900 dark:text-white">88 / 100</span>
-                  </div>
-                  <div className="flex items-center justify-between border-b pb-2">
-                    <span className="text-muted-foreground">Deployment</span>
-                    <span className="font-bold text-slate-900 dark:text-white">88 / 100</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Operations</span>
-                    <span className="font-bold text-slate-900 dark:text-white">89 / 100</span>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Key Highlights */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b border-border/40">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Key Highlights
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 text-xs space-y-2">
-                  {[
-                    "RESTful API design compliant",
-                    "OAuth 2.0 authentication implemented",
-                    "Rate limiting and throttling enabled",
-                    "API documentation (OpenAPI) ready",
-                    "Test coverage achieved 87.3%",
-                    "Monitoring and analytics configured",
-                  ].map((h, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-                      <span className="text-slate-700 dark:text-slate-300 font-medium">{h}</span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* Quick Actions */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b border-border/40">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Quick Actions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 text-xs space-y-2">
-                  <Button variant="outline" size="sm" onClick={handleExportPDF} className="w-full justify-start text-xs h-8">
-                    <FileText className="mr-2 h-3.5 w-3.5 text-primary" /> Generate API Report
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("documentation")} className="w-full justify-start text-xs h-8">
-                    <FileCode className="mr-2 h-3.5 w-3.5 text-primary" /> View API Documentation
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setIsPostmanModalOpen(true)} className="w-full justify-start text-xs h-8">
-                    <Play className="mr-2 h-3.5 w-3.5 text-orange-500" /> Test API in Postman
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("monitoring")} className="w-full justify-start text-xs h-8">
-                    <Activity className="mr-2 h-3.5 w-3.5 text-emerald-500" /> View API Analytics Dashboard
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("security")} className="w-full justify-start text-xs h-8">
-                    <ShieldCheck className="mr-2 h-3.5 w-3.5 text-blue-500" /> Run Security Scan
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setIsScheduleModalOpen(true)} className="w-full justify-start text-xs h-8">
-                    <Calendar className="mr-2 h-3.5 w-3.5 text-purple-500" /> Schedule API Review
-                  </Button>
-                </CardContent>
-              </Card>
+            {/* Right Sticky Sidebar Panel (3 columns) with clean score gauge */}
+            <div className="lg:col-span-3">
+              <div className="sticky top-6 space-y-4">
+                {renderSidebarWidgets()}
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Postman Test Dialog */}
+        <Dialog open={isPostmanModalOpen} onOpenChange={setIsPostmanModalOpen}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-base font-bold">
+                <Play className="h-5 w-5 text-blue-600" />
+                Postman API Tester Console
+              </DialogTitle>
+              <DialogDescription className="text-xs">
+                Simulate mock HTTP request to live Kong Gateway route
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-3 py-2 text-xs">
+              <div className="flex items-center gap-2">
+                <Badge className="bg-emerald-600 text-white font-bold text-xs">GET</Badge>
+                <Input value="https://api.magnertia.com/v2/chargers" readOnly className="font-mono text-xs h-8 bg-slate-50" />
+              </div>
+              <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/70 font-mono text-[11px] text-slate-800 space-y-1">
+                <div className="text-emerald-700 font-bold">Status: 200 OK • Latency: 24ms</div>
+                <div className="text-slate-600">{`{ "status": "success", "count": 142, "region": "Global" }`}</div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button size="sm" onClick={() => setIsPostmanModalOpen(false)} className="h-8 text-xs font-bold bg-blue-600 text-white">
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Attachment Preview Modal */}
+        <Dialog
+          open={!!selectedAttachment}
+          onOpenChange={(open) => !open && setSelectedAttachment(null)}
+        >
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-base font-bold">
+                <Eye className="h-5 w-5 text-blue-600" />
+                {selectedAttachment?.name}
+              </DialogTitle>
+              <DialogDescription className="text-xs">
+                {selectedAttachment?.type} Document • {selectedAttachment?.size}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 font-mono text-xs h-40 flex items-center justify-center">
+              [Previewing file content for {selectedAttachment?.name}]
+            </div>
+            <DialogFooter>
+              <Button size="sm" onClick={() => setSelectedAttachment(null)} className="h-8 text-xs">
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* File Upload Modal */}
+        <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-base font-bold">Upload API Specification / Schema</DialogTitle>
+              <DialogDescription className="text-xs">
+                Upload .yaml, .json, .pdf, or postman collection file
+              </DialogDescription>
+            </DialogHeader>
+            <div className="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg p-8 text-center space-y-2 bg-slate-50/50">
+              <Upload className="h-8 w-8 text-muted-foreground mx-auto" />
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                Drag and drop files here or click to browse
+              </span>
+              <span className="text-[10px] text-muted-foreground block">
+                Supports .yaml, .json, .pdf up to 50 MB
+              </span>
+            </div>
+            <DialogFooter>
+              <Button
+                size="sm"
+                onClick={() => {
+                  setIsUploadOpen(false);
+                  toast.success("File uploaded successfully!");
+                }}
+                className="h-8 text-xs font-bold bg-blue-600 text-white"
+              >
+                Done
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppShell>
   );
 }
+
+export default ApiDevelopmentNewPage;

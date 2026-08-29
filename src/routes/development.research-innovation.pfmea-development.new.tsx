@@ -92,7 +92,7 @@ export function PfmeaDevelopmentPage({
   return (
     <AppShell
       title="PFMEA Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > PFMEA Development"}
       description="Identify process failure modes, severity/occurrence/detection scoring, and risk mitigation actions."
       tabs={tabs ?? <InnovationAreaTabs sub={<PfmeaTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

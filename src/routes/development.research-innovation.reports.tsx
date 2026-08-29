@@ -13,7 +13,7 @@ function ResearchInnovationReportsPage() {
   return (
     <AppShell
       title="Reports"
-      breadcrumb="Development · Research & Innovation"
+      breadcrumb="Development > Research & Innovation > Reports"
       description="Generate innovation-pipeline reports and export to CSV, Excel, or PDF."
       tabs={<ResearchInnovationTabBar />}
     >

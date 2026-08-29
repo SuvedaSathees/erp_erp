@@ -312,7 +312,7 @@ export function ManufacturingExcellencePage({
   return (
     <AppShell
       title="Manufacturing Excellence"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Manufacturing Excellence"}
       description="Govern continuous improvement, operational excellence, productivity, quality optimization, cost reduction, sustainability, and AI performance benchmarking."
       tabs={tabs ?? <InnovationAreaTabs sub={<ManufacturingExcellenceTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

@@ -10,4 +10,3 @@ export const Route = createFileRoute("/development/product-development/ai-model-
     />
   ),
 });
-

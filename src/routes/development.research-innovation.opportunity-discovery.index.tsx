@@ -93,7 +93,7 @@ function OpportunityRegisterPage() {
   return (
     <AppShell
       title="Opportunity Discovery"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Opportunity Discovery"
       description="Discover and qualify innovation opportunities from validated ideas."
       tabs={<InnovationAreaTabs />}
       topbarActions={newButton}

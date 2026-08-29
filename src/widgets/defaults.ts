@@ -288,6 +288,14 @@ export const DEFAULT_LAYOUTS: Record<WidgetPageId, WidgetInstance[]> = {
     { ...base, id: "ri-pat-granted", widgetId: "kpi.ri.pat-granted", size: "sm" },
     { ...base, id: "ri-pat-alerts", widgetId: "kpi.ri.pat-deadline-alerts", size: "sm" },
   ],
+  "procurement-overview": [],
+  "bd-overview": [
+    { ...base, id: "bd-ovw-pipeline-val", widgetId: "kpi.bd.pipeline-value", size: "sm" },
+    { ...base, id: "bd-ovw-active-deals", widgetId: "kpi.bd.active-deals", size: "sm" },
+    { ...base, id: "bd-ovw-closed-ytd", widgetId: "kpi.bd.closed-ytd", size: "sm" },
+    { ...base, id: "bd-ovw-win-rate", widgetId: "kpi.bd.win-rate", size: "sm" },
+    { ...base, id: "bd-ovw-partner-eco", widgetId: "kpi.bd.partner-ecosystem", size: "sm" },
+  ],
 };
 
 /** Display metadata for each widget surface. */
@@ -326,6 +334,8 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
   "md-overview": { label: "Manufacturing Development Overview", route: "/development/manufacturing-development/overview" },
   "hrm-overview": { label: "HRM Overview", route: "/management/hrm-management/overview" },
   "admin-overview": { label: "Administration Overview", route: "/management/administration-management/overview" },
+  "procurement-overview": { label: "Procurement Overview", route: "/management/procurement-management/overview" },
+  "bd-overview": { label: "Business Development Overview", route: "/development/business-development/overview" },
 };
 
 /**
@@ -338,6 +348,8 @@ export const PLACEABLE_PAGES: WidgetPageId[] = [
   "crm-overview",
   "hrm-overview",
   "admin-overview",
+  "procurement-overview",
+  "bd-overview",
   "pd-overview",
   "md-overview",
   "ri-overview",
@@ -360,7 +372,8 @@ export const PLACEABLE_PAGES: WidgetPageId[] = [
 
 /** Deep-copy a default layout so callers can never mutate the shared constant. */
 export function getDefaultLayout(pageId: WidgetPageId): WidgetInstance[] {
-  return DEFAULT_LAYOUTS[pageId].map((i) => ({
+  const layout = DEFAULT_LAYOUTS[pageId] ?? [];
+  return layout.map((i) => ({
     ...i,
     spanOverride: i.spanOverride && { ...i.spanOverride },
   }));

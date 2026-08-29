@@ -64,7 +64,6 @@ import {
   Mail,
   Phone,
   Video,
-  UserCheck2,
   ShieldAlert,
   HelpCircle,
   Eye,
@@ -949,6 +948,4 @@ export function ExpenseClaimsPage() {
     </AppShell>
   );
 }
-
-export default ExpenseClaimsPage;
 

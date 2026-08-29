@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, type ReactNode } from "react";
 import { toast } from "sonner";
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 import {
@@ -295,8 +295,8 @@ export function ProductionEngineeringNewPage({
 
   return (
     <AppShell
-      title="Process Engineering & Validation"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      title="Production Engineering"
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Production Engineering"}
       description="Govern mass production process design, workstation allocation, pilot runs, PFMEA, OEE Targets, and AI optimization."
       tabs={tabs ?? <InnovationAreaTabs sub={<ProductionEngineeringTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
@@ -404,7 +404,6 @@ export function ProductionEngineeringNewPage({
               <div>
                 <span className="text-muted-foreground block text-[11px]">Production Engineer</span>
                 <span className="font-medium text-slate-900 dark:text-slate-100 flex items-center gap-1">
-                  <img src={record.productionEngineer.avatar} className="h-4 w-4 rounded-full" alt="owner" />
                   {record.productionEngineer.name}
                 </span>
               </div>
@@ -441,10 +440,7 @@ export function ProductionEngineeringNewPage({
                 <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 border-4 border-emerald-500/20 p-2">
                   <div className="text-center">
                     <span className="text-2xl font-black tracking-tight text-emerald-600 dark:text-emerald-400">
-                      {record.overallProductionReadiness}
-                    </span>
-                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                      / 100
+                      {record.overallProductionReadiness}%
                     </span>
                   </div>
                 </div>
@@ -1203,8 +1199,7 @@ export function ProductionEngineeringNewPage({
                       <CardContent className="p-4 text-center space-y-3">
                         <div className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
                           <div className="text-center">
-                            <span className="text-2xl font-black text-primary dark:text-blue-400">{record.overallProductionReadiness}</span>
-                            <span className="block text-[9px] font-bold text-muted-foreground">/ 100</span>
+                            <span className="text-2xl font-black text-primary dark:text-blue-400">{record.overallProductionReadiness}%</span>
                           </div>
                         </div>
                         <span className="text-[11px] text-muted-foreground block">
@@ -1330,13 +1325,9 @@ export function ProductionEngineeringNewPage({
                             {record.reviewers.map((rev: ProductionEngineeringReviewer) => (
                               <div key={rev.id} className="flex items-center justify-between p-2 rounded-lg border bg-slate-50/50 dark:bg-slate-800/40">
                                 <div className="flex items-center gap-2 min-w-0">
-                                  {rev.avatar ? (
-                                    <img src={rev.avatar} className="h-8 w-8 rounded-full object-cover" alt="avatar" />
-                                  ) : (
-                                    <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[11px]">
-                                      {rev.person.split(" ").map(w => w[0]).join("")}
-                                    </div>
-                                  )}
+                                  <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[11px]">
+                                    {rev.person.split(" ").map(w => w[0]).join("")}
+                                  </div>
                                   <div className="min-w-0">
                                     <span className="block font-bold text-[11px] text-slate-900 dark:text-white truncate">{rev.person}</span>
                                     <span className="block text-[9px] text-muted-foreground truncate">{rev.role}</span>
@@ -1463,95 +1454,36 @@ export function ProductionEngineeringNewPage({
                 <CardContent className="p-5 text-center space-y-4">
                   <div className="relative mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-emerald-500/10 border-4 border-emerald-500/20 p-2">
                     <div>
-                      <span className="text-3xl font-black text-emerald-600 dark:text-emerald-400">{record.overallProductionReadiness}</span>
-                      <span className="block text-[10px] font-bold text-muted-foreground">/ 100</span>
+                      <span className="text-3xl font-black text-emerald-600 dark:text-emerald-400">{record.overallProductionReadiness}%</span>
                     </div>
                   </div>
 
                   <div className="space-y-2 text-left text-xs border-t pt-3">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Process Design Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.designReadinessScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.designReadinessScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Resource Readiness</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.resourceReadinessScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.resourceReadinessScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Validation Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.validationScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.validationScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Quality & Safety Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.qualityScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.qualityScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Performance Score</span>
-                      <span className="font-bold text-primary">{record.performanceScore} / 100</span>
+                      <span className="font-bold text-primary">{record.performanceScore}%</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Key Highlights */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Key Highlights</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 space-y-3 text-xs">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-[11px]">Pilot production run completed successfully.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-[11px]">First Article Inspection passed.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-[11px]">Process Capability (Cp/Cpk) is 1.67.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-[11px]">OEE target achievable with current setup.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Sparkles className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-[11px]">AI suggests 8% productivity improvement.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-[11px]">No critical risks identified.</span>
-                  </div>
-                </CardContent>
-              </Card>
 
-              {/* Quick Actions */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 space-y-2 text-xs">
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("validation")} className="w-full justify-start text-xs h-8">
-                    <ClipboardCheck className="h-3.5 w-3.5 mr-2 text-primary" /> Create Pilot Production Plan
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("design")} className="w-full justify-start text-xs h-8">
-                    <FileSpreadsheet className="h-3.5 w-3.5 mr-2 text-emerald-600" /> Upload Routing Sheet
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("quality")} className="w-full justify-start text-xs h-8">
-                    <ShieldCheck className="h-3.5 w-3.5 mr-2 text-amber-500" /> Generate Control Plan
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("quality")} className="w-full justify-start text-xs h-8">
-                    <SlidersHorizontal className="h-3.5 w-3.5 mr-2 text-rose-500" /> Run FMEA Analysis
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("design")} className="w-full justify-start text-xs h-8">
-                    <Workflow className="h-3.5 w-3.5 mr-2 text-purple-600" /> View Line Balancing Report
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("resources")} className="w-full justify-start text-xs h-8">
-                    <Building2 className="h-3.5 w-3.5 mr-2 text-emerald-600" /> View Capacity Planning
-                  </Button>
-                </CardContent>
-              </Card>
 
               {/* Production Timeline */}
               <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
@@ -1612,8 +1544,19 @@ export function ProductionEngineeringNewPage({
                 <Badge variant="outline">DELMIA Simulation Map</Badge>
               </DialogTitle>
             </DialogHeader>
-            <div className="relative h-96 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center">
-              <img src={selectedDiagram} alt="layout" className="h-full w-full object-contain" />
+            <div className="relative h-96 w-full bg-slate-950 rounded-lg flex flex-col items-center justify-center text-white p-6 gap-3 border border-slate-800">
+              <div className="h-16 w-16 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+                <Cpu className="h-8 w-8" />
+              </div>
+              <h3 className="text-base font-bold text-slate-100">DELMIA Digital Factory Flow Simulation</h3>
+              <p className="text-xs text-slate-400 max-w-md text-center">
+                Digital twin plant layout showing CNC machining centers, automated guided vehicle (AGV) routing, staging buffers, and ergonomic operator reach envelopes.
+              </p>
+              <div className="flex gap-2 mt-2">
+                <Button size="sm" onClick={() => toast.success("Plant layout simulation verified.")}>
+                  <CheckCircle2 className="h-4 w-4 mr-1.5 text-emerald-400" /> Validate Factory Flow
+                </Button>
+              </div>
             </div>
             <DialogFooter>
               <Button size="sm" variant="outline" onClick={() => setSelectedDiagram(null)}>Close</Button>

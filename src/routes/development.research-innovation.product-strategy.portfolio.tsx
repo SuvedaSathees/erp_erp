@@ -128,7 +128,7 @@ function ProductStrategyPortfolioPage() {
   return (
     <AppShell
       title="Strategy Portfolio Register"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Product Strategy"
       description="Central register of strategic product plans, market opportunity sizing, and stage status."
       tabs={<InnovationAreaTabs sub={<ProductStrategyTabBar />} />}
       topbarActions={
@@ -221,10 +221,7 @@ function ProductStrategyPortfolioPage() {
                     </td>
                     <td className="p-3">{r.businessUnit}</td>
                     <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        <img src={r.avatar} alt={r.pmName} className="w-5 h-5 rounded-full object-cover border border-primary/30" />
-                        <span>{r.pmName}</span>
-                      </div>
+                      <span className="font-medium text-foreground">{r.pmName}</span>
                     </td>
                     <td className="p-3 font-mono">{formatCurrency(r.tam)}</td>
                     <td className="p-3 font-mono text-emerald-600 font-semibold">{formatCurrency(r.revenueForecast)}</td>

@@ -668,7 +668,7 @@ function DesignThinkingFormPage() {
   return (
     <AppShell
       title="Design Thinking"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Design Thinking"
       description="Run design-thinking cycles from empathy through tested prototypes."
       tabs={<InnovationAreaTabs sub={<DesignThinkingTabBar />} />}
     >
@@ -1550,41 +1550,13 @@ function DesignThinkingFormPage() {
               </p>
             </div>
 
-            <div className="card-soft p-5">
-              <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                Quick Actions
-              </h4>
-              <div className="space-y-1">
-                <QuickAction
-                  icon={UploadCloud}
-                  label="Upload File"
-                  onClick={() => fileRef.current?.click()}
-                />
-                <QuickAction
-                  icon={UserPlus}
-                  label="Add Team Member"
-                  onClick={() => toast.message("Team management isn't wired to a backend yet.")}
-                />
-                <QuickAction
-                  icon={ClipboardList}
-                  label="Create Prototype Task"
-                  onClick={() => toast.message("Task creation isn't wired to a backend yet.")}
-                />
-                <QuickAction
-                  icon={CalendarClock}
-                  label="Schedule User Test"
-                  onClick={() => toast.message("Scheduling isn't wired to a backend yet.")}
-                />
-                <QuickAction icon={Sparkles} label="Generate AI Insights" onClick={doGenerateAI} />
-              </div>
-              <input
-                ref={fileRef}
-                type="file"
-                multiple
-                className="hidden"
-                onChange={(e) => onFiles(e.target.files)}
-              />
-            </div>
+            <input
+              ref={fileRef}
+              type="file"
+              multiple
+              className="hidden"
+              onChange={(e) => onFiles(e.target.files)}
+            />
 
             <div className="card-soft p-5">
               <div className="mb-2 flex items-center justify-between">

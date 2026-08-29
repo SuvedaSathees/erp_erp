@@ -30,18 +30,25 @@ import {
   DrawerFooter,
 } from "@/components/ui/drawer";
 import { FINANCE_PAGE_KPIS } from "../content/finance/financeKpiMap";
+import { CRM_PAGE_KPIS } from "../content/crm/crmKpiMap";
+import { HRM_PAGE_KPIS } from "../content/hrm/hrmKpiMap";
+import { ADMIN_PAGE_KPIS } from "../content/admin/adminKpiMap";
+import { PROCUREMENT_PAGE_KPIS } from "../content/procurement/procurementKpiMap";
+import { BD_PAGE_KPIS } from "../content/bd/bdKpiMap";
 
 // ===========================================================================
 // 1. WidgetPreferenceService
 // ===========================================================================
 export const WidgetPreferenceService = {
   isAdded(prefs: WidgetPreferencesDoc, pageId: WidgetPageId, widgetId: string): boolean {
-    const instances = prefs.pages[pageId]?.instances ?? getDefaultLayout(pageId);
+    if (!pageId) return false;
+    const instances = prefs.pages[pageId]?.instances ?? getDefaultLayout(pageId) ?? [];
     return instances.some((i) => i.widgetId === widgetId);
   },
 
   isPinned(prefs: WidgetPreferencesDoc, pageId: WidgetPageId, widgetId: string): boolean {
-    const instances = prefs.pages[pageId]?.instances ?? getDefaultLayout(pageId);
+    if (!pageId) return false;
+    const instances = prefs.pages[pageId]?.instances ?? getDefaultLayout(pageId) ?? [];
     const inst = instances.find((i) => i.widgetId === widgetId);
     return inst ? !!inst.pinned : false;
   },
@@ -52,7 +59,8 @@ export const WidgetPreferenceService = {
     widgetId: string,
     update: (reducer: (curr: WidgetPreferencesDoc) => WidgetPreferencesPatch) => void,
   ): "added" | "removed" {
-    const instances = prefs.pages[pageId]?.instances ?? getDefaultLayout(pageId);
+    if (!pageId) return "added";
+    const instances = prefs.pages[pageId]?.instances ?? getDefaultLayout(pageId) ?? [];
     const exists = instances.some((i) => i.widgetId === widgetId);
 
     if (exists) {
@@ -160,6 +168,11 @@ export function getPageIdFromPathname(pathname: string): WidgetPageId | null {
   if (pathname.startsWith("/management/finance/reports")) return "finance-reports";
   if (pathname.startsWith("/management/finance/assets")) return "finance-assets";
   if (pathname.startsWith("/management/finance/audit")) return "finance-audit";
+  if (pathname.startsWith("/management/procurement-management/overview")) return "procurement-overview";
+  if (pathname.startsWith("/management/crm-management/overview")) return "crm-overview";
+  if (pathname.startsWith("/management/hrm-management/overview")) return "hrm-overview";
+  if (pathname.startsWith("/management/admin-management/overview")) return "admin-overview";
+  if (pathname.startsWith("/development/business-development/overview")) return "bd-overview";
   return null;
 }
 
@@ -397,7 +410,14 @@ export function KPIWidgetCard({
   const widgetId = useMemo(() => {
     if (!label) return null;
     const pageId = getPageIdFromPathname(pathname);
-    let id = pageId ? FINANCE_PAGE_KPIS[pageId]?.[label] : undefined;
+    let id = pageId
+      ? (FINANCE_PAGE_KPIS[pageId]?.[label] ??
+         PROCUREMENT_PAGE_KPIS[pageId]?.[label] ??
+         CRM_PAGE_KPIS[pageId]?.[label] ??
+         HRM_PAGE_KPIS[pageId]?.[label] ??
+         ADMIN_PAGE_KPIS[pageId]?.[label] ??
+         BD_PAGE_KPIS[pageId]?.[label])
+      : undefined;
 
     if (!id) {
       const match = WIDGET_LIST.find(
@@ -410,13 +430,22 @@ export function KPIWidgetCard({
     }
 
     if (!id) {
-      for (const pid of Object.keys(FINANCE_PAGE_KPIS)) {
-        const kpiMap = FINANCE_PAGE_KPIS[pid as WidgetPageId];
-        if (kpiMap && kpiMap[label]) {
-          id = kpiMap[label];
-          break;
+      const allMaps = [FINANCE_PAGE_KPIS, PROCUREMENT_PAGE_KPIS, CRM_PAGE_KPIS, HRM_PAGE_KPIS, ADMIN_PAGE_KPIS, BD_PAGE_KPIS];
+      for (const m of allMaps) {
+        for (const pid of Object.keys(m)) {
+          const kpiMap = (m as any)[pid];
+          if (kpiMap && kpiMap[label]) {
+            id = kpiMap[label];
+            break;
+          }
         }
+        if (id) break;
       }
+    }
+
+    // Always generate a deterministic fallback widgetId for any unmapped KPI card
+    if (!id) {
+      id = "kpi." + label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     }
 
     return id;

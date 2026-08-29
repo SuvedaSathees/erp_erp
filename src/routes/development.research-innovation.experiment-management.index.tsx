@@ -90,7 +90,7 @@ function ExperimentRegisterPage() {
   return (
     <AppShell
       title="Experiment Management"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Experiment Management"
       description="Design, run, and validate structured experiments."
       tabs={<InnovationAreaTabs sub={<ExperimentMgmtPageTabBar />} />}
       topbarActions={newButton}

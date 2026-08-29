@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import React, { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 import {
@@ -255,7 +255,7 @@ export function ToolingDevelopmentNewPage({
   return (
     <AppShell
       title="Tooling Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Tooling Development"}
       description="Design molds, dies, cutting tools, stamping tooling, and tool maintenance schedules."
       tabs={tabs ?? <InnovationAreaTabs sub={<ToolingDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
@@ -272,13 +272,6 @@ export function ToolingDevelopmentNewPage({
               
               {/* Left Title Parameters */}
               <div className="space-y-1.5">
-                <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-muted-foreground">
-                  <span className="hover:text-foreground cursor-pointer">Development</span>
-                  <span>/</span>
-                  <span className="hover:text-foreground cursor-pointer">Manufacturing Engineering</span>
-                  <span>/</span>
-                  <span className="text-primary font-semibold">Tooling Development Form</span>
-                </div>
 
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
@@ -370,7 +363,6 @@ export function ToolingDevelopmentNewPage({
               <div>
                 <span className="text-muted-foreground block text-[11px]">Design Engineer</span>
                 <span className="font-medium text-slate-900 dark:text-slate-100 flex items-center gap-1">
-                  <img src={record.toolDesignEngineer.avatar} className="h-4 w-4 rounded-full" alt="owner" />
                   {record.toolDesignEngineer.name}
                 </span>
               </div>
@@ -407,10 +399,7 @@ export function ToolingDevelopmentNewPage({
                 <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
                   <div className="text-center">
                     <span className="text-2xl font-black tracking-tight text-primary dark:text-blue-400">
-                      {record.overallToolReadiness}
-                    </span>
-                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                      / 100
+                      {record.overallToolReadiness}%
                     </span>
                   </div>
                 </div>
@@ -578,21 +567,11 @@ export function ToolingDevelopmentNewPage({
                                 </div>
                               </div>
                               {/* 3D CAD Preview Panel inside overview */}
-                              <div className="h-36 w-64 bg-slate-100 dark:bg-slate-950 border rounded-lg flex flex-col items-center justify-center p-3 relative shrink-0">
-                                <div className="absolute top-2 left-2 flex gap-1">
-                                  <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => setRotationAngle(rotationAngle + 90)}>⟳</Button>
-                                  <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => setZoomLevel(Math.max(50, zoomLevel - 10))}>-</Button>
-                                  <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => setZoomLevel(Math.min(200, zoomLevel + 10))}>+</Button>
-                                </div>
-                                <div className="flex-1 w-full flex items-center justify-center overflow-hidden">
-                                  <img
-                                    src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=350&auto=format&fit=crop&q=80"
-                                    className="h-full w-full object-cover transition-transform duration-300"
-                                    style={{ transform: `rotate(${rotationAngle}deg) scale(${zoomLevel / 100})` }}
-                                    alt="tooling mock"
-                                  />
-                                </div>
-                                <span className="absolute bottom-1 right-1 text-[8px] bg-slate-900/60 text-white px-1.5 py-0.5 rounded">3D Model active</span>
+                              <div className="h-36 w-64 bg-slate-900 border border-slate-800 rounded-lg flex flex-col items-center justify-center p-3 relative shrink-0 text-white">
+                                <Wrench className="h-8 w-8 text-amber-400 mb-1" />
+                                <span className="text-xs font-bold text-slate-100">Tooling 3D Master</span>
+                                <span className="text-[10px] text-slate-400 font-mono">P20 Steel • HRC 32</span>
+                                <span className="absolute bottom-1 right-1 text-[8px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded font-mono">3D Model Active</span>
                               </div>
                             </div>
                           </div>
@@ -699,21 +678,19 @@ export function ToolingDevelopmentNewPage({
                     {/* CAD Drawing preview */}
                     <div className="md:col-span-7">
                       <Card className="border-border/80 shadow-xs overflow-hidden">
-                        <div className="relative h-64 bg-slate-100 dark:bg-slate-950 overflow-hidden flex items-center justify-center group">
-                          <img
-                            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80"
-                            alt="CAD preview"
-                            className="h-full w-full object-cover opacity-80 group-hover:scale-102 transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <Button
-                              size="sm"
-                              className="bg-white text-slate-950 hover:bg-slate-100 border text-xs"
-                              onClick={() => setSelectedDiagram("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80")}
-                            >
-                              <Maximize2 className="h-3.5 w-3.5 mr-1" /> View Design Drawing
-                            </Button>
+                        <div className="relative h-64 bg-slate-950 text-white flex flex-col items-center justify-center p-6 gap-3 group">
+                          <div className="h-14 w-14 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+                            <Wrench className="h-7 w-7" />
                           </div>
+                          <span className="text-sm font-bold text-slate-100">Injection Mold &amp; Tooling CAD Blueprint</span>
+                          <span className="text-xs text-slate-400 font-mono">Drawing No: DWG-TL-804 • 4-Cavity Tool • Side Action Lifters</span>
+                          <Button
+                            size="sm"
+                            className="bg-white text-slate-950 hover:bg-slate-100 border text-xs mt-1"
+                            onClick={() => setSelectedDiagram("tooling-cad-drawing")}
+                          >
+                            <Maximize2 className="h-3.5 w-3.5 mr-1" /> View Design Drawing
+                          </Button>
                         </div>
                         <CardContent className="p-4 space-y-1 text-xs">
                           <span className="text-muted-foreground block text-[10px]">CAD Model Release</span>
@@ -1089,8 +1066,7 @@ export function ToolingDevelopmentNewPage({
                       <CardContent className="p-4 text-center space-y-3">
                         <div className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
                           <div className="text-center">
-                            <span className="text-2xl font-black text-primary dark:text-blue-400">{record.overallToolReadiness}</span>
-                            <span className="block text-[9px] font-bold text-muted-foreground">/ 100</span>
+                            <span className="text-2xl font-black text-primary dark:text-blue-400">{record.overallToolReadiness}%</span>
                           </div>
                         </div>
                         <span className="text-[11px] text-muted-foreground block">
@@ -1216,13 +1192,9 @@ export function ToolingDevelopmentNewPage({
                             {record.reviewers.map((rev: ToolingReviewer) => (
                               <div key={rev.id} className="flex items-center justify-between p-2 rounded-lg border bg-slate-50/50 dark:bg-slate-800/40">
                                 <div className="flex items-center gap-2 min-w-0">
-                                  {rev.avatar ? (
-                                    <img src={rev.avatar} className="h-8 w-8 rounded-full object-cover" alt="avatar" />
-                                  ) : (
-                                    <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[11px]">
-                                      {rev.person.split(" ").map(w => w[0]).join("")}
-                                    </div>
-                                  )}
+                                  <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[11px]">
+                                    {rev.person.split(" ").map(w => w[0]).join("")}
+                                  </div>
                                   <div className="min-w-0">
                                     <span className="block font-bold text-[11px] text-slate-900 dark:text-white truncate">{rev.person}</span>
                                     <span className="block text-[9px] text-muted-foreground truncate">{rev.role}</span>
@@ -1349,88 +1321,36 @@ export function ToolingDevelopmentNewPage({
                 <CardContent className="p-5 text-center space-y-4">
                   <div className="relative mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
                     <div>
-                      <span className="text-3xl font-black text-primary dark:text-blue-400">{record.overallToolReadiness}</span>
-                      <span className="block text-[10px] font-bold text-muted-foreground">/ 100</span>
+                      <span className="text-3xl font-black text-primary dark:text-blue-400">{record.overallToolReadiness}%</span>
                     </div>
                   </div>
 
                   <div className="space-y-2 text-left text-xs border-t pt-3">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Design Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.designReviewScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.designReviewScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Planning Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.manufacturingReadinessScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.manufacturingReadinessScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Validation Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.validationScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.validationScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Readiness Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.readinessScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.readinessScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Performance Score</span>
-                      <span className="font-bold text-primary">{record.performanceScore} / 100</span>
+                      <span className="font-bold text-primary">{record.performanceScore}%</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Key Highlights */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Key Highlights</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 space-y-3.5 text-xs">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-350 font-medium text-[11px]">Design review score achieved: 88%</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-350 font-medium text-[11px]">Repeatability limit: 0.025 mm.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-350 font-medium text-[11px]">Trial tool validation successful.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Sparkles className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-350 font-medium text-[11px]">AI predicts 520,000 cycles wear.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-350 font-medium text-[11px]">Ready for installation and commissioning.</span>
-                  </div>
-                </CardContent>
-              </Card>
 
-              {/* Quick Actions */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 space-y-2 text-xs">
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("design")} className="w-full justify-start text-xs h-8">
-                    <Palette className="h-3.5 w-3.5 mr-2 text-primary" /> Create Tooling Concept
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("design")} className="w-full justify-start text-xs h-8">
-                    <FileSpreadsheet className="h-3.5 w-3.5 mr-2 text-emerald-600" /> Upload CAD Model
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("planning")} className="w-full justify-start text-xs h-8">
-                    <FileCheck className="h-3.5 w-3.5 mr-2 text-amber-500" /> Generate Manufacturing Plan
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("validation")} className="w-full justify-start text-xs h-8">
-                    <SlidersHorizontal className="h-3.5 w-3.5 mr-2 text-rose-500" /> Run Tool Validation
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("readiness")} className="w-full justify-start text-xs h-8">
-                    <Calendar className="h-3.5 w-3.5 mr-2 text-purple-600" /> Schedule Calibration
-                  </Button>
-                </CardContent>
-              </Card>
 
               {/* Vertical Timeline */}
               <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
@@ -1495,8 +1415,19 @@ export function ToolingDevelopmentNewPage({
                 <span>CAD Modeling Drawing</span>
               </DialogTitle>
             </DialogHeader>
-            <div className="relative h-96 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center">
-              <img src={selectedDiagram} alt="CAD drawings" className="h-full w-full object-contain" />
+            <div className="relative h-96 w-full bg-slate-950 rounded-lg flex flex-col items-center justify-center text-white p-6 gap-3 border border-slate-800">
+              <div className="h-16 w-16 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+                <Wrench className="h-8 w-8" />
+              </div>
+              <h3 className="text-base font-bold text-slate-100">Tooling &amp; Die CAD Drawing Master Blueprint</h3>
+              <p className="text-xs text-slate-400 max-w-md text-center">
+                Detailed 4-cavity injection mold tooling schematic with core/cavity inserts, cooling channels, stripper plate layout, and parting line locks.
+              </p>
+              <div className="flex gap-2 mt-2">
+                <Button size="sm" onClick={() => toast.success("Tooling dimensions validated.")}>
+                  <CheckCircle2 className="h-4 w-4 mr-1.5 text-emerald-400" /> Validate Mold Clearances
+                </Button>
+              </div>
             </div>
             <DialogFooter>
               <Button size="sm" variant="outline" onClick={() => setSelectedDiagram(null)}>Close</Button>

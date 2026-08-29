@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import React, { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import {
   ShieldCheck,
@@ -99,6 +99,57 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { AppShell } from "@/components/erp/AppShell";
+import { cn } from "@/lib/utils";
+
+/* ===========================================================================
+   Circular Score Gauge Component
+   =========================================================================== */
+function CircularScoreGauge({
+  score,
+  label = "SECURITY SCORE",
+}: {
+  score: number;
+  label?: string;
+}) {
+  const circumference = 2 * Math.PI * 42;
+  const strokeDashoffset = circumference - (score / 100) * circumference;
+
+  let scoreColor = "text-blue-600 stroke-blue-600 dark:text-blue-400 dark:stroke-blue-400";
+  if (score < 60) scoreColor = "text-amber-500 stroke-amber-500";
+  if (score < 40) scoreColor = "text-rose-500 stroke-rose-500";
+
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      <svg className="w-28 h-28 transform -rotate-90">
+        <circle
+          cx="56"
+          cy="56"
+          r="42"
+          className="stroke-slate-100 dark:stroke-slate-800 fill-none"
+          strokeWidth="8"
+        />
+        <circle
+          cx="56"
+          cy="56"
+          r="42"
+          className={cn(
+            "fill-none transition-all duration-1000 ease-out",
+            scoreColor,
+          )}
+          strokeWidth="8"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center text-center">
+        <span className="text-2xl font-bold tracking-tight text-foreground">
+          {score}%
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export const Route = createFileRoute(
   "/development/research-innovation/cybersecurity-engineering/new",
@@ -109,12 +160,20 @@ export const Route = createFileRoute(
   component: CybersecurityEngineeringNewPage,
 });
 
+export function CybersecurityFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <CybersecurityEngineeringNewPage {...props} />;
+}
+
+export function CybersecurityPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <CybersecurityEngineeringNewPage {...props} />;
+}
+
 export function CybersecurityEngineeringNewPage({
   breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -127,6 +186,7 @@ export function CybersecurityEngineeringNewPage({
   const [isVulnerabilityScanOpen, setIsVulnerabilityScanOpen] = useState(false);
   const [isThreatHeatmapOpen, setIsThreatHeatmapOpen] = useState(false);
   const [isSiemConsoleOpen, setIsSiemConsoleOpen] = useState(false);
+  const [isKeyManagementOpen, setIsKeyManagementOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
 
   // Scan Simulation State
@@ -237,17 +297,23 @@ export function CybersecurityEngineeringNewPage({
   return (
     <AppShell
       title="Cybersecurity Engineering"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Cybersecurity Engineering"}
       description="Perform threat modeling (STRIDE), vulnerability assessments, penetration testing, and security compliance audits."
       tabs={tabs ?? <ResearchInnovationTabBar />}
     >
       <div className="space-y-6 pb-16">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <ShieldCheck className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              {record.securityProjectName}
-            </h1>
+        {/* Record Header Bar */}
+        <div className="bg-white dark:bg-slate-900 border-b border-border px-6 py-4 space-y-3 shadow-2xs">
+          {/* Row 1: Primary Title, Version, Status & Actions */}
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center font-bold shrink-0 border border-blue-200/50 dark:border-blue-800/50">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  {record.securityProjectName}
+                </h1>
                 <Badge
                   variant="outline"
                   className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-mono text-xs"
@@ -275,7 +341,7 @@ export function CybersecurityEngineeringNewPage({
                 size="sm"
                 onClick={() => saveDraftMutation.mutate({})}
                 disabled={saveDraftMutation.isPending}
-                className="gap-1.5"
+                className="gap-1.5 h-9"
               >
                 <Save className="h-4 w-4 text-slate-500" />
                 Save Draft
@@ -285,7 +351,7 @@ export function CybersecurityEngineeringNewPage({
                 size="sm"
                 onClick={() => submitForReviewMutation.mutate()}
                 disabled={submitForReviewMutation.isPending}
-                className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-sm h-9"
               >
                 <Send className="h-4 w-4" />
                 Submit for Review
@@ -329,63 +395,96 @@ export function CybersecurityEngineeringNewPage({
             </div>
           </div>
 
-          {/* Linked Entities Bar (Matching Screenshot) */}
-          <div className="max-w-7xl mx-auto mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 text-xs">
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Cybersecurity ID</span>
-              <span className="font-mono font-semibold text-foreground">
-                {record.cybersecurityEngineeringId}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Form Code</span>
-              <span className="font-mono font-semibold text-foreground">
-                {record.formCode}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Linked Product</span>
-              <span className="font-medium text-blue-600 dark:text-blue-400 flex items-center gap-1 cursor-pointer truncate">
-                {record.linkedProductId}
-                <ExternalLink className="h-3 w-3 shrink-0" />
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Linked Software</span>
-              <span className="font-mono text-muted-foreground truncate">
-                {record.linkedSoftwareDevId}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Linked Cloud</span>
-              <span className="font-mono text-muted-foreground truncate">
-                {record.linkedCloudPlatformDevId}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Linked API</span>
-              <span className="font-mono text-muted-foreground truncate">
-                {record.linkedApiDevId}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Linked AI Model</span>
-              <span className="font-mono text-muted-foreground truncate">
-                {record.linkedAiModelDevId}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground text-[10px]">Security Architect</span>
-              <div className="flex items-center gap-1 font-medium text-foreground truncate">
-                <img
-                  src={record.securityArchitectAvatar}
-                  alt={record.securityArchitectName}
-                  className="h-3.5 w-3.5 rounded-full object-cover shrink-0"
-                />
-                <span className="truncate">{record.securityArchitectName}</span>
+          {/* Row 2: Secondary Metadata & Linked Entities with proper alignment */}
+          <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
+            <div className="flex flex-wrap items-center gap-4 text-xs">
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  Cybersecurity ID
+                </span>
+                <span className="font-bold font-mono text-foreground">
+                  {record.cybersecurityEngineeringId}
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  Form Code
+                </span>
+                <span className="font-semibold font-mono text-foreground">
+                  {record.formCode}
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  Linked Product
+                </span>
+                <span className="font-medium text-blue-600 dark:text-blue-400 flex items-center gap-1 cursor-pointer hover:underline">
+                  {record.linkedProductId}
+                  <ExternalLink className="h-3 w-3 shrink-0" />
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  Linked Software
+                </span>
+                <span className="font-mono text-muted-foreground">
+                  {record.linkedSoftwareDevId}
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  Linked Cloud
+                </span>
+                <span className="font-mono text-muted-foreground">
+                  {record.linkedCloudPlatformDevId}
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  Linked API
+                </span>
+                <span className="font-mono text-muted-foreground">
+                  {record.linkedApiDevId}
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  Linked AI Model
+                </span>
+                <span className="font-mono text-muted-foreground">
+                  {record.linkedAiModelDevId}
+                </span>
               </div>
             </div>
+
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-muted-foreground text-[10px] uppercase font-semibold">
+                Security Architect:
+              </span>
+              <span className="font-semibold text-foreground">
+                {record.securityArchitectName}
+              </span>
+            </div>
           </div>
+        </div>
 
         {/* =========================================================================
             2. MAIN CONTENT AREA (LAYOUT: LEFT CONTENT + RIGHT SIDEBAR)
@@ -393,61 +492,40 @@ export function CybersecurityEngineeringNewPage({
         <div className="max-w-7xl mx-auto px-6 py-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main 9-column content */}
           <div className="lg:col-span-9 space-y-6">
-            {/* WORKFLOW STAGE TIMELINE / OVERALL PROGRESS BANNER */}
+            {/* WORKFLOW STAGE TIMELINE BANNER */}
             <Card className="border-border/80 shadow-xs bg-gradient-to-br from-white via-slate-50 to-blue-50/30 dark:from-slate-900 dark:via-slate-900/90 dark:to-blue-950/20 overflow-hidden">
-              <CardContent className="p-5">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                  {/* Score Radial Visual */}
-                  <div className="flex items-center gap-4 shrink-0">
-                    <div className="relative flex items-center justify-center h-20 w-20 rounded-full border-4 border-blue-600/20 bg-blue-600/5 dark:bg-blue-500/10">
-                      <div className="text-center">
-                        <span className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
-                          {record.overallCybersecurityScore}
-                        </span>
-                        <span className="text-[10px] block text-muted-foreground font-semibold">
-                          /100
-                        </span>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-xs uppercase font-semibold tracking-wider text-muted-foreground">
-                        Overall Cybersecurity Score
-                      </div>
-                      <div className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                        Production Ready
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Validated across 5 cybersecurity engineering pillars
-                      </div>
-                    </div>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-3">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-blue-600" />
+                    <span className="font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                      Cybersecurity Lifecycle Readiness Pillars
+                    </span>
                   </div>
-
-                  {/* Security Pillars Bar */}
-                  <div className="w-full space-y-2">
-                    <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
-                      <span>Cybersecurity Lifecycle Readiness Pillars</span>
-                      <span className="text-blue-600 dark:text-blue-400">
-                        5 of 5 Pillars Compliant (91% Avg)
-                      </span>
+                  <span className="text-blue-600 dark:text-blue-400 font-medium">
+                    Status: <strong className="font-bold">5 of 5 Pillars Compliant (91% Avg)</strong>
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                  {[
+                    { label: "1. Threat Model", score: record.threatReadinessScore, color: "bg-blue-500" },
+                    { label: "2. Architecture", score: record.architectureSecurityScore, color: "bg-emerald-500" },
+                    { label: "3. Secure Dev", score: record.secureDevelopmentScore, color: "bg-purple-500" },
+                    { label: "4. Compliance", score: record.governanceScore, color: "bg-indigo-500" },
+                    { label: "5. Monitoring", score: record.monitoringScore, color: "bg-emerald-600" },
+                  ].map((pillar, idx) => (
+                    <div key={idx} className="p-2.5 rounded-lg border border-border/60 bg-white/80 dark:bg-slate-900/80 space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-semibold text-slate-800 dark:text-slate-200 truncate">{pillar.label}</span>
+                        <Badge variant="outline" className="text-[10px] font-mono font-bold">
+                          {pillar.score}/100
+                        </Badge>
+                      </div>
+                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div className={`h-full ${pillar.color}`} style={{ width: `${pillar.score}%` }} />
+                      </div>
                     </div>
-                    <div className="grid grid-cols-5 gap-2">
-                      {[
-                        { label: "Threat Readiness", score: record.threatReadinessScore, color: "bg-blue-500" },
-                        { label: "Architecture", score: record.architectureSecurityScore, color: "bg-emerald-500" },
-                        { label: "Secure Dev", score: record.secureDevelopmentScore, color: "bg-purple-500" },
-                        { label: "Compliance", score: record.governanceScore, color: "bg-indigo-500" },
-                        { label: "Monitoring", score: record.monitoringScore, color: "bg-emerald-600" },
-                      ].map((pillar, idx) => (
-                        <div key={idx} className="space-y-1 text-center">
-                          <div className={`h-2 rounded-full ${pillar.color}`} />
-                          <span className="text-[10px] block font-medium truncate text-slate-600 dark:text-slate-400">
-                            {pillar.label} ({pillar.score})
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -455,144 +533,65 @@ export function CybersecurityEngineeringNewPage({
             {/* TAB CONTENT 1: OVERVIEW */}
             {(activeTab === "overview" || activeTab === "system_info") && (
               <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Card 1: Security Project Overview */}
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                      <div className="space-y-1">
-                        <CardTitle className="text-base font-semibold flex items-center gap-2">
-                          <Info className="h-4 w-4 text-blue-600" />
-                          1. Security Project Overview
-                        </CardTitle>
-                        <CardDescription>
-                          Business objective and target deployment scope
-                        </CardDescription>
-                      </div>
-                      <Badge className="bg-red-600 text-white">
-                        Criticality: {record.criticalityLevel}
-                      </Badge>
-                    </CardHeader>
-                    <CardContent className="space-y-4 text-xs">
-                      <div>
-                        <span className="font-semibold text-muted-foreground block mb-1">
-                          Business Objective
-                        </span>
-                        <p className="text-slate-800 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-md border border-slate-200/60 dark:border-slate-800">
-                          {record.businessObjective}
-                        </p>
-                      </div>
-
-                      <div>
-                        <span className="font-semibold text-muted-foreground block mb-1">
-                          Security Scope
-                        </span>
-                        <p className="text-slate-700 dark:text-slate-300">
-                          {record.securityScope}
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <span className="font-semibold text-muted-foreground block mb-1">
-                            Product Category
-                          </span>
-                          <Badge variant="outline" className="font-medium">
-                            {record.productCategory}
-                          </Badge>
-                        </div>
-
-                        <div>
-                          <span className="font-semibold text-muted-foreground block mb-1">
-                            Target Deployment
-                          </span>
-                          <div className="flex flex-wrap gap-1">
-                            {record.targetDeployment.map((d, i) => (
-                              <Badge key={i} variant="secondary" className="text-[10px]">
-                                {d}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Card 2: Security Telemetry & Status */}
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="pb-3">
+                <Card className="border-border/80 shadow-xs">
+                  <CardHeader className="pb-3 flex flex-row items-center justify-between">
+                    <div className="space-y-1">
                       <CardTitle className="text-base font-semibold flex items-center gap-2">
-                        <ShieldAlert className="h-4 w-4 text-blue-600" />
-                        Security Telemetry & Health Status
+                        <Info className="h-4 w-4 text-blue-600" />
+                        1. Security Project Overview
                       </CardTitle>
                       <CardDescription>
-                        Scans, vulnerabilities, and monitoring platform
+                        Business objective and target deployment scope
                       </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-2 gap-3 text-xs">
-                        <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                          <span className="text-muted-foreground block text-[11px]">
-                            Threat Modeling
-                          </span>
-                          <span className="text-sm font-bold text-slate-900 dark:text-white font-mono">
-                            {record.threatModelConfig.method} Method
-                          </span>
-                          <span className="text-[10px] text-muted-foreground block mt-0.5">
-                            {record.threatModelConfig.assetsIdentified} Assets Identified
-                          </span>
-                        </div>
+                    </div>
+                    <Badge className="bg-red-600 text-white">
+                      Criticality: {record.criticalityLevel}
+                    </Badge>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-xs">
+                    <div>
+                      <span className="font-semibold text-muted-foreground block mb-1">
+                        Business Objective
+                      </span>
+                      <p className="text-slate-800 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-md border border-slate-200/60 dark:border-slate-800">
+                        {record.businessObjective}
+                      </p>
+                    </div>
 
-                        <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                          <span className="text-muted-foreground block text-[11px]">
-                            Encryption Standard
-                          </span>
-                          <span className="text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">
-                            {record.architectureConfig.encryptionStandard}
-                          </span>
-                          <span className="text-[10px] text-muted-foreground block mt-0.5">
-                            {record.architectureConfig.secureCommunication}
-                          </span>
-                        </div>
+                    <div>
+                      <span className="font-semibold text-muted-foreground block mb-1">
+                        Security Scope
+                      </span>
+                      <p className="text-slate-700 dark:text-slate-300">
+                        {record.securityScope}
+                      </p>
+                    </div>
 
-                        <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                          <span className="text-muted-foreground block text-[11px]">
-                            Vulnerabilities Found
-                          </span>
-                          <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 font-mono">
-                            {record.secureDevConfig.vulnerabilitiesFoundCount} Low Severity
-                          </span>
-                          <span className="text-[10px] text-emerald-600 block mt-0.5 font-medium">
-                            0 Critical / High
-                          </span>
-                        </div>
-
-                        <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                          <span className="text-muted-foreground block text-[11px]">
-                            SIEM Monitoring
-                          </span>
-                          <span className="text-xs font-bold text-slate-900 dark:text-white font-mono truncate block">
-                            {record.monitoringConfig.siemPlatform}
-                          </span>
-                          <span className="text-[10px] text-emerald-600 block mt-0.5 font-medium">
-                            Active 24/7
-                          </span>
-                        </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <span className="font-semibold text-muted-foreground block mb-1">
+                          Product Category
+                        </span>
+                        <Badge variant="outline" className="font-medium">
+                          {record.productCategory}
+                        </Badge>
                       </div>
 
-                      <div className="p-3 rounded-lg bg-blue-50/50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-900 text-xs space-y-1.5">
-                        <div className="flex items-center justify-between font-semibold text-blue-900 dark:text-blue-200">
-                          <span>AI Security Copilot Recommendation</span>
-                          <Badge className="bg-blue-600 text-white text-[10px]">
-                            Verified
-                          </Badge>
+                      <div>
+                        <span className="font-semibold text-muted-foreground block mb-1">
+                          Target Deployment
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {record.targetDeployment.map((d, i) => (
+                            <Badge key={i} variant="secondary" className="text-[10px]">
+                              {d}
+                            </Badge>
+                          ))}
                         </div>
-                        <p className="text-blue-800 dark:text-blue-300">
-                          {record.readinessSummary.recommendation}
-                        </p>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             )}
 
@@ -1052,68 +1051,14 @@ export function CybersecurityEngineeringNewPage({
               </Card>
             )}
 
-            {/* TAB CONTENT 10: SUMMARY */}
-            {(activeTab === "overview" || activeTab === "summary") && (
-              <Card className="border-border/80 shadow-xs">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold flex items-center gap-2">
-                    <Target className="h-4 w-4 text-blue-600" />
-                    10. Cybersecurity Readiness Summary
-                  </CardTitle>
-                  <CardDescription>
-                    Consolidated readiness across security engineering pillars
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4 text-xs">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Threat Readiness
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.threatReadiness}/100
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Architecture Security
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.architectureSecurityScore}/100
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Secure Development
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.secureDevelopmentScore}/100
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Compliance Score
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.complianceScore}/100
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* TAB CONTENT 11: ATTACHMENTS */}
+            {/* TAB CONTENT 10: ATTACHMENTS */}
             {(activeTab === "overview" || activeTab === "attachments") && (
               <Card className="border-border/80 shadow-xs">
                 <CardHeader className="pb-3 flex flex-row items-center justify-between">
                   <div>
                     <CardTitle className="text-base font-semibold flex items-center gap-2">
                       <FileText className="h-4 w-4 text-blue-600" />
-                      11. Security Attachments & Penetration Reports
+                      10. Security Attachments & Penetration Reports
                     </CardTitle>
                     <CardDescription>
                       Threat models, vulnerability assessments, and risk reports
@@ -1168,16 +1113,16 @@ export function CybersecurityEngineeringNewPage({
               </Card>
             )}
 
-            {/* TAB CONTENT 12: REVIEW & APPROVAL */}
+            {/* TAB CONTENT 11: REVIEW & APPROVAL */}
             {(activeTab === "overview" || activeTab === "review_approval") && (
               <Card className="border-border/80 shadow-xs">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-semibold flex items-center gap-2">
                     <Workflow className="h-4 w-4 text-blue-600" />
-                    12. Review & Approval Board Timeline
+                    11. Review & Approval Board Timeline
                   </CardTitle>
                   <CardDescription>
-                    Multi-sign-off enterprise security committee status
+                    Multi-stage engineering approval committee
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6 text-xs">
@@ -1199,13 +1144,8 @@ export function CybersecurityEngineeringNewPage({
                             <td className="p-3 font-semibold text-slate-900 dark:text-white">
                               {rev.role}
                             </td>
-                            <td className="p-3 flex items-center gap-2">
-                              <img
-                                src={rev.avatar}
-                                alt={rev.person}
-                                className="h-5 w-5 rounded-full object-cover"
-                              />
-                              <span className="font-medium">{rev.person}</span>
+                            <td className="p-3">
+                              <span className="font-medium text-foreground">{rev.person}</span>
                             </td>
                             <td className="p-3">
                               <Badge
@@ -1294,134 +1234,58 @@ export function CybersecurityEngineeringNewPage({
 
           {/* RIGHT SIDEBAR (3 columns) */}
           <div className="lg:col-span-3 space-y-6">
-            {/* Overall Score Radial Widget */}
-            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-              <CardHeader className="pb-2 text-center">
-                <CardTitle className="text-sm font-semibold">Overall Cybersecurity Score</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-center">
-                <div className="relative inline-flex items-center justify-center">
-                  <div className="h-28 w-28 rounded-full border-6 border-blue-600 flex items-center justify-center bg-blue-50/30 dark:bg-blue-950/30">
-                    <div>
-                      <span className="text-3xl font-black text-blue-600 dark:text-blue-400">
-                        {record.overallCybersecurityScore}
-                      </span>
-                      <span className="text-[10px] block font-semibold text-muted-foreground">
-                        / 100
+            <div className="sticky top-6 space-y-4">
+              {/* Overall Score Radial Widget */}
+              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+                <CardHeader className="pb-2 text-center">
+                  <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider">
+                    Overall Cybersecurity Score
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-center">
+                  <div className="flex justify-center items-center py-2">
+                    <CircularScoreGauge score={record.overallCybersecurityScore} label="Overall Score" />
+                  </div>
+
+                  <div className="space-y-2 text-xs text-left pt-3 border-t border-slate-100 dark:border-slate-800">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Threat Readiness</span>
+                      <span className="font-bold text-foreground font-mono">
+                        {record.threatReadinessScore} /100
                       </span>
                     </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Architecture Security</span>
+                      <span className="font-bold text-foreground font-mono">
+                        {record.architectureSecurityScore} /100
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Secure Development</span>
+                      <span className="font-bold text-foreground font-mono">
+                        {record.secureDevelopmentScore} /100
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Compliance</span>
+                      <span className="font-bold text-foreground font-mono">
+                        {record.governanceScore} /100
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Monitoring</span>
+                      <span className="font-bold text-foreground font-mono">
+                        {record.monitoringScore} /100
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center pt-2 border-t font-bold text-blue-600 dark:text-blue-400">
+                      <span>Total Score</span>
+                      <span>{record.overallCybersecurityScore}%</span>
+                    </div>
                   </div>
-                </div>
-
-                <div className="space-y-2 text-xs text-left pt-2 border-t border-slate-100 dark:border-slate-800">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Threat Readiness</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.threatReadinessScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Architecture Security</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.architectureSecurityScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Secure Development</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.secureDevelopmentScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Compliance</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.governanceScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Monitoring</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.monitoringScore}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Key Highlights */}
-            <Card className="border-border/80 shadow-xs">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 text-blue-600" />
-                  Key Highlights
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2.5 text-xs">
-                {[
-                  "Zero Trust Architecture implemented",
-                  "MFA enabled for all user access",
-                  "No critical vulnerabilities detected",
-                  "Penetration testing completed",
-                  "All compliance requirements met",
-                  "Security monitoring active 24/7",
-                ].map((hl, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium">
-                      {hl}
-                    </span>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions Panel */}
-            <Card className="border-border/80 shadow-xs">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-xs">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => toast.info("Generating Cybersecurity PDF Report...")}
-                >
-                  <FileText className="h-3.5 w-3.5 text-blue-600" />
-                  Generate Security Report
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => setIsThreatHeatmapOpen(true)}
-                >
-                  <AlertOctagon className="h-3.5 w-3.5 text-red-600" />
-                  View Threat Model
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => setIsVulnerabilityScanOpen(true)}
-                >
-                  <Bug className="h-3.5 w-3.5 text-amber-600" />
-                  Run Vulnerability Scan
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => setIsSiemConsoleOpen(true)}
-                >
-                  <Activity className="h-3.5 w-3.5 text-purple-600" />
-                  View Security Dashboard
-                </Button>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
 
@@ -1470,56 +1334,62 @@ export function CybersecurityEngineeringNewPage({
           </DialogContent>
         </Dialog>
 
-        {/* STRIDE Heatmap Modal */}
-        <Dialog open={isThreatHeatmapOpen} onOpenChange={setIsThreatHeatmapOpen}>
+        {/* SIEM Incident Console Modal */}
+        <Dialog open={isSiemConsoleOpen} onOpenChange={setIsSiemConsoleOpen}>
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <AlertOctagon className="h-5 w-5 text-red-500" />
-                STRIDE Threat Heatmap Inspector
+                <Activity className="h-5 w-5 text-purple-600" />
+                SIEM Real-Time Incident Stream
               </DialogTitle>
               <DialogDescription>
-                24 identified assets & risk exposure matrix
+                Splunk / Microsoft Sentinel live event telemetry
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-3 py-2 text-xs">
               <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 space-y-1">
                 <span className="font-bold text-slate-900 dark:text-white block">
-                  Identified Threats
+                  Active Alert Status
                 </span>
                 <span className="text-emerald-600 font-mono font-bold">
-                  18 Threat Scenarios - All 32 Security Controls Verified.
+                  All 1,420 events Triaged • Zero Active Breaches
                 </span>
               </div>
             </div>
             <DialogFooter>
-              <Button size="sm" onClick={() => setIsThreatHeatmapOpen(false)}>
-                Close Heatmap
+              <Button size="sm" onClick={() => setIsSiemConsoleOpen(false)}>
+                Close
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
-        {/* SIEM Console Modal */}
-        <Dialog open={isSiemConsoleOpen} onOpenChange={setIsSiemConsoleOpen}>
-          <DialogContent className="max-w-lg">
+        {/* Key Management Modal */}
+        <Dialog open={isKeyManagementOpen} onOpenChange={setIsKeyManagementOpen}>
+          <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-blue-600" />
-                Microsoft Sentinel SIEM Live Event Feed
+                <Key className="h-5 w-5 text-blue-600" />
+                Hardware Security Module (HSM) Key Vault
               </DialogTitle>
               <DialogDescription>
-                Real-time security log streaming
+                ECC Secp256r1 & AES-256-GCM hardware key storage status
               </DialogDescription>
             </DialogHeader>
-            <div className="p-4 rounded-lg bg-slate-950 text-slate-100 font-mono text-xs h-40 overflow-y-auto space-y-1">
-              <div>[INFO] 15:30:02 - OAuth2 Token issued for admin@magnertia.com</div>
-              <div>[INFO] 15:28:45 - Keycloak MFA verified successfully</div>
-              <div>[SEC]  15:25:12 - TLS 1.3 handshake verified for /v1/ev-charging/predict</div>
+            <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs space-y-1">
+              <div>[HSM] Device State: Secure Boot Locked</div>
+              <div>[ROT] Root of Trust: ATECC608A Provisioned</div>
+              <div>[TIME] Last Key Rotation: {record.keyVaultLastRotation}</div>
             </div>
             <DialogFooter>
-              <Button size="sm" onClick={() => setIsSiemConsoleOpen(false)}>
-                Close Console
+              <Button
+                size="sm"
+                onClick={() => {
+                  setIsKeyManagementOpen(false);
+                  toast.success("Cryptographic keys rotated successfully in HSM!");
+                }}
+              >
+                Rotate Keys Now
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -1537,7 +1407,7 @@ export function CybersecurityEngineeringNewPage({
                 {selectedAttachment?.name}
               </DialogTitle>
               <DialogDescription>
-                {selectedAttachment?.type} Document • {selectedAttachment?.size}
+                {selectedAttachment?.type} File • {selectedAttachment?.size}
               </DialogDescription>
             </DialogHeader>
             <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs h-40 flex items-center justify-center">
@@ -1555,9 +1425,9 @@ export function CybersecurityEngineeringNewPage({
         <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Upload Security Attachment</DialogTitle>
+              <DialogTitle>Upload Security Document</DialogTitle>
               <DialogDescription>
-                Upload threat model, penetration test, or compliance report
+                Upload STRIDE threat models, pen-test reports, or SBOM SPDX files
               </DialogDescription>
             </DialogHeader>
             <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-8 text-center space-y-2">
@@ -1579,6 +1449,9 @@ export function CybersecurityEngineeringNewPage({
             </DialogFooter>
           </DialogContent>
         </Dialog>
+      </div>
     </AppShell>
   );
 }
+
+export default CybersecurityEngineeringNewPage;

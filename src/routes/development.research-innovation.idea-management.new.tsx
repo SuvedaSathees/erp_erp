@@ -917,7 +917,7 @@ function IdeaSubmissionPage() {
   return (
     <AppShell
       title="Idea Management"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Idea Management"
       description="Capture, evaluate, and track ideas through the innovation pipeline."
       tabs={<InnovationAreaTabs sub={<IdeaTabBar />} />}
     >
@@ -1719,36 +1719,7 @@ function IdeaSubmissionPage() {
               </dl>
             </div>
 
-            {/* Quick Actions */}
-            <div className="card-soft p-5">
-              <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                Quick Actions
-              </h4>
-              <div className="space-y-1">
-                <QuickAction icon={Save} label="Save Draft" onClick={doSave} />
-                <QuickAction icon={Send} label="Submit Idea" onClick={doSubmit} />
-                <QuickAction
-                  icon={UserPlus}
-                  label="Add Team Members"
-                  onClick={() =>
-                    document
-                      .getElementById("team-members")
-                      ?.scrollIntoView({ behavior: "smooth", block: "center" })
-                  }
-                />
-                <QuickAction
-                  icon={UploadCloud}
-                  label="Upload Attachments"
-                  onClick={() => setAttachOpen((o) => !o)}
-                />
-                <QuickAction
-                  icon={MessageSquarePlus}
-                  label="Request Feedback"
-                  onClick={() => toast.success("Feedback request noted for reviewers.")}
-                />
-              </div>
-              {attachOpen && <AttachmentEditor input={input} setInput={setInput} />}
-            </div>
+
 
             {/* Related Links */}
             <div className="card-soft p-5">

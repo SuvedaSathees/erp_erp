@@ -700,7 +700,7 @@ function PatentFormPage() {
     return (
       <AppShell
         title="Patent Management"
-        breadcrumb="Research & Innovation Development"
+        breadcrumb="Development > Research & Innovation > Patent Management"
         description="Manage patent filing, prosecution, grant, and portfolio."
         tabs={<InnovationAreaTabs sub={<PatentMgmtPageTabBar />} />}
       >
@@ -720,7 +720,7 @@ function PatentFormPage() {
   return (
     <AppShell
       title="Patent Management"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Patent Management"
       description="Manage patent filing, prosecution, grant, and portfolio."
       tabs={<InnovationAreaTabs sub={<PatentMgmtPageTabBar />} />}
     >

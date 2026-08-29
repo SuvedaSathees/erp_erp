@@ -1,7 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { BusinessModelDevelopmentPage } from "@/routes/development.business-development.business-model-development.index";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/development/business-development/")({
-  head: () => ({ meta: [{ title: "Business Development · Magnertia ERP" }] }),
-  component: BusinessModelDevelopmentPage,
+export const Route = createFileRoute(
+  "/development/business-development/",
+)({
+  beforeLoad: () => {
+    throw redirect({
+      to: "/development/business-development/overview",
+    });
+  },
 });

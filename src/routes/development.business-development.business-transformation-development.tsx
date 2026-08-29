@@ -679,16 +679,14 @@ function BusinessTransformationDevelopmentPage() {
           <ScoreGauge label="AI Score" score={formData.aiTransformationScore} sub="Good" size="normal" />
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Main Form Canvas */}
+        <div className="w-full space-y-6">
 
-            {/* 1. Transformation Overview */}
+            {/* Transformation Overview */}
             <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Transformation Overview & Strategic Intent
+                  <Building2 className="h-4 w-4 text-primary" /> Transformation Overview & Strategic Intent
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Enterprise Modernization</span>
               </div>
@@ -811,11 +809,11 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-            {/* 2. Current State Assessment (AS-IS) */}
+            {/* Current State Assessment (AS-IS) */}
             <div id="sec-current-state" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Sliders className="h-4 w-4 text-amber-500" /> 2. Current State Assessment (AS-IS)
+                  <Sliders className="h-4 w-4 text-amber-500" /> Current State Assessment (AS-IS)
                 </h3>
                 <span className="text-xs font-semibold text-amber-600 flex items-center gap-1">
                   Current State Score: <strong>{formData.currentStateScore}/100</strong> <MAICWBadge type="C" />
@@ -911,11 +909,11 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-            {/* 3. Future State Design (TO-BE) */}
+            {/* Future State Design (TO-BE Blueprint) */}
             <div id="sec-future-state" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Crosshair className="h-4 w-4 text-emerald-600" /> 3. Future State Design (TO-BE Blueprint)
+                  <Crosshair className="h-4 w-4 text-emerald-600" /> Future State Design (TO-BE Blueprint)
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Future State Score: <strong>{formData.futureStateReadiness}/100</strong> <MAICWBadge type="C" />
@@ -988,11 +986,11 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-            {/* 4. Transformation Initiatives */}
+            {/* Transformation Program Initiatives */}
             <div id="sec-initiatives" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Boxes className="h-4 w-4 text-purple-600" /> 4. Transformation Program Initiatives
+                  <Boxes className="h-4 w-4 text-purple-600" /> Transformation Program Initiatives
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">4 Active Initiatives</span>
               </div>
@@ -1036,11 +1034,11 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-            {/* 5. Organization & Change Management */}
+            {/* Organization & Change Management */}
             <div id="sec-change-management" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4 text-emerald-600" /> 5. Organization & Change Management
+                  <Users className="h-4 w-4 text-emerald-600" /> Organization & Change Management
                 </h3>
                 <span className="text-xs font-semibold text-amber-600 flex items-center gap-1">
                   Change Score: <strong>{formData.changeReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1089,11 +1087,11 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-            {/* 6. Process & Technology Transformation */}
+            {/* Process & Technology Transformation */}
             <div id="sec-tech-transformation" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Cpu className="h-4 w-4 text-purple-600" /> 6. Process & Technology Transformation
+                  <Cpu className="h-4 w-4 text-purple-600" /> Process & Technology Transformation
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Technology Score: <strong>{formData.technologyTransformationScore}/100</strong> <MAICWBadge type="C" />
@@ -1140,11 +1138,11 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-            {/* 7. Financial & Value Realization */}
+            {/* Financial & Value Realization */}
             <div id="sec-value-realization" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 7. Financial & Value Realization
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Financial & Value Realization
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Value Score: <strong>{formData.valueRealizationScore}/100</strong> <MAICWBadge type="C" />
@@ -1226,11 +1224,11 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-            {/* 8. Risk & Governance */}
+            {/* Risk & Governance */}
             <div id="sec-risk-governance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Scale className="h-4 w-4 text-amber-500" /> 8. Risk & Governance Committee
+                  <Scale className="h-4 w-4 text-amber-500" /> Risk & Governance Committee
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Governance Score: <strong>{formData.governanceScore}/100</strong> <MAICWBadge type="C" />
@@ -1267,140 +1265,52 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-            {/* 9. AI Business Transformation Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 9. AI Business Transformation Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Transformation Score: {formData.aiTransformationScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> AI Transformation Assessment
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiTransformationAssessment}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Cpu className="h-3.5 w-3.5 text-blue-600" /> AI Process Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiProcessOptimization}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-purple-600" /> AI Cost Reduction Opportunities
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiCostReductionOpportunities}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <Zap className="h-3.5 w-3.5" /> AI Resource Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiResourceOptimization}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Transformation Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 10. Business Transformation Summary */}
+            {/* Business Transformation Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 10. Transformation Summary & Recommendation
+                  <Award className="h-4 w-4 text-emerald-600" /> Transformation Summary & Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Readiness: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Transformation Readiness: {computedOverallScore}/100</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Current State (AS-IS)</span>
-                    <span className="font-mono font-bold">{formData.currentStateScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Transformation Program Status</span>
+                    <span className="text-emerald-600 font-bold">Phase 2 Digital Rollout Approved</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: `${formData.currentStateScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Future State (TO-BE)</span>
-                    <span className="font-mono font-bold">{formData.futureStateReadiness} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.futureStateReadiness}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Technology Score</span>
-                    <span className="font-mono font-bold">{formData.technologyTransformationScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.technologyTransformationScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Value Realization</span>
-                    <span className="font-mono font-bold">{formData.valueRealizationScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.valueRealizationScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Governance Score</span>
-                    <span className="font-mono font-bold">{formData.governanceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.governanceScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Digital core modernization delivers ₹25.0 Cr annual cost savings, +18.4% workforce productivity, and 72/100 customer experience score.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Transformation Readiness" score={computedOverallScore} sub="Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Proceed to Execution",
-                        "Approve Transformation",
-                        "Revise Business Case",
-                        "Strengthen Change Management",
-                        "Accelerate Digital Transformation",
-                        "Optimize Investment",
-                        "Reduce Transformation Risk",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Proceed to Execution",
+                      "Approve Transformation Program",
+                      "Accelerate Digital Workflows",
+                      "Optimize Resource Allocation",
+                      "Review Change Management Governance",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 11. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 11. Transformation Artifacts & Blueprint Dossier
+                  <FileText className="h-4 w-4 text-primary" /> Transformation Artifacts & Blueprint Dossier
                 </h3>
                 <button
                   type="button"
@@ -1455,11 +1365,11 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-            {/* 12. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 12. Transformation Steering Committee Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Transformation Steering Committee Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">8 Governance Roles</span>
               </div>
@@ -1524,11 +1434,11 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-            {/* 13. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 13. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History Log
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1551,210 +1461,6 @@ function BusinessTransformationDevelopmentPage() {
               </div>
             </div>
 
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Transformation Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Transformation Insights
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 76</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> High Impact Potential
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    This program can deliver ₹ 100 Cr cost savings and 25% productivity improvement.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-blue-600" /> Top Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Process automation and digital modernization offer highest ROI.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-amber-500">
-                    <ShieldAlert className="h-3.5 w-3.5" /> Risk Alert
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Change adoption risk is medium due to organizational resistance.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-purple-600">
-                    <Zap className="h-3.5 w-3.5" /> Resource Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Optimize resources to reduce project costs by 12%.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Transformation KPI Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Transformation KPI Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Cost Savings</span>
-                    <Sparkline data={[12, 16, 20, 25]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">₹ 25.0 Cr <span className="text-xs text-emerald-600">+12.6%</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Productivity Impr.</span>
-                    <Sparkline data={[10, 12.5, 15, 18.4]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">18.4% <span className="text-xs text-emerald-600">+8.2%</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">CX Score</span>
-                    <Sparkline data={[60, 64, 68, 72]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">72 / 100 <span className="text-xs text-blue-600">+6.0%</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Digital Maturity</span>
-                    <Sparkline data={[2.0, 2.4, 2.8, 3.2]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-primary font-mono block">3.2 / 5 <span className="text-xs text-primary">+0.6</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Initiatives On Track</span>
-                    <Sparkline data={[4, 5, 5, 6]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">6 / 8</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Budget Utilization</span>
-                    <Sparkline data={[30, 36, 40, 42]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">42.0% <span className="text-xs text-emerald-600">-3.2%</span></span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Transformation KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Program Health Card */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>Program Health</span>
-                <span className="text-[10px] text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">Good</span>
-              </div>
-
-              <div className="flex items-center justify-between gap-4">
-                <ScoreGauge label="Overall Health" score={74} sub="Good" size="normal" />
-                <div className="flex-1 space-y-1.5">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-emerald-500" /> On Track</span>
-                    <span className="font-bold font-mono">6</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber-500" /> At Risk</span>
-                    <span className="font-bold font-mono">2</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-rose-500" /> Delayed</span>
-                    <span className="font-bold font-mono">1</span>
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-[11px] text-muted-foreground pt-2 border-t border-border leading-relaxed">
-                Program is progressing well and on track to achieve transformation goals.
-              </p>
-            </div>
-
-            {/* System Information Audit Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Company:</span>
-                  <span className="font-semibold text-foreground">Magnertia Industries Ltd.</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Fiscal Year:</span>
-                  <span className="font-semibold text-foreground">2024 - 25</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Base Currency:</span>
-                  <span className="font-semibold text-foreground">INR - Indian Rupee</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Timezone:</span>
-                  <span className="font-semibold text-foreground">IST (UTC +05:30)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Date Format:</span>
-                  <span className="font-semibold text-foreground">dd MMM yyyy</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Time Format:</span>
-                  <span className="font-semibold text-foreground">hh:mm:ss A</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Activity History
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 

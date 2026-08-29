@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo } from "react";
+import React, { useState, useMemo, type ReactNode } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
 import {
@@ -39,7 +39,6 @@ import {
   Printer,
   History,
   Workflow,
-  Sparkle,
   ArrowRight,
   ShieldCheck,
   Box,
@@ -56,10 +55,15 @@ import {
   Users,
   CheckSquare,
   FileText,
-  BadgeAlert,
   Wrench,
   Archive,
   RotateCcw,
+  Cpu,
+  Factory,
+  Paperclip,
+  UserCheck,
+  Building2,
+  LifeBuoy,
 } from "lucide-react";
 
 import { plmService } from "@/services/plmService";
@@ -71,7 +75,6 @@ import type {
   PlmAttachment,
 } from "@/services/types";
 import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
-import { PlmTabBar, type PlmTabId } from "@/components/erp/PlmTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -98,6 +101,19 @@ export const Route = createFileRoute(
 )({
   component: PlmPage,
 });
+
+export function ProductLifecycleManagementPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <PlmPage {...props} />;
+}
+
+export function ProductLifecycleManagementNewPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <PlmPage {...props} />;
+}
+
+export function PlmFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <PlmPage {...props} />;
+}
+
 
 /* Helper component for SVG Circular Gauge */
 function CircularScoreGauge({
@@ -145,11 +161,11 @@ function CircularScoreGauge({
             className="transition-all duration-1000 ease-out"
           />
         </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <div className="absolute inset-0 flex flex-col items-center justify-center select-none">
+          <span className="text-xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400 flex items-baseline justify-center">
             {score}
+            <span className="text-xs font-bold ml-0.5">%</span>
           </span>
-          <span className="text-[9px] text-slate-400 font-medium">/100</span>
         </div>
       </div>
       {label && <span className="mt-2 text-xs font-semibold text-slate-700 dark:text-slate-300">{label}</span>}
@@ -178,12 +194,10 @@ export function PlmPage({
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const [activeTab, setActiveTab] = useState<PlmTabId>("overview");
 
   // Dialog & Modal States
   const [showUploadDialog, setShowUploadDialog] = useState(false);
@@ -314,6 +328,8 @@ export function PlmPage({
     );
   }
 
+
+
   // Helper for workflow status badge style
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -341,125 +357,118 @@ export function PlmPage({
   return (
     <AppShell
       title="Product Lifecycle Management (PLM)"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Product Lifecycle Management"}
       description="Manage digital thread traceability, ECO/ECN change control, BOM revisions, and End-of-Life sunsetting."
       tabs={tabs ?? <ResearchInnovationTabBar />}
     >
       <div className="space-y-6 pb-16">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
-              Product Lifecycle Management (PLM)
-              <Repeat className="h-5 w-5 text-blue-600" />
-            </h1>
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200 font-semibold">
-              Digital Thread Control
-            </Badge>
-          </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowWorkflowModal(true)}
-                className="gap-1.5 text-xs"
-              >
-                <Workflow className="h-3.5 w-3.5 text-blue-600" />
-                PLM Lifecycle (4 Stages & 5-Way Decision)
-              </Button>
-            </div>
-          </div>
-
-      {/* 3. Record Header Bar (2 Rows matching screenshot 2_24.png) */}
-      <div className="mx-auto max-w-[1600px] px-4 pt-4">
-        <Card className="border-border shadow-xs bg-white dark:bg-slate-900 mb-4">
-          <CardContent className="p-4 flex flex-col gap-3">
-            {/* Row 1 */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-border/60">
-              <div className="flex flex-wrap items-center gap-6 text-xs">
-                <div>
-                  <span className="text-muted-foreground block font-medium">PLM ID</span>
-                  <span className="font-mono font-bold text-foreground">{rec.plmId}</span>
+        {/* Record Header Bar */}
+        <div className="mx-auto max-w-[1600px] px-4 pt-2">
+          <Card className="border border-border/80 shadow-xs bg-card mb-4 overflow-hidden rounded-xl">
+            {/* TOP ROW: Record Identity, Editable Title, & Action Buttons */}
+            <div className="p-4 sm:p-5 pb-4 bg-slate-50/70 dark:bg-slate-900/90 border-b border-border/70 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              {/* Left: Record Identity & Title */}
+              <div className="flex items-start sm:items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-blue-600/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center font-bold shrink-0 border border-blue-200/50 dark:border-blue-800/50 shadow-2xs">
+                  <Layers className="h-5 w-5" />
                 </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Form Code</span>
-                  <span className="font-mono text-slate-700 dark:text-slate-300 font-semibold">{rec.formCode}</span>
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div className="min-w-[220px]">
-                  <span className="text-muted-foreground block font-medium">Product Lifecycle Project</span>
-                  <Input
-                    value={formData.plmProjectName || rec.plmProjectName}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, plmProjectName: e.target.value }))}
-                    className="h-7 text-xs font-semibold text-foreground bg-slate-50 dark:bg-slate-800/80 border-slate-200"
-                  />
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Product Version</span>
-                  <span className="inline-flex items-center rounded-md bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-bold text-blue-700 dark:text-blue-300">
-                    {rec.productVersion}
-                  </span>
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Workflow Status</span>
-                  {getStatusBadge(rec.workflowStatus)}
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Created On</span>
-                  <span className="font-medium text-slate-700 dark:text-slate-300">{rec.createdOn}</span>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-border/60">
+                      {rec.plmId}
+                    </span>
+                    <span className="text-slate-300 dark:text-slate-700">•</span>
+                    <Badge variant="outline" className="font-mono text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-white/80 dark:bg-slate-800">
+                      {rec.formCode}
+                    </Badge>
+                    <Badge variant="secondary" className="font-mono text-[11px] font-bold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800">
+                      {rec.productVersion}
+                    </Badge>
+                    {getStatusBadge(rec.workflowStatus)}
+                  </div>
+                  {/* Project Title Input with clean hover/focus state */}
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={formData.plmProjectName || rec.plmProjectName}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, plmProjectName: e.target.value }))}
+                      className="h-8 text-sm sm:text-base font-bold text-foreground bg-transparent hover:bg-white dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-primary shadow-none px-2 py-0 transition-all rounded-md max-w-md"
+                      placeholder="Product Lifecycle Project Name..."
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Right Action Buttons */}
-              <div className="flex items-center gap-2">
+              {/* Right: Actions */}
+              <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowWorkflowModal(true)}
+                  className="gap-1.5 text-xs font-medium bg-white dark:bg-slate-800 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700"
+                >
+                  <Workflow className="h-3.5 w-3.5 text-blue-600" />
+                  <span className="hidden lg:inline">PLM Lifecycle</span> Diagram
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => saveDraftMutation.mutate(formData)}
                   disabled={saveDraftMutation.isPending}
-                  className="gap-1.5 text-xs"
+                  className="gap-1.5 text-xs font-medium bg-white dark:bg-slate-800 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700"
                 >
-                  <Save className="h-3.5 w-3.5 text-slate-600" />
+                  {saveDraftMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5 text-slate-600 dark:text-slate-300" />}
                   Save Draft
                 </Button>
                 <Button
                   size="sm"
                   onClick={() => submitMutation.mutate()}
                   disabled={submitMutation.isPending}
-                  className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs font-bold"
+                  className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs font-semibold"
                 >
-                  <Send className="h-3.5 w-3.5" />
+                  {submitMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
                   Submit for Review
                 </Button>
 
+                {/* More Actions Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" className="h-8 w-8">
+                    <Button variant="outline" size="icon" className="h-8 w-8 bg-white dark:bg-slate-800 shadow-2xs">
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 text-xs">
-                    <DropdownMenuItem onClick={() => setShowConfigModal(true)} className="gap-2">
+                  <DropdownMenuContent align="end" className="w-56 text-xs shadow-lg">
+                    <DropdownMenuItem onClick={() => setShowConfigModal(true)} className="gap-2 cursor-pointer">
                       <Box className="h-4 w-4 text-blue-600" />
                       View Product Configuration
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowEcrModal(true)} className="gap-2">
+                    <DropdownMenuItem onClick={() => setShowEcrModal(true)} className="gap-2 cursor-pointer">
                       <Wrench className="h-4 w-4 text-amber-600" />
                       Create Engineering Change (ECR)
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowEcoModal(true)} className="gap-2">
+                    <DropdownMenuItem onClick={() => setShowEcoModal(true)} className="gap-2 cursor-pointer">
                       <FileCheck className="h-4 w-4 text-emerald-600" />
                       Create Change Order (ECO)
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowAiReportModal(true)} className="gap-2">
+                    <DropdownMenuItem onClick={() => setShowAiReportModal(true)} className="gap-2 cursor-pointer">
                       <Sparkles className="h-4 w-4 text-purple-600" />
                       Generate AI Lifecycle Report
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setShowAuditLogDrawer(true)} className="gap-2">
+                    <DropdownMenuItem onClick={() => {
+                      toast.success("Exporting PLM Record PDF...");
+                      window.print();
+                    }} className="gap-2 cursor-pointer">
+                      <Printer className="h-4 w-4 text-slate-600" />
+                      Print / Export PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success("PLM record link copied to clipboard!");
+                    }} className="gap-2 cursor-pointer">
+                      <Share2 className="h-4 w-4 text-slate-600" />
+                      Share Link
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setShowAuditLogDrawer(true)} className="gap-2 cursor-pointer">
                       <History className="h-4 w-4 text-slate-600" />
                       View Audit Log
                     </DropdownMenuItem>
@@ -468,255 +477,225 @@ export function PlmPage({
               </div>
             </div>
 
-            {/* Row 2 */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-1 text-xs">
-              <div className="flex flex-wrap items-center gap-4">
-                {/* Linked Product Chip */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Linked Product:</span>
-                  <button
-                    type="button"
-                    onClick={() => toast.info(`Navigating to product record: ${rec.linkedProduct.name}`)}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800 hover:bg-blue-100 transition-colors"
-                  >
-                    <Box className="h-3.5 w-3.5 text-blue-600" />
-                    {rec.linkedProduct.name}
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </button>
-                </div>
-
-                {/* Product Owner */}
-                <div className="flex items-center gap-1.5 border-l border-border pl-3">
-                  <span className="text-muted-foreground font-medium">Product Owner:</span>
-                  <div className="flex items-center gap-1.5">
-                    <img src={rec.productOwner.avatar} alt={rec.productOwner.name} className="h-5 w-5 rounded-full object-cover" />
-                    <span className="font-semibold text-foreground">{rec.productOwner.name}</span>
-                  </div>
-                </div>
-
-                {/* Lifecycle Manager */}
-                <div className="flex items-center gap-1.5 border-l border-border pl-3">
-                  <span className="text-muted-foreground font-medium">Lifecycle Manager:</span>
-                  <div className="flex items-center gap-1.5">
-                    <img src={rec.lifecycleManager.avatar} alt={rec.lifecycleManager.name} className="h-5 w-5 rounded-full object-cover" />
-                    <span className="font-semibold text-foreground">{rec.lifecycleManager.name}</span>
-                  </div>
-                </div>
-
-                {/* Business Unit */}
-                <div className="flex items-center gap-1.5 border-l border-border pl-3">
-                  <span className="text-muted-foreground font-medium">Business Unit:</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">{rec.businessUnit}</span>
-                </div>
+            {/* BOTTOM ROW: Key-Value Structured Metadata Ribbon */}
+            <div className="px-4 py-2.5 bg-white dark:bg-slate-900 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 text-xs divide-y sm:divide-y-0 sm:divide-x divide-border/60">
+              {/* Linked Product */}
+              <div className="flex flex-col gap-0.5 sm:pr-2">
+                <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                  <Box className="h-3 w-3 text-blue-500" /> Linked Product
+                </span>
+                <button
+                  type="button"
+                  onClick={() => toast.info(`Navigating to product record: ${rec.linkedProduct.name}`)}
+                  className="font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+                >
+                  <span className="truncate">{rec.linkedProduct.name}</span>
+                  <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+                </button>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Product Category:</span>
-                  <Badge variant="secondary" className="font-semibold bg-slate-100 dark:bg-slate-800">
-                    {rec.productCategory}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Product Family:</span>
-                  <Badge variant="outline" className="font-semibold bg-slate-50 dark:bg-slate-800">
-                    {rec.productFamily}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Priority:</span>
-                  <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 font-semibold border-amber-200">
+              {/* Product Owner */}
+              <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                  <User className="h-3 w-3 text-slate-400" /> Product Owner
+                </span>
+                <span className="font-semibold text-foreground truncate">{rec.productOwner.name}</span>
+              </div>
+
+              {/* Lifecycle Manager */}
+              <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                  <UserCheck className="h-3 w-3 text-emerald-500" /> Lifecycle Manager
+                </span>
+                <span className="font-semibold text-foreground truncate">{rec.lifecycleManager.name}</span>
+              </div>
+
+              {/* Business Unit */}
+              <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                  <Building2 className="h-3 w-3 text-slate-400" /> Business Unit
+                </span>
+                <span className="font-semibold text-foreground truncate">{rec.businessUnit}</span>
+              </div>
+
+              {/* Category / Family */}
+              <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium">Category / Family</span>
+                <span className="font-medium text-foreground truncate">
+                  {rec.productCategory} <span className="text-muted-foreground">({rec.productFamily})</span>
+                </span>
+              </div>
+
+              {/* Priority */}
+              <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium">Priority</span>
+                <div>
+                  <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 font-bold px-1.5 py-0 text-[10px] border-amber-300">
                     {rec.productPriority}
                   </Badge>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* 4-Stage Stepper Bar */}
-        <div className="mb-4 rounded-xl border border-blue-200/60 bg-blue-50/40 dark:bg-blue-950/20 p-3 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Workflow className="h-4 w-4 text-blue-600" />
-              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-                4-Stage PLM Digital Thread Workflow
+              {/* Created On */}
+              <div className="flex flex-col gap-0.5 sm:pl-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                  <Calendar className="h-3 w-3 text-slate-400" /> Created On
+                </span>
+                <span className="font-medium text-slate-600 dark:text-slate-400 truncate">{rec.createdOn}</span>
+              </div>
+            </div>
+          </Card>
+
+          {/* 4-Stage Stepper Bar */}
+          <div className="mb-6 rounded-xl border border-blue-200/60 bg-blue-50/40 dark:bg-blue-950/20 p-3 shadow-2xs">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Workflow className="h-4 w-4 text-blue-600" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+                  4-Stage PLM Digital Thread Workflow
+                </span>
+              </div>
+              <span className="text-xs text-blue-700 dark:text-blue-300 font-medium">
+                Current Stage: <strong className="font-bold">{rec.workflowStageLabel}</strong>
               </span>
             </div>
-            <span className="text-xs text-blue-700 dark:text-blue-300 font-medium">
-              Current Stage: <strong className="font-bold">{rec.workflowStageLabel}</strong>
-            </span>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-            {/* Stage 1 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(1)}
-              className={`flex items-start gap-2 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 1
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : rec.stage > 1
-                  ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+              {/* Stage 1 */}
+              <button
+                type="button"
+                onClick={() => advanceStageMutation.mutate(1)}
+                className={`flex items-center gap-3 rounded-xl p-2.5 text-left border transition-all cursor-pointer ${
                   rec.stage === 1
-                    ? "bg-blue-600 text-white"
+                    ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
                     : rec.stage > 1
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 dark:bg-slate-700 text-slate-600"
+                    ? "bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800"
+                    : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-slate-300"
                 }`}
               >
-                {rec.stage > 1 ? <Check className="h-3 w-3" /> : "1"}
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white text-[11px]">Stage 1: Config Mgmt</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">BOM & HW/FW baseline.</p>
-              </div>
-            </button>
+                <div
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                    rec.stage === 1
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : rec.stage > 1
+                      ? "bg-emerald-600 text-white shadow-xs"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                  }`}
+                >
+                  {rec.stage > 1 ? <Check className="h-4 w-4" /> : <Box className="h-4 w-4" />}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">Stage 1: Config Mgmt</span>
+                    {rec.stage > 1 && <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">Done</span>}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground truncate">BOM & HW/FW baseline</p>
+                </div>
+              </button>
 
-            {/* Stage 2 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(2)}
-              className={`flex items-start gap-2 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 2
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : rec.stage > 2
-                  ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+              {/* Stage 2 */}
+              <button
+                type="button"
+                onClick={() => advanceStageMutation.mutate(2)}
+                className={`flex items-center gap-3 rounded-xl p-2.5 text-left border transition-all cursor-pointer ${
                   rec.stage === 2
-                    ? "bg-blue-600 text-white"
+                    ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
                     : rec.stage > 2
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 dark:bg-slate-700 text-slate-600"
+                    ? "bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800"
+                    : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-slate-300"
                 }`}
               >
-                {rec.stage > 2 ? <Check className="h-3 w-3" /> : "2"}
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white text-[11px]">Stage 2: Lifecycle Assess</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Eng, Mfg & Service readiness.</p>
-              </div>
-            </button>
+                <div
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                    rec.stage === 2
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : rec.stage > 2
+                      ? "bg-emerald-600 text-white shadow-xs"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                  }`}
+                >
+                  {rec.stage > 2 ? <Check className="h-4 w-4" /> : <Activity className="h-4 w-4" />}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">Stage 2: Lifecycle Assess</span>
+                    {rec.stage > 2 && <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">Done</span>}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground truncate">Eng, Mfg & Service readiness</p>
+                </div>
+              </button>
 
-            {/* Stage 3 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(3)}
-              className={`flex items-start gap-2 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 3
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : rec.stage > 3
-                  ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+              {/* Stage 3 */}
+              <button
+                type="button"
+                onClick={() => advanceStageMutation.mutate(3)}
+                className={`flex items-center gap-3 rounded-xl p-2.5 text-left border transition-all cursor-pointer ${
                   rec.stage === 3
-                    ? "bg-blue-600 text-white"
+                    ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
                     : rec.stage > 3
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 dark:bg-slate-700 text-slate-600"
+                    ? "bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800"
+                    : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-slate-300"
                 }`}
               >
-                {rec.stage > 3 ? <Check className="h-3 w-3" /> : "3"}
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white text-[11px]">Stage 3: ECR / ECO Mgmt</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Evaluate revision changes.</p>
-              </div>
-            </button>
+                <div
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                    rec.stage === 3
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : rec.stage > 3
+                      ? "bg-emerald-600 text-white shadow-xs"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                  }`}
+                >
+                  {rec.stage > 3 ? <Check className="h-4 w-4" /> : <Wrench className="h-4 w-4" />}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">Stage 3: ECR / ECO Mgmt</span>
+                    {rec.stage > 3 && <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">Done</span>}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground truncate">Evaluate revision changes</p>
+                </div>
+              </button>
 
-            {/* Stage 4 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(4)}
-              className={`flex items-start gap-2 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 4
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                  rec.stage === 4 ? "bg-blue-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-600"
+              {/* Stage 4 */}
+              <button
+                type="button"
+                onClick={() => advanceStageMutation.mutate(4)}
+                className={`flex items-center gap-3 rounded-xl p-2.5 text-left border transition-all cursor-pointer ${
+                  rec.stage === 4
+                    ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
+                    : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-slate-300"
                 }`}
               >
-                4
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white text-[11px]">Stage 4: Executive Board</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">5-Way outcome decision.</p>
-              </div>
-            </button>
+                <div
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                    rec.stage === 4 ? "bg-blue-600 text-white shadow-xs" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                  }`}
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="font-bold text-slate-900 dark:text-white text-xs">Stage 4: Executive Board</span>
+                  <p className="text-[10px] text-muted-foreground truncate">5-Way outcome decision</p>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* 4. Tab Navigation Shell */}
-      <div className="mx-auto max-w-[1600px] px-4">
-        <PlmTabBar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          scores={{
-            configuration: rec.configurationScore,
-            engineering: rec.engineeringScore,
-            manufacturing: rec.manufacturingScore,
-            service: rec.serviceScore,
-            risk: rec.riskScore,
-            ai: rec.aiLifecycleScore,
-            overall: rec.overallProductHealthScore,
-          }}
-          attachmentsCount={rec.attachments.length}
-          status={rec.workflowStatus}
-        />
-      </div>
-
-      {/* 5. Main Dashboard Grid Layout */}
-      <div className="mx-auto max-w-[1600px] px-4 pt-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Main Content Column */}
-          <div className="lg:col-span-9 space-y-6">
-            {activeTab !== "overview" ? (
-              <Card className="border-border bg-white dark:bg-slate-900 p-8 text-center shadow-xs">
-                <CardContent className="flex flex-col items-center justify-center gap-4 py-12">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600">
-                    <Repeat className="h-8 w-8" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white capitalize">
-                    {activeTab.replace("_", " ")} Section View
-                  </h3>
-                  <p className="max-w-md text-sm text-muted-foreground">
-                    This section view is aggregated under the <strong>Overview tab</strong> single-source-of-truth dashboard. Click below to return to the interactive Overview panel.
-                  </p>
-                  <Button onClick={() => setActiveTab("overview")} className="bg-blue-600 text-white">
-                    Return to Overview Tab
-                  </Button>
-                </CardContent>
-              </Card>
-            ) : (
-              <>
-                {/* ------------------------------------------------------------- */}
-                {/* PANEL 1: Product Lifecycle Overview */}
-                {/* ------------------------------------------------------------- */}
-                <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                  <CardHeader className="pb-3 border-b border-border/60">
-                    <div className="flex items-center gap-2">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                        1
-                      </div>
-                      <CardTitle className="text-base font-bold">Product Lifecycle Overview</CardTitle>
-                    </div>
-                  </CardHeader>
+        {/* Main Dashboard Grid Layout */}
+        <div className="mx-auto max-w-[1600px] px-4 pt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left Main Content Column */}
+            <div className="lg:col-span-9 space-y-6">
+              {/* PANEL 1: Product Lifecycle Overview */}
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+                <CardHeader className="pb-3 border-b border-border/60">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <Repeat className="h-4 w-4 text-blue-600" />
+                    Product Lifecycle Overview
+                  </CardTitle>
+                </CardHeader>
                   <CardContent className="pt-4">
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                       {/* Left Form Inputs */}
@@ -812,17 +791,46 @@ export function PlmPage({
                         </div>
                       </div>
 
-                      {/* Right Product Image Panel (EV Wallbox Charger image matching screenshot 2_24.png) */}
-                      <div className="md:col-span-5 flex flex-col justify-center items-center rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-4 text-center">
-                        <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-xs mb-2 max-w-[200px]">
-                          <img
-                            src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=400&auto=format&fit=crop&q=80"
-                            alt="Smart EV Charger Product Wallbox"
-                            className="h-32 w-full object-cover rounded-lg"
-                          />
+                      {/* Right Product Technical Specs Summary Card */}
+                      <div className="md:col-span-5 flex flex-col justify-between rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-4">
+                        <div className="flex items-center justify-between pb-2.5 border-b border-border/60">
+                          <div className="flex items-center gap-2">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/50 text-blue-600">
+                              <Box className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <h4 className="text-xs font-bold text-slate-900 dark:text-white">Smart EV Charger AC 7kW</h4>
+                              <p className="text-[11px] font-mono text-muted-foreground">Model: AC-7KW-EVSE-V1.2</p>
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="text-[10px] font-mono font-semibold bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300">
+                            Active Spec
+                          </Badge>
                         </div>
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white">Smart EV Charger AC 7kW</h4>
-                        <p className="text-[11px] text-muted-foreground mt-0.5">Model: AC-7KW-EVSE-V1.2</p>
+
+                        <div className="grid grid-cols-2 gap-2 text-[11px] py-3">
+                          <div className="rounded-lg bg-white dark:bg-slate-900 p-2 border border-slate-200/80 dark:border-slate-800">
+                            <span className="text-muted-foreground block text-[10px]">Power Rating</span>
+                            <span className="font-bold text-slate-800 dark:text-slate-200">7.4 kW @ 32A</span>
+                          </div>
+                          <div className="rounded-lg bg-white dark:bg-slate-900 p-2 border border-slate-200/80 dark:border-slate-800">
+                            <span className="text-muted-foreground block text-[10px]">Protocol</span>
+                            <span className="font-bold text-slate-800 dark:text-slate-200">OCPP 1.6J / 2.0.1</span>
+                          </div>
+                          <div className="rounded-lg bg-white dark:bg-slate-900 p-2 border border-slate-200/80 dark:border-slate-800">
+                            <span className="text-muted-foreground block text-[10px]">Connectivity</span>
+                            <span className="font-bold text-slate-800 dark:text-slate-200">Wi-Fi, 4G, BLE, RFID</span>
+                          </div>
+                          <div className="rounded-lg bg-white dark:bg-slate-900 p-2 border border-slate-200/80 dark:border-slate-800">
+                            <span className="text-muted-foreground block text-[10px]">Ingress Rating</span>
+                            <span className="font-bold text-slate-800 dark:text-slate-200">IP65 / IK10 Outdoor</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-border/60 text-[10px] text-muted-foreground">
+                          <span>Digital Thread Linked</span>
+                          <span className="font-mono text-blue-600 dark:text-blue-400 font-semibold">BOM-7KW-V1.2</span>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -837,12 +845,10 @@ export function PlmPage({
                     <div>
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              2
-                            </div>
-                            <CardTitle className="text-base font-bold">Product Configuration Management</CardTitle>
-                          </div>
+                          <CardTitle className="text-base font-bold flex items-center gap-2">
+                            <Box className="h-4 w-4 text-blue-600" />
+                            Product Configuration Management
+                          </CardTitle>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                             Baseline v1.2
                           </Badge>
@@ -901,12 +907,10 @@ export function PlmPage({
                     <div>
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              3
-                            </div>
-                            <CardTitle className="text-base font-bold">Engineering Lifecycle</CardTitle>
-                          </div>
+                          <CardTitle className="text-base font-bold flex items-center gap-2">
+                            <Cpu className="h-4 w-4 text-blue-600" />
+                            Engineering Lifecycle
+                          </CardTitle>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                             6 Deliverables
                           </Badge>
@@ -962,12 +966,10 @@ export function PlmPage({
                     <div>
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              4
-                            </div>
-                            <CardTitle className="text-base font-bold">Manufacturing Lifecycle</CardTitle>
-                          </div>
+                          <CardTitle className="text-base font-bold flex items-center gap-2">
+                            <Factory className="h-4 w-4 text-blue-600" />
+                            Manufacturing Lifecycle
+                          </CardTitle>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                             6 Deliverables
                           </Badge>
@@ -1020,12 +1022,10 @@ export function PlmPage({
                     <div>
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              5
-                            </div>
-                            <CardTitle className="text-base font-bold">Service & Support Lifecycle</CardTitle>
-                          </div>
+                          <CardTitle className="text-base font-bold flex items-center gap-2">
+                            <LifeBuoy className="h-4 w-4 text-blue-600" />
+                            Service & Support Lifecycle
+                          </CardTitle>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                             5 Deliverables
                           </Badge>
@@ -1078,12 +1078,10 @@ export function PlmPage({
                 <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          6
-                        </div>
-                        <CardTitle className="text-base font-bold">Change & Obsolescence Management</CardTitle>
-                      </div>
+                      <CardTitle className="text-base font-bold flex items-center gap-2">
+                        <Wrench className="h-4 w-4 text-blue-600" />
+                        Change & Obsolescence Management
+                      </CardTitle>
                       <Badge variant="outline" className="bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-mono font-bold">
                         Obsolescence Risk: Medium
                       </Badge>
@@ -1164,12 +1162,10 @@ export function PlmPage({
                 <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          7
-                        </div>
-                        <CardTitle className="text-base font-bold">AI Lifecycle Assessment</CardTitle>
-                      </div>
+                      <CardTitle className="text-base font-bold flex items-center gap-2">
+                        <Sparkles className="h-4 w-4 text-purple-600" />
+                        AI Lifecycle Assessment
+                      </CardTitle>
                       <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold">
                         <Sparkles className="h-3 w-3 text-purple-600" />
                         AI Digital Thread Assessment
@@ -1251,12 +1247,10 @@ export function PlmPage({
                 <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          8
-                        </div>
-                        <CardTitle className="text-base font-bold">Product Lifecycle Summary</CardTitle>
-                      </div>
+                      <CardTitle className="text-base font-bold flex items-center gap-2">
+                        <Activity className="h-4 w-4 text-blue-600" />
+                        Product Lifecycle Summary
+                      </CardTitle>
                       <Badge variant="outline" className="text-xs bg-slate-50 dark:bg-slate-800 font-semibold">
                         Digital Thread Gauges
                       </Badge>
@@ -1324,12 +1318,10 @@ export function PlmPage({
                 <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          9
-                        </div>
-                        <CardTitle className="text-base font-bold">Attachments</CardTitle>
-                      </div>
+                      <CardTitle className="text-base font-bold flex items-center gap-2">
+                        <Paperclip className="h-4 w-4 text-blue-600" />
+                        Attachments
+                      </CardTitle>
                       <Button
                         variant="outline"
                         size="sm"
@@ -1387,12 +1379,10 @@ export function PlmPage({
                 <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          10
-                        </div>
-                        <CardTitle className="text-base font-bold">Review & Approval</CardTitle>
-                      </div>
+                      <CardTitle className="text-base font-bold flex items-center gap-2">
+                        <ShieldCheck className="h-4 w-4 text-blue-600" />
+                        Review & Approval
+                      </CardTitle>
                       <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-xs font-semibold border-emerald-200">
                         Executive Review Board (5-Way Decision Engine)
                       </Badge>
@@ -1416,13 +1406,8 @@ export function PlmPage({
                           {rec.reviewers.map((rev) => (
                             <tr key={rev.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
                               <td className="p-2.5 font-semibold text-slate-800 dark:text-slate-200">{rev.role}</td>
-                              <td className="p-2.5">
-                                <div className="flex items-center gap-1.5">
-                                  {rev.avatar && (
-                                    <img src={rev.avatar} alt={rev.person} className="h-5 w-5 rounded-full object-cover" />
-                                  )}
-                                  <span className="font-medium text-slate-700 dark:text-slate-300">{rev.person}</span>
-                                </div>
+                              <td className="p-2.5 font-medium text-slate-700 dark:text-slate-300">
+                                {rev.person}
                               </td>
                               <td className="p-2.5">
                                 {rev.decision === "Approved" ? (
@@ -1530,12 +1515,10 @@ export function PlmPage({
                 <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          11
-                        </div>
-                        <CardTitle className="text-base font-bold">System Information</CardTitle>
-                      </div>
+                      <CardTitle className="text-base font-bold flex items-center gap-2">
+                        <History className="h-4 w-4 text-blue-600" />
+                        System Information
+                      </CardTitle>
                       <Badge variant="outline" className="text-xs font-mono">
                         Digital Thread Logged
                       </Badge>
@@ -1599,192 +1582,131 @@ export function PlmPage({
                     </div>
                   </CardContent>
                 </Card>
-              </>
-            )}
-          </div>
+            </div>
 
-          {/* Right Sticky Sidebar Panel */}
-          <div className="lg:col-span-3 space-y-6">
-            <div className="sticky top-[110px] space-y-4">
-              {/* Overall Product Health Score Gauge Card */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60">
-                  <CardTitle className="text-sm font-bold">Overall Product Health Score</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-4 flex flex-col items-center">
-                  <CircularScoreGauge
-                    score={rec.overallProductHealthScore}
-                    size={110}
-                    strokeWidth={10}
-                    color="#059669"
-                  />
+            {/* Right Sticky Sidebar Panel */}
+            <div className="lg:col-span-3 space-y-6">
+              <div className="sticky top-6 space-y-4">
+                {/* Overall Product Health Score Gauge Card */}
+                <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="pb-2 border-b border-border/60">
+                    <CardTitle className="text-sm font-bold">Overall Product Health Score</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-4 flex flex-col items-center">
+                    <CircularScoreGauge
+                      score={rec.overallProductHealthScore}
+                      size={110}
+                      strokeWidth={10}
+                      color="#059669"
+                    />
 
-                  {/* Breakdown List */}
-                  <div className="w-full mt-4 space-y-2 text-xs border-t border-border/60 pt-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600 dark:text-slate-400">Engineering</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.engineeringScore}</span>
+                    {/* Breakdown List */}
+                    <div className="w-full mt-4 space-y-2 text-xs border-t border-border/60 pt-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-600 dark:text-slate-400">Engineering</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">{rec.engineeringScore}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-600 dark:text-slate-400">Manufacturing</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">{rec.manufacturingScore}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-600 dark:text-slate-400">Service</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">{rec.serviceScore}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-600 dark:text-slate-400">Risk</span>
+                        <span className="font-bold text-amber-600">{rec.riskScore}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600 dark:text-slate-400">Manufacturing</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.manufacturingScore}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600 dark:text-slate-400">Service</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.serviceScore}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600 dark:text-slate-400">Risk</span>
-                      <span className="font-bold text-amber-600">{rec.riskScore}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
 
-              {/* Lifecycle Stage Progress (12 Ordered Stages matching screenshot 2_24.png) */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60">
-                  <CardTitle className="text-sm font-bold">Lifecycle Stage Progress</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-3 space-y-2 text-xs">
-                  {rec.stageProgress.map((sp) => {
-                    const isCurrent = sp.name === rec.lifecycleStage;
-                    return (
-                      <div key={sp.id} className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className={`h-2 w-2 rounded-full ${
-                              sp.status === "Completed"
-                                ? "bg-emerald-500"
-                                : isCurrent
-                                ? "bg-amber-500 animate-ping"
-                                : "bg-slate-300 dark:bg-slate-700"
-                            }`}
-                          />
+                {/* Lifecycle Stage Progress (12 Ordered Stages matching screenshot 2_24.png) */}
+                <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="pb-2 border-b border-border/60">
+                    <CardTitle className="text-sm font-bold">Lifecycle Stage Progress</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-3 space-y-2 text-xs">
+                    {rec.stageProgress.map((sp) => {
+                      const isCurrent = sp.name === rec.lifecycleStage;
+                      return (
+                        <div key={sp.id} className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div
+                              className={`h-2 w-2 rounded-full ${
+                                sp.status === "Completed"
+                                  ? "bg-emerald-500"
+                                  : isCurrent
+                                  ? "bg-amber-500 animate-ping"
+                                  : "bg-slate-300 dark:bg-slate-700"
+                              }`}
+                            />
+                            <span
+                              className={`font-semibold ${
+                                isCurrent
+                                  ? "text-amber-600 dark:text-amber-400 font-bold"
+                                  : sp.status === "Completed"
+                                  ? "text-slate-700 dark:text-slate-300"
+                                  : "text-slate-400"
+                              }`}
+                            >
+                              {sp.name}
+                            </span>
+                          </div>
                           <span
-                            className={`font-semibold ${
+                            className={`text-[10px] font-mono ${
                               isCurrent
-                                ? "text-amber-600 dark:text-amber-400 font-bold"
+                                ? "text-amber-700 dark:text-amber-400 font-bold bg-amber-50 dark:bg-amber-950 px-1.5 py-0.5 rounded"
                                 : sp.status === "Completed"
-                                ? "text-slate-700 dark:text-slate-300"
+                                ? "text-emerald-600 dark:text-emerald-400 font-medium"
                                 : "text-slate-400"
                             }`}
                           >
-                            {sp.name}
+                            {sp.status}
                           </span>
                         </div>
-                        <span
-                          className={`text-[10px] font-mono ${
-                            isCurrent
-                              ? "text-amber-700 dark:text-amber-400 font-bold bg-amber-50 dark:bg-amber-950 px-1.5 py-0.5 rounded"
-                              : sp.status === "Completed"
-                              ? "text-emerald-600 dark:text-emerald-400 font-medium"
-                              : "text-slate-400"
-                          }`}
-                        >
-                          {sp.status}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </CardContent>
-              </Card>
+                      );
+                    })}
+                  </CardContent>
+                </Card>
 
-              {/* Quick Actions Card */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60">
-                  <CardTitle className="text-sm font-bold">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-3 space-y-1 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setShowEcrModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Wrench className="h-4 w-4 text-blue-600" />
-                    <span>Create Engineering Change (ECR)</span>
-                  </button>
 
-                  <button
-                    type="button"
-                    onClick={() => setShowEcoModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <FileCheck className="h-4 w-4 text-blue-600" />
-                    <span>Create Change Order (ECO)</span>
-                  </button>
 
-                  <button
-                    type="button"
-                    onClick={() => setShowTimelineModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Clock className="h-4 w-4 text-blue-600" />
-                    <span>View Product Timeline</span>
-                  </button>
+                {/* Lifecycle Timeline Component */}
+                <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+                  <CardHeader className="pb-2 border-b border-border/60 flex flex-row items-center justify-between">
+                    <CardTitle className="text-sm font-bold">Lifecycle Timeline</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-4 px-4 text-xs space-y-3">
+                    <div className="relative pl-4 space-y-4 before:absolute before:left-1.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
+                      {rec.lifecycleTimeline.map((ms) => (
+                        <div key={ms.id} className="relative flex flex-col">
+                          <div
+                            className={`absolute -left-4 top-1 h-3 w-3 rounded-full ring-4 ring-white dark:ring-slate-900 ${
+                              ms.completed ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-700"
+                            }`}
+                          />
+                          <span className={`font-bold ${ms.completed ? "text-slate-900 dark:text-white" : "text-slate-500"}`}>
+                            {ms.title}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">{ms.date}</span>
+                        </div>
+                      ))}
+                    </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setShowAiReportModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Sparkles className="h-4 w-4 text-blue-600" />
-                    <span>Generate AI Lifecycle Report</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowConfigModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Box className="h-4 w-4 text-blue-600" />
-                    <span>View Product Configuration</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.success("Exporting PLM Report...")}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Printer className="h-4 w-4 text-blue-600" />
-                    <span>Export PLM Report</span>
-                  </button>
-                </CardContent>
-              </Card>
-
-              {/* Lifecycle Timeline Component */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60 flex flex-row items-center justify-between">
-                  <CardTitle className="text-sm font-bold">Lifecycle Timeline</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-4 px-4 text-xs space-y-3">
-                  <div className="relative pl-4 space-y-4 before:absolute before:left-1.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
-                    {rec.lifecycleTimeline.map((ms) => (
-                      <div key={ms.id} className="relative flex flex-col">
-                        <div
-                          className={`absolute -left-4 top-1 h-3 w-3 rounded-full ring-4 ring-white dark:ring-slate-900 ${
-                            ms.completed ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-700"
-                          }`}
-                        />
-                        <span className={`font-bold ${ms.completed ? "text-slate-900 dark:text-white" : "text-slate-500"}`}>
-                          {ms.title}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground">{ms.date}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="pt-2 text-right border-t border-border/60">
-                    <button
-                      type="button"
-                      onClick={() => setShowTimelineModal(true)}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
-                    >
-                      View Full Timeline <ArrowRight className="h-3 w-3" />
-                    </button>
-                  </div>
-                </CardContent>
-              </Card>
+                    <div className="pt-2 text-right border-t border-border/60">
+                      <button
+                        type="button"
+                        onClick={() => setShowTimelineModal(true)}
+                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
+                      >
+                        View Full Timeline <ArrowRight className="h-3 w-3" />
+                      </button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </div>
@@ -2026,7 +1948,8 @@ export function PlmPage({
           </div>
         </DialogContent>
       </Dialog>
-    </div>
-  </AppShell>
-);
+    </AppShell>
+  );
 }
+
+export default PlmPage;

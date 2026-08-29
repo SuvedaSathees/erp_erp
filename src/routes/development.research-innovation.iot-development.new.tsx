@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo } from "react";
+import React, { useState, useMemo, type ReactNode } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
 import {
@@ -39,7 +39,6 @@ import {
   Printer,
   History,
   Workflow,
-  Sparkle,
   ArrowRight,
   ShieldCheck,
   Box,
@@ -56,7 +55,6 @@ import {
   Users,
   CheckSquare,
   FileText,
-  BadgeAlert,
   Cpu,
   Database,
   Radio,
@@ -65,6 +63,10 @@ import {
   BarChart3,
   Server,
   Terminal,
+  UserCheck,
+  Building2,
+  Paperclip,
+  HardDrive,
 } from "lucide-react";
 
 import { iotDevelopmentService } from "@/services/iotDevelopmentService";
@@ -76,7 +78,6 @@ import type {
   IotAttachment,
 } from "@/services/types";
 import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
-import { IotDevelopmentTabBar, type IotTabId } from "@/components/erp/IotDevelopmentTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -103,6 +104,19 @@ export const Route = createFileRoute(
 )({
   component: IotPage,
 });
+
+export function IotDevelopmentFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <IotPage {...props} />;
+}
+
+export function IotDevelopmentNewPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <IotPage {...props} />;
+}
+
+export function IotDevelopmentPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <IotPage {...props} />;
+}
+
 
 /* Helper component for SVG Circular Gauge */
 function CircularScoreGauge({
@@ -152,9 +166,8 @@ function CircularScoreGauge({
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-            {score}
+            {score}%
           </span>
-          <span className="text-[9px] text-slate-400 font-medium">/100</span>
         </div>
       </div>
       {label && <span className="mt-2 text-xs font-semibold text-slate-700 dark:text-slate-300">{label}</span>}
@@ -183,12 +196,10 @@ export function IotPage({
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const [activeTab, setActiveTab] = useState<IotTabId>("overview");
 
   // Dialog & Modal States
   const [showUploadDialog, setShowUploadDialog] = useState(false);
@@ -337,378 +348,200 @@ export function IotPage({
   return (
     <AppShell
       title="IoT Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > IoT Development"}
       description="Manage connected IoT devices, MQTT/CoAP telemetry, edge gateways, OTA firmware updates, and digital twin state."
       tabs={tabs ?? <ResearchInnovationTabBar />}
     >
       <div className="space-y-6 pb-16">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
-              IoT Development
-              <Wifi className="h-5 w-5 text-blue-600" />
-            </h1>
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200 font-semibold">
-              Connected Device Solution
-            </Badge>
-          </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowWorkflowModal(true)}
-                className="gap-1.5 text-xs"
-              >
-                <Workflow className="h-3.5 w-3.5 text-blue-600" />
-                IoT Solution Lifecycle (4 Stages)
-              </Button>
-            </div>
-          </div>
-
-      {/* 3. Record Header Bar (2 Rows matching screenshot 2_17.png) */}
+      {/* 3. Record Header Bar */}
       <div className="mx-auto max-w-[1600px] px-4 pt-4">
-        <Card className="border-border shadow-xs bg-white dark:bg-slate-900 mb-4">
-          <CardContent className="p-4 flex flex-col gap-3">
-            {/* Row 1 */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-border/60">
-              <div className="flex flex-wrap items-center gap-6 text-xs">
-                <div>
-                  <span className="text-muted-foreground block font-medium">IoT Development ID</span>
-                  <span className="font-mono font-bold text-foreground">{rec.iotDevelopmentId}</span>
+        <Card className="border border-border/80 shadow-xs bg-card mb-4 overflow-hidden rounded-xl">
+          {/* TOP ROW: Record Identity, Editable Title, & Action Buttons */}
+          <div className="p-4 sm:p-5 pb-4 bg-slate-50/70 dark:bg-slate-900/90 border-b border-border/70 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            {/* Left: Record Identity & Title */}
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-blue-600/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center font-bold shrink-0 border border-blue-200/50 dark:border-blue-800/50 shadow-2xs">
+                <Wifi className="h-5 w-5" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-border/60">
+                    {rec.iotDevelopmentId}
+                  </span>
+                  <span className="text-slate-300 dark:text-slate-700">•</span>
+                  <Badge variant="outline" className="font-mono text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-white/80 dark:bg-slate-800">
+                    {rec.formCode}
+                  </Badge>
+                  <Badge variant="secondary" className="font-mono text-[11px] font-bold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800">
+                    {rec.solutionVersion}
+                  </Badge>
+                  {getStatusBadge(rec.workflowStatus)}
                 </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Form Code</span>
-                  <span className="font-mono text-slate-700 dark:text-slate-300 font-semibold">{rec.formCode}</span>
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div className="min-w-[220px]">
-                  <span className="text-muted-foreground block font-medium">IoT Project Name</span>
+                {/* Project Title Input with clean hover/focus state */}
+                <div className="flex items-center gap-2">
                   <Input
                     value={formData.iotProjectName || rec.iotProjectName}
                     onChange={(e) => setFormData((prev) => ({ ...prev, iotProjectName: e.target.value }))}
-                    className="h-7 text-xs font-semibold text-foreground bg-slate-50 dark:bg-slate-800/80 border-slate-200"
+                    className="h-8 text-sm sm:text-base font-bold text-foreground bg-transparent hover:bg-white dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-primary shadow-none px-2 py-0 transition-all rounded-md max-w-md"
+                    placeholder="IoT Project Name..."
                   />
                 </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Solution Version</span>
-                  <span className="inline-flex items-center rounded-md bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-bold text-blue-700 dark:text-blue-300">
-                    {rec.solutionVersion}
-                  </span>
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Workflow Status</span>
-                  {getStatusBadge(rec.workflowStatus)}
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Created On</span>
-                  <span className="font-medium text-slate-700 dark:text-slate-300">{rec.createdOn}</span>
-                </div>
-              </div>
-
-              {/* Right Action Buttons */}
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => saveDraftMutation.mutate(formData)}
-                  disabled={saveDraftMutation.isPending}
-                  className="gap-1.5 text-xs"
-                >
-                  <Save className="h-3.5 w-3.5 text-slate-600" />
-                  Save Draft
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => submitMutation.mutate()}
-                  disabled={submitMutation.isPending}
-                  className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs font-bold"
-                >
-                  <Send className="h-3.5 w-3.5" />
-                  Submit for Review
-                </Button>
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 text-xs">
-                    <DropdownMenuItem onClick={() => setShowDeviceDashboardModal(true)} className="gap-2">
-                      <Smartphone className="h-4 w-4 text-blue-600" />
-                      View Device Dashboard
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowTopologyModal(true)} className="gap-2">
-                      <Radio className="h-4 w-4 text-emerald-600" />
-                      View Network Topology
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowDigitalTwinModal(true)} className="gap-2">
-                      <Zap className="h-4 w-4 text-purple-600" />
-                      View Digital Twin
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowSecurityScanModal(true)} className="gap-2">
-                      <Lock className="h-4 w-4 text-red-600" />
-                      Run Security Scan
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowOtaModal(true)} className="gap-2">
-                      <Upload className="h-4 w-4 text-amber-600" />
-                      Schedule OTA Update
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setShowAuditLogDrawer(true)} className="gap-2">
-                      <History className="h-4 w-4 text-slate-600" />
-                      View Audit Log
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
               </div>
             </div>
 
-            {/* Row 2 (5 Linked record chips matching screenshot 2_17.png) */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-1 text-xs">
-              <div className="flex flex-wrap items-center gap-3">
-                {/* Linked Product Chip */}
-                <div className="flex items-center gap-1">
-                  <span className="text-muted-foreground font-medium">Linked Product:</span>
-                  <button
-                    type="button"
-                    onClick={() => toast.info(`Navigating to product record: ${rec.linkedProduct.name}`)}
-                    className="inline-flex items-center gap-1 rounded-full bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 text-xs font-semibold text-blue-700 dark:text-blue-300 border border-blue-200/80 hover:bg-blue-100 transition-colors"
-                  >
-                    <Box className="h-3 w-3 text-blue-600" />
-                    {rec.linkedProduct.name}
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </button>
-                </div>
+            {/* Right: Actions */}
+            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => saveDraftMutation.mutate(formData)}
+                disabled={saveDraftMutation.isPending}
+                className="gap-1.5 text-xs font-medium bg-white dark:bg-slate-800 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700"
+              >
+                {saveDraftMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5 text-slate-600 dark:text-slate-300" />}
+                Save Draft
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => submitMutation.mutate()}
+                disabled={submitMutation.isPending}
+                className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs font-semibold"
+              >
+                {submitMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+                Submit for Review
+              </Button>
 
-                {/* Linked Embedded Systems Dev */}
-                <div className="flex items-center gap-1 border-l border-border pl-2">
-                  <span className="text-muted-foreground font-medium">Embedded Dev:</span>
-                  <button
-                    type="button"
-                    onClick={() => toast.info(`Navigating to record: ${rec.linkedEmbeddedDev.code}`)}
-                    className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 hover:bg-emerald-100 transition-colors"
-                  >
-                    <Cpu className="h-3 w-3 text-emerald-600" />
-                    {rec.linkedEmbeddedDev.code}
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </button>
-                </div>
-
-                {/* Linked Cloud Platform Dev */}
-                <div className="flex items-center gap-1 border-l border-border pl-2">
-                  <span className="text-muted-foreground font-medium">Cloud Dev:</span>
-                  <button
-                    type="button"
-                    onClick={() => toast.info(`Navigating to record: ${rec.linkedCloudDev.code}`)}
-                    className="inline-flex items-center gap-1 rounded-full bg-purple-50 dark:bg-purple-950/60 px-2 py-0.5 text-xs font-semibold text-purple-700 dark:text-purple-300 border border-purple-200/80 hover:bg-purple-100 transition-colors"
-                  >
-                    <Server className="h-3 w-3 text-purple-600" />
-                    {rec.linkedCloudDev.code}
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </button>
-                </div>
-
-                {/* Linked AI Model Dev */}
-                <div className="flex items-center gap-1 border-l border-border pl-2">
-                  <span className="text-muted-foreground font-medium">AI Dev:</span>
-                  <button
-                    type="button"
-                    onClick={() => toast.info(`Navigating to record: ${rec.linkedAiDev.code}`)}
-                    className="inline-flex items-center gap-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 hover:bg-indigo-100 transition-colors"
-                  >
-                    <Sparkles className="h-3 w-3 text-indigo-600" />
-                    {rec.linkedAiDev.code}
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </button>
-                </div>
-
-                {/* Linked API Dev */}
-                <div className="flex items-center gap-1 border-l border-border pl-2">
-                  <span className="text-muted-foreground font-medium">API Dev:</span>
-                  <button
-                    type="button"
-                    onClick={() => toast.info(`Navigating to record: ${rec.linkedApiDev.code}`)}
-                    className="inline-flex items-center gap-1 rounded-full bg-cyan-50 dark:bg-cyan-950/60 px-2 py-0.5 text-xs font-semibold text-cyan-700 dark:text-cyan-300 border border-cyan-200/80 hover:bg-cyan-100 transition-colors"
-                  >
-                    <Terminal className="h-3 w-3 text-cyan-600" />
-                    {rec.linkedApiDev.code}
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                {/* IoT Architect */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">IoT Architect:</span>
-                  <div className="flex items-center gap-1.5">
-                    <img src={rec.iotArchitect.avatar} alt={rec.iotArchitect.name} className="h-5 w-5 rounded-full object-cover" />
-                    <span className="font-semibold text-foreground">{rec.iotArchitect.name}</span>
-                  </div>
-                </div>
-
-                {/* Last Updated */}
-                <div className="flex items-center gap-1.5 border-l border-border pl-3">
-                  <span className="text-muted-foreground font-medium">Last Updated:</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">{rec.lastUpdated}</span>
-                </div>
-              </div>
+              {/* More Actions Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-8 w-8 bg-white dark:bg-slate-800 shadow-2xs">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 text-xs shadow-lg">
+                  <DropdownMenuItem onClick={() => setShowDeviceDashboardModal(true)} className="gap-2 cursor-pointer">
+                    <Smartphone className="h-4 w-4 text-blue-600" />
+                    View Device Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowTopologyModal(true)} className="gap-2 cursor-pointer">
+                    <Radio className="h-4 w-4 text-emerald-600" />
+                    View Network Topology
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowDigitalTwinModal(true)} className="gap-2 cursor-pointer">
+                    <Zap className="h-4 w-4 text-purple-600" />
+                    View Digital Twin
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowSecurityScanModal(true)} className="gap-2 cursor-pointer">
+                    <Lock className="h-4 w-4 text-red-600" />
+                    Run Security Scan
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowOtaModal(true)} className="gap-2 cursor-pointer">
+                    <Upload className="h-4 w-4 text-amber-600" />
+                    Schedule OTA Update
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => {
+                    toast.success("Exporting IoT Summary PDF...");
+                    window.print();
+                  }} className="gap-2 cursor-pointer">
+                    <Printer className="h-4 w-4 text-slate-600" />
+                    Print / Export PDF
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success("IoT solution link copied to clipboard!");
+                  }} className="gap-2 cursor-pointer">
+                    <Share2 className="h-4 w-4 text-slate-600" />
+                    Share Link
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowAuditLogDrawer(true)} className="gap-2 cursor-pointer">
+                    <History className="h-4 w-4 text-slate-600" />
+                    View Audit Log
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* 4-Stage Stepper Bar */}
-        <div className="mb-4 rounded-xl border border-blue-200/60 bg-blue-50/40 dark:bg-blue-950/20 p-3 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Workflow className="h-4 w-4 text-blue-600" />
-              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-                4-Stage IoT Solution Lifecycle
+          {/* BOTTOM ROW: Key-Value Structured Metadata Ribbon */}
+          <div className="px-4 py-2.5 bg-white dark:bg-slate-900 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs divide-y sm:divide-y-0 sm:divide-x divide-border/60">
+            {/* Linked Product */}
+            <div className="flex flex-col gap-0.5 sm:pr-2">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Box className="h-3 w-3 text-blue-500" /> Linked Product
               </span>
+              <button
+                type="button"
+                onClick={() => toast.info(`Navigating to product record: ${rec.linkedProduct.name}`)}
+                className="font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+              >
+                <span className="truncate">{rec.linkedProduct.name}</span>
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+              </button>
             </div>
-            <span className="text-xs text-blue-700 dark:text-blue-300 font-medium">
-              Current Stage: <strong className="font-bold">{rec.workflowStageLabel}</strong>
-            </span>
+
+            {/* Embedded Dev */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Cpu className="h-3 w-3 text-emerald-500" /> Embedded Dev
+              </span>
+              <button
+                type="button"
+                onClick={() => toast.info(`Navigating to record: ${rec.linkedEmbeddedDev.code}`)}
+                className="font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+              >
+                <span className="truncate">{rec.linkedEmbeddedDev.code}</span>
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+              </button>
+            </div>
+
+            {/* Cloud Dev */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Server className="h-3 w-3 text-purple-500" /> Cloud Dev
+              </span>
+              <button
+                type="button"
+                onClick={() => toast.info(`Navigating to record: ${rec.linkedCloudDev.code}`)}
+                className="font-semibold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+              >
+                <span className="truncate">{rec.linkedCloudDev.code}</span>
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+              </button>
+            </div>
+
+            {/* AI Dev */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Sparkles className="h-3 w-3 text-indigo-500" /> AI Dev
+              </span>
+              <button
+                type="button"
+                onClick={() => toast.info(`Navigating to record: ${rec.linkedAiDev.code}`)}
+                className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+              >
+                <span className="truncate">{rec.linkedAiDev.code}</span>
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+              </button>
+            </div>
+
+            {/* IoT Architect */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <UserCheck className="h-3 w-3 text-slate-400" /> IoT Architect
+              </span>
+              <span className="font-semibold text-foreground truncate">{rec.iotArchitect.name}</span>
+            </div>
+
+            {/* Last Updated & Created */}
+            <div className="flex flex-col gap-0.5 sm:pl-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Calendar className="h-3 w-3 text-slate-400" /> Created / Updated
+              </span>
+              <span className="font-medium text-slate-600 dark:text-slate-400 truncate">{rec.createdOn}</span>
+            </div>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-            {/* Stage 1 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(1)}
-              className={`flex items-start gap-2 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 1
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : rec.stage > 1
-                  ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                  rec.stage === 1
-                    ? "bg-blue-600 text-white"
-                    : rec.stage > 1
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 dark:bg-slate-700 text-slate-600"
-                }`}
-              >
-                {rec.stage > 1 ? <Check className="h-3 w-3" /> : "1"}
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white text-[11px]">Stage 1: Device & Connectivity</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Sensors, gateway & protocol design.</p>
-              </div>
-            </button>
-
-            {/* Stage 2 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(2)}
-              className={`flex items-start gap-2 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 2
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : rec.stage > 2
-                  ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                  rec.stage === 2
-                    ? "bg-blue-600 text-white"
-                    : rec.stage > 2
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 dark:bg-slate-700 text-slate-600"
-                }`}
-              >
-                {rec.stage > 2 ? <Check className="h-3 w-3" /> : "2"}
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white text-[11px]">Stage 2: Registration & Integration</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">X.509 identity & MQTT topics.</p>
-              </div>
-            </button>
-
-            {/* Stage 3 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(3)}
-              className={`flex items-start gap-2 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 3
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : rec.stage > 3
-                  ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                  rec.stage === 3
-                    ? "bg-blue-600 text-white"
-                    : rec.stage > 3
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 dark:bg-slate-700 text-slate-600"
-                }`}
-              >
-                {rec.stage > 3 ? <Check className="h-3 w-3" /> : "3"}
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white text-[11px]">Stage 3: Telemetry & Analytics</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Azure IoT Hub & AI prediction.</p>
-              </div>
-            </button>
-
-            {/* Stage 4 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(4)}
-              className={`flex items-start gap-2 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 4
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                  rec.stage === 4 ? "bg-blue-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-600"
-                }`}
-              >
-                4
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white text-[11px]">Stage 4: Review & Production</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Enable live production monitoring.</p>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Tab Navigation Shell */}
-      <div className="mx-auto max-w-[1600px] px-4">
-        <IotDevelopmentTabBar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          scores={{
-            hardware: rec.hardwareScore,
-            connectivity: rec.connectivityScore,
-            deviceMgmt: rec.deviceMgmtScore,
-            analytics: rec.analyticsScore,
-            security: rec.securityScore,
-            integration: rec.integrationScore,
-            deployment: rec.deploymentScore,
-            ai: rec.aiOverallIotScore,
-            overall: rec.overallIotSolutionScore,
-          }}
-          attachmentsCount={rec.attachments.length}
-          status={rec.workflowStatus}
-        />
+        </Card>
       </div>
 
       {/* 5. Main Dashboard Grid Layout */}
@@ -716,41 +549,20 @@ export function IotPage({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Main Content Column */}
           <div className="lg:col-span-9 space-y-6">
-            {activeTab !== "overview" ? (
-              <Card className="border-border bg-white dark:bg-slate-900 p-8 text-center shadow-xs">
-                <CardContent className="flex flex-col items-center justify-center gap-4 py-12">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600">
-                    <Wifi className="h-8 w-8" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white capitalize">
-                    {activeTab.replace("_", " ")} Section View
-                  </h3>
-                  <p className="max-w-md text-sm text-muted-foreground">
-                    This section view is aggregated under the <strong>Overview tab</strong> single-source-of-truth dashboard. Click below to return to the interactive Overview panel.
-                  </p>
-                  <Button onClick={() => setActiveTab("overview")} className="bg-blue-600 text-white">
-                    Return to Overview Tab
-                  </Button>
-                </CardContent>
-              </Card>
-            ) : (
-              <>
                 {/* ------------------------------------------------------------- */}
                 {/* PANEL 1: IoT Project Overview */}
                 {/* ------------------------------------------------------------- */}
                 <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center gap-2">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                        1
-                      </div>
+                      <Wifi className="h-5 w-5 text-blue-600" />
                       <CardTitle className="text-base font-bold">IoT Project Overview</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent className="pt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                      {/* Left Form Inputs */}
-                      <div className="md:col-span-7 space-y-3 text-xs">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                      {/* Left Column */}
+                      <div className="space-y-3">
                         <div>
                           <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
                             IoT Project Name <span className="text-red-500">*</span>
@@ -800,7 +612,10 @@ export function IotPage({
                             </Badge>
                           </div>
                         </div>
+                      </div>
 
+                      {/* Right Column */}
+                      <div className="space-y-3">
                         <div>
                           <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
                             Target Devices
@@ -825,25 +640,13 @@ export function IotPage({
                             className="text-xs resize-none"
                           />
                         </div>
-                      </div>
 
-                      {/* Right EV Charging Pole Graphic Panel (matching screenshot 2_17.png) */}
-                      <div className="md:col-span-5 flex flex-col justify-center items-center rounded-xl bg-gradient-to-br from-blue-500/10 via-emerald-500/10 to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-blue-200 dark:border-slate-700 p-6 text-center">
-                        <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-tr from-blue-600 to-emerald-600 text-white shadow-xl mb-3">
-                          <Radio className="h-12 w-12 animate-pulse" />
-                          <span className="absolute -bottom-2 -right-2 rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-extrabold text-white shadow-xs">
-                            Online
-                          </span>
-                        </div>
-                        <h4 className="text-sm font-extrabold text-slate-900 dark:text-white">
-                          Smart EV Charging Network
-                        </h4>
-                        <p className="text-xs text-muted-foreground mt-1 max-w-xs">
-                          Connected IoT gateway & MQTT stream telemetry platform.
-                        </p>
-                        <div className="mt-4 flex items-center gap-2">
-                          <Badge variant="outline" className="bg-white dark:bg-slate-800 text-xs font-bold">
-                            ESP32 MCU + 4G LTE
+                        <div>
+                          <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                            Platform Architecture
+                          </label>
+                          <Badge variant="outline" className="font-mono text-xs font-semibold">
+                            ESP32 MCU • 4G LTE • MQTT Stream
                           </Badge>
                         </div>
                       </div>
@@ -861,9 +664,7 @@ export function IotPage({
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              2
-                            </div>
+                            <Cpu className="h-5 w-5 text-blue-600" />
                             <CardTitle className="text-base font-bold">Device & Hardware Configuration</CardTitle>
                           </div>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
@@ -940,9 +741,7 @@ export function IotPage({
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              3
-                            </div>
+                            <Radio className="h-5 w-5 text-blue-600" />
                             <CardTitle className="text-base font-bold">Connectivity & Communication</CardTitle>
                           </div>
                           <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-950 text-xs font-mono font-bold">
@@ -1019,9 +818,7 @@ export function IotPage({
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              4
-                            </div>
+                            <Smartphone className="h-5 w-5 text-blue-600" />
                             <CardTitle className="text-base font-bold">Device Management</CardTitle>
                           </div>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
@@ -1077,9 +874,7 @@ export function IotPage({
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              5
-                            </div>
+                            <BarChart3 className="h-5 w-5 text-blue-600" />
                             <CardTitle className="text-base font-bold">Data Collection & Analytics</CardTitle>
                           </div>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
@@ -1144,9 +939,7 @@ export function IotPage({
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          6
-                        </div>
+                        <Lock className="h-5 w-5 text-blue-600" />
                         <CardTitle className="text-base font-bold">Security & Compliance</CardTitle>
                       </div>
                       <Badge variant="outline" className="bg-emerald-50 text-emerald-700 text-xs font-mono font-bold">
@@ -1222,9 +1015,7 @@ export function IotPage({
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              7
-                            </div>
+                            <Workflow className="h-5 w-5 text-blue-600" />
                             <CardTitle className="text-base font-bold">Integration & Automation</CardTitle>
                           </div>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
@@ -1280,9 +1071,7 @@ export function IotPage({
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              8
-                            </div>
+                            <HardDrive className="h-5 w-5 text-blue-600" />
                             <CardTitle className="text-base font-bold">Deployment & Operations</CardTitle>
                           </div>
                           <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 text-xs font-semibold">
@@ -1344,9 +1133,7 @@ export function IotPage({
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          9
-                        </div>
+                        <Sparkles className="h-5 w-5 text-purple-600" />
                         <CardTitle className="text-base font-bold">AI IoT Assessment</CardTitle>
                       </div>
                       <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold">
@@ -1405,101 +1192,13 @@ export function IotPage({
                 </Card>
 
                 {/* ------------------------------------------------------------- */}
-                {/* PANEL 10: IoT Solution Summary */}
+                {/* PANEL 10: Attachments */}
                 {/* ------------------------------------------------------------- */}
                 <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          10
-                        </div>
-                        <CardTitle className="text-base font-bold">IoT Solution Summary</CardTitle>
-                      </div>
-                      <Badge variant="outline" className="text-xs bg-slate-50 dark:bg-slate-800 font-semibold">
-                        Progress Indicators
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-4 space-y-3.5 text-xs">
-                    {/* Labeled Progress Bars matching screenshot 2_17.png */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between font-semibold">
-                        <span>Hardware Readiness</span>
-                        <span className="font-mono">{rec.hardwareScore} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-600 rounded-full" style={{ width: `${rec.hardwareScore}%` }} />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex justify-between font-semibold">
-                        <span>Connectivity Readiness</span>
-                        <span className="font-mono">{rec.connectivityScore} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-600 rounded-full" style={{ width: `${rec.connectivityScore}%` }} />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex justify-between font-semibold">
-                        <span>Security Readiness</span>
-                        <span className="font-mono">{rec.securityScore} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-600 rounded-full" style={{ width: `${rec.securityScore}%` }} />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex justify-between font-semibold">
-                        <span>Deployment Readiness</span>
-                        <span className="font-mono">{rec.deploymentScore} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-600 rounded-full" style={{ width: `${rec.deploymentScore}%` }} />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2 pt-1 border-t border-border/60">
-                      <div className="flex justify-between font-bold text-sm text-slate-900 dark:text-white">
-                        <span>Overall IoT Solution Score</span>
-                        <span className="font-mono text-emerald-600">{rec.overallIotSolutionScore} /100</span>
-                      </div>
-                      <div className="h-2.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${rec.overallIotSolutionScore}%` }} />
-                      </div>
-                    </div>
-
-                    <div className="mt-4 pt-3 border-t border-border/60 flex flex-wrap items-center justify-between gap-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-slate-700 dark:text-slate-300">Recommendation:</span>
-                        <select
-                          value={formData.recommendation || rec.recommendation}
-                          onChange={(e) => setFormData((prev) => ({ ...prev, recommendation: e.target.value }))}
-                          className="h-8 rounded-md border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 text-xs font-bold text-emerald-800 dark:text-emerald-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-                        >
-                          <option value="Proceed to Production">Proceed to Production</option>
-                          <option value="Minor Security Actions Required">Minor Security Actions Required</option>
-                          <option value="Redesign Device Architecture">Redesign Device Architecture</option>
-                        </select>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* ------------------------------------------------------------- */}
-                {/* PANEL 11: Attachments */}
-                {/* ------------------------------------------------------------- */}
-                <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                  <CardHeader className="pb-3 border-b border-border/60">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          11
-                        </div>
+                        <Paperclip className="h-5 w-5 text-blue-600" />
                         <CardTitle className="text-base font-bold">Attachments</CardTitle>
                       </div>
                       <Button
@@ -1554,15 +1253,13 @@ export function IotPage({
                 </Card>
 
                 {/* ------------------------------------------------------------- */}
-                {/* PANEL 12: Review & Approval */}
+                {/* PANEL 11: Review & Approval */}
                 {/* ------------------------------------------------------------- */}
                 <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          12
-                        </div>
+                        <UserCheck className="h-5 w-5 text-blue-600" />
                         <CardTitle className="text-base font-bold">Review & Approval</CardTitle>
                       </div>
                       <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold border-amber-200">
@@ -1681,15 +1378,13 @@ export function IotPage({
                 </Card>
 
                 {/* ------------------------------------------------------------- */}
-                {/* PANEL 13: System Information */}
+                {/* PANEL 12: System Information */}
                 {/* ------------------------------------------------------------- */}
                 <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          13
-                        </div>
+                        <History className="h-5 w-5 text-blue-600" />
                         <CardTitle className="text-base font-bold">System Information</CardTitle>
                       </div>
                       <Badge variant="outline" className="text-xs font-mono">
@@ -1763,13 +1458,11 @@ export function IotPage({
                     </div>
                   </CardContent>
                 </Card>
-              </>
-            )}
           </div>
 
           {/* Right Sticky Sidebar Panel */}
           <div className="lg:col-span-3 space-y-6">
-            <div className="sticky top-[110px] space-y-4">
+            <div className="sticky top-6 space-y-4">
               {/* Overall IoT Solution Score Gauge Card matching screenshot 2_17.png */}
               <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                 <CardHeader className="pb-2 border-b border-border/60">
@@ -1787,117 +1480,34 @@ export function IotPage({
                   <div className="w-full mt-4 space-y-2 text-xs border-t border-border/60 pt-3">
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600 dark:text-slate-400">Hardware</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.hardwareScore}</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.hardwareScore}%</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600 dark:text-slate-400">Connectivity</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.connectivityScore}</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.connectivityScore}%</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600 dark:text-slate-400">Security</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.securityScore}</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.securityScore}%</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600 dark:text-slate-400">Deployment</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.deploymentScore}</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.deploymentScore}%</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600 dark:text-slate-400">Operations</span>
-                      <span className="font-bold text-emerald-600">93</span>
+                      <span className="font-bold text-emerald-600">93%</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Key Highlights Card matching screenshot 2_17.png */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60">
-                  <CardTitle className="text-sm font-bold">Key Highlights</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-3 space-y-2.5 text-xs">
-                  {keyHighlights.map((hl, i) => (
-                    <div key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-700 dark:text-slate-300 font-medium">{hl.label}</span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
 
-              {/* Quick Actions Card matching screenshot 2_17.png */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60">
-                  <CardTitle className="text-sm font-bold">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-3 space-y-1 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => toast.success("Generating IoT Solution Report...")}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <FileText className="h-4 w-4 text-blue-600" />
-                    <span>Generate IoT Report</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowDeviceDashboardModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Smartphone className="h-4 w-4 text-blue-600" />
-                    <span>View Device Dashboard</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowTopologyModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Radio className="h-4 w-4 text-blue-600" />
-                    <span>View Network Topology</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("data_analytics")}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <BarChart3 className="h-4 w-4 text-blue-600" />
-                    <span>View Data Analytics</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowSecurityScanModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Lock className="h-4 w-4 text-blue-600" />
-                    <span>Run Security Scan</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowDigitalTwinModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Zap className="h-4 w-4 text-blue-600" />
-                    <span>View Digital Twin</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowOtaModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Upload className="h-4 w-4 text-blue-600" />
-                    <span>Schedule OTA Update</span>
-                  </button>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
       {/* --------------------------------------------------------------------- */}
       {/* DIALOGS & MODALS */}
@@ -2111,7 +1721,8 @@ export function IotPage({
           </div>
         </DialogContent>
       </Dialog>
-    </div>
-  </AppShell>
-);
+    </AppShell>
+  );
 }
+
+export default IotPage;

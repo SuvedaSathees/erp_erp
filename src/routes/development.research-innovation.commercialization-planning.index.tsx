@@ -79,7 +79,7 @@ function CommercializationRegisterPage() {
 
   return (
     <AppShell
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Commercialization Planning"
       title="Commercialization Planning"
       description="Plan go-to-market, financials, and launch readiness."
       topbarActions={

@@ -64,7 +64,6 @@ import {
   Mail,
   Phone,
   Video,
-  UserCheck2,
   ShieldAlert,
   HelpCircle,
   Eye,

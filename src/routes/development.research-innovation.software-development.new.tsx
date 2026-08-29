@@ -1,90 +1,56 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import {
+  Code,
+  Layers,
+  Cpu,
+  Database,
+  ShieldCheck,
+  Activity,
+  GitBranch,
+  Terminal,
+  Play,
+  RefreshCw,
+  FileText,
+  Download,
+  Upload,
+  Eye,
   Save,
   Send,
   MoreHorizontal,
   ExternalLink,
-  Calendar,
-  Building2,
-  FileText,
-  Download,
-  Upload,
-  X,
-  Sparkles,
-  CheckCircle2,
-  AlertTriangle,
-  History,
-  Activity,
-  Layers,
+  ChevronRight,
+  Workflow,
+  Copy,
+  Plus,
+  FileCode,
+  HardDrive,
+  Lock,
   Target,
   Zap,
-  Map,
-  Award,
-  Paperclip,
-  Eye,
+  BarChart3,
   Check,
-  ClipboardCheck,
-  Cpu,
-  ShieldAlert,
-  UserCheck,
-  FileSpreadsheet,
-  FileCode,
-  Info,
-  Clock,
-  ChevronRight,
-  TrendingUp,
-  Maximize2,
+  X,
   Share2,
   Printer,
-  FileCheck,
-  User,
-  ShieldCheck,
-  Radio,
-  HardDrive,
-  Database,
-  Lock,
-  Workflow,
-  Plus,
-  ArrowRight,
-  Palette,
-  Box,
-  Star,
-  Ruler,
-  Weight,
-  PenTool,
-  Factory,
-  CheckSquare,
-  Leaf,
-  Layers3,
-  Wrench,
-  Cog,
-  FileArchive,
-  ArrowUpRight,
-  PlusCircle,
-  BarChart3,
-  CheckCircle,
-  HelpCircle,
-  Search,
-  Flame,
-  Shield,
-  Cable,
-  CircuitBoard,
-  Microscope,
-  Terminal,
-  Code,
-  LockKeyhole,
-  GitBranch,
-  Play,
-  Package,
+  History,
+  Info,
+  Maximize2,
+  CheckCircle2,
+  AlertTriangle,
   Server,
-  Cloud,
+  Box,
   Globe,
-  DatabaseZap,
-  LayoutGrid,
-  ActivitySquare,
+  Settings,
+  Sparkles,
+  Clock,
+  ArrowRight,
+  CheckSquare,
+  UserCheck,
+  Paperclip,
+  ShieldAlert,
 } from "lucide-react";
 
 import { AppShell } from "@/components/erp/AppShell";
@@ -92,16 +58,27 @@ import {
   SoftwareDevelopmentTabBar,
   type SoftwareDevelopmentTabId,
 } from "@/components/erp/SoftwareDevelopmentTabBar";
-import { StatusBadge } from "@/components/erp/StatusBadge";
-import { ErpButton } from "@/components/erp/Button";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { softwareDevelopmentService } from "@/services";
 import type {
@@ -115,88 +92,71 @@ export const Route = createFileRoute(
   "/development/research-innovation/software-development/new",
 )({
   head: () => ({
-    meta: [{ title: "Software Development Form · Magnertia ERP" }],
+    meta: [{ title: "Software Development · Magnertia ERP" }],
   }),
-  component: SoftwareDevelopmentFormPage,
+  component: SoftwareDevelopmentNewPage,
 });
 
+export function SoftwareDevelopmentFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <SoftwareDevelopmentNewPage {...props} />;
+}
+
+export function SoftwareDevelopmentPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <SoftwareDevelopmentNewPage {...props} />;
+}
+
 /* ===========================================================================
-   Score Gauge Component (Circular Gauge / 100)
+   Circular Score Gauge Component
    =========================================================================== */
 function CircularScoreGauge({
   score,
-  label = "Overall Score",
   size = 110,
 }: {
   score: number;
   label?: string;
   size?: number;
 }) {
-  const strokeWidth = 9;
+  const strokeWidth = 8;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (score / 100) * circumference;
+  const strokeDashoffset = circumference - (score / 100) * circumference;
 
-  let strokeColor = "stroke-blue-600";
-  let textColor = "text-blue-700";
-  let bgColor = "text-blue-100";
-
-  if (score >= 85) {
-    strokeColor = "stroke-blue-600";
-    textColor = "text-blue-700";
-    bgColor = "text-blue-100";
-  } else if (score >= 70) {
-    strokeColor = "stroke-teal-600";
-    textColor = "text-teal-600";
-    bgColor = "text-teal-100";
-  } else {
-    strokeColor = "stroke-amber-500";
-    textColor = "text-amber-700";
-    bgColor = "text-amber-100";
-  }
+  let scoreColor = "text-blue-600 stroke-blue-600 dark:text-blue-400 dark:stroke-blue-400";
+  if (score < 60) scoreColor = "text-amber-500 stroke-amber-500";
+  if (score < 40) scoreColor = "text-rose-500 stroke-rose-500";
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="relative inline-flex items-center justify-center">
-        <svg width={size} height={size} className="transform -rotate-90">
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            className={bgColor}
-            strokeWidth={strokeWidth}
-            stroke="currentColor"
-            fill="transparent"
-          />
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            className={cn("transition-all duration-1000 ease-out", strokeColor)}
-            strokeWidth={strokeWidth}
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-            strokeLinecap="round"
-            stroke="currentColor"
-            fill="transparent"
-          />
-        </svg>
-        <div className="absolute flex flex-col items-center justify-center text-center">
-          <span className={cn("text-2xl font-black tracking-tight", textColor)}>
-            {score}
-          </span>
-          <span className="text-[10px] font-semibold text-slate-400">/100</span>
-        </div>
+    <div className="relative inline-flex items-center justify-center">
+      <svg width={size} height={size} className="transform -rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          className="stroke-slate-100 dark:stroke-slate-800 fill-none"
+          strokeWidth={strokeWidth}
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          className={cn("fill-none transition-all duration-1000 ease-out", scoreColor)}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center text-center">
+        <span className="text-2xl font-bold tracking-tight text-foreground">
+          {score}%
+        </span>
       </div>
-      {label && (
-        <span className="mt-2 text-xs font-bold text-slate-700">{label}</span>
-      )}
     </div>
   );
 }
 
 /* ===========================================================================
-   CI/CD Pipeline Stage Visualization Component
+   CI/CD Pipeline Stages Visualizer
    =========================================================================== */
 function CicdPipelineStages({
   stages,
@@ -204,17 +164,17 @@ function CicdPipelineStages({
   stages: { id: string; name: string; status: "completed" | "in_progress" | "pending" }[];
 }) {
   return (
-    <div className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl overflow-x-auto">
+    <div className="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-900 border border-border rounded-xl overflow-x-auto">
       {stages.map((stg, idx) => (
         <div key={stg.id} className="flex items-center gap-2">
-          <div className="flex flex-col items-center gap-1">
-            <div className="h-8 w-8 rounded-full bg-white border-2 border-primary flex items-center justify-center shadow-xs">
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="h-8 w-8 rounded-full bg-white dark:bg-slate-800 border-2 border-primary flex items-center justify-center shadow-2xs">
               <Check className="h-4 w-4 text-primary stroke-[3]" />
             </div>
-            <span className="text-[11px] font-bold text-slate-800">{stg.name}</span>
+            <span className="text-[11px] font-bold text-foreground whitespace-nowrap">{stg.name}</span>
           </div>
           {idx < stages.length - 1 && (
-            <div className="h-[2px] w-8 bg-slate-300 mx-1" />
+            <div className="h-[2px] w-10 sm:w-16 bg-slate-200 dark:bg-slate-700 mx-1" />
           )}
         </div>
       ))}
@@ -223,44 +183,33 @@ function CicdPipelineStages({
 }
 
 /* ===========================================================================
-   Main Software Development Form Page
+   Main Software Development Page Component
    =========================================================================== */
-export function SoftwareDevelopmentFormPage({
+export function SoftwareDevelopmentNewPage({
   breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<SoftwareDevelopmentTabId>("overview");
 
-  // Dialog / Modal states
+  // Modals
   const [reportModalOpen, setReportModalOpen] = useState(false);
-  const [sourceCodeModalOpen, setSourceCodeModalOpen] = useState(false);
-  const [techStackModalOpen, setTechStackModalOpen] = useState(false);
   const [architectureDiagramModalOpen, setArchitectureDiagramModalOpen] = useState(false);
-  const [apiDocsModalOpen, setApiDocsModalOpen] = useState(false);
-  const [staticAnalysisModalOpen, setStaticAnalysisModalOpen] = useState(false);
-  const [securityScanModalOpen, setSecurityScanModalOpen] = useState(false);
-  const [testReportModalOpen, setTestReportModalOpen] = useState(false);
-  const [newReleaseModalOpen, setNewReleaseModalOpen] = useState(false);
   const [systemLogModalOpen, setSystemLogModalOpen] = useState(false);
-  const [scheduleReviewModalOpen, setScheduleReviewModalOpen] = useState(false);
 
-  // Query server data
+  // Fetch record
   const { data: record, isLoading } = useQuery({
     queryKey: ["software-development-record"],
     queryFn: () => softwareDevelopmentService.fetchRecord(),
   });
 
-  // Local state for live form fields
-  const [formInput, setFormInput] = useState<SoftwareDevelopmentFormInput | null>(
-    null
-  );
+  // Local Form state
+  const [formInput, setFormInput] = useState<SoftwareDevelopmentFormInput | null>(null);
 
-  // Sync state once data loads
   if (record && !formInput) {
     setFormInput(record.input);
   }
@@ -271,7 +220,9 @@ export function SoftwareDevelopmentFormPage({
       softwareDevelopmentService.saveDraft(input, record?.id),
     onSuccess: (updated) => {
       queryClient.setQueryData(["software-development-record"], updated);
-      toast.success("Software Development draft saved successfully.");
+      toast.success("Draft saved successfully!", {
+        description: "Software development configurations updated.",
+      });
     },
     onError: (err: Error) => toast.error(err.message || "Failed to save draft"),
   });
@@ -280,7 +231,9 @@ export function SoftwareDevelopmentFormPage({
     mutationFn: () => softwareDevelopmentService.submitForReview(record?.id),
     onSuccess: (updated) => {
       queryClient.setQueryData(["software-development-record"], updated);
-      toast.success("Submitted for Stage 4 Engineering Review Board!");
+      toast.success("Submitted for Architecture Review!", {
+        description: "Project moved to Stage 4 Engineering Review.",
+      });
     },
     onError: (err: Error) => toast.error(err.message || "Submission failed"),
   });
@@ -294,7 +247,7 @@ export function SoftwareDevelopmentFormPage({
       queryClient.setQueryData(["software-development-record"], updated);
       if (variables.decision === "Approved") {
         toast.success(
-          "Software Development Approved! Auto-created/linked downstream System Integration project SI-2024-0089."
+          "Software Development Approved! Downstream System Integration project SI-2024-0089 created."
         );
       } else {
         toast.info(`Review Decision updated to '${variables.decision}'.`);
@@ -316,15 +269,15 @@ export function SoftwareDevelopmentFormPage({
     return (
       <AppShell
         title="Software Development"
-        breadcrumb={breadcrumb}
+        breadcrumb={breadcrumb ?? "Development > Product Development > Software Development"}
         tabs={tabs}
       >
-        <div className="flex h-[80vh] items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <div className="h-9 w-9 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-            <p className="text-sm font-medium text-muted-foreground">
-              Loading Software Development module...
-            </p>
+        <div className="p-8 space-y-6">
+          <div className="h-14 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="h-48 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse" />
+            <div className="h-48 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse" />
+            <div className="h-48 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse" />
           </div>
         </div>
       </AppShell>
@@ -335,1540 +288,1170 @@ export function SoftwareDevelopmentFormPage({
     setFormInput((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
+  const shouldShowSection = (tabKey: SoftwareDevelopmentTabId) => {
+    return activeTab === "overview" || activeTab === tabKey;
+  };
+
   return (
     <AppShell
       title="Software Development"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Development > Product Development > Software Development"}
       description="Develop core application software, microservices, algorithms, and backend enterprise services."
       tabs={tabs}
     >
       <div className="space-y-6 pb-16">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <ErpButton
-              variant="outline"
+        {/* ===========================================================================
+            1. RECORD HEADER BAR (Exact match to Cloud Platform / API Development design)
+            =========================================================================== */}
+        <div className="bg-white dark:bg-slate-900 border border-border rounded-xl px-6 py-4 space-y-3 shadow-2xs">
+          {/* Row 1: Primary Title, Version, Status & Actions */}
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center font-bold shrink-0 border border-blue-200/50 dark:border-blue-800/50">
+                <Code className="h-5 w-5" />
+              </div>
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  {record.softwareProjectName}
+                </h1>
+                <Badge
+                  variant="outline"
+                  className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-mono text-xs font-semibold px-2.5 py-0.5"
+                >
+                  {record.softwareVersion}
+                </Badge>
+                <Badge
+                  className={
+                    record.status === "Approved"
+                      ? "bg-emerald-600 text-white"
+                      : record.status === "In Review" || record.status === "Under Review"
+                      ? "bg-amber-500 text-white hover:bg-amber-600 font-semibold px-3 py-1 rounded-full"
+                      : "bg-blue-600 text-white"
+                  }
+                >
+                  {record.status}
+                </Badge>
+              </div>
+            </div>
+
+            {/* Header Actions */}
+            <div className="flex items-center gap-2.5 shrink-0">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => saveDraftMutation.mutate(formInput)}
+                disabled={saveDraftMutation.isPending}
+                className="gap-1.5 h-9"
+              >
+                <Save className="h-4 w-4 text-slate-500" />
+                Save Draft
+              </Button>
+
+              <Button
+                size="sm"
+                onClick={() => submitMutation.mutate()}
+                disabled={submitMutation.isPending}
+                className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-sm h-9"
+              >
+                <Send className="h-4 w-4" />
+                Submit for Review
+              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-9 w-9">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={() => setArchitectureDiagramModalOpen(true)}>
+                    <Layers className="h-4 w-4 mr-2 text-blue-500" />
+                    View Architecture Topology
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setReportModalOpen(true)}>
+                    <FileText className="h-4 w-4 mr-2 text-purple-500" />
+                    Download Executive Report
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSystemLogModalOpen(true)}>
+                    <History className="h-4 w-4 mr-2 text-emerald-500" />
+                    View Audit Trail
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => window.print()}>
+                    <Printer className="h-4 w-4 mr-2" />
+                    Print Specification
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success("Link copied to clipboard!");
+                    }}
+                  >
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share Project
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+
+          {/* Row 2: Secondary Metadata & Linked Entities with proper alignment */}
+          <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
+            <div className="flex flex-wrap items-center gap-4 text-xs">
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  SOFTWARE DEV ID
+                </span>
+                <span className="font-bold font-mono text-foreground">
+                  {record.softwareId}
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  FORM CODE
+                </span>
+                <span className="font-semibold font-mono text-foreground">
+                  {record.formCode}
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  LINKED PRD
+                </span>
+                <span
+                  onClick={() =>
+                    navigate({ to: "/development/research-innovation/prd/new" as any })
+                  }
+                  className="font-medium text-blue-600 dark:text-blue-400 flex items-center gap-1 cursor-pointer hover:underline font-mono"
+                >
+                  {record.linkedPrdId}
+                  <ExternalLink className="h-3 w-3 shrink-0" />
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  LINKED ARCHITECTURE
+                </span>
+                <span
+                  onClick={() =>
+                    navigate({
+                      to: "/development/research-innovation/product-architecture/new" as any,
+                    })
+                  }
+                  className="font-medium text-blue-600 dark:text-blue-400 flex items-center gap-1 cursor-pointer hover:underline font-mono"
+                >
+                  {record.linkedProductArchitectureId}
+                  <ExternalLink className="h-3 w-3 shrink-0" />
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  CREATED ON
+                </span>
+                <span className="font-mono text-muted-foreground">
+                  {record.createdOn}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-muted-foreground text-[10px] uppercase font-semibold">
+                SOFTWARE ARCHITECT:
+              </span>
+              <span className="font-semibold text-foreground">
+                {record.softwareArchitectName}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Downstream Banner when Approved */}
+        {record.status === "Approved" && (
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 flex items-center justify-between text-emerald-900 dark:text-emerald-200 shadow-2xs">
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="h-6 w-6 text-emerald-600 shrink-0" />
+              <div>
+                <h4 className="font-bold text-sm text-emerald-950 dark:text-white">
+                  Software Development Approved by Review Board
+                </h4>
+                <p className="text-xs text-emerald-800 dark:text-emerald-300">
+                  Downstream System Integration project{" "}
+                  <span className="font-bold font-mono">
+                    {record.linkedSystemIntegrationId}
+                  </span>{" "}
+                  has been auto-created &amp; linked (converging Firmware, Embedded, Electronics, and Software streams).
+                </p>
+              </div>
+            </div>
+            <Button
               size="sm"
               onClick={() =>
-                toast.info("Navigating to Software Development Repository...")
+                toast.info(
+                  `Navigating to System Integration (${record.linkedSystemIntegrationId})...`
+                )
               }
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
             >
-              <Database className="h-3.5 w-3.5 mr-1.5" />
-              Browse Records
-            </ErpButton>
-            <ErpButton
-              variant="primary"
-              size="sm"
-              onClick={() => {
-                toast.success("Created new Software Development Draft SWF-2024-26");
-              }}
-            >
-              <Plus className="h-3.5 w-3.5 mr-1.5" />
-              New Software Project
-            </ErpButton>
-          </div>
-        </div>
-
-        {/* ===========================================================================
-            2. WORKFLOW STAGE STEPPER (Sequence Diagram driven 4 Stages)
-            =========================================================================== */}
-        <div className="bg-slate-900 text-white px-6 py-3.5 shadow-md">
-          <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Workflow className="h-5 w-5 text-blue-400" />
-              <div>
-                <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                  Software Development Lifecycle
-                </div>
-                <div className="text-sm font-bold text-white flex items-center gap-2">
-                  {record.currentStageLabel}
-                  <span className="bg-blue-500/20 text-blue-300 text-xs px-2 py-0.5 rounded border border-blue-400/30">
-                    {record.status}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Stepper pills */}
-            <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
-              {record.stages.map((stg) => {
-                const isCurrent = stg.id === record.currentStage;
-                const isDone = stg.status === "completed";
-                return (
-                  <button
-                    key={stg.id}
-                    type="button"
-                    onClick={() => advanceStageMutation.mutate(stg.id)}
-                    className={cn(
-                      "flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer border whitespace-nowrap",
-                      isCurrent
-                        ? "bg-blue-600 border-blue-400 text-white shadow-sm ring-2 ring-blue-400/50"
-                        : isDone
-                        ? "bg-slate-800 border-slate-700 text-emerald-400 hover:bg-slate-700"
-                        : "bg-slate-800/60 border-slate-700 text-slate-400 hover:bg-slate-700"
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "h-5 w-5 rounded-full flex items-center justify-center text-[11px] font-bold",
-                        isCurrent
-                          ? "bg-white text-blue-700"
-                          : isDone
-                          ? "bg-emerald-500 text-slate-950"
-                          : "bg-slate-700 text-slate-300"
-                      )}
-                    >
-                      {isDone ? <Check className="h-3 w-3 stroke-[3]" /> : stg.stageNumber}
-                    </span>
-                    <span>{stg.label.split(": ")[1]}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* ===========================================================================
-            3. RECORD HEADER BAR (Two Rows)
-            =========================================================================== */}
-        <div className="bg-white border-b border-border px-6 py-4 shadow-xs">
-          <div className="max-w-[1600px] mx-auto space-y-3">
-            {/* Row 1: Primary Key Details & Actions */}
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex flex-wrap items-center gap-4 text-xs">
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Software Development ID
-                  </span>
-                  <span className="font-bold text-foreground text-sm font-mono">
-                    {record.softwareId}
-                  </span>
-                </div>
-
-                <div className="h-7 w-[1px] bg-slate-200" />
-
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Form Code
-                  </span>
-                  <span className="font-semibold text-slate-700 font-mono">
-                    {record.formCode}
-                  </span>
-                </div>
-
-                <div className="h-7 w-[1px] bg-slate-200" />
-
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Software Project Name
-                  </span>
-                  <input
-                    type="text"
-                    value={record.softwareProjectName}
-                    onChange={(e) =>
-                      queryClient.setQueryData(
-                        ["software-development-record"],
-                        (prev: any) => ({
-                          ...prev,
-                          softwareProjectName: e.target.value,
-                        })
-                      )
-                    }
-                    className="font-bold text-slate-900 border border-slate-300 rounded px-2 py-0.5 text-xs bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary min-w-[260px]"
-                  />
-                </div>
-
-                <div className="h-7 w-[1px] bg-slate-200" />
-
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Software Version
-                  </span>
-                  <span className="inline-block bg-slate-100 text-slate-800 border border-slate-300 font-bold text-xs px-2 py-0.5 rounded font-mono">
-                    {record.softwareVersion}
-                  </span>
-                </div>
-
-                <div className="h-7 w-[1px] bg-slate-200" />
-
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Workflow Status
-                  </span>
-                  <StatusBadge status={record.status} />
-                </div>
-
-                <div className="h-7 w-[1px] bg-slate-200" />
-
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Created On
-                  </span>
-                  <span className="font-medium text-slate-600">
-                    {record.createdOn}
-                  </span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center gap-2">
-                <ErpButton
-                  variant="outline"
-                  size="sm"
-                  loading={saveDraftMutation.isPending}
-                  onClick={() => saveDraftMutation.mutate(formInput)}
-                >
-                  <Save className="h-3.5 w-3.5 mr-1.5" />
-                  Save Draft
-                </ErpButton>
-
-                <ErpButton
-                  variant="primary"
-                  size="sm"
-                  loading={submitMutation.isPending}
-                  onClick={() => submitMutation.mutate()}
-                >
-                  <Send className="h-3.5 w-3.5 mr-1.5" />
-                  Submit for Review
-                </ErpButton>
-
-                <button
-                  type="button"
-                  onClick={() => toast.info("Exporting Software Development package...")}
-                  className="p-1.5 rounded-md border border-input bg-background hover:bg-accent text-muted-foreground hover:text-foreground cursor-pointer"
-                  title="More Options"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Row 2: Resolved Linked Records & Owner Chips */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-100 text-xs">
-              <div className="flex flex-wrap items-center gap-3">
-                {/* Linked Product Architecture Chip */}
-                <div className="flex items-center gap-1.5 bg-purple-50/80 border border-purple-200 text-purple-800 rounded-md px-2.5 py-1 font-medium">
-                  <Layers className="h-3.5 w-3.5 text-purple-600" />
-                  <span>Linked Product Architecture:</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate({
-                        to: "/development/research-innovation/product-architecture/new" as any,
-                      })
-                    }
-                    className="font-bold underline hover:text-purple-950 cursor-pointer flex items-center gap-1 font-mono"
-                  >
-                    {record.linkedProductArchitectureId}
-                    <ExternalLink className="h-3 w-3" />
-                  </button>
-                </div>
-
-                {/* Linked PRD Chip */}
-                <div className="flex items-center gap-1.5 bg-emerald-50/80 border border-emerald-200 text-emerald-800 rounded-md px-2.5 py-1 font-medium">
-                  <ClipboardCheck className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>Linked PRD:</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate({
-                        to: "/development/research-innovation/prd/new" as any,
-                      })
-                    }
-                    className="font-bold underline hover:text-emerald-950 cursor-pointer flex items-center gap-1 font-mono"
-                  >
-                    {record.linkedPrdId}
-                    <ExternalLink className="h-3 w-3" />
-                  </button>
-                </div>
-
-                {/* Linked Product Roadmap Chip */}
-                <div className="flex items-center gap-1.5 bg-blue-50/80 border border-blue-200 text-blue-800 rounded-md px-2.5 py-1 font-medium">
-                  <Map className="h-3.5 w-3.5 text-blue-600" />
-                  <span>Linked Product Roadmap:</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate({
-                        to: "/development/research-innovation/product-strategy/roadmaps" as any,
-                      })
-                    }
-                    className="font-bold underline hover:text-blue-950 cursor-pointer flex items-center gap-1 font-mono"
-                  >
-                    {record.linkedProductRoadmapId}
-                    <ExternalLink className="h-3 w-3" />
-                  </button>
-                </div>
-
-                {/* Linked Firmware Development Chip */}
-                <div className="flex items-center gap-1.5 bg-teal-50/80 border border-teal-200 text-teal-800 rounded-md px-2.5 py-1 font-medium">
-                  <Terminal className="h-3.5 w-3.5 text-teal-600" />
-                  <span>Linked Firmware Development:</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate({
-                        to: "/development/research-innovation/firmware-development/new" as any,
-                      })
-                    }
-                    className="font-bold underline hover:text-teal-950 cursor-pointer flex items-center gap-1 font-mono"
-                  >
-                    {record.linkedFirmwareDevelopmentId}
-                    <ExternalLink className="h-3 w-3" />
-                  </button>
-                </div>
-
-                {/* Linked Product Chip */}
-                <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 text-slate-700 rounded-md px-2.5 py-1 font-medium">
-                  <Target className="h-3.5 w-3.5 text-slate-500" />
-                  <span>Linked Product:</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate({
-                        to: "/development/research-innovation/product-strategy/overview" as any,
-                      })
-                    }
-                    className="font-bold underline hover:text-slate-900 cursor-pointer flex items-center gap-1"
-                  >
-                    {record.linkedProductName}
-                    <ExternalLink className="h-3 w-3" />
-                  </button>
-                </div>
-
-                {/* Downstream System Integration Banner if Approved */}
-                {record.linkedSystemIntegrationId && (
-                  <div className="flex items-center gap-1.5 bg-amber-100 border border-amber-300 text-amber-900 rounded-md px-2.5 py-1 font-bold animate-pulse">
-                    <Sparkles className="h-3.5 w-3.5 text-amber-600" />
-                    <span>Downstream System Integration:</span>
-                    <span className="underline font-black font-mono">
-                      {record.linkedSystemIntegrationId}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Right Side Metadata */}
-              <div className="flex items-center gap-4 text-muted-foreground">
-                <div>
-                  <span>Business Unit:</span>{" "}
-                  <span className="font-semibold text-foreground">
-                    {record.businessUnit}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span>Software Architect:</span>
-                  <img
-                    src={record.softwareArchitectAvatar}
-                    alt={record.softwareArchitectName}
-                    className="h-4 w-4 rounded-full object-cover"
-                  />
-                  <span className="font-semibold text-foreground">
-                    {record.softwareArchitectName}
-                  </span>
-                </div>
-                <div>
-                  <span>Last Updated:</span>{" "}
-                  <span className="font-semibold text-foreground">
-                    {record.lastUpdated}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ===========================================================================
-            4. TAB BAR
-            =========================================================================== */}
-        <SoftwareDevelopmentTabBar
-          activeTab={activeTab}
-          onTabChange={(tabId) => setActiveTab(tabId)}
-        />
-
-        {/* Notification Banner when Approved */}
-        {record.status === "Approved" && (
-          <div className="max-w-[1600px] mx-auto px-6 pt-4">
-            <div className="bg-emerald-500/10 border-2 border-emerald-500 rounded-xl p-4 flex items-center justify-between text-emerald-900 shadow-xs">
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-6 w-6 text-emerald-600 shrink-0" />
-                <div>
-                  <h4 className="font-bold text-sm text-emerald-950">
-                    Software Development Approved by Review Board
-                  </h4>
-                  <p className="text-xs text-emerald-800">
-                    Downstream System Integration project{" "}
-                    <span className="font-bold font-mono">
-                      {record.linkedSystemIntegrationId}
-                    </span>{" "}
-                    has been auto-created & linked (converging Firmware, Embedded, Electronics, and Software streams). Proceed to System Integration.
-                  </p>
-                </div>
-              </div>
-              <ErpButton
-                size="sm"
-                onClick={() =>
-                  toast.info(
-                    `Navigating to System Integration (${record.linkedSystemIntegrationId})...`
-                  )
-                }
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
-              >
-                Proceed to System Integration
-                <ArrowRight className="h-4 w-4 ml-1.5" />
-              </ErpButton>
-            </div>
+              Proceed to System Integration
+              <ArrowRight className="h-4 w-4 ml-1.5" />
+            </Button>
           </div>
         )}
 
         {/* ===========================================================================
-            5. MAIN CONTENT AREA (OVERVIEW TAB OR PLACEHOLDERS) + STICKY SIDEBAR
+            4. MAIN CONTENT AREA & STICKY SIDEBAR
             =========================================================================== */}
-        <div className="px-6 py-6 max-w-[1600px] mx-auto w-full">
-          {activeTab !== "overview" ? (
-            /* Non-Overview Placeholder / Sub-view */
-            <div className="bg-white rounded-xl border border-border p-8 shadow-xs space-y-6">
-              <div className="flex items-center justify-between border-b border-border pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                    <Code className="h-5 w-5" />
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+          {/* MAIN CONTENT PANELS (COL-SPAN 3) */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* -------------------------------------------------------------------
+                PANEL 1: Software Project Overview
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("overview") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Code className="h-4 w-4 text-blue-600" />
+                    Software Project Overview
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold">
+                    Status: {formInput.developmentStatus}
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  <div>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Product Name
+                    </label>
+                    <Input
+                      value={formInput.productName}
+                      onChange={(e) => handleFieldChange("productName", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Software Name
+                    </label>
+                    <Input
+                      value={formInput.softwareName}
+                      onChange={(e) => handleFieldChange("softwareName", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Development Objective
+                    </label>
+                    <Textarea
+                      rows={2}
+                      value={formInput.developmentObjective}
+                      onChange={(e) => handleFieldChange("developmentObjective", e.target.value)}
+                      className="text-xs resize-none"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Business Requirements
+                    </label>
+                    <Textarea
+                      rows={2}
+                      value={formInput.businessRequirements}
+                      onChange={(e) => handleFieldChange("businessRequirements", e.target.value)}
+                      className="text-xs resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Functional Requirements
+                    </label>
+                    <div className="bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 text-indigo-800 dark:text-indigo-300 text-xs font-bold px-3 py-2 rounded-lg flex items-center justify-between">
+                      <span>{formInput.functionalRequirements}</span>
+                      <span className="text-[11px] font-normal text-indigo-600 dark:text-indigo-400">Enterprise Grade</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Non-functional Requirements
+                    </label>
+                    <div className="text-xs text-foreground font-medium px-3 py-2 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-border">
+                      {formInput.nonFunctionalRequirements}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 2: Software Architecture & Topology
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("architecture") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Layers className="h-4 w-4 text-blue-600" />
+                    Software Architecture &amp; Topology
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold">
+                    Status: {formInput.architectureStatus}
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Architecture Style</span>
+                    <Input
+                      value={formInput.architectureStyle}
+                      onChange={(e) => handleFieldChange("architectureStyle", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-foreground capitalize">
-                      {activeTab.replace("_", " ")} Workspace
-                    </h3>
-                    <p className="text-xs text-muted-foreground">
-                      Linked to Software Development record ({record.softwareId}) • {record.softwareProjectName}
-                    </p>
+                    <span className="text-muted-foreground block font-semibold mb-1">Application Architecture</span>
+                    <Input
+                      value={formInput.applicationArchitecture}
+                      onChange={(e) => handleFieldChange("applicationArchitecture", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
                   </div>
-                </div>
-                <ErpButton
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setActiveTab("overview")}
-                >
-                  <ArrowRight className="h-4 w-4 mr-1.5 rotate-180" />
-                  Back to Overview Dashboard
-                </ErpButton>
-              </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Backend Architecture</span>
+                    <Input
+                      value={formInput.backendArchitecture}
+                      onChange={(e) => handleFieldChange("backendArchitecture", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Frontend Architecture</span>
+                    <Input
+                      value={formInput.frontendArchitecture}
+                      onChange={(e) => handleFieldChange("frontendArchitecture", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Microservices Count</span>
+                    <Input
+                      type="number"
+                      value={formInput.microservicesCount}
+                      onChange={(e) => handleFieldChange("microservicesCount", Number(e.target.value))}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Middleware</span>
+                    <Input
+                      value={formInput.middleware}
+                      onChange={(e) => handleFieldChange("middleware", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
-              <div className="p-12 text-center text-slate-500 space-y-3">
-                <p className="text-sm font-medium">
-                  Detailed sub-views and interactive editors for <span className="font-bold capitalize">{activeTab.replace("_", " ")}</span> are linked to record {record.softwareId}.
-                </p>
-                <ErpButton variant="outline" onClick={() => setActiveTab("overview")}>
-                  Return to Overview Dashboard
-                </ErpButton>
-              </div>
-            </div>
-          ) : (
-            /* OVERVIEW TAB CONTENT GRID + STICKY SIDEBAR */
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* MAIN CONTENT PANELS (COL-SPAN 3) */}
-              <div className="lg:col-span-3 space-y-6">
-                {/* -------------------------------------------------------------------
-                    PANEL 1: Software Project Overview
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        1
-                      </span>
-                      Software Project Overview
-                    </h2>
-                    <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      Status: {formInput.developmentStatus}
-                    </span>
+            {/* -------------------------------------------------------------------
+                PANEL 3: Technology Stack & Frameworks
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("technology_stack") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Cpu className="h-4 w-4 text-blue-600" />
+                    Technology Stack &amp; Frameworks
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-bold">
+                    Readiness: {formInput.technologyReadinessScore}/100
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Frontend Framework</span>
+                    <Input
+                      value={formInput.frontendFramework}
+                      onChange={(e) => handleFieldChange("frontendFramework", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Left/Middle text fields */}
-                    <div className="md:col-span-2 space-y-3">
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                            Product Name
-                          </label>
-                          <input
-                            type="text"
-                            value={formInput.productName}
-                            onChange={(e) => handleFieldChange("productName", e.target.value)}
-                            className="w-full rounded-md border border-input bg-slate-50/50 px-3 py-1.5 text-xs font-medium text-foreground focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                            Software Name
-                          </label>
-                          <input
-                            type="text"
-                            value={formInput.softwareName}
-                            onChange={(e) => handleFieldChange("softwareName", e.target.value)}
-                            className="w-full rounded-md border border-input bg-slate-50/50 px-3 py-1.5 text-xs font-bold text-foreground focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                          Development Objective
-                        </label>
-                        <textarea
-                          rows={2}
-                          value={formInput.developmentObjective}
-                          onChange={(e) => handleFieldChange("developmentObjective", e.target.value)}
-                          className="w-full rounded-md border border-input bg-slate-50/50 p-2 text-xs text-foreground focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                          Business Requirements
-                        </label>
-                        <textarea
-                          rows={2}
-                          value={formInput.businessRequirements}
-                          onChange={(e) => handleFieldChange("businessRequirements", e.target.value)}
-                          className="w-full rounded-md border border-input bg-slate-50/50 p-2 text-xs text-foreground focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-                        />
-                      </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Backend Framework</span>
+                    <Input
+                      value={formInput.backendFramework}
+                      onChange={(e) => handleFieldChange("backendFramework", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
 
-                      <div className="grid grid-cols-2 gap-3 pt-1">
-                        <div>
-                          <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                            Functional Requirements
-                          </label>
-                          <span className="inline-block bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold px-2.5 py-1 rounded">
-                            {formInput.functionalRequirements}
-                          </span>
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                            Non-functional Requirements
-                          </label>
-                          <span className="text-xs text-slate-700 font-medium block p-1 bg-slate-50 rounded border">
-                            {formInput.nonFunctionalRequirements}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Database Engine</span>
+                    <Input
+                      value={formInput.database}
+                      onChange={(e) => handleFieldChange("database", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
 
-                    {/* Tech Stack Laptop Image Panel */}
-                    <div className="flex flex-col items-center justify-between border border-slate-200 rounded-xl p-3 bg-slate-50/60 relative overflow-hidden group">
-                      <div className="w-full flex items-center justify-between mb-2">
-                        <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
-                          <Eye className="h-3.5 w-3.5 text-primary" />
-                          Software Platform Stack
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Cloud Infrastructure</span>
+                    <Input
+                      value={formInput.cloudPlatform}
+                      onChange={(e) => handleFieldChange("cloudPlatform", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Container Orchestration</span>
+                    <Input
+                      value={formInput.containerPlatform}
+                      onChange={(e) => handleFieldChange("containerPlatform", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Programming Languages</span>
+                    <div className="flex flex-wrap gap-1.5 p-1 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-border min-h-[36px] items-center">
+                      {formInput.programmingLanguages.map((lang, i) => (
+                        <span key={i} className="bg-white dark:bg-slate-700 border border-border px-2 py-0.5 rounded text-[11px] font-bold text-foreground shadow-2xs">
+                          {lang}
                         </span>
-                        <button
-                          type="button"
-                          onClick={() => setTechStackModalOpen(true)}
-                          className="p-1 hover:bg-white rounded text-muted-foreground hover:text-foreground cursor-pointer"
-                        >
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-
-                      <div
-                        onClick={() => setTechStackModalOpen(true)}
-                        className="w-full h-56 rounded-lg overflow-hidden bg-white border border-slate-200 flex items-center justify-center cursor-pointer relative group/img"
-                      >
-                        <img
-                          src={formInput.techStackImageUrl}
-                          alt="Laptop & Tech Stack Render"
-                          className="w-full h-full object-contain p-2 group-hover/img:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                      <span className="text-[10px] text-muted-foreground pt-1 block">
-                        React 18 • Spring Boot • Python • PostgreSQL
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 2: Software Architecture (with System Diagram)
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        2
-                      </span>
-                      Software Architecture
-                    </h2>
-                    <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      Architecture Status: {formInput.architectureStatus}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2 grid grid-cols-2 gap-3 text-xs">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Architecture Style</span>
-                        <span className="inline-block bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold px-2.5 py-1 rounded">
-                          {formInput.architectureStyle}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Application Architecture</span>
-                        <input
-                          type="text"
-                          value={formInput.applicationArchitecture}
-                          onChange={(e) => handleFieldChange("applicationArchitecture", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-semibold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Backend Architecture</span>
-                        <input
-                          type="text"
-                          value={formInput.backendArchitecture}
-                          onChange={(e) => handleFieldChange("backendArchitecture", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Frontend Architecture</span>
-                        <input
-                          type="text"
-                          value={formInput.frontendArchitecture}
-                          onChange={(e) => handleFieldChange("frontendArchitecture", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Microservices Count</span>
-                        <input
-                          type="number"
-                          value={formInput.microservicesCount}
-                          onChange={(e) => handleFieldChange("microservicesCount", Number(e.target.value))}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Middleware</span>
-                        <input
-                          type="text"
-                          value={formInput.middleware}
-                          onChange={(e) => handleFieldChange("middleware", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Architecture Diagram Box */}
-                    <div className="border border-slate-200 rounded-xl p-3 bg-slate-900 text-white flex flex-col items-center justify-between">
-                      <div className="w-full flex justify-between items-center mb-2">
-                        <span className="text-[11px] font-bold text-blue-300 uppercase tracking-wider flex items-center gap-1">
-                          <Layers className="h-3.5 w-3.5 text-blue-400" />
-                          System Architecture Diagram
-                        </span>
-                        <button type="button" onClick={() => setArchitectureDiagramModalOpen(true)} className="p-1 text-slate-400 hover:text-white">
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                      <div onClick={() => setArchitectureDiagramModalOpen(true)} className="w-full h-36 rounded-lg overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center cursor-pointer">
-                        <img src={formInput.softwareArchitectureDiagramUrl} alt="Software Architecture" className="w-full h-full object-contain p-1" />
-                      </div>
-                      <span className="text-[10px] text-slate-400 pt-1">
-                        Web/Mobile → Gateway → Microservices → DB/Cloud
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 3: Technology Stack
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        3
-                      </span>
-                      Technology Stack
-                    </h2>
-                    <span className="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-                      Tech Readiness: {formInput.technologyReadinessScore}/100
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                    <div className="md:col-span-3 grid grid-cols-2 gap-3">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Frontend Framework</span>
-                        <input
-                          type="text"
-                          value={formInput.frontendFramework}
-                          onChange={(e) => handleFieldChange("frontendFramework", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Backend Framework</span>
-                        <input
-                          type="text"
-                          value={formInput.backendFramework}
-                          onChange={(e) => handleFieldChange("backendFramework", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Programming Languages</span>
-                        <div className="flex flex-wrap gap-1 p-1 bg-slate-50 rounded border">
-                          {formInput.programmingLanguages.map((lang, i) => (
-                            <span key={i} className="bg-white border px-2 py-0.5 rounded text-xs font-bold text-slate-800">
-                              {lang}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Database</span>
-                        <input
-                          type="text"
-                          value={formInput.database}
-                          onChange={(e) => handleFieldChange("database", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-semibold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Cloud Platform</span>
-                        <input
-                          type="text"
-                          value={formInput.cloudPlatform}
-                          onChange={(e) => handleFieldChange("cloudPlatform", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-semibold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Container Platform</span>
-                        <input
-                          type="text"
-                          value={formInput.containerPlatform}
-                          onChange={(e) => handleFieldChange("containerPlatform", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-semibold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Technology Readiness Score Tile */}
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                      <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
-                        Technology Readiness Score
-                      </span>
-                      <div className="text-3xl font-black text-emerald-700 my-1">
-                        {formInput.technologyReadinessScore}{" "}
-                        <span className="text-xs font-semibold text-emerald-600">/100</span>
-                      </div>
-                      <span className="text-[10px] font-semibold text-emerald-700">
-                        React 18 & Spring Boot 3.2
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 4: API & Integration
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        4
-                      </span>
-                      API & Integration
-                    </h2>
-                    <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-0.5 rounded-full">
-                      API Status: {formInput.apiStatus}
-                    </span>
-                  </div>
-
-                  <div className="space-y-3 text-xs">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {formInput.apiTypesList.map((iface, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-2.5 bg-slate-50 border rounded-lg">
-                          <span className="font-semibold text-slate-800">{iface.name}</span>
-                          <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
-                            <Check className="h-3 w-3 stroke-[3]" /> Enabled
-                          </span>
-                        </div>
                       ))}
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">API Gateway</span>
-                        <input
-                          type="text"
-                          value={formInput.apiGateway}
-                          onChange={(e) => handleFieldChange("apiGateway", e.target.value)}
-                          className="w-full rounded-md border border-input px-2 py-1 font-semibold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Third-party APIs</span>
-                        <div className="flex flex-wrap gap-1">
-                          {formInput.thirdPartyApis.map((api, i) => (
-                            <span key={i} className="bg-blue-50 border border-blue-200 text-blue-800 px-2 py-0.5 rounded text-[11px] font-semibold">
-                              {api}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">ERP Integration</span>
-                        <input
-                          type="text"
-                          value={formInput.erpIntegration}
-                          onChange={(e) => handleFieldChange("erpIntegration", e.target.value)}
-                          className="w-full rounded-md border border-input px-2 py-1 font-semibold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                    </div>
                   </div>
-                </div>
+                </CardContent>
+              </Card>
+            )}
 
-                {/* -------------------------------------------------------------------
-                    PANEL 5: Database Design
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        5
-                      </span>
-                      Database Design
-                    </h2>
-                    <span className="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-                      Database Score: {formInput.databaseReadinessScore}/100
-                    </span>
-                  </div>
+            {/* -------------------------------------------------------------------
+                PANEL 4: API & Service Integration
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("api_integration") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Globe className="h-4 w-4 text-blue-600" />
+                    API &amp; Service Integration
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-bold">
+                    API Status: {formInput.apiStatus}
+                  </Badge>
+                </CardHeader>
 
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                    <div className="md:col-span-3 grid grid-cols-2 gap-3">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Database Type</span>
-                        <input
-                          type="text"
-                          value={formInput.databaseType}
-                          onChange={(e) => handleFieldChange("databaseType", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Database Schema</span>
-                        <button type="button" onClick={() => toast.info("Opening ER Diagram editor...")} className="text-xs font-bold text-primary hover:underline flex items-center gap-1 pt-1">
-                          {formInput.databaseSchemaLink} &rarr;
-                        </button>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Master Tables</span>
-                        <input
-                          type="number"
-                          value={formInput.masterTablesCount}
-                          onChange={(e) => handleFieldChange("masterTablesCount", Number(e.target.value))}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Transaction Tables</span>
-                        <input
-                          type="number"
-                          value={formInput.transactionTablesCount}
-                          onChange={(e) => handleFieldChange("transactionTablesCount", Number(e.target.value))}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Data Retention Policy</span>
-                        <input
-                          type="text"
-                          value={formInput.dataRetentionPolicy}
-                          onChange={(e) => handleFieldChange("dataRetentionPolicy", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Backup Strategy</span>
-                        <input
-                          type="text"
-                          value={formInput.backupStrategy}
-                          onChange={(e) => handleFieldChange("backupStrategy", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Database Readiness Score Tile */}
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                      <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
-                        Database Readiness
-                      </span>
-                      <div className="text-3xl font-black text-emerald-700 my-1">
-                        {formInput.databaseReadinessScore}{" "}
-                        <span className="text-xs font-semibold text-emerald-600">/100</span>
-                      </div>
-                      <span className="text-[10px] font-semibold text-emerald-700">
-                        100 Schema Tables Verified
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 6: DevOps & CI/CD (with Pipeline Visualization & Environments)
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        6
-                      </span>
-                      DevOps & CI/CD
-                    </h2>
-                    <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      DevOps Status: {formInput.devOpsStatus}
-                    </span>
-                  </div>
-
-                  <div className="space-y-4 text-xs">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Source Code Rep.</span>
-                        <span className="font-bold text-slate-800">{formInput.sourceCodeRepository}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Branch Strategy</span>
-                        <span className="font-bold text-slate-800">{formInput.branchStrategy}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">CI/CD Platform</span>
-                        <span className="font-bold text-slate-800">{formInput.cicdPlatform}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Build Pipeline</span>
-                        <span className="font-medium text-slate-700">{formInput.buildPipeline}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Deployment Strat.</span>
-                        <span className="font-bold text-slate-800">{formInput.deploymentStrategy}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Monitoring</span>
-                        <span className="font-medium text-slate-700">{formInput.monitoringPlatform}</span>
-                      </div>
-                    </div>
-
-                    {/* Pipeline Stage Visualization */}
-                    <CicdPipelineStages stages={formInput.pipelineStages} />
-
-                    {/* Environments Row */}
-                    <div className="pt-2 border-t flex items-center justify-between">
-                      <span className="text-muted-foreground font-semibold">Environments:</span>
-                      <div className="flex items-center gap-2">
-                        {formInput.environments.map((env, idx) => (
-                          <span
-                            key={idx}
-                            className={cn(
-                              "px-3 py-1 rounded text-xs font-bold border",
-                              env.badgeColor || "bg-slate-100 text-slate-800 border-slate-300"
-                            )}
-                          >
-                            {env.name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 7: Security & Compliance
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        7
-                      </span>
-                      Security & Compliance
-                    </h2>
-                    <span className="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-                      Security Score: {formInput.securityScore}/100
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                    <div className="md:col-span-3 grid grid-cols-2 gap-3">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Authentication Method</span>
-                        <input
-                          type="text"
-                          value={formInput.authenticationMethod}
-                          onChange={(e) => handleFieldChange("authenticationMethod", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Authorization Model</span>
-                        <input
-                          type="text"
-                          value={formInput.authorizationModel}
-                          onChange={(e) => handleFieldChange("authorizationModel", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-semibold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Encryption Standard</span>
-                        <input
-                          type="text"
-                          value={formInput.encryptionStandard}
-                          onChange={(e) => handleFieldChange("encryptionStandard", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">API Security</span>
-                        <input
-                          type="text"
-                          value={formInput.apiSecurity}
-                          onChange={(e) => handleFieldChange("apiSecurity", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Secure Coding Standard</span>
-                        <input
-                          type="text"
-                          value={formInput.secureCodingStandard}
-                          onChange={(e) => handleFieldChange("secureCodingStandard", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Regulatory Compliance</span>
-                        <div className="flex flex-wrap gap-1 p-1 bg-slate-50 rounded border">
-                          {formInput.regulatoryComplianceTags.map((tag, i) => (
-                            <span key={i} className="bg-white border px-2 py-0.5 rounded text-xs font-bold text-slate-800">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Security Score Tile */}
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                      <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
-                        Security Score
-                      </span>
-                      <div className="text-3xl font-black text-emerald-700 my-1">
-                        {formInput.securityScore}{" "}
-                        <span className="text-xs font-semibold text-emerald-600">/100</span>
-                      </div>
-                      <span className="text-[10px] font-semibold text-emerald-700">
-                        OAuth 2.0 & AES-256 Verified
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 8: Testing & Quality Assurance
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        8
-                      </span>
-                      Testing & Quality Assurance
-                    </h2>
-                    <span className="bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      Test Coverage: {formInput.codeCoverage}%
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                    <div className="md:col-span-3 space-y-3">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        {formInput.testItems.map((test) => (
-                          <div key={test.id} className="p-2.5 bg-slate-50 border rounded-lg flex justify-between items-center">
-                            <div>
-                              <span className="font-semibold text-slate-800 block">{test.name}</span>
-                            </div>
-                            <StatusBadge status={test.status} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Test Coverage Score Tile */}
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                      <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
-                        Test Coverage
-                      </span>
-                      <div className="text-3xl font-black text-emerald-700 my-1">
-                        {formInput.codeCoverage}{" "}
-                        <span className="text-xs font-semibold text-emerald-600">%</span>
-                      </div>
-                      <span className="text-[10px] font-semibold text-emerald-700">
-                        87.5% Automated Coverage
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 9: AI Software Development Assessment (Single Source of Truth)
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        9
-                      </span>
-                      AI Software Development Assessment
-                    </h2>
-                    <span className="bg-blue-600 text-white text-xs font-black px-3 py-0.5 rounded-full">
-                      AI Overall: {record.aiAssessment.aiOverallSoftwareScore} /100
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs">
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Code Quality</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiCodeQualityScore} /100</span>
-                    </div>
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Architecture</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiArchitectureAssessment} /100</span>
-                    </div>
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Performance</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiPerformanceOptimization} /100</span>
-                    </div>
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Security Anal.</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiSecurityAssessment} /100</span>
-                    </div>
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Maintainability</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiMaintainabilityAnalysis} /100</span>
-                    </div>
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Tech Debt</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiTechnicalDebtAnalysis} /100</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 10: Software Release Summary (Kept in Sync with Sidebar)
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        10
-                      </span>
-                      Software Release Summary
-                    </h2>
-                    <span className="bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold px-2.5 py-0.5 rounded-full">
-                      Recommendation: {record.summary.recommendation}
-                    </span>
-                  </div>
-
-                  <div className="space-y-3 text-xs">
-                    <div>
-                      <div className="flex justify-between font-semibold text-slate-700 mb-1">
-                        <span>Development Progress</span>
-                        <span>{record.summary.developmentProgress} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-600 rounded-full" style={{ width: `${record.summary.developmentProgress}%` }} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between font-semibold text-slate-700 mb-1">
-                        <span>Architecture Readiness</span>
-                        <span>{record.summary.architectureReadiness} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${record.summary.architectureReadiness}%` }} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between font-semibold text-slate-700 mb-1">
-                        <span>Testing Readiness</span>
-                        <span>{record.summary.testingReadiness} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-indigo-600 rounded-full" style={{ width: `${record.summary.testingReadiness}%` }} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between font-semibold text-slate-700 mb-1">
-                        <span>Deployment Readiness</span>
-                        <span>{record.summary.deploymentReadiness} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-purple-600 rounded-full" style={{ width: `${record.summary.deploymentReadiness}%` }} />
-                      </div>
-                    </div>
-                    <div className="pt-2 border-t flex justify-between items-center font-bold text-slate-900">
-                      <span>Overall Software Score</span>
-                      <span className="text-base text-blue-700">{record.summary.overallSoftwareScore} /100</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 11: Attachments
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        11
-                      </span>
-                      Attachments
-                    </h2>
-                    <button type="button" onClick={() => setActiveTab("attachments")} className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
-                      View All Attachments &rarr;
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                    {formInput.attachments.slice(0, 8).map((att) => (
-                      <div key={att.id} className="p-2.5 border border-slate-200 rounded-lg bg-slate-50/60 hover:bg-white transition-all flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 truncate">
-                          <FileText className="h-5 w-5 text-primary shrink-0" />
-                          <div className="truncate">
-                            <span className="font-bold text-xs text-foreground block truncate">{att.name}</span>
-                            <span className="text-[10px] text-muted-foreground block">{att.size}</span>
-                          </div>
-                        </div>
-                        <button type="button" onClick={() => toast.info(`Downloading ${att.name}...`)} className="p-1 text-slate-500 hover:text-slate-900 cursor-pointer">
-                          <Download className="h-3.5 w-3.5" />
-                        </button>
+                <CardContent className="pt-4 space-y-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {formInput.apiTypesList.map((iface, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg">
+                        <span className="font-bold text-foreground">{iface.name}</span>
+                        <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded">
+                          <Check className="h-3 w-3 stroke-[3]" /> Enabled
+                        </span>
                       </div>
                     ))}
                   </div>
-                </div>
 
-                {/* -------------------------------------------------------------------
-                    PANEL 12: Review & Approval Table & Form
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        12
-                      </span>
-                      Review & Approval
-                    </h2>
-                    <span className="text-xs font-semibold text-muted-foreground">
-                      Software Engineering Review Board
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Reviewers Table (Col-span 2) */}
-                    <div className="lg:col-span-2 overflow-x-auto border border-border rounded-lg">
-                      <table className="w-full text-left text-xs">
-                        <thead className="bg-slate-100 border-b border-border text-slate-700 font-semibold">
-                          <tr>
-                            <th className="p-2.5">Role</th>
-                            <th className="p-2.5">Person</th>
-                            <th className="p-2.5">Decision</th>
-                            <th className="p-2.5">Status</th>
-                            <th className="p-2.5">Date</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border">
-                          {formInput.reviewers.map((rev) => (
-                            <tr key={rev.id} className="hover:bg-slate-50">
-                              <td className="p-2.5 font-semibold text-slate-800">{rev.role}</td>
-                              <td className="p-2.5 text-slate-700">{rev.person}</td>
-                              <td className="p-2.5"><StatusBadge status={rev.decision} /></td>
-                              <td className="p-2.5 font-medium text-slate-600">{rev.status}</td>
-                              <td className="p-2.5 text-slate-500">{rev.date || "—"}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 border-t border-border">
+                    <div>
+                      <span className="text-muted-foreground block font-semibold mb-1">API Gateway</span>
+                      <Input
+                        value={formInput.apiGateway}
+                        onChange={(e) => handleFieldChange("apiGateway", e.target.value)}
+                        className="h-9 text-xs font-semibold"
+                      />
                     </div>
-
-                    {/* Decision Input Controls */}
-                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3 text-xs">
-                      <div>
-                        <label className="block font-semibold text-muted-foreground mb-1">Approval Decision</label>
-                        <select
-                          value={formInput.approvalDecision || ""}
-                          onChange={(e) => handleFieldChange("approvalDecision", e.target.value as SoftwareDevelopmentApprovalDecision)}
-                          className="w-full rounded-md border border-input bg-white p-2 font-semibold text-foreground"
-                        >
-                          <option value="">Select Decision</option>
-                          <option value="Approved">Approved</option>
-                          <option value="Approved with Conditions">Approved with Conditions</option>
-                          <option value="Revision Required">Revision Required</option>
-                          <option value="Rejected">Rejected</option>
-                        </select>
+                    <div>
+                      <span className="text-muted-foreground block font-semibold mb-1">ERP Integration</span>
+                      <Input
+                        value={formInput.erpIntegration}
+                        onChange={(e) => handleFieldChange("erpIntegration", e.target.value)}
+                        className="h-9 text-xs font-semibold"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-semibold mb-1">Third-party APIs</span>
+                      <div className="flex flex-wrap gap-1.5 p-1">
+                        {formInput.thirdPartyApis.map((api, i) => (
+                          <span key={i} className="bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 px-2 py-0.5 rounded text-[11px] font-semibold">
+                            {api}
+                          </span>
+                        ))}
                       </div>
-
-                      <div>
-                        <div className="flex justify-between font-semibold text-muted-foreground mb-1">
-                          <label>Review Comments</label>
-                          <span>{(formInput.reviewComments || "").length}/2000</span>
-                        </div>
-                        <textarea
-                          rows={3}
-                          maxLength={2000}
-                          value={formInput.reviewComments || ""}
-                          onChange={(e) => handleFieldChange("reviewComments", e.target.value)}
-                          placeholder="Enter software review board comments..."
-                          className="w-full rounded-md border border-input bg-white p-2 text-foreground resize-none"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block font-semibold text-muted-foreground mb-1">Approval Date</label>
-                        <input
-                          type="date"
-                          value={formInput.approvalDate || ""}
-                          onChange={(e) => handleFieldChange("approvalDate", e.target.value)}
-                          className="w-full rounded-md border border-input bg-white p-2 text-foreground"
-                        />
-                      </div>
-
-                      <ErpButton
-                        size="sm"
-                        className="w-full"
-                        loading={reviewMutation.isPending}
-                        onClick={() => {
-                          if (!formInput.approvalDecision) {
-                            toast.error("Please select an Approval Decision.");
-                            return;
-                          }
-                          reviewMutation.mutate({
-                            decision: formInput.approvalDecision,
-                            comments: formInput.reviewComments,
-                          });
-                        }}
-                      >
-                        Submit Board Decision
-                      </ErpButton>
                     </div>
                   </div>
-                </div>
+                </CardContent>
+              </Card>
+            )}
 
-                {/* -------------------------------------------------------------------
-                    PANEL 13: System Information
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        13
-                      </span>
-                      System Information
-                    </h2>
-                    <span className="text-xs font-semibold text-muted-foreground font-mono">
-                      Audit Ref: {record.id}
-                    </span>
-                  </div>
+            {/* -------------------------------------------------------------------
+                PANEL 5: Database Architecture & Schema
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("database") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Database className="h-4 w-4 text-blue-600" />
+                    Database Architecture &amp; Schema
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-bold">
+                    Readiness: {formInput.databaseReadinessScore}/100 (100 Tables)
+                  </Badge>
+                </CardHeader>
 
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                    <div className="md:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Created By</span>
-                        <span className="font-bold text-foreground">{record.softwareArchitectName}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Created Date</span>
-                        <span className="font-medium text-slate-700">{record.createdOn}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Last Modified By</span>
-                        <span className="font-bold text-foreground">{record.softwareArchitectName}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Last Modified Date</span>
-                        <span className="font-medium text-slate-700">{record.lastUpdated}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Workflow Stage</span>
-                        <StatusBadge status={record.currentStageLabel.split(": ")[1]} />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Version</span>
-                        <span className="font-bold font-mono text-foreground">v{record.version}</span>
-                      </div>
-                    </div>
-
-                    {/* History links */}
-                    <div className="flex flex-col justify-center space-y-1.5 border-l border-slate-200 pl-4">
-                      <button type="button" onClick={() => setSystemLogModalOpen(true)} className="text-xs font-bold text-primary hover:underline text-left cursor-pointer">
-                        View Log &rarr;
-                      </button>
-                      <button type="button" onClick={() => setSystemLogModalOpen(true)} className="text-xs font-bold text-primary hover:underline text-left cursor-pointer">
-                        View History &rarr;
-                      </button>
-                      <button type="button" onClick={() => setSystemLogModalOpen(true)} className="text-xs font-bold text-primary hover:underline text-left cursor-pointer">
-                        View Changes &rarr;
-                      </button>
-                      <button type="button" onClick={() => setSystemLogModalOpen(true)} className="text-xs font-bold text-primary hover:underline text-left cursor-pointer">
-                        View Workflow &rarr;
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* ===========================================================================
-                  RIGHT SIDEBAR PANEL (STICKY ON SCROLL)
-                  =========================================================================== */}
-              <div className="lg:col-span-1 space-y-6">
-                <div className="sticky top-6 space-y-6">
-                  {/* Overall Software Score Gauge Box */}
-                  <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                    <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-4 text-center flex items-center justify-center gap-1.5">
-                      <Code className="h-4 w-4 text-primary" />
-                      Overall Software Score
-                    </h3>
-
-                    <CircularScoreGauge
-                      score={record.summary.overallSoftwareScore}
-                      label="Overall Score"
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Database Type</span>
+                    <Input
+                      value={formInput.databaseType}
+                      onChange={(e) => handleFieldChange("databaseType", e.target.value)}
+                      className="h-9 text-xs font-bold"
                     />
+                  </div>
 
-                    <div className="mt-5 space-y-2 border-t border-slate-100 pt-4 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground font-medium">Code Quality</span>
-                        <span className="font-bold text-slate-800">{record.summary.developmentProgress} /100</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground font-medium">Architecture</span>
-                        <span className="font-bold text-slate-800">{record.summary.architectureReadiness} /100</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground font-medium">Security</span>
-                        <span className="font-bold text-slate-800">{record.summary.deploymentReadiness} /100</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground font-medium">Performance</span>
-                        <span className="font-bold text-slate-800">86 /100</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground font-medium">Test Coverage</span>
-                        <span className="font-bold text-slate-800">{record.summary.testingReadiness}%</span>
-                      </div>
-                      <div className="flex justify-between items-center pt-1 border-t font-bold text-blue-700">
-                        <span>Overall Score</span>
-                        <span>{record.summary.overallSoftwareScore} /100</span>
-                      </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Master Tables</span>
+                    <Input
+                      type="number"
+                      value={formInput.masterTablesCount}
+                      onChange={(e) => handleFieldChange("masterTablesCount", Number(e.target.value))}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Transaction Tables</span>
+                    <Input
+                      type="number"
+                      value={formInput.transactionTablesCount}
+                      onChange={(e) => handleFieldChange("transactionTablesCount", Number(e.target.value))}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Data Retention Policy</span>
+                    <Input
+                      value={formInput.dataRetentionPolicy}
+                      onChange={(e) => handleFieldChange("dataRetentionPolicy", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Backup Strategy</span>
+                    <Input
+                      value={formInput.backupStrategy}
+                      onChange={(e) => handleFieldChange("backupStrategy", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Database Schema</span>
+                    <button
+                      type="button"
+                      onClick={() => toast.info("Opening ER Diagram editor...")}
+                      className="text-xs font-bold text-primary hover:underline flex items-center gap-1.5 pt-2"
+                    >
+                      {formInput.databaseSchemaLink} &rarr;
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 6: DevOps & CI/CD Pipeline
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("devops_cicd") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <GitBranch className="h-4 w-4 text-blue-600" />
+                    DevOps &amp; CI/CD Pipeline
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold">
+                    DevOps: {formInput.devOpsStatus}
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 space-y-4 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                    <div>
+                      <span className="text-muted-foreground block font-semibold">Repository</span>
+                      <span className="font-bold text-foreground">{formInput.sourceCodeRepository}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-semibold">Branch Strategy</span>
+                      <span className="font-bold text-foreground">{formInput.branchStrategy}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-semibold">CI/CD Platform</span>
+                      <span className="font-bold text-foreground">{formInput.cicdPlatform}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-semibold">Build Pipeline</span>
+                      <span className="font-medium text-foreground">{formInput.buildPipeline}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-semibold">Deployment Strat.</span>
+                      <span className="font-bold text-foreground">{formInput.deploymentStrategy}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-semibold">Monitoring</span>
+                      <span className="font-medium text-foreground">{formInput.monitoringPlatform}</span>
                     </div>
                   </div>
 
-                  {/* Key Highlights Dynamic Checklist */}
-                  <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                    <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
-                      Key Highlights
-                    </h3>
-                    <div className="space-y-2 text-xs">
-                      {record.keyHighlights.map((hl, idx) => (
-                        <div key={idx} className="flex items-start gap-2 text-slate-700">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                          <span className="font-medium">{hl}</span>
-                        </div>
+                  {/* Pipeline Visualizer */}
+                  <CicdPipelineStages stages={formInput.pipelineStages} />
+
+                  {/* Environments */}
+                  <div className="pt-3 border-t border-border flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-muted-foreground font-semibold">Target Environments:</span>
+                    <div className="flex items-center gap-2">
+                      {formInput.environments.map((env, idx) => (
+                        <span
+                          key={idx}
+                          className={cn(
+                            "px-3 py-1 rounded-lg text-xs font-bold border",
+                            env.badgeColor || "bg-slate-100 text-slate-800 border-slate-300 dark:bg-slate-800 dark:text-slate-200"
+                          )}
+                        >
+                          {env.name}
+                        </span>
                       ))}
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            )}
 
-                  {/* Quick Actions List */}
-                  <div className="bg-white rounded-xl border border-border p-5 shadow-xs space-y-3">
-                    <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Quick Actions
-                    </h3>
-                    <div className="space-y-1.5">
-                      <button
-                        type="button"
-                        onClick={() => setReportModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <FileText className="h-4 w-4 text-blue-600" />
-                        Generate Software Report
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setSourceCodeModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <Code className="h-4 w-4 text-amber-600" />
-                        View Source Code Repository
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setApiDocsModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <Globe className="h-4 w-4 text-teal-600" />
-                        API Documentation
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setStaticAnalysisModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <ShieldCheck className="h-4 w-4 text-indigo-600" />
-                        Run Static Code Analysis
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setSecurityScanModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <Lock className="h-4 w-4 text-rose-600" />
-                        Run Security Scan
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setTestReportModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <CheckSquare className="h-4 w-4 text-purple-600" />
-                        View Test Report
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setNewReleaseModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <Package className="h-4 w-4 text-emerald-600" />
-                        Create New Release
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setScheduleReviewModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <Calendar className="h-4 w-4 text-blue-600" />
-                        Schedule Design Review
-                      </button>
+            {/* -------------------------------------------------------------------
+                PANEL 7: Security, Auth & Compliance
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("security_compliance") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-blue-600" />
+                    Security, Auth &amp; Compliance
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-bold">
+                    Score: {formInput.securityScore}/100
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Authentication Method</span>
+                    <Input
+                      value={formInput.authenticationMethod}
+                      onChange={(e) => handleFieldChange("authenticationMethod", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Authorization Model</span>
+                    <Input
+                      value={formInput.authorizationModel}
+                      onChange={(e) => handleFieldChange("authorizationModel", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Encryption Standard</span>
+                    <Input
+                      value={formInput.encryptionStandard}
+                      onChange={(e) => handleFieldChange("encryptionStandard", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">API Security</span>
+                    <Input
+                      value={formInput.apiSecurity}
+                      onChange={(e) => handleFieldChange("apiSecurity", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Secure Coding Standard</span>
+                    <Input
+                      value={formInput.secureCodingStandard}
+                      onChange={(e) => handleFieldChange("secureCodingStandard", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Regulatory Compliance</span>
+                    <div className="flex flex-wrap gap-1.5 p-1 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-border min-h-[36px] items-center">
+                      {formInput.regulatoryComplianceTags.map((tag, i) => (
+                        <span key={i} className="bg-white dark:bg-slate-700 border border-border px-2 py-0.5 rounded text-[11px] font-bold text-foreground shadow-2xs">
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 8: Testing Suite & QA Coverage
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("testing_qa") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <CheckSquare className="h-4 w-4 text-blue-600" />
+                    Testing Suite &amp; QA Coverage
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-bold">
+                    Automated Code Coverage: {formInput.codeCoverage}%
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                  {formInput.testItems.map((test) => (
+                    <div key={test.id} className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg flex justify-between items-center">
+                      <span className="font-semibold text-foreground">{test.name}</span>
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "text-[11px] font-semibold",
+                          test.status === "Completed"
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                            : "bg-blue-50 text-blue-700 border-blue-200"
+                        )}
+                      >
+                        {test.status}
+                      </Badge>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 9: AI Software Assessment
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("ai_assessment") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-blue-600" />
+                    AI Software Quality &amp; Architecture Assessment
+                  </CardTitle>
+                  <Badge className="bg-blue-600 text-white text-xs font-bold px-3 py-0.5 rounded-full">
+                    AI Overall: {record.aiAssessment.aiOverallSoftwareScore}/100
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs">
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Code Quality</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiCodeQualityScore}/100</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Architecture</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiArchitectureAssessment}/100</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Performance</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiPerformanceOptimization}/100</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Security Anal.</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiSecurityAssessment}/100</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Maintainability</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiMaintainabilityAnalysis}/100</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Tech Debt</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiTechnicalDebtAnalysis}/100</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 10: Readiness Summary
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("summary") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <BarChart3 className="h-4 w-4 text-blue-600" />
+                    Readiness &amp; Release Summary
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 text-xs font-bold px-2.5 py-0.5">
+                    Recommendation: {record.summary.recommendation}
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 space-y-3.5 text-xs">
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>Development Progress</span>
+                      <span>{record.summary.developmentProgress} / 100</span>
+                    </div>
+                    <Progress value={record.summary.developmentProgress} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>Architecture Readiness</span>
+                      <span>{record.summary.architectureReadiness} / 100</span>
+                    </div>
+                    <Progress value={record.summary.architectureReadiness} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>Testing Readiness</span>
+                      <span>{record.summary.testingReadiness} / 100</span>
+                    </div>
+                    <Progress value={record.summary.testingReadiness} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>Deployment Readiness</span>
+                      <span>{record.summary.deploymentReadiness} / 100</span>
+                    </div>
+                    <Progress value={record.summary.deploymentReadiness} className="h-2" />
+                  </div>
+                  <div className="pt-2 border-t border-border flex justify-between items-center font-bold text-foreground">
+                    <span>Overall Software Score</span>
+                    <span className="text-base text-blue-600">{record.summary.overallSoftwareScore} / 100</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 11: Document & Artifact Attachments
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("attachments") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Paperclip className="h-4 w-4 text-blue-600" />
+                    Document &amp; Artifact Attachments
+                  </CardTitle>
+                  <span className="text-xs font-semibold text-muted-foreground">
+                    {formInput.attachments.length} Verified Files
+                  </span>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                  {formInput.attachments.map((att) => (
+                    <div key={att.id} className="p-3 border border-border rounded-lg bg-slate-50/60 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 transition-all flex items-center justify-between gap-2 shadow-2xs">
+                      <div className="flex items-center gap-2 truncate">
+                        <FileText className="h-4 w-4 text-primary shrink-0" />
+                        <div className="truncate">
+                          <span className="font-bold text-xs text-foreground block truncate">{att.name}</span>
+                          <span className="text-[10px] text-muted-foreground block">{att.size}</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toast.info(`Downloading ${att.name}...`)}
+                        className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
+                        title="Download file"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 12: Review & Approval Table & Form
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("review_approval") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <UserCheck className="h-4 w-4 text-blue-600" />
+                    Review &amp; Approval
+                  </CardTitle>
+                  <span className="text-xs font-semibold text-muted-foreground">
+                    Software Engineering Review Board
+                  </span>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Reviewers Table (Col-span 2) */}
+                  <div className="lg:col-span-2 overflow-x-auto border border-border rounded-lg">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-border text-foreground font-semibold">
+                        <tr>
+                          <th className="p-2.5">Role</th>
+                          <th className="p-2.5">Person</th>
+                          <th className="p-2.5">Decision</th>
+                          <th className="p-2.5">Status</th>
+                          <th className="p-2.5">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {formInput.reviewers.map((rev) => (
+                          <tr key={rev.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40">
+                            <td className="p-2.5 font-semibold text-foreground">{rev.role}</td>
+                            <td className="p-2.5 text-muted-foreground">{rev.person}</td>
+                            <td className="p-2.5">
+                              <Badge
+                                variant="outline"
+                                className={cn(
+                                  "text-[10px] font-semibold",
+                                  rev.decision === "Approved"
+                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                    : "bg-amber-50 text-amber-700 border-amber-200"
+                                )}
+                              >
+                                {rev.decision}
+                              </Badge>
+                            </td>
+                            <td className="p-2.5 font-medium text-foreground">{rev.status}</td>
+                            <td className="p-2.5 text-muted-foreground">{rev.date || "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Decision Input Controls */}
+                  <div className="bg-slate-50 dark:bg-slate-800/50 border border-border rounded-xl p-4 space-y-3 text-xs">
+                    <div>
+                      <label className="block font-semibold text-muted-foreground mb-1">Approval Decision</label>
+                      <select
+                        value={formInput.approvalDecision || ""}
+                        onChange={(e) => handleFieldChange("approvalDecision", e.target.value as SoftwareDevelopmentApprovalDecision)}
+                        className="w-full rounded-lg border border-input bg-white dark:bg-slate-900 p-2 font-semibold text-foreground text-xs"
+                      >
+                        <option value="">Select Decision</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Approved with Conditions">Approved with Conditions</option>
+                        <option value="Revision Required">Revision Required</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between font-semibold text-muted-foreground mb-1">
+                        <label>Review Comments</label>
+                        <span>{(formInput.reviewComments || "").length}/2000</span>
+                      </div>
+                      <Textarea
+                        rows={3}
+                        maxLength={2000}
+                        value={formInput.reviewComments || ""}
+                        onChange={(e) => handleFieldChange("reviewComments", e.target.value)}
+                        placeholder="Enter software review board comments..."
+                        className="text-xs resize-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-muted-foreground mb-1">Approval Date</label>
+                      <Input
+                        type="date"
+                        value={formInput.approvalDate || ""}
+                        onChange={(e) => handleFieldChange("approvalDate", e.target.value)}
+                        className="h-9 text-xs"
+                      />
+                    </div>
+
+                    <Button
+                      size="sm"
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                      disabled={reviewMutation.isPending}
+                      onClick={() => {
+                        if (!formInput.approvalDecision) {
+                          toast.error("Please select an Approval Decision.");
+                          return;
+                        }
+                        reviewMutation.mutate({
+                          decision: formInput.approvalDecision,
+                          comments: formInput.reviewComments,
+                        });
+                      }}
+                    >
+                      Submit Board Decision
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 13: System Information & Audit Trail
+                ------------------------------------------------------------------- */}
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+              <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                <CardTitle className="text-sm font-bold flex items-center gap-2">
+                  <History className="h-4 w-4 text-blue-600" />
+                  System Information &amp; Audit Trail
+                </CardTitle>
+                <span className="text-xs font-semibold text-muted-foreground font-mono">
+                  Audit Ref: {record.id}
+                </span>
+              </CardHeader>
+
+              <CardContent className="pt-4 grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                <div className="md:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Created By</span>
+                    <span className="font-bold text-foreground">{record.softwareArchitectName}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Created Date</span>
+                    <span className="font-medium text-muted-foreground">{record.createdOn}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Last Modified By</span>
+                    <span className="font-bold text-foreground">{record.softwareArchitectName}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Last Modified Date</span>
+                    <span className="font-medium text-muted-foreground">{record.lastUpdated}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Workflow Stage</span>
+                    <Badge variant="outline" className="text-[11px] font-semibold">{record.currentStageLabel.split(": ")[1]}</Badge>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Version</span>
+                    <span className="font-bold font-mono text-foreground">v{record.version}</span>
+                  </div>
                 </div>
-              </div>
+
+                {/* History quick links */}
+                <div className="flex flex-col justify-center space-y-1.5 border-t md:border-t-0 md:border-l border-border pt-3 md:pt-0 md:pl-4">
+                  <button
+                    type="button"
+                    onClick={() => setSystemLogModalOpen(true)}
+                    className="text-xs font-bold text-primary hover:underline text-left cursor-pointer"
+                  >
+                    View Log &rarr;
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSystemLogModalOpen(true)}
+                    className="text-xs font-bold text-primary hover:underline text-left cursor-pointer"
+                  >
+                    View History &rarr;
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSystemLogModalOpen(true)}
+                    className="text-xs font-bold text-primary hover:underline text-left cursor-pointer"
+                  >
+                    View Changes &rarr;
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* ===========================================================================
+              RIGHT SIDEBAR PANEL (STICKY ON SCROLL)
+              =========================================================================== */}
+          <div className="lg:col-span-1 space-y-6">
+            <div className="sticky top-6 space-y-6">
+              {/* Overall Software Score Gauge Box */}
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-2 border-b border-border text-center">
+                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Software Quality Score
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent className="pt-5 flex flex-col items-center">
+                  <CircularScoreGauge
+                    score={record.summary.overallSoftwareScore}
+                  />
+
+                  <div className="w-full mt-5 space-y-2 border-t border-border pt-4 text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Code Quality</span>
+                      <span className="font-bold text-foreground">{record.summary.developmentProgress}/100</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Architecture</span>
+                      <span className="font-bold text-foreground">{record.summary.architectureReadiness}/100</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Security</span>
+                      <span className="font-bold text-foreground">{record.summary.deploymentReadiness}/100</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Test Coverage</span>
+                      <span className="font-bold text-foreground">{record.summary.testingReadiness}%</span>
+                    </div>
+                    <div className="flex justify-between items-center pt-2 border-t border-border font-bold text-blue-600 dark:text-blue-400">
+                      <span>Overall Score</span>
+                      <span>{record.summary.overallSoftwareScore}%</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Key Highlights Card */}
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-2 border-b border-border">
+                  <CardTitle className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                    <Sparkles className="h-3.5 w-3.5 text-blue-600" />
+                    Key Highlights
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-3">
+                  <ul className="space-y-2 text-xs text-muted-foreground">
+                    {record.keyHighlights.map((highlight, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5">
+                        <Check className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <span className="text-foreground">{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
             </div>
-          )}
+          </div>
         </div>
 
         {/* ===========================================================================
-            MODALS FOR QUICK ACTIONS & IMAGES
+            MODALS
             =========================================================================== */}
 
-        {/* Report Modal */}
+        {/* Executive Report Modal */}
         <Dialog open={reportModalOpen} onOpenChange={setReportModalOpen}>
           <DialogContent className="max-w-xl">
             <DialogHeader>
@@ -1882,38 +1465,26 @@ export function SoftwareDevelopmentFormPage({
             </DialogHeader>
 
             <div className="space-y-4 text-xs py-2">
-              <div className="p-3 bg-slate-50 rounded-lg border space-y-1">
-                <span className="font-bold text-slate-900 block">{record.softwareProjectName}</span>
-                <p className="text-slate-600">
-                  Covers Microservices architecture (12 services), React 18 frontend, Spring Boot 3.2 backend, 87.5% test coverage, and Blue-Green production deployment.
+              <div className="p-3.5 bg-slate-50 dark:bg-slate-800 rounded-lg border border-border space-y-1.5">
+                <span className="font-bold text-foreground block">{record.softwareProjectName}</span>
+                <p className="text-muted-foreground leading-relaxed">
+                  Covers Microservices architecture (12 services), React 18 frontend, Spring Boot 3.2 backend, 87.5% automated test coverage, OAuth 2.0 security, and Blue-Green staging deployment.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 font-semibold">
-                <div className="p-2 border rounded">Overall Software Score: {record.summary.overallSoftwareScore}/100</div>
-                <div className="p-2 border rounded">Software Version: {record.softwareVersion}</div>
+                <div className="p-2.5 border border-border rounded-lg bg-slate-50/50 dark:bg-slate-800/50">Overall Software Score: {record.summary.overallSoftwareScore}/100</div>
+                <div className="p-2.5 border border-border rounded-lg bg-slate-50/50 dark:bg-slate-800/50">Software Version: {record.softwareVersion}</div>
               </div>
             </div>
 
             <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setReportModalOpen(false)}>
+              <Button variant="outline" onClick={() => setReportModalOpen(false)}>
                 Close
-              </ErpButton>
-              <ErpButton onClick={() => { toast.success("Downloaded Software_Development_Report.pdf"); setReportModalOpen(false); }}>
+              </Button>
+              <Button onClick={() => { toast.success("Downloaded Software_Development_Report.pdf"); setReportModalOpen(false); }}>
                 <Download className="h-4 w-4 mr-1.5" /> Download PDF Report
-              </ErpButton>
+              </Button>
             </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* Tech Stack Modal */}
-        <Dialog open={techStackModalOpen} onOpenChange={setTechStackModalOpen}>
-          <DialogContent className="max-w-4xl">
-            <DialogHeader>
-              <DialogTitle>Software Platform Stack & IDE View</DialogTitle>
-            </DialogHeader>
-            <div className="h-[480px] bg-slate-900 rounded-xl p-4 flex items-center justify-center">
-              <img src={formInput.techStackImageUrl} alt="Tech Stack Render" className="max-h-full object-contain" />
-            </div>
           </DialogContent>
         </Dialog>
 
@@ -1921,155 +1492,22 @@ export function SoftwareDevelopmentFormPage({
         <Dialog open={architectureDiagramModalOpen} onOpenChange={setArchitectureDiagramModalOpen}>
           <DialogContent className="max-w-4xl">
             <DialogHeader>
-              <DialogTitle>Microservices Architecture Diagram</DialogTitle>
+              <DialogTitle>Microservices Architecture Topology</DialogTitle>
             </DialogHeader>
-            <div className="h-[480px] bg-slate-900 rounded-xl p-4 flex items-center justify-center">
-              <img src={formInput.softwareArchitectureDiagramUrl} alt="Architecture Diagram" className="max-h-full object-contain" />
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Source Code Modal */}
-        <Dialog open={sourceCodeModalOpen} onOpenChange={setSourceCodeModalOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Code className="h-5 w-5 text-amber-600" />
-                Software Source Code Repository
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-3 text-xs py-2">
-              <div className="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[11px] space-y-1">
-                <div className="text-emerald-400">// Smart EV Management Microservice Controller</div>
-                <div>@RestController</div>
-                <div>@RequestMapping("/api/v1/fleet")</div>
-                <div>public class FleetController &#123;</div>
-                <div className="pl-4 text-blue-300">@GetMapping("/telemetry")</div>
-                <div className="pl-4">public ResponseEntity&lt;List&lt;TelemetryDto&gt;&gt; getFleetTelemetry() &#123;</div>
-                <div className="pl-8 text-emerald-300">return ResponseEntity.ok(telemetryService.getActiveData());</div>
-                <div className="pl-4">&#125;</div>
-                <div>&#125;</div>
+            <div className="h-[400px] bg-slate-950 rounded-xl p-6 flex flex-col items-center justify-center text-white gap-3 border border-slate-800">
+              <div className="h-16 w-16 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+                <Layers className="h-8 w-8" />
+              </div>
+              <h3 className="text-base font-bold text-slate-100">Kubernetes Distributed Service Mesh</h3>
+              <p className="text-xs text-slate-400 max-w-md text-center">
+                Ingress Controller routing via Kong API Gateway, gRPC inter-service communication, Kafka event bus for async messaging, and Prometheus observability.
+              </p>
+              <div className="flex gap-2 mt-2">
+                <Button size="sm" onClick={() => toast.success("Service mesh topology validated.")} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                  <CheckCircle2 className="h-4 w-4 mr-1.5 text-emerald-200" /> Validate Topology
+                </Button>
               </div>
             </div>
-            <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setSourceCodeModalOpen(false)}>Close</ErpButton>
-              <ErpButton onClick={() => { toast.success("Downloaded Source_Code_Repository.zip"); setSourceCodeModalOpen(false); }}>Download Repository</ErpButton>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* API Docs Modal */}
-        <Dialog open={apiDocsModalOpen} onOpenChange={setApiDocsModalOpen}>
-          <DialogContent className="max-w-xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Globe className="h-5 w-5 text-teal-600" />
-                Swagger / OpenAPI 3.0 Documentation
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-2 text-xs py-2">
-              <div className="p-2.5 bg-slate-50 border rounded font-mono text-slate-800">
-                GET /api/v1/fleet/status — 200 OK (Kong Gateway Authenticated)
-              </div>
-              <div className="p-2.5 bg-slate-50 border rounded font-mono text-slate-800">
-                POST /api/v1/charging/session — 201 Created (OAuth 2.0 JWT)
-              </div>
-            </div>
-            <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setApiDocsModalOpen(false)}>Close</ErpButton>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* Static Analysis Modal */}
-        <Dialog open={staticAnalysisModalOpen} onOpenChange={setStaticAnalysisModalOpen}>
-          <DialogContent className="max-w-xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-indigo-600" />
-                SonarQube Static Code Analysis
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-2 text-xs py-2">
-              <div className="p-3 bg-slate-50 border rounded font-semibold text-slate-800">
-                Code Quality Rating: A • Technical Debt: 2h 15m • 0 Critical Security Vulnerabilities
-              </div>
-            </div>
-            <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setStaticAnalysisModalOpen(false)}>Close</ErpButton>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* Security Scan Modal */}
-        <Dialog open={securityScanModalOpen} onOpenChange={setSecurityScanModalOpen}>
-          <DialogContent className="max-w-xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Lock className="h-5 w-5 text-rose-600" />
-                OWASP ZAP & SAST Security Scan Report
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-2 text-xs py-2">
-              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded font-semibold">
-                Security Score: 90/100 • GDPR & ISO 27001 Compliant • OAuth 2.0 JWT Active
-              </div>
-            </div>
-            <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setSecurityScanModalOpen(false)}>Close</ErpButton>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* Test Report Modal */}
-        <Dialog open={testReportModalOpen} onOpenChange={setTestReportModalOpen}>
-          <DialogContent className="max-w-xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <CheckSquare className="h-5 w-5 text-purple-600" />
-                Test Suite Execution Summary
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-2 text-xs py-2">
-              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded font-semibold">
-                87.5% Automated Line Coverage • 1,240 / 1,240 Passed • 0 Regressions
-              </div>
-            </div>
-            <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setTestReportModalOpen(false)}>Close</ErpButton>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* New Release Modal */}
-        <Dialog open={newReleaseModalOpen} onOpenChange={setNewReleaseModalOpen}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Package className="h-5 w-5 text-emerald-600" />
-                Create New Software Release
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-3 text-xs py-2">
-              <div>
-                <label className="block font-semibold text-muted-foreground mb-1">Version Tag</label>
-                <input type="text" defaultValue="v1.3.0-RC1" className="w-full border p-2 rounded font-mono font-bold" />
-              </div>
-              <div>
-                <label className="block font-semibold text-muted-foreground mb-1">Release Type</label>
-                <select className="w-full border p-2 rounded">
-                  <option>Minor Release</option>
-                  <option>Major Release</option>
-                  <option>Patch / Hotfix</option>
-                </select>
-              </div>
-            </div>
-            <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setNewReleaseModalOpen(false)}>Cancel</ErpButton>
-              <ErpButton onClick={() => { toast.success("Created release candidate v1.3.0-RC1"); setNewReleaseModalOpen(false); }}>
-                Build Docker Image & Deploy
-              </ErpButton>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
 
@@ -2079,50 +1517,20 @@ export function SoftwareDevelopmentFormPage({
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <History className="h-5 w-5 text-primary" />
-                Audit Trail & Workflow History
+                Audit Trail &amp; Workflow History
               </DialogTitle>
             </DialogHeader>
             <div className="max-h-80 overflow-y-auto space-y-3 text-xs">
               {record.auditTrail.map((log, idx) => (
-                <div key={idx} className="p-3 border rounded-lg bg-slate-50 space-y-1">
-                  <div className="flex justify-between font-bold text-slate-900">
+                <div key={idx} className="p-3 border border-border rounded-lg bg-slate-50 dark:bg-slate-800 space-y-1">
+                  <div className="flex justify-between font-bold text-foreground">
                     <span>{log.actor}</span>
-                    <span className="text-slate-500 font-normal">{log.at}</span>
+                    <span className="text-muted-foreground font-normal">{log.at}</span>
                   </div>
-                  <p className="text-slate-700">{log.event}</p>
+                  <p className="text-muted-foreground">{log.event}</p>
                 </div>
               ))}
             </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Schedule Review Modal */}
-        <Dialog open={scheduleReviewModalOpen} onOpenChange={setScheduleReviewModalOpen}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-blue-600" />
-                Schedule Software Review Board Meeting
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-3 text-xs py-2">
-              <div>
-                <label className="block font-semibold text-muted-foreground mb-1">Review Date & Time</label>
-                <input type="datetime-local" className="w-full border p-2 rounded" />
-              </div>
-              <div>
-                <label className="block font-semibold text-muted-foreground mb-1">Attendees</label>
-                <input type="text" defaultValue="Rahul Sharma, Ananya Iyer, Vikram Singh, Neha Verma" className="w-full border p-2 rounded" />
-              </div>
-            </div>
-            <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setScheduleReviewModalOpen(false)}>
-                Cancel
-              </ErpButton>
-              <ErpButton onClick={() => { toast.success("Software Review Board meeting scheduled."); setScheduleReviewModalOpen(false); }}>
-                Send Invites
-              </ErpButton>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

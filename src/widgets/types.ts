@@ -91,7 +91,11 @@ export type WidgetPageId =
   | "crm-overview"
   // HRM & Administration Management Overviews
   | "hrm-overview"
-  | "admin-overview";
+  | "admin-overview"
+  // Procurement Management Overview
+  | "procurement-overview"
+  // Business Development Overview
+  | "bd-overview";
 
 /** Grid spans per breakpoint tier, expressed in that tier's column count. */
 export type WidgetSpan = {

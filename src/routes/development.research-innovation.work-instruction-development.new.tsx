@@ -103,7 +103,7 @@ export function WorkInstructionDevelopmentNewPage({
   return (
     <AppShell
       title="Work Instruction Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Work Instruction Development"}
       description="Author, review and control shop floor assembly work instructions with step sequencing, visual guides, quality checkpoints & AI risk validation."
       tabs={tabs ?? <InnovationAreaTabs sub={<WorkInstructionTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

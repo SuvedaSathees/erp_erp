@@ -98,7 +98,7 @@ function ProblemValidationRegisterPage() {
   return (
     <AppShell
       title="Problem Validation"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Problem Validation"
       description="Validate problems against customer, market, technical, and business evidence."
       tabs={<InnovationAreaTabs sub={<ProblemValidationTabBar />} />}
       topbarActions={newButton}

@@ -3,6 +3,7 @@ import { FINANCE_PAGE_KPIS } from "../content/finance/financeKpiMap";
 import { CRM_PAGE_KPIS } from "../content/crm/crmKpiMap";
 import { HRM_PAGE_KPIS } from "../content/hrm/hrmKpiMap";
 import { ADMIN_PAGE_KPIS } from "../content/admin/adminKpiMap";
+import { PROCUREMENT_PAGE_KPIS } from "../content/procurement/procurementKpiMap";
 import type { WidgetPageId } from "../types";
 
 /* ===========================================================================
@@ -42,6 +43,7 @@ export function KpiQuickAddLayer({ pageId, onOpen }: KpiQuickAddLayerProps) {
   useEffect(() => {
     const map =
       FINANCE_PAGE_KPIS[pageId] ??
+      PROCUREMENT_PAGE_KPIS[pageId] ??
       CRM_PAGE_KPIS[pageId] ??
       HRM_PAGE_KPIS[pageId] ??
       ADMIN_PAGE_KPIS[pageId];

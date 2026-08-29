@@ -684,16 +684,14 @@ function ExportDevelopmentPage() {
           <ScoreGauge label="AI Export Score" score={formData.aiExportScore} sub="Excellent" size="normal" />
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Main Form Canvas */}
+        <div className="w-full space-y-6">
 
-            {/* 1. Export Opportunity Overview */}
+            {/* Export Opportunity Overview */}
             <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Export Opportunity Overview
+                  <Building2 className="h-4 w-4 text-primary" /> Export Opportunity Overview
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Export Strategy</span>
               </div>
@@ -835,11 +833,11 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-            {/* 2. Export Market Analysis */}
+            {/* Export Market Analysis */}
             <div id="sec-market-analysis" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-emerald-600" /> 2. Export Market Sizing & Regulatory Analysis
+                  <BarChart3 className="h-4 w-4 text-emerald-600" /> Export Market Sizing & Regulatory Analysis
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Market Score: <strong>{formData.marketScore}/100</strong> <MAICWBadge type="C" />
@@ -912,11 +910,11 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-            {/* 3. Customer & Channel Development */}
+            {/* Customer & Channel Development */}
             <div id="sec-customer-channel" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4 text-purple-600" /> 3. Customer & Overseas Channel Development
+                  <Users className="h-4 w-4 text-purple-600" /> Customer & Overseas Channel Development
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Customer Score: <strong>{formData.customerScore}/100</strong> <MAICWBadge type="C" />
@@ -975,11 +973,11 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-            {/* 4. Product & Compliance */}
+            {/* Product & Compliance */}
             <div id="sec-product-compliance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-emerald-600" /> 4. Product Classification & Export Compliance
+                  <ShieldCheck className="h-4 w-4 text-emerald-600" /> Product Classification & Export Compliance
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Compliance Score: <strong>{formData.complianceScore}/100</strong> <MAICWBadge type="C" />
@@ -1040,11 +1038,11 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-            {/* 5. Pricing & Commercial Planning */}
+            {/* Pricing & Commercial Planning */}
             <div id="sec-commercial-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 5. Export Pricing & Commercial Structure
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Export Pricing & Commercial Structure
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Commercial Score: <strong>{formData.commercialScore}/100</strong> <MAICWBadge type="C" />
@@ -1142,11 +1140,11 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-            {/* 6. Logistics & Documentation */}
+            {/* Logistics & Documentation */}
             <div id="sec-logistics-docs" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-blue-600" /> 6. Logistics & Export Documentation
+                  <Truck className="h-4 w-4 text-blue-600" /> Logistics & Export Documentation
                 </h3>
                 <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
                   Logistics Score: <strong>{formData.logisticsScore}/100</strong> <MAICWBadge type="C" />
@@ -1239,11 +1237,11 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-            {/* 7. Trade Finance & Payments */}
+            {/* Trade Finance & Payments */}
             <div id="sec-trade-finance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <CreditCard className="h-4 w-4 text-emerald-600" /> 7. Trade Finance & Hedging Protection
+                  <CreditCard className="h-4 w-4 text-emerald-600" /> Trade Finance & Hedging Protection
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Financial Score: <strong>{formData.financialScore}/100</strong> <MAICWBadge type="C" />
@@ -1314,11 +1312,11 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-            {/* 8. Shipment & Delivery */}
+            {/* Shipment & Delivery */}
             <div id="sec-shipment-delivery" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Container className="h-4 w-4 text-emerald-600" /> 8. Shipment Execution & Delivery Tracking
+                  <Container className="h-4 w-4 text-emerald-600" /> Shipment Execution & Delivery Tracking
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Delivery Score: <strong>{formData.deliveryScore}/100</strong> <MAICWBadge type="C" />
@@ -1396,140 +1394,52 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-            {/* 9. AI Export Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-primary/20 border-b">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 9. AI Export Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Export Score: {formData.aiExportScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Target className="h-3.5 w-3.5 text-emerald-600" /> AI Export Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiExportOpportunity}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-blue-600" /> AI Country Recommendation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiCountryRecommendation}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-purple-600" /> AI Pricing Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiPricingOptimization}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <Truck className="h-3.5 w-3.5" /> AI Logistics Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiLogisticsOptimization}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Export Intelligence Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 10. Export Summary */}
+            {/* Export Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 10. Export Summary & Executive Recommendation
+                  <Award className="h-4 w-4 text-emerald-600" /> Export Summary & Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Export Rating: {computedOverallScore}/100 (Tier 1)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Market Score</span>
-                    <span className="font-mono font-bold">{formData.marketScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Export Compliance Status</span>
+                    <span className="text-emerald-600 font-bold">Customs & Export Ready</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.marketScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Customer Score</span>
-                    <span className="font-mono font-bold">{formData.customerScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.customerScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Compliance Score</span>
-                    <span className="font-mono font-bold">{formData.complianceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${formData.complianceScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Commercial Score</span>
-                    <span className="font-mono font-bold">{formData.commercialScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.commercialScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Financial Score</span>
-                    <span className="font-mono font-bold">{formData.financialScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.financialScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    24 active commercial export orders across GCC and Southeast Asia with 92% on-time logistics and 85% collection rate under LC.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Readiness" score={computedOverallScore} sub="Very Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Proceed to Export",
-                        "Complete Documentation",
-                        "Improve Compliance",
-                        "Secure Trade Finance",
-                        "Optimize Logistics",
-                        "Strengthen Customer Engagement",
-                        "Close Export Order",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Approve Export Project",
+                      "Finalize Customs Documentation",
+                      "Approve Letter of Credit (LC) Terms",
+                      "Execute International Freight Contract",
+                      "Proceed to Shipment Dispatch",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 11. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 11. Export Documentation Dossier & Artifacts
+                  <FileText className="h-4 w-4 text-primary" /> Export Documentation Dossier & Artifacts
                 </h3>
                 <button
                   type="button"
@@ -1584,11 +1494,11 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-            {/* 12. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 12. Export Review Committee Governance Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Export Review Committee Governance Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">8 Governance Roles</span>
               </div>
@@ -1653,11 +1563,11 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-            {/* 13. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 13. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1680,180 +1590,6 @@ function ExportDevelopmentPage() {
               </div>
             </div>
 
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 88</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-emerald-600" /> Best Market Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Germany offers high demand with favorable trade agreements.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Award className="h-3.5 w-3.5 text-blue-600" /> Competitive Advantage
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Your pricing is competitive in European markets.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-purple-600">
-                    <Truck className="h-3.5 w-3.5" /> Logistics Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Sea Freight (FCL) reduces cost by 18% compared to Air Freight.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-amber-500">
-                    <ShieldAlert className="h-3.5 w-3.5" /> Risk Insight
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Medium FX risk detected. Hedge recommended.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Export Opportunities</span>
-                    <Sparkline data={[16, 19, 21, 24]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">24 <span className="text-xs text-emerald-600">+18%</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">RFQs Received</span>
-                    <Sparkline data={[12, 14, 16, 18]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">18 <span className="text-xs text-emerald-600">+22%</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Orders Confirmed</span>
-                    <Sparkline data={[7, 9, 10, 11]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">11 <span className="text-xs text-emerald-600">+15%</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Shipment in Transit</span>
-                    <Sparkline data={[5, 6, 7, 8]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-blue-600 font-mono block">8 <span className="text-xs text-blue-600">+12%</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">On-time Delivery</span>
-                    <Sparkline data={[95, 94, 93, 92]} color="#f43f5e" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">92% <span className="text-xs text-rose-500">-3%</span></span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Payment Collection</span>
-                    <Sparkline data={[72, 76, 80, 85]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">85% <span className="text-xs text-emerald-600">+12%</span></span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Export KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Information Audit Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Company:</span>
-                  <span className="font-semibold text-foreground">Magnertia Industries Ltd.</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Fiscal Year:</span>
-                  <span className="font-semibold text-foreground">2024 - 25</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Base Currency:</span>
-                  <span className="font-semibold text-foreground">INR - Indian Rupee</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Timezone:</span>
-                  <span className="font-semibold text-foreground">Asia/Kolkata (IST)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Date Format:</span>
-                  <span className="font-semibold text-foreground">DD MMM YYYY</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Activity Period:</span>
-                  <span className="font-semibold text-foreground">24 Hour</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 

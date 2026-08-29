@@ -54,7 +54,7 @@ function ProductStrategyOverviewPage() {
   return (
     <AppShell
       title="Product Strategy Overview"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Product Strategy"
       description="Strategic product planning, portfolio alignment, 4-stage workflow governance, and AI-driven market feasibility."
       tabs={<InnovationAreaTabs sub={<ProductStrategyTabBar />} />}
       topbarActions={

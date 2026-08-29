@@ -606,7 +606,7 @@ function PocFormPage() {
     return (
       <AppShell
         title="Proof of Concept"
-        breadcrumb="Research & Innovation Development · Proof of Concept (PoC)"
+        breadcrumb="Development > Research & Innovation > Proof of Concept"
         description="Build and validate proofs of concept before prototyping."
         tabs={<InnovationAreaTabs sub={<PocPageTabBar />} />}
       >
@@ -621,7 +621,7 @@ function PocFormPage() {
   return (
     <AppShell
       title="Proof of Concept"
-      breadcrumb="Research & Innovation Development · Proof of Concept (PoC)"
+      breadcrumb="Development > Research & Innovation > Proof of Concept"
       description="Build and validate proofs of concept before prototyping."
       tabs={<InnovationAreaTabs sub={<PocPageTabBar />} />}
     >

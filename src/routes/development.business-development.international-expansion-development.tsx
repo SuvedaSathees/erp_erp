@@ -674,16 +674,14 @@ function InternationalExpansionDevelopmentPage() {
           <ScoreGauge label="AI Expansion" score={formData.aiExpansionScore} sub="Very Good" size="normal" />
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Main Form Canvas */}
+        <div className="w-full space-y-6">
 
-            {/* 1. Expansion Overview */}
+            {/* Expansion Overview */}
             <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Expansion Overview
+                  <Building2 className="h-4 w-4 text-primary" /> Expansion Overview
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Market Strategy</span>
               </div>
@@ -814,11 +812,11 @@ function InternationalExpansionDevelopmentPage() {
               </div>
             </div>
 
-            {/* 2. Market Assessment */}
+            {/* Market Assessment */}
             <div id="sec-market-assessment" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-emerald-600" /> 2. Market Sizing & Opportunity Assessment
+                  <BarChart3 className="h-4 w-4 text-emerald-600" /> Market Sizing & Opportunity Assessment
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Market Score: <strong>{formData.marketAttractivenessScore}/100</strong> <MAICWBadge type="C" />
@@ -916,11 +914,11 @@ function InternationalExpansionDevelopmentPage() {
               </div>
             </div>
 
-            {/* 3. Country Assessment */}
+            {/* Country Assessment */}
             <div id="sec-country-assessment" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Landmark className="h-4 w-4 text-purple-600" /> 3. Country Environment & Infrastructure
+                  <Landmark className="h-4 w-4 text-purple-600" /> Country Environment & Infrastructure
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Country Score: <strong>{formData.countryReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -930,17 +928,17 @@ function InternationalExpansionDevelopmentPage() {
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 text-xs">
                 <div className="rounded-lg border border-border bg-muted/20 p-2.5">
                   <span className="text-[11px] text-muted-foreground font-medium block">Ease of Doing Business <MAICWBadge type="C" /></span>
-                  <span className="text-sm font-bold text-emerald-600 font-mono mt-0.5 block">82 / 100</span>
+                  <span className="text-sm font-bold text-emerald-600 font-mono mt-0.5 block">82%</span>
                 </div>
 
                 <div className="rounded-lg border border-border bg-muted/20 p-2.5">
                   <span className="text-[11px] text-muted-foreground font-medium block">Political Stability <MAICWBadge type="C" /></span>
-                  <span className="text-sm font-bold text-foreground font-mono mt-0.5 block">76 / 100</span>
+                  <span className="text-sm font-bold text-foreground font-mono mt-0.5 block">76%</span>
                 </div>
 
                 <div className="rounded-lg border border-border bg-muted/20 p-2.5">
                   <span className="text-[11px] text-muted-foreground font-medium block">Economic Stability <MAICWBadge type="C" /></span>
-                  <span className="text-sm font-bold text-foreground font-mono mt-0.5 block">78 / 100</span>
+                  <span className="text-sm font-bold text-foreground font-mono mt-0.5 block">78%</span>
                 </div>
 
                 <div className="rounded-lg border border-border bg-muted/20 p-2.5">
@@ -960,16 +958,16 @@ function InternationalExpansionDevelopmentPage() {
 
                 <div className="rounded-lg border border-border bg-muted/20 p-2.5 sm:col-span-3">
                   <span className="text-[11px] text-muted-foreground font-medium block">Infrastructure Readiness <MAICWBadge type="C" /></span>
-                  <span className="text-sm font-bold text-emerald-600 font-mono mt-0.5 block">80 / 100 (Advanced Logistics & High-Speed EV Grid)</span>
+                  <span className="text-sm font-bold text-emerald-600 font-mono mt-0.5 block">80% (Advanced Logistics & High-Speed EV Grid)</span>
                 </div>
               </div>
             </div>
 
-            {/* 4. Regulatory & Compliance */}
+            {/* Regulatory & Compliance */}
             <div id="sec-regulatory-compliance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-emerald-600" /> 4. Regulatory, Licensing & Compliance
+                  <ShieldCheck className="h-4 w-4 text-emerald-600" /> Regulatory, Licensing & Compliance
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Regulatory Score: <strong>{formData.regulatoryReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1014,11 +1012,11 @@ function InternationalExpansionDevelopmentPage() {
               </div>
             </div>
 
-            {/* 5. Business Model & Commercial Strategy */}
+            {/* Business Model & Commercial Strategy */}
             <div id="sec-commercial-strategy" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 5. Commercial Model & Localization
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Commercial Model & Localization
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Commercial Score: <strong>{formData.commercialReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1103,11 +1101,11 @@ function InternationalExpansionDevelopmentPage() {
               </div>
             </div>
 
-            {/* 6. Operations & Supply Chain */}
+            {/* Operations & Supply Chain */}
             <div id="sec-supply-chain" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-blue-600" /> 6. Global Operations & Supply Chain
+                  <Truck className="h-4 w-4 text-blue-600" /> Global Operations & Supply Chain
                 </h3>
                 <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
                   Supply Chain Score: <strong>{formData.supplyChainReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1182,11 +1180,11 @@ function InternationalExpansionDevelopmentPage() {
               </div>
             </div>
 
-            {/* 7. Financial Planning */}
+            {/* Financial Planning */}
             <div id="sec-financial-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 7. Financial Forecast & Investment Plan
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Financial Forecast & Investment Plan
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Financial Score: <strong>{formData.financialReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1271,11 +1269,11 @@ function InternationalExpansionDevelopmentPage() {
               </div>
             </div>
 
-            {/* 8. Risk Assessment */}
+            {/* Risk Assessment */}
             <div id="sec-risk-assessment" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldAlert className="h-4 w-4 text-amber-500" /> 8. Risk Assessment & Mitigation Matrix
+                  <ShieldAlert className="h-4 w-4 text-amber-500" /> Risk Assessment & Mitigation Matrix
                 </h3>
                 <span className="text-xs font-semibold text-amber-600 flex items-center gap-1">
                   Risk Score: <strong>{formData.overallRiskScore}/100</strong> <MAICWBadge type="C" />
@@ -1327,140 +1325,52 @@ function InternationalExpansionDevelopmentPage() {
               </div>
             </div>
 
-            {/* 9. AI Global Expansion Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 9. AI Global Expansion Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Expansion Score: {formData.aiExpansionScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-emerald-600" /> AI Country Ranking
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiCountryRanking}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Target className="h-3.5 w-3.5 text-blue-600" /> AI Market Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiMarketOpportunity}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Building2 className="h-3.5 w-3.5 text-purple-600" /> AI Entry Strategy
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiEntryStrategyRecommendation}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <DollarSign className="h-3.5 w-3.5" /> AI Pricing Recommendation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiPricingRecommendation}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Global Expansion Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 10. Expansion Summary */}
+            {/* Expansion Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 10. Expansion Summary & Executive Recommendation
+                  <Award className="h-4 w-4 text-emerald-600" /> Global Expansion Summary & Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Expansion Rating: {computedOverallScore}/100 (Tier 1)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Market Score</span>
-                    <span className="font-mono font-bold">{formData.marketAttractivenessScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Target Market Status</span>
+                    <span className="text-emerald-600 font-bold">Approved for APAC & MENA</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.marketAttractivenessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Country Score</span>
-                    <span className="font-mono font-bold">{formData.countryReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.countryReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Regulatory Score</span>
-                    <span className="font-mono font-bold">{formData.regulatoryReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${formData.regulatoryReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Commercial Score</span>
-                    <span className="font-mono font-bold">{formData.commercialReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.commercialReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Financial Score</span>
-                    <span className="font-mono font-bold">{formData.financialReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.financialReadinessScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Cross-border regulatory filings cleared (88/100 readiness) with local distributor channel agreements prepared across UAE and Singapore.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Readiness" score={computedOverallScore} sub="Very Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Proceed to Market Entry",
-                        "Strengthen Regulatory Readiness",
-                        "Improve Supply Chain",
-                        "Revise Commercial Strategy",
-                        "Secure Funding",
-                        "Delay Expansion",
-                        "Launch Operations",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Approve Country Entry",
+                      "Establish Local Subsidiary",
+                      "Approve Master Distributor Agreement",
+                      "Execute Joint Venture Agreement",
+                      "Proceed to Commercial Launch",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 11. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 11. Expansion Attachments & Dossiers
+                  <FileText className="h-4 w-4 text-primary" /> Expansion Attachments & Dossiers
                 </h3>
                 <button
                   type="button"
@@ -1515,11 +1425,11 @@ function InternationalExpansionDevelopmentPage() {
               </div>
             </div>
 
-            {/* 12. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 12. Global Expansion Committee Governance Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Global Expansion Committee Governance Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">8 Governance Roles</span>
               </div>
@@ -1584,11 +1494,11 @@ function InternationalExpansionDevelopmentPage() {
               </div>
             </div>
 
-            {/* 13. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 13. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History Log
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1611,196 +1521,6 @@ function InternationalExpansionDevelopmentPage() {
               </div>
             </div>
 
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 86</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-blue-600" /> Best Market Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Germany offers high demand with favorable business environment.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-emerald-600" /> Revenue Projection
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Expected revenue of € 12M in 3 years with 12-15% CAGR.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-amber-500">
-                    <ShieldCheck className="h-3.5 w-3.5" /> Risk Insight
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Moderate risks identified in legal and supply chain areas.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <Award className="h-3.5 w-3.5" /> Recommendation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Proceed with market entry and establish local partnerships.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Market Attractiveness</span>
-                    <Sparkline data={[75, 78, 80, 82]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">82 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Country Readiness</span>
-                    <Sparkline data={[74, 76, 79, 81]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">81 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Regulatory Readiness</span>
-                    <Sparkline data={[80, 83, 86, 88]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">88 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Commercial Readiness</span>
-                    <Sparkline data={[78, 80, 82, 84]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">84 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Supply Chain</span>
-                    <Sparkline data={[72, 75, 78, 80]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">80 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Financial Readiness</span>
-                    <Sparkline data={[78, 80, 83, 85]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">85 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Risk Score</span>
-                    <Sparkline data={[78, 76, 74, 72]} color="#f43f5e" />
-                  </div>
-                  <span className="text-base font-bold text-amber-600 font-mono block">72 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">AI Expansion</span>
-                    <Sparkline data={[80, 82, 84, 86]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-indigo-600 font-mono block">86 / 100</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Global Expansion KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Audit Information Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Created By:</span>
-                  <span className="font-semibold text-foreground">{formData.expansionManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Created Date:</span>
-                  <span className="font-semibold text-foreground">05 May 2024 10:15 AM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified By:</span>
-                  <span className="font-semibold text-foreground">{formData.expansionManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified Date:</span>
-                  <span className="font-semibold text-foreground">{formData.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Workflow Stage:</span>
-                  <span className="font-semibold text-primary">{formData.workflowStage}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span className="font-semibold text-foreground">v{formData.version}</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 
@@ -1824,7 +1544,7 @@ function InternationalExpansionDevelopmentPage() {
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 bg-muted/20 p-4 rounded-xl border border-border text-xs">
               <div>
                 <span className="text-muted-foreground font-medium block">Overall Readiness Score</span>
-                <span className="text-lg font-bold text-emerald-600">{computedOverallScore} / 100</span>
+                <span className="text-lg font-bold text-emerald-600">{computedOverallScore}%</span>
               </div>
               <div>
                 <span className="text-muted-foreground font-medium block">Initial Investment</span>
@@ -1900,7 +1620,7 @@ function InternationalExpansionDevelopmentPage() {
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-2">
               <div className="flex justify-between items-center text-xs font-bold text-primary">
                 <span>AI Expansion Score</span>
-                <span>86 / 100 (Tier-1 Market Selection)</span>
+                <span>86% (Tier-1 Market Selection)</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Germany ranks #2 out of 25 expansion destinations globally for industrial electric mobility solutions with strong regulatory predictability.

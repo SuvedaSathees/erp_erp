@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo } from "react";
+import React, { useState, useMemo, type ReactNode } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
 import {
@@ -43,9 +43,15 @@ import {
   ArrowRight,
   ShieldCheck,
   Box,
-  Zap,
   Activity,
   Maximize2,
+  Share2,
+  UserCheck,
+  Calendar,
+  Cpu,
+  Factory,
+  Paperclip,
+  BarChart2,
 } from "lucide-react";
 
 import { productDocumentationService } from "@/services/productDocumentationService";
@@ -57,10 +63,6 @@ import type {
   ProductDocAttachment,
 } from "@/services/types";
 import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
-import {
-  ProductDocumentationTabBar,
-  type ProductDocumentationTabId,
-} from "@/components/erp/ProductDocumentationTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -88,6 +90,15 @@ export const Route = createFileRoute(
 )({
   component: ProductDocumentationPage,
 });
+
+export function ProductDocumentationFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <ProductDocumentationPage {...props} />;
+}
+
+export function ProductDocumentationNewPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <ProductDocumentationPage {...props} />;
+}
+
 
 /* Helper component for SVG Circular Gauge */
 function CircularScoreGauge({
@@ -137,11 +148,11 @@ function CircularScoreGauge({
             className="transition-all duration-1000 ease-out"
           />
         </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <div className="absolute inset-0 flex flex-col items-center justify-center select-none">
+          <span className="text-xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400 flex items-baseline justify-center">
             {score}
+            <span className="text-xs font-bold ml-0.5">%</span>
           </span>
-          <span className="text-[9px] text-slate-400 font-medium">/100</span>
         </div>
       </div>
       {label && <span className="mt-2 text-xs font-semibold text-slate-700 dark:text-slate-300">{label}</span>}
@@ -176,12 +187,10 @@ export function ProductDocumentationPage({
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const [activeTab, setActiveTab] = useState<ProductDocumentationTabId>("overview");
 
   // Dialog & Drawer States
   const [showUploadDialog, setShowUploadDialog] = useState(false);
@@ -333,207 +342,190 @@ export function ProductDocumentationPage({
   return (
     <AppShell
       title="Product Documentation"
-      breadcrumb={breadcrumb ?? "Development > Product Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Product Documentation"}
       description="Centralized repository for technical specs, user manuals, engineering guides, and compliance documentation."
       tabs={tabs ?? <ResearchInnovationTabBar />}
     >
       <div className="space-y-6 pb-16">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
-              Product Documentation
-            </h1>
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200">
-              Release Readiness Module
-            </Badge>
-          </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowWorkflowModal(true)}
-                className="gap-1.5 text-xs"
-              >
-                <Workflow className="h-3.5 w-3.5 text-blue-600" />
-                Workflow Engine (3 Stages)
-              </Button>
-            </div>
-          </div>
-
-      {/* 3. Record Header Bar (2 Rows) */}
+      {/* 3. Record Header Bar */}
       <div className="mx-auto max-w-[1600px] px-4 pt-4">
-        <Card className="border-border shadow-xs bg-white dark:bg-slate-900 mb-4">
-          <CardContent className="p-4 flex flex-col gap-3">
-            {/* Row 1 */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-border/60">
-              <div className="flex flex-wrap items-center gap-6 text-sm">
-                <div>
-                  <span className="text-xs text-muted-foreground block font-medium">Documentation ID</span>
-                  <span className="font-mono font-bold text-foreground">{rec.documentationId}</span>
+        <Card className="border border-border/80 shadow-xs bg-card mb-4 overflow-hidden rounded-xl">
+          {/* TOP ROW: Record Identity, Editable Title, & Action Buttons */}
+          <div className="p-4 sm:p-5 pb-4 bg-slate-50/70 dark:bg-slate-900/90 border-b border-border/70 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            {/* Left: Record Identity & Title */}
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-blue-600/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center font-bold shrink-0 border border-blue-200/50 dark:border-blue-800/50 shadow-2xs">
+                <FileText className="h-5 w-5" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-border/60">
+                    {rec.documentationId}
+                  </span>
+                  <span className="text-slate-300 dark:text-slate-700">•</span>
+                  <Badge variant="outline" className="font-mono text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-white/80 dark:bg-slate-800">
+                    {rec.formCode}
+                  </Badge>
+                  <Badge variant="secondary" className="font-mono text-[11px] font-bold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800">
+                    {rec.documentationVersion}
+                  </Badge>
+                  {getStatusBadge(rec.workflowStatus)}
                 </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-xs text-muted-foreground block font-medium">Form Code</span>
-                  <span className="font-mono text-slate-700 dark:text-slate-300 font-semibold">{rec.formCode}</span>
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div className="min-w-[220px]">
-                  <span className="text-xs text-muted-foreground block font-medium">Documentation Project</span>
+                {/* Project Title Input with clean hover/focus state */}
+                <div className="flex items-center gap-2">
                   <Input
                     value={formData.documentationProject || rec.documentationProject}
                     onChange={(e) => setFormData((prev) => ({ ...prev, documentationProject: e.target.value }))}
-                    className="h-7 text-xs font-semibold text-foreground bg-slate-50 dark:bg-slate-800/80 border-slate-200"
+                    className="h-8 text-sm sm:text-base font-bold text-foreground bg-transparent hover:bg-white dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-primary shadow-none px-2 py-0 transition-all rounded-md max-w-md"
+                    placeholder="Documentation Project Name..."
                   />
                 </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-xs text-muted-foreground block font-medium">Documentation Version</span>
-                  <span className="inline-flex items-center rounded-md bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-bold text-blue-700 dark:text-blue-300">
-                    {rec.documentationVersion}
-                  </span>
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-xs text-muted-foreground block font-medium">Workflow Status</span>
-                  {getStatusBadge(rec.workflowStatus)}
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-xs text-muted-foreground block font-medium">Created On</span>
-                  <span className="text-xs font-medium text-slate-700 dark:text-slate-300">{rec.createdOn}</span>
-                </div>
-              </div>
-
-              {/* Right Action Buttons */}
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => saveDraftMutation.mutate(formData)}
-                  disabled={saveDraftMutation.isPending}
-                  className="gap-1.5 text-xs"
-                >
-                  <Save className="h-3.5 w-3.5 text-slate-600" />
-                  Save Draft
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => submitMutation.mutate()}
-                  disabled={submitMutation.isPending}
-                  className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
-                >
-                  <Send className="h-3.5 w-3.5" />
-                  Submit for Review
-                </Button>
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuItem onClick={() => setShowReleasePackageModal(true)} className="gap-2">
-                      <Download className="h-4 w-4 text-blue-600" />
-                      Download Release Package (.ZIP)
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowAiAnalyzerModal(true)} className="gap-2">
-                      <Sparkles className="h-4 w-4 text-purple-600" />
-                      Run AI Document Analysis
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowAuditLogDrawer(true)} className="gap-2">
-                      <History className="h-4 w-4 text-slate-600" />
-                      View Audit Log
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowHistoryDrawer(true)} className="gap-2">
-                      <FileCheck className="h-4 w-4 text-emerald-600" />
-                      Version History
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => toast.success("PDF report generated successfully.")} className="gap-2">
-                      <Printer className="h-4 w-4 text-slate-600" />
-                      Export Summary PDF
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
               </div>
             </div>
 
-            {/* Row 2 */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-1 text-xs">
-              <div className="flex flex-wrap items-center gap-4">
-                {/* Linked Product Chip */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Linked Product:</span>
-                  <button
-                    type="button"
-                    onClick={() => toast.info(`Navigating to product record: ${rec.linkedProduct.name}`)}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800 hover:bg-blue-100 transition-colors"
-                  >
-                    <Box className="h-3.5 w-3.5 text-blue-600" />
-                    {rec.linkedProduct.name}
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </button>
-                </div>
+            {/* Right: Actions */}
+            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => saveDraftMutation.mutate(formData)}
+                disabled={saveDraftMutation.isPending}
+                className="gap-1.5 text-xs font-medium bg-white dark:bg-slate-800 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700"
+              >
+                {saveDraftMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5 text-slate-600 dark:text-slate-300" />}
+                Save Draft
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => submitMutation.mutate()}
+                disabled={submitMutation.isPending}
+                className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs font-semibold"
+              >
+                {submitMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+                Submit for Review
+              </Button>
 
-                {/* Linked Certification Chip */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Linked Certification:</span>
-                  <button
-                    type="button"
-                    onClick={() => toast.info(`Navigating to certification record: ${rec.linkedCertification.code}`)}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 hover:bg-emerald-100 transition-colors"
-                  >
-                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                    {rec.linkedCertification.code}
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </button>
-                </div>
+              {/* More Actions Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-8 w-8 bg-white dark:bg-slate-800 shadow-2xs">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 text-xs shadow-lg">
+                  <DropdownMenuItem onClick={() => setShowWorkflowModal(true)} className="gap-2 cursor-pointer">
+                    <Workflow className="h-4 w-4 text-blue-600" />
+                    Workflow Engine (3 Stages)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowReleasePackageModal(true)} className="gap-2 cursor-pointer">
+                    <Download className="h-4 w-4 text-blue-600" />
+                    Download Release Package (.ZIP)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowAiAnalyzerModal(true)} className="gap-2 cursor-pointer">
+                    <Sparkles className="h-4 w-4 text-purple-600" />
+                    Run AI Document Analysis
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowHistoryDrawer(true)} className="gap-2 cursor-pointer">
+                    <FileCheck className="h-4 w-4 text-emerald-600" />
+                    Version History
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowAuditLogDrawer(true)} className="gap-2 cursor-pointer">
+                    <History className="h-4 w-4 text-slate-600" />
+                    View Audit Log
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => {
+                    toast.success("Exporting Summary PDF...");
+                    window.print();
+                  }} className="gap-2 cursor-pointer">
+                    <Printer className="h-4 w-4 text-slate-600" />
+                    Print / Export PDF
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success("Documentation record link copied to clipboard!");
+                  }} className="gap-2 cursor-pointer">
+                    <Share2 className="h-4 w-4 text-slate-600" />
+                    Share Link
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
 
-                {/* Document Owner */}
-                <div className="flex items-center gap-1.5 border-l border-border pl-3">
-                  <span className="text-muted-foreground font-medium">Owner:</span>
-                  <div className="flex items-center gap-1.5">
-                    <img src={rec.documentOwner.avatar} alt={rec.documentOwner.name} className="h-5 w-5 rounded-full object-cover" />
-                    <span className="font-semibold text-foreground">{rec.documentOwner.name}</span>
-                  </div>
-                </div>
+          {/* BOTTOM ROW: Key-Value Structured Metadata Ribbon */}
+          <div className="px-4 py-2.5 bg-white dark:bg-slate-900 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 text-xs divide-y sm:divide-y-0 sm:divide-x divide-border/60">
+            {/* Linked Product */}
+            <div className="flex flex-col gap-0.5 sm:pr-2">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Box className="h-3 w-3 text-blue-500" /> Linked Product
+              </span>
+              <button
+                type="button"
+                onClick={() => toast.info(`Navigating to product record: ${rec.linkedProduct.name}`)}
+                className="font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+              >
+                <span className="truncate">{rec.linkedProduct.name}</span>
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+              </button>
+            </div>
 
-                {/* Documentation Engineer */}
-                <div className="flex items-center gap-1.5 border-l border-border pl-3">
-                  <span className="text-muted-foreground font-medium">Engineer:</span>
-                  <div className="flex items-center gap-1.5">
-                    <img src={rec.documentationEngineer.avatar} alt={rec.documentationEngineer.name} className="h-5 w-5 rounded-full object-cover" />
-                    <span className="font-semibold text-foreground">{rec.documentationEngineer.name}</span>
-                  </div>
-                </div>
+            {/* Linked Certification */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <ShieldCheck className="h-3 w-3 text-emerald-500" /> Certification
+              </span>
+              <button
+                type="button"
+                onClick={() => toast.info(`Navigating to certification record: ${rec.linkedCertification.code}`)}
+                className="font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+              >
+                <span className="truncate">{rec.linkedCertification.code}</span>
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+              </button>
+            </div>
 
-                {/* Quality Manager */}
-                <div className="flex items-center gap-1.5 border-l border-border pl-3">
-                  <span className="text-muted-foreground font-medium">Quality Mgr:</span>
-                  <div className="flex items-center gap-1.5">
-                    <img src={rec.qualityManager.avatar} alt={rec.qualityManager.name} className="h-5 w-5 rounded-full object-cover" />
-                    <span className="font-semibold text-foreground">{rec.qualityManager.name}</span>
-                  </div>
-                </div>
-              </div>
+            {/* Document Owner */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <User className="h-3 w-3 text-slate-400" /> Owner
+              </span>
+              <span className="font-semibold text-foreground truncate">{rec.documentOwner.name}</span>
+            </div>
 
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Development Stage:</span>
-                  <Badge variant="secondary" className="font-semibold bg-slate-100 dark:bg-slate-800">
-                    {rec.developmentStage}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Confidentiality:</span>
-                  <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 font-semibold border-amber-200">
-                    {rec.confidentialityLevel}
-                  </Badge>
-                </div>
+            {/* Documentation Engineer */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <UserCheck className="h-3 w-3 text-emerald-500" /> Engineer
+              </span>
+              <span className="font-semibold text-foreground truncate">{rec.documentationEngineer.name}</span>
+            </div>
+
+            {/* Quality Manager */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium">Quality Mgr</span>
+              <span className="font-semibold text-foreground truncate">{rec.qualityManager.name}</span>
+            </div>
+
+            {/* Development Stage */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium">Stage</span>
+              <Badge variant="secondary" className="font-semibold w-fit px-1.5 py-0 text-[10px]">
+                {rec.developmentStage}
+              </Badge>
+            </div>
+
+            {/* Confidentiality & Created */}
+            <div className="flex flex-col gap-0.5 sm:pl-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium">Confidentiality</span>
+              <div className="flex items-center gap-1.5">
+                <Badge variant="outline" className="font-semibold px-1.5 py-0 text-[10px]">
+                  {rec.confidentialityLevel}
+                </Badge>
+                <span className="text-[10px] text-muted-foreground truncate">{rec.createdOn}</span>
               </div>
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         {/* 3-Stage Interactive Stage Stepper Bar */}
@@ -641,161 +633,94 @@ export function ProductDocumentationPage({
         </div>
       </div>
 
-      {/* 4. Tab Navigation Shell */}
-      <div className="mx-auto max-w-[1600px] px-4">
-        <ProductDocumentationTabBar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          scores={{
-            eng: rec.engineeringScore,
-            mfg: rec.manufacturingScore,
-            qual: rec.qualityComplianceScore,
-            cust: rec.customerScore,
-            ver: rec.versionControlScore,
-            ai: rec.aiDocumentationScore,
-            overall: rec.overallDocumentationScore,
-          }}
-          attachmentsCount={rec.attachments.length + 8}
-          status={rec.workflowStatus}
-        />
-      </div>
-
-      {/* 5. Main Dashboard Grid Layout */}
+      {/* 4. Main Dashboard Grid Layout */}
       <div className="mx-auto max-w-[1600px] px-4 pt-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Main Content Column (Overview Tab or Placeholder Tabs) */}
+          {/* Left Main Content Column */}
           <div className="lg:col-span-9 space-y-6">
-            {activeTab !== "overview" ? (
-              <Card className="border-border bg-white dark:bg-slate-900 p-8 text-center shadow-xs">
-                <CardContent className="flex flex-col items-center justify-center gap-4 py-12">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600">
-                    <BookOpen className="h-8 w-8" />
+            {/* ------------------------------------------------------------- */}
+            {/* PANEL 1: Documentation Overview */}
+            {/* ------------------------------------------------------------- */}
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-blue-600" />
+                  <CardTitle className="text-base font-bold">Documentation Overview</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-4 text-xs">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                      Product Name <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      value={formData.productName || rec.productName}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, productName: e.target.value }))}
+                      className="h-8 text-xs font-medium"
+                    />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white capitalize">
-                    {activeTab.replace("_", " ")} Section
-                  </h3>
-                  <p className="max-w-md text-sm text-muted-foreground">
-                    This section view is scoped under the <strong>Overview tab</strong> single-source-of-truth dashboard. Click below to view the fully interactive Overview panel.
-                  </p>
-                  <Button onClick={() => setActiveTab("overview")} className="bg-blue-600 text-white">
-                    Return to Overview Tab
-                  </Button>
-                </CardContent>
-              </Card>
-            ) : (
-              <>
-                {/* ------------------------------------------------------------- */}
-                {/* PANEL 1: Documentation Overview */}
-                {/* ------------------------------------------------------------- */}
-                <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                  <CardHeader className="pb-3 border-b border-border/60">
-                    <div className="flex items-center gap-2">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                        1
-                      </div>
-                      <CardTitle className="text-base font-bold">Documentation Overview</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                      {/* Left Form Inputs */}
-                      <div className="md:col-span-7 space-y-4 text-xs">
-                        <div>
-                          <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                            Product Name <span className="text-red-500">*</span>
-                          </label>
-                          <Input
-                            value={formData.productName || rec.productName}
-                            onChange={(e) => setFormData((prev) => ({ ...prev, productName: e.target.value }))}
-                            className="h-8 text-xs"
-                          />
-                        </div>
 
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                              Product Category <span className="text-red-500">*</span>
-                            </label>
-                            <select
-                              value={formData.productCategory || rec.productCategory}
-                              onChange={(e) => setFormData((prev) => ({ ...prev, productCategory: e.target.value }))}
-                              className="h-8 w-full rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                            >
-                              <option value="AC EV Charger">AC EV Charger</option>
-                              <option value="DC Fast Charger">DC Fast Charger</option>
-                              <option value="Industrial Power Module">Industrial Power Module</option>
-                              <option value="Smart Energy System">Smart Energy System</option>
-                            </select>
-                          </div>
+                  <div>
+                    <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                      Document Title <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      value={formData.documentTitle || rec.documentTitle}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, documentTitle: e.target.value }))}
+                      className="h-8 text-xs font-medium"
+                    />
+                  </div>
+                </div>
 
-                          <div>
-                            <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                              Document Type <span className="text-red-500">*</span>
-                            </label>
-                            <select
-                              value={formData.documentType || rec.documentType}
-                              onChange={(e) => setFormData((prev) => ({ ...prev, documentType: e.target.value }))}
-                              className="h-8 w-full rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                            >
-                              <option value="Technical Specification">Technical Specification</option>
-                              <option value="Release Dossier">Release Dossier</option>
-                              <option value="Compliance Package">Compliance Package</option>
-                              <option value="Customer Manual Package">Customer Manual Package</option>
-                            </select>
-                          </div>
-                        </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                      Product Category <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.productCategory || rec.productCategory}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, productCategory: e.target.value }))}
+                      className="h-8 w-full rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary font-medium"
+                    >
+                      <option value="AC EV Charger">AC EV Charger</option>
+                      <option value="DC Fast Charger">DC Fast Charger</option>
+                      <option value="Industrial Power Module">Industrial Power Module</option>
+                      <option value="Smart Energy System">Smart Energy System</option>
+                    </select>
+                  </div>
 
-                        <div>
-                          <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                            Document Title <span className="text-red-500">*</span>
-                          </label>
-                          <Input
-                            value={formData.documentTitle || rec.documentTitle}
-                            onChange={(e) => setFormData((prev) => ({ ...prev, documentTitle: e.target.value }))}
-                            className="h-8 text-xs"
-                          />
-                        </div>
+                  <div>
+                    <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                      Document Type <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.documentType || rec.documentType}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, documentType: e.target.value }))}
+                      className="h-8 w-full rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary font-medium"
+                    >
+                      <option value="Technical Specification">Technical Specification</option>
+                      <option value="Release Dossier">Release Dossier</option>
+                      <option value="Compliance Package">Compliance Package</option>
+                      <option value="Customer Manual Package">Customer Manual Package</option>
+                    </select>
+                  </div>
+                </div>
 
-                        <div>
-                          <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                            Business Purpose <span className="text-red-500">*</span>
-                          </label>
-                          <Textarea
-                            rows={3}
-                            value={formData.businessPurpose || rec.businessPurpose}
-                            onChange={(e) => setFormData((prev) => ({ ...prev, businessPurpose: e.target.value }))}
-                            className="text-xs resize-none"
-                            placeholder="Provide complete technical specifications, design details, and operational guidelines."
-                          />
-                        </div>
-                      </div>
-
-                      {/* Right Graphic Panel (Embedded Illustration matching screenshot) */}
-                      <div className="md:col-span-5 flex flex-col justify-center items-center rounded-xl bg-gradient-to-br from-blue-50/80 to-slate-100/90 dark:from-slate-800/80 dark:to-slate-900 border border-blue-100 dark:border-slate-700 p-6 text-center">
-                        <div className="relative flex h-24 w-24 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg mb-3">
-                          <BookOpen className="h-12 w-12" />
-                          <span className="absolute -bottom-2 -right-2 rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
-                            v1.2.0
-                          </span>
-                        </div>
-                        <h4 className="text-sm font-bold text-slate-800 dark:text-white">
-                          Smart EV Charger Technical Dossier
-                        </h4>
-                        <p className="text-xs text-muted-foreground mt-1 max-w-xs">
-                          Aggregated document package from 4 upstream engineering streams ready for board approval.
-                        </p>
-                        <div className="mt-4 flex items-center gap-2">
-                          <Badge variant="outline" className="bg-white dark:bg-slate-800 text-xs">
-                            25 Sourced Documents
-                          </Badge>
-                          <Badge variant="outline" className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 text-xs">
-                            Ready for Release
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div>
+                  <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                    Business Purpose <span className="text-red-500">*</span>
+                  </label>
+                  <Textarea
+                    rows={3}
+                    value={formData.businessPurpose || rec.businessPurpose}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, businessPurpose: e.target.value }))}
+                    className="text-xs resize-none"
+                    placeholder="Provide complete technical specifications, design details, and operational guidelines."
+                  />
+                </div>
+              </CardContent>
+            </Card>
 
                 {/* Grid for Document Collection Cards (Panels 2 to 5) */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -807,9 +732,7 @@ export function ProductDocumentationPage({
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              2
-                            </div>
+                            <Cpu className="h-4 w-4 text-blue-600" />
                             <CardTitle className="text-base font-bold">Engineering Documentation</CardTitle>
                           </div>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
@@ -870,9 +793,7 @@ export function ProductDocumentationPage({
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              3
-                            </div>
+                            <Factory className="h-4 w-4 text-blue-600" />
                             <CardTitle className="text-base font-bold">Manufacturing Documentation</CardTitle>
                           </div>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
@@ -933,9 +854,7 @@ export function ProductDocumentationPage({
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              4
-                            </div>
+                            <Award className="h-4 w-4 text-blue-600" />
                             <CardTitle className="text-base font-bold">Quality & Compliance Documentation</CardTitle>
                           </div>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
@@ -996,9 +915,7 @@ export function ProductDocumentationPage({
                       <CardHeader className="pb-3 border-b border-border/60">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              5
-                            </div>
+                            <BookOpen className="h-4 w-4 text-blue-600" />
                             <CardTitle className="text-base font-bold">Customer Documentation</CardTitle>
                           </div>
                           <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
@@ -1059,9 +976,7 @@ export function ProductDocumentationPage({
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          6
-                        </div>
+                        <Workflow className="h-4 w-4 text-blue-600" />
                         <CardTitle className="text-base font-bold">Version Control & Change Management</CardTitle>
                       </div>
                       <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 text-xs font-mono font-bold">
@@ -1438,12 +1353,7 @@ export function ProductDocumentationPage({
                             <tr key={rev.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
                               <td className="p-2.5 font-semibold text-slate-800 dark:text-slate-200">{rev.role}</td>
                               <td className="p-2.5">
-                                <div className="flex items-center gap-1.5">
-                                  {rev.avatar && (
-                                    <img src={rev.avatar} alt={rev.person} className="h-5 w-5 rounded-full object-cover" />
-                                  )}
-                                  <span className="font-medium text-slate-700 dark:text-slate-300">{rev.person}</span>
-                                </div>
+                                <span className="font-medium text-slate-700 dark:text-slate-300">{rev.person}</span>
                               </td>
                               <td className="p-2.5">
                                 {rev.decision === "Approved" ? (
@@ -1548,9 +1458,7 @@ export function ProductDocumentationPage({
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          11
-                        </div>
+                        <History className="h-4 w-4 text-blue-600" />
                         <CardTitle className="text-base font-bold">System Information</CardTitle>
                       </div>
                       <Badge variant="outline" className="text-xs font-mono">
@@ -1626,13 +1534,11 @@ export function ProductDocumentationPage({
                     </div>
                   </CardContent>
                 </Card>
-              </>
-            )}
           </div>
 
           {/* Right Sticky Sidebar Panel */}
           <div className="lg:col-span-3 space-y-6">
-            <div className="sticky top-[110px] space-y-4">
+            <div className="sticky top-6 space-y-4">
               {/* Overall Documentation Score Gauge Card */}
               <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                 <CardHeader className="pb-2 border-b border-border/60">
@@ -1669,110 +1575,6 @@ export function ProductDocumentationPage({
                       <span className="font-bold text-slate-800 dark:text-slate-200">{rec.versionControlScore}</span>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Key Highlights Card */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60">
-                  <CardTitle className="text-sm font-bold">Key Highlights</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-3 space-y-2.5 text-xs">
-                  {keyHighlights.map((hl, i) => (
-                    <div key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-700 dark:text-slate-300 font-medium">{hl.label}</span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* Quick Actions Card */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60">
-                  <CardTitle className="text-sm font-bold">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-3 space-y-1 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setShowCreateDocDialog(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Plus className="h-4 w-4 text-blue-600" />
-                    <span>Create New Document</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowUploadDialog(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Upload className="h-4 w-4 text-blue-600" />
-                    <span>Upload Document</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.success("Folder created in Document Repository.")}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <FolderPlus className="h-4 w-4 text-blue-600" />
-                    <span>Create Folder</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowTemplatesDialog(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <BookOpen className="h-4 w-4 text-blue-600" />
-                    <span>Document Templates</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowSearchModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Search className="h-4 w-4 text-blue-600" />
-                    <span>Document Search</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowHistoryDrawer(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <History className="h-4 w-4 text-blue-600" />
-                    <span>View Document History</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowReleasePackageModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Download className="h-4 w-4 text-blue-600" />
-                    <span>Download Release Package</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.success("Documentation report generated.")}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Printer className="h-4 w-4 text-blue-600" />
-                    <span>Generate Documentation Report</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowAiAnalyzerModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/40 hover:bg-purple-100 transition-colors text-left cursor-pointer font-bold"
-                  >
-                    <Sparkles className="h-4 w-4 text-purple-600" />
-                    <span>AI Document Analyzer</span>
-                  </button>
                 </CardContent>
               </Card>
             </div>
@@ -2118,3 +1920,5 @@ export function ProductDocumentationPage({
   </AppShell>
 );
 }
+
+export default ProductDocumentationPage;

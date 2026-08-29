@@ -104,7 +104,7 @@ export function CapacityPlanningNewPage({
   return (
     <AppShell
       title="Capacity Planning"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Capacity Planning"}
       description="Calculate machine hours, shift availability, bottleneck constraints, line balancing, and throughput analysis."
       tabs={tabs ?? <InnovationAreaTabs sub={<CapacityPlanningTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

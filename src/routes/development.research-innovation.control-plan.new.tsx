@@ -92,7 +92,7 @@ export function ControlPlanDevelopmentPage({
   return (
     <AppShell
       title="Control Plan Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Control Plan"}
       description="Establish process control points, inspection criteria, sampling frequencies, and reaction plans."
       tabs={tabs ?? <InnovationAreaTabs sub={<ControlPlanTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >

@@ -1,77 +1,61 @@
+// Electronics Design Form - Magnertia ERP
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import React, { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import {
+  Cpu,
+  Layers,
+  Database,
+  ShieldCheck,
+  Activity,
+  GitBranch,
+  Play,
+  RefreshCw,
+  FileText,
+  Download,
+  Upload,
+  Eye,
   Save,
   Send,
   MoreHorizontal,
   ExternalLink,
-  Calendar,
-  Building2,
-  FileText,
-  Download,
-  Upload,
-  X,
-  Sparkles,
-  CheckCircle2,
-  AlertTriangle,
-  History,
-  Activity,
-  Layers,
+  ChevronRight,
+  Workflow,
+  Copy,
+  Plus,
+  FileCode,
+  HardDrive,
+  Lock,
   Target,
   Zap,
-  Map,
-  Award,
-  Paperclip,
-  Eye,
+  BarChart3,
   Check,
-  ClipboardCheck,
-  Cpu,
-  ShieldAlert,
-  UserCheck,
-  FileSpreadsheet,
-  FileCode,
-  Info,
-  Clock,
-  ChevronRight,
-  TrendingUp,
-  Maximize2,
+  X,
   Share2,
   Printer,
-  FileCheck,
-  User,
-  ShieldCheck,
-  Radio,
-  HardDrive,
-  Database,
-  Lock,
-  Workflow,
-  Plus,
-  ArrowRight,
-  Palette,
+  History,
+  Info,
+  Maximize2,
+  CheckCircle2,
+  AlertTriangle,
+  Server,
   Box,
-  Star,
-  Ruler,
-  Weight,
-  PenTool,
-  Factory,
+  Globe,
+  Settings,
+  Sparkles,
+  Clock,
+  ArrowRight,
   CheckSquare,
-  Leaf,
-  Layers3,
-  Wrench,
-  Cog,
-  FileArchive,
-  ArrowUpRight,
-  PlusCircle,
-  BarChart3,
-  CheckCircle,
-  HelpCircle,
-  Search,
-  Flame,
-  Shield,
-  Cable,
+  UserCheck,
+  Paperclip,
+  Palette,
+  QrCode,
+  Radio,
+  Package,
   CircuitBoard,
+  Microscope,
+  ShieldAlert,
 } from "lucide-react";
 
 import { AppShell } from "@/components/erp/AppShell";
@@ -79,16 +63,27 @@ import {
   ElectronicsDesignTabBar,
   type ElectronicsDesignTabId,
 } from "@/components/erp/ElectronicsDesignTabBar";
-import { StatusBadge } from "@/components/erp/StatusBadge";
-import { ErpButton } from "@/components/erp/Button";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { electronicsDesignService } from "@/services";
 import type {
@@ -102,125 +97,102 @@ export const Route = createFileRoute(
   "/development/research-innovation/electronics-design/new",
 )({
   head: () => ({
-    meta: [{ title: "Electronics Design Form · Magnertia ERP" }],
+    meta: [{ title: "Electronics Design · Magnertia ERP" }],
   }),
-  component: ElectronicsDesignFormPage,
+  component: ElectronicsDesignNewPage,
 });
 
+export function ElectronicsDesignFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <ElectronicsDesignNewPage {...props} />;
+}
+
+export function ElectronicsDesignPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <ElectronicsDesignNewPage {...props} />;
+}
+
+export function ElectronicsDesignDevelopmentNewPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <ElectronicsDesignNewPage {...props} />;
+}
+
 /* ===========================================================================
-   Score Gauge Component (Circular Gauge / 100)
+   Circular Score Gauge Component
    =========================================================================== */
 function CircularScoreGauge({
   score,
-  label = "Overall Score",
   size = 110,
 }: {
   score: number;
   label?: string;
   size?: number;
 }) {
-  const strokeWidth = 9;
+  const strokeWidth = 8;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (score / 100) * circumference;
+  const strokeDashoffset = circumference - (score / 100) * circumference;
 
-  let strokeColor = "stroke-indigo-600";
-  let textColor = "text-indigo-600";
-  let bgColor = "text-indigo-100";
-
-  if (score >= 85) {
-    strokeColor = "stroke-indigo-600";
-    textColor = "text-indigo-600";
-    bgColor = "text-indigo-100";
-  } else if (score >= 70) {
-    strokeColor = "stroke-emerald-600";
-    textColor = "text-emerald-700";
-    bgColor = "text-emerald-100";
-  } else {
-    strokeColor = "stroke-amber-500";
-    textColor = "text-amber-700";
-    bgColor = "text-amber-100";
-  }
+  let scoreColor = "text-indigo-600 stroke-indigo-600 dark:text-indigo-400 dark:stroke-indigo-400";
+  if (score < 60) scoreColor = "text-amber-500 stroke-amber-500";
+  if (score < 40) scoreColor = "text-rose-500 stroke-rose-500";
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="relative inline-flex items-center justify-center">
-        <svg width={size} height={size} className="transform -rotate-90">
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            className={bgColor}
-            strokeWidth={strokeWidth}
-            stroke="currentColor"
-            fill="transparent"
-          />
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            className={cn("transition-all duration-1000 ease-out", strokeColor)}
-            strokeWidth={strokeWidth}
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-            strokeLinecap="round"
-            stroke="currentColor"
-            fill="transparent"
-          />
-        </svg>
-        <div className="absolute flex flex-col items-center justify-center text-center">
-          <span className={cn("text-2xl font-black tracking-tight", textColor)}>
-            {score}
-          </span>
-          <span className="text-[10px] font-semibold text-slate-400">/100</span>
-        </div>
+    <div className="relative inline-flex items-center justify-center">
+      <svg width={size} height={size} className="transform -rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          className="stroke-slate-100 dark:stroke-slate-800 fill-none"
+          strokeWidth={strokeWidth}
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          className={cn("fill-none transition-all duration-1000 ease-out", scoreColor)}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center text-center">
+        <span className="text-2xl font-bold tracking-tight text-foreground">
+          {score}%
+        </span>
       </div>
-      {label && (
-        <span className="mt-2 text-xs font-bold text-slate-700">{label}</span>
-      )}
     </div>
   );
 }
 
 /* ===========================================================================
-   Main Electronics Design Form Page
+   Main Electronics Design Page Component
    =========================================================================== */
-export function ElectronicsDesignFormPage({
+export function ElectronicsDesignNewPage({
   breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<ElectronicsDesignTabId>("overview");
 
-  // Dialog / Modal states
+  // Modals
   const [reportModalOpen, setReportModalOpen] = useState(false);
-  const [schematicModalOpen, setSchematicModalOpen] = useState(false);
   const [diagramModalOpen, setDiagramModalOpen] = useState(false);
-  const [bomModalOpen, setBomModalOpen] = useState(false);
-  const [componentListModalOpen, setComponentListModalOpen] = useState(false);
-  const [simulationModalOpen, setSimulationModalOpen] = useState(false);
   const [renderModalOpen, setRenderModalOpen] = useState(false);
-  const [stackupModalOpen, setStackupModalOpen] = useState(false);
-  const [waveformModalOpen, setWaveformModalOpen] = useState(false);
   const [systemLogModalOpen, setSystemLogModalOpen] = useState(false);
-  const [scheduleReviewModalOpen, setScheduleReviewModalOpen] = useState(false);
 
-  // Query server data
+  // Fetch record
   const { data: record, isLoading } = useQuery({
     queryKey: ["electronics-design-record"],
     queryFn: () => electronicsDesignService.fetchRecord(),
   });
 
-  // Local state for live form fields
-  const [formInput, setFormInput] = useState<ElectronicsDesignFormInput | null>(
-    null
-  );
+  // Local Form state
+  const [formInput, setFormInput] = useState<ElectronicsDesignFormInput | null>(null);
 
-  // Sync state once data loads
   if (record && !formInput) {
     setFormInput(record.input);
   }
@@ -231,7 +203,9 @@ export function ElectronicsDesignFormPage({
       electronicsDesignService.saveDraft(input, record?.id),
     onSuccess: (updated) => {
       queryClient.setQueryData(["electronics-design-record"], updated);
-      toast.success("Electronics Design draft saved successfully.");
+      toast.success("Draft saved successfully!", {
+        description: "Electronics design configurations updated.",
+      });
     },
     onError: (err: Error) => toast.error(err.message || "Failed to save draft"),
   });
@@ -240,7 +214,9 @@ export function ElectronicsDesignFormPage({
     mutationFn: () => electronicsDesignService.submitForReview(record?.id),
     onSuccess: (updated) => {
       queryClient.setQueryData(["electronics-design-record"], updated);
-      toast.success("Submitted for Stage 4 Engineering Review Board!");
+      toast.success("Submitted for Architecture Review!", {
+        description: "Project moved to Stage 4 Engineering Review.",
+      });
     },
     onError: (err: Error) => toast.error(err.message || "Submission failed"),
   });
@@ -254,7 +230,7 @@ export function ElectronicsDesignFormPage({
       queryClient.setQueryData(["electronics-design-record"], updated);
       if (variables.decision === "Approved") {
         toast.success(
-          "Electronics Design Approved! Auto-created downstream PCB Layout Design project PCB-2024-0089."
+          "Electronics Design Approved! Downstream PCB Layout project PCB-2024-0017 created."
         );
       } else {
         toast.info(`Review Decision updated to '${variables.decision}'.`);
@@ -274,13 +250,17 @@ export function ElectronicsDesignFormPage({
 
   if (isLoading || !record || !formInput) {
     return (
-      <AppShell>
-        <div className="flex h-[80vh] items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <div className="h-9 w-9 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-            <p className="text-sm font-medium text-muted-foreground">
-              Loading Electronics Design module...
-            </p>
+      <AppShell
+        title="Electronics Design"
+        breadcrumb={breadcrumb ?? "Development > Product Development > Electronics Design"}
+        tabs={tabs}
+      >
+        <div className="p-8 space-y-6">
+          <div className="h-14 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="h-48 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse" />
+            <div className="h-48 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse" />
+            <div className="h-48 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse" />
           </div>
         </div>
       </AppShell>
@@ -291,1592 +271,1179 @@ export function ElectronicsDesignFormPage({
     setFormInput((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
+  const shouldShowSection = (tabKey: ElectronicsDesignTabId) => {
+    return activeTab === "overview" || activeTab === tabKey;
+  };
+
   return (
     <AppShell
       title="Electronics Design"
-      breadcrumb={breadcrumb}
-      description="Develop PCB circuit schematics, layout routing, signal integrity, and component BOMs."
+      breadcrumb={breadcrumb ?? "Development > Product Development > Electronics Design"}
+      description="Design electronic system architectures, schematics, component selections, power domains, and signal integrity."
       tabs={tabs}
     >
       <div className="space-y-6 pb-16">
-        <div className="flex items-center justify-between">
+        {/* ===========================================================================
+            1. RECORD HEADER BAR (Exact match to Cloud Platform / API Development design)
+            =========================================================================== */}
+        <div className="bg-white dark:bg-slate-900 border border-border rounded-xl px-6 py-4 space-y-3 shadow-2xs">
+          {/* Row 1: Primary Title, Version, Status & Actions */}
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-indigo-500/10 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 flex items-center justify-center font-bold shrink-0 border border-indigo-200/50 dark:border-indigo-800/50">
+                <Cpu className="h-5 w-5" />
+              </div>
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  {record.designProjectName}
+                </h1>
+                <Badge
+                  variant="outline"
+                  className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-mono text-xs font-semibold px-2.5 py-0.5"
+                >
+                  {record.designVersion}
+                </Badge>
+                <Badge
+                  className={
+                    record.status === "Approved"
+                      ? "bg-emerald-600 text-white"
+                      : record.status === "In Review" || record.status === "Under Review"
+                      ? "bg-amber-500 text-white hover:bg-amber-600 font-semibold px-3 py-1 rounded-full"
+                      : "bg-blue-600 text-white"
+                  }
+                >
+                  {record.status}
+                </Badge>
+              </div>
+            </div>
 
-            <div className="flex items-center gap-3">
-              <ErpButton
+            {/* Header Actions */}
+            <div className="flex items-center gap-2.5 shrink-0">
+              <Button
                 variant="outline"
                 size="sm"
-                onClick={() =>
-                  toast.info("Navigating to Electronics Design Repository...")
-                }
+                onClick={() => saveDraftMutation.mutate(formInput)}
+                disabled={saveDraftMutation.isPending}
+                className="gap-1.5 h-9"
               >
-                <Database className="h-3.5 w-3.5 mr-1.5" />
-                Browse Records
-              </ErpButton>
-              <ErpButton
-                variant="primary"
+                <Save className="h-4 w-4 text-slate-500" />
+                Save Draft
+              </Button>
+
+              <Button
                 size="sm"
-                onClick={() => {
-                  toast.success("Created new Electronics Design Draft EDF-2024-26");
-                }}
+                onClick={() => submitMutation.mutate()}
+                disabled={submitMutation.isPending}
+                className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-sm h-9"
               >
-                <Plus className="h-3.5 w-3.5 mr-1.5" />
-                New Electronics Design
-              </ErpButton>
+                <Send className="h-4 w-4" />
+                Submit for Review
+              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-9 w-9">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={() => setRenderModalOpen(true)}>
+                    <Cpu className="h-4 w-4 mr-2 text-indigo-500" />
+                    Inspect PCB Model
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setDiagramModalOpen(true)}>
+                    <Layers className="h-4 w-4 mr-2 text-blue-500" />
+                    View System Block Diagram
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setReportModalOpen(true)}>
+                    <FileText className="h-4 w-4 mr-2 text-purple-500" />
+                    Download Executive Report
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSystemLogModalOpen(true)}>
+                    <History className="h-4 w-4 mr-2 text-emerald-500" />
+                    View Audit Trail
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => window.print()}>
+                    <Printer className="h-4 w-4 mr-2" />
+                    Print Specification
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success("Link copied to clipboard!");
+                    }}
+                  >
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share Project
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 
-        {/* ===========================================================================
-            2. WORKFLOW STAGE STEPPER (Sequence Diagram driven 4 Stages)
-            =========================================================================== */}
-        <div className="bg-slate-900 text-white px-6 py-3.5 shadow-md">
-          <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Workflow className="h-5 w-5 text-indigo-400" />
+          {/* Row 2: Secondary Metadata & Linked Entities with proper alignment */}
+          <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
+            <div className="flex flex-wrap items-center gap-4 text-xs">
               <div>
-                <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                  Electronics Engineering Lifecycle
-                </div>
-                <div className="text-sm font-bold text-white flex items-center gap-2">
-                  {record.currentStageLabel}
-                  <span className="bg-indigo-500/20 text-indigo-300 text-xs px-2 py-0.5 rounded border border-indigo-400/30">
-                    {record.status}
-                  </span>
-                </div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  ELECTRONICS DEV ID
+                </span>
+                <span className="font-bold font-mono text-foreground">
+                  {record.designId}
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  FORM CODE
+                </span>
+                <span className="font-semibold font-mono text-foreground">
+                  {record.formCode}
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  LINKED ELECTRICAL
+                </span>
+                <span
+                  onClick={() =>
+                    navigate({
+                      to: "/development/research-innovation/electrical-design/new" as any,
+                    })
+                  }
+                  className="font-medium text-blue-600 dark:text-blue-400 flex items-center gap-1 cursor-pointer hover:underline font-mono"
+                >
+                  {record.linkedElectricalDesignId}
+                  <ExternalLink className="h-3 w-3 shrink-0" />
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  LINKED ARCHITECTURE
+                </span>
+                <span
+                  onClick={() =>
+                    navigate({
+                      to: "/development/research-innovation/product-architecture/new" as any,
+                    })
+                  }
+                  className="font-medium text-blue-600 dark:text-blue-400 flex items-center gap-1 cursor-pointer hover:underline font-mono"
+                >
+                  {record.linkedProductArchitectureId}
+                  <ExternalLink className="h-3 w-3 shrink-0" />
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  LINKED PRD
+                </span>
+                <span
+                  onClick={() =>
+                    navigate({
+                      to: "/development/research-innovation/prd/new" as any,
+                    })
+                  }
+                  className="font-medium text-blue-600 dark:text-blue-400 flex items-center gap-1 cursor-pointer hover:underline font-mono"
+                >
+                  {record.linkedPrdId}
+                  <ExternalLink className="h-3 w-3 shrink-0" />
+                </span>
+              </div>
+
+              <div className="h-7 w-px bg-border hidden sm:block" />
+
+              <div>
+                <span className="text-muted-foreground block text-[10px] uppercase font-semibold">
+                  CREATED ON
+                </span>
+                <span className="font-mono text-muted-foreground">
+                  {record.createdOn}
+                </span>
               </div>
             </div>
 
-            {/* Stepper pills */}
-            <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
-              {record.stages.map((stg) => {
-                const isCurrent = stg.id === record.currentStage;
-                const isDone = stg.status === "completed";
-                return (
-                  <button
-                    key={stg.id}
-                    type="button"
-                    onClick={() => advanceStageMutation.mutate(stg.id)}
-                    className={cn(
-                      "flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer border whitespace-nowrap",
-                      isCurrent
-                        ? "bg-indigo-600 border-indigo-400 text-white shadow-sm ring-2 ring-indigo-400/50"
-                        : isDone
-                        ? "bg-slate-800 border-slate-700 text-emerald-400 hover:bg-slate-700"
-                        : "bg-slate-800/60 border-slate-700 text-slate-400 hover:bg-slate-700"
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "h-5 w-5 rounded-full flex items-center justify-center text-[11px] font-bold",
-                        isCurrent
-                          ? "bg-white text-indigo-700"
-                          : isDone
-                          ? "bg-emerald-500 text-slate-950"
-                          : "bg-slate-700 text-slate-300"
-                      )}
-                    >
-                      {isDone ? <Check className="h-3 w-3 stroke-[3]" /> : stg.stageNumber}
-                    </span>
-                    <span>{stg.label.split(": ")[1]}</span>
-                  </button>
-                );
-              })}
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-muted-foreground text-[10px] uppercase font-semibold">
+                ELECTRONICS ENGINEER:
+              </span>
+              <span className="font-semibold text-foreground">
+                {record.electronicsEngineerName}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* ===========================================================================
-            3. RECORD HEADER BAR (Two Rows)
-            =========================================================================== */}
-        <div className="bg-white border-b border-border px-6 py-4 shadow-xs">
-          <div className="max-w-[1600px] mx-auto space-y-3">
-            {/* Row 1: Primary Key Details & Actions */}
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex flex-wrap items-center gap-4 text-xs">
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Electronics Design ID
-                  </span>
-                  <span className="font-bold text-foreground text-sm font-mono">
-                    {record.designId}
-                  </span>
-                </div>
-
-                <div className="h-7 w-[1px] bg-slate-200" />
-
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Form Code
-                  </span>
-                  <span className="font-semibold text-slate-700 font-mono">
-                    {record.formCode}
-                  </span>
-                </div>
-
-                <div className="h-7 w-[1px] bg-slate-200" />
-
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Design Project Name
-                  </span>
-                  <input
-                    type="text"
-                    value={record.designProjectName}
-                    onChange={(e) =>
-                      queryClient.setQueryData(
-                        ["electronics-design-record"],
-                        (prev: any) => ({
-                          ...prev,
-                          designProjectName: e.target.value,
-                        })
-                      )
-                    }
-                    className="font-bold text-slate-900 border border-slate-300 rounded px-2 py-0.5 text-xs bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary min-w-[260px]"
-                  />
-                </div>
-
-                <div className="h-7 w-[1px] bg-slate-200" />
-
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Design Version
-                  </span>
-                  <span className="inline-block bg-slate-100 text-slate-800 border border-slate-300 font-bold text-xs px-2 py-0.5 rounded">
-                    {record.designVersion}
-                  </span>
-                </div>
-
-                <div className="h-7 w-[1px] bg-slate-200" />
-
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Workflow Status
-                  </span>
-                  <StatusBadge status={record.status} />
-                </div>
-
-                <div className="h-7 w-[1px] bg-slate-200" />
-
-                <div>
-                  <span className="text-muted-foreground block text-[10px] font-medium uppercase tracking-wider">
-                    Created On
-                  </span>
-                  <span className="font-medium text-slate-600">
-                    {record.createdOn}
-                  </span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center gap-2">
-                <ErpButton
-                  variant="outline"
-                  size="sm"
-                  loading={saveDraftMutation.isPending}
-                  onClick={() => saveDraftMutation.mutate(formInput)}
-                >
-                  <Save className="h-3.5 w-3.5 mr-1.5" />
-                  Save Draft
-                </ErpButton>
-
-                <ErpButton
-                  variant="primary"
-                  size="sm"
-                  loading={submitMutation.isPending}
-                  onClick={() => submitMutation.mutate()}
-                >
-                  <Send className="h-3.5 w-3.5 mr-1.5" />
-                  Submit for Review
-                </ErpButton>
-
-                <button
-                  type="button"
-                  onClick={() => toast.info("Exporting Electronics Design package...")}
-                  className="p-1.5 rounded-md border border-input bg-background hover:bg-accent text-muted-foreground hover:text-foreground cursor-pointer"
-                  title="More Options"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Row 2: Resolved Linked Records & Owner Chips */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-100 text-xs">
-              <div className="flex flex-wrap items-center gap-3">
-                {/* Linked Electrical Design Chip */}
-                <div className="flex items-center gap-1.5 bg-blue-50/80 border border-blue-200 text-blue-800 rounded-md px-2.5 py-1 font-medium">
-                  <Zap className="h-3.5 w-3.5 text-blue-600" />
-                  <span>Linked Electrical Design:</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate({
-                        to: "/development/research-innovation/electrical-design/new" as any,
-                      })
-                    }
-                    className="font-bold underline hover:text-blue-950 cursor-pointer flex items-center gap-1 font-mono"
-                  >
-                    {record.linkedElectricalDesignId}
-                    <ExternalLink className="h-3 w-3" />
-                  </button>
-                </div>
-
-                {/* Linked Product Architecture Chip */}
-                <div className="flex items-center gap-1.5 bg-purple-50/80 border border-purple-200 text-purple-800 rounded-md px-2.5 py-1 font-medium">
-                  <Cpu className="h-3.5 w-3.5 text-purple-600" />
-                  <span>Linked Product Architecture:</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate({
-                        to: "/development/research-innovation/product-architecture/new" as any,
-                      })
-                    }
-                    className="font-bold underline hover:text-purple-950 cursor-pointer flex items-center gap-1 font-mono"
-                  >
-                    {record.linkedProductArchitectureId}
-                    <ExternalLink className="h-3 w-3" />
-                  </button>
-                </div>
-
-                {/* Linked PRD Chip */}
-                <div className="flex items-center gap-1.5 bg-emerald-50/80 border border-emerald-200 text-emerald-800 rounded-md px-2.5 py-1 font-medium">
-                  <ClipboardCheck className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>Linked PRD:</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate({
-                        to: "/development/research-innovation/prd/new" as any,
-                      })
-                    }
-                    className="font-bold underline hover:text-emerald-950 cursor-pointer flex items-center gap-1 font-mono"
-                  >
-                    {record.linkedPrdId}
-                    <ExternalLink className="h-3 w-3" />
-                  </button>
-                </div>
-
-                {/* Linked Product Chip */}
-                <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 text-slate-700 rounded-md px-2.5 py-1 font-medium">
-                  <Target className="h-3.5 w-3.5 text-slate-500" />
-                  <span>Linked Product:</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate({
-                        to: "/development/research-innovation/product-strategy/overview" as any,
-                      })
-                    }
-                    className="font-bold underline hover:text-slate-900 cursor-pointer flex items-center gap-1"
-                  >
-                    {record.linkedProductName}
-                    <ExternalLink className="h-3 w-3" />
-                  </button>
-                </div>
-
-                {/* Downstream PCB Layout Design Banner if Approved */}
-                {record.linkedPcbLayoutId && (
-                  <div className="flex items-center gap-1.5 bg-amber-100 border border-amber-300 text-amber-900 rounded-md px-2.5 py-1 font-bold animate-pulse">
-                    <Sparkles className="h-3.5 w-3.5 text-amber-600" />
-                    <span>Downstream PCB Layout Design:</span>
-                    <span className="underline font-black font-mono">
-                      {record.linkedPcbLayoutId}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Right Side Metadata */}
-              <div className="flex items-center gap-4 text-muted-foreground">
-                <div>
-                  <span>Business Unit:</span>{" "}
-                  <span className="font-semibold text-foreground">
-                    {record.businessUnit}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span>Electronics Engineer:</span>
-                  <img
-                    src={record.electronicsEngineerAvatar}
-                    alt={record.electronicsEngineerName}
-                    className="h-4 w-4 rounded-full object-cover"
-                  />
-                  <span className="font-semibold text-foreground">
-                    {record.electronicsEngineerName}
-                  </span>
-                </div>
-                <div>
-                  <span>Last Updated:</span>{" "}
-                  <span className="font-semibold text-foreground">
-                    {record.lastUpdated}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ===========================================================================
-            4. TAB BAR
-            =========================================================================== */}
-        <ElectronicsDesignTabBar
-          activeTab={activeTab}
-          onTabChange={(tabId) => setActiveTab(tabId)}
-        />
-
-        {/* Notification Banner when Approved */}
+        {/* Downstream Banner when Approved */}
         {record.status === "Approved" && (
-          <div className="max-w-[1600px] mx-auto px-6 pt-4">
-            <div className="bg-emerald-500/10 border-2 border-emerald-500 rounded-xl p-4 flex items-center justify-between text-emerald-900 shadow-xs">
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-6 w-6 text-emerald-600 shrink-0" />
-                <div>
-                  <h4 className="font-bold text-sm text-emerald-950">
-                    Electronics Design Approved by Review Board
-                  </h4>
-                  <p className="text-xs text-emerald-800">
-                    Downstream PCB Layout Design project{" "}
-                    <span className="font-bold font-mono">
-                      {record.linkedPcbLayoutId}
-                    </span>{" "}
-                    has been auto-created & linked. Proceed to PCB Layout Design.
-                  </p>
-                </div>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 flex items-center justify-between text-emerald-900 dark:text-emerald-200 shadow-2xs">
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="h-6 w-6 text-emerald-600 shrink-0" />
+              <div>
+                <h4 className="font-bold text-sm text-emerald-950 dark:text-white">
+                  Electronics Design Approved by Engineering Board
+                </h4>
+                <p className="text-xs text-emerald-800 dark:text-emerald-300">
+                  Downstream PCB Layout project{" "}
+                  <span className="font-bold font-mono">PCB-2024-0017</span>{" "}
+                  has been auto-created &amp; linked for routing.
+                </p>
               </div>
-              <ErpButton
-                size="sm"
-                onClick={() =>
-                  toast.info(
-                    `Navigating to PCB Layout Design (${record.linkedPcbLayoutId})...`
-                  )
-                }
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
-              >
-                Proceed to PCB Layout Design
-                <ArrowRight className="h-4 w-4 ml-1.5" />
-              </ErpButton>
             </div>
+            <Button
+              size="sm"
+              onClick={() => toast.info("Navigating to PCB Layout Design (PCB-2024-0017)...")}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+            >
+              Proceed to PCB Layout
+              <ArrowRight className="h-4 w-4 ml-1.5" />
+            </Button>
           </div>
         )}
 
         {/* ===========================================================================
-            5. MAIN CONTENT AREA (OVERVIEW TAB OR PLACEHOLDERS) + STICKY SIDEBAR
+            4. MAIN CONTENT AREA & STICKY SIDEBAR
             =========================================================================== */}
-        <div className="px-6 py-6 max-w-[1600px] mx-auto w-full">
-          {activeTab !== "overview" ? (
-            /* Non-Overview Placeholder / Sub-view */
-            <div className="bg-white rounded-xl border border-border p-8 shadow-xs space-y-6">
-              <div className="flex items-center justify-between border-b border-border pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                    <Cpu className="h-5 w-5" />
-                  </div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+          {/* MAIN CONTENT PANELS (COL-SPAN 3) */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* -------------------------------------------------------------------
+                PANEL 1: Electronics Design Overview
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("overview") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Cpu className="h-4 w-4 text-indigo-600" />
+                    Electronics Design Overview
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold">
+                    Status: {formInput.developmentStatus}
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                   <div>
-                    <h3 className="text-lg font-bold text-foreground capitalize">
-                      {activeTab.replace("_", " ")} Workspace
-                    </h3>
-                    <p className="text-xs text-muted-foreground">
-                      Linked to Electronics Design record ({record.designId}) • {record.designProjectName}
-                    </p>
-                  </div>
-                </div>
-                <ErpButton
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setActiveTab("overview")}
-                >
-                  <ArrowRight className="h-4 w-4 mr-1.5 rotate-180" />
-                  Back to Overview Dashboard
-                </ErpButton>
-              </div>
-
-              <div className="p-12 text-center text-slate-500 space-y-3">
-                <p className="text-sm font-medium">
-                  Detailed sub-views and interactive editors for <span className="font-bold capitalize">{activeTab.replace("_", " ")}</span> are linked to record {record.designId}.
-                </p>
-                <ErpButton variant="outline" onClick={() => setActiveTab("overview")}>
-                  Return to Overview Dashboard
-                </ErpButton>
-              </div>
-            </div>
-          ) : (
-            /* OVERVIEW TAB CONTENT GRID + STICKY SIDEBAR */
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* MAIN CONTENT PANELS (COL-SPAN 3) */}
-              <div className="lg:col-span-3 space-y-6">
-                {/* -------------------------------------------------------------------
-                    PANEL 1: Electronics Design Overview
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        1
-                      </span>
-                      Electronics Design Overview
-                    </h2>
-                    <span className="bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      Status: {formInput.designStatus}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Left/Middle text fields */}
-                    <div className="md:col-span-2 space-y-3">
-                      <div>
-                        <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                          Product Name
-                        </label>
-                        <input
-                          type="text"
-                          value={formInput.productName}
-                          onChange={(e) => handleFieldChange("productName", e.target.value)}
-                          className="w-full rounded-md border border-input bg-slate-50/50 px-3 py-1.5 text-xs font-medium text-foreground focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                          Electronics Design Objective
-                        </label>
-                        <textarea
-                          rows={2}
-                          value={formInput.electronicsDesignObjective}
-                          onChange={(e) => handleFieldChange("electronicsDesignObjective", e.target.value)}
-                          className="w-full rounded-md border border-input bg-slate-50/50 p-2 text-xs text-foreground focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                          Design Scope
-                        </label>
-                        <textarea
-                          rows={2}
-                          value={formInput.designScope}
-                          onChange={(e) => handleFieldChange("designScope", e.target.value)}
-                          className="w-full rounded-md border border-input bg-slate-50/50 p-2 text-xs text-foreground focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3 pt-1">
-                        <div>
-                          <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                            Design Methodology
-                          </label>
-                          <span className="inline-block bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-semibold px-2.5 py-1 rounded-md">
-                            {formInput.designMethodology}
-                          </span>
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                            Product Category
-                          </label>
-                          <span className="inline-block bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold px-2.5 py-1 rounded-md">
-                            {formInput.productCategory}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                          Applicable Standards
-                        </label>
-                        <div className="flex flex-wrap items-center gap-1.5 p-2 bg-slate-50 rounded-md border border-input">
-                          {formInput.applicableStandards.map((std, idx) => (
-                            <span
-                              key={idx}
-                              className="inline-flex items-center gap-1 bg-white border border-border px-2.5 py-0.5 rounded-md text-xs font-bold text-slate-800 shadow-2xs"
-                            >
-                              <ShieldCheck className="h-3 w-3 text-primary" />
-                              {std}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Embedded Product/PCB Image */}
-                    <div className="flex flex-col items-center justify-between border border-slate-200 rounded-xl p-3 bg-slate-50/60 relative overflow-hidden group">
-                      <div className="w-full flex items-center justify-between mb-2">
-                        <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
-                          <Eye className="h-3.5 w-3.5 text-primary" />
-                          Product / PCB Render
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => setRenderModalOpen(true)}
-                          className="p-1 hover:bg-white rounded text-muted-foreground hover:text-foreground cursor-pointer"
-                        >
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-
-                      <div
-                        onClick={() => setRenderModalOpen(true)}
-                        className="w-full h-56 rounded-lg overflow-hidden bg-white border border-slate-200 flex items-center justify-center cursor-pointer relative group/img"
-                      >
-                        <img
-                          src={formInput.productRenderUrl}
-                          alt="Smart EV Charger Electronics Render"
-                          className="w-full h-full object-contain p-2 group-hover/img:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                      <span className="text-[10px] text-muted-foreground pt-1 block">
-                        EV Charging Station • Controller Board
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 2: Electronic System Architecture (with Diagram)
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        2
-                      </span>
-                      Electronic System Architecture
-                    </h2>
-                    <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      Architecture Status: {formInput.architectureStatus}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2 grid grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">System Name</span>
-                        <input
-                          type="text"
-                          value={formInput.electronicSystemName}
-                          onChange={(e) => handleFieldChange("electronicSystemName", e.target.value)}
-                          className="w-full rounded-md border border-input px-3 py-1.5 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Functional Blocks</span>
-                        <input
-                          type="text"
-                          value={formInput.functionalBlocks}
-                          onChange={(e) => handleFieldChange("functionalBlocks", e.target.value)}
-                          className="w-full rounded-md border border-input px-3 py-1.5 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Board Architecture</span>
-                        <input
-                          type="text"
-                          value={formInput.boardArchitecture}
-                          onChange={(e) => handleFieldChange("boardArchitecture", e.target.value)}
-                          className="w-full rounded-md border border-input px-3 py-1.5 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Signal Interfaces</span>
-                        <input
-                          type="text"
-                          value={formInput.signalInterfaces}
-                          onChange={(e) => handleFieldChange("signalInterfaces", e.target.value)}
-                          className="w-full rounded-md border border-input px-3 py-1.5 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Power Domains</span>
-                        <input
-                          type="text"
-                          value={formInput.powerDomains}
-                          onChange={(e) => handleFieldChange("powerDomains", e.target.value)}
-                          className="w-full rounded-md border border-input px-3 py-1.5 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Communication Interfaces</span>
-                        <div className="flex flex-wrap gap-1 p-1 bg-slate-50 rounded border">
-                          {formInput.communicationInterfaces.map((c, i) => (
-                            <span key={i} className="bg-white border px-2 py-0.5 rounded text-xs font-bold text-slate-800">
-                              {c}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* System Diagram Box */}
-                    <div className="border border-slate-200 rounded-xl p-3 bg-slate-50/60 flex flex-col items-center justify-between">
-                      <div className="w-full flex justify-between items-center mb-2">
-                        <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
-                          <Cpu className="h-3.5 w-3.5 text-primary" />
-                          Electronic System Diagram
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => setDiagramModalOpen(true)}
-                          className="p-1 text-slate-500 hover:text-slate-900"
-                        >
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                      <div
-                        onClick={() => setDiagramModalOpen(true)}
-                        className="w-full h-36 rounded-lg overflow-hidden bg-white border border-slate-200 flex items-center justify-center cursor-pointer"
-                      >
-                        <img
-                          src={formInput.systemDiagramUrl}
-                          alt="Electronic System Diagram"
-                          className="w-full h-full object-contain p-1"
-                        />
-                      </div>
-                      <span className="text-[10px] text-muted-foreground pt-1">
-                        System Architecture • Functional Blocks
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 3: Component Selection
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        3
-                      </span>
-                      Component Selection
-                    </h2>
-                    <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-0.5 rounded-full">
-                      Lifecycle: {formInput.componentLifecycleStatus}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
-                    <div>
-                      <span className="text-muted-foreground block font-semibold mb-1">Microcontroller / MCU</span>
-                      <input
-                        type="text"
-                        value={formInput.microcontrollerProcessor}
-                        onChange={(e) => handleFieldChange("microcontrollerProcessor", e.target.value)}
-                        className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                      />
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block font-semibold mb-1">Memory Devices</span>
-                      <input
-                        type="text"
-                        value={formInput.memoryDevices}
-                        onChange={(e) => handleFieldChange("memoryDevices", e.target.value)}
-                        className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                      />
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block font-semibold mb-1">Power Devices</span>
-                      <input
-                        type="text"
-                        value={formInput.powerDevices}
-                        onChange={(e) => handleFieldChange("powerDevices", e.target.value)}
-                        className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                      />
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block font-semibold mb-1">Passive Components</span>
-                      <input
-                        type="text"
-                        value={formInput.passiveComponents}
-                        onChange={(e) => handleFieldChange("passiveComponents", e.target.value)}
-                        className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                      />
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block font-semibold mb-1">Sensors</span>
-                      <input
-                        type="text"
-                        value={formInput.sensors}
-                        onChange={(e) => handleFieldChange("sensors", e.target.value)}
-                        className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                      />
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block font-semibold mb-1">Communication Modules</span>
-                      <input
-                        type="text"
-                        value={formInput.communicationModules}
-                        onChange={(e) => handleFieldChange("communicationModules", e.target.value)}
-                        className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 4: Circuit Design (with Circuit Schematic)
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        4
-                      </span>
-                      Circuit Design
-                    </h2>
-                    <span className="bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      Circuit Status: {formInput.circuitStatus}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2 grid grid-cols-2 gap-3 text-xs">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Circuit Name</span>
-                        <input
-                          type="text"
-                          value={formInput.circuitName}
-                          onChange={(e) => handleFieldChange("circuitName", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Circuit Category</span>
-                        <input
-                          type="text"
-                          value={formInput.circuitCategory}
-                          onChange={(e) => handleFieldChange("circuitCategory", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Input Voltage</span>
-                        <input
-                          type="text"
-                          value={formInput.inputVoltage}
-                          onChange={(e) => handleFieldChange("inputVoltage", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Output Voltage</span>
-                        <input
-                          type="text"
-                          value={formInput.outputVoltage}
-                          onChange={(e) => handleFieldChange("outputVoltage", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Operating Frequency</span>
-                        <input
-                          type="text"
-                          value={formInput.operatingFrequency}
-                          onChange={(e) => handleFieldChange("operatingFrequency", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Current Rating</span>
-                        <input
-                          type="text"
-                          value={formInput.currentRating}
-                          onChange={(e) => handleFieldChange("currentRating", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Circuit Schematic Panel */}
-                    <div className="border border-slate-200 rounded-xl p-3 bg-slate-900 text-white flex flex-col items-center justify-between">
-                      <div className="w-full flex justify-between items-center mb-2">
-                        <span className="text-[11px] font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1">
-                          <Zap className="h-3.5 w-3.5 text-indigo-400" />
-                          Circuit Schematic
-                        </span>
-                        <button type="button" onClick={() => setSchematicModalOpen(true)} className="p-1 text-slate-400 hover:text-white">
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                      <div onClick={() => setSchematicModalOpen(true)} className="w-full h-36 rounded-lg overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center cursor-pointer">
-                        <img src={formInput.circuitSchematicUrl} alt="Circuit Schematic" className="w-full h-full object-contain p-1" />
-                      </div>
-                      <span className="text-[10px] text-slate-400 pt-1">
-                        CAD Schematic • Mixed Signal Circuit
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 5: PCB Design Preparation (with Stack-up Diagram)
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        5
-                      </span>
-                      PCB Design Preparation
-                    </h2>
-                    <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-0.5 rounded-full">
-                      PCB Readiness: {formInput.pcbReadinessScore}/100
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                    <div className="md:col-span-3 grid grid-cols-2 gap-3">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">PCB Type</span>
-                        <input
-                          type="text"
-                          value={formInput.pcbType}
-                          onChange={(e) => handleFieldChange("pcbType", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-semibold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Estimated Layer Count</span>
-                        <input
-                          type="number"
-                          value={formInput.estimatedLayerCount}
-                          onChange={(e) => handleFieldChange("estimatedLayerCount", Number(e.target.value))}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Board Dimensions</span>
-                        <input
-                          type="text"
-                          value={formInput.boardDimensions}
-                          onChange={(e) => handleFieldChange("boardDimensions", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">High-Speed Signal Design</span>
-                        <input
-                          type="text"
-                          value={formInput.highSpeedSignalDesign}
-                          onChange={(e) => handleFieldChange("highSpeedSignalDesign", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Placement Strategy</span>
-                        <input
-                          type="text"
-                          value={formInput.componentPlacementStrategy}
-                          onChange={(e) => handleFieldChange("componentPlacementStrategy", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Thermal Management</span>
-                        <input
-                          type="text"
-                          value={formInput.thermalManagementMethod}
-                          onChange={(e) => handleFieldChange("thermalManagementMethod", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Stack-up Diagram Box & Score Tile */}
-                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-col items-center justify-between text-center">
-                      <div className="w-full flex justify-between items-center mb-1">
-                        <span className="text-[10px] font-bold text-slate-700 uppercase">PCB Stackup</span>
-                        <button type="button" onClick={() => setStackupModalOpen(true)} className="p-1 text-slate-500 hover:text-slate-900">
-                          <Maximize2 className="h-3 w-3" />
-                        </button>
-                      </div>
-                      <div onClick={() => setStackupModalOpen(true)} className="w-full h-24 rounded border bg-white overflow-hidden flex items-center justify-center cursor-pointer mb-2">
-                        <img src={formInput.pcbStackupDiagramUrl} alt="PCB Stackup" className="max-h-full object-contain p-1" />
-                      </div>
-                      <span className="text-[10px] font-bold text-emerald-800 uppercase">Readiness Score</span>
-                      <div className="text-2xl font-black text-emerald-700">{formInput.pcbReadinessScore} /100</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 6: Embedded Hardware Interfaces
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        6
-                      </span>
-                      Embedded Hardware Interfaces
-                    </h2>
-                    <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      Status: {formInput.hardwareInterfaceStatus}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                    <div className="md:col-span-3 grid grid-cols-2 gap-3">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">GPIO Interfaces</span>
-                        <input
-                          type="text"
-                          value={formInput.gpioInterfaces}
-                          onChange={(e) => handleFieldChange("gpioInterfaces", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">ADC / DAC Interfaces</span>
-                        <input
-                          type="text"
-                          value={formInput.adcDacInterfaces}
-                          onChange={(e) => handleFieldChange("adcDacInterfaces", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">PWM Outputs</span>
-                        <input
-                          type="text"
-                          value={formInput.pwmOutputs}
-                          onChange={(e) => handleFieldChange("pwmOutputs", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Bus Interfaces</span>
-                        <div className="flex flex-wrap gap-1 p-1 bg-slate-50 rounded border">
-                          {formInput.busInterfaces.map((b, i) => (
-                            <span key={i} className="bg-white border px-2 py-0.5 rounded text-xs font-bold text-slate-800">
-                              {b}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">CAN Interface</span>
-                        <span className="inline-block bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-1 rounded">
-                          {formInput.canInterfaceStatus}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Ethernet Interface</span>
-                        <span className="inline-block bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-1 rounded">
-                          {formInput.ethernetInterfaceStatus}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Hardware Interface Score Tile */}
-                    <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                      <span className="text-[10px] font-bold text-indigo-800 uppercase tracking-wider">
-                        Hardware Interface Score
-                      </span>
-                      <div className="text-3xl font-black text-indigo-700 my-1">
-                        {formInput.hardwareInterfaceScore}{" "}
-                        <span className="text-xs font-semibold text-indigo-600">/100</span>
-                      </div>
-                      <span className="text-[10px] font-semibold text-indigo-700">
-                        All Bus & PHY Signals Verified
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 7: Signal Integrity & Reliability
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        7
-                      </span>
-                      Signal Integrity & Reliability
-                    </h2>
-                    <span className="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-                      Reliability Score: {formInput.reliabilityScore}/100
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                    <div className="md:col-span-3 grid grid-cols-2 gap-3">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Signal Integrity Analysis</span>
-                        <input
-                          type="text"
-                          value={formInput.signalIntegrityAnalysis}
-                          onChange={(e) => handleFieldChange("signalIntegrityAnalysis", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Power Integrity Analysis</span>
-                        <input
-                          type="text"
-                          value={formInput.powerIntegrityAnalysis}
-                          onChange={(e) => handleFieldChange("powerIntegrityAnalysis", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-bold text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Noise Reduction Strategy</span>
-                        <input
-                          type="text"
-                          value={formInput.noiseReductionStrategy}
-                          onChange={(e) => handleFieldChange("noiseReductionStrategy", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Clock Distribution</span>
-                        <input
-                          type="text"
-                          value={formInput.clockDistribution}
-                          onChange={(e) => handleFieldChange("clockDistribution", e.target.value)}
-                          className="w-full rounded-md border border-input px-2.5 py-1 font-medium text-foreground bg-slate-50/50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">Reliability Target</span>
-                        <input
-                          type="text"
-                          value={formInput.reliabilityTarget}
-                          onChange={(e) => handleFieldChange("reliabilityTarget", e.target.value)}
-                          className="w-full rounded-md border border-emerald-300 font-black text-emerald-700 bg-emerald-50/50 px-2.5 py-1"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold mb-1">MTBF Target</span>
-                        <input
-                          type="text"
-                          value={formInput.mtbfTarget}
-                          onChange={(e) => handleFieldChange("mtbfTarget", e.target.value)}
-                          className="w-full rounded-md border border-input font-bold text-slate-800 bg-slate-50/50 px-2.5 py-1"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Computed Reliability Score Tile */}
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                      <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
-                        Reliability Score
-                      </span>
-                      <div className="text-3xl font-black text-emerald-700 my-1">
-                        {formInput.reliabilityScore}{" "}
-                        <span className="text-xs font-semibold text-emerald-600">/100</span>
-                      </div>
-                      <span className="text-[10px] font-semibold text-emerald-700">
-                        MTBF &gt; 100,000 hrs Target Met
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 8: Design Verification & Testing (with Waveform Plot)
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        8
-                      </span>
-                      Design Verification & Testing
-                    </h2>
-                    <span className="bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      Verification Score: {formInput.verificationScore}/100
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2 space-y-3 text-xs">
-                      <div className="grid grid-cols-2 gap-3">
-                        {formInput.verifications.map((ver) => (
-                          <div key={ver.id} className="p-2.5 bg-slate-50 border rounded-lg flex justify-between items-center">
-                            <span className="font-semibold text-slate-800">{ver.name}</span>
-                            <StatusBadge status={ver.status} />
-                          </div>
-                        ))}
-                      </div>
-                      <div className="bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg text-center mt-2">
-                        <span className="text-[10px] font-bold text-emerald-800 uppercase block">Verification Score</span>
-                        <span className="text-xl font-black text-emerald-700">{formInput.verificationScore} /100</span>
-                      </div>
-                    </div>
-
-                    {/* Waveform Visualization Box */}
-                    <div className="border border-slate-200 rounded-xl p-3 bg-slate-950 text-white flex flex-col items-center justify-between relative overflow-hidden group">
-                      <div className="w-full flex justify-between items-center mb-2">
-                        <span className="text-[11px] font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1">
-                          <Activity className="h-3.5 w-3.5 text-indigo-400" />
-                          Simulation Waveform Plot
-                        </span>
-                        <button type="button" onClick={() => setWaveformModalOpen(true)} className="p-1 text-slate-400 hover:text-white">
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                      <div onClick={() => setWaveformModalOpen(true)} className="w-full h-36 rounded-lg overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center cursor-pointer">
-                        <img src={formInput.waveformPlotUrl} alt="Simulation Waveform" className="w-full h-full object-contain p-1" />
-                      </div>
-                      <span className="text-[10px] text-slate-400 pt-1 block">
-                        Oscilloscope Plot • 500 MHz Signal Trace
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 9: AI Electronics Design Assessment (Single Source of Truth)
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        9
-                      </span>
-                      AI Electronics Design Assessment
-                    </h2>
-                    <span className="bg-indigo-600 text-white text-xs font-black px-3 py-0.5 rounded-full">
-                      AI Overall: {record.aiAssessment.aiOverallElectronicsScore} /100
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs">
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Design Quality</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiDesignQualityScore} /100</span>
-                    </div>
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Comp. Opt.</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiComponentOptimization} /100</span>
-                    </div>
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Circuit Review</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiCircuitReview} /100</span>
-                    </div>
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Signal Integrity</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiSignalIntegrityAnalysis} /100</span>
-                    </div>
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Thermal Rec.</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiThermalRecommendations} /100</span>
-                    </div>
-                    <div className="p-3 bg-slate-50 border rounded-lg text-center">
-                      <span className="text-[10px] text-muted-foreground block font-semibold">Reliability Pred.</span>
-                      <span className="text-lg font-black text-slate-800">{record.aiAssessment.aiReliabilityPrediction} /100</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 10: Design Summary (Kept in Sync with Sidebar)
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        10
-                      </span>
-                      Design Summary
-                    </h2>
-                    <span className="bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold px-2.5 py-0.5 rounded-full">
-                      Recommendation: {record.summary.recommendation}
-                    </span>
-                  </div>
-
-                  <div className="space-y-3 text-xs">
-                    <div>
-                      <div className="flex justify-between font-semibold text-slate-700 mb-1">
-                        <span>Architecture Readiness</span>
-                        <span>{record.summary.architectureReadiness} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-600 rounded-full" style={{ width: `${record.summary.architectureReadiness}%` }} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between font-semibold text-slate-700 mb-1">
-                        <span>Circuit Readiness</span>
-                        <span>{record.summary.circuitReadiness} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${record.summary.circuitReadiness}%` }} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between font-semibold text-slate-700 mb-1">
-                        <span>Hardware Interface Score</span>
-                        <span>{record.summary.hardwareInterfaceScore} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-indigo-600 rounded-full" style={{ width: `${record.summary.hardwareInterfaceScore}%` }} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between font-semibold text-slate-700 mb-1">
-                        <span>Reliability Score</span>
-                        <span>{record.summary.reliabilityScore} /100</span>
-                      </div>
-                      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-purple-600 rounded-full" style={{ width: `${record.summary.reliabilityScore}%` }} />
-                      </div>
-                    </div>
-                    <div className="pt-2 border-t flex justify-between items-center font-bold text-slate-900">
-                      <span>Overall Electronics Design Score</span>
-                      <span className="text-base text-indigo-700">{record.summary.overallElectronicsDesignScore} /100</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 11: Attachments
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        11
-                      </span>
-                      Attachments
-                    </h2>
-                    <button type="button" onClick={() => setActiveTab("attachments")} className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
-                      View All Attachments &rarr;
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                    {formInput.attachments.slice(0, 8).map((att) => (
-                      <div key={att.id} className="p-2.5 border border-slate-200 rounded-lg bg-slate-50/60 hover:bg-white transition-all flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 truncate">
-                          <FileText className="h-5 w-5 text-primary shrink-0" />
-                          <div className="truncate">
-                            <span className="font-bold text-xs text-foreground block truncate">{att.name}</span>
-                            <span className="text-[10px] text-muted-foreground block">{att.size}</span>
-                          </div>
-                        </div>
-                        <button type="button" onClick={() => toast.info(`Downloading ${att.name}...`)} className="p-1 text-slate-500 hover:text-slate-900 cursor-pointer">
-                          <Download className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 12: Review & Approval Table & Form
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        12
-                      </span>
-                      Review & Approval
-                    </h2>
-                    <span className="text-xs font-semibold text-muted-foreground">
-                      Electronics Design Review Board
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Reviewers Table (Col-span 2) */}
-                    <div className="lg:col-span-2 overflow-x-auto border border-border rounded-lg">
-                      <table className="w-full text-left text-xs">
-                        <thead className="bg-slate-100 border-b border-border text-slate-700 font-semibold">
-                          <tr>
-                            <th className="p-2.5">Role</th>
-                            <th className="p-2.5">Person</th>
-                            <th className="p-2.5">Decision</th>
-                            <th className="p-2.5">Status</th>
-                            <th className="p-2.5">Date</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border">
-                          {formInput.reviewers.map((rev) => (
-                            <tr key={rev.id} className="hover:bg-slate-50">
-                              <td className="p-2.5 font-semibold text-slate-800">{rev.role}</td>
-                              <td className="p-2.5 text-slate-700">{rev.person}</td>
-                              <td className="p-2.5"><StatusBadge status={rev.decision} /></td>
-                              <td className="p-2.5 font-medium text-slate-600">{rev.status}</td>
-                              <td className="p-2.5 text-slate-500">{rev.date || "—"}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* Decision Input Controls */}
-                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3 text-xs">
-                      <div>
-                        <label className="block font-semibold text-muted-foreground mb-1">Approval Decision</label>
-                        <select
-                          value={formInput.approvalDecision || ""}
-                          onChange={(e) => handleFieldChange("approvalDecision", e.target.value as ElectronicsDesignApprovalDecision)}
-                          className="w-full rounded-md border border-input bg-white p-2 font-semibold text-foreground"
-                        >
-                          <option value="">Select Decision</option>
-                          <option value="Approved">Approved</option>
-                          <option value="Approved with Conditions">Approved with Conditions</option>
-                          <option value="Revision Required">Revision Required</option>
-                          <option value="Rejected">Rejected</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <div className="flex justify-between font-semibold text-muted-foreground mb-1">
-                          <label>Review Comments</label>
-                          <span>{(formInput.reviewComments || "").length}/2000</span>
-                        </div>
-                        <textarea
-                          rows={3}
-                          maxLength={2000}
-                          value={formInput.reviewComments || ""}
-                          onChange={(e) => handleFieldChange("reviewComments", e.target.value)}
-                          placeholder="Enter electronics review board comments..."
-                          className="w-full rounded-md border border-input bg-white p-2 text-foreground resize-none"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block font-semibold text-muted-foreground mb-1">Approval Date</label>
-                        <input
-                          type="date"
-                          value={formInput.approvalDate || ""}
-                          onChange={(e) => handleFieldChange("approvalDate", e.target.value)}
-                          className="w-full rounded-md border border-input bg-white p-2 text-foreground"
-                        />
-                      </div>
-
-                      <ErpButton
-                        size="sm"
-                        className="w-full"
-                        loading={reviewMutation.isPending}
-                        onClick={() => {
-                          if (!formInput.approvalDecision) {
-                            toast.error("Please select an Approval Decision.");
-                            return;
-                          }
-                          reviewMutation.mutate({
-                            decision: formInput.approvalDecision,
-                            comments: formInput.reviewComments,
-                          });
-                        }}
-                      >
-                        Submit Board Decision
-                      </ErpButton>
-                    </div>
-                  </div>
-                </div>
-
-                {/* -------------------------------------------------------------------
-                    PANEL 13: System Information
-                    ------------------------------------------------------------------- */}
-                <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-border pb-3 mb-4">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                        13
-                      </span>
-                      System Information
-                    </h2>
-                    <span className="text-xs font-semibold text-muted-foreground font-mono">
-                      Audit Ref: {record.id}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                    <div className="md:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Created By</span>
-                        <span className="font-bold text-foreground">{record.electronicsEngineerName}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Created Date</span>
-                        <span className="font-medium text-slate-700">{record.createdOn}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Last Modified By</span>
-                        <span className="font-bold text-foreground">{record.electronicsEngineerName}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Last Modified Date</span>
-                        <span className="font-medium text-slate-700">{record.lastUpdated}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Workflow Stage</span>
-                        <StatusBadge status={record.currentStageLabel.split(": ")[1]} />
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block font-semibold">Version</span>
-                        <span className="font-bold font-mono text-foreground">v{record.version}</span>
-                      </div>
-                    </div>
-
-                    {/* History links */}
-                    <div className="flex flex-col justify-center space-y-1.5 border-l border-slate-200 pl-4">
-                      <button type="button" onClick={() => setSystemLogModalOpen(true)} className="text-xs font-bold text-primary hover:underline text-left cursor-pointer">
-                        View Log &rarr;
-                      </button>
-                      <button type="button" onClick={() => setSystemLogModalOpen(true)} className="text-xs font-bold text-primary hover:underline text-left cursor-pointer">
-                        View History &rarr;
-                      </button>
-                      <button type="button" onClick={() => setSystemLogModalOpen(true)} className="text-xs font-bold text-primary hover:underline text-left cursor-pointer">
-                        View Changes &rarr;
-                      </button>
-                      <button type="button" onClick={() => setSystemLogModalOpen(true)} className="text-xs font-bold text-primary hover:underline text-left cursor-pointer">
-                        View Workflow &rarr;
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* ===========================================================================
-                  RIGHT SIDEBAR PANEL (STICKY ON SCROLL)
-                  =========================================================================== */}
-              <div className="lg:col-span-1 space-y-6">
-                <div className="sticky top-6 space-y-6">
-                  {/* Overall Electronics Design Score Gauge Box */}
-                  <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                    <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-4 text-center flex items-center justify-center gap-1.5">
-                      <Cpu className="h-4 w-4 text-primary" />
-                      Overall Electronics Design Score
-                    </h3>
-
-                    <CircularScoreGauge
-                      score={record.summary.overallElectronicsDesignScore}
-                      label="Overall Score"
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Product Name
+                    </label>
+                    <Input
+                      value={formInput.productName}
+                      onChange={(e) => handleFieldChange("productName", e.target.value)}
+                      className="h-9 text-xs"
                     />
-
-                    <div className="mt-5 space-y-2 border-t border-slate-100 pt-4 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground font-medium">Architecture Readiness</span>
-                        <span className="font-bold text-slate-800">{record.summary.architectureReadiness} /100</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground font-medium">Circuit Readiness</span>
-                        <span className="font-bold text-slate-800">{record.summary.circuitReadiness} /100</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground font-medium">Hardware Interface</span>
-                        <span className="font-bold text-slate-800">{record.summary.hardwareInterfaceScore} /100</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground font-medium">Reliability</span>
-                        <span className="font-bold text-slate-800">{record.summary.reliabilityScore} /100</span>
-                      </div>
-                      <div className="flex justify-between items-center pt-1 border-t font-bold text-indigo-700">
-                        <span>Overall Score</span>
-                        <span>{record.summary.overallElectronicsDesignScore} /100</span>
-                      </div>
-                    </div>
                   </div>
 
-                  {/* Key Highlights Dynamic Checklist */}
-                  <div className="bg-white rounded-xl border border-border p-5 shadow-xs">
-                    <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
-                      Key Highlights
-                    </h3>
-                    <div className="space-y-2 text-xs">
-                      {record.keyHighlights.map((hl, idx) => (
-                        <div key={idx} className="flex items-start gap-2 text-slate-700">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                          <span className="font-medium">{hl}</span>
-                        </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Product Category
+                    </label>
+                    <Input
+                      value={formInput.productCategory}
+                      onChange={(e) => handleFieldChange("productCategory", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Electronics Design Objective
+                    </label>
+                    <Textarea
+                      rows={2}
+                      value={formInput.electronicsDesignObjective}
+                      onChange={(e) => handleFieldChange("electronicsDesignObjective", e.target.value)}
+                      className="text-xs resize-none"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Design Scope
+                    </label>
+                    <Textarea
+                      rows={2}
+                      value={formInput.designScope}
+                      onChange={(e) => handleFieldChange("designScope", e.target.value)}
+                      className="text-xs resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Design Methodology
+                    </label>
+                    <Input
+                      value={formInput.designMethodology}
+                      onChange={(e) => handleFieldChange("designMethodology", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">
+                      Applicable Standards
+                    </label>
+                    <div className="flex flex-wrap gap-1.5 p-1.5 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-border min-h-[36px] items-center">
+                      {formInput.applicableStandards.map((std, i) => (
+                        <span key={i} className="bg-indigo-50 text-indigo-800 border border-indigo-200 dark:bg-indigo-950 dark:text-indigo-300 dark:border-indigo-800 px-2.5 py-0.5 rounded text-xs font-bold shadow-2xs">
+                          {std}
+                        </span>
                       ))}
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            )}
 
-                  {/* Quick Actions List */}
-                  <div className="bg-white rounded-xl border border-border p-5 shadow-xs space-y-3">
-                    <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Quick Actions
-                    </h3>
-                    <div className="space-y-1.5">
-                      <button
-                        type="button"
-                        onClick={() => setReportModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <FileText className="h-4 w-4 text-blue-600" />
-                        Generate Design Report
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setSchematicModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <Zap className="h-4 w-4 text-amber-600" />
-                        View Electronic Schematics
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDiagramModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <Cpu className="h-4 w-4 text-indigo-600" />
-                        View Block Diagram
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setBomModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <FileSpreadsheet className="h-4 w-4 text-emerald-600" />
-                        View BOM
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setComponentListModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <CircuitBoard className="h-4 w-4 text-purple-600" />
-                        View Component List
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setSimulationModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <Activity className="h-4 w-4 text-rose-600" />
-                        View Simulation Report
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(record, null, 2));
-                          const downloadAnchor = document.createElement("a");
-                          downloadAnchor.setAttribute("href", dataStr);
-                          downloadAnchor.setAttribute("download", `${record.designId}_export.json`);
-                          document.body.appendChild(downloadAnchor);
-                          downloadAnchor.click();
-                          downloadAnchor.remove();
-                          toast.success("Exported Electronics Design Data JSON package.");
-                        }}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <Share2 className="h-4 w-4 text-slate-600" />
-                        Export Design Data
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setScheduleReviewModalOpen(true)}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-primary transition-all text-left cursor-pointer"
-                      >
-                        <Calendar className="h-4 w-4 text-blue-600" />
-                        Schedule Design Review
-                      </button>
+            {/* -------------------------------------------------------------------
+                PANEL 2: System Architecture & Schematics
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("system_architecture") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Layers className="h-4 w-4 text-blue-600" />
+                    Electronic System Architecture &amp; Blocks
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold">
+                    Status: {formInput.architectureStatus}
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">System Name</span>
+                    <Input
+                      value={formInput.systemName}
+                      onChange={(e) => handleFieldChange("systemName", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Board Architecture</span>
+                    <Input
+                      value={formInput.boardArchitecture}
+                      onChange={(e) => handleFieldChange("boardArchitecture", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Signal Interfaces</span>
+                    <Input
+                      value={formInput.signalInterfaces}
+                      onChange={(e) => handleFieldChange("signalInterfaces", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <span className="text-muted-foreground block font-semibold mb-1">Functional Blocks</span>
+                    <Input
+                      value={formInput.functionalBlocks}
+                      onChange={(e) => handleFieldChange("functionalBlocks", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Power Domains</span>
+                    <Input
+                      value={formInput.powerDomains}
+                      onChange={(e) => handleFieldChange("powerDomains", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 3: Component Selection
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("component_selection") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Box className="h-4 w-4 text-purple-600" />
+                    Component Selection &amp; MCU Specifications
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold">
+                    Lifecycle: {formInput.lifecycleStatus}
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Microcontroller / MCU</span>
+                    <Input
+                      value={formInput.microcontrollerProcessor}
+                      onChange={(e) => handleFieldChange("microcontrollerProcessor", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Memory Devices</span>
+                    <Input
+                      value={formInput.memoryDevices}
+                      onChange={(e) => handleFieldChange("memoryDevices", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Power Management ICs</span>
+                    <Input
+                      value={formInput.powerDevices}
+                      onChange={(e) => handleFieldChange("powerDevices", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Passive Components</span>
+                    <Input
+                      value={formInput.passiveComponents}
+                      onChange={(e) => handleFieldChange("passiveComponents", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Sensors</span>
+                    <Input
+                      value={formInput.sensors}
+                      onChange={(e) => handleFieldChange("sensors", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Communication Modules</span>
+                    <Input
+                      value={formInput.communicationModules}
+                      onChange={(e) => handleFieldChange("communicationModules", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 4: Circuit Design & Schematics
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("circuit_design") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-amber-600" />
+                    Circuit Design &amp; Operating Parameters
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-bold">
+                    Status: {formInput.circuitStatus}
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Circuit Name</span>
+                    <Input
+                      value={formInput.circuitName}
+                      onChange={(e) => handleFieldChange("circuitName", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Circuit Category</span>
+                    <Input
+                      value={formInput.circuitCategory}
+                      onChange={(e) => handleFieldChange("circuitCategory", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Operating Frequency</span>
+                    <Input
+                      value={formInput.operatingFrequency}
+                      onChange={(e) => handleFieldChange("operatingFrequency", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Input Voltage Range</span>
+                    <Input
+                      value={formInput.inputVoltage}
+                      onChange={(e) => handleFieldChange("inputVoltage", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Output Voltages</span>
+                    <Input
+                      value={formInput.outputVoltage}
+                      onChange={(e) => handleFieldChange("outputVoltage", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Current Rating</span>
+                    <Input
+                      value={formInput.currentRating}
+                      onChange={(e) => handleFieldChange("currentRating", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 5: PCB Preparation
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("pcb_preparation") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <CircuitBoard className="h-4 w-4 text-blue-600" />
+                    PCB Layout Preparation &amp; Stackup
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 text-xs font-bold">
+                    Readiness: {formInput.pcbReadinessScore}/100
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">PCB Type</span>
+                    <Input
+                      value={formInput.pcbType}
+                      onChange={(e) => handleFieldChange("pcbType", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Estimated Layer Count</span>
+                    <Input
+                      type="number"
+                      value={formInput.estimatedLayerCount}
+                      onChange={(e) => handleFieldChange("estimatedLayerCount", Number(e.target.value))}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Board Dimensions</span>
+                    <Input
+                      value={formInput.boardDimensions}
+                      onChange={(e) => handleFieldChange("boardDimensions", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">High-Speed Signal Design</span>
+                    <Input
+                      value={formInput.highSpeedSignalDesign}
+                      onChange={(e) => handleFieldChange("highSpeedSignalDesign", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Placement Strategy</span>
+                    <Input
+                      value={formInput.placementStrategy}
+                      onChange={(e) => handleFieldChange("placementStrategy", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Thermal Management</span>
+                    <Input
+                      value={formInput.thermalManagement}
+                      onChange={(e) => handleFieldChange("thermalManagement", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 6: Embedded Interfaces & Peripherals
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("embedded_interfaces") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Radio className="h-4 w-4 text-blue-600" />
+                    Embedded &amp; Peripheral Interfaces
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-bold">
+                    Interface Score: {formInput.hardwareInterfaceScore}/100
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">GPIO Interfaces</span>
+                    <Input
+                      value={formInput.gpioInterfaces}
+                      onChange={(e) => handleFieldChange("gpioInterfaces", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">ADC / DAC Interfaces</span>
+                    <Input
+                      value={formInput.adcDacInterfaces}
+                      onChange={(e) => handleFieldChange("adcDacInterfaces", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">PWM Outputs</span>
+                    <Input
+                      value={formInput.pwmOutputs}
+                      onChange={(e) => handleFieldChange("pwmOutputs", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div className="md:col-span-3">
+                    <span className="text-muted-foreground block font-semibold mb-1">Bus Interfaces</span>
+                    <div className="flex flex-wrap gap-1.5 p-1 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-border min-h-[36px] items-center">
+                      {formInput.busInterfaces.map((bus, i) => (
+                        <span key={i} className="bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-0.5 rounded text-[11px] font-bold">
+                          {bus}
+                        </span>
+                      ))}
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 7: Signal Integrity & Reliability
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("signal_integrity") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-blue-600" />
+                    Signal Integrity &amp; System Reliability
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-bold">
+                    Reliability Score: {formInput.reliabilityScore}/100
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Signal Integrity Analysis</span>
+                    <Input
+                      value={formInput.signalIntegrityAnalysis}
+                      onChange={(e) => handleFieldChange("signalIntegrityAnalysis", e.target.value)}
+                      className="h-9 text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Power Integrity Analysis</span>
+                    <Input
+                      value={formInput.powerIntegrityAnalysis}
+                      onChange={(e) => handleFieldChange("powerIntegrityAnalysis", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Clock Distribution</span>
+                    <Input
+                      value={formInput.clockDistribution}
+                      onChange={(e) => handleFieldChange("clockDistribution", e.target.value)}
+                      className="h-9 text-xs font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Noise Reduction</span>
+                    <Input
+                      value={formInput.noiseReductionStrategy}
+                      onChange={(e) => handleFieldChange("noiseReductionStrategy", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">Reliability Target</span>
+                    <Input
+                      value={formInput.reliabilityTarget}
+                      onChange={(e) => handleFieldChange("reliabilityTarget", e.target.value)}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-muted-foreground block font-semibold mb-1">MTBF Target</span>
+                    <Input
+                      value={formInput.mtbfTarget}
+                      onChange={(e) => handleFieldChange("mtbfTarget", e.target.value)}
+                      className="h-9 text-xs font-bold font-mono"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 8: Verification & Testing
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("verification_testing") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <CheckSquare className="h-4 w-4 text-blue-600" />
+                    Electronics Verification &amp; Simulation
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-bold">
+                    Verification: {formInput.verificationScore}/100
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                  {formInput.verifications.map((item) => (
+                    <div key={item.id} className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg flex justify-between items-center">
+                      <span className="font-semibold text-foreground">{item.name}</span>
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "text-[10px] font-semibold",
+                          item.status === "Completed" || item.status === "Passed"
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                            : "bg-blue-50 text-blue-700 border-blue-200"
+                        )}
+                      >
+                        {item.status}
+                      </Badge>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 9: AI Assessment
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("ai_assessment") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-blue-600" />
+                    AI Electronics Evaluation &amp; Optimization
+                  </CardTitle>
+                  <Badge className="bg-blue-600 text-white text-xs font-bold px-3 py-0.5 rounded-full">
+                    AI Overall: {record.aiAssessment.aiOverallElectronicsScore}/100
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs">
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Design Quality</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiDesignQualityScore}/100</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Comp. Opt.</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiComponentOptimization}/100</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Circuit Review</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiCircuitReview}/100</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Signal Integrity</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiSignalIntegrity}/100</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Thermal Rec.</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiThermalRecommendations}/100</span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-lg text-center">
+                    <span className="text-[10px] text-muted-foreground block font-semibold">Reliability Pred.</span>
+                    <span className="text-base font-black text-foreground mt-1 block">{record.aiAssessment.aiReliabilityPrediction}/100</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 10: Readiness Summary
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("summary") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <BarChart3 className="h-4 w-4 text-blue-600" />
+                    Readiness &amp; Release Summary
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 text-xs font-bold px-2.5 py-0.5">
+                    Recommendation: {record.summary.recommendation}
+                  </Badge>
+                </CardHeader>
+
+                <CardContent className="pt-4 space-y-3.5 text-xs">
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>Architecture Readiness</span>
+                      <span>{record.summary.architectureReadiness} / 100</span>
+                    </div>
+                    <Progress value={record.summary.architectureReadiness} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>Circuit Readiness</span>
+                      <span>{record.summary.circuitReadiness} / 100</span>
+                    </div>
+                    <Progress value={record.summary.circuitReadiness} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>Hardware Interface Score</span>
+                      <span>{record.summary.hardwareInterfaceScore} / 100</span>
+                    </div>
+                    <Progress value={record.summary.hardwareInterfaceScore} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>Reliability Score</span>
+                      <span>{record.summary.reliabilityScore} / 100</span>
+                    </div>
+                    <Progress value={record.summary.reliabilityScore} className="h-2" />
+                  </div>
+                  <div className="pt-2 border-t border-border flex justify-between items-center font-bold text-foreground">
+                    <span>Overall Electronics Design Score</span>
+                    <span className="text-base text-indigo-600">{record.summary.overallElectronicsDesignScore} / 100</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 11: Document & Artifact Attachments
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("attachments") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <Paperclip className="h-4 w-4 text-blue-600" />
+                    Attachments &amp; Technical Documents
+                  </CardTitle>
+                  <span className="text-xs font-semibold text-muted-foreground">
+                    {formInput.attachments.length} Verified Files
+                  </span>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                  {formInput.attachments.map((att) => (
+                    <div key={att.id} className="p-3 border border-border rounded-lg bg-slate-50/60 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 transition-all flex items-center justify-between gap-2 shadow-2xs">
+                      <div className="flex items-center gap-2 truncate">
+                        <FileText className="h-4 w-4 text-primary shrink-0" />
+                        <div className="truncate">
+                          <span className="font-bold text-xs text-foreground block truncate">{att.name}</span>
+                          <span className="text-[10px] text-muted-foreground block">{att.size}</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toast.info(`Downloading ${att.name}...`)}
+                        className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
+                        title="Download file"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 12: Review & Approval Table & Form
+                ------------------------------------------------------------------- */}
+            {shouldShowSection("review_approval") && (
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
+                    <UserCheck className="h-4 w-4 text-blue-600" />
+                    Review &amp; Approval
+                  </CardTitle>
+                  <span className="text-xs font-semibold text-muted-foreground">
+                    Electronics Design Review Board
+                  </span>
+                </CardHeader>
+
+                <CardContent className="pt-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Reviewers Table (Col-span 2) */}
+                  <div className="lg:col-span-2 overflow-x-auto border border-border rounded-lg">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-border text-foreground font-semibold">
+                        <tr>
+                          <th className="p-2.5">Role</th>
+                          <th className="p-2.5">Person</th>
+                          <th className="p-2.5">Decision</th>
+                          <th className="p-2.5">Status</th>
+                          <th className="p-2.5">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {formInput.reviewers.map((rev) => (
+                          <tr key={rev.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40">
+                            <td className="p-2.5 font-semibold text-foreground">{rev.role}</td>
+                            <td className="p-2.5 text-muted-foreground">{rev.person}</td>
+                            <td className="p-2.5">
+                              <Badge
+                                variant="outline"
+                                className={cn(
+                                  "text-[10px] font-semibold",
+                                  rev.decision === "Approved"
+                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                    : "bg-amber-50 text-amber-700 border-amber-200"
+                                )}
+                              >
+                                {rev.decision}
+                              </Badge>
+                            </td>
+                            <td className="p-2.5 font-medium text-foreground">{rev.status}</td>
+                            <td className="p-2.5 text-muted-foreground">{rev.date || "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Decision Input Controls */}
+                  <div className="bg-slate-50 dark:bg-slate-800/50 border border-border rounded-xl p-4 space-y-3 text-xs">
+                    <div>
+                      <label className="block font-semibold text-muted-foreground mb-1">Approval Decision</label>
+                      <select
+                        value={formInput.approvalDecision || ""}
+                        onChange={(e) => handleFieldChange("approvalDecision", e.target.value as ElectronicsDesignApprovalDecision)}
+                        className="w-full rounded-lg border border-input bg-white dark:bg-slate-900 p-2 font-semibold text-foreground text-xs"
+                      >
+                        <option value="">Select Decision</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Approved with Conditions">Approved with Conditions</option>
+                        <option value="Revision Required">Revision Required</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between font-semibold text-muted-foreground mb-1">
+                        <label>Review Comments</label>
+                        <span>{(formInput.reviewComments || "").length}/2000</span>
+                      </div>
+                      <Textarea
+                        rows={3}
+                        maxLength={2000}
+                        value={formInput.reviewComments || ""}
+                        onChange={(e) => handleFieldChange("reviewComments", e.target.value)}
+                        placeholder="Enter electronics review board comments..."
+                        className="text-xs resize-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-muted-foreground mb-1">Approval Date</label>
+                      <Input
+                        type="date"
+                        value={formInput.approvalDate || ""}
+                        onChange={(e) => handleFieldChange("approvalDate", e.target.value)}
+                        className="h-9 text-xs"
+                      />
+                    </div>
+
+                    <Button
+                      size="sm"
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                      disabled={reviewMutation.isPending}
+                      onClick={() => {
+                        if (!formInput.approvalDecision) {
+                          toast.error("Please select an Approval Decision.");
+                          return;
+                        }
+                        reviewMutation.mutate({
+                          decision: formInput.approvalDecision,
+                          comments: formInput.reviewComments,
+                        });
+                      }}
+                    >
+                      Submit Board Decision
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* -------------------------------------------------------------------
+                PANEL 13: System Information & Audit Trail
+                ------------------------------------------------------------------- */}
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+              <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
+                <CardTitle className="text-sm font-bold flex items-center gap-2">
+                  <History className="h-4 w-4 text-blue-600" />
+                  System Information &amp; Audit Trail
+                </CardTitle>
+                <span className="text-xs font-semibold text-muted-foreground font-mono">
+                  Audit Ref: {record.id}
+                </span>
+              </CardHeader>
+
+              <CardContent className="pt-4 grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                <div className="md:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Created By</span>
+                    <span className="font-bold text-foreground">{record.electronicsEngineerName}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Created Date</span>
+                    <span className="font-medium text-muted-foreground">{record.createdOn}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Last Modified By</span>
+                    <span className="font-bold text-foreground">{record.electronicsEngineerName}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Last Modified Date</span>
+                    <span className="font-medium text-muted-foreground">{record.lastUpdated}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Workflow Stage</span>
+                    <Badge variant="outline" className="text-[11px] font-semibold">{record.currentStageLabel.split(": ")[1]}</Badge>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block font-semibold">Version</span>
+                    <span className="font-bold font-mono text-foreground">v{record.version}</span>
+                  </div>
                 </div>
-              </div>
+
+                {/* History quick links */}
+                <div className="flex flex-col justify-center space-y-1.5 border-t md:border-t-0 md:border-l border-border pt-3 md:pt-0 md:pl-4">
+                  <button
+                    type="button"
+                    onClick={() => setSystemLogModalOpen(true)}
+                    className="text-xs font-bold text-primary hover:underline text-left cursor-pointer"
+                  >
+                    View Audit Trail &rarr;
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSystemLogModalOpen(true)}
+                    className="text-xs font-bold text-primary hover:underline text-left cursor-pointer"
+                  >
+                    View Activity History &rarr;
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* ===========================================================================
+              RIGHT SIDEBAR PANEL (STICKY ON SCROLL)
+              =========================================================================== */}
+          <div className="lg:col-span-1 space-y-6">
+            <div className="sticky top-6 space-y-6">
+              {/* Overall Score Gauge Box */}
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-2 border-b border-border text-center">
+                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Overall Electronics Design Score
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent className="pt-5 flex flex-col items-center">
+                  <CircularScoreGauge
+                    score={record.summary.overallElectronicsDesignScore}
+                  />
+
+                  <div className="w-full mt-5 space-y-2 border-t border-border pt-4 text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Architecture Readiness</span>
+                      <span className="font-bold text-foreground">{record.summary.architectureReadiness}%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Circuit Readiness</span>
+                      <span className="font-bold text-foreground">{record.summary.circuitReadiness}%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Hardware Interface</span>
+                      <span className="font-bold text-foreground">{record.summary.hardwareInterfaceScore}%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">Reliability</span>
+                      <span className="font-bold text-foreground">{record.summary.reliabilityScore}%</span>
+                    </div>
+                    <div className="flex justify-between items-center pt-2 border-t border-border font-bold text-indigo-600 dark:text-indigo-400">
+                      <span>Overall Score</span>
+                      <span>{record.summary.overallElectronicsDesignScore}%</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Key Highlights Card */}
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
+                <CardHeader className="pb-2 border-b border-border">
+                  <CardTitle className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                    <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
+                    Key Highlights
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-3">
+                  <ul className="space-y-2 text-xs text-muted-foreground">
+                    {record.keyHighlights.map((highlight, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5">
+                        <Check className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <span className="text-foreground">{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
             </div>
-          )}
+          </div>
         </div>
 
         {/* ===========================================================================
-            MODALS FOR QUICK ACTIONS & IMAGES
+            MODALS
             =========================================================================== */}
 
-        {/* Report Modal */}
+        {/* Executive Report Modal */}
         <Dialog open={reportModalOpen} onOpenChange={setReportModalOpen}>
           <DialogContent className="max-w-xl">
             <DialogHeader>
@@ -1890,154 +1457,73 @@ export function ElectronicsDesignFormPage({
             </DialogHeader>
 
             <div className="space-y-4 text-xs py-2">
-              <div className="p-3 bg-slate-50 rounded-lg border space-y-1">
-                <span className="font-bold text-slate-900 block">{record.designProjectName}</span>
-                <p className="text-slate-600">
+              <div className="p-3.5 bg-slate-50 dark:bg-slate-800 rounded-lg border border-border space-y-1.5">
+                <span className="font-bold text-foreground block">{record.designProjectName}</span>
+                <p className="text-muted-foreground leading-relaxed">
                   Covers MCU ARM Cortex-M7 controller, 6-layer PCB stackup, 500 MHz signal integrity, MTBF target (&gt;100,000 hrs), and IPC-A-610 compliance.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 font-semibold">
-                <div className="p-2 border rounded">Overall Design Score: {record.summary.overallElectronicsDesignScore}/100</div>
-                <div className="p-2 border rounded">Microcontroller: {formInput.microcontrollerProcessor}</div>
+                <div className="p-2.5 border border-border rounded-lg bg-slate-50/50 dark:bg-slate-800/50">Overall Design Score: {record.summary.overallElectronicsDesignScore}/100</div>
+                <div className="p-2.5 border border-border rounded-lg bg-slate-50/50 dark:bg-slate-800/50">Design Version: {record.designVersion}</div>
               </div>
             </div>
 
             <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setReportModalOpen(false)}>
+              <Button variant="outline" onClick={() => setReportModalOpen(false)}>
                 Close
-              </ErpButton>
-              <ErpButton onClick={() => { toast.success("Downloaded Electronics_Design_Report.pdf"); setReportModalOpen(false); }}>
+              </Button>
+              <Button onClick={() => { toast.success("Downloaded Electronics_Design_Report.pdf"); setReportModalOpen(false); }}>
                 <Download className="h-4 w-4 mr-1.5" /> Download PDF Report
-              </ErpButton>
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
-        {/* System Diagram Modal */}
-        <Dialog open={diagramModalOpen} onOpenChange={setDiagramModalOpen}>
-          <DialogContent className="max-w-4xl">
-            <DialogHeader>
-              <DialogTitle>Electronic System Architecture Block Diagram</DialogTitle>
-            </DialogHeader>
-            <div className="h-[480px] bg-white rounded-xl p-4 flex items-center justify-center border">
-              <img src={formInput.systemDiagramUrl} alt="Diagram" className="max-h-full object-contain" />
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Product Render Modal */}
+        {/* PCB Spec Modal */}
         <Dialog open={renderModalOpen} onOpenChange={setRenderModalOpen}>
-          <DialogContent className="max-w-4xl">
-            <DialogHeader>
-              <DialogTitle>Product / PCB Controller Render</DialogTitle>
-            </DialogHeader>
-            <div className="h-[480px] bg-slate-900 rounded-xl p-4 flex items-center justify-center">
-              <img src={formInput.productRenderUrl} alt="Render" className="max-h-full object-contain" />
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Circuit Schematic Modal */}
-        <Dialog open={schematicModalOpen} onOpenChange={setSchematicModalOpen}>
-          <DialogContent className="max-w-4xl">
-            <DialogHeader>
-              <DialogTitle>CAD Circuit Schematic View</DialogTitle>
-            </DialogHeader>
-            <div className="h-[480px] bg-slate-900 rounded-xl p-4 flex items-center justify-center">
-              <img src={formInput.circuitSchematicUrl} alt="Circuit Schematic" className="max-h-full object-contain" />
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* PCB Stackup Modal */}
-        <Dialog open={stackupModalOpen} onOpenChange={setStackupModalOpen}>
-          <DialogContent className="max-w-4xl">
-            <DialogHeader>
-              <DialogTitle>6-Layer PCB Stackup Cross-Section Diagram</DialogTitle>
-            </DialogHeader>
-            <div className="h-[480px] bg-white rounded-xl p-4 flex items-center justify-center border">
-              <img src={formInput.pcbStackupDiagramUrl} alt="PCB Stackup" className="max-h-full object-contain" />
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Waveform Modal */}
-        <Dialog open={waveformModalOpen} onOpenChange={setWaveformModalOpen}>
-          <DialogContent className="max-w-4xl">
-            <DialogHeader>
-              <DialogTitle>Digital & Analog Oscilloscope Simulation Waveforms</DialogTitle>
-            </DialogHeader>
-            <div className="h-[480px] bg-slate-950 rounded-xl p-4 flex items-center justify-center">
-              <img src={formInput.waveformPlotUrl} alt="Simulation Waveform" className="max-h-full object-contain" />
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* BOM Modal */}
-        <Dialog open={bomModalOpen} onOpenChange={setBomModalOpen}>
-          <DialogContent className="max-w-xl">
+          <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <FileSpreadsheet className="h-5 w-5 text-emerald-600" />
-                Electronics Bill of Materials (BOM)
+                <Cpu className="h-5 w-5 text-indigo-600" />
+                Product / PCB Controller Layout Spec
               </DialogTitle>
             </DialogHeader>
-            <div className="space-y-3 text-xs py-2">
-              <div className="p-3 bg-slate-50 rounded border space-y-1">
-                <div className="flex justify-between font-bold text-slate-800">
-                  <span>Total Line Items: 142</span>
-                  <span>Estimated Unit BOM Cost: $42.50</span>
-                </div>
-                <p className="text-slate-600">Includes MCU, PMIC, CAN PHY, Ethernet Transceiver, Resistors, Capacitors & Connectors.</p>
+            <div className="h-64 bg-slate-950 rounded-xl p-6 flex flex-col items-center justify-center text-white gap-3 border border-slate-800">
+              <div className="h-16 w-16 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+                <Cpu className="h-8 w-8" />
               </div>
+              <h3 className="text-base font-bold text-slate-100">Main Controller PCB Master Layout</h3>
+              <p className="text-xs text-slate-400 max-w-md text-center">
+                Production-intent 6-layer high-density PCB layout with matched differential pairs and controlled impedance routing.
+              </p>
             </div>
             <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setBomModalOpen(false)}>Close</ErpButton>
-              <ErpButton onClick={() => { toast.success("Downloaded BOM.xlsx"); setBomModalOpen(false); }}>Download Excel</ErpButton>
+              <Button variant="outline" onClick={() => setRenderModalOpen(false)}>Close</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
-        {/* Component List Modal */}
-        <Dialog open={componentListModalOpen} onOpenChange={setComponentListModalOpen}>
-          <DialogContent className="max-w-xl">
+        {/* Architecture Modal */}
+        <Dialog open={diagramModalOpen} onOpenChange={setDiagramModalOpen}>
+          <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <CircuitBoard className="h-5 w-5 text-purple-600" />
-                Component Library Details
+                <Layers className="h-5 w-5 text-blue-600" />
+                Electronic System Architecture Block Diagram
               </DialogTitle>
             </DialogHeader>
-            <div className="space-y-2 text-xs py-2">
-              <div className="p-2 border rounded font-semibold text-slate-800">MCU: STM32H753BIT6 (ARM Cortex-M7, 480 MHz)</div>
-              <div className="p-2 border rounded font-semibold text-slate-800">CAN PHY: ISO1050 Isolated Transceiver</div>
-              <div className="p-2 border rounded font-semibold text-slate-800">Ethernet PHY: KSZ8081RND 10/100 MII/RMII</div>
-              <div className="p-2 border rounded font-semibold text-slate-800">PMIC: TPS65218D0 Power Management IC</div>
+            <div className="h-64 bg-slate-950 rounded-xl p-6 flex flex-col items-center justify-center text-white gap-3 border border-slate-800">
+              <div className="h-16 w-16 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30">
+                <Layers className="h-8 w-8" />
+              </div>
+              <h3 className="text-base font-bold text-slate-100">Electronic Architecture Topology</h3>
+              <p className="text-xs text-slate-400 max-w-md text-center">
+                System block hierarchy mapping power conversion rails, CAN/Ethernet communications PHYs, MCU sub-assemblies, and safety lockouts.
+              </p>
             </div>
             <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setComponentListModalOpen(false)}>Close</ErpButton>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* Simulation Modal */}
-        <Dialog open={simulationModalOpen} onOpenChange={setSimulationModalOpen}>
-          <DialogContent className="max-w-xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-rose-600" />
-                Simulation Analysis Report
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-2 text-xs py-2">
-              <div className="p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded font-semibold">
-                Signal Integrity: 0 Crosstalk Warnings (Passed)
-              </div>
-              <div className="p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded font-semibold">
-                Power Integrity: PDN Impedance &lt; 0.1Ω up to 500 MHz (Passed)
-              </div>
-            </div>
-            <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setSimulationModalOpen(false)}>Close</ErpButton>
+              <Button variant="outline" onClick={() => setDiagramModalOpen(false)}>Close</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -2048,50 +1534,20 @@ export function ElectronicsDesignFormPage({
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <History className="h-5 w-5 text-primary" />
-                Audit Trail & Workflow History
+                Audit Trail &amp; Workflow History
               </DialogTitle>
             </DialogHeader>
             <div className="max-h-80 overflow-y-auto space-y-3 text-xs">
               {record.auditTrail.map((log, idx) => (
-                <div key={idx} className="p-3 border rounded-lg bg-slate-50 space-y-1">
-                  <div className="flex justify-between font-bold text-slate-900">
+                <div key={idx} className="p-3 border border-border rounded-lg bg-slate-50 dark:bg-slate-800 space-y-1">
+                  <div className="flex justify-between font-bold text-foreground">
                     <span>{log.actor}</span>
-                    <span className="text-slate-500 font-normal">{log.at}</span>
+                    <span className="text-muted-foreground font-normal">{log.at}</span>
                   </div>
-                  <p className="text-slate-700">{log.event}</p>
+                  <p className="text-muted-foreground">{log.event}</p>
                 </div>
               ))}
             </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Schedule Review Modal */}
-        <Dialog open={scheduleReviewModalOpen} onOpenChange={setScheduleReviewModalOpen}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-blue-600" />
-                Schedule Electronics Design Review
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-3 text-xs py-2">
-              <div>
-                <label className="block font-semibold text-muted-foreground mb-1">Review Date & Time</label>
-                <input type="datetime-local" className="w-full border p-2 rounded" />
-              </div>
-              <div>
-                <label className="block font-semibold text-muted-foreground mb-1">Attendees</label>
-                <input type="text" defaultValue="Rohit Nair, Ananya Iyer, Kavita Sharma, Suresh Menon" className="w-full border p-2 rounded" />
-              </div>
-            </div>
-            <DialogFooter>
-              <ErpButton variant="outline" onClick={() => setScheduleReviewModalOpen(false)}>
-                Cancel
-              </ErpButton>
-              <ErpButton onClick={() => { toast.success("Electronics Design Review Meeting scheduled."); setScheduleReviewModalOpen(false); }}>
-                Send Invites
-              </ErpButton>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

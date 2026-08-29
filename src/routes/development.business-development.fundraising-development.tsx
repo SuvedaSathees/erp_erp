@@ -660,16 +660,14 @@ function FundraisingDevelopmentPage() {
           <ScoreGauge label="AI Fundraising Score" score={formData.aiFundraisingScore} sub="Excellent" size="normal" />
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Main Form Canvas */}
+        <div className="w-full space-y-6">
 
-            {/* 1. Fundraising Overview */}
+            {/* Fundraising Overview */}
             <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Fundraising Overview
+                  <Building2 className="h-4 w-4 text-primary" /> Fundraising Overview
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Fundraising Strategy</span>
               </div>
@@ -803,11 +801,11 @@ function FundraisingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 2. Capital Planning */}
+            {/* Capital Planning */}
             <div id="sec-capital-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <PiggyBank className="h-4 w-4 text-emerald-600" /> 2. Capital Planning & Valuation Model
+                  <PiggyBank className="h-4 w-4 text-emerald-600" /> Capital Planning & Valuation Model
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Capital Planning Score: <strong>{formData.capitalPlanningScore}/100</strong> <MAICWBadge type="C" />
@@ -901,11 +899,11 @@ function FundraisingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 3. Investor Targeting */}
+            {/* Investor Targeting */}
             <div id="sec-investor-targeting" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4 text-purple-600" /> 3. Investor Targeting & Shortlisting
+                  <Users className="h-4 w-4 text-purple-600" /> Investor Targeting & Shortlisting
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Investor Readiness: <strong>{formData.investorReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -993,11 +991,11 @@ function FundraisingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 4. Fundraising Execution */}
+            {/* Fundraising Execution */}
             <div id="sec-execution" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Target className="h-4 w-4 text-blue-600" /> 4. Fundraising Execution & Traction
+                  <Target className="h-4 w-4 text-blue-600" /> Fundraising Execution & Traction
                 </h3>
                 <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
                   Execution Score: <strong>{formData.executionScore}/100</strong> <MAICWBadge type="C" />
@@ -1042,11 +1040,11 @@ function FundraisingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 5. Due Diligence */}
+            {/* Due Diligence */}
             <div id="sec-due-diligence" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-emerald-600" /> 5. Due Diligence Workstreams
+                  <ShieldCheck className="h-4 w-4 text-emerald-600" /> Due Diligence Workstreams
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Due Diligence Score: <strong>{formData.dueDiligenceScore}/100</strong> <MAICWBadge type="C" />
@@ -1086,11 +1084,11 @@ function FundraisingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 6. Investment Negotiation */}
+            {/* Investment Negotiation */}
             <div id="sec-negotiation" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Handshake className="h-4 w-4 text-emerald-600" /> 6. Term Sheet & Investment Negotiation
+                  <Handshake className="h-4 w-4 text-emerald-600" /> Term Sheet & Investment Negotiation
                 </h3>
                 <span className="text-xs font-semibold text-amber-500 flex items-center gap-1">
                   Negotiation Score: <strong>{formData.negotiationScore}/100</strong> <MAICWBadge type="C" />
@@ -1190,11 +1188,11 @@ function FundraisingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 7. Compliance & Governance */}
+            {/* Compliance & Governance */}
             <div id="sec-governance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Scale className="h-4 w-4 text-purple-600" /> 7. Compliance & Statutory Governance
+                  <Scale className="h-4 w-4 text-purple-600" /> Compliance & Statutory Governance
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Governance Score: <strong>{formData.governanceScore}/100</strong> <MAICWBadge type="C" />
@@ -1234,140 +1232,52 @@ function FundraisingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 8. AI Fundraising Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 8. AI Fundraising Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Fundraising Score: {formData.aiFundraisingScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Target className="h-3.5 w-3.5 text-emerald-600" /> AI Investor Matching
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiInvestorMatching}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-purple-600" /> AI Valuation Benchmark
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiValuationBenchmark}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> AI Funding Probability
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiFundingProbability}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <ShieldCheck className="h-3.5 w-3.5" /> AI Risk Analysis
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiRiskAnalysis}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Fundraising Intelligence Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 9. Fundraising Summary */}
+            {/* Fundraising Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 9. Fundraising Summary & Recommendation
+                  <Award className="h-4 w-4 text-emerald-600" /> Fundraising Summary & Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Fundraising Rating: {computedOverallScore}/100 (Tier 1)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Capital Planning Score</span>
-                    <span className="font-mono font-bold">{formData.capitalPlanningScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Capital Campaign Status</span>
+                    <span className="text-emerald-600 font-bold">₹60 Cr Committed (40%)</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.capitalPlanningScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Investor Readiness</span>
-                    <span className="font-mono font-bold">{formData.investorReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.investorReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Execution Score</span>
-                    <span className="font-mono font-bold">{formData.executionScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: `${formData.executionScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Due Diligence Score</span>
-                    <span className="font-mono font-bold">{formData.dueDiligenceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.dueDiligenceScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Governance Score</span>
-                    <span className="font-mono font-bold">{formData.governanceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${formData.governanceScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Institutional round active with 4 signed LOIs, 70% closing probability, and 15 completed Tier-1 VC/PE partner meetings.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Readiness" score={computedOverallScore} sub="Very Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Proceed to Investor Meetings",
-                        "Improve Financial Readiness",
-                        "Complete Due Diligence",
-                        "Strengthen Data Room",
-                        "Negotiate Valuation",
-                        "Execute Agreements",
-                        "Close Funding Round",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Proceed to Investor Meetings",
+                      "Accelerate Due Diligence Process",
+                      "Negotiate Term Sheets",
+                      "Engage Lead Institutional Investor",
+                      "Proceed to Investment Round Closing",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 10. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 10. Fundraising Data Room & Artifacts
+                  <FileText className="h-4 w-4 text-primary" /> Fundraising Data Room & Artifacts
                 </h3>
                 <button
                   type="button"
@@ -1422,11 +1332,11 @@ function FundraisingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 11. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 11. Investment Committee Governance Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Investment Committee Governance Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">6 Governance Roles</span>
               </div>
@@ -1491,11 +1401,11 @@ function FundraisingDevelopmentPage() {
               </div>
             </div>
 
-            {/* 12. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 12. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History Log
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1518,180 +1428,6 @@ function FundraisingDevelopmentPage() {
               </div>
             </div>
 
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 88</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> High Funding Potential
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    AI analysis shows 76% probability of successful fundraising.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-purple-600" /> Valuation Benchmark
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Comparable valuation range between ₹ 420 Cr - ₹ 480 Cr.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-blue-600">
-                    <Target className="h-3.5 w-3.5" /> Investor Match
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Sequoia Capital, Accel Partners and 2 more highly aligned.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-amber-500">
-                    <ShieldCheck className="h-3.5 w-3.5" /> Risk Assessment
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Overall fundraising risk is Low to Medium.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Capital Required</span>
-                    <Sparkline data={[100, 120, 135, 150]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">₹ 150 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Funds Committed</span>
-                    <Sparkline data={[20, 35, 48, 60]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">₹ 60 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Closing Probability</span>
-                    <Sparkline data={[50, 58, 65, 70]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">70 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Investor Meetings</span>
-                    <Sparkline data={[4, 8, 11, 15]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">15</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">LOIs Received</span>
-                    <Sparkline data={[1, 2, 3, 4]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">4</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Execution Score</span>
-                    <Sparkline data={[65, 70, 74, 78]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">78 / 100</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Fundraising KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Audit Information Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Created By:</span>
-                  <span className="font-semibold text-foreground">{formData.fundraisingManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Created Date:</span>
-                  <span className="font-semibold text-foreground">05 May 2024 10:20 AM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified By:</span>
-                  <span className="font-semibold text-foreground">{formData.fundraisingManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified Date:</span>
-                  <span className="font-semibold text-foreground">{formData.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Workflow Stage:</span>
-                  <span className="font-semibold text-primary">{formData.workflowStage}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span className="font-semibold text-foreground">v{formData.version}</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 

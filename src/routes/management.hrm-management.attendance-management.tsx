@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
@@ -64,7 +64,6 @@ import {
   Mail,
   Phone,
   Video,
-  UserCheck2,
   ShieldAlert,
   HelpCircle,
   Eye,
@@ -730,7 +729,7 @@ export default function AttendanceManagementPage() {
 
                 <div className="pt-2 border-t border-slate-100 text-right">
                   <button
-                    onClick={() => setActiveTab("exceptions")}
+                    onClick={() => setActiveTab("regularization")}
                     className="text-[10px] font-semibold text-primary hover:underline cursor-pointer"
                   >
                     View All Exceptions →
@@ -831,7 +830,7 @@ export default function AttendanceManagementPage() {
                   </div>
                 </div>
 
-                <button onClick={() => setActiveTab("approvals")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer pt-1">
+                <button onClick={() => setActiveTab("regularization")} className="text-[10px] font-semibold text-primary hover:underline cursor-pointer pt-1">
                   View Approval History →
                 </button>
               </div>

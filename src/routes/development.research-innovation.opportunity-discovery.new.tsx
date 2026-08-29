@@ -859,7 +859,7 @@ function OpportunityFormPage() {
   return (
     <AppShell
       title="Opportunity Discovery"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Opportunity Discovery"
       description="Discover and qualify innovation opportunities from validated ideas."
       tabs={<InnovationAreaTabs sub={<OpportunityTabBar />} />}
     >
@@ -1738,26 +1738,7 @@ function OpportunityFormPage() {
               </div>
             )}
 
-            <div className="card-soft p-5">
-              <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                Key Highlights
-              </h4>
-              <ul className="space-y-1.5">
-                {highlights.map((h, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs">
-                    <CheckCircle2
-                      className={cn(
-                        "mt-0.5 h-3.5 w-3.5 shrink-0",
-                        h.ok ? "text-success" : "text-muted-foreground/50",
-                      )}
-                    />
-                    <span className={h.ok ? "text-foreground" : "text-muted-foreground"}>
-                      {h.text}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+
 
             <div className="card-soft p-5">
               <div className="mb-2 flex items-center justify-between">

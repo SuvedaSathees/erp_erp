@@ -75,7 +75,7 @@ function PortfolioRegisterPage() {
   return (
     <AppShell
       title="Innovation Portfolio"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Innovation Portfolio"
       description="Balance and prioritize the innovation portfolio across projects."
       tabs={<InnovationAreaTabs sub={<PortfolioPageTabBar />} />}
       topbarActions={newButton}

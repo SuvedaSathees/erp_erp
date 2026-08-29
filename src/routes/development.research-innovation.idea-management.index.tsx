@@ -103,7 +103,7 @@ function IdeaDashboardPage() {
   return (
     <AppShell
       title="Idea Management"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Idea Management"
       description="Capture, evaluate, and track ideas through the innovation pipeline."
       tabs={<InnovationAreaTabs />}
       topbarActions={newIdeaButton}

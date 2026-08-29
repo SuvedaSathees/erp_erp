@@ -908,7 +908,7 @@ function OpportunityManagementPage() {
                         <div className="flex items-center justify-between border-t border-slate-200 pt-2 mt-2">
                           <div>
                             <span className="font-bold text-slate-800 block">Qualification Score</span>
-                            <span className="font-extrabold text-emerald-600 text-sm font-mono">{formState.qualificationScore} / 100</span>
+                            <span className="font-extrabold text-emerald-600 text-sm font-mono">{formState.qualificationScore}%</span>
                           </div>
                           <div className="relative inline-flex items-center justify-center shrink-0">
                             <svg width="36" height="36" className="transform -rotate-90">

@@ -41,8 +41,8 @@ type MakeStatCardWidgetArgs<TData, TKey extends readonly unknown[]> = {
   /** Base icon treatment; `map` may override per value. */
   iconBg: string;
   iconColor: string;
-  /** Query options factory for the widget's data source. */
-  options: () => UseQueryOptions<TData, Error, TData, TKey>;
+  /** Query options factory or object for the widget's data source. */
+  options: (() => UseQueryOptions<TData, Error, TData, TKey>) | UseQueryOptions<TData, Error, TData, TKey>;
   /** Derive the card's display props from the fetched data. */
   map: (data: TData) => StatCardShape;
 };
@@ -66,7 +66,8 @@ export function makeStatCardWidget<TData, TKey extends readonly unknown[]>({
   const Icon = icon;
 
   const Content = memo(function StatCardWidgetContent({ instance }: WidgetContentProps) {
-    const { data, isLoading, isError } = useQuery(options());
+    const queryOpts = typeof options === "function" ? options() : options;
+    const { data, isLoading, isError } = useQuery(queryOpts);
 
     if (isLoading || (!data && !isError)) {
       return <Skeleton className="h-[104px] rounded-xl" />;

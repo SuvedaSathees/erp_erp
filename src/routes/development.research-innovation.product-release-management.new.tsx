@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo } from "react";
+import React, { useState, useMemo, type ReactNode } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
 import {
@@ -39,7 +39,6 @@ import {
   Printer,
   History,
   Workflow,
-  Sparkle,
   ArrowRight,
   ShieldCheck,
   Box,
@@ -56,7 +55,11 @@ import {
   Users,
   CheckSquare,
   FileText,
-  BadgeAlert,
+  Cpu,
+  Paperclip,
+  UserCheck,
+  Building2,
+  Factory,
 } from "lucide-react";
 
 import { productReleaseService } from "@/services/productReleaseService";
@@ -68,10 +71,6 @@ import type {
   ProductReleaseAttachment,
 } from "@/services/types";
 import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
-import {
-  ProductReleaseTabBar,
-  type ProductReleaseTabId,
-} from "@/components/erp/ProductReleaseTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -145,11 +144,11 @@ function CircularScoreGauge({
             className="transition-all duration-1000 ease-out"
           />
         </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <div className="absolute inset-0 flex flex-col items-center justify-center select-none">
+          <span className="text-xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400 flex items-baseline justify-center">
             {score}
+            <span className="text-xs font-bold ml-0.5">%</span>
           </span>
-          <span className="text-[9px] text-slate-400 font-medium">/100</span>
         </div>
       </div>
       {label && <span className="mt-2 text-xs font-semibold text-slate-700 dark:text-slate-300">{label}</span>}
@@ -265,11 +264,22 @@ const DEFAULT_PRODUCT_RELEASE_RECORD: ProductReleaseRecord = {
   attachments: [
     { id: "att-1", name: "release_checklist_v1.2.pdf", size: "1.2 MB", type: "pdf", uploadDate: "18 Jun 2024", category: "Checklist" },
     { id: "att-2", name: "documentation_package.zip", size: "24.5 MB", type: "zip", uploadDate: "18 Jun 2024", category: "Documentation" },
+    { id: "att-3", name: "marketing_kit_v1.2.pptx", size: "18.6 MB", type: "pptx", uploadDate: "18 Jun 2024", category: "Marketing" },
+    { id: "att-4", name: "release_notes_v1.2.pdf", size: "1.1 MB", type: "pdf", uploadDate: "18 Jun 2024", category: "Release Notes" },
+    { id: "att-5", name: "manufacturing_package.zip", size: "32.2 MB", type: "zip", uploadDate: "18 Jun 2024", category: "Manufacturing" },
+    { id: "att-6", name: "training_material_v1.2.pdf", size: "9.7 MB", type: "pdf", uploadDate: "18 Jun 2024", category: "Training" },
+    { id: "att-7", name: "ai_release_report.pdf", size: "2.4 MB", type: "pdf", uploadDate: "18 Jun 2024", category: "AI Report" },
+    { id: "att-8", name: "supporting_documents.zip", size: "5.6 MB", type: "zip", uploadDate: "18 Jun 2024", category: "General" },
   ],
 
   reviewers: [
-    { id: "rev-1", role: "Release Manager", person: "Rahul Sharma", decision: "Approved", date: "18 Jun 2024", comments: "All good", status: "Completed", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" },
-    { id: "rev-2", role: "Engineering Manager", person: "Nisha Verma", decision: "Approved", date: "18 Jun 2024", comments: "Engineering complete", status: "Completed", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80" },
+    { id: "rev-1", role: "Release Manager", person: "Rahul Sharma", decision: "Approved", date: "18 Jun 2024", comments: "All good", status: "Completed" },
+    { id: "rev-2", role: "Engineering Manager", person: "Nisha Verma", decision: "Approved", date: "18 Jun 2024", comments: "Engineering complete", status: "Completed" },
+    { id: "rev-3", role: "Manufacturing Manager", person: "Vikram Singh", decision: "Approved", date: "18 Jun 2024", comments: "Production ready", status: "Completed" },
+    { id: "rev-4", role: "Quality Manager", person: "Amit Patel", decision: "Approved", date: "18 Jun 2024", comments: "Compliant", status: "Completed" },
+    { id: "rev-5", role: "Sales & Marketing Head", person: "Neha Reddy", decision: "Approved", date: "18 Jun 2024", comments: "Go to market ready", status: "Completed" },
+    { id: "rev-6", role: "COO", person: "Arun Kumar", decision: "Approved", date: "19 Jun 2024", comments: "Approved", status: "Completed" },
+    { id: "rev-7", role: "CEO", person: "Sankaran R.", decision: "Pending", date: "-", comments: "Final approval", status: "Pending" },
   ],
   approvalDecision: "Approved",
   reviewComments: "All departments are aligned. Proceed with product launch.",
@@ -296,12 +306,10 @@ export function ProductReleasePage({
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const [activeTab, setActiveTab] = useState<ProductReleaseTabId>("overview");
 
   // Dialog & Drawer States
   const [showUploadDialog, setShowUploadDialog] = useState(false);
@@ -458,120 +466,114 @@ export function ProductReleasePage({
   return (
     <AppShell
       title="Product Release Management"
-      breadcrumb={breadcrumb}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Product Release Management"}
       description="Govern release gates, ECO sign-offs, production deployment checklists, and release notes."
-      tabs={tabs}
+      tabs={tabs ?? <ResearchInnovationTabBar />}
     >
       <div className="space-y-6 pb-16">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
-              Product Release Management
-              <Rocket className="h-5 w-5 text-blue-600" />
-            </h1>
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200 font-semibold">
-              Release Gate Module
-            </Badge>
-          </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowWorkflowModal(true)}
-                className="gap-1.5 text-xs"
-              >
-                <Workflow className="h-3.5 w-3.5 text-blue-600" />
-                Release Gate Workflow (3 Stages)
-              </Button>
-            </div>
-          </div>
-
-      {/* 3. Record Header Bar (2 Rows) */}
-      <div className="mx-auto max-w-[1600px] px-4 pt-4">
-        <Card className="border-border shadow-xs bg-white dark:bg-slate-900 mb-4">
-          <CardContent className="p-4 flex flex-col gap-3">
-            {/* Row 1 */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-border/60">
-              <div className="flex flex-wrap items-center gap-6 text-xs">
-                <div>
-                  <span className="text-muted-foreground block font-medium">Release ID</span>
-                  <span className="font-mono font-bold text-foreground">{rec.releaseId}</span>
+        {/* Record Header Bar */}
+        <div className="mx-auto max-w-[1600px] px-4 pt-2">
+          <Card className="border border-border/80 shadow-xs bg-card mb-4 overflow-hidden rounded-xl">
+            {/* TOP ROW: Record Identity, Editable Title, & Action Buttons */}
+            <div className="p-4 sm:p-5 pb-4 bg-slate-50/70 dark:bg-slate-900/90 border-b border-border/70 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              {/* Left: Record Identity & Title */}
+              <div className="flex items-start sm:items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-blue-600/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center font-bold shrink-0 border border-blue-200/50 dark:border-blue-800/50 shadow-2xs">
+                  <Rocket className="h-5 w-5" />
                 </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Form Code</span>
-                  <span className="font-mono text-slate-700 dark:text-slate-300 font-semibold">{rec.formCode}</span>
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div className="min-w-[220px]">
-                  <span className="text-muted-foreground block font-medium">Release Project</span>
-                  <Input
-                    value={formData.releaseProjectName || rec.releaseProjectName}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, releaseProjectName: e.target.value }))}
-                    className="h-7 text-xs font-semibold text-foreground bg-slate-50 dark:bg-slate-800/80 border-slate-200"
-                  />
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Release Version</span>
-                  <span className="inline-flex items-center rounded-md bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-bold text-blue-700 dark:text-blue-300">
-                    {rec.releaseVersion}
-                  </span>
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Workflow Status</span>
-                  {getStatusBadge(rec.workflowStatus)}
-                </div>
-                <div className="h-7 w-px bg-border hidden sm:block" />
-                <div>
-                  <span className="text-muted-foreground block font-medium">Created On</span>
-                  <span className="font-medium text-slate-700 dark:text-slate-300">{rec.createdOn}</span>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-border/60">
+                      {rec.releaseId}
+                    </span>
+                    <span className="text-slate-300 dark:text-slate-700">•</span>
+                    <Badge variant="outline" className="font-mono text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-white/80 dark:bg-slate-800">
+                      {rec.formCode}
+                    </Badge>
+                    <Badge variant="secondary" className="font-mono text-[11px] font-bold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800">
+                      {rec.releaseVersion}
+                    </Badge>
+                    {getStatusBadge(rec.workflowStatus)}
+                  </div>
+                  {/* Project Title Input with clean hover/focus state */}
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={formData.releaseProjectName || rec.releaseProjectName}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, releaseProjectName: e.target.value }))}
+                      className="h-8 text-sm sm:text-base font-bold text-foreground bg-transparent hover:bg-white dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-primary shadow-none px-2 py-0 transition-all rounded-md max-w-md"
+                      placeholder="Release Project Name..."
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Right Action Buttons */}
-              <div className="flex items-center gap-2">
+              {/* Right: Actions */}
+              <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowWorkflowModal(true)}
+                  className="gap-1.5 text-xs font-medium bg-white dark:bg-slate-800 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700"
+                >
+                  <Workflow className="h-3.5 w-3.5 text-blue-600" />
+                  <span className="hidden lg:inline">Release Gate</span> Workflow
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => saveDraftMutation.mutate(formData)}
                   disabled={saveDraftMutation.isPending}
-                  className="gap-1.5 text-xs"
+                  className="gap-1.5 text-xs font-medium bg-white dark:bg-slate-800 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700"
                 >
-                  <Save className="h-3.5 w-3.5 text-slate-600" />
+                  {saveDraftMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5 text-slate-600 dark:text-slate-300" />}
                   Save Draft
                 </Button>
                 <Button
                   size="sm"
                   onClick={() => submitMutation.mutate()}
                   disabled={submitMutation.isPending}
-                  className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs font-bold"
+                  className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs font-semibold"
                 >
-                  <Send className="h-3.5 w-3.5" />
+                  {submitMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
                   Submit for Review
                 </Button>
 
+                {/* More Actions Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" className="h-8 w-8">
+                    <Button variant="outline" size="icon" className="h-8 w-8 bg-white dark:bg-slate-800 shadow-2xs">
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 text-xs">
-                    <DropdownMenuItem onClick={() => setShowReleasePackageModal(true)} className="gap-2">
+                  <DropdownMenuContent align="end" className="w-56 text-xs shadow-lg">
+                    <DropdownMenuItem onClick={() => setShowReleasePackageModal(true)} className="gap-2 cursor-pointer">
                       <Download className="h-4 w-4 text-blue-600" />
                       Download Release Package (.ZIP)
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowReleaseNotesDialog(true)} className="gap-2">
+                    <DropdownMenuItem onClick={() => setShowReleaseNotesDialog(true)} className="gap-2 cursor-pointer">
                       <FileText className="h-4 w-4 text-emerald-600" />
                       Publish Release Notes
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowAiAnalyzerModal(true)} className="gap-2">
+                    <DropdownMenuItem onClick={() => setShowAiAnalyzerModal(true)} className="gap-2 cursor-pointer">
                       <Sparkles className="h-4 w-4 text-purple-600" />
                       Run AI Release Analysis
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowAuditLogDrawer(true)} className="gap-2">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => {
+                      toast.success("Exporting Release Record PDF...");
+                      window.print();
+                    }} className="gap-2 cursor-pointer">
+                      <Printer className="h-4 w-4 text-slate-600" />
+                      Print / Export PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success("Release record link copied to clipboard!");
+                    }} className="gap-2 cursor-pointer">
+                      <Share2 className="h-4 w-4 text-slate-600" />
+                      Share Link
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setShowAuditLogDrawer(true)} className="gap-2 cursor-pointer">
                       <History className="h-4 w-4 text-slate-600" />
                       View Audit Log
                     </DropdownMenuItem>
@@ -580,1156 +582,1107 @@ export function ProductReleasePage({
               </div>
             </div>
 
-            {/* Row 2 */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-1 text-xs">
-              <div className="flex flex-wrap items-center gap-4">
-                {/* Linked Product Chip */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Linked Product:</span>
-                  <button
-                    type="button"
-                    onClick={() => toast.info(`Navigating to product record: ${rec.linkedProduct.name}`)}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800 hover:bg-blue-100 transition-colors"
-                  >
-                    <Box className="h-3.5 w-3.5 text-blue-600" />
-                    {rec.linkedProduct.name}
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </button>
-                </div>
-
-                {/* Linked Documentation Chip */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Linked Documentation:</span>
-                  <button
-                    type="button"
-                    onClick={() => toast.info(`Navigating to documentation record: ${rec.linkedDocumentation.code}`)}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 hover:bg-emerald-100 transition-colors"
-                  >
-                    <BookOpen className="h-3.5 w-3.5 text-emerald-600" />
-                    {rec.linkedDocumentation.code}
-                    <ExternalLink className="h-3 w-3 opacity-70" />
-                  </button>
-                </div>
-
-                {/* Release Manager */}
-                <div className="flex items-center gap-1.5 border-l border-border pl-3">
-                  <span className="text-muted-foreground font-medium">Release Manager:</span>
-                  <div className="flex items-center gap-1.5">
-                    <img src={rec.releaseManager.avatar} alt={rec.releaseManager.name} className="h-5 w-5 rounded-full object-cover" />
-                    <span className="font-semibold text-foreground">{rec.releaseManager.name}</span>
-                  </div>
-                </div>
-
-                {/* Planned Release Date */}
-                <div className="flex items-center gap-1.5 border-l border-border pl-3">
-                  <span className="text-muted-foreground font-medium">Planned Release Date:</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5 text-blue-600" />
-                    {rec.plannedReleaseDate}
-                  </span>
-                </div>
+            {/* BOTTOM ROW: Key-Value Structured Metadata Ribbon */}
+            <div className="px-4 py-2.5 bg-white dark:bg-slate-900 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 text-xs divide-y sm:divide-y-0 sm:divide-x divide-border/60">
+              {/* Linked Product */}
+              <div className="flex flex-col gap-0.5 sm:pr-2">
+                <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                  <Box className="h-3 w-3 text-blue-500" /> Linked Product
+                </span>
+                <button
+                  type="button"
+                  onClick={() => toast.info(`Navigating to product record: ${rec.linkedProduct.name}`)}
+                  className="font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+                >
+                  <span className="truncate">{rec.linkedProduct.name}</span>
+                  <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+                </button>
               </div>
 
-              <div className="flex items-center gap-3">
+              {/* Linked Documentation */}
+              <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                  <BookOpen className="h-3 w-3 text-emerald-500" /> Documentation
+                </span>
+                <button
+                  type="button"
+                  onClick={() => toast.info(`Navigating to documentation record: ${rec.linkedDocumentation.code}`)}
+                  className="font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+                >
+                  <span className="truncate">{rec.linkedDocumentation.code}</span>
+                  <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+                </button>
+              </div>
+
+              {/* Release Manager */}
+              <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                  <UserCheck className="h-3 w-3 text-emerald-500" /> Release Manager
+                </span>
+                <span className="font-semibold text-foreground truncate">{rec.releaseManager.name}</span>
+              </div>
+
+              {/* Planned Release Date */}
+              <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                  <Calendar className="h-3 w-3 text-blue-500" /> Planned Date
+                </span>
+                <span className="font-semibold text-foreground truncate">{rec.plannedReleaseDate}</span>
+              </div>
+
+              {/* Release Type */}
+              <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium">Release Type</span>
+                <Badge variant="secondary" className="font-semibold w-fit px-1.5 py-0 text-[10px]">
+                  {rec.releaseType}
+                </Badge>
+              </div>
+
+              {/* Priority & Created */}
+              <div className="flex flex-col gap-0.5 sm:pl-2 pt-2 sm:pt-0">
+                <span className="text-[11px] text-muted-foreground font-medium">Priority</span>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Release Type:</span>
-                  <Badge variant="secondary" className="font-semibold bg-slate-100 dark:bg-slate-800">
-                    {rec.releaseType}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Release Priority:</span>
-                  <Badge className="bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 font-semibold border-red-200">
+                  <Badge className="bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 font-bold px-1.5 py-0 text-[10px] border-red-300">
                     {rec.releasePriority}
                   </Badge>
+                  <span className="text-[10px] text-muted-foreground truncate">{rec.createdOn}</span>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </Card>
 
-        {/* 3-Stage Interactive Stage Stepper Bar */}
-        <div className="mb-4 rounded-xl border border-blue-200/60 bg-blue-50/40 dark:bg-blue-950/20 p-3 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Workflow className="h-4 w-4 text-blue-600" />
-              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-                3-Stage Release Gate Lifecycle
+          {/* 3-Stage Interactive Stage Stepper Bar */}
+          <div className="mb-4 rounded-xl border border-blue-200/60 bg-blue-50/40 dark:bg-blue-950/20 p-3 shadow-2xs">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Workflow className="h-4 w-4 text-blue-600" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+                  3-Stage Release Gate Lifecycle
+                </span>
+              </div>
+              <span className="text-xs text-blue-700 dark:text-blue-300 font-medium">
+                Current Stage: <strong className="font-bold">{rec.workflowStageLabel}</strong>
               </span>
             </div>
-            <span className="text-xs text-blue-700 dark:text-blue-300 font-medium">
-              Current Stage: <strong className="font-bold">{rec.workflowStageLabel}</strong>
-            </span>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-            {/* Stage 1 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(1)}
-              className={`flex items-start gap-2.5 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 1
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : rec.stage > 1
-                  ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+              {/* Stage 1 */}
+              <button
+                type="button"
+                onClick={() => advanceStageMutation.mutate(1)}
+                className={`flex items-center gap-3 rounded-xl p-2.5 text-left border transition-all cursor-pointer ${
                   rec.stage === 1
-                    ? "bg-blue-600 text-white"
+                    ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
                     : rec.stage > 1
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 dark:bg-slate-700 text-slate-600"
+                    ? "bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800"
+                    : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-slate-300"
                 }`}
               >
-                {rec.stage > 1 ? <Check className="h-3.5 w-3.5" /> : "1"}
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white">Stage 1: Release Readiness Assessment</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                  Verify engineering, manufacturing, commercial & compliance streams. Trigger AI assessment.
-                </p>
-              </div>
-            </button>
+                <div
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                    rec.stage === 1
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : rec.stage > 1
+                      ? "bg-emerald-600 text-white shadow-xs"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                  }`}
+                >
+                  {rec.stage > 1 ? <Check className="h-4 w-4" /> : <Box className="h-4 w-4" />}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">Stage 1: Readiness Assessment</span>
+                    {rec.stage > 1 && <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">Done</span>}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground truncate">Engineering, Mfg, Commercial & Compliance</p>
+                </div>
+              </button>
 
-            {/* Stage 2 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(2)}
-              className={`flex items-start gap-2.5 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 2
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : rec.stage > 2
-                  ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+              {/* Stage 2 */}
+              <button
+                type="button"
+                onClick={() => advanceStageMutation.mutate(2)}
+                className={`flex items-center gap-3 rounded-xl p-2.5 text-left border transition-all cursor-pointer ${
                   rec.stage === 2
-                    ? "bg-blue-600 text-white"
+                    ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
                     : rec.stage > 2
-                    ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 dark:bg-slate-700 text-slate-600"
+                    ? "bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800"
+                    : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-slate-300"
                 }`}
               >
-                {rec.stage > 2 ? <Check className="h-3.5 w-3.5" /> : "2"}
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white">Stage 2: Deployment Planning</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                  Configure release schedule, rollout channels, reserve inventory stock & activate sales channels.
-                </p>
-              </div>
-            </button>
+                <div
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                    rec.stage === 2
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : rec.stage > 2
+                      ? "bg-emerald-600 text-white shadow-xs"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                  }`}
+                >
+                  {rec.stage > 2 ? <Check className="h-4 w-4" /> : <Calendar className="h-4 w-4" />}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">Stage 2: Deployment Planning</span>
+                    {rec.stage > 2 && <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">Done</span>}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground truncate">Schedule, channels, stock & sales activation</p>
+                </div>
+              </button>
 
-            {/* Stage 3 */}
-            <button
-              type="button"
-              onClick={() => advanceStageMutation.mutate(3)}
-              className={`flex items-start gap-2.5 rounded-lg p-2.5 text-left border transition-all cursor-pointer ${
-                rec.stage === 3
-                  ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
-                  : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <div
-                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                  rec.stage === 3 ? "bg-blue-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-600"
+              {/* Stage 3 */}
+              <button
+                type="button"
+                onClick={() => advanceStageMutation.mutate(3)}
+                className={`flex items-center gap-3 rounded-xl p-2.5 text-left border transition-all cursor-pointer ${
+                  rec.stage === 3
+                    ? "bg-white dark:bg-slate-900 border-blue-500 shadow-xs ring-2 ring-blue-500/20"
+                    : "bg-white/60 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-slate-300"
                 }`}
               >
-                3
-              </div>
-              <div>
-                <p className="font-bold text-slate-900 dark:text-white">Stage 3: Executive Review & Launch</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                  Executive Review Board decision → Authorize production release & publish release notes.
-                </p>
-              </div>
-            </button>
+                <div
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                    rec.stage === 3 ? "bg-blue-600 text-white shadow-xs" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                  }`}
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="font-bold text-slate-900 dark:text-white text-xs">Stage 3: Executive Launch</span>
+                  <p className="text-[10px] text-muted-foreground truncate">Board decision, release notes & sales launch</p>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* 4. Tab Navigation Shell */}
-      <div className="mx-auto max-w-[1600px] px-4">
-        <ProductReleaseTabBar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          scores={{
-            readiness: rec.engineeringScore,
-            deployment: rec.deploymentScore,
-            risk: rec.riskScore,
-            ai: rec.aiReleaseScore,
-            overall: rec.overallReleaseScore,
-          }}
-          attachmentsCount={rec.attachments.length}
-          status={rec.workflowStatus}
-        />
-      </div>
 
       {/* 5. Main Dashboard Grid Layout */}
       <div className="mx-auto max-w-[1600px] px-4 pt-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Main Content Column */}
           <div className="lg:col-span-9 space-y-6">
-            {activeTab === "overview" && (
-              <>
-                {/* ------------------------------------------------------------- */}
-                {/* PANEL 1: Release Overview */}
-                {/* ------------------------------------------------------------- */}
-                <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                  <CardHeader className="pb-3 border-b border-border/60">
-                    <div className="flex items-center gap-2">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                        1
-                      </div>
-                      <CardTitle className="text-base font-bold">Release Overview</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                      {/* Left Form Inputs */}
-                      <div className="md:col-span-7 space-y-3.5 text-xs">
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                              Product Name <span className="text-red-500">*</span>
-                            </label>
-                            <Input
-                              value={formData.productName || rec.productName}
-                              onChange={(e) => setFormData((prev) => ({ ...prev, productName: e.target.value }))}
-                              className="h-8 text-xs font-semibold"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                              Product Category <span className="text-red-500">*</span>
-                            </label>
-                            <select
-                              value={formData.productCategory || rec.productCategory}
-                              onChange={(e) => setFormData((prev) => ({ ...prev, productCategory: e.target.value }))}
-                              className="h-8 w-full rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                            >
-                              <option value="AC EV Charger">AC EV Charger</option>
-                              <option value="DC Fast Charger">DC Fast Charger</option>
-                              <option value="Industrial Energy System">Industrial Energy System</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                              Release Name <span className="text-red-500">*</span>
-                            </label>
-                            <Input
-                              value={formData.releaseName || rec.releaseName}
-                              onChange={(e) => setFormData((prev) => ({ ...prev, releaseName: e.target.value }))}
-                              className="h-8 text-xs font-semibold"
-                            />
-                          </div>
-                          <div>
-                            <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                              Release Version <span className="text-red-500">*</span>
-                            </label>
-                            <Input
-                              value={formData.releaseVersion || rec.releaseVersion}
-                              onChange={(e) => setFormData((prev) => ({ ...prev, releaseVersion: e.target.value }))}
-                              className="h-8 text-xs font-mono font-bold"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                              Release Type <span className="text-red-500">*</span>
-                            </label>
-                            <select
-                              value={formData.releaseType || rec.releaseType}
-                              onChange={(e) => setFormData((prev) => ({ ...prev, releaseType: e.target.value }))}
-                              className="h-8 w-full rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                            >
-                              <option value="Production Release">Production Release</option>
-                              <option value="Beta Pilot Release">Beta Pilot Release</option>
-                              <option value="Minor Patch Release">Minor Patch Release</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                              Planned Release Date <span className="text-red-500">*</span>
-                            </label>
-                            <Input
-                              value={formData.plannedReleaseDate || rec.plannedReleaseDate}
-                              onChange={(e) => setFormData((prev) => ({ ...prev, plannedReleaseDate: e.target.value }))}
-                              className="h-8 text-xs"
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                            Target Markets
-                          </label>
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            {rec.targetMarkets.map((m) => (
-                              <Badge key={m} className="bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 font-bold border-blue-200">
-                                {m}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                            Release Objective <span className="text-red-500">*</span>
-                          </label>
-                          <Textarea
-                            rows={2}
-                            value={formData.releaseObjective || rec.releaseObjective}
-                            onChange={(e) => setFormData((prev) => ({ ...prev, releaseObjective: e.target.value }))}
-                            className="text-xs resize-none"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Right Graphic Panel (Embedded Rocket Launch Illustration matching screenshot) */}
-                      <div className="md:col-span-5 flex flex-col justify-center items-center rounded-xl bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-slate-100 dark:from-slate-800/80 dark:to-slate-900 border border-blue-200/80 dark:border-slate-700 p-6 text-center">
-                        <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-xl mb-3">
-                          <Rocket className="h-12 w-12 animate-pulse" />
-                          <span className="absolute -bottom-2 -right-2 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-extrabold text-white shadow-xs uppercase">
-                            High Priority
-                          </span>
-                        </div>
-                        <h4 className="text-sm font-extrabold text-slate-900 dark:text-white">
-                          Smart EV Charger v1.2 Launch
-                        </h4>
-                        <p className="text-xs text-muted-foreground mt-1 max-w-xs">
-                          Final release gate converging engineering, manufacturing, quality, CRM stock & sales channels.
-                        </p>
-                        <div className="mt-4 flex items-center gap-2">
-                          <Badge variant="outline" className="bg-white dark:bg-slate-800 text-xs font-bold">
-                            2,450 Units Stock Ready
-                          </Badge>
-                          <Badge className="bg-emerald-600 text-white text-xs font-bold">
-                            Ready for Launch
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </>
-            )}
-
-            {(activeTab === "overview" || activeTab === "readiness") && (
-              <>
-                {/* Grid for Engineering & Manufacturing Readiness Cards (Panels 2 & 3) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* ------------------------------------------------------------- */}
-                  {/* PANEL 2: Engineering Release Readiness */}
-                  {/* ------------------------------------------------------------- */}
-                  <Card className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between">
-                    <div>
-                      <CardHeader className="pb-3 border-b border-border/60">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              2
-                            </div>
-                            <CardTitle className="text-base font-bold">Engineering Release Readiness</CardTitle>
-                          </div>
-                          <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
-                            6 Deliverables
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-3 pb-2 px-4">
-                        <div className="space-y-2.5">
-                          {rec.engineeringChecklist.map((item) => (
-                            <button
-                              key={item.id}
-                              type="button"
-                              onClick={() => toggleChecklistMutation.mutate({ section: "engineering", itemId: item.id })}
-                              className="w-full flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-2.5 text-xs transition-hover hover:bg-slate-100/60 dark:hover:bg-slate-800/80 cursor-pointer text-left"
-                            >
-                              <div className="flex items-center gap-2.5">
-                                <div
-                                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded ${
-                                    item.completed ? "bg-emerald-600 text-white" : "border border-slate-300 dark:border-slate-600"
-                                  }`}
-                                >
-                                  {item.completed && <Check className="h-3 w-3" />}
-                                </div>
-                                <span className="font-semibold text-slate-800 dark:text-slate-200">{item.label}</span>
-                              </div>
-                              <span className="text-[10px] text-muted-foreground font-mono bg-slate-200/60 dark:bg-slate-700 px-1.5 py-0.5 rounded">
-                                {item.sourceStream}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </div>
-
-                    {/* Computed Score Footer Tile */}
-                    <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        Engineering Readiness Score
-                      </span>
-                      <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
-                        <span>{rec.engineeringScore}</span>
-                        <span className="text-xs font-normal opacity-80">/100</span>
-                      </div>
-                    </div>
-                  </Card>
-
-                  {/* ------------------------------------------------------------- */}
-                  {/* PANEL 3: Manufacturing Readiness */}
-                  {/* ------------------------------------------------------------- */}
-                  <Card className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between">
-                    <div>
-                      <CardHeader className="pb-3 border-b border-border/60">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              3
-                            </div>
-                            <CardTitle className="text-base font-bold">Manufacturing Readiness</CardTitle>
-                          </div>
-                          <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
-                            6 Deliverables
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-3 pb-2 px-4">
-                        <div className="space-y-2.5">
-                          {rec.manufacturingChecklist.map((item) => (
-                            <button
-                              key={item.id}
-                              type="button"
-                              onClick={() => toggleChecklistMutation.mutate({ section: "manufacturing", itemId: item.id })}
-                              className="w-full flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-2.5 text-xs transition-hover hover:bg-slate-100/60 dark:hover:bg-slate-800/80 cursor-pointer text-left"
-                            >
-                              <div className="flex items-center gap-2.5">
-                                <div
-                                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded ${
-                                    item.completed ? "bg-emerald-600 text-white" : "border border-slate-300 dark:border-slate-600"
-                                  }`}
-                                >
-                                  {item.completed && <Check className="h-3 w-3" />}
-                                </div>
-                                <span className="font-semibold text-slate-800 dark:text-slate-200">{item.label}</span>
-                              </div>
-                              <span className="text-[10px] text-muted-foreground font-mono bg-slate-200/60 dark:bg-slate-700 px-1.5 py-0.5 rounded">
-                                {item.sourceStream}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </div>
-
-                    {/* Computed Score Footer Tile */}
-                    <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        Manufacturing Readiness Score
-                      </span>
-                      <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
-                        <span>{rec.manufacturingScore}</span>
-                        <span className="text-xs font-normal opacity-80">/100</span>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              </>
-            )}
-
-            {(activeTab === "overview" || activeTab === "readiness" || activeTab === "deployment") && (
-              <>
-                {/* Grid for Commercial Readiness & Deployment Cards (Panels 4 & 5) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* ------------------------------------------------------------- */}
-                  {/* PANEL 4: Commercial Readiness */}
-                  {/* ------------------------------------------------------------- */}
-                  <Card className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between">
-                    <div>
-                      <CardHeader className="pb-3 border-b border-border/60">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              4
-                            </div>
-                            <CardTitle className="text-base font-bold">Commercial Readiness</CardTitle>
-                          </div>
-                          <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
-                            6 Deliverables
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-3 pb-2 px-4">
-                        <div className="space-y-2.5">
-                          {rec.commercialChecklist.map((item) => (
-                            <button
-                              key={item.id}
-                              type="button"
-                              onClick={() => toggleChecklistMutation.mutate({ section: "commercial", itemId: item.id })}
-                              className="w-full flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-2.5 text-xs transition-hover hover:bg-slate-100/60 dark:hover:bg-slate-800/80 cursor-pointer text-left"
-                            >
-                              <div className="flex items-center gap-2.5">
-                                <div
-                                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded ${
-                                    item.completed ? "bg-emerald-600 text-white" : "border border-slate-300 dark:border-slate-600"
-                                  }`}
-                                >
-                                  {item.completed && <Check className="h-3 w-3" />}
-                                </div>
-                                <span className="font-semibold text-slate-800 dark:text-slate-200">{item.label}</span>
-                              </div>
-                              <span className="text-[10px] text-muted-foreground font-mono bg-slate-200/60 dark:bg-slate-700 px-1.5 py-0.5 rounded">
-                                {item.sourceStream}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </div>
-
-                    {/* Computed Score Footer Tile */}
-                    <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        Commercial Readiness Score
-                      </span>
-                      <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
-                        <span>{rec.commercialScore}</span>
-                        <span className="text-xs font-normal opacity-80">/100</span>
-                      </div>
-                    </div>
-                  </Card>
-
-                  {/* ------------------------------------------------------------- */}
-                  {/* PANEL 5: Deployment & Distribution */}
-                  {/* ------------------------------------------------------------- */}
-                  <Card className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between">
-                    <div>
-                      <CardHeader className="pb-3 border-b border-border/60">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                              5
-                            </div>
-                            <CardTitle className="text-base font-bold">Deployment & Distribution</CardTitle>
-                          </div>
-                          <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 text-xs font-mono font-bold">
-                            Stock Reserved
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-3 pb-2 px-4 space-y-3 text-xs">
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <span className="text-muted-foreground block font-medium">Release Channels</span>
-                            <div className="flex gap-1 flex-wrap mt-1">
-                              {rec.releaseChannels.map((c) => (
-                                <Badge key={c} variant="secondary" className="text-[10px] font-semibold">
-                                  {c}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block font-medium">Deployment Regions</span>
-                            <div className="flex gap-1 flex-wrap mt-1">
-                              {rec.deploymentRegions.map((r) => (
-                                <Badge key={r} variant="outline" className="text-[10px] font-semibold bg-slate-100 dark:bg-slate-800">
-                                  {r}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <span className="text-muted-foreground block font-medium">Distribution Partner</span>
-                            <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">{rec.distributionPartner}</p>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block font-medium">Inventory Available</span>
-                            <p className="font-mono font-bold text-blue-600 dark:text-blue-400 mt-0.5">
-                              {rec.inventoryAvailable.toLocaleString()} {rec.inventoryUnits}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <span className="text-muted-foreground block font-medium">Release Schedule</span>
-                            <p className="font-medium text-slate-700 dark:text-slate-300 mt-0.5">{rec.plannedReleaseDate}</p>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block font-medium">Rollout Strategy</span>
-                            <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">{rec.rolloutStrategy}</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </div>
-
-                    {/* Computed Score Footer Tile */}
-                    <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        Deployment Readiness Score
-                      </span>
-                      <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
-                        <span>{rec.deploymentScore}</span>
-                        <span className="text-xs font-normal opacity-80">/100</span>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              </>
-            )}
-
-                {/* ------------------------------------------------------------- */}
-                {/* PANEL 6: Risk & Compliance Review */}
-                {/* ------------------------------------------------------------- */}
-                {(activeTab === "overview" || activeTab === "risk_compliance") && (
-                  <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                    <CardHeader className="pb-3 border-b border-border/60">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                            6
-                          </div>
-                          <CardTitle className="text-base font-bold">Risk & Compliance Review</CardTitle>
-                        </div>
-                        <Badge variant="outline" className="bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-mono font-bold">
-                          1 Critical Risk Monitored
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-4">
-                      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                        <div className="md:col-span-9 grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                          <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
-                            <span className="text-muted-foreground block font-medium">Open Risks</span>
-                            <span className="text-lg font-bold text-slate-800 dark:text-slate-200">{rec.openRisksCount}</span>
-                          </div>
-
-                          <div className="p-3 rounded-lg border border-amber-200 dark:border-amber-900/60 bg-amber-50/40 dark:bg-amber-950/20">
-                            <span className="text-amber-900 dark:text-amber-300 block font-medium">Critical Risks</span>
-                            <span className="text-lg font-bold text-amber-700 dark:text-amber-400">{rec.criticalRisksCount}</span>
-                          </div>
-
-                          <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center justify-between">
-                            <div>
-                              <span className="text-muted-foreground block font-medium">CAPA Closed</span>
-                              <span className="font-bold text-emerald-600 dark:text-emerald-400">Yes</span>
-                            </div>
-                            <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                          </div>
-
-                          <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center justify-between">
-                            <div>
-                              <span className="text-muted-foreground block font-medium">Regulatory Approval</span>
-                              <span className="font-bold text-emerald-600 dark:text-emerald-400">Yes</span>
-                            </div>
-                            <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                          </div>
-
-                          <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center justify-between">
-                            <div>
-                              <span className="text-muted-foreground block font-medium">Warranty Policy Approved</span>
-                              <span className="font-bold text-emerald-600 dark:text-emerald-400">Yes</span>
-                            </div>
-                            <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                          </div>
-
-                          <div className="p-3 rounded-lg border border-blue-200 dark:border-blue-900/60 bg-blue-50/40 dark:bg-blue-950/20 flex flex-col justify-between">
-                            <span className="text-muted-foreground block font-medium">Release Risk Assessment</span>
-                            <button
-                              type="button"
-                              onClick={() => toast.info("Opening Risk Assessment Report...")}
-                              className="inline-flex items-center gap-1 font-bold text-blue-600 hover:text-blue-700 text-xs mt-1 cursor-pointer"
-                            >
-                              View Report <ExternalLink className="h-3 w-3" />
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Score Badge Card */}
-                        <div className="md:col-span-3 flex flex-col items-center justify-center rounded-xl bg-amber-50/50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/60 p-4 text-center">
-                          <span className="text-xs font-bold text-amber-900 dark:text-amber-300 mb-2">Risk Readiness Score</span>
-                          <div className="flex items-center gap-1 bg-amber-100 dark:bg-amber-950 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-300 px-4 py-2 rounded-lg font-bold text-xl">
-                            <span>{rec.riskScore}</span>
-                            <span className="text-xs font-normal opacity-80">/100</span>
-                          </div>
-                          <p className="text-[11px] text-amber-800 dark:text-amber-300 mt-2">1 minor supply buffer risk monitored.</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* ------------------------------------------------------------- */}
-                {/* PANEL 7: AI Release Assessment */}
-                {/* ------------------------------------------------------------- */}
-                {(activeTab === "overview" || activeTab === "ai_assessment") && (
-                  <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                    <CardHeader className="pb-3 border-b border-border/60">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                            7
-                          </div>
-                          <CardTitle className="text-base font-bold">AI Release Assessment</CardTitle>
-                        </div>
-                        <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold">
-                          <Sparkles className="h-3 w-3 text-purple-600" />
-                          AI Agent Generated
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-4">
-                      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                        <div className="md:col-span-9 space-y-2.5 text-xs">
-                          <div className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 p-2.5 bg-slate-50/50 dark:bg-slate-800/40">
-                            <span className="font-semibold text-slate-700 dark:text-slate-300 w-1/3">
-                              AI Release Readiness Review
-                            </span>
-                            <span className="text-slate-600 dark:text-slate-400 font-medium flex-1">
-                              {rec.aiReleaseReadinessReview}
-                            </span>
-                            <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 ml-2" />
-                          </div>
-
-                          <div className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 p-2.5 bg-slate-50/50 dark:bg-slate-800/40">
-                            <span className="font-semibold text-slate-700 dark:text-slate-300 w-1/3">
-                              AI Deployment Risk Analysis
-                            </span>
-                            <span className="text-slate-600 dark:text-slate-400 font-medium flex-1">
-                              {rec.aiDeploymentRiskAnalysis}
-                            </span>
-                            <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 ml-2" />
-                          </div>
-
-                          <div className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 p-2.5 bg-slate-50/50 dark:bg-slate-800/40">
-                            <span className="font-semibold text-slate-700 dark:text-slate-300 w-1/3">
-                              AI Commercial Readiness
-                            </span>
-                            <span className="text-slate-600 dark:text-slate-400 font-medium flex-1">
-                              {rec.aiCommercialReadiness}
-                            </span>
-                            <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 ml-2" />
-                          </div>
-
-                          <div className="flex items-center justify-between rounded-lg border border-emerald-200/80 dark:border-emerald-900/40 p-2.5 bg-emerald-50/40 dark:bg-emerald-950/20">
-                            <span className="font-semibold text-emerald-900 dark:text-emerald-300 w-1/3">
-                              AI Launch Recommendation
-                            </span>
-                            <span className="text-emerald-800 dark:text-emerald-200 font-bold flex-1">
-                              {rec.aiLaunchRecommendation}
-                            </span>
-                            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 ml-2" />
-                          </div>
-
-                          <div className="flex items-center justify-between rounded-lg border border-purple-200/80 dark:border-purple-900/40 p-2.5 bg-purple-50/40 dark:bg-purple-950/20">
-                            <span className="font-semibold text-purple-900 dark:text-purple-300 w-1/3">
-                              AI Improvement Suggestions
-                            </span>
-                            <span className="text-purple-800 dark:text-purple-200 font-medium flex-1">
-                              {rec.aiImprovementSuggestions}
-                            </span>
-                            <Sparkles className="h-4 w-4 text-purple-600 shrink-0 ml-2" />
-                          </div>
-                        </div>
-
-                        {/* AI Graphic Icon Card */}
-                        <div className="md:col-span-3 flex flex-col items-center justify-center rounded-xl bg-gradient-to-b from-purple-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 border border-purple-200/60 dark:border-slate-700 p-4 text-center">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold shadow-sm mb-2">
-                            AI
-                          </div>
-                          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">AI Release Score</span>
-                          <div className="mt-2 flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-lg font-bold text-lg">
-                            <span>{rec.aiReleaseScore}</span>
-                            <span className="text-xs font-normal opacity-80">/100</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* ------------------------------------------------------------- */}
-                {/* PANEL 8: Release Summary */}
-                {/* ------------------------------------------------------------- */}
-                {(activeTab === "overview" || activeTab === "summary") && (
-                  <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                    <CardHeader className="pb-3 border-b border-border/60">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                            8
-                          </div>
-                          <CardTitle className="text-base font-bold">Release Summary</CardTitle>
-                        </div>
-                        <Badge variant="outline" className="text-xs bg-slate-50 dark:bg-slate-800 font-semibold">
-                          Single Source of Truth Gauges
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-6 pb-6">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 items-center justify-items-center">
-                        <CircularScoreGauge
-                          score={rec.engineeringScore}
-                          label="Engineering Score"
-                          color="#10B981"
+            {/* ------------------------------------------------------------- */}
+            {/* PANEL 1: Release Overview */}
+            {/* ------------------------------------------------------------- */}
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <CardTitle className="text-base font-bold flex items-center gap-2">
+                  <Rocket className="h-4 w-4 text-blue-600" />
+                  Release Overview
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                  {/* Left Form Inputs */}
+                  <div className="md:col-span-7 space-y-3.5 text-xs">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                          Product Name <span className="text-red-500">*</span>
+                        </label>
+                        <Input
+                          value={formData.productName || rec.productName}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, productName: e.target.value }))}
+                          className="h-8 text-xs font-semibold"
                         />
-                        <CircularScoreGauge
-                          score={rec.manufacturingScore}
-                          label="Manufacturing Score"
-                          color="#10B981"
-                        />
-                        <CircularScoreGauge
-                          score={rec.commercialScore}
-                          label="Commercial Score"
-                          color="#10B981"
-                        />
-                        <CircularScoreGauge
-                          score={rec.riskScore}
-                          label="Risk Score"
-                          color="#F59E0B"
-                        />
-                        {/* Overall Release Score — Larger Gauge */}
-                        <div className="col-span-2 sm:col-span-1 flex flex-col items-center">
-                          <CircularScoreGauge
-                            score={rec.overallReleaseScore}
-                            size={96}
-                            strokeWidth={8}
-                            label="Overall Release Score"
-                            color="#059669"
-                          />
-                        </div>
                       </div>
 
-                      <div className="mt-6 pt-4 border-t border-border/60 flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex items-center gap-2 text-xs">
-                          <span className="font-bold text-slate-700 dark:text-slate-300">Recommendation:</span>
-                          <select
-                            value={formData.recommendation || rec.recommendation}
-                            onChange={(e) => setFormData((prev) => ({ ...prev, recommendation: e.target.value }))}
-                            className="h-8 rounded-md border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 text-xs font-bold text-emerald-800 dark:text-emerald-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-                          >
-                            <option value="Ready for Product Launch">Ready for Product Launch</option>
-                            <option value="Requires Minor Updates">Requires Minor Updates</option>
-                            <option value="Pending Board Decision">Pending Board Decision</option>
-                            <option value="Not Recommended">Not Recommended</option>
-                          </select>
-                        </div>
-
-                        <div className="text-xs text-muted-foreground">
-                          All 6 readiness & compliance streams converged. Product launch authorized.
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* ------------------------------------------------------------- */}
-                {/* PANEL 9: Attachments */}
-                {/* ------------------------------------------------------------- */}
-                {(activeTab === "overview" || activeTab === "attachments") && (
-                  <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                    <CardHeader className="pb-3 border-b border-border/60">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                            9
-                          </div>
-                          <CardTitle className="text-base font-bold">Attachments</CardTitle>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setShowUploadDialog(true)}
-                          className="gap-1.5 text-xs"
+                      <div>
+                        <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                          Product Category <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                          value={formData.productCategory || rec.productCategory}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, productCategory: e.target.value }))}
+                          className="h-8 w-full rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                         >
-                          <Upload className="h-3.5 w-3.5 text-blue-600" />
-                          Upload Attachment
-                        </Button>
+                          <option value="AC EV Charger">AC EV Charger</option>
+                          <option value="DC Fast Charger">DC Fast Charger</option>
+                          <option value="Industrial Energy System">Industrial Energy System</option>
+                        </select>
                       </div>
-                    </CardHeader>
-                    <CardContent className="pt-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                        {rec.attachments.map((att) => (
-                          <div
-                            key={att.id}
-                            className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-2.5 transition-hover hover:bg-slate-100/60 dark:hover:bg-slate-800/80"
-                          >
-                            <div className="flex items-center gap-2 min-w-0 pr-2">
-                              {getFileIcon(att.type, att.name)}
-                              <div className="truncate">
-                                <p className="font-semibold text-slate-800 dark:text-slate-200 truncate" title={att.name}>
-                                  {att.name}
-                                </p>
-                                <p className="text-[10px] text-muted-foreground">{att.size}</p>
-                              </div>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => toast.success(`Downloading ${att.name}`)}
-                              className="p-1 text-slate-500 hover:text-blue-600 transition-colors shrink-0 cursor-pointer"
-                              title="Download Attachment"
-                            >
-                              <Download className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                          Release Name <span className="text-red-500">*</span>
+                        </label>
+                        <Input
+                          value={formData.releaseName || rec.releaseName}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, releaseName: e.target.value }))}
+                          className="h-8 text-xs font-semibold"
+                        />
+                      </div>
+                      <div>
+                        <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                          Release Version <span className="text-red-500">*</span>
+                        </label>
+                        <Input
+                          value={formData.releaseVersion || rec.releaseVersion}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, releaseVersion: e.target.value }))}
+                          className="h-8 text-xs font-mono font-bold"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                          Release Type <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                          value={formData.releaseType || rec.releaseType}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, releaseType: e.target.value }))}
+                          className="h-8 w-full rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        >
+                          <option value="Production Release">Production Release</option>
+                          <option value="Beta Pilot Release">Beta Pilot Release</option>
+                          <option value="Minor Patch Release">Minor Patch Release</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                          Planned Release Date <span className="text-red-500">*</span>
+                        </label>
+                        <Input
+                          value={formData.plannedReleaseDate || rec.plannedReleaseDate}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, plannedReleaseDate: e.target.value }))}
+                          className="h-8 text-xs"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                        Target Markets
+                      </label>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {rec.targetMarkets.map((m) => (
+                          <Badge key={m} className="bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 font-bold border-blue-200">
+                            {m}
+                          </Badge>
                         ))}
                       </div>
+                    </div>
 
-                      <div className="mt-4 pt-3 border-t border-border/60 text-right">
-                        <button
-                          type="button"
-                          onClick={() => setShowUploadDialog(true)}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
-                        >
-                          View All Attachments (8) <ChevronRight className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+                    <div>
+                      <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                        Release Objective <span className="text-red-500">*</span>
+                      </label>
+                      <Textarea
+                        rows={2}
+                        value={formData.releaseObjective || rec.releaseObjective}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, releaseObjective: e.target.value }))}
+                        className="text-xs resize-none"
+                      />
+                    </div>
+                  </div>
 
-                {/* ------------------------------------------------------------- */}
-                {/* PANEL 10: Review & Approval */}
-                {/* ------------------------------------------------------------- */}
-                {(activeTab === "overview" || activeTab === "review_approval") && (
-                  <>
-                    <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                    <CardHeader className="pb-3 border-b border-border/60">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                            10
-                          </div>
-                          <CardTitle className="text-base font-bold">Review & Approval</CardTitle>
+                  {/* Right Technical Release Readiness & Inventory Card */}
+                  <div className="md:col-span-5 flex flex-col justify-between rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-4">
+                    <div className="flex items-center justify-between pb-2.5 border-b border-border/60">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/50 text-blue-600">
+                          <Rocket className="h-4 w-4" />
                         </div>
-                        <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-xs font-semibold border-emerald-200">
-                          Executive Review Board
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-4 space-y-6">
-                      {/* Reviewers Table */}
-                      <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
-                        <table className="w-full text-left text-xs">
-                          <thead className="bg-slate-100/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-800">
-                            <tr>
-                              <th className="p-2.5">Role</th>
-                              <th className="p-2.5">Person</th>
-                              <th className="p-2.5">Decision</th>
-                              <th className="p-2.5">Date</th>
-                              <th className="p-2.5">Comments</th>
-                              <th className="p-2.5 text-center">Status</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                            {rec.reviewers.map((rev) => (
-                              <tr key={rev.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                                <td className="p-2.5 font-semibold text-slate-800 dark:text-slate-200">{rev.role}</td>
-                                <td className="p-2.5">
-                                  <div className="flex items-center gap-1.5">
-                                    {rev.avatar && (
-                                      <img src={rev.avatar} alt={rev.person} className="h-5 w-5 rounded-full object-cover" />
-                                    )}
-                                    <span className="font-medium text-slate-700 dark:text-slate-300">{rev.person}</span>
-                                  </div>
-                                </td>
-                                <td className="p-2.5">
-                                  {rev.decision === "Approved" ? (
-                                    <span className="inline-flex items-center rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 px-2 py-0.5 text-[10px] font-bold">
-                                      Approved
-                                    </span>
-                                  ) : rev.decision === "Pending" ? (
-                                    <span className="inline-flex items-center rounded-full bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 px-2 py-0.5 text-[10px] font-medium">
-                                      Pending
-                                    </span>
-                                  ) : (
-                                    <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 px-2 py-0.5 text-[10px] font-bold">
-                                      {rev.decision}
-                                    </span>
-                                  )}
-                                </td>
-                                <td className="p-2.5 text-slate-500">{rev.date}</td>
-                                <td className="p-2.5 text-slate-600 dark:text-slate-400 font-mono text-[11px]">{rev.comments}</td>
-                                <td className="p-2.5 text-center">
-                                  {rev.status === "Completed" ? (
-                                    <CheckCircle2 className="h-4 w-4 text-emerald-500 inline-block" />
-                                  ) : (
-                                    <Clock className="h-4 w-4 text-slate-400 inline-block" />
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-
-                      {/* Board Decision Controls */}
-                      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 text-xs pt-2">
-                        <div className="md:col-span-4">
-                          <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                            Approval Decision <span className="text-red-500">*</span>
-                          </label>
-                          <select
-                            value={formData.approvalDecision || rec.approvalDecision}
-                            onChange={(e) =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                approvalDecision: e.target.value as ProductReleaseApprovalDecision,
-                              }))
-                            }
-                            className="h-9 w-full rounded-md border border-input bg-background px-3 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                          >
-                            <option value="Approved">Approved</option>
-                            <option value="Approved with Conditions">Approved with Conditions</option>
-                            <option value="Revision Required">Revision Required</option>
-                            <option value="Rejected">Rejected</option>
-                          </select>
-                        </div>
-
-                        <div className="md:col-span-5">
-                          <div className="flex justify-between items-center mb-1">
-                            <label className="font-semibold text-slate-700 dark:text-slate-300">
-                              Review Comments <span className="text-red-500">*</span>
-                            </label>
-                            <span className="text-[10px] text-muted-foreground font-mono">
-                              {(formData.reviewComments || rec.reviewComments || "").length}/2000
-                            </span>
-                          </div>
-                          <Textarea
-                            rows={2}
-                            maxLength={2000}
-                            value={formData.reviewComments || rec.reviewComments}
-                            onChange={(e) => setFormData((prev) => ({ ...prev, reviewComments: e.target.value }))}
-                            className="text-xs resize-none"
-                          />
-                        </div>
-
-                        <div className="md:col-span-3">
-                          <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
-                            Approval Date <span className="text-red-500">*</span>
-                          </label>
-                          <Input
-                            type="text"
-                            value={formData.approvalDate || rec.approvalDate}
-                            onChange={(e) => setFormData((prev) => ({ ...prev, approvalDate: e.target.value }))}
-                            className="h-9 text-xs"
-                          />
-                          <Button
-                            className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white text-xs h-8 font-bold"
-                            onClick={() =>
-                              reviewMutation.mutate({
-                                id: rec.id,
-                                decision: formData.approvalDecision || rec.approvalDecision,
-                                comments: formData.reviewComments || rec.reviewComments,
-                              })
-                            }
-                            disabled={reviewMutation.isPending}
-                          >
-                            Authorize Launch
-                          </Button>
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-900 dark:text-white">Smart EV Charger v1.2 Launch</h4>
+                          <p className="text-[11px] font-mono text-muted-foreground">Release Plan: REL-2024-0053</p>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <Badge className="bg-emerald-600 text-white text-[10px] font-bold">
+                        Ready for Launch
+                      </Badge>
+                    </div>
 
-                {/* ------------------------------------------------------------- */}
-                {/* PANEL 11: System Information */}
-                {/* ------------------------------------------------------------- */}
-                <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+                    <div className="grid grid-cols-2 gap-2 text-[11px] py-3">
+                      <div className="rounded-lg bg-white dark:bg-slate-900 p-2 border border-slate-200/80 dark:border-slate-800">
+                        <span className="text-muted-foreground block text-[10px]">Stock Reserved</span>
+                        <span className="font-mono font-bold text-blue-600 dark:text-blue-400">2,450 Units</span>
+                      </div>
+                      <div className="rounded-lg bg-white dark:bg-slate-900 p-2 border border-slate-200/80 dark:border-slate-800">
+                        <span className="text-muted-foreground block text-[10px]">Target Markets</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">India, EU, USA, MEA</span>
+                      </div>
+                      <div className="rounded-lg bg-white dark:bg-slate-900 p-2 border border-slate-200/80 dark:border-slate-800">
+                        <span className="text-muted-foreground block text-[10px]">Release Date</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">30 Jun 2024</span>
+                      </div>
+                      <div className="rounded-lg bg-white dark:bg-slate-900 p-2 border border-slate-200/80 dark:border-slate-800">
+                        <span className="text-muted-foreground block text-[10px]">Pricing Baseline</span>
+                        <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">₹ 23,999.00</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-border/60 text-[10px] text-muted-foreground">
+                      <span>Digital Thread Linked</span>
+                      <span className="font-mono text-blue-600 dark:text-blue-400 font-semibold">DOC-2024-0087</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Grid for Engineering & Manufacturing Readiness Cards (Panels 2 & 3) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* ------------------------------------------------------------- */}
+              {/* PANEL 2: Engineering Release Readiness */}
+              {/* ------------------------------------------------------------- */}
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between">
+                <div>
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-                          11
-                        </div>
-                        <CardTitle className="text-base font-bold">System Information</CardTitle>
-                      </div>
-                      <Badge variant="outline" className="text-xs font-mono">
-                        Audit Logged
+                      <CardTitle className="text-base font-bold flex items-center gap-2">
+                        <Cpu className="h-4 w-4 text-blue-600" />
+                        Engineering Release Readiness
+                      </CardTitle>
+                      <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
+                        6 Deliverables
                       </Badge>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 text-xs">
-                      <div className="md:col-span-8 grid grid-cols-2 gap-y-3 gap-x-6">
-                        <div>
-                          <span className="text-muted-foreground block font-medium">Created By</span>
-                          <span className="font-semibold text-slate-800 dark:text-slate-200">{rec.createdBy}</span>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground block font-medium">Created Date</span>
-                          <span className="font-medium text-slate-700 dark:text-slate-300">{rec.createdDate}</span>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground block font-medium">Last Modified By</span>
-                          <span className="font-semibold text-slate-800 dark:text-slate-200">{rec.lastModifiedBy}</span>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground block font-medium">Last Modified Date</span>
-                          <span className="font-medium text-slate-700 dark:text-slate-300">{rec.lastModifiedDate}</span>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground block font-medium">Commercial Date</span>
-                          <span className="font-medium text-slate-700 dark:text-slate-300">{rec.commercialDate}</span>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground block font-medium">Workflow Stage</span>
-                          <span className="font-semibold text-blue-600 dark:text-blue-400">{rec.workflowStageLabel}</span>
+                  <CardContent className="pt-3 pb-2 px-4">
+                    <div className="space-y-2.5">
+                      {rec.engineeringChecklist.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => toggleChecklistMutation.mutate({ section: "engineering", itemId: item.id })}
+                          className="w-full flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-2.5 text-xs transition-hover hover:bg-slate-100/60 dark:hover:bg-slate-800/80 cursor-pointer text-left"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <div
+                              className={`flex h-4 w-4 shrink-0 items-center justify-center rounded ${
+                                item.completed ? "bg-emerald-600 text-white" : "border border-slate-300 dark:border-slate-600"
+                              }`}
+                            >
+                              {item.completed && <Check className="h-3 w-3" />}
+                            </div>
+                            <span className="font-semibold text-slate-800 dark:text-slate-200">{item.label}</span>
+                          </div>
+                          <span className="text-[10px] text-muted-foreground font-mono bg-slate-200/60 dark:bg-slate-700 px-1.5 py-0.5 rounded">
+                            {item.sourceStream}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </div>
+
+                {/* Computed Score Footer Tile */}
+                <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Engineering Readiness Score
+                  </span>
+                  <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
+                    <span>{rec.engineeringScore}</span>
+                    <span className="text-xs font-normal opacity-80">/100</span>
+                  </div>
+                </div>
+              </Card>
+
+              {/* ------------------------------------------------------------- */}
+              {/* PANEL 3: Manufacturing Readiness */}
+              {/* ------------------------------------------------------------- */}
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between">
+                <div>
+                  <CardHeader className="pb-3 border-b border-border/60">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-base font-bold flex items-center gap-2">
+                        <Factory className="h-4 w-4 text-blue-600" />
+                        Manufacturing Readiness
+                      </CardTitle>
+                      <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
+                        6 Deliverables
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-3 pb-2 px-4">
+                    <div className="space-y-2.5">
+                      {rec.manufacturingChecklist.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => toggleChecklistMutation.mutate({ section: "manufacturing", itemId: item.id })}
+                          className="w-full flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-2.5 text-xs transition-hover hover:bg-slate-100/60 dark:hover:bg-slate-800/80 cursor-pointer text-left"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <div
+                              className={`flex h-4 w-4 shrink-0 items-center justify-center rounded ${
+                                item.completed ? "bg-emerald-600 text-white" : "border border-slate-300 dark:border-slate-600"
+                              }`}
+                            >
+                              {item.completed && <Check className="h-3 w-3" />}
+                            </div>
+                            <span className="font-semibold text-slate-800 dark:text-slate-200">{item.label}</span>
+                          </div>
+                          <span className="text-[10px] text-muted-foreground font-mono bg-slate-200/60 dark:bg-slate-700 px-1.5 py-0.5 rounded">
+                            {item.sourceStream}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </div>
+
+                {/* Computed Score Footer Tile */}
+                <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Manufacturing Readiness Score
+                  </span>
+                  <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
+                    <span>{rec.manufacturingScore}</span>
+                    <span className="text-xs font-normal opacity-80">/100</span>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* Grid for Commercial Readiness & Deployment Cards (Panels 4 & 5) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* ------------------------------------------------------------- */}
+              {/* PANEL 4: Commercial Readiness */}
+              {/* ------------------------------------------------------------- */}
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between">
+                <div>
+                  <CardHeader className="pb-3 border-b border-border/60">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-base font-bold flex items-center gap-2">
+                        <Megaphone className="h-4 w-4 text-blue-600" />
+                        Commercial Readiness
+                      </CardTitle>
+                      <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
+                        6 Deliverables
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-3 pb-2 px-4">
+                    <div className="space-y-2.5">
+                      {rec.commercialChecklist.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => toggleChecklistMutation.mutate({ section: "commercial", itemId: item.id })}
+                          className="w-full flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-2.5 text-xs transition-hover hover:bg-slate-100/60 dark:hover:bg-slate-800/80 cursor-pointer text-left"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <div
+                              className={`flex h-4 w-4 shrink-0 items-center justify-center rounded ${
+                                item.completed ? "bg-emerald-600 text-white" : "border border-slate-300 dark:border-slate-600"
+                              }`}
+                            >
+                              {item.completed && <Check className="h-3 w-3" />}
+                            </div>
+                            <span className="font-semibold text-slate-800 dark:text-slate-200">{item.label}</span>
+                          </div>
+                          <span className="text-[10px] text-muted-foreground font-mono bg-slate-200/60 dark:bg-slate-700 px-1.5 py-0.5 rounded">
+                            {item.sourceStream}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </div>
+
+                {/* Computed Score Footer Tile */}
+                <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Commercial Readiness Score
+                  </span>
+                  <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
+                    <span>{rec.commercialScore}</span>
+                    <span className="text-xs font-normal opacity-80">/100</span>
+                  </div>
+                </div>
+              </Card>
+
+              {/* ------------------------------------------------------------- */}
+              {/* PANEL 5: Deployment & Distribution */}
+              {/* ------------------------------------------------------------- */}
+              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between">
+                <div>
+                  <CardHeader className="pb-3 border-b border-border/60">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-base font-bold flex items-center gap-2">
+                        <Truck className="h-4 w-4 text-blue-600" />
+                        Deployment & Distribution
+                      </CardTitle>
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 text-xs font-mono font-bold">
+                        Stock Reserved
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-3 pb-2 px-4 space-y-3 text-xs">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <span className="text-muted-foreground block font-medium">Release Channels</span>
+                        <div className="flex gap-1 flex-wrap mt-1">
+                          {rec.releaseChannels.map((c) => (
+                            <Badge key={c} variant="secondary" className="text-[10px] font-semibold">
+                              {c}
+                            </Badge>
+                          ))}
                         </div>
                       </div>
+                      <div>
+                        <span className="text-muted-foreground block font-medium">Deployment Regions</span>
+                        <div className="flex gap-1 flex-wrap mt-1">
+                          {rec.deploymentRegions.map((r) => (
+                            <Badge key={r} variant="outline" className="text-[10px] font-semibold bg-slate-100 dark:bg-slate-800">
+                              {r}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
 
-                      <div className="md:col-span-4 flex flex-col justify-center space-y-2 border-t md:border-t-0 md:border-l border-border pt-4 md:pt-0 md:pl-6">
-                        <button
-                          type="button"
-                          onClick={() => setShowAuditLogDrawer(true)}
-                          className="flex items-center justify-between text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors py-1 cursor-pointer"
-                        >
-                          <span>View Log</span>
-                          <ArrowRight className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setShowTimelineModal(true)}
-                          className="flex items-center justify-between text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors py-1 cursor-pointer"
-                        >
-                          <span>View Release Timeline</span>
-                          <ArrowRight className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setShowWorkflowModal(true)}
-                          className="flex items-center justify-between text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors py-1 cursor-pointer"
-                        >
-                          <span>View Workflow</span>
-                          <ArrowRight className="h-3.5 w-3.5" />
-                        </button>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <span className="text-muted-foreground block font-medium">Distribution Partner</span>
+                        <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">{rec.distributionPartner}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground block font-medium">Inventory Available</span>
+                        <p className="font-mono font-bold text-blue-600 dark:text-blue-400 mt-0.5">
+                          {rec.inventoryAvailable.toLocaleString()} {rec.inventoryUnits}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <span className="text-muted-foreground block font-medium">Release Schedule</span>
+                        <p className="font-medium text-slate-700 dark:text-slate-300 mt-0.5">{rec.plannedReleaseDate}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground block font-medium">Rollout Strategy</span>
+                        <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">{rec.rolloutStrategy}</p>
                       </div>
                     </div>
                   </CardContent>
-                </Card>
-              </>
-            )}
+                </div>
+
+                {/* Computed Score Footer Tile */}
+                <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Deployment Readiness Score
+                  </span>
+                  <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
+                    <span>{rec.deploymentScore}</span>
+                    <span className="text-xs font-normal opacity-80">/100</span>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* ------------------------------------------------------------- */}
+            {/* PANEL 6: Risk & Compliance Review */}
+            {/* ------------------------------------------------------------- */}
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <ShieldAlert className="h-4 w-4 text-blue-600" />
+                    Risk & Compliance Review
+                  </CardTitle>
+                  <Badge variant="outline" className="bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-mono font-bold">
+                    1 Critical Risk Monitored
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                  <div className="md:col-span-9 grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="text-muted-foreground block font-medium">Open Risks</span>
+                      <span className="text-lg font-bold text-slate-800 dark:text-slate-200">{rec.openRisksCount}</span>
+                    </div>
+
+                    <div className="p-3 rounded-lg border border-amber-200 dark:border-amber-900/60 bg-amber-50/40 dark:bg-amber-950/20">
+                      <span className="text-amber-900 dark:text-amber-300 block font-medium">Critical Risks</span>
+                      <span className="text-lg font-bold text-amber-700 dark:text-amber-400">{rec.criticalRisksCount}</span>
+                    </div>
+
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center justify-between">
+                      <div>
+                        <span className="text-muted-foreground block font-medium">CAPA Closed</span>
+                        <span className="font-bold text-emerald-600 dark:text-emerald-400">Yes</span>
+                      </div>
+                      <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                    </div>
+
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center justify-between">
+                      <div>
+                        <span className="text-muted-foreground block font-medium">Regulatory Approval</span>
+                        <span className="font-bold text-emerald-600 dark:text-emerald-400">Yes</span>
+                      </div>
+                      <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                    </div>
+
+                    <div className="p-3 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center justify-between">
+                      <div>
+                        <span className="text-muted-foreground block font-medium">Warranty Policy Approved</span>
+                        <span className="font-bold text-emerald-600 dark:text-emerald-400">Yes</span>
+                      </div>
+                      <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                    </div>
+
+                    <div className="p-3 rounded-lg border border-blue-200 dark:border-blue-900/60 bg-blue-50/40 dark:bg-blue-950/20 flex flex-col justify-between">
+                      <span className="text-muted-foreground block font-medium">Release Risk Assessment</span>
+                      <button
+                        type="button"
+                        onClick={() => toast.info("Opening Risk Assessment Report...")}
+                        className="inline-flex items-center gap-1 font-bold text-blue-600 hover:text-blue-700 text-xs mt-1 cursor-pointer"
+                      >
+                        View Report <ExternalLink className="h-3 w-3" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Score Badge Card */}
+                  <div className="md:col-span-3 flex flex-col items-center justify-center rounded-xl bg-amber-50/50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/60 p-4 text-center">
+                    <span className="text-xs font-bold text-amber-900 dark:text-amber-300 mb-2">Risk Readiness Score</span>
+                    <div className="flex items-center gap-1 bg-amber-100 dark:bg-amber-950 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-300 px-4 py-2 rounded-lg font-bold text-xl">
+                      <span>{rec.riskScore}</span>
+                      <span className="text-xs font-normal opacity-80">/100</span>
+                    </div>
+                    <p className="text-[11px] text-amber-800 dark:text-amber-300 mt-2">1 minor supply buffer risk monitored.</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ------------------------------------------------------------- */}
+            {/* PANEL 7: AI Release Assessment */}
+            {/* ------------------------------------------------------------- */}
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-purple-600" />
+                    AI Release Assessment
+                  </CardTitle>
+                  <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold">
+                    <Sparkles className="h-3 w-3 text-purple-600" />
+                    AI Digital Thread Engine
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                  <div className="md:col-span-9 space-y-2.5 text-xs">
+                    <div className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 p-2.5 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 w-1/3">
+                        AI Release Readiness Review
+                      </span>
+                      <span className="text-slate-600 dark:text-slate-400 font-medium flex-1">
+                        {rec.aiReleaseReadinessReview}
+                      </span>
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 ml-2" />
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 p-2.5 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 w-1/3">
+                        AI Deployment Risk Analysis
+                      </span>
+                      <span className="text-slate-600 dark:text-slate-400 font-medium flex-1">
+                        {rec.aiDeploymentRiskAnalysis}
+                      </span>
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 ml-2" />
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 p-2.5 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 w-1/3">
+                        AI Commercial Readiness
+                      </span>
+                      <span className="text-slate-600 dark:text-slate-400 font-medium flex-1">
+                        {rec.aiCommercialReadiness}
+                      </span>
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 ml-2" />
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-lg border border-emerald-200/80 dark:border-emerald-900/40 p-2.5 bg-emerald-50/40 dark:bg-emerald-950/20">
+                      <span className="font-semibold text-emerald-900 dark:text-emerald-300 w-1/3">
+                        AI Launch Recommendation
+                      </span>
+                      <span className="text-emerald-800 dark:text-emerald-200 font-bold flex-1">
+                        {rec.aiLaunchRecommendation}
+                      </span>
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 ml-2" />
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-lg border border-purple-200/80 dark:border-purple-900/40 p-2.5 bg-purple-50/40 dark:bg-purple-950/20">
+                      <span className="font-semibold text-purple-900 dark:text-purple-300 w-1/3">
+                        AI Improvement Suggestions
+                      </span>
+                      <span className="text-purple-800 dark:text-purple-200 font-medium flex-1">
+                        {rec.aiImprovementSuggestions}
+                      </span>
+                      <Sparkles className="h-4 w-4 text-purple-600 shrink-0 ml-2" />
+                    </div>
+                  </div>
+
+                  {/* AI Graphic Icon Card */}
+                  <div className="md:col-span-3 flex flex-col items-center justify-center rounded-xl bg-gradient-to-b from-purple-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 border border-purple-200/60 dark:border-slate-700 p-4 text-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold shadow-sm mb-2">
+                      AI
+                    </div>
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">AI Release Score</span>
+                    <div className="mt-2 flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-lg font-bold text-lg">
+                      <span>{rec.aiReleaseScore}</span>
+                      <span className="text-xs font-normal opacity-80">/100</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ------------------------------------------------------------- */}
+            {/* PANEL 8: Release Summary */}
+            {/* ------------------------------------------------------------- */}
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <Activity className="h-4 w-4 text-blue-600" />
+                    Release Summary
+                  </CardTitle>
+                  <Badge variant="outline" className="text-xs bg-slate-50 dark:bg-slate-800 font-semibold">
+                    Single Source of Truth Gauges
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 pb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 items-center justify-items-center">
+                  <CircularScoreGauge
+                    score={rec.engineeringScore}
+                    label="Engineering Score"
+                    color="#10B981"
+                  />
+                  <CircularScoreGauge
+                    score={rec.manufacturingScore}
+                    label="Manufacturing Score"
+                    color="#10B981"
+                  />
+                  <CircularScoreGauge
+                    score={rec.commercialScore}
+                    label="Commercial Score"
+                    color="#10B981"
+                  />
+                  <CircularScoreGauge
+                    score={rec.riskScore}
+                    label="Risk Score"
+                    color="#F59E0B"
+                  />
+                  {/* Overall Release Score — Larger Gauge */}
+                  <div className="col-span-2 sm:col-span-1 flex flex-col items-center">
+                    <CircularScoreGauge
+                      score={rec.overallReleaseScore}
+                      size={96}
+                      strokeWidth={8}
+                      label="Overall Release Score"
+                      color="#059669"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-border/60 flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className="font-bold text-slate-700 dark:text-slate-300">Recommendation:</span>
+                    <select
+                      value={formData.recommendation || rec.recommendation}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, recommendation: e.target.value }))}
+                      className="h-8 rounded-md border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 text-xs font-bold text-emerald-800 dark:text-emerald-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                    >
+                      <option value="Ready for Product Launch">Ready for Product Launch</option>
+                      <option value="Requires Minor Updates">Requires Minor Updates</option>
+                      <option value="Pending Board Decision">Pending Board Decision</option>
+                      <option value="Not Recommended">Not Recommended</option>
+                    </select>
+                  </div>
+
+                  <div className="text-xs text-muted-foreground">
+                    All 6 readiness & compliance streams converged. Product launch authorized.
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ------------------------------------------------------------- */}
+            {/* PANEL 9: Attachments */}
+            {/* ------------------------------------------------------------- */}
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <Paperclip className="h-4 w-4 text-blue-600" />
+                    Attachments
+                  </CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowUploadDialog(true)}
+                    className="gap-1.5 text-xs"
+                  >
+                    <Upload className="h-3.5 w-3.5 text-blue-600" />
+                    Upload Attachment
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                  {rec.attachments.map((att) => (
+                    <div
+                      key={att.id}
+                      className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-2.5 transition-hover hover:bg-slate-100/60 dark:hover:bg-slate-800/80"
+                    >
+                      <div className="flex items-center gap-2 min-w-0 pr-2">
+                        {getFileIcon(att.type, att.name)}
+                        <div className="truncate">
+                          <p className="font-semibold text-slate-800 dark:text-slate-200 truncate" title={att.name}>
+                            {att.name}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground">{att.size}</p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toast.success(`Downloading ${att.name}`)}
+                        className="p-1 text-slate-500 hover:text-blue-600 transition-colors shrink-0 cursor-pointer"
+                        title="Download Attachment"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-border/60 text-right">
+                  <button
+                    type="button"
+                    onClick={() => setShowUploadDialog(true)}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
+                  >
+                    View All Attachments (8) <ChevronRight className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ------------------------------------------------------------- */}
+            {/* PANEL 10: Review & Approval */}
+            {/* ------------------------------------------------------------- */}
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-blue-600" />
+                    Review & Approval
+                  </CardTitle>
+                  <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-xs font-semibold border-emerald-200">
+                    Executive Review Board
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-6">
+                {/* Reviewers Table */}
+                <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-100/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-800">
+                      <tr>
+                        <th className="p-2.5">Role</th>
+                        <th className="p-2.5">Person</th>
+                        <th className="p-2.5">Decision</th>
+                        <th className="p-2.5">Date</th>
+                        <th className="p-2.5">Comments</th>
+                        <th className="p-2.5 text-center">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                      {rec.reviewers.map((rev) => (
+                        <tr key={rev.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                          <td className="p-2.5 font-semibold text-slate-800 dark:text-slate-200">{rev.role}</td>
+                          <td className="p-2.5 font-medium text-slate-700 dark:text-slate-300">
+                            {rev.person}
+                          </td>
+                          <td className="p-2.5">
+                            {rev.decision === "Approved" ? (
+                              <span className="inline-flex items-center rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 px-2 py-0.5 text-[10px] font-bold">
+                                Approved
+                              </span>
+                            ) : rev.decision === "Pending" ? (
+                              <span className="inline-flex items-center rounded-full bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 px-2 py-0.5 text-[10px] font-medium">
+                                Pending
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 px-2 py-0.5 text-[10px] font-bold">
+                                {rev.decision}
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-2.5 text-slate-500">{rev.date}</td>
+                          <td className="p-2.5 text-slate-600 dark:text-slate-400 font-mono text-[11px]">{rev.comments}</td>
+                          <td className="p-2.5 text-center">
+                            {rev.status === "Completed" ? (
+                              <CheckCircle2 className="h-4 w-4 text-emerald-500 inline-block" />
+                            ) : (
+                              <Clock className="h-4 w-4 text-slate-400 inline-block" />
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Board Decision Controls */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 text-xs pt-2">
+                  <div className="md:col-span-4">
+                    <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                      Approval Decision <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.approvalDecision || rec.approvalDecision}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          approvalDecision: e.target.value as ProductReleaseApprovalDecision,
+                        }))
+                      }
+                      className="h-9 w-full rounded-md border border-input bg-background px-3 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    >
+                      <option value="Approved">Approved</option>
+                      <option value="Approved with Conditions">Approved with Conditions</option>
+                      <option value="Revision Required">Revision Required</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </div>
+
+                  <div className="md:col-span-5">
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="font-semibold text-slate-700 dark:text-slate-300">
+                        Review Comments <span className="text-red-500">*</span>
+                      </label>
+                      <span className="text-[10px] text-muted-foreground font-mono">
+                        {(formData.reviewComments || rec.reviewComments || "").length}/2000
+                      </span>
+                    </div>
+                    <Textarea
+                      rows={2}
+                      maxLength={2000}
+                      value={formData.reviewComments || rec.reviewComments}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, reviewComments: e.target.value }))}
+                      className="text-xs resize-none"
+                    />
+                  </div>
+
+                  <div className="md:col-span-3">
+                    <label className="font-semibold text-slate-700 dark:text-slate-300 mb-1 block">
+                      Approval Date <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      type="text"
+                      value={formData.approvalDate || rec.approvalDate}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, approvalDate: e.target.value }))}
+                      className="h-9 text-xs"
+                    />
+                    <Button
+                      className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white text-xs h-8 font-bold"
+                      onClick={() =>
+                        reviewMutation.mutate({
+                          id: rec.id,
+                          decision: formData.approvalDecision || rec.approvalDecision,
+                          comments: formData.reviewComments || rec.reviewComments,
+                        })
+                      }
+                      disabled={reviewMutation.isPending}
+                    >
+                      Authorize Launch
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ------------------------------------------------------------- */}
+            {/* PANEL 11: System Information */}
+            {/* ------------------------------------------------------------- */}
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <History className="h-4 w-4 text-blue-600" />
+                    System Information
+                  </CardTitle>
+                  <Badge variant="outline" className="text-xs font-mono">
+                    Audit Logged
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 text-xs">
+                  <div className="md:col-span-8 grid grid-cols-2 gap-y-3 gap-x-6">
+                    <div>
+                      <span className="text-muted-foreground block font-medium">Created By</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">{rec.createdBy}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-medium">Created Date</span>
+                      <span className="font-medium text-slate-700 dark:text-slate-300">{rec.createdDate}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-medium">Last Modified By</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">{rec.lastModifiedBy}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-medium">Last Modified Date</span>
+                      <span className="font-medium text-slate-700 dark:text-slate-300">{rec.lastModifiedDate}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-medium">Commercial Date</span>
+                      <span className="font-medium text-slate-700 dark:text-slate-300">{rec.commercialDate}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-medium">Workflow Stage</span>
+                      <span className="font-semibold text-blue-600 dark:text-blue-400">{rec.workflowStageLabel}</span>
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-4 flex flex-col justify-center space-y-2 border-t md:border-t-0 md:border-l border-border pt-4 md:pt-0 md:pl-6">
+                    <button
+                      type="button"
+                      onClick={() => setShowAuditLogDrawer(true)}
+                      className="flex items-center justify-between text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors py-1 cursor-pointer"
+                    >
+                      <span>View Log</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowTimelineModal(true)}
+                      className="flex items-center justify-between text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors py-1 cursor-pointer"
+                    >
+                      <span>View Release Timeline</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowWorkflowModal(true)}
+                      className="flex items-center justify-between text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors py-1 cursor-pointer"
+                    >
+                      <span>View Workflow</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Right Sticky Sidebar Panel */}
           <div className="lg:col-span-3 space-y-6">
-            <div className="sticky top-[110px] space-y-4">
+            <div className="sticky top-6 space-y-4">
               {/* Overall Release Score Gauge Card */}
               <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
                 <CardHeader className="pb-2 border-b border-border/60">
@@ -1769,100 +1722,7 @@ export function ProductReleasePage({
                 </CardContent>
               </Card>
 
-              {/* Key Highlights Card */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60">
-                  <CardTitle className="text-sm font-bold">Key Highlights</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-3 space-y-2.5 text-xs">
-                  {keyHighlights.map((hl, i) => (
-                    <div key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-700 dark:text-slate-300 font-medium">{hl.label}</span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
 
-              {/* Quick Actions Card */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60">
-                  <CardTitle className="text-sm font-bold">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-3 space-y-1 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("readiness")}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <CheckSquare className="h-4 w-4 text-blue-600" />
-                    <span>Release Checklist</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowTimelineModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Clock className="h-4 w-4 text-blue-600" />
-                    <span>View Release Timeline</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowReleasePackageModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Download className="h-4 w-4 text-blue-600" />
-                    <span>Download Release Package</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => submitMutation.mutate()}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Send className="h-4 w-4 text-blue-600" />
-                    <span>Send for Approval</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowReleaseNotesDialog(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <FileText className="h-4 w-4 text-blue-600" />
-                    <span>Publish Release Notes</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.success("Launch plan updated.")}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Calendar className="h-4 w-4 text-blue-600" />
-                    <span>Update Launch Plan</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowNotifyModal(true)}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Users className="h-4 w-4 text-blue-600" />
-                    <span>Notify Stakeholders</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => toast.success("Release report generated.")}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer font-medium"
-                  >
-                    <Printer className="h-4 w-4 text-blue-600" />
-                    <span>Generate Release Report</span>
-                  </button>
-                </CardContent>
-              </Card>
 
               {/* Release Timeline Component (Vertical Timeline) */}
               <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
@@ -2149,3 +2009,16 @@ export function ProductReleasePage({
   </AppShell>
 );
 }
+
+export function ProductReleaseManagementPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <ProductReleasePage {...props} />;
+}
+
+export function ProductReleaseManagementNewPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <ProductReleasePage {...props} />;
+}
+
+export function ProductReleaseFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <ProductReleasePage {...props} />;
+}
+

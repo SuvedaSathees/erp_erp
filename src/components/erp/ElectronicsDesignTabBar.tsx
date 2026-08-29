@@ -9,7 +9,8 @@ export type ElectronicsDesignTabId =
   | "verification_testing"
   | "ai_assessment"
   | "summary"
-  | "attachments";
+  | "attachments"
+  | "review_approval";
 
 export function ElectronicsDesignTabBar({
   activeTab = "overview",
@@ -30,6 +31,7 @@ export function ElectronicsDesignTabBar({
     { id: "ai_assessment", label: "AI Assessment" },
     { id: "summary", label: "Summary" },
     { id: "attachments", label: "Attachments" },
+    { id: "review_approval", label: "Review & Approval" },
   ];
 
   return (

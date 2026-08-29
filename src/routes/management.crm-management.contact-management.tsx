@@ -1248,8 +1248,7 @@ function ContactManagementPage() {
                           />
                         </svg>
                         <div className="absolute flex flex-col items-center justify-center">
-                          <span className="text-2xl font-extrabold text-slate-900 font-mono">{formState.engagementScore}</span>
-                          <span className="text-[10px] font-semibold text-slate-400">/ 100</span>
+                          <span className="text-2xl font-extrabold text-slate-900 font-mono">{formState.engagementScore}%</span>
                         </div>
                       </div>
                       <span className="mt-2 px-3 py-0.5 bg-emerald-50 text-emerald-700 font-bold text-xs rounded-full border border-emerald-200">

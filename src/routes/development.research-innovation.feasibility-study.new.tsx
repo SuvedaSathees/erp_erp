@@ -667,7 +667,7 @@ function FeasibilityFormPage() {
     return (
       <AppShell
         title="Feasibility Study"
-        breadcrumb="Research & Innovation Development · Feasibility Study"
+        breadcrumb="Development > Research & Innovation > Feasibility Study"
         description="Assess technical, market, financial, and operational feasibility."
         tabs={<InnovationAreaTabs sub={<FeasibilityStudyPageTabBar />} />}
       >
@@ -682,7 +682,7 @@ function FeasibilityFormPage() {
   return (
     <AppShell
       title="Feasibility Study"
-      breadcrumb="Research & Innovation Development · Feasibility Study"
+      breadcrumb="Development > Research & Innovation > Feasibility Study"
       description="Assess technical, market, financial, and operational feasibility."
       tabs={<InnovationAreaTabs sub={<FeasibilityStudyPageTabBar />} />}
     >
@@ -1659,50 +1659,7 @@ function FeasibilityFormPage() {
               </div>
             )}
 
-            <div className="card-soft space-y-2 p-4">
-              <h3 className="text-sm font-bold text-foreground">Quick Actions</h3>
-              <QuickAction
-                icon={<FileText className="h-4 w-4" />}
-                label="Generate Feasibility Report"
-                onClick={() => reportMut.mutate()}
-                disabled={!record || busy}
-              />
-              <QuickAction
-                icon={<Wallet className="h-4 w-4" />}
-                label="Open Financial Model"
-                onClick={() => toast.success("Opening financial model.")}
-                disabled={!record}
-              />
-              <QuickAction
-                icon={<Activity className="h-4 w-4" />}
-                label="Risk Analysis Report"
-                onClick={() => toast.success("Generating risk analysis report.")}
-                disabled={!record}
-              />
-              <QuickAction
-                icon={<FlaskConical className="h-4 w-4" />}
-                label="Resource Plan"
-                onClick={() => toast.success("Opening resource plan.")}
-                disabled={!record}
-              />
-              <QuickAction
-                icon={<Rocket className="h-4 w-4" />}
-                label="Create PoC Project"
-                onClick={() => {
-                  if (status !== "approved")
-                    return toast.error(
-                      "Create PoC Project is available once the study is Approved.",
-                    );
-                  toast.success(
-                    record?.pocProjectCode
-                      ? `PoC project ${record.pocProjectCode} already created on approval.`
-                      : "Creating PoC project.",
-                  );
-                }}
-                disabled={!record || status !== "approved"}
-                highlight={status === "approved"}
-              />
-            </div>
+
 
             {record && (
               <div className="card-soft space-y-2 p-4 text-xs">

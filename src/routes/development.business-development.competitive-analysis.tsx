@@ -468,7 +468,8 @@ function CompetitiveAnalysisPage() {
         )}
 
         {/* Form Header Action Strip & Top Metadata Cards */}
-        <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-sm">
+        <div className="relative rounded-2xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Top Row: Icon + Title + Status + Action Buttons */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-3">
             <div className="flex items-center gap-3">
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary font-bold shadow-inner">
@@ -572,7 +573,7 @@ function CompetitiveAnalysisPage() {
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
                 Competitor <MAICWBadge type="I" />
               </span>
-              <span className="font-bold text-primary block truncate mt-0.5">{formData.competitor}</span>
+              <span className="font-bold text-primary block truncate mt-0.5">{formData.competitorName}</span>
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
@@ -648,16 +649,13 @@ function CompetitiveAnalysisPage() {
           </div>
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
-
-            {/* 1. Competitive Overview */}
-            <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+        {/* Main Focused Form Canvas */}
+        <div className="w-full space-y-6">
+          {/* Competitive Overview */}
+          <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Competitive Overview
+                  <Building2 className="h-4 w-4 text-primary" /> Competitive Overview
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Scope & Methodology</span>
               </div>
@@ -772,11 +770,11 @@ function CompetitiveAnalysisPage() {
               </div>
             </div>
 
-            {/* 2. Competitor Profile */}
-            <div id="sec-profile" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Competitor Profile */}
+          <div id="sec-profile" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building className="h-4 w-4 text-emerald-600" /> 2. Competitor Profile
+                  <Building className="h-4 w-4 text-emerald-600" /> Competitor Profile
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Competitor Score: <strong>{formData.competitorScore}/100</strong> <MAICWBadge type="C" />
@@ -886,11 +884,11 @@ function CompetitiveAnalysisPage() {
               </div>
             </div>
 
-            {/* 3. Product & Technology Comparison */}
-            <div id="sec-technology" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Product & Technology Comparison */}
+          <div id="sec-technology" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Cpu className="h-4 w-4 text-purple-600" /> 3. Product & Technology Comparison
+                  <Cpu className="h-4 w-4 text-purple-600" /> Product & Technology Comparison
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Technology Leadership Score: <strong>{formData.technologyLeadershipScore}/100</strong> <MAICWBadge type="C" />
@@ -983,11 +981,11 @@ function CompetitiveAnalysisPage() {
               </div>
             </div>
 
-            {/* 4. Commercial Comparison */}
-            <div id="sec-commercial" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Commercial Comparison */}
+          <div id="sec-commercial" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 4. Commercial Comparison
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Commercial Comparison
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Commercial Competitiveness: <strong>{formData.commercialCompetitivenessScore}/100</strong> <MAICWBadge type="C" />
@@ -1058,11 +1056,11 @@ function CompetitiveAnalysisPage() {
               </div>
             </div>
 
-            {/* 5. SWOT Analysis */}
-            <div id="sec-swot" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* SWOT Analysis */}
+          <div id="sec-swot" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Target className="h-4 w-4 text-indigo-600" /> 5. SWOT Analysis & Strategic Position
+                  <Target className="h-4 w-4 text-indigo-600" /> SWOT Analysis & Strategic Position
                 </h3>
                 <span className="text-xs font-semibold text-indigo-600 flex items-center gap-1">
                   SWOT Score: <strong>{formData.swotScore}/100</strong> <MAICWBadge type="C" />
@@ -1128,11 +1126,11 @@ function CompetitiveAnalysisPage() {
               </div>
             </div>
 
-            {/* 6. Strategic Benchmarking */}
-            <div id="sec-benchmarking" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Strategic Benchmarking */}
+          <div id="sec-benchmarking" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-blue-600" /> 6. Strategic Benchmarking & Rankings
+                  <BarChart3 className="h-4 w-4 text-blue-600" /> Strategic Benchmarking & Rankings
                 </h3>
                 <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
                   Benchmark Score: <strong>{formData.benchmarkScore}/100</strong> <MAICWBadge type="C" />
@@ -1200,145 +1198,117 @@ function CompetitiveAnalysisPage() {
               </div>
             </div>
 
-            {/* 7. AI Competitive Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 7. AI Competitive Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Intelligence Score: {formData.aiIntelligenceScore}/100
+          {/* AI Competitive Intelligence */}
+          <div id="sec-ai-intelligence" className="rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-primary/15">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-primary" /> AI Competitive Intelligence
+              </h3>
+              <span className="text-xs font-bold text-primary flex items-center gap-1.5">
+                AI Intelligence Score: <strong className="font-mono">91/100</strong>
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div className="rounded-lg border border-border bg-card p-3.5 space-y-1">
+                <span className="font-bold text-foreground flex items-center gap-1.5">
+                  <TrendingUp className="h-3.5 w-3.5 text-emerald-600" /> AI Competitor Analysis
                 </span>
+                <p className="text-muted-foreground leading-relaxed">
+                  Strong product portfolio and global presence with expanding partnerships.
+                </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Building className="h-3.5 w-3.5 text-blue-600" /> AI Competitor Analysis
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiCompetitorAnalysis}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-emerald-600" /> AI Pricing Intelligence
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiPricingIntelligence}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-purple-600" /> AI Market Trend Analysis
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiMarketTrendAnalysis}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-indigo-600">
-                    <Zap className="h-3.5 w-3.5" /> AI Opportunity Mapping
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiOpportunityMapping}</p>
-                </div>
+              <div className="rounded-lg border border-border bg-card p-3.5 space-y-1">
+                <span className="font-bold text-foreground flex items-center gap-1.5">
+                  <DollarSign className="h-3.5 w-3.5 text-blue-600" /> AI Pricing Intelligence
+                </span>
+                <p className="text-muted-foreground leading-relaxed">
+                  Pricing premium ~15% above market average in North America.
+                </p>
               </div>
 
+              <div className="rounded-lg border border-border bg-card p-3.5 space-y-1">
+                <span className="font-bold text-foreground flex items-center gap-1.5">
+                  <Zap className="h-3.5 w-3.5 text-amber-500" /> AI Market Trend Analysis
+                </span>
+                <p className="text-muted-foreground leading-relaxed">
+                  Fast growth in DC fast charging segment and smart charging solutions.
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-border bg-card p-3.5 space-y-1">
+                <span className="font-bold text-foreground flex items-center gap-1.5">
+                  <Target className="h-3.5 w-3.5 text-purple-600" /> AI Opportunity Mapping
+                </span>
+                <p className="text-muted-foreground leading-relaxed">
+                  High opportunity in emerging markets and fleet solutions.
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
               <button
                 type="button"
                 onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-all cursor-pointer"
               >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Competitive Intelligence Workbench <ChevronRight className="h-4 w-4" />
+                <Sparkles className="h-3.5 w-3.5" /> Open Interactive AI Competitive Intelligence Workbench
               </button>
             </div>
+          </div>
 
-            {/* 8. Competitive Analysis Summary */}
-            <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Competitive Analysis Summary */}
+          <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 8. Competitive Analysis Summary
+                  <Award className="h-4 w-4 text-emerald-600" /> Competitive Analysis Summary & Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Competitive Rating: {computedOverallScore}/100 (Tier 1)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Competitor Score</span>
-                    <span className="font-mono font-bold">{formData.competitorScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Benchmarking Status</span>
+                    <span className="text-emerald-600 font-bold">Top Quartile (84/100)</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.competitorScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Technology Score</span>
-                    <span className="font-mono font-bold">{formData.technologyLeadershipScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.technologyLeadershipScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Commercial Score</span>
-                    <span className="font-mono font-bold">{formData.commercialCompetitivenessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.commercialCompetitivenessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Benchmark Score</span>
-                    <span className="font-mono font-bold">{formData.benchmarkScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: `${formData.benchmarkScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>AI Intelligence Score</span>
-                    <span className="font-mono font-bold">{formData.aiIntelligenceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.aiIntelligenceScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Product maintains strong technology leadership in AI analytics against ABB, Siemens, and ChargePoint with 18% market share upside.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Competitive Score" score={computedOverallScore} sub="Very Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Maintain Competitive Advantage",
-                        "Improve Product Differentiation",
-                        "Optimize Pricing Strategy",
-                        "Expand Market Presence",
-                        "Accelerate Innovation",
-                        "Develop Strategic Partnerships",
-                        "Proceed to Strategic Planning",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Approve Competitive Strategy",
+                      "Strengthen Feature Differentiation",
+                      "Accelerate Product Roadmap",
+                      "Refine Pricing Model",
+                      "Expand Patent Protections",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 9. Attachments */}
-            <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Attachments */}
+          <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 9. Competitive Analysis Attachments & Artifacts
+                  <FileText className="h-4 w-4 text-primary" /> Competitive Analysis Attachments & Artifacts
                 </h3>
                 <button
                   type="button"
                   onClick={() => setIsUploadModalOpen(true)}
-                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-colors"
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
                 >
                   <Upload className="h-3.5 w-3.5" /> Upload File
                 </button>
@@ -1361,7 +1331,7 @@ function CompetitiveAnalysisPage() {
                       <button
                         type="button"
                         onClick={() => setViewingFile(file.name)}
-                        className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted"
+                        className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"
                         title="View File"
                       >
                         <Eye className="h-3.5 w-3.5" />
@@ -1369,7 +1339,7 @@ function CompetitiveAnalysisPage() {
                       <button
                         type="button"
                         onClick={() => showToast("info", "Download Triggered", `Downloading ${file.name}...`)}
-                        className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted"
+                        className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"
                         title="Download File"
                       >
                         <Download className="h-3.5 w-3.5" />
@@ -1377,7 +1347,7 @@ function CompetitiveAnalysisPage() {
                       <button
                         type="button"
                         onClick={() => handleRemoveAttachment(file.id, file.name)}
-                        className="rounded p-1 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10"
+                        className="rounded p-1 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 cursor-pointer"
                         title="Delete File"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -1388,11 +1358,11 @@ function CompetitiveAnalysisPage() {
               </div>
             </div>
 
-            {/* 10. Review & Approval */}
-            <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Review & Approval */}
+          <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 10. Governance & Review Board Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Governance & Review Board Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">8 Stakeholder Roles</span>
               </div>
@@ -1440,7 +1410,8 @@ function CompetitiveAnalysisPage() {
                       value={formData.userApprovalDate}
                       onChange={(e) => updateField("userApprovalDate", e.target.value)}
                       className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
-                    />
+                    >
+                    </input>
                   </div>
                 </div>
 
@@ -1457,11 +1428,11 @@ function CompetitiveAnalysisPage() {
               </div>
             </div>
 
-            {/* 11. Activity History */}
-            <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
+          {/* Activity History */}
+          <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 11. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History Log
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1483,181 +1454,6 @@ function CompetitiveAnalysisPage() {
                 ))}
               </div>
             </div>
-
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> AI Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 91</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Building className="h-3.5 w-3.5 text-blue-600" /> Market Position
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    ChargePoint is a strong challenger with 18% global market share.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-emerald-600" /> Pricing Insight
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Premium pricing strategy with high profitability potential.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Cpu className="h-3.5 w-3.5 text-purple-600" /> Innovation Insight
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Advanced technology with 120+ patents in EV charging solutions.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-amber-600">
-                    <AlertTriangle className="h-3.5 w-3.5" /> Risk Insight
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Price competition expected from new entrants in emerging markets.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Market Share</span>
-                    <Sparkline data={[12, 14, 16, 18]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-blue-600 font-mono block">18 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Revenue Est.</span>
-                    <Sparkline data={[5500, 6800, 7500, 8250]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">₹ 8,250 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Innovation Rank</span>
-                    <Sparkline data={[4, 3, 2, 2]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-purple-600 font-mono block">2 / 5</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Customer Sat. Rank</span>
-                    <Sparkline data={[5, 4, 3, 3]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">3 / 5</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Benchmark Score</span>
-                    <Sparkline data={[75, 78, 81, 84]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">84 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Commercial Score</span>
-                    <Sparkline data={[72, 76, 80, 83]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-indigo-600 font-mono block">83 / 100</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Competitive Analysis KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Audit Information Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Created By:</span>
-                  <span className="font-semibold text-foreground">{formData.analysisOwner}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Created Date:</span>
-                  <span className="font-semibold text-foreground">05 May 2024 09:20 AM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified By:</span>
-                  <span className="font-semibold text-foreground">{formData.analysisOwner}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified Date:</span>
-                  <span className="font-semibold text-foreground">{formData.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Workflow Stage:</span>
-                  <span className="font-semibold text-primary">{formData.workflowStage}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span className="font-semibold text-foreground">v{formData.version}</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 
@@ -1681,7 +1477,7 @@ function CompetitiveAnalysisPage() {
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 bg-muted/20 p-4 rounded-xl border border-border text-xs">
               <div>
                 <span className="text-muted-foreground font-medium block">Overall Competitive Score</span>
-                <span className="text-lg font-bold text-emerald-600">{computedOverallScore} / 100</span>
+                <span className="text-lg font-bold text-emerald-600">{computedOverallScore}%</span>
               </div>
               <div>
                 <span className="text-muted-foreground font-medium block">Competitor</span>
@@ -1699,19 +1495,19 @@ function CompetitiveAnalysisPage() {
 
             <div className="space-y-4 text-xs">
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">1. Executive Summary & Objective</h4>
+                <h4 className="font-bold text-foreground">Executive Summary & Objective</h4>
                 <p className="text-muted-foreground"><strong>Objective:</strong> {formData.businessObjective}</p>
                 <p className="text-muted-foreground mt-1"><strong>Scope:</strong> {formData.competitiveScope} | <strong>Type:</strong> {formData.analysisType}</p>
               </div>
 
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">2. Competitor Profile & Market Power</h4>
+                <h4 className="font-bold text-foreground">Competitor Profile & Market Power</h4>
                 <p className="text-muted-foreground"><strong>Competitor:</strong> {formData.competitorName} ({formData.headquarters})</p>
                 <p className="text-muted-foreground mt-1"><strong>Market Share:</strong> {formData.marketShare}% | <strong>Revenue Est:</strong> ₹ 8,250 Cr | <strong>Employees:</strong> 2,100</p>
               </div>
 
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">3. Product, Technology & SWOT Summary</h4>
+                <h4 className="font-bold text-foreground">Product, Technology & SWOT Summary</h4>
                 <p className="text-muted-foreground"><strong>Strengths:</strong> {formData.strengths}</p>
                 <p className="text-muted-foreground mt-1"><strong>Weaknesses:</strong> {formData.weaknesses}</p>
               </div>
@@ -1757,7 +1553,7 @@ function CompetitiveAnalysisPage() {
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-2">
               <div className="flex justify-between items-center text-xs font-bold text-primary">
                 <span>AI Intelligence Score</span>
-                <span>91 / 100 (High Differentiation Signal)</span>
+                <span>91% (High Differentiation Signal)</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Empirical data shows ChargePoint holds 18% market share with premium pricing. Magnertia solution can disrupt via lower TCO and open OCPP integration.

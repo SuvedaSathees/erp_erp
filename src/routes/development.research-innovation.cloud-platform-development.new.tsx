@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, type ReactNode } from "react";
 import { toast } from "sonner";
 import {
   Cloud,
@@ -99,6 +99,57 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { AppShell } from "@/components/erp/AppShell";
+import { cn } from "@/lib/utils";
+
+/* ===========================================================================
+   Circular Score Gauge Component
+   =========================================================================== */
+function CircularScoreGauge({
+  score,
+  label = "CLOUD SCORE",
+}: {
+  score: number;
+  label?: string;
+}) {
+  const circumference = 2 * Math.PI * 42;
+  const strokeDashoffset = circumference - (score / 100) * circumference;
+
+  let scoreColor = "text-blue-600 stroke-blue-600 dark:text-blue-400 dark:stroke-blue-400";
+  if (score < 60) scoreColor = "text-amber-500 stroke-amber-500";
+  if (score < 40) scoreColor = "text-rose-500 stroke-rose-500";
+
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      <svg className="w-28 h-28 transform -rotate-90">
+        <circle
+          cx="56"
+          cy="56"
+          r="42"
+          className="stroke-slate-100 dark:stroke-slate-800 fill-none"
+          strokeWidth="8"
+        />
+        <circle
+          cx="56"
+          cy="56"
+          r="42"
+          className={cn(
+            "fill-none transition-all duration-1000 ease-out",
+            scoreColor,
+          )}
+          strokeWidth="8"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center text-center">
+        <span className="text-2xl font-bold tracking-tight text-foreground">
+          {score}%
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export const Route = createFileRoute(
   "/development/research-innovation/cloud-platform-development/new",
@@ -109,12 +160,20 @@ export const Route = createFileRoute(
   component: CloudPlatformDevelopmentNewPage,
 });
 
+export function CloudPlatformFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <CloudPlatformDevelopmentNewPage {...props} />;
+}
+
+export function CloudPlatformPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
+  return <CloudPlatformDevelopmentNewPage {...props} />;
+}
+
 export function CloudPlatformDevelopmentNewPage({
   breadcrumb,
   tabs,
 }: {
   breadcrumb?: string;
-  tabs?: React.ReactNode;
+  tabs?: ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -219,47 +278,51 @@ export function CloudPlatformDevelopmentNewPage({
   return (
     <AppShell
       title="Cloud Platform Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Cloud Platform Development"}
       description="Architect multi-region cloud infrastructure, Kubernetes clusters, microservices, and serverless compute."
       tabs={tabs ?? <ResearchInnovationTabBar />}
     >
       <div className="space-y-6 pb-16">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <Cloud className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              {record.cloudProjectName}
-            </h1>
-                <Badge
-                  variant="outline"
-                  className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-mono text-xs"
-                >
+        {/* Top Header Card */}
+        <div className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs p-4 sm:p-5 transition-all">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="space-y-1.5">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 dark:text-white flex items-center gap-2.5">
+                  <Cloud className="h-6 w-6 text-blue-600 shrink-0" />
+                  {record.cloudProjectName}
+                </h1>
+                <Badge variant="outline" className="bg-blue-50/80 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 font-mono text-xs font-semibold px-2.5 py-0.5">
                   {record.platformVersion}
                 </Badge>
                 <Badge
                   className={
                     record.workflowStatus === "Approved"
-                      ? "bg-emerald-600 text-white"
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold"
                       : record.workflowStatus === "In Review"
-                      ? "bg-amber-500 text-white"
-                      : "bg-blue-600 text-white"
+                      ? "bg-purple-50 text-purple-700 border border-purple-200 font-semibold"
+                      : "bg-amber-50 text-amber-700 border border-amber-200 font-semibold"
                   }
                 >
+                  <Workflow className="mr-1 h-3 w-3 inline" />
                   {record.workflowStatus}
                 </Badge>
               </div>
+              <p className="text-xs text-muted-foreground max-w-3xl">
+                {record.platformObjective || "Provide secure, multi-region cloud infrastructure and scalable services for EV operations."}
+              </p>
             </div>
 
-            {/* Header Actions */}
-            <div className="flex items-center gap-2.5 shrink-0">
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => saveDraftMutation.mutate({})}
                 disabled={saveDraftMutation.isPending}
-                className="gap-1.5"
+                className="h-8 px-3 text-xs gap-1.5 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium"
               >
-                <Save className="h-4 w-4 text-slate-500" />
+                <Save className="h-3.5 w-3.5 text-slate-500" />
                 Save Draft
               </Button>
 
@@ -267,35 +330,31 @@ export function CloudPlatformDevelopmentNewPage({
                 size="sm"
                 onClick={() => submitForReviewMutation.mutate()}
                 disabled={submitForReviewMutation.isPending}
-                className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-sm"
+                className="h-8 px-4 text-xs font-bold gap-1.5 bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-3.5 w-3.5" />
                 Submit for Review
               </Button>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon" className="h-9 w-9">
-                    <MoreHorizontal className="h-4 w-4" />
+                  <Button variant="outline" size="icon" className="h-8 w-8 border-slate-200">
+                    <MoreHorizontal className="h-4 w-4 text-slate-600" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-56 text-xs">
                   <DropdownMenuItem onClick={() => setIsScaleClusterModalOpen(true)}>
-                    <Server className="h-4 w-4 mr-2 text-blue-500" />
-                    Scale Kubernetes Nodes
+                    <Server className="h-3.5 w-3.5 mr-2 text-blue-600" /> Scale Kubernetes Nodes
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsSecurityAuditModalOpen(true)}>
-                    <ShieldCheck className="h-4 w-4 mr-2 text-emerald-500" />
-                    Run Security & IAM Scan
+                    <ShieldCheck className="h-3.5 w-3.5 mr-2 text-emerald-600" /> Run Security & IAM Scan
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsIacModalOpen(true)}>
-                    <FileCode className="h-4 w-4 mr-2 text-purple-500" />
-                    View Terraform IaC Specs
+                    <FileCode className="h-3.5 w-3.5 mr-2 text-purple-600" /> View Terraform IaC Specs
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => window.print()}>
-                    <Printer className="h-4 w-4 mr-2" />
-                    Print Specification
+                    <Printer className="h-3.5 w-3.5 mr-2" /> Print Specification
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
@@ -303,124 +362,60 @@ export function CloudPlatformDevelopmentNewPage({
                       toast.success("Link copied to clipboard!");
                     }}
                   >
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share Project
+                    <Share2 className="h-3.5 w-3.5 mr-2" /> Share Project
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
           </div>
 
-          {/* Key Reference Badges Row */}
-          <div className="max-w-7xl mx-auto mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
-            <div className="flex flex-col">
-              <span className="text-muted-foreground">Cloud Dev ID</span>
-              <span className="font-mono font-semibold text-foreground">
-                {record.cloudPlatformDevelopmentId}
+          {/* Reference Badges Strip */}
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Cloud Dev ID</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-100 font-mono">{record.cloudPlatformDevelopmentId}</span>
+            </div>
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Form Code</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-100 font-mono">{record.formCode}</span>
+            </div>
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Linked Product</span>
+              <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                {record.linkedProductId || "Smart EV Platform"} <ExternalLink className="h-3 w-3" />
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground">Form Code</span>
-              <span className="font-mono font-semibold text-foreground">
-                {record.formCode}
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Linked Software Dev</span>
+              <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                {record.linkedSoftwareDevId} <ExternalLink className="h-3 w-3" />
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground">Linked Software Dev</span>
-              <span className="font-medium text-blue-600 dark:text-blue-400 flex items-center gap-1 cursor-pointer">
-                {record.linkedSoftwareDevId}
-                <ExternalLink className="h-3 w-3" />
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Linked Cloud Platform</span>
+              <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                {record.cloudPlatformDevelopmentId} <ExternalLink className="h-3 w-3" />
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground">Linked Mobile App</span>
-              <span className="font-medium text-foreground">
-                {record.linkedMobileDevId}
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Linked Mobile App</span>
+              <span className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                {record.linkedMobileDevId} <ExternalLink className="h-3 w-3" />
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground">Cloud Architect</span>
-              <div className="flex items-center gap-1.5 font-medium text-foreground">
-                <img
-                  src={record.cloudArchitectAvatar}
-                  alt={record.cloudArchitectName}
-                  className="h-4 w-4 rounded-full object-cover"
-                />
-                {record.cloudArchitectName}
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-muted-foreground">Created / Updated</span>
-              <span className="font-medium text-foreground">
-                {record.createdOn}
-              </span>
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Cloud Architect</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-100 truncate block">{record.cloudArchitectName}</span>
             </div>
           </div>
+        </div>
 
         {/* =========================================================================
             2. MAIN CONTENT AREA (LAYOUT: LEFT CONTENT + RIGHT SIDEBAR)
             ========================================================================= */}
-        <div className="max-w-7xl mx-auto px-6 py-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="mx-auto max-w-[1720px] px-4 sm:px-6 lg:px-8 py-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main 9-column content */}
           <div className="lg:col-span-9 space-y-6">
-            {/* OVERALL CLOUD PLATFORM SCORE BANNER */}
-            <Card className="border-border/80 shadow-xs bg-gradient-to-br from-white via-slate-50 to-blue-50/30 dark:from-slate-900 dark:via-slate-900/90 dark:to-blue-950/20 overflow-hidden">
-              <CardContent className="p-5">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                  {/* Score Radial Visual */}
-                  <div className="flex items-center gap-4 shrink-0">
-                    <div className="relative flex items-center justify-center h-20 w-20 rounded-full border-4 border-blue-600/20 bg-blue-600/5 dark:bg-blue-500/10">
-                      <div className="text-center">
-                        <span className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
-                          {record.overallCloudPlatformScore}
-                        </span>
-                        <span className="text-[10px] block text-muted-foreground font-semibold">
-                          /100
-                        </span>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-xs uppercase font-semibold tracking-wider text-muted-foreground">
-                        Overall Cloud Platform Score
-                      </div>
-                      <div className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                        Enterprise Certified
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Validated across 5 cloud readiness pillars
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Pillars Progress Bar */}
-                  <div className="w-full space-y-2">
-                    <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
-                      <span>Cloud Architecture & DevOps Readiness Pillars</span>
-                      <span className="text-blue-600 dark:text-blue-400">
-                        5 of 5 Pillars Verified (89% Avg)
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-5 gap-2">
-                      {[
-                        { label: "Architecture", score: record.architectureReadinessScore, color: "bg-blue-500" },
-                        { label: "Security", score: record.securityScore, color: "bg-emerald-500" },
-                        { label: "Infrastructure", score: record.infrastructureReadinessScore, color: "bg-purple-500" },
-                        { label: "Operations", score: record.operationsReadinessScore, color: "bg-amber-500" },
-                        { label: "Performance", score: record.performanceScore, color: "bg-indigo-500" },
-                      ].map((pillar, idx) => (
-                        <div key={idx} className="space-y-1 text-center">
-                          <div className={`h-2 rounded-full ${pillar.color}`} />
-                          <span className="text-[10px] block font-medium truncate text-slate-600 dark:text-slate-400">
-                            {pillar.label} ({pillar.score})
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
 
             {/* TAB CONTENT 1: OVERVIEW */}
             {(activeTab === "overview" || activeTab === "system_info") && (
@@ -617,104 +612,6 @@ export function CloudPlatformDevelopmentNewPage({
                       <span className="font-semibold text-slate-900 dark:text-white">
                         {record.architectureConfig.drStrategy}
                       </span>
-                    </div>
-                  </div>
-
-                  {/* Interactive Network Diagram Component (Matching Screenshot) */}
-                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-gradient-to-r from-slate-50 via-blue-50/20 to-slate-50 dark:from-slate-900 dark:via-blue-950/10 dark:to-slate-900 space-y-4">
-                    <div className="flex justify-between items-center text-xs font-semibold text-slate-800 dark:text-slate-200">
-                      <span>Cloud Microservices Architecture Diagram</span>
-                      <Badge variant="outline" className="text-[10px]">
-                        Active Topology
-                      </Badge>
-                    </div>
-
-                    {/* Diagram Layout */}
-                    <div className="space-y-4 bg-white dark:bg-slate-950 p-4 rounded-lg border border-slate-200 dark:border-slate-800 text-xs">
-                      {/* Users / Devices Layer */}
-                      <div className="flex justify-center">
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/60 font-semibold text-blue-700 dark:text-blue-300">
-                          <Globe className="h-4 w-4" />
-                          Users / Devices / Mobile Clients
-                        </div>
-                      </div>
-
-                      <div className="w-0.5 h-4 bg-slate-300 dark:bg-slate-700 mx-auto" />
-
-                      {/* API Gateway Layer */}
-                      <div className="flex justify-center">
-                        <div className="w-64 p-2.5 rounded-lg border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/60 text-center font-bold text-indigo-900 dark:text-indigo-200 shadow-xs">
-                          Kong API Gateway (TLS / Rate Limiting)
-                        </div>
-                      </div>
-
-                      <div className="w-0.5 h-4 bg-slate-300 dark:bg-slate-700 mx-auto" />
-
-                      {/* Microservices Cluster */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-center space-y-1">
-                          <Server className="h-4 w-4 text-blue-500 mx-auto" />
-                          <span className="font-bold text-slate-900 dark:text-white block">
-                            Auth & User Service
-                          </span>
-                          <span className="text-[10px] text-muted-foreground">
-                            OAuth2 / Keycloak Pods
-                          </span>
-                        </div>
-
-                        <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-center space-y-1">
-                          <Server className="h-4 w-4 text-blue-500 mx-auto" />
-                          <span className="font-bold text-slate-900 dark:text-white block">
-                            EV Station API Service
-                          </span>
-                          <span className="text-[10px] text-muted-foreground">
-                            FastAPI / Node.js
-                          </span>
-                        </div>
-
-                        <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-center space-y-1">
-                          <Server className="h-4 w-4 text-blue-500 mx-auto" />
-                          <span className="font-bold text-slate-900 dark:text-white block">
-                            IoT Telemetry Service
-                          </span>
-                          <span className="text-[10px] text-muted-foreground">
-                            Go MQTT Worker
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="w-0.5 h-4 bg-slate-300 dark:bg-slate-700 mx-auto" />
-
-                      {/* Storage & Queue Layer */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
-                        <div className="p-2.5 rounded-lg border border-emerald-200 dark:border-emerald-900 bg-emerald-50/50 dark:bg-emerald-950/30">
-                          <Database className="h-4 w-4 text-emerald-600 mx-auto" />
-                          <span className="font-bold block text-[11px] mt-1">
-                            PostgreSQL Aurora
-                          </span>
-                        </div>
-
-                        <div className="p-2.5 rounded-lg border border-red-200 dark:border-red-900 bg-red-50/50 dark:bg-red-950/30">
-                          <Zap className="h-4 w-4 text-red-600 mx-auto" />
-                          <span className="font-bold block text-[11px] mt-1">
-                            Redis Cache Cluster
-                          </span>
-                        </div>
-
-                        <div className="p-2.5 rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-950/30">
-                          <Box className="h-4 w-4 text-amber-600 mx-auto" />
-                          <span className="font-bold block text-[11px] mt-1">
-                            S3 Object Storage
-                          </span>
-                        </div>
-
-                        <div className="p-2.5 rounded-lg border border-purple-200 dark:border-purple-900 bg-purple-50/50 dark:bg-purple-950/30">
-                          <Radio className="h-4 w-4 text-purple-600 mx-auto" />
-                          <span className="font-bold block text-[11px] mt-1">
-                            Kafka Message Queue
-                          </span>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -1123,68 +1020,14 @@ export function CloudPlatformDevelopmentNewPage({
               </Card>
             )}
 
-            {/* TAB CONTENT 10: SUMMARY */}
-            {(activeTab === "overview" || activeTab === "summary") && (
-              <Card className="border-border/80 shadow-xs">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold flex items-center gap-2">
-                    <Target className="h-4 w-4 text-blue-600" />
-                    10. Cloud Platform Readiness Summary
-                  </CardTitle>
-                  <CardDescription>
-                    Consolidated score across all evaluation dimensions
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4 text-xs">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Architecture
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.architectureReadiness}/100
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Security
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.securityReadiness}/100
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Infrastructure
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.infrastructureReadiness}/100
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1">
-                      <span className="text-muted-foreground block text-[11px]">
-                        Operations
-                      </span>
-                      <span className="text-lg font-bold text-slate-900 dark:text-white font-mono">
-                        {record.readinessSummary.operationsReadiness}/100
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* TAB CONTENT 11: ATTACHMENTS */}
+            {/* TAB CONTENT 10: ATTACHMENTS */}
             {(activeTab === "overview" || activeTab === "attachments") && (
               <Card className="border-border/80 shadow-xs">
                 <CardHeader className="pb-3 flex flex-row items-center justify-between">
                   <div>
                     <CardTitle className="text-base font-semibold flex items-center gap-2">
                       <FileText className="h-4 w-4 text-blue-600" />
-                      11. Attachments & Infrastructure Diagrams
+                      10. Attachments & Infrastructure Diagrams
                     </CardTitle>
                     <CardDescription>
                       Terraform files, architecture diagrams, and security reports
@@ -1239,13 +1082,13 @@ export function CloudPlatformDevelopmentNewPage({
               </Card>
             )}
 
-            {/* TAB CONTENT 12: REVIEW & APPROVAL */}
+            {/* TAB CONTENT 11: REVIEW & APPROVAL */}
             {(activeTab === "overview" || activeTab === "review_approval") && (
               <Card className="border-border/80 shadow-xs">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-semibold flex items-center gap-2">
                     <Workflow className="h-4 w-4 text-blue-600" />
-                    12. Review & Approval Board Timeline
+                    11. Review & Approval Board Timeline
                   </CardTitle>
                   <CardDescription>
                     Multi-sign-off enterprise governance committee status
@@ -1270,13 +1113,8 @@ export function CloudPlatformDevelopmentNewPage({
                             <td className="p-3 font-semibold text-slate-900 dark:text-white">
                               {rev.role}
                             </td>
-                            <td className="p-3 flex items-center gap-2">
-                              <img
-                                src={rev.avatar}
-                                alt={rev.person}
-                                className="h-5 w-5 rounded-full object-cover"
-                              />
-                              <span className="font-medium">{rev.person}</span>
+                            <td className="p-3">
+                              <span className="font-medium text-foreground">{rev.person}</span>
                             </td>
                             <td className="p-3">
                               <Badge
@@ -1368,131 +1206,50 @@ export function CloudPlatformDevelopmentNewPage({
             {/* Overall Score Radial Widget */}
             <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
               <CardHeader className="pb-2 text-center">
-                <CardTitle className="text-sm font-semibold">Overall Cloud Score</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-center">
-                <div className="relative inline-flex items-center justify-center">
-                  <div className="h-28 w-28 rounded-full border-6 border-blue-600 flex items-center justify-center bg-blue-50/30 dark:bg-blue-950/30">
-                    <div>
-                      <span className="text-3xl font-black text-blue-600 dark:text-blue-400">
-                        {record.overallCloudPlatformScore}
-                      </span>
-                      <span className="text-[10px] block font-semibold text-muted-foreground">
-                        / 100
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2 text-xs text-left pt-2 border-t border-slate-100 dark:border-slate-800">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Architecture</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.architectureReadinessScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Security</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.securityScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Infrastructure</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.infrastructureReadinessScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Operations</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.operationsReadinessScore}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Performance</span>
-                    <span className="font-bold text-slate-900 dark:text-white font-mono">
-                      {record.performanceScore}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Key Highlights */}
-            <Card className="border-border/80 shadow-xs">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 text-blue-600" />
-                  Key Highlights
+                <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider">
+                  Overall Cloud Score
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2.5 text-xs">
-                {[
-                  "Microservices architecture designed",
-                  "Kubernetes cluster deployed",
-                  "CI/CD pipeline configured",
-                  "Security policies implemented",
-                  "Multi region DR strategy defined",
-                  "Monitoring and alerting enabled",
-                ].map((hl, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium">
-                      {hl}
+              <CardContent className="space-y-4 text-center">
+                <div className="flex justify-center items-center py-2">
+                  <CircularScoreGauge score={record.overallCloudPlatformScore} label="Overall Score" />
+                </div>
+
+                <div className="space-y-2 text-xs text-left pt-3 border-t border-slate-100 dark:border-slate-800">
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-medium">Architecture</span>
+                    <span className="font-bold text-foreground font-mono">
+                      {record.architectureReadinessScore}%
                     </span>
                   </div>
-                ))}
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-medium">Security</span>
+                    <span className="font-bold text-foreground font-mono">
+                      {record.securityScore}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-medium">Infrastructure</span>
+                    <span className="font-bold text-foreground font-mono">
+                      {record.infrastructureReadinessScore}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-medium">Operations</span>
+                    <span className="font-bold text-foreground font-mono">
+                      {record.operationsReadinessScore}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-medium">Performance</span>
+                    <span className="font-bold text-foreground font-mono">
+                      {record.performanceScore}%
+                    </span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Quick Actions Panel */}
-            <Card className="border-border/80 shadow-xs">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-xs">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => toast.info("Generating Cloud Architecture Executive PDF Report...")}
-                >
-                  <FileText className="h-3.5 w-3.5 text-blue-600" />
-                  Generate Cloud Report
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => setActiveTab("architecture")}
-                >
-                  <Layers className="h-3.5 w-3.5 text-indigo-600" />
-                  View Architecture Diagram
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => setIsSecurityAuditModalOpen(true)}
-                >
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                  Run Security Scan
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start gap-2 text-xs font-medium"
-                  onClick={() => setIsScaleClusterModalOpen(true)}
-                >
-                  <Server className="h-3.5 w-3.5 text-purple-600" />
-                  Scale Kubernetes Cluster
-                </Button>
-              </CardContent>
-            </Card>
           </div>
         </div>
 
@@ -1658,6 +1415,11 @@ export function CloudPlatformDevelopmentNewPage({
             </DialogFooter>
           </DialogContent>
         </Dialog>
+      </div>
     </AppShell>
   );
 }
+
+export default CloudPlatformDevelopmentNewPage;
+
+

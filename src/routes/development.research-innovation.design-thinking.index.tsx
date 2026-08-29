@@ -80,7 +80,7 @@ function DesignThinkingRegisterPage() {
   return (
     <AppShell
       title="Design Thinking"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Design Thinking"
       description="Run design-thinking cycles from empathy through tested prototypes."
       tabs={<InnovationAreaTabs sub={<DesignThinkingTabBar />} />}
       topbarActions={newButton}

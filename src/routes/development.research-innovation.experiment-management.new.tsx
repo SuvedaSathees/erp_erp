@@ -969,7 +969,7 @@ function ExperimentFormPage() {
     return (
       <AppShell
         title="Experiment Management"
-        breadcrumb="Research & Innovation Development"
+        breadcrumb="Development > Research & Innovation > Experiment Management"
         description="Design, run, and validate structured experiments."
         tabs={<InnovationAreaTabs sub={<ExperimentMgmtPageTabBar />} />}
       >
@@ -984,7 +984,7 @@ function ExperimentFormPage() {
   return (
     <AppShell
       title="Experiment Management"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Experiment Management"
       description="Design, run, and validate structured experiments."
       tabs={<InnovationAreaTabs sub={<ExperimentMgmtPageTabBar />} />}
     >
@@ -2169,46 +2169,7 @@ function ExperimentFormPage() {
               </button>
             </div>
 
-            {/* Quick Actions */}
-            <div className="card-soft space-y-2 p-4">
-              <h3 className="text-sm font-bold text-foreground">Quick Actions</h3>
-              <QuickAction
-                icon={<FileText className="h-4 w-4" />}
-                label="Generate Test Plan"
-                onClick={() => setTestPlanModalOpen(true)}
-              />
-              <QuickAction
-                icon={<CalendarClock className="h-4 w-4" />}
-                label="Schedule Experiment"
-                onClick={() => setScheduleModalOpen(true)}
-              />
-              <QuickAction
-                icon={<Upload className="h-4 w-4" />}
-                label="Upload Raw Data"
-                onClick={() => setUploadModalOpen(true)}
-              />
-              <QuickAction
-                icon={<Brain className="h-4 w-4" />}
-                label="Run AI Analysis"
-                onClick={() => {
-                  toast.success("AI Analysis executed — scores refreshed.");
-                }}
-              />
-              <QuickAction
-                icon={<FlaskConical className="h-4 w-4" />}
-                label="Generate Report"
-                onClick={() => {
-                  toast.success("Experiment Report generated successfully.");
-                }}
-              />
-              <QuickAction
-                icon={<Landmark className="h-4 w-4" />}
-                label="Request Approval"
-                onClick={() => {
-                  setReviewOpen(true);
-                }}
-              />
-            </div>
+
 
             {/* Related Links */}
             <div className="card-soft space-y-2 p-4">

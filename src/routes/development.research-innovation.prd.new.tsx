@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import {
   Save,
@@ -30,19 +30,34 @@ import {
   Cpu,
   ShieldAlert,
   UserCheck,
+  User,
+  Printer,
+  Share2,
   FileSpreadsheet,
   FileCode,
   Info,
   Clock,
   ChevronRight,
   TrendingUp,
+  Compass,
+  ShieldCheck,
 } from "lucide-react";
 import { AppShell } from "@/components/erp/AppShell";
 import { PrdTabBar, type PrdTabId } from "@/components/erp/PrdTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { ErpButton } from "@/components/erp/Button";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { StarRating } from "@/components/erp/StarRating";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { prdService } from "@/services";
 import { calculatePrdScores } from "@/lib/prdFns.server";
@@ -83,9 +98,8 @@ function CircularScoreGauge({ score, label = "PRD SCORE" }: { score: number; lab
           strokeLinecap="round"
         />
       </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-2xl font-bold tracking-tight text-foreground">{score}</span>
-        <span className="text-[9px] font-bold uppercase text-muted-foreground">{label}</span>
+      <div className="absolute inset-0 flex items-center justify-center text-center">
+        <span className="text-2xl font-bold tracking-tight text-foreground">{score}%</span>
       </div>
     </div>
   );
@@ -228,117 +242,59 @@ export function PrdFormPage({
     >
       <div className="space-y-6 pb-12">
         {/* ========================================================================= */}
-        {/* 2. RECORD HEADER BAR (Two Rows)                                           */}
         {/* ========================================================================= */}
-        <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
-          {/* Row 1 */}
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center flex-wrap gap-3">
-              <span className="px-2.5 py-1 text-xs font-semibold rounded bg-muted text-muted-foreground">
-                {record.prdId}
-              </span>
-              <span className="px-2.5 py-1 text-xs font-medium rounded bg-muted/60 text-muted-foreground">
-                {record.formCode}
-              </span>
-
-              {/* Editable PRD Title */}
-              <input
-                type="text"
-                value={formInput.prdTitle}
-                onChange={(e) => handleInputChange("prdTitle", e.target.value)}
-                disabled={!isEditable}
-                className="text-lg font-bold bg-transparent border-b border-transparent hover:border-border focus:border-primary focus:outline-none text-foreground px-1 py-0.5 rounded transition-colors min-w-[340px]"
-              />
-
-              <span className="px-2 py-0.5 text-xs font-bold rounded bg-primary/10 text-primary border border-primary/20">
-                {formInput.prdVersion}
-              </span>
-
-              <StatusBadge status={record.status} />
+        {/* 2. RECORD HEADER BAR                                                      */}
+        {/* ========================================================================= */}
+        <Card className="border border-border/80 shadow-xs bg-card mb-4 overflow-hidden rounded-xl">
+          {/* TOP ROW: Record Identity, Editable Title, & Action Buttons */}
+          <div className="p-4 sm:p-5 pb-4 bg-slate-50/70 dark:bg-slate-900/90 border-b border-border/70 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            {/* Left: Identity & Title */}
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-blue-600/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center font-bold shrink-0 border border-blue-200/50 dark:border-blue-800/50 shadow-2xs">
+                <FileText className="h-5 w-5" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-border/60">
+                    {record.prdId}
+                  </span>
+                  <span className="text-slate-300 dark:text-slate-700">•</span>
+                  <Badge variant="outline" className="font-mono text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-white/80 dark:bg-slate-800">
+                    {record.formCode}
+                  </Badge>
+                  <Badge variant="outline" className="font-mono text-[11px] font-bold text-primary bg-primary/10 border-primary/20">
+                    {formInput.prdVersion}
+                  </Badge>
+                  <StatusBadge status={record.status} />
+                  {record.linkedSystemDesignId && (
+                    <Badge variant="secondary" className="font-mono text-[11px] font-semibold bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200/60 flex items-center gap-1">
+                      <Cpu className="h-3 w-3" /> System Design: {record.linkedSystemDesignId}
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={formInput.prdTitle}
+                    onChange={(e) => handleInputChange("prdTitle", e.target.value)}
+                    disabled={!isEditable}
+                    className="text-base sm:text-lg font-bold text-foreground bg-transparent hover:bg-white dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-primary shadow-none px-2 py-0.5 transition-all rounded-md max-w-lg focus:outline-none"
+                    placeholder="Product Requirements Document Title..."
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="text-xs text-muted-foreground">
-              Created On: <span className="font-semibold text-foreground">{record.createdOn}</span>
-            </div>
-          </div>
-
-          {/* Row 2 */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-border/50 text-xs">
-            <div className="flex items-center flex-wrap gap-3">
-              {/* Linked Product Chip */}
-              <button
-                type="button"
-                onClick={() => setShowProductModal(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 transition-colors"
-              >
-                <Zap className="h-3.5 w-3.5" />
-                <span>Product: {formInput.linkedProductName}</span>
-                <ExternalLink className="h-3 w-3 opacity-70" />
-              </button>
-
-              {/* Linked Product Roadmap Chip */}
-              <button
-                type="button"
-                onClick={() => setShowRoadmapModal(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-              >
-                <Map className="h-3.5 w-3.5" />
-                <span>Roadmap: {formInput.linkedRoadmapId}</span>
-                <ExternalLink className="h-3 w-3 opacity-70" />
-              </button>
-
-              {/* Linked Release Chip */}
-              <button
-                type="button"
-                onClick={() => setShowReleaseModal(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 transition-colors"
-              >
-                <Layers className="h-3.5 w-3.5" />
-                <span>Release: {formInput.linkedReleaseName}</span>
-                <ExternalLink className="h-3 w-3 opacity-70" />
-              </button>
-
-              <div className="flex items-center gap-1.5 text-muted-foreground pl-2 border-l border-border">
-                <Building2 className="h-3.5 w-3.5" />
-                <span>BU:</span>
-                <span className="font-semibold text-foreground">{formInput.businessUnit}</span>
-              </div>
-
-              <div className="flex items-center gap-2 pl-2 border-l border-border">
-                <img
-                  src={record.productOwnerAvatar}
-                  alt={formInput.productOwnerName}
-                  className="w-5 h-5 rounded-full object-cover border border-primary/30"
-                />
-                <span className="text-muted-foreground">PO:</span>
-                <span className="font-semibold text-foreground">{formInput.productOwnerName}</span>
-              </div>
-
-              <div className="flex items-center gap-1.5 text-muted-foreground pl-2 border-l border-border">
-                <Calendar className="h-3.5 w-3.5 text-primary" />
-                <span>Planned Release:</span>
-                <span className="font-medium text-foreground">{formInput.plannedReleaseDate}</span>
-              </div>
-
-              {/* Surfaced Linked System Design Project ID */}
-              {record.linkedSystemDesignId && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/30">
-                  <Cpu className="h-3.5 w-3.5" />
-                  System Design: {record.linkedSystemDesignId}
-                </span>
-              )}
-            </div>
-
-            {/* Right-aligned Actions */}
-            <div className="flex items-center gap-2">
+            {/* Right: Actions */}
+            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
               <ErpButton
                 variant="outline"
                 size="sm"
                 onClick={() => saveDraftMutation.mutate(formInput)}
                 disabled={saveDraftMutation.isPending}
-                className="gap-1.5"
+                className="gap-1.5 text-xs font-medium bg-white dark:bg-slate-800 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-700"
               >
-                <Save className="h-4 w-4" />
+                <Save className="h-3.5 w-3.5" />
                 <span>{saveDraftMutation.isPending ? "Saving..." : "Save Draft"}</span>
               </ErpButton>
 
@@ -347,9 +303,9 @@ export function PrdFormPage({
                   variant="primary"
                   size="sm"
                   onClick={() => setShowReviewDecisionModal(true)}
-                  className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+                  className="gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs font-semibold"
                 >
-                  <Award className="h-4 w-4" />
+                  <Award className="h-3.5 w-3.5" />
                   <span>Committee Review</span>
                 </ErpButton>
               ) : (
@@ -358,66 +314,124 @@ export function PrdFormPage({
                   size="sm"
                   onClick={() => submitMutation.mutate()}
                   disabled={submitMutation.isPending}
-                  className="gap-1.5"
+                  className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs font-semibold"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-3.5 w-3.5" />
                   <span>Submit for Review</span>
                 </ErpButton>
               )}
 
-              <button
-                type="button"
-                className="p-1.5 text-muted-foreground hover:text-foreground rounded-lg border border-border bg-background hover:bg-muted"
-                title="Overflow Menu"
-              >
-                <MoreHorizontal className="h-4 w-4" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-8 w-8 bg-white dark:bg-slate-800 shadow-2xs">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 text-xs shadow-lg">
+                  <DropdownMenuItem onClick={() => setShowProductModal(true)} className="gap-2 cursor-pointer">
+                    <Zap className="h-4 w-4 text-emerald-600" />
+                    View Linked Product
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowRoadmapModal(true)} className="gap-2 cursor-pointer">
+                    <Map className="h-4 w-4 text-blue-600" />
+                    View Linked Roadmap
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowReleaseModal(true)} className="gap-2 cursor-pointer">
+                    <Layers className="h-4 w-4 text-amber-600" />
+                    View Linked Release
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => {
+                    toast.success("Printing PRD Report...");
+                    window.print();
+                  }} className="gap-2 cursor-pointer">
+                    <Printer className="h-4 w-4 text-slate-600" />
+                    Print / Export PDF
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success("PRD link copied to clipboard!");
+                  }} className="gap-2 cursor-pointer">
+                    <Share2 className="h-4 w-4 text-slate-600" />
+                    Share PRD Link
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 
-          {/* Workflow Stage Progress Bar */}
-          <div className="pt-3 border-t border-border/50">
-            <div className="grid grid-cols-4 gap-2">
-              {record.stages.map((stg, idx) => {
-                const stageNum = idx + 1;
-                return (
-                  <button
-                    key={stg.stage}
-                    type="button"
-                    onClick={() => advanceStageMutation.mutate(stg.stage)}
-                    className={cn(
-                      "flex items-center gap-2 p-2.5 rounded-lg border text-left transition-all text-xs",
-                      stg.active
-                        ? "border-primary bg-primary/10 text-primary font-semibold shadow-xs"
-                        : stg.completed
-                        ? "border-emerald-500/40 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400"
-                        : "border-border/60 bg-muted/30 text-muted-foreground hover:bg-muted/60"
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold",
-                        stg.active
-                          ? "bg-primary text-primary-foreground"
-                          : stg.completed
-                          ? "bg-emerald-500 text-white"
-                          : "bg-muted-foreground/30 text-muted-foreground"
-                      )}
-                    >
-                      {stg.completed ? "✓" : stageNum}
-                    </span>
-                    <div className="truncate">
-                      <div className="truncate font-medium">{stg.label}</div>
-                      {stg.completedAt && (
-                        <div className="text-[10px] opacity-75">Done {stg.completedAt}</div>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
+          {/* BOTTOM ROW: Key-Value Structured Metadata Ribbon */}
+          <div className="px-4 py-2.5 bg-white dark:bg-slate-900 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 text-xs divide-y sm:divide-y-0 sm:divide-x divide-border/60">
+            {/* Linked Product */}
+            <div className="flex flex-col gap-0.5 sm:pr-2">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Zap className="h-3 w-3 text-emerald-500" /> Linked Product
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowProductModal(true)}
+                className="font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+              >
+                <span className="truncate">{formInput.linkedProductName}</span>
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+              </button>
+            </div>
+
+            {/* Linked Roadmap */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Map className="h-3 w-3 text-blue-500" /> Linked Roadmap
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowRoadmapModal(true)}
+                className="font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+              >
+                <span className="truncate">{formInput.linkedRoadmapId}</span>
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+              </button>
+            </div>
+
+            {/* Linked Release */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Layers className="h-3 w-3 text-amber-500" /> Linked Release
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowReleaseModal(true)}
+                className="font-medium text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+              >
+                <span className="truncate">{formInput.linkedReleaseName}</span>
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+              </button>
+            </div>
+
+            {/* Business Unit */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Building2 className="h-3 w-3 text-slate-400" /> Business Unit
+              </span>
+              <span className="font-semibold text-foreground truncate">{formInput.businessUnit}</span>
+            </div>
+
+            {/* Product Owner */}
+            <div className="flex flex-col gap-0.5 sm:px-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <User className="h-3 w-3 text-slate-400" /> Product Owner
+              </span>
+              <span className="font-semibold text-foreground truncate">{formInput.productOwnerName}</span>
+            </div>
+
+            {/* Planned Release */}
+            <div className="flex flex-col gap-0.5 sm:pl-2 pt-2 sm:pt-0">
+              <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                <Calendar className="h-3 w-3 text-slate-400" /> Planned Release
+              </span>
+              <span className="font-medium text-slate-600 dark:text-slate-400 truncate">{formInput.plannedReleaseDate}</span>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* ========================================================================= */}
         {/* TAB CONTROLS & OVERVIEW TAB CONTENT                                       */}
@@ -453,9 +467,7 @@ export function PrdFormPage({
               <div className="lg:col-span-7 card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
                 <div className="flex items-center justify-between border-b border-border/50 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                      1
-                    </span>
+                    <Compass className="h-4 w-4 text-blue-600" />
                     <h3 className="text-base font-bold text-foreground">Product Overview</h3>
                   </div>
                   <span className="text-xs text-muted-foreground">Inherited from {formInput.linkedRoadmapId}</span>
@@ -526,9 +538,7 @@ export function PrdFormPage({
                 {/* PANEL 2: Quick Info */}
                 <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-3 shadow-sm">
                   <div className="flex items-center gap-2 border-b border-border/50 pb-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                      2
-                    </span>
+                    <Info className="h-4 w-4 text-blue-600" />
                     <h3 className="text-sm font-bold text-foreground">Quick Info</h3>
                   </div>
 
@@ -563,9 +573,7 @@ export function PrdFormPage({
                 {/* PANEL 3: PRD Readiness Overview */}
                 <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
                   <div className="flex items-center gap-2 border-b border-border/50 pb-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                      3
-                    </span>
+                    <Target className="h-4 w-4 text-blue-600" />
                     <h3 className="text-sm font-bold text-foreground">PRD Readiness Overview</h3>
                   </div>
 
@@ -608,65 +616,40 @@ export function PrdFormPage({
               </div>
             </div>
 
-            {/* SECOND ROW: PANEL 4 (Key Highlights) & PANEL 5 (AI PRD Quality Score) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              {/* PANEL 4: Key Highlights (Left 6 Cols) */}
-              <div className="lg:col-span-6 card-soft p-5 bg-card border border-border/80 rounded-xl space-y-3 shadow-sm">
-                <div className="flex items-center gap-2 border-b border-border/50 pb-2">
-                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                    4
-                  </span>
-                  <h3 className="text-base font-bold text-foreground">Key Highlights</h3>
+            {/* SECOND ROW: PANEL 5 (AI PRD Quality Score) */}
+            <div className="card-soft p-5 bg-gradient-to-br from-primary/5 via-card to-card border border-primary/20 rounded-xl space-y-4 shadow-sm">
+              <div className="flex items-center justify-between border-b border-primary/10 pb-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  <h3 className="text-base font-bold text-foreground">AI PRD Quality Score</h3>
                 </div>
+                <button type="button" onClick={() => setActiveTab("ai_assessment")} className="text-xs font-semibold text-primary hover:underline">
+                  View AI Insights →
+                </button>
+              </div>
 
-                <div className="space-y-2 text-xs">
-                  {activeHighlights.map((hl, idx) => (
-                    <div key={idx} className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-800 dark:text-emerald-300 font-medium flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>{hl}</span>
-                    </div>
-                  ))}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                <div className="p-2 rounded bg-card border text-center">
+                  <span className="text-[10px] text-muted-foreground block">Completeness</span>
+                  <span className="font-bold text-primary">{activeAiQuality.requirementCompleteness}%</span>
+                </div>
+                <div className="p-2 rounded bg-card border text-center">
+                  <span className="text-[10px] text-muted-foreground block">Consistency</span>
+                  <span className="font-bold text-emerald-600">{activeAiQuality.requirementConsistency}%</span>
+                </div>
+                <div className="p-2 rounded bg-card border text-center">
+                  <span className="text-[10px] text-muted-foreground block">Risk Assess</span>
+                  <span className="font-bold text-amber-600">{activeAiQuality.riskAssessment}%</span>
+                </div>
+                <div className="p-2 rounded bg-card border text-center">
+                  <span className="text-[10px] text-muted-foreground block">AI Confidence</span>
+                  <span className="font-bold text-purple-600">{activeAiQuality.aiConfidenceScore}%</span>
                 </div>
               </div>
 
-              {/* PANEL 5: AI PRD Quality Score (Right 6 Cols) */}
-              <div className="lg:col-span-6 card-soft p-5 bg-gradient-to-br from-primary/5 via-card to-card border border-primary/20 rounded-xl space-y-4 shadow-sm">
-                <div className="flex items-center justify-between border-b border-primary/10 pb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                      5
-                    </span>
-                    <Sparkles className="h-4 w-4 text-primary" />
-                    <h3 className="text-base font-bold text-foreground">AI PRD Quality Score</h3>
-                  </div>
-                  <button type="button" onClick={() => setActiveTab("ai_assessment")} className="text-xs font-semibold text-primary hover:underline">
-                    View AI Insights →
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                  <div className="p-2 rounded bg-card border text-center">
-                    <span className="text-[10px] text-muted-foreground block">Completeness</span>
-                    <span className="font-bold text-primary">{activeAiQuality.requirementCompleteness}%</span>
-                  </div>
-                  <div className="p-2 rounded bg-card border text-center">
-                    <span className="text-[10px] text-muted-foreground block">Consistency</span>
-                    <span className="font-bold text-emerald-600">{activeAiQuality.requirementConsistency}%</span>
-                  </div>
-                  <div className="p-2 rounded bg-card border text-center">
-                    <span className="text-[10px] text-muted-foreground block">Risk Assess</span>
-                    <span className="font-bold text-amber-600">{activeAiQuality.riskAssessment}%</span>
-                  </div>
-                  <div className="p-2 rounded bg-card border text-center">
-                    <span className="text-[10px] text-muted-foreground block">AI Confidence</span>
-                    <span className="font-bold text-purple-600">{activeAiQuality.aiConfidenceScore}%</span>
-                  </div>
-                </div>
-
-                <p className="text-xs text-muted-foreground italic leading-snug">
-                  "{activeAiQuality.aiInsightsSummary}"
-                </p>
-              </div>
+              <p className="text-xs text-muted-foreground italic leading-snug">
+                "{activeAiQuality.aiInsightsSummary}"
+              </p>
             </div>
 
             {/* THIRD ROW: TABLES (PANEL 6, PANEL 7, PANEL 8, PANEL 9) */}
@@ -676,9 +659,7 @@ export function PrdFormPage({
               <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
                 <div className="flex items-center justify-between border-b border-border/50 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                      6
-                    </span>
+                    <ClipboardCheck className="h-4 w-4 text-blue-600" />
                     <h3 className="text-base font-bold text-foreground">Recent Business Requirements</h3>
                   </div>
                   <button type="button" onClick={() => setActiveTab("business_reqs")} className="text-xs font-semibold text-primary hover:underline">
@@ -716,9 +697,7 @@ export function PrdFormPage({
               <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
                 <div className="flex items-center justify-between border-b border-border/50 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                      7
-                    </span>
+                    <Layers className="h-4 w-4 text-blue-600" />
                     <h3 className="text-base font-bold text-foreground">Top Functional Requirements</h3>
                   </div>
                   <button type="button" onClick={() => setActiveTab("functional_reqs")} className="text-xs font-semibold text-primary hover:underline">
@@ -758,9 +737,7 @@ export function PrdFormPage({
               <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
                 <div className="flex items-center justify-between border-b border-border/50 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                      8
-                    </span>
+                    <Calendar className="h-4 w-4 text-blue-600" />
                     <h3 className="text-base font-bold text-foreground">Key Milestones</h3>
                   </div>
                   <button type="button" onClick={() => setActiveTab("summary")} className="text-xs font-semibold text-primary hover:underline">
@@ -792,9 +769,7 @@ export function PrdFormPage({
               <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
                 <div className="flex items-center justify-between border-b border-border/50 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                      9
-                    </span>
+                    <ShieldAlert className="h-4 w-4 text-amber-600" />
                     <h3 className="text-base font-bold text-foreground">Risk Summary</h3>
                   </div>
                   <button type="button" onClick={() => setActiveTab("risk_deps")} className="text-xs font-semibold text-primary hover:underline">
@@ -844,9 +819,7 @@ export function PrdFormPage({
             <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
               <div className="flex items-center justify-between border-b border-border/50 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                    10
-                  </span>
+                  <Paperclip className="h-4 w-4 text-blue-600" />
                   <h3 className="text-base font-bold text-foreground">Attachments & Reference Artifacts</h3>
                 </div>
                 <ErpButton variant="outline" size="sm" className="gap-1 text-xs">
@@ -877,9 +850,7 @@ export function PrdFormPage({
             <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
               <div className="flex items-center justify-between border-b border-border/50 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                    11
-                  </span>
+                  <ShieldCheck className="h-4 w-4 text-blue-600" />
                   <h3 className="text-base font-bold text-foreground">Executive Review & Approval Matrix</h3>
                 </div>
                 <span className="text-xs text-muted-foreground">6 Key Sign-Off Roles</span>
@@ -971,9 +942,7 @@ export function PrdFormPage({
             <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
               <div className="flex items-center justify-between border-b border-border/50 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                    12
-                  </span>
+                  <History className="h-4 w-4 text-blue-600" />
                   <h3 className="text-base font-bold text-foreground">System Information & Audit Trail</h3>
                 </div>
                 <span className="text-xs text-muted-foreground">Version {record.version}</span>

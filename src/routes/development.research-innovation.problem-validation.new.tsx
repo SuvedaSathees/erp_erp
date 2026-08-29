@@ -708,7 +708,7 @@ function ProblemValidationFormPage() {
   return (
     <AppShell
       title="Problem Validation"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Problem Validation"
       description="Validate problems against customer, market, technical, and business evidence."
       tabs={<InnovationAreaTabs sub={<ProblemValidationTabBar />} />}
     >
@@ -1709,44 +1709,13 @@ function ProblemValidationFormPage() {
               )}
             </div>
 
-            <div className="card-soft p-5">
-              <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                Quick Actions
-              </h4>
-              <div className="space-y-1">
-                <QuickAction
-                  icon={UploadCloud}
-                  label="Upload Evidence"
-                  onClick={() => fileRef.current?.click()}
-                />
-                <QuickAction
-                  icon={UserPlus}
-                  label="Add Customer Interview"
-                  onClick={() => toast.message("Interview capture isn't wired to a backend yet.")}
-                />
-                <QuickAction
-                  icon={FilePlus2}
-                  label="Add Survey Results"
-                  onClick={() => toast.message("Survey import isn't wired to a backend yet.")}
-                />
-                <QuickAction icon={Sparkles} label="Generate AI Report" onClick={doGenerateAI} />
-                <QuickAction
-                  icon={FlaskConical}
-                  label="Create Feasibility Study"
-                  onClick={() =>
-                    toast.success("Feasibility Study is auto-created when the record is Validated.")
-                  }
-                  disabled={status !== "validated"}
-                />
-              </div>
-              <input
-                ref={fileRef}
-                type="file"
-                multiple
-                className="hidden"
-                onChange={(e) => onFiles(e.target.files)}
-              />
-            </div>
+            <input
+              ref={fileRef}
+              type="file"
+              multiple
+              className="hidden"
+              onChange={(e) => onFiles(e.target.files)}
+            />
 
             <div className="card-soft p-5">
               <div className="mb-2 flex items-center justify-between">

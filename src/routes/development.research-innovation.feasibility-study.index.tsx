@@ -91,7 +91,7 @@ function FeasibilityRegisterPage() {
   return (
     <AppShell
       title="Feasibility Study"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Feasibility Study"
       description="Assess technical, market, financial, and operational feasibility."
       tabs={<InnovationAreaTabs sub={<FeasibilityStudyPageTabBar />} />}
       topbarActions={newButton}

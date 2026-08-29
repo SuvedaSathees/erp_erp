@@ -1,0 +1,4 @@
+{
+  "routeFileIgnorePrefix": "-",
+  "routeFileIgnorePattern": "development\\.(product-development|business-development)\\..*\\.index\\.tsx"
+}

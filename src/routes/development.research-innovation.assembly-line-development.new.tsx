@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, type ReactNode } from "react";
 import { toast } from "sonner";
 import {
   Save,
@@ -278,7 +278,7 @@ export function AssemblyLineDevelopmentNewPage({
   return (
     <AppShell
       title="Assembly Line Development"
-      breadcrumb={breadcrumb ?? "Research & Innovation Development"}
+      breadcrumb={breadcrumb ?? "Development > Research & Innovation > Assembly Line Development"}
       description="Balance assembly lines, takt time distribution, ergonomic workstations, and automated line feeds."
       tabs={tabs ?? <InnovationAreaTabs sub={<AssemblyLineDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
     >
@@ -393,7 +393,7 @@ export function AssemblyLineDevelopmentNewPage({
               <div>
                 <span className="text-muted-foreground block text-[11px]">Assembly Engineer</span>
                 <span className="font-medium text-slate-900 dark:text-slate-100 flex items-center gap-1">
-                  <img src={record.assemblyLineEngineer.avatar} className="h-4 w-4 rounded-full" alt="owner" />
+                  <User className="h-3.5 w-3.5 text-muted-foreground" />
                   {record.assemblyLineEngineer.name}
                 </span>
               </div>
@@ -430,10 +430,7 @@ export function AssemblyLineDevelopmentNewPage({
                 <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
                   <div className="text-center">
                     <span className="text-2xl font-black tracking-tight text-primary dark:text-blue-400">
-                      {record.overallAssemblyReadiness}
-                    </span>
-                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                      / 100
+                      {record.overallAssemblyReadiness}%
                     </span>
                   </div>
                 </div>
@@ -670,21 +667,19 @@ export function AssemblyLineDevelopmentNewPage({
                     {/* Layout diagram preview */}
                     <div className="md:col-span-7">
                       <Card className="border-border/80 shadow-xs overflow-hidden">
-                        <div className="relative h-64 bg-slate-100 dark:bg-slate-950 overflow-hidden flex items-center justify-center group">
-                          <img
-                            src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&auto=format&fit=crop&q=80"
-                            alt="layout diagram preview"
-                            className="h-full w-full object-cover opacity-80 group-hover:scale-102 transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <Button
-                              size="sm"
-                              className="bg-white text-slate-950 hover:bg-slate-100 border text-xs"
-                              onClick={() => setSelectedDiagram("https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&auto=format&fit=crop&q=80")}
-                            >
-                              <Maximize2 className="h-3.5 w-3.5 mr-1" /> Full Layout Preview
-                            </Button>
+                        <div className="relative h-64 bg-slate-950 text-white flex flex-col items-center justify-center p-6 gap-3 group">
+                          <div className="h-14 w-14 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30">
+                            <Layers className="h-7 w-7" />
                           </div>
+                          <span className="text-sm font-bold text-slate-100">Cellular Assembly Line Layout CAD Blueprint</span>
+                          <span className="text-xs text-slate-400 font-mono">Drawing No: DWG-AL-702 • 12 Workstations • Conveyor Flow</span>
+                          <Button
+                            size="sm"
+                            className="bg-white text-slate-950 hover:bg-slate-100 border text-xs mt-1"
+                            onClick={() => setSelectedDiagram("assembly-layout-blueprint")}
+                          >
+                            <Maximize2 className="h-3.5 w-3.5 mr-1" /> Full Layout Specification
+                          </Button>
                         </div>
                         <CardContent className="p-4 space-y-1 text-xs">
                           <span className="text-muted-foreground block text-[10px]">Layout Design Score</span>
@@ -1089,8 +1084,7 @@ export function AssemblyLineDevelopmentNewPage({
                       <CardContent className="p-4 text-center space-y-3">
                         <div className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
                           <div className="text-center">
-                            <span className="text-2xl font-black text-primary dark:text-blue-400">{record.overallAssemblyReadiness}</span>
-                            <span className="block text-[9px] font-bold text-muted-foreground">/ 100</span>
+                            <span className="text-2xl font-black text-primary dark:text-blue-400">{record.overallAssemblyReadiness}%</span>
                           </div>
                         </div>
                         <span className="text-[11px] text-muted-foreground block">
@@ -1216,13 +1210,9 @@ export function AssemblyLineDevelopmentNewPage({
                             {record.reviewers.map((rev: AssemblyLineReviewer) => (
                               <div key={rev.id} className="flex items-center justify-between p-2 rounded-lg border bg-slate-50/50 dark:bg-slate-800/40">
                                 <div className="flex items-center gap-2 min-w-0">
-                                  {rev.avatar ? (
-                                    <img src={rev.avatar} className="h-8 w-8 rounded-full object-cover" alt="avatar" />
-                                  ) : (
-                                    <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[11px]">
-                                      {rev.person.split(" ").map(w => w[0]).join("")}
-                                    </div>
-                                  )}
+                                  <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 border flex items-center justify-center font-bold text-[11px] text-primary">
+                                    {rev.person.split(" ").map(w => w[0]).join("")}
+                                  </div>
                                   <div className="min-w-0">
                                     <span className="block font-bold text-[11px] text-slate-900 dark:text-white truncate">{rev.person}</span>
                                     <span className="block text-[9px] text-muted-foreground truncate">{rev.role}</span>
@@ -1349,84 +1339,36 @@ export function AssemblyLineDevelopmentNewPage({
                 <CardContent className="p-5 text-center space-y-4">
                   <div className="relative mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
                     <div>
-                      <span className="text-3xl font-black text-primary dark:text-blue-400">{record.overallAssemblyReadiness}</span>
-                      <span className="block text-[10px] font-bold text-muted-foreground">/ 100</span>
+                      <span className="text-3xl font-black text-primary dark:text-blue-400">{record.overallAssemblyReadiness}%</span>
                     </div>
                   </div>
 
                   <div className="space-y-2 text-left text-xs border-t pt-3">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Layout Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.layoutDesignScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.layoutDesignScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Workstation Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.workstationReadinessScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.workstationReadinessScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Validation Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.validationScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.validationScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Automation Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.automationScore} / 100</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{record.automationScore}%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Performance Score</span>
-                      <span className="font-bold text-primary">{record.performanceScore} / 100</span>
+                      <span className="font-bold text-primary">{record.performanceScore}%</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Key Highlights */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Key Highlights</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 space-y-3.5 text-xs">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-[11px]">Takt Time achieved: 90 sec.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-[11px]">Pilot Run completed successfully.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Sparkles className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-[11px]">AI Optimization available: 6% reduction.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-300 font-medium text-[11px]">OEE Target reached: 82.6%.</span>
-                  </div>
-                </CardContent>
-              </Card>
 
-              {/* Quick Actions */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 space-y-2 text-xs">
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("balancing")} className="w-full justify-start text-xs h-8">
-                    <ClipboardCheck className="h-3.5 w-3.5 mr-2 text-primary" /> Create Pilot Run Plan
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("design")} className="w-full justify-start text-xs h-8">
-                    <FileSpreadsheet className="h-3.5 w-3.5 mr-2 text-emerald-600" /> Upload Assembly Layout
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("workstations")} className="w-full justify-start text-xs h-8">
-                    <FileCheck className="h-3.5 w-3.5 mr-2 text-amber-500" /> Generate Work Instructions
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("balancing")} className="w-full justify-start text-xs h-8">
-                    <SlidersHorizontal className="h-3.5 w-3.5 mr-2 text-rose-500" /> Run Line Balancing
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("performance")} className="w-full justify-start text-xs h-8">
-                    <BarChart3 className="h-3.5 w-3.5 mr-2 text-purple-600" /> View Performance Dashboard
-                  </Button>
-                </CardContent>
-              </Card>
 
               {/* Vertical Timeline */}
               <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
@@ -1491,8 +1433,19 @@ export function AssemblyLineDevelopmentNewPage({
                 <span>Layout Drawing</span>
               </DialogTitle>
             </DialogHeader>
-            <div className="relative h-96 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center">
-              <img src={selectedDiagram} alt="layout drawings" className="h-full w-full object-contain" />
+            <div className="relative h-96 w-full bg-slate-950 rounded-lg flex flex-col items-center justify-center text-white p-6 gap-3 border border-slate-800">
+              <div className="h-16 w-16 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30">
+                <Layers className="h-8 w-8" />
+              </div>
+              <h3 className="text-base font-bold text-slate-100">Cellular Assembly Line Layout Master Blueprint</h3>
+              <p className="text-xs text-slate-400 max-w-md text-center">
+                12 automated and manual workstations, integrated roller conveyors, AGV material delivery paths, and safety light curtains.
+              </p>
+              <div className="flex gap-2 mt-2">
+                <Button size="sm" onClick={() => toast.success("Line layout validated.")}>
+                  <CheckCircle2 className="h-4 w-4 mr-1.5 text-emerald-400" /> Validate Line Clearance
+                </Button>
+              </div>
             </div>
             <DialogFooter>
               <Button size="sm" variant="outline" onClick={() => setSelectedDiagram(null)}>Close</Button>

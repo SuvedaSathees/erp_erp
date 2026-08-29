@@ -81,7 +81,7 @@ function TechScoutingRegisterPage() {
   return (
     <AppShell
       title="Technology Scouting"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Technology Scouting"
       description="Scout, assess, and track emerging technologies."
       tabs={<InnovationAreaTabs sub={<TechScoutingPageTabBar />} />}
       topbarActions={newButton}

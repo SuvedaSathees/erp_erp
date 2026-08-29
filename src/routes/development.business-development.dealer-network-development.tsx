@@ -654,16 +654,14 @@ function DealerNetworkDevelopmentPage() {
           <ScoreGauge label="AI Intelligence Score" score={formData.aiDealerIntelligenceScore} sub="Excellent" size="normal" />
         </div>
 
-        {/* Main Grid: Form Sections (Left 2 Columns) & Executive AI/Health Panels (Right 1 Column) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Multi-Section Form Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Main Form Canvas */}
+        <div className="w-full space-y-6">
 
-            {/* 1. Dealer Network Overview */}
+            {/* Dealer Network Overview */}
             <div id="sec-overview" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" /> 1. Dealer Network Overview
+                  <Building2 className="h-4 w-4 text-primary" /> Dealer Network Overview
                 </h3>
                 <span className="text-xs text-muted-foreground font-medium">Scope & Coverage</span>
               </div>
@@ -791,11 +789,11 @@ function DealerNetworkDevelopmentPage() {
               </div>
             </div>
 
-            {/* 2. Dealer Profile */}
+            {/* Dealer Profile */}
             <div id="sec-dealer-profile" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Store className="h-4 w-4 text-emerald-600" /> 2. Dealer Organization Profile
+                  <Store className="h-4 w-4 text-emerald-600" /> Dealer Organization Profile
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Capability Score: <strong>{formData.dealerCapabilityScore}/100</strong> <MAICWBadge type="C" />
@@ -893,11 +891,11 @@ function DealerNetworkDevelopmentPage() {
               </div>
             </div>
 
-            {/* 3. Dealer Qualification */}
+            {/* Dealer Qualification */}
             <div id="sec-dealer-qualification" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Star className="h-4 w-4 text-purple-600" /> 3. Dealer Qualification & Assessment
+                  <Star className="h-4 w-4 text-purple-600" /> Dealer Qualification & Assessment
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Qualification Score: <strong>{formData.qualificationScore}/100</strong> <MAICWBadge type="C" />
@@ -937,11 +935,11 @@ function DealerNetworkDevelopmentPage() {
               </div>
             </div>
 
-            {/* 4. Commercial Planning */}
+            {/* Commercial Planning */}
             <div id="sec-commercial-planning" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-emerald-600" /> 4. Commercial Planning & Margins
+                  <DollarSign className="h-4 w-4 text-emerald-600" /> Commercial Planning & Margins
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Commercial Score: <strong>{formData.commercialScore}/100</strong> <MAICWBadge type="C" />
@@ -1026,11 +1024,11 @@ function DealerNetworkDevelopmentPage() {
               </div>
             </div>
 
-            {/* 5. Infrastructure & Operations */}
+            {/* Infrastructure & Operations */}
             <div id="sec-operations" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <CheckSquare className="h-4 w-4 text-blue-600" /> 5. Infrastructure & Operations Readiness
+                  <CheckSquare className="h-4 w-4 text-blue-600" /> Infrastructure & Operations Readiness
                 </h3>
                 <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
                   Operational Score: <strong>{formData.operationalReadinessScore}/100</strong> <MAICWBadge type="C" />
@@ -1070,11 +1068,11 @@ function DealerNetworkDevelopmentPage() {
               </div>
             </div>
 
-            {/* 6. Training & Certification */}
+            {/* Training & Certification */}
             <div id="sec-training" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <GraduationCap className="h-4 w-4 text-purple-600" /> 6. Training & Technical Certification
+                  <GraduationCap className="h-4 w-4 text-purple-600" /> Training & Technical Certification
                 </h3>
                 <span className="text-xs font-semibold text-purple-600 flex items-center gap-1">
                   Training Score: <strong>{formData.trainingScore}/100</strong> <MAICWBadge type="C" />
@@ -1114,11 +1112,11 @@ function DealerNetworkDevelopmentPage() {
               </div>
             </div>
 
-            {/* 7. Performance Management */}
+            {/* Performance Management */}
             <div id="sec-performance" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-emerald-600" /> 7. Performance Management Metrics
+                  <BarChart3 className="h-4 w-4 text-emerald-600" /> Performance Management Metrics
                 </h3>
                 <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
                   Performance Score: <strong>{formData.performanceScore}/100</strong> <MAICWBadge type="C" />
@@ -1158,141 +1156,54 @@ function DealerNetworkDevelopmentPage() {
               </div>
             </div>
 
-            {/* 8. AI Dealer Intelligence */}
-            <div id="sec-ai-intelligence" className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/20">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> 8. AI Dealer Intelligence
-                </h3>
-                <span className="rounded-full bg-primary/10 border border-primary/20 px-3 py-0.5 text-xs font-bold text-primary">
-                  AI Intelligence Score: {formData.aiDealerIntelligenceScore}/100
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Store className="h-3.5 w-3.5 text-emerald-600" /> AI Dealer Suitability
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiDealerSuitability}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 text-blue-600" /> AI Territory Recommendation
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiTerritoryRecommendation}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-purple-600" /> AI Revenue Forecast
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiRevenueForecast}</p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <TrendingUp className="h-3.5 w-3.5" /> AI Performance Prediction
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">{formData.aiPerformancePrediction}</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-primary/10 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all"
-              >
-                <Sparkles className="h-4 w-4" /> Open Interactive AI Dealer Intelligence Workbench <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* 9. Dealer Network Summary */}
+            {/* Dealer Network Summary */}
             <div id="sec-summary" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Award className="h-4 w-4 text-emerald-600" /> 9. Dealer Summary & Executive Recommendation
+                  <Award className="h-4 w-4 text-emerald-600" /> Dealer Network Summary & Strategic Decision
                 </h3>
-                <span className="text-xs font-bold text-emerald-600">Overall Score: {computedOverallScore}/100</span>
+                <span className="text-xs font-bold text-emerald-600">Dealer Network Rating: {computedOverallScore}/100 (Tier 1)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Capability Score</span>
-                    <span className="font-mono font-bold">{formData.dealerCapabilityScore} / 100</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="rounded-xl border border-border bg-muted/10 p-4 space-y-2 text-xs">
+                  <div className="font-bold text-foreground flex items-center justify-between">
+                    <span>Executive Dealership Status</span>
+                    <span className="text-emerald-600 font-bold">Authorized & Certified</span>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${formData.dealerCapabilityScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Qualification Score</span>
-                    <span className="font-mono font-bold">{formData.qualificationScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${formData.qualificationScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Commercial Score</span>
-                    <span className="font-mono font-bold">{formData.commercialScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-purple-600 rounded-full" style={{ width: `${formData.commercialScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>Operational Score</span>
-                    <span className="font-mono font-bold">{formData.operationalReadinessScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full" style={{ width: `${formData.operationalReadinessScore}%` }} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span>AI Intelligence Score</span>
-                    <span className="font-mono font-bold">{formData.aiDealerIntelligenceScore} / 100</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${formData.aiDealerIntelligenceScore}%` }} />
-                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Dealer network covers 68.5% territory footprint with 96% SLA compliance and ₹12.5 Cr annual projected sales.
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-3">
-                  <ScoreGauge label="Overall Dealer Score" score={computedOverallScore} sub="Very Good" size="large" />
-
-                  <div className="w-full">
-                    <label className="text-[11px] font-bold text-muted-foreground block mb-1">Executive Recommendation</label>
-                    <select
-                      value={formData.recommendation}
-                      onChange={(e) => updateField("recommendation", e.target.value)}
-                      className="w-full rounded-lg border border-emerald-500/30 bg-emerald-950/20 px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none"
-                    >
-                      {[
-                        "Approve Dealer",
-                        "Improve Infrastructure",
-                        "Complete Training",
-                        "Increase Inventory",
-                        "Revise Commercial Terms",
-                        "Expand Territory",
-                        "Proceed to Dealer Launch",
-                      ].map((rec) => (
-                        <option key={rec} value={rec}>{rec}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <p className="text-[11px] text-muted-foreground font-medium italic">{formData.overallRemark}</p>
+                <div className="flex flex-col items-center justify-center p-4 border border-border rounded-xl bg-muted/20 text-center space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Executive Recommendation <MAICWBadge type="M" /></label>
+                  <select
+                    value={formData.recommendation}
+                    onChange={(e) => updateField("recommendation", e.target.value)}
+                    className="w-full rounded-lg border border-emerald-500/30 bg-card px-3 py-2 text-xs font-bold text-emerald-600 text-center focus:outline-none cursor-pointer"
+                  >
+                    {[
+                      "Approve Dealer",
+                      "Improve Infrastructure",
+                      "Complete Training",
+                      "Increase Inventory",
+                      "Revise Commercial Terms",
+                      "Expand Territory",
+                      "Proceed to Dealer Launch",
+                    ].map((rec) => (
+                      <option key={rec} value={rec}>{rec}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* 10. Attachments */}
+            {/* Attachments */}
             <div id="sec-attachments" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-primary" /> 10. Dealer Attachments & Artifacts
+                  <FileText className="h-4 w-4 text-primary" /> Dealer Attachments & Artifacts
                 </h3>
                 <button
                   type="button"
@@ -1347,11 +1258,11 @@ function DealerNetworkDevelopmentPage() {
               </div>
             </div>
 
-            {/* 11. Review & Approval */}
+            {/* Review & Approval */}
             <div id="sec-review-approval" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" /> 11. Governance & Executive Review Board Matrix
+                  <ShieldCheck className="h-4 w-4 text-primary" /> Governance & Executive Review Board Matrix
                 </h3>
                 <span className="text-xs font-semibold text-primary">8 Governance Roles</span>
               </div>
@@ -1416,11 +1327,11 @@ function DealerNetworkDevelopmentPage() {
               </div>
             </div>
 
-            {/* 12. Activity History */}
+            {/* Activity History */}
             <div id="sec-activity-history" className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" /> 12. Activity History Log
+                  <History className="h-4 w-4 text-primary" /> Activity History Log
                 </h3>
                 <span className="text-xs font-semibold text-muted-foreground">{activityHistory.length} Log Entries</span>
               </div>
@@ -1443,180 +1354,6 @@ function DealerNetworkDevelopmentPage() {
               </div>
             </div>
 
-          </div>
-
-          {/* Right Column: Executive Panels */}
-          <div className="space-y-6">
-
-            {/* AI Insights Snapshot Panel */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-primary/10">
-                <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" /> Insights Snapshot
-                </h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">AI Score 89</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <Store className="h-3.5 w-3.5 text-blue-600" /> High Potential Dealer
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    This dealer has strong growth potential with high market coverage.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <DollarSign className="h-3.5 w-3.5 text-emerald-600" /> Revenue Opportunity
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Potential revenue of ₹ 12.5 Cr in next 24 months.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-indigo-600">
-                    <Zap className="h-3.5 w-3.5" /> Inventory Optimization
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    AI recommends increasing inventory for Top 5 EV models.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-border bg-card p-3 space-y-1">
-                  <span className="font-bold text-foreground flex items-center gap-1.5 text-emerald-600">
-                    <TrendingUp className="h-3.5 w-3.5" /> Performance Outlook
-                  </span>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Expected performance score improvement of 15% in next 12 months.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAiDrawerOpen(true)}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-colors"
-              >
-                View Full AI Analysis <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* Key KPIs Snapshot Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500" /> Key KPIs Snapshot
-                </h3>
-                <span className="text-xs font-mono text-muted-foreground">Real-time</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Projected Revenue</span>
-                    <Sparkline data={[8.5, 9.8, 11.2, 12.5]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">₹ 12.5 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Annual Sales Target</span>
-                    <Sparkline data={[7.0, 8.0, 9.0, 10.0]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">₹ 10.0 Cr</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Market Coverage</span>
-                    <Sparkline data={[45, 54, 62, 68.5]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-indigo-600 font-mono block">68.5 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Performance Score</span>
-                    <Sparkline data={[72, 75, 78, 81]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">81 / 100</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">SLA Achievement</span>
-                    <Sparkline data={[90, 92, 94, 96]} color="#10b981" />
-                  </div>
-                  <span className="text-base font-bold text-emerald-600 font-mono block">96 %</span>
-                </div>
-
-                <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-semibold">Customer Rating</span>
-                    <Sparkline data={[3.9, 4.1, 4.2, 4.3]} color="#2563eb" />
-                  </div>
-                  <span className="text-base font-bold text-foreground font-mono block">4.3 / 5</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => showToast("info", "KPI Dashboard", "Navigating to Dealer KPI Dashboard...")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:underline pt-1"
-              >
-                View KPI Dashboard <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            {/* System Audit Information Panel */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-border font-bold text-foreground">
-                <span>System Information</span>
-                <span className="text-[10px] text-muted-foreground">Audit Log</span>
-              </div>
-
-              <div className="space-y-1.5 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Created By:</span>
-                  <span className="font-semibold text-foreground">{formData.dealerDevelopmentManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Created Date:</span>
-                  <span className="font-semibold text-foreground">05 May 2024 09:30 AM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified By:</span>
-                  <span className="font-semibold text-foreground">{formData.dealerDevelopmentManager}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last Modified Date:</span>
-                  <span className="font-semibold text-foreground">{formData.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Workflow Stage:</span>
-                  <span className="font-semibold text-primary">{formData.workflowStage}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Version:</span>
-                  <span className="font-semibold text-foreground">v{formData.version}</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <button type="button" onClick={() => showToast("info", "Audit Trail", "Displaying system audit log...")} className="text-primary hover:underline font-semibold">
-                  View Audit Trail
-                </button>
-                <button type="button" onClick={() => showToast("info", "Workflow Logs", "Displaying system workflow state transitions...")} className="text-muted-foreground hover:text-foreground">
-                  View History
-                </button>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
 
@@ -1648,7 +1385,7 @@ function DealerNetworkDevelopmentPage() {
               </div>
               <div>
                 <span className="text-muted-foreground font-medium block">Annual Sales Target</span>
-                <span className="text-lg font-bold text-foreground font-mono">₹ 10.00 Cr</span>
+                <span className="text-lg font-bold text-foreground">₹ 10.00 Cr</span>
               </div>
               <div>
                 <span className="text-muted-foreground font-medium block">Recommendation</span>
@@ -1658,21 +1395,21 @@ function DealerNetworkDevelopmentPage() {
 
             <div className="space-y-4 text-xs">
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">1. Dealer Profile & Qualification</h4>
+                <h4 className="font-bold text-foreground">Dealer Profile & Qualification</h4>
                 <p className="text-muted-foreground"><strong>Dealer:</strong> GreenRide Motors Pvt. Ltd. | <strong>Branches:</strong> 12 | <strong>Brands:</strong> Hero, TVS, Bajaj</p>
                 <p className="text-muted-foreground mt-1"><strong>Capability Score:</strong> 82/100 | <strong>Qualification Score:</strong> 85/100 (Financial & Tech Strong)</p>
               </div>
 
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">2. Commercial Structure & Infrastructure</h4>
+                <h4 className="font-bold text-foreground">Commercial Structure & Infrastructure</h4>
                 <p className="text-muted-foreground"><strong>Margin:</strong> 18.00% | <strong>Credit Limit:</strong> ₹ 1.50 Cr | <strong>Payment Terms:</strong> Net 30</p>
                 <p className="text-muted-foreground mt-1"><strong>Infrastructure:</strong> Showroom, Warehouse, Service Center, Demo Equipment & ERP Integration ready.</p>
               </div>
 
               <div className="border border-border p-4 rounded-xl space-y-1">
-                <h4 className="font-bold text-foreground">3. Training & Performance Metrics</h4>
+                <h4 className="font-bold text-foreground">Training & Performance Metrics</h4>
                 <p className="text-muted-foreground"><strong>Training:</strong> Sales & Technical training complete, Authorized Service Center certified (84/100).</p>
-                <p className="text-muted-foreground mt-1"><strong>Performance:</strong> Lead Conv. 22.5%, SLA Achievement 96%, Rating ★★★★☆ (4 Star).</p>
+                <p className="text-muted-foreground mt-1"><strong>Performance:</strong> Lead Conv. 22.5%, SLA Achievement 96%, Rating 4 Star.</p>
               </div>
             </div>
 

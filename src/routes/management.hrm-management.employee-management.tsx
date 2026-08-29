@@ -3,6 +3,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Users,
   Target,
@@ -64,7 +72,6 @@ import {
   Mail,
   Phone,
   Video,
-  UserCheck2,
   ShieldAlert,
   HelpCircle,
   Eye,
@@ -89,7 +96,6 @@ import {
   Cell,
   Tooltip as RechartsTooltip,
 } from "recharts";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/management/hrm-management/employee-management")({
   head: () => ({
@@ -197,6 +203,39 @@ const ASSIGNED_ASSETS = [
 export default function EmployeeManagementPage() {
   const [profile, setProfile] = useState<EmployeeProfile>(INITIAL_PROFILE);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isNewEmployeeModalOpen, setIsNewEmployeeModalOpen] = useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [isIdCardModalOpen, setIsIdCardModalOpen] = useState(false);
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
+
+  // New Employee Form State
+  const [newEmployeeForm, setNewEmployeeForm] = useState({
+    name: "",
+    designation: "Software Engineer",
+    department: "Engineering",
+    officialEmail: "",
+    mobile: "",
+    location: "Coimbatore",
+    joiningDate: new Date().toISOString().slice(0, 10),
+    annualCTC: "₹ 9,50,000",
+    employmentType: "Full Time",
+    reportingManager: "Arun Kumar",
+    currentGrade: "G3",
+    businessUnit: "Product Development",
+  });
+
+  // Send Email Form State
+  const [emailForm, setEmailForm] = useState({
+    recipient: INITIAL_PROFILE.officialEmail,
+    subject: `Employee Master Record - [${INITIAL_PROFILE.employeeId}] ${INITIAL_PROFILE.name}`,
+    message: "Dear Team,\n\nPlease find attached the official 360° Employee Master Record dossier including employment identity, organization hierarchy, compensation, compliance, and asset allocations.\n\nBest regards,\nHR Operations Team",
+    includeCompensation: true,
+    includeAssets: true,
+  });
+
+  // Edit Profile Form State
+  const [editForm, setEditForm] = useState<EmployeeProfile>(INITIAL_PROFILE);
 
   const handleSave = () => {
     toast.success(`Employee Record ${profile.employeeNumber} saved successfully`, {
@@ -206,8 +245,71 @@ export default function EmployeeManagementPage() {
 
   const handleExportData = (type: "excel" | "pdf") => {
     toast.success(`Employee 360° record exported as ${type.toUpperCase()}`, {
-      description: `Downloaded EMP-000125_${new Date().toISOString().slice(0, 10)}.${type === "excel" ? "xlsx" : "pdf"}`,
+      description: `Downloaded ${profile.employeeId}_${new Date().toISOString().slice(0, 10)}.${type === "excel" ? "xlsx" : "pdf"}`,
     });
+  };
+
+  const handleCreateNewEmployee = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEmployeeForm.name.trim()) {
+      toast.error("Please enter the employee's full name.");
+      return;
+    }
+
+    const newEmpId = `EMP-000${Math.floor(130 + Math.random() * 50)}`;
+    const newEmpNum = `MAG/EMP/2026/${newEmpId.split("-")[1]}`;
+
+    const createdProfile: EmployeeProfile = {
+      employeeId: newEmpId,
+      employeeNumber: newEmpNum,
+      name: newEmployeeForm.name,
+      photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80",
+      designation: newEmployeeForm.designation,
+      department: newEmployeeForm.department,
+      status: "Active",
+      officialEmail: newEmployeeForm.officialEmail || `${newEmployeeForm.name.toLowerCase().replace(/\s+/g, ".")}@magnertia.com`,
+      mobile: newEmployeeForm.mobile || "+91 98765 00000",
+      dob: "15 May 1998",
+      age: 26,
+      location: newEmployeeForm.location,
+      joiningDate: newEmployeeForm.joiningDate,
+      totalExperience: "3.5 Years",
+      currentGrade: newEmployeeForm.currentGrade,
+      annualCTC: newEmployeeForm.annualCTC,
+      businessUnit: newEmployeeForm.businessUnit,
+      reportingManager: {
+        name: newEmployeeForm.reportingManager,
+        designation: "Engineering Manager",
+        avatar: "",
+      },
+      employmentType: newEmployeeForm.employmentType,
+      nextReviewDate: "01 Nov 2026",
+    };
+
+    setProfile(createdProfile);
+    setIsNewEmployeeModalOpen(false);
+    toast.success(`Employee ${createdProfile.name} (${createdProfile.employeeId}) onboarded successfully!`, {
+      description: `Profile initialized with ${createdProfile.department} department and ${createdProfile.designation} role.`,
+    });
+  };
+
+  const handleSendEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailForm.recipient.trim()) {
+      toast.error("Please provide a recipient email.");
+      return;
+    }
+    setIsEmailModalOpen(false);
+    toast.success(`Employee Dossier dispatched to ${emailForm.recipient}!`, {
+      description: `Encrypted PDF with checksum verification sent.`,
+    });
+  };
+
+  const handleSaveEditProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    setProfile(editForm);
+    setIsEditModalOpen(false);
+    toast.success(`Employee Record ${editForm.employeeId} updated successfully!`);
   };
 
   return (
@@ -232,7 +334,23 @@ export default function EmployeeManagementPage() {
             <div className="flex items-center flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => toast.info("Create New Employee Wizard opened")}
+                onClick={() => {
+                  setNewEmployeeForm({
+                    name: "",
+                    designation: "Software Engineer",
+                    department: "Engineering",
+                    officialEmail: "",
+                    mobile: "",
+                    location: "Coimbatore",
+                    joiningDate: new Date().toISOString().slice(0, 10),
+                    annualCTC: "₹ 9,50,000",
+                    employmentType: "Full Time",
+                    reportingManager: "Arun Kumar",
+                    currentGrade: "G3",
+                    businessUnit: "Product Development",
+                  });
+                  setIsNewEmployeeModalOpen(true);
+                }}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition shadow-xs cursor-pointer"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -240,7 +358,7 @@ export default function EmployeeManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => window.print()}
+                onClick={() => setIsPrintModalOpen(true)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Printer className="h-3.5 w-3.5" />
@@ -248,23 +366,66 @@ export default function EmployeeManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => handleExportData("pdf")}
+                onClick={() => {
+                  setEmailForm((prev) => ({
+                    ...prev,
+                    recipient: profile.officialEmail,
+                    subject: `Employee Master Record - [${profile.employeeId}] ${profile.name}`,
+                  }));
+                  setIsEmailModalOpen(true);
+                }}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Send className="h-3.5 w-3.5" />
                 Send Email
               </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
+                  >
+                    More
+                    <ChevronDown className="h-3 w-3 text-slate-400" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 p-1.5 text-xs">
+                  <DropdownMenuItem onClick={() => handleExportData("excel")} className="cursor-pointer">
+                    <FileSpreadsheet className="mr-2 h-4 w-4 text-emerald-600" />
+                    Export Full Dossier (.xlsx)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleExportData("pdf")} className="cursor-pointer">
+                    <FileText className="mr-2 h-4 w-4 text-rose-600" />
+                    Export Official Profile (.pdf)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setIsIdCardModalOpen(true)} className="cursor-pointer">
+                    <BadgeCheck className="mr-2 h-4 w-4 text-primary" />
+                    Generate Digital ID Card
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setIsAuditModalOpen(true)} className="cursor-pointer">
+                    <Activity className="mr-2 h-4 w-4 text-amber-600" />
+                    View HR Audit Trail
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const nextStatus = profile.status === "Active" ? "Notice Period" : "Active";
+                      setProfile((p) => ({ ...p, status: nextStatus }));
+                      toast.info(`Employee status updated to "${nextStatus}"`);
+                    }}
+                    className="text-rose-600 cursor-pointer"
+                  >
+                    <ShieldAlert className="mr-2 h-4 w-4" />
+                    {profile.status === "Active" ? "Mark as Notice Period" : "Re-activate Profile"}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <button
                 type="button"
-                onClick={() => handleExportData("excel")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
-              >
-                More
-                <ChevronDown className="h-3 w-3 text-slate-400" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsEditModalOpen(true)}
+                onClick={() => {
+                  setEditForm(profile);
+                  setIsEditModalOpen(true);
+                }}
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
               >
                 <Edit className="h-3.5 w-3.5" />
@@ -921,14 +1082,464 @@ export default function EmployeeManagementPage() {
         </div>
       </div>
 
-      {/* Edit Profile Modal */}
-      {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
+      {/* 1. Modal: New Employee Onboarding Wizard */}
+      {isNewEmployeeModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="grid h-9 w-9 place-items-center rounded-xl bg-primary/10 text-primary">
+                  <UserPlus className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">New Employee Onboarding Wizard</h3>
+                  <p className="text-xs text-slate-500">Initialize a new employee master record in the ERP</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsNewEmployeeModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              >
+                <XCircle className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateNewEmployee} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Full Legal Name *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Rahul Sharma"
+                    value={newEmployeeForm.name}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, name: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Designation / Role *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Senior Frontend Engineer"
+                    value={newEmployeeForm.designation}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, designation: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Department *</label>
+                  <select
+                    value={newEmployeeForm.department}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, department: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden bg-white cursor-pointer"
+                  >
+                    <option>Engineering</option>
+                    <option>Product Development</option>
+                    <option>Manufacturing</option>
+                    <option>Human Resources</option>
+                    <option>Finance & Accounts</option>
+                    <option>Sales & Marketing</option>
+                    <option>Quality Assurance</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Business Unit</label>
+                  <select
+                    value={newEmployeeForm.businessUnit}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, businessUnit: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden bg-white cursor-pointer"
+                  >
+                    <option>Product Development</option>
+                    <option>Industrial Systems</option>
+                    <option>EV Mobility Division</option>
+                    <option>Corporate Headquarters</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Official Email</label>
+                  <input
+                    type="email"
+                    placeholder="e.g. rahul.sharma@magnertia.com"
+                    value={newEmployeeForm.officialEmail}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, officialEmail: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Mobile Phone Number</label>
+                  <input
+                    type="tel"
+                    placeholder="e.g. +91 98765 12345"
+                    value={newEmployeeForm.mobile}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, mobile: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Date of Joining</label>
+                  <input
+                    type="date"
+                    value={newEmployeeForm.joiningDate}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, joiningDate: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Annual CTC (₹)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. ₹ 14,50,000"
+                    value={newEmployeeForm.annualCTC}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, annualCTC: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Work Location</label>
+                  <select
+                    value={newEmployeeForm.location}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, location: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden bg-white cursor-pointer"
+                  >
+                    <option>Coimbatore</option>
+                    <option>Bengaluru</option>
+                    <option>Chennai</option>
+                    <option>Hyderabad</option>
+                    <option>Pune</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Reporting Manager</label>
+                  <select
+                    value={newEmployeeForm.reportingManager}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, reportingManager: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden bg-white cursor-pointer"
+                  >
+                    <option>Arun Kumar</option>
+                    <option>Sneha Patel</option>
+                    <option>Vikramaditya Bose</option>
+                    <option>Pooja Hegde</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsNewEmployeeModalOpen(false)}
+                  className="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer inline-flex items-center gap-1.5"
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  Create Employee Master Record
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Modal: Print Preview Dossier */}
+      {isPrintModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="grid h-9 w-9 place-items-center rounded-xl bg-blue-50 text-blue-600">
+                  <Printer className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Print Employee 360° Record</h3>
+                  <p className="text-xs text-slate-500">Official HR Master Summary Printout</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPrintModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              >
+                <XCircle className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Print Document Paper Preview */}
+            <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-4 text-xs font-sans">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                <div>
+                  <div className="text-sm font-black text-slate-900">MAGNERTIA INDUSTRIAL ERP</div>
+                  <div className="text-[10px] text-slate-500">Confidential HR Master Dossier</div>
+                </div>
+                <div className="text-right font-mono font-bold text-slate-700">
+                  {profile.employeeNumber}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div><strong className="text-slate-600">Employee Name:</strong> <span className="font-bold text-slate-900">{profile.name}</span></div>
+                <div><strong className="text-slate-600">Employee ID:</strong> <span className="font-mono text-slate-900">{profile.employeeId}</span></div>
+                <div><strong className="text-slate-600">Designation:</strong> <span className="text-slate-900">{profile.designation}</span></div>
+                <div><strong className="text-slate-600">Department:</strong> <span className="text-slate-900">{profile.department}</span></div>
+                <div><strong className="text-slate-600">Official Email:</strong> <span className="text-slate-900">{profile.officialEmail}</span></div>
+                <div><strong className="text-slate-600">Mobile Phone:</strong> <span className="text-slate-900">{profile.mobile}</span></div>
+                <div><strong className="text-slate-600">Date of Joining:</strong> <span className="text-slate-900">{profile.joiningDate}</span></div>
+                <div><strong className="text-slate-600">Annual CTC:</strong> <span className="font-bold text-slate-900">{profile.annualCTC}</span></div>
+                <div><strong className="text-slate-600">Reporting Manager:</strong> <span className="text-slate-900">{profile.reportingManager.name}</span></div>
+                <div><strong className="text-slate-600">Current Status:</strong> <span className="font-bold text-emerald-600">{profile.status}</span></div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsPrintModalOpen(false)}
+                className="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium cursor-pointer"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  window.print();
+                  setIsPrintModalOpen(false);
+                }}
+                className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer inline-flex items-center gap-1.5"
+              >
+                <Printer className="h-4 w-4" />
+                Print Dossier
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Modal: Send Email */}
+      {isEmailModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
           <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="grid h-9 w-9 place-items-center rounded-xl bg-blue-50 text-blue-600">
+                  <Send className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Dispatch Employee Dossier</h3>
+                  <p className="text-xs text-slate-500">Send encrypted master profile via email</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEmailModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              >
+                <XCircle className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSendEmailSubmit} className="space-y-3 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Recipient Email *</label>
+                <input
+                  type="email"
+                  required
+                  value={emailForm.recipient}
+                  onChange={(e) => setEmailForm({ ...emailForm, recipient: e.target.value })}
+                  className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Subject</label>
+                <input
+                  type="text"
+                  required
+                  value={emailForm.subject}
+                  onChange={(e) => setEmailForm({ ...emailForm, subject: e.target.value })}
+                  className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Message Body</label>
+                <textarea
+                  rows={4}
+                  value={emailForm.message}
+                  onChange={(e) => setEmailForm({ ...emailForm, message: e.target.value })}
+                  className="w-full p-2.5 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden resize-none"
+                />
+              </div>
+
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-2.5 flex items-center justify-between text-[11px]">
+                <div className="flex items-center gap-2 text-slate-700">
+                  <Paperclip className="h-4 w-4 text-slate-400" />
+                  <span className="font-semibold">{profile.employeeId}_360_Master.pdf</span>
+                </div>
+                <span className="font-mono text-slate-500">2.4 MB</span>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsEmailModalOpen(false)}
+                  className="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer inline-flex items-center gap-1.5"
+                >
+                  <Send className="h-4 w-4" />
+                  Send Email
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Modal: Digital ID Card */}
+      {isIdCardModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-sm w-full p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <BadgeCheck className="h-5 w-5 text-primary" />
+                Digital Employee Badge
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsIdCardModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              >
+                <XCircle className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Smart ID Badge UI */}
+            <div className="rounded-2xl border-2 border-primary/40 bg-gradient-to-b from-primary/10 via-white to-slate-50 p-5 text-center shadow-lg space-y-3">
+              <div className="text-[11px] font-black uppercase tracking-widest text-primary">Magnertia ERP</div>
+              <img
+                src={profile.photo}
+                alt={profile.name}
+                className="h-20 w-20 rounded-full mx-auto object-cover border-2 border-white shadow-md"
+              />
+              <div>
+                <div className="text-sm font-black text-slate-900">{profile.name}</div>
+                <div className="text-xs text-slate-600 font-medium">{profile.designation}</div>
+                <div className="text-[10px] text-primary font-bold">{profile.department}</div>
+              </div>
+
+              <div className="border-t border-slate-200 pt-2 flex justify-between text-[10px] font-mono text-slate-600">
+                <span>ID: {profile.employeeId}</span>
+                <span>BLD: {profile.location}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsIdCardModalOpen(false)}
+                className="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium cursor-pointer text-xs"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  toast.success("Digital ID Badge downloaded as PNG!");
+                  setIsIdCardModalOpen(false);
+                }}
+                className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer text-xs inline-flex items-center gap-1.5"
+              >
+                <Download className="h-4 w-4" /> Download Badge
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Modal: HR Audit Trail */}
+      {isAuditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <Activity className="h-5 w-5 text-amber-600" />
+                HR Master Audit Trail
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsAuditModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              >
+                <XCircle className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="flex gap-3 items-start border-l-2 border-primary pl-3 py-1">
+                <div>
+                  <div className="font-bold text-slate-900">Profile Updated</div>
+                  <div className="text-slate-500 text-[11px]">Changed designation to Senior Engineer by Admin</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">Today at 11:20 AM</div>
+                </div>
+              </div>
+
+              <div className="flex gap-3 items-start border-l-2 border-emerald-500 pl-3 py-1">
+                <div>
+                  <div className="font-bold text-slate-900">Annual Appraisal Sign-off</div>
+                  <div className="text-slate-500 text-[11px]">Band revision to G4 and CTC updated to ₹ 12,50,000</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">15 Jan 2026</div>
+                </div>
+              </div>
+
+              <div className="flex gap-3 items-start border-l-2 border-slate-300 pl-3 py-1">
+                <div>
+                  <div className="font-bold text-slate-900">Asset Assignment</div>
+                  <div className="text-slate-500 text-[11px]">Dell Laptop AST-LAP-1123 issued by IT Admin</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">01 Aug 2023</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsAuditModalOpen(false)}
+                className="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold cursor-pointer text-xs"
+              >
+                Close Audit Trail
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. Edit Profile Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                 <Edit className="h-4 w-4 text-primary" />
-                Edit Employee Details
+                Edit Employee Master Record
               </h3>
               <button
                 type="button"
@@ -939,23 +1550,45 @@ export default function EmployeeManagementPage() {
               </button>
             </div>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setIsEditModalOpen(false);
-                toast.success("Employee profile updated successfully");
-              }}
-              className="space-y-3.5 text-xs"
-            >
+            <form onSubmit={handleSaveEditProfile} className="space-y-3.5 text-xs">
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">Employee Full Name *</label>
                 <input
                   type="text"
                   required
-                  value={profile.name}
-                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                   className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Designation</label>
+                  <input
+                    type="text"
+                    value={editForm.designation}
+                    onChange={(e) => setEditForm({ ...editForm, designation: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Department</label>
+                  <select
+                    value={editForm.department}
+                    onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden bg-white cursor-pointer"
+                  >
+                    <option>Engineering</option>
+                    <option>Product Development</option>
+                    <option>Manufacturing</option>
+                    <option>Human Resources</option>
+                    <option>Finance & Accounts</option>
+                    <option>Sales & Marketing</option>
+                    <option>Quality Assurance</option>
+                  </select>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -963,8 +1596,8 @@ export default function EmployeeManagementPage() {
                   <label className="block font-semibold text-slate-700 mb-1">Official Email</label>
                   <input
                     type="email"
-                    value={profile.officialEmail}
-                    onChange={(e) => setProfile({ ...profile, officialEmail: e.target.value })}
+                    value={editForm.officialEmail}
+                    onChange={(e) => setEditForm({ ...editForm, officialEmail: e.target.value })}
                     className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
                   />
                 </div>
@@ -973,10 +1606,38 @@ export default function EmployeeManagementPage() {
                   <label className="block font-semibold text-slate-700 mb-1">Mobile Phone</label>
                   <input
                     type="tel"
-                    value={profile.mobile}
-                    onChange={(e) => setProfile({ ...profile, mobile: e.target.value })}
+                    value={editForm.mobile}
+                    onChange={(e) => setEditForm({ ...editForm, mobile: e.target.value })}
                     className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
                   />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Annual CTC</label>
+                  <input
+                    type="text"
+                    value={editForm.annualCTC}
+                    onChange={(e) => setEditForm({ ...editForm, annualCTC: e.target.value })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Status</label>
+                  <select
+                    value={editForm.status}
+                    onChange={(e) => setEditForm({ ...editForm, status: e.target.value as any })}
+                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden bg-white cursor-pointer font-bold text-slate-800"
+                  >
+                    <option value="Active">Active</option>
+                    <option value="On Leave">On Leave</option>
+                    <option value="Notice Period">Notice Period</option>
+                    <option value="Suspended">Suspended</option>
+                    <option value="Resigned">Resigned</option>
+                    <option value="Separated">Separated</option>
+                  </select>
                 </div>
               </div>
 
@@ -990,8 +1651,9 @@ export default function EmployeeManagementPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer inline-flex items-center gap-1.5"
                 >
+                  <CheckCircle2 className="h-4 w-4" />
                   Save Changes
                 </button>
               </div>

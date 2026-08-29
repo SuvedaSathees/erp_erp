@@ -518,10 +518,10 @@ function TrlAssessmentFormPage() {
   if (recordQuery.isLoading) {
     return (
       <AppShell
-        breadcrumb="Research & Innovation Development"
-        title="Technology Readiness Level"
-      description="Assess and advance technology readiness levels."
-      tabs={<InnovationAreaTabs sub={<TrlAssessmentPageTabBar />} />}
+        breadcrumb="Development > Research & Innovation > TRL Assessment"
+        title="TRL Assessment"
+        description="Assess and advance technology readiness levels."
+        tabs={<InnovationAreaTabs sub={<TrlAssessmentPageTabBar />} />}
       >
         <div className="flex h-64 items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -532,8 +532,8 @@ function TrlAssessmentFormPage() {
 
   return (
     <AppShell
-      breadcrumb="Research & Innovation Development"
-      title="Technology Readiness Level"
+      breadcrumb="Development > Research & Innovation > TRL Assessment"
+      title="TRL Assessment"
       description="Assess and advance technology readiness levels."
       tabs={<InnovationAreaTabs sub={<TrlAssessmentPageTabBar />} />}
     >
@@ -1705,66 +1705,7 @@ function TrlAssessmentFormPage() {
               </div>
             </div>
 
-            {/* PANEL 3: Quick Actions */}
-            <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-3">
-              <h3 className="font-bold text-foreground border-b border-border pb-2.5">Quick Actions</h3>
 
-              <div className="space-y-1.5 text-xs">
-                <button
-                  type="button"
-                  onClick={() => reportMutation.mutate()}
-                  className="flex w-full items-center gap-2.5 rounded-lg border border-border bg-background p-2.5 font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
-                >
-                  <FileText className="h-4 w-4 text-primary" />
-                  Generate TRL Report
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowScheduleModal(true)}
-                  className="flex w-full items-center gap-2.5 rounded-lg border border-border bg-background p-2.5 font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
-                >
-                  <Calendar className="h-4 w-4 text-indigo-600" />
-                  Schedule Review Meeting
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex w-full items-center gap-2.5 rounded-lg border border-border bg-background p-2.5 font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
-                >
-                  <Upload className="h-4 w-4 text-emerald-600" />
-                  Upload New Evidence
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowCompareHistoryDrawer(true)}
-                  className="flex w-full items-center gap-2.5 rounded-lg border border-border bg-background p-2.5 font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
-                >
-                  <History className="h-4 w-4 text-amber-600" />
-                  Compare TRL History
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowRoadmapModal(true)}
-                  className="flex w-full items-center gap-2.5 rounded-lg border border-border bg-background p-2.5 font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
-                >
-                  <Layers className="h-4 w-4 text-purple-600" />
-                  View Technology Roadmap
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => toast.success("Exporting TRL Assessment report...")}
-                  className="flex w-full items-center gap-2.5 rounded-lg border border-border bg-background p-2.5 font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
-                >
-                  <Download className="h-4 w-4 text-muted-foreground" />
-                  Export Assessment
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>

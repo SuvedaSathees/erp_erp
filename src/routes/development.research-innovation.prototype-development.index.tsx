@@ -88,7 +88,7 @@ function PrototypeRegisterPage() {
   return (
     <AppShell
       title="Prototype Development"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Prototype Development"
       description="Engineer, manufacture, and test working prototypes."
       tabs={<InnovationAreaTabs sub={<PrototypeDevPageTabBar />} />}
       topbarActions={newButton}

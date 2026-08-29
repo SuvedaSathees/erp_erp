@@ -46,7 +46,7 @@ function ProductStrategyReportsPage() {
   return (
     <AppShell
       title="Strategy Reports & Analytics"
-      breadcrumb="Research & Innovation Development"
+      breadcrumb="Development > Research & Innovation > Product Strategy"
       description="Financial projections, capex/opex breakdown, and AI executive briefs for Product Strategy governance."
       tabs={<InnovationAreaTabs sub={<ProductStrategyTabBar />} />}
       topbarActions={

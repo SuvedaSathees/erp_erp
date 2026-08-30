@@ -11,7 +11,7 @@ export const ProcessValidationSystemInfoCard: React.FC<ProcessValidationSystemIn
   return (
     <div className="bg-card border border-border rounded-lg shadow-sm p-3.5 text-xs">
       <h2 className="font-bold text-foreground text-xs pb-2 border-b border-border mb-2.5">
-        11. System Information
+        System Information
       </h2>
 
       <div className="space-y-2 text-[11px]">

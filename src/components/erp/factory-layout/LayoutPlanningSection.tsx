@@ -30,12 +30,7 @@ export function LayoutPlanningSection({
     <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-              2
-            </span>
-            <CardTitle className="text-base font-bold">Layout Planning & CAD Drawings</CardTitle>
-          </div>
+          <CardTitle className="text-base font-bold">Layout Planning & CAD Drawings</CardTitle>
           <CardDescription className="text-xs">
             2D/3D CAD blueprints, shopfloor arrangement, utility schematics & equipment mapping.
           </CardDescription>
@@ -57,55 +52,62 @@ export function LayoutPlanningSection({
       </CardHeader>
 
       <CardContent className="space-y-5">
-        <div className="rounded-lg border border-border/80 overflow-hidden bg-slate-50/50 dark:bg-slate-800/30">
-          <div className="grid grid-cols-12 gap-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-muted-foreground uppercase tracking-wider border-b border-border">
-            <div className="col-span-4">Drawing Item</div>
-            <div className="col-span-5">Attached CAD / Blueprint</div>
-            <div className="col-span-3 text-right">Actions</div>
-          </div>
+        <div className="rounded-lg border border-border/80 overflow-hidden bg-background text-xs shadow-xs">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-muted/50 border-b border-border text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                  <th className="py-3 px-4 font-semibold whitespace-nowrap">Drawing Item</th>
+                  <th className="py-3 px-4 font-semibold whitespace-nowrap">Attached CAD / Blueprint</th>
+                  <th className="py-3 px-4 text-right font-semibold whitespace-nowrap">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/60">
+                {layoutDocuments.map((doc, idx) => (
+                  <tr key={doc.label} className="hover:bg-muted/30 transition-colors">
+                    <td className="py-3 px-4 font-semibold text-foreground whitespace-nowrap">
+                      <span className="text-slate-400 font-mono text-[10px] mr-2">{idx + 1}.</span>
+                      {doc.label}
+                    </td>
 
-          <div className="divide-y divide-border/60 text-xs">
-            {layoutDocuments.map((doc, idx) => (
-              <div
-                key={doc.label}
-                className="grid grid-cols-12 gap-2 px-4 py-2.5 items-center hover:bg-white dark:hover:bg-slate-800/80 transition-colors"
-              >
-                <div className="col-span-4 font-semibold text-foreground flex items-center gap-2">
-                  <span className="text-slate-400 font-mono text-[10px]">{idx + 1}.</span>
-                  {doc.label}
-                </div>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-blue-600 shrink-0" />
+                        <span className="font-mono text-xs text-primary font-medium cursor-pointer hover:underline">
+                          {doc.filename}
+                        </span>
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                          {doc.size}
+                        </Badge>
+                      </div>
+                    </td>
 
-                <div className="col-span-5 flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-blue-600 shrink-0" />
-                  <span className="font-mono text-xs truncate text-primary font-medium cursor-pointer hover:underline">
-                    {doc.filename}
-                  </span>
-                  <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                    {doc.size}
-                  </Badge>
-                </div>
-
-                <div className="col-span-3 flex items-center justify-end gap-1.5">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 px-2 text-[11px] gap-1 hover:text-primary"
-                    onClick={() => toast.info(`Previewing ${doc.filename}`)}
-                  >
-                    <Eye className="h-3.5 w-3.5" />
-                    Preview
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600"
-                    onClick={() => toast.success(`Downloading ${doc.filename}`)}
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              </div>
-            ))}
+                    <td className="py-3 px-4 text-right whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 px-2 text-[11px] gap-1 hover:text-primary"
+                          onClick={() => toast.info(`Previewing ${doc.filename}`)}
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          Preview
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600"
+                          onClick={() => toast.success(`Downloading ${doc.filename}`)}
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          Download
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </CardContent>

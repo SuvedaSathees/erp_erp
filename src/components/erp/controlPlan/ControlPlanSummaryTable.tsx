@@ -15,7 +15,7 @@ export const ControlPlanSummaryTable: React.FC<ControlPlanSummaryTableProps> = (
     <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden text-xs">
       <div className="p-3 border-b border-border bg-muted/20 flex justify-between items-center">
         <h2 className="text-sm font-bold text-foreground">
-          7. Process Control Plan (Summary Table)
+          Process Control Plan (Summary Table)
         </h2>
         <button
           onClick={onViewFullControlPlan}

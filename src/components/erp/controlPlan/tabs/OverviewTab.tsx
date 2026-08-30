@@ -18,12 +18,14 @@ interface OverviewTabProps {
   record: ControlPlanRecord;
   onNavigateTab: (tab: any) => void;
   onAddCharacteristic: () => void;
+  onReviewDecision?: (decision: any, comments: string) => void;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({
   record,
   onNavigateTab,
   onAddCharacteristic,
+  onReviewDecision,
 }) => {
   return (
     <div className="space-y-4">
@@ -100,6 +102,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           <ControlPlanReviewApprovalPanel
             record={record}
             onViewApprovalFlow={() => onNavigateTab("approval")}
+            onReviewDecision={onReviewDecision}
           />
         </div>
       </div>

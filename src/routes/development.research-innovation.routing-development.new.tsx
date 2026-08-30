@@ -1,26 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
-import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { RoutingHeader } from "@/components/erp/routing-development/RoutingHeader";
-import { RoutingScoresHeader } from "@/components/erp/routing-development/RoutingScoresHeader";
-import { RoutingTabBar, type RoutingTabType } from "@/components/erp/routing-development/RoutingTabBar";
 import { AddOperationModal } from "@/components/erp/routing-development/AddOperationModal";
-
 import { OverviewTab } from "@/components/erp/routing-development/tabs/OverviewTab";
-import { OperationsTab } from "@/components/erp/routing-development/tabs/OperationsTab";
-import { ResourcesTab } from "@/components/erp/routing-development/tabs/ResourcesTab";
-import { ManufacturingValidationTab } from "@/components/erp/routing-development/tabs/ManufacturingValidationTab";
-import { QualityComplianceTab } from "@/components/erp/routing-development/tabs/QualityComplianceTab";
-import { CostAnalysisTab } from "@/components/erp/routing-development/tabs/CostAnalysisTab";
-import { AiAssessmentTab } from "@/components/erp/routing-development/tabs/AiAssessmentTab";
-import { SummaryTab } from "@/components/erp/routing-development/tabs/SummaryTab";
-import { ReviewApprovalTab } from "@/components/erp/routing-development/tabs/ReviewApprovalTab";
-import { AttachmentsTab } from "@/components/erp/routing-development/tabs/AttachmentsTab";
-import { ActivityHistoryTab } from "@/components/erp/routing-development/tabs/ActivityHistoryTab";
 
 import {
   fetchRoutingRecord,
@@ -43,7 +29,6 @@ export function RoutingDevelopmentPage({
   tabs?: React.ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<RoutingTabType>("overview");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const { data: record, isLoading } = useQuery({
@@ -83,7 +68,7 @@ export function RoutingDevelopmentPage({
       <AppShell
         title="Routing Development"
         breadcrumb={breadcrumb ?? "Research & Innovation Development"}
-        tabs={tabs ?? <InnovationAreaTabs sub={<RoutingTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+        tabs={tabs ?? <InnovationAreaTabs />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Routing Development Master Record...
@@ -92,99 +77,96 @@ export function RoutingDevelopmentPage({
     );
   }
 
+  const handleExportReport = () => {
+    const content = `=====================================================
+MANUFACTURING ROUTING SPECIFICATION: ${record.routingName}
+=====================================================
+Routing ID: ${record.routingId}
+Form Code: ${record.formCode}
+Routing Number: ${record.routingNumber}
+Routing Version: ${record.routingVersion}
+Workflow Status: ${record.workflowStatus}
+Product: ${record.product} (Revision: ${record.productRevision})
+Process Owner: ${record.processOwner}
+Created Date: ${record.createdDate}
+Effective Date: ${record.effectiveDate}
+Next Review Date: ${record.nextReviewDate}
+
+READINESS SCORES:
+-----------------------------------------------------
+Overall Routing Readiness: ${record.overallReadinessScore}/100
+Routing Readiness: ${record.routingReadinessScore}/100
+Resource Readiness: ${record.resourceReadinessScore}/100
+Manufacturing Readiness: ${record.manufacturingReadinessScore}/100
+Quality Score: ${record.qualityScore}/100
+Cost Score: ${record.costScore}/100
+
+OPERATIONS MATRIX (${record.operations.length} Operations):
+-----------------------------------------------------
+${record.operations
+  .map(
+    (op) =>
+      `[${op.operationNo}] Seq ${op.seq}: ${op.operationName} | Work Centre: ${op.workCentre} | Machine: ${op.machine} | Setup: ${op.setupTimeMins}m | Cycle: ${op.cycleTimeMins}m | Labour: ${op.labourCount}`
+  )
+  .join("\n")}
+
+COST SUMMARY:
+-----------------------------------------------------
+Total Routing Cost: ₹${record.costSummary.totalRoutingCost.toLocaleString()}
+Target Cost: ₹${record.costSummary.targetCost.toLocaleString()}
+Cost Variance: ₹${record.costSummary.costVariance.toLocaleString()} (Favorable)
+
+AI ASSESSMENTS & BOTTLENECKS:
+-----------------------------------------------------
+AI Health Score: ${record.aiAssessment.aiHealthScore}/100
+Optimization: ${record.aiAssessment.routingOptimization}
+Bottleneck Prediction: ${record.aiAssessment.bottleneckPrediction}
+Cycle Time Optimization: ${record.aiAssessment.cycleTimeOptimization}
+Recommendation: ${record.recommendation}
+=====================================================`;
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${record.routingNumber}_Routing_Specification.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Routing specification exported and downloaded successfully!");
+  };
+
   return (
     <AppShell
       title="Routing Development"
       breadcrumb={breadcrumb ?? "Development > Research & Innovation > Routing Development"}
       description="Define manufacturing operations, work center assignments, setup times, run times, and scrap factors."
-      tabs={tabs ?? <InnovationAreaTabs sub={<RoutingTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+      tabs={tabs ?? <InnovationAreaTabs />}
     >
-      <div className="space-y-0 min-h-screen bg-background text-foreground">
+      <div className="p-4 sm:p-6 space-y-5">
         {/* Top Header Bar */}
         <RoutingHeader
           record={record}
           onSaveDraft={() => saveDraftMutation.mutate({})}
           onSubmitForReview={() => submitMutation.mutate()}
-          onExport={() => toast.info("Exporting Routing Sheet to PDF...")}
+          onExport={handleExportReport}
           onNewRouting={() => {
             setIsAddModalOpen(true);
             toast.info("Creating new routing operation...");
           }}
         />
 
-        {/* 6 Score Ring Gauges */}
-        <RoutingScoresHeader record={record} />
-
-        {/* 11 Horizontal Navigation Tabs */}
-        <RoutingTabBar
-          activeTab={activeTab}
-          onTabChange={(tab) => setActiveTab(tab)}
+        {/* Unified Main View */}
+        <OverviewTab
+          record={record}
+          onAddOperation={() => setIsAddModalOpen(true)}
+          onNavigateTab={(tab) => toast.info(`Viewing ${tab} section`)}
+          onUpdateOperations={(ops) => saveDraftMutation.mutate({ operations: ops })}
+          onReviewDecision={(decision, comments) => {
+            saveDraftMutation.mutate({ approvalDecision: decision });
+            toast.success(`Review decision recorded: ${decision}`);
+          }}
         />
-
-        {/* Tab View Container */}
-        <div className="p-4 sm:p-6">
-          {activeTab === "overview" && (
-            <OverviewTab
-              record={record}
-              onAddOperation={() => setIsAddModalOpen(true)}
-              onNavigateTab={(t) => setActiveTab(t)}
-            />
-          )}
-
-          {activeTab === "operations" && (
-            <OperationsTab
-              record={record}
-              onAddOperation={() => setIsAddModalOpen(true)}
-            />
-          )}
-
-          {activeTab === "resources" && (
-            <ResourcesTab record={record} />
-          )}
-
-          {activeTab === "validation" && (
-            <ManufacturingValidationTab record={record} />
-          )}
-
-          {activeTab === "quality" && (
-            <QualityComplianceTab record={record} />
-          )}
-
-          {activeTab === "cost" && (
-            <CostAnalysisTab record={record} />
-          )}
-
-          {activeTab === "ai" && (
-            <AiAssessmentTab record={record} />
-          )}
-
-          {activeTab === "summary" && (
-            <SummaryTab
-              record={record}
-              onUpdateRecommendation={(rec) =>
-                saveDraftMutation.mutate({ recommendation: rec })
-              }
-            />
-          )}
-
-          {activeTab === "approval" && (
-            <ReviewApprovalTab
-              record={record}
-              onReviewDecision={(decision, comments) => {
-                saveDraftMutation.mutate({ approvalDecision: decision });
-                toast.success(`Review decision submitted: ${decision}`);
-              }}
-            />
-          )}
-
-          {activeTab === "attachments" && (
-            <AttachmentsTab record={record} />
-          )}
-
-          {activeTab === "history" && (
-            <ActivityHistoryTab record={record} />
-          )}
-        </div>
 
         {/* Add Operation Modal */}
         <AddOperationModal

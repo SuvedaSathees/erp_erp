@@ -10,13 +10,13 @@ export const ProductionCostAnalysisCard: React.FC<ProductionCostAnalysisCardProp
   record,
 }) => {
   return (
-    <div className="bg-card border border-border rounded-lg shadow-sm p-3.5 flex flex-col justify-between text-xs">
+    <div className="bg-card border border-border rounded-lg shadow-sm p-3.5 flex flex-col justify-between text-xs hover:border-border/80 transition-all">
       <div>
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
-          <h3 className="font-bold text-foreground text-xs">6. Production Cost Analysis</h3>
-          <span className="px-1.5 py-0.5 rounded bg-teal-100 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold text-[10px]">
-            {record.costScore} / 100
-          </span>
+          <div className="flex items-center gap-1.5">
+            <Calculator className="w-3.5 h-3.5 text-teal-500" />
+            <h3 className="font-bold text-foreground text-xs">Production Cost Analysis</h3>
+          </div>
         </div>
 
         <div className="space-y-1 text-[11px]">
@@ -51,11 +51,6 @@ export const ProductionCostAnalysisCard: React.FC<ProductionCostAnalysisCardProp
             </span>
           </div>
         </div>
-      </div>
-
-      <div className="pt-2 border-t border-border mt-2 flex justify-between items-center">
-        <span className="font-semibold text-muted-foreground text-[10px]">Cost Score</span>
-        <span className="font-extrabold text-teal-600 dark:text-teal-400">{record.costScore} / 100</span>
       </div>
     </div>
   );

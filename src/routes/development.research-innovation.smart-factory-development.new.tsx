@@ -1,33 +1,31 @@
 import { useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { RefreshCw, Sparkles, X, CheckCircle2 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Sparkles } from "lucide-react";
 
 import { smartFactoryDevelopmentService } from "@/services";
 import type { SmartFactoryDevelopmentRecord } from "@/services/types";
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
-import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
-import { SmartFactoryTabBar, type SmartFactoryTabId } from "@/components/erp/SmartFactoryTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { SmartFactoryHeader } from "@/components/erp/smartFactory/SmartFactoryHeader";
-import { SmartFactoryTopBadges } from "@/components/erp/smartFactory/SmartFactoryTopBadges";
 import { SmartFactoryOverviewCard } from "@/components/erp/smartFactory/SmartFactoryOverviewCard";
 import { SmartFactoryInfrastructureCard } from "@/components/erp/smartFactory/SmartFactoryInfrastructureCard";
 import { SmartFactorySystemsCard } from "@/components/erp/smartFactory/SmartFactorySystemsCard";
-import { SmartFactoryAiCard } from "@/components/erp/smartFactory/SmartFactoryAiCard";
 import { SmartFactoryAutomationCard } from "@/components/erp/smartFactory/SmartFactoryAutomationCard";
 import { SmartFactoryOperationsCard } from "@/components/erp/smartFactory/SmartFactoryOperationsCard";
 import { SmartFactoryValidationCard } from "@/components/erp/smartFactory/SmartFactoryValidationCard";
-import { SmartFactorySummaryCard } from "@/components/erp/smartFactory/SmartFactorySummaryCard";
 import { SmartFactoryAttachmentsCard } from "@/components/erp/smartFactory/SmartFactoryAttachmentsCard";
 import { SmartFactoryReviewApprovalCard } from "@/components/erp/smartFactory/SmartFactoryReviewApprovalCard";
-import { SmartFactorySystemInfoCard } from "@/components/erp/smartFactory/SmartFactorySystemInfoCard";
-import { SmartFactoryAiInsightsPanel } from "@/components/erp/smartFactory/SmartFactoryAiInsightsPanel";
-import { SmartFactoryWorkflowStepper } from "@/components/erp/smartFactory/SmartFactoryWorkflowStepper";
 import { NewSmartFactoryDialog } from "@/components/erp/smartFactory/NewSmartFactoryDialog";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute(
   "/development/research-innovation/smart-factory-development/new",
@@ -46,8 +44,6 @@ export function SmartFactoryDevelopmentPage({
   tabs?: React.ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<SmartFactoryTabId>("overview");
   const [isNewDialogOpen, setIsNewDialogOpen] = useState(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
 
@@ -100,7 +96,7 @@ export function SmartFactoryDevelopmentPage({
       <AppShell
         title="Smart Factory Development"
         breadcrumb={breadcrumb ?? "Research & Innovation Development"}
-        tabs={tabs ?? <InnovationAreaTabs sub={<SmartFactoryTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+        tabs={tabs ?? <InnovationAreaTabs />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Smart Factory Development Master Record...
@@ -125,9 +121,45 @@ export function SmartFactoryDevelopmentPage({
   };
 
   const handlePreview = () => {
-    toast.info("Generating Smart Factory Blueprint PDF Preview...", {
-      description: "Compiling IoT node topology and Industry 4.0 architecture.",
-    });
+    if (!record) return;
+    const content = `=====================================================
+SMART FACTORY ARCHITECTURE BLUEPRINT: ${record.smartFactoryProjectTitle}
+=====================================================
+Project ID: ${record.smartFactoryProjectId}
+Form Code: ${record.formCode}
+Project Number: ${record.projectNumber}
+Workflow Status: ${record.workflowStatus}
+Manufacturing Plant: ${record.manufacturingPlant}
+Factory Zone: ${record.factoryZone}
+Project Manager: ${record.projectManager}
+Target Go-Live: ${record.targetGoLive}
+Smart Factory Level: ${record.smartFactoryLevel}
+Industry 4.0 Maturity: ${record.industry40Maturity}
+
+READINESS SCORES:
+-----------------------------------------------------
+Overall Smart Factory Readiness: ${record.overallSmartFactoryReadiness}/100
+Infrastructure Readiness Score: ${record.infrastructureReadinessScore}/100
+Integration Score: ${record.integrationScore}/100
+Automation Score: ${record.automationScore}/100
+Operational Score: ${record.operationalScore}/100
+AI Readiness Score: ${record.aiReadinessScore}/100
+Validation Score: ${record.validationScore}/100
+
+Vision: ${record.factoryVision}
+Objectives: ${record.businessObjectives}
+Recommendation: ${record.recommendation}
+=====================================================`;
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${record.projectNumber}_Smart_Factory_Blueprint.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Smart Factory Blueprint generated & downloaded successfully!");
   };
 
   const handleCreateNewProject = (newProj: any) => {
@@ -184,7 +216,7 @@ export function SmartFactoryDevelopmentPage({
       title="Smart Factory Development"
       breadcrumb={breadcrumb ?? "Development > Research & Innovation > Smart Factory Development"}
       description="Govern Industry 4.0 transformation through IIoT, Cyber-Physical Systems, Digital Twins, AI, and MES."
-      tabs={tabs ?? <InnovationAreaTabs sub={<SmartFactoryTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+      tabs={tabs ?? <InnovationAreaTabs />}
     >
       <div className="flex flex-col gap-5 p-4 sm:p-6">
         {/* Header Bar */}
@@ -194,108 +226,53 @@ export function SmartFactoryDevelopmentPage({
           onSubmitForApproval={handleSubmitForApproval}
           onPreview={handlePreview}
           onNewProject={() => setIsNewDialogOpen(true)}
+          onExportReport={handlePreview}
           isSubmitting={submitReviewMutation.isPending}
         />
 
-        {/* Top Score Gauge Cards */}
-        <SmartFactoryTopBadges record={record} />
+        {/* Full-Width Unified Sections */}
+        <div className="flex flex-col gap-6">
+          <SmartFactoryOverviewCard
+            record={record}
+            onChange={handleFieldChange}
+          />
 
-        {/* Industry 4.0 Interactive Workflow Stepper */}
-        <SmartFactoryWorkflowStepper currentStage={record.workflowStage} />
-
-        {/* Tab Bar Navigation */}
-        <SmartFactoryTabBar activeTab={activeTab} onTabChange={setActiveTab} />
-
-        {/* Main Content Layout Grid */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-          {/* Left Column: Form Sections based on Active Tab or Full Stack */}
-          <div className="flex flex-col gap-6 lg:col-span-8">
-            {(activeTab === "overview" || activeTab === "summary") && (
-              <SmartFactoryOverviewCard
-                record={record}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "infrastructure" || activeTab === "summary") && (
-              <SmartFactoryInfrastructureCard
-                record={record}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "systems" || activeTab === "summary") && (
-              <SmartFactorySystemsCard
-                record={record}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "ai" || activeTab === "summary") && (
-              <SmartFactoryAiCard
-                record={record}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "automation" || activeTab === "summary") && (
-              <SmartFactoryAutomationCard
-                record={record}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "operations" || activeTab === "summary") && (
-              <SmartFactoryOperationsCard
-                record={record}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "validation" || activeTab === "summary") && (
-              <SmartFactoryValidationCard
-                record={record}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {activeTab === "summary" && (
-              <SmartFactorySummaryCard
-                record={record}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "summary" || activeTab === "overview") && (
-              <SmartFactoryAttachmentsCard
-                record={record}
-                onUploadAttachment={handleUploadAttachment}
-              />
-            )}
-
-            {(activeTab === "review" || activeTab === "summary") && (
-              <SmartFactoryReviewApprovalCard
-                record={record}
-                onDecisionChange={handleReviewDecision}
-              />
-            )}
-
-            {(activeTab === "history" || activeTab === "summary") && (
-              <SmartFactorySystemInfoCard record={record} />
-            )}
-          </div>
-
-          {/* Right Column: AI Insights Panel & Action Summary */}
-          <div className="flex flex-col gap-6 lg:col-span-4">
-            <SmartFactoryAiInsightsPanel
-              onViewFullAnalysis={() => setIsAiModalOpen(true)}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <SmartFactoryInfrastructureCard
+              record={record}
+              onChange={handleFieldChange}
             />
-
-            <SmartFactorySummaryCard
+            <SmartFactorySystemsCard
               record={record}
               onChange={handleFieldChange}
             />
           </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <SmartFactoryAutomationCard
+              record={record}
+              onChange={handleFieldChange}
+            />
+            <SmartFactoryOperationsCard
+              record={record}
+              onChange={handleFieldChange}
+            />
+          </div>
+
+          <SmartFactoryValidationCard
+            record={record}
+            onChange={handleFieldChange}
+          />
+
+          <SmartFactoryReviewApprovalCard
+            record={record}
+            onDecisionChange={handleReviewDecision}
+          />
+
+          <SmartFactoryAttachmentsCard
+            record={record}
+            onUploadAttachment={handleUploadAttachment}
+          />
         </div>
       </div>
 

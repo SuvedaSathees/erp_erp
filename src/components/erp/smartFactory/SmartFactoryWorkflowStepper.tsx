@@ -62,7 +62,9 @@ export const SmartFactoryWorkflowStepper: React.FC<SmartFactoryWorkflowStepperPr
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase">Stage {st.id}</span>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
+                    {isCurrent ? "Active" : isPassed ? "Completed" : "Planned"}
+                  </span>
                   {isPassed && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />}
                   {isCurrent && <Clock className="h-3.5 w-3.5 animate-spin text-primary" />}
                 </div>

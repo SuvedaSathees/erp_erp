@@ -50,9 +50,11 @@ export const ExcellenceWorkflowStepper: React.FC<ExcellenceWorkflowStepperProps>
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase">Stage {st.id}</span>
-                  {isPassed && <CheckCircle2 className="h-4 w-4 text-emerald-600" />}
-                  {isCurrent && <Clock className="h-4 w-4 animate-spin text-primary" />}
+                  <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
+                    {isCurrent ? "Active" : isPassed ? "Completed" : "Planned"}
+                  </span>
+                  {isPassed && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />}
+                  {isCurrent && <Clock className="h-3.5 w-3.5 animate-spin text-primary" />}
                 </div>
                 <span className="my-1.5 text-xs font-bold leading-tight text-foreground">{st.name}</span>
                 <span className="text-[10px] leading-snug text-muted-foreground">{st.desc}</span>

@@ -39,7 +39,7 @@ export const AiAssessmentTab: React.FC<AiAssessmentTabProps> = ({
 
       {/* AI Assessment Grid Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-        {/* 1. Duplicate Detection */}
+        {/* Duplicate Detection */}
         <div className="bg-card p-4 rounded-lg border border-border space-y-2">
           <div className="flex items-center gap-2 font-bold text-foreground pb-2 border-b border-border text-sm">
             <CheckCircle2 className="w-4 h-4 text-emerald-500" /> AI Duplicate Part Detection
@@ -52,7 +52,7 @@ export const AiAssessmentTab: React.FC<AiAssessmentTabProps> = ({
           </div>
         </div>
 
-        {/* 2. Cost Optimization */}
+        {/* Cost Optimization */}
         <div className="bg-card p-4 rounded-lg border border-border space-y-2">
           <div className="flex items-center gap-2 font-bold text-foreground pb-2 border-b border-border text-sm">
             <TrendingDown className="w-4 h-4 text-rose-500" /> AI Cost Optimization Engine
@@ -65,7 +65,7 @@ export const AiAssessmentTab: React.FC<AiAssessmentTabProps> = ({
           </div>
         </div>
 
-        {/* 3. Alternate Components */}
+        {/* Alternate Components */}
         <div className="bg-card p-4 rounded-lg border border-border space-y-2">
           <div className="flex items-center gap-2 font-bold text-foreground pb-2 border-b border-border text-sm">
             <RefreshCw className="w-4 h-4 text-blue-500" /> AI Alternate Component Suggestions
@@ -78,7 +78,7 @@ export const AiAssessmentTab: React.FC<AiAssessmentTabProps> = ({
           </div>
         </div>
 
-        {/* 4. Supply Risk Prediction */}
+        {/* Supply Risk Prediction */}
         <div className="bg-card p-4 rounded-lg border border-border space-y-2">
           <div className="flex items-center gap-2 font-bold text-foreground pb-2 border-b border-border text-sm">
             <AlertTriangle className="w-4 h-4 text-amber-500" /> AI Supply Risk Prediction

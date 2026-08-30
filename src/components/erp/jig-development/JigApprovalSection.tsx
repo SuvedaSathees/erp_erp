@@ -46,9 +46,6 @@ export function JigApprovalSection({
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-              10
-            </span>
             <CardTitle className="text-base font-bold">Multi-Level Review & Approval Workflow</CardTitle>
           </div>
           <CardDescription className="text-xs">
@@ -62,70 +59,81 @@ export function JigApprovalSection({
       </CardHeader>
 
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
           {/* Left Column: Reviewers Table (8 Roles) */}
-          <div className="lg:col-span-8 space-y-2">
-            <div className="rounded-lg border border-border overflow-hidden text-xs">
-              <div className="grid grid-cols-12 gap-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-muted-foreground uppercase tracking-wider border-b border-border">
-                <div className="col-span-3">Role</div>
-                <div className="col-span-3">Approver</div>
-                <div className="col-span-2">Decision</div>
-                <div className="col-span-2">Date</div>
-                <div className="col-span-2 text-right">Status</div>
-              </div>
-
-              <div className="divide-y divide-border/60">
-                {reviewers.map((rev) => {
-                  const isApproved = rev.status === "Approved";
-                  return (
-                    <div
-                      key={rev.role}
-                      className="grid grid-cols-12 gap-2 px-4 py-2.5 items-center hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors"
-                    >
-                      <div className="col-span-3 font-semibold text-foreground">{rev.role}</div>
-                      <div className="col-span-3 text-muted-foreground">{rev.person}</div>
-                      <div className="col-span-2 font-medium">
-                        {isApproved ? (
-                          <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-semibold">
-                            <CheckCircle2 className="h-3.5 w-3.5" /> Approved
-                          </span>
-                        ) : (
-                          <span className="text-amber-600 dark:text-amber-400 flex items-center gap-1">
-                            <Clock className="h-3.5 w-3.5" /> Pending
-                          </span>
-                        )}
-                      </div>
-                      <div className="col-span-2 text-muted-foreground font-mono">{rev.date}</div>
-                      <div className="col-span-2 text-right">
-                        <Badge
-                          variant="outline"
-                          className={
-                            isApproved
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 text-[10px]"
-                              : "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 text-[10px]"
-                          }
+          <div className="xl:col-span-8 space-y-2">
+            <div className="rounded-lg border border-border overflow-hidden text-xs bg-background shadow-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-muted/50 border-b border-border text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                      <th className="py-3 px-4 font-semibold">Role</th>
+                      <th className="py-3 px-4 font-semibold">Approver</th>
+                      <th className="py-3 px-4 font-semibold">Decision</th>
+                      <th className="py-3 px-4 font-semibold whitespace-nowrap">Date</th>
+                      <th className="py-3 px-4 text-right font-semibold">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/60">
+                    {reviewers.map((rev) => {
+                      const isApproved = rev.status === "Approved";
+                      return (
+                        <tr
+                          key={rev.role}
+                          className="hover:bg-muted/30 transition-colors"
                         >
-                          {rev.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  );
-                })}
+                          <td className="py-3 px-4 font-semibold text-foreground whitespace-nowrap">
+                            {rev.role}
+                          </td>
+                          <td className="py-3 px-4 text-muted-foreground whitespace-nowrap">
+                            {rev.person}
+                          </td>
+                          <td className="py-3 px-4 font-medium whitespace-nowrap">
+                            {isApproved ? (
+                              <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 font-semibold">
+                                <CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> Approved
+                              </span>
+                            ) : (
+                              <span className="text-amber-600 dark:text-amber-400 flex items-center gap-1.5 font-semibold">
+                                <Clock className="h-3.5 w-3.5 shrink-0" /> Pending
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3 px-4 text-muted-foreground font-mono whitespace-nowrap">
+                            {rev.date || "-"}
+                          </td>
+                          <td className="py-3 px-4 text-right whitespace-nowrap">
+                            <Badge
+                              variant="outline"
+                              className={
+                                isApproved
+                                  ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800 text-[10px] font-semibold"
+                                  : "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200 dark:border-amber-800 text-[10px] font-semibold"
+                              }
+                            >
+                              {rev.status}
+                            </Badge>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
 
           {/* Right Column: Approval Action Form Box */}
-          <div className="lg:col-span-4 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 space-y-4 text-xs">
+          <div className="xl:col-span-4 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 space-y-4 text-xs">
             <span className="font-bold text-foreground block text-sm flex items-center gap-2">
-              <UserCheck className="h-4 w-4 text-primary" />
+              <UserCheck className="h-4 w-4 text-primary shrink-0" />
               Sign-Off Decision Panel
             </span>
 
-            <div className="space-y-1">
-              <label className="font-semibold text-foreground">Approval Decision</label>
+            <div className="space-y-1.5">
+              <label className="font-semibold text-foreground block">Approval Decision</label>
               <Select value={decision} onValueChange={(v) => setDecision(v as JigApprovalDecision)}>
-                <SelectTrigger className="h-9 text-xs font-semibold bg-white dark:bg-slate-900">
+                <SelectTrigger className="h-9 text-xs font-semibold bg-white dark:bg-slate-900 border-border">
                   <SelectValue placeholder="Select Decision" />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,14 +156,14 @@ export function JigApprovalSection({
               </Select>
             </div>
 
-            <div className="space-y-1">
-              <label className="font-semibold text-foreground">Review Comments</label>
+            <div className="space-y-1.5">
+              <label className="font-semibold text-foreground block">Review Comments</label>
               <Textarea
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
                 rows={4}
-                placeholder="Enter sign-off comments, conditional constraints, or revision notes..."
-                className="text-xs bg-white dark:bg-slate-900 min-h-[90px]"
+                placeholder="Enter sign-off comments, tolerance validation notes, or maintenance prerequisites..."
+                className="text-xs bg-white dark:bg-slate-900 min-h-[90px] border-border"
               />
             </div>
 
@@ -163,7 +171,7 @@ export function JigApprovalSection({
               size="sm"
               onClick={handleApplyDecision}
               disabled={isSubmitting}
-              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold text-xs shadow-xs"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs shadow-xs"
             >
               {isSubmitting ? "Submitting..." : "Submit Review Decision"}
             </Button>

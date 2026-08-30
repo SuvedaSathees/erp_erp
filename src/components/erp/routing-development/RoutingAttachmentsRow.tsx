@@ -1,5 +1,6 @@
 import React from "react";
 import { Paperclip, FileText, Download, FileSpreadsheet, Image as ImageIcon, Archive, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 import type { RoutingRecord } from "@/services/types";
 
 interface RoutingAttachmentsRowProps {
@@ -23,7 +24,7 @@ export const RoutingAttachmentsRow: React.FC<RoutingAttachmentsRowProps> = ({
       <div className="flex justify-between items-center pb-2.5 border-b border-border mb-3">
         <div className="flex items-center gap-1.5">
           <Paperclip className="w-4 h-4 text-primary" />
-          <h2 className="font-bold text-foreground text-xs">9. Attachments</h2>
+          <h2 className="font-bold text-foreground text-xs">Attachments</h2>
           <span className="text-[10px] text-muted-foreground font-normal">
             ({record.attachments.length} Documents)
           </span>
@@ -57,7 +58,22 @@ export const RoutingAttachmentsRow: React.FC<RoutingAttachmentsRowProps> = ({
 
             <div className="flex items-center justify-between pt-1 border-t border-border/40 text-[9px] text-muted-foreground">
               <span>{att.fileSize}</span>
-              <button className="p-0.5 hover:text-primary transition-colors">
+              <button
+                onClick={() => {
+                  const content = `ROUTING ATTACHMENT: ${att.fileName}\nDocument Type: ${att.documentType}\nVersion: ${att.version}\nUploaded By: ${att.uploadedBy}\nDate: ${att.uploadedDate}\nStatus: Verified`;
+                  const blob = new Blob([content], { type: "text/plain" });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.download = att.fileName;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  toast.success(`Downloaded ${att.fileName}`);
+                }}
+                className="p-0.5 hover:text-primary transition-colors cursor-pointer"
+                title={`Download ${att.fileName}`}
+              >
                 <Download className="w-3 h-3" />
               </button>
             </div>

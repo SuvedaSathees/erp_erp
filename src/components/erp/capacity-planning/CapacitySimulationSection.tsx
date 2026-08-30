@@ -41,15 +41,10 @@ export function CapacitySimulationSection({
     <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-              5
-            </span>
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Cpu className="h-4 w-4 text-primary" />
-              Digital Twin Capacity Simulation
-            </CardTitle>
-          </div>
+          <CardTitle className="text-base font-bold flex items-center gap-2">
+            <Cpu className="h-4 w-4 text-primary" />
+            Digital Twin Capacity Simulation
+          </CardTitle>
           <CardDescription className="text-xs">
             Simulate peak demand scenarios, line loading surges & equipment expansion requirements.
           </CardDescription>

@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Clock } from "lucide-react";
 import type { PfmeaRecord } from "@/services/types";
 
 interface PfmeaWorkflowProgressBarProps {
@@ -41,13 +41,9 @@ export const PfmeaWorkflowProgressBar: React.FC<PfmeaWorkflowProgressBarProps> =
               {isCompleted ? (
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               ) : isInProgress ? (
-                <div className="w-4 h-4 rounded-full bg-blue-600 text-white text-[10px] flex items-center justify-center font-bold shrink-0">
-                  {s.number}
-                </div>
+                <Clock className="w-4 h-4 text-blue-600 animate-spin shrink-0" />
               ) : (
-                <div className="w-4 h-4 rounded-full bg-muted-foreground/30 text-muted-foreground text-[10px] flex items-center justify-center font-bold shrink-0">
-                  {s.number}
-                </div>
+                <div className="w-3.5 h-3.5 rounded-full border-2 border-muted-foreground/40 shrink-0" />
               )}
 
               <div className="min-w-0 flex-1">

@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { UserCheck, Send } from "lucide-react";
+import { UserCheck, ShieldCheck, CheckCircle2, Clock } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { ControlPlanRecord, ControlPlanApprovalDecision } from "@/services/types";
 
 interface ReviewApprovalTabProps {
@@ -12,7 +23,7 @@ export const ReviewApprovalTab: React.FC<ReviewApprovalTabProps> = ({
   onReviewDecision,
 }) => {
   const [selectedDecision, setSelectedDecision] = useState<ControlPlanApprovalDecision>(
-    record.approvalDecision
+    record.approvalDecision || "Approved"
   );
   const [comments, setComments] = useState("");
 
@@ -22,107 +33,132 @@ export const ReviewApprovalTab: React.FC<ReviewApprovalTabProps> = ({
   };
 
   return (
-    <div className="space-y-6 text-xs">
-      <div className="bg-card p-4 rounded-lg border border-border flex justify-between items-center">
-        <div>
-          <h2 className="text-base font-bold text-foreground">
-            Control Plan Executive Gate Review Board (7-Role Sign-off)
-          </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Cross-functional approval matrix for Quality Engineer, Manufacturing Engineer, Process Engineer, Production Manager, APQP Manager, Plant Head, and COO.
-          </p>
+    <Card className="border-border shadow-xs bg-white dark:bg-slate-900">
+      <CardHeader className="border-b border-border/60 pb-3 flex flex-row items-center justify-between">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
+          <CardTitle className="text-base font-bold text-foreground">
+            Review & Approval Authorization Matrix
+          </CardTitle>
         </div>
-        <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950 px-3 py-1.5 rounded-lg border border-emerald-200 dark:border-emerald-800">
-          <span className="text-xs text-muted-foreground font-semibold">Workflow Decision:</span>
-          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-            {record.approvalDecision}
-          </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold text-muted-foreground">Workflow Stage:</span>
+          <Badge className="bg-blue-600 text-white text-xs font-semibold px-2.5 py-0.5">
+            {record.workflowStatus}
+          </Badge>
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {record.reviewers.map((rev, idx) => (
-          <div key={idx} className="bg-card p-4 rounded-lg border border-border space-y-2">
-            <div className="flex justify-between items-center pb-2 border-b border-border">
-              <span className="font-bold text-foreground truncate">{rev.role}</span>
-              <span
-                className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                  rev.status === "Approved"
-                    ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300"
-                    : "bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300"
-                }`}
+      <CardContent className="space-y-6 pt-5">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+          {/* Table on Left (8 cols) */}
+          <div className="xl:col-span-8 space-y-2">
+            <div className="rounded-lg border border-border overflow-hidden text-xs bg-background shadow-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-muted/50 border-b border-border text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                      <th className="py-3 px-4 font-semibold">Role</th>
+                      <th className="py-3 px-4 font-semibold">Approver</th>
+                      <th className="py-3 px-4 font-semibold">Decision</th>
+                      <th className="py-3 px-4 font-semibold whitespace-nowrap">Date</th>
+                      <th className="py-3 px-4 text-right font-semibold">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/60">
+                    {record.reviewers.map((rev, idx) => {
+                      const isApproved = rev.status === "Approved";
+                      return (
+                        <tr key={idx} className="hover:bg-muted/30 transition-colors">
+                          <td className="py-3 px-4 font-semibold text-foreground whitespace-nowrap">
+                            {rev.role}
+                          </td>
+                          <td className="py-3 px-4 text-muted-foreground whitespace-nowrap font-medium">
+                            {rev.person}
+                          </td>
+                          <td className="py-3 px-4 font-medium whitespace-nowrap">
+                            {isApproved ? (
+                              <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 font-semibold">
+                                <CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> Approved
+                              </span>
+                            ) : (
+                              <span className="text-amber-600 dark:text-amber-400 flex items-center gap-1.5 font-semibold">
+                                <Clock className="h-3.5 w-3.5 shrink-0" /> Pending
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3 px-4 text-muted-foreground font-mono whitespace-nowrap">
+                            {rev.date || "-"}
+                          </td>
+                          <td className="py-3 px-4 text-right whitespace-nowrap">
+                            <Badge
+                              className={
+                                isApproved
+                                  ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 text-[10px] font-semibold"
+                                  : "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200 text-[10px] font-semibold"
+                              }
+                            >
+                              {rev.status}
+                            </Badge>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          {/* Sign-Off Decision Panel on Right (4 cols) */}
+          <div className="xl:col-span-4 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 space-y-4 text-xs">
+            <span className="font-bold text-foreground block text-sm flex items-center gap-2">
+              <UserCheck className="h-4 w-4 text-primary shrink-0" />
+              Sign-Off Decision Panel
+            </span>
+
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground block">Approval Decision</label>
+                <Select
+                  value={selectedDecision}
+                  onValueChange={(val) => setSelectedDecision(val as ControlPlanApprovalDecision)}
+                >
+                  <SelectTrigger className="h-9 text-xs font-semibold bg-white dark:bg-slate-900 border-border">
+                    <SelectValue placeholder="Select Decision" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Approved" className="text-xs text-emerald-600 font-semibold">Approved</SelectItem>
+                    <SelectItem value="Approved with Conditions" className="text-xs text-blue-600">Approved with Conditions</SelectItem>
+                    <SelectItem value="Revision Required" className="text-xs text-amber-600 font-semibold">Revision Required</SelectItem>
+                    <SelectItem value="Rejected" className="text-xs text-destructive font-semibold">Rejected</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground block">Review Comments</label>
+                <Textarea
+                  rows={3}
+                  value={comments}
+                  onChange={(e) => setComments(e.target.value)}
+                  placeholder="Enter review board comments, clearance notes, or process stipulations..."
+                  className="text-xs bg-white dark:bg-slate-900 border-border min-h-[85px]"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                size="sm"
+                className="w-full gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-xs"
               >
-                {rev.status}
-              </span>
-            </div>
-            <div className="font-semibold text-foreground">{rev.person}</div>
-            <div className="text-[10px] text-muted-foreground font-mono">Date: {rev.date}</div>
-            <p className="text-muted-foreground text-[11px] italic bg-muted/30 p-2 rounded border border-border/40">
-              "{rev.comments}"
-            </p>
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Submit Review Decision
+              </Button>
+            </form>
           </div>
-        ))}
-      </div>
-
-      <div className="bg-card p-4 rounded-lg border border-border space-y-4">
-        <h3 className="font-bold text-foreground pb-2 border-b border-border flex items-center gap-2">
-          <UserCheck className="w-4 h-4 text-primary" /> Record Control Plan Approval Decision
-        </h3>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-muted-foreground font-semibold mb-1">
-                Approval Decision
-              </label>
-              <select
-                value={selectedDecision}
-                onChange={(e) => setSelectedDecision(e.target.value as ControlPlanApprovalDecision)}
-                className="w-full bg-background border border-input rounded px-3 py-1.5 font-bold focus:ring-1 focus:ring-primary"
-              >
-                <option value="Approved">Approved</option>
-                <option value="Approved with Conditions">Approved with Conditions</option>
-                <option value="Revision Required">Revision Required</option>
-                <option value="On Hold">On Hold</option>
-                <option value="Rejected">Rejected</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-muted-foreground font-semibold mb-1">
-                Sign-off Date
-              </label>
-              <input
-                type="text"
-                readOnly
-                value={new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
-                className="w-full bg-muted border border-input rounded px-3 py-1.5 font-mono"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-muted-foreground font-semibold mb-1">
-              Reviewer Gate Feedback & Approval Conditions
-            </label>
-            <textarea
-              rows={3}
-              placeholder="Enter review feedback or approval conditions..."
-              value={comments}
-              onChange={(e) => setComments(e.target.value)}
-              className="w-full bg-background border border-input rounded p-2 focus:ring-1 focus:ring-primary"
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded shadow flex items-center gap-1.5 transition-colors"
-            >
-              <Send className="w-3.5 h-3.5" /> Submit Gate Decision
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

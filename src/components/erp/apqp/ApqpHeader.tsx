@@ -2,13 +2,12 @@ import React from "react";
 import {
   Save,
   Send,
-  Download,
+  Printer,
   Plus,
-  ChevronRight,
-  Eye,
-  Clock,
 } from "lucide-react";
 import type { ApqpRecord } from "@/services/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface ApqpHeaderProps {
   record: ApqpRecord;
@@ -26,122 +25,76 @@ export const ApqpHeader: React.FC<ApqpHeaderProps> = ({
   onNewProject,
 }) => {
   return (
-    <div className="bg-card text-card-foreground border-b border-border p-4 shadow-sm space-y-4 text-xs">
-      {/* Top Row: Breadcrumbs & Header Actions */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
-          <span className="hover:text-foreground cursor-pointer">Development</span>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="hover:text-foreground cursor-pointer">Manufacturing Development</span>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-foreground font-semibold">Quality Planning (APQP)</span>
-        </div>
+    <div className="bg-card text-card-foreground border border-border px-5 py-3.5 shadow-xs rounded-xl mb-4">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+        {/* Left: Identity, Title & Sub-metadata */}
+        <div className="space-y-1.5 min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded bg-muted font-mono font-semibold text-xs border border-border whitespace-nowrap">
+              {record.apqpId}
+            </span>
+            <h1 className="text-base font-bold text-foreground truncate">
+              {record.apqpProjectName}
+            </h1>
+            <Badge
+              variant="outline"
+              className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25 text-xs font-semibold px-2.5 py-0.5 whitespace-nowrap"
+            >
+              {record.workflowStatus}
+            </Badge>
+          </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onNewProject}
-            className="px-3 py-1.5 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold rounded-md shadow flex items-center gap-1.5 transition-colors"
-          >
-            <Plus className="w-3.5 h-3.5" /> New APQP Project
-          </button>
-          <button
-            onClick={onSaveDraft}
-            className="px-3 py-1.5 border border-input bg-background hover:bg-accent text-xs font-medium rounded-md shadow-sm flex items-center gap-1.5 transition-colors"
-          >
-            <Save className="w-3.5 h-3.5" /> Save Draft
-          </button>
-          <button
-            onClick={onSubmitForReview}
-            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow flex items-center gap-1.5 transition-colors"
-          >
-            <Send className="w-3.5 h-3.5" /> Submit for Review
-          </button>
-        </div>
-      </div>
-
-      {/* Row 1 Metadata Cards matching mockup */}
-      <div className="flex flex-wrap items-center gap-y-3 gap-x-6 pt-1">
-        <div className="min-w-[110px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">APQP ID</span>
-          <span className="font-extrabold text-foreground">{record.apqpId}</span>
-        </div>
-
-        <div className="min-w-[100px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">Form Code</span>
-          <span className="font-bold text-foreground">{record.formCode}</span>
-        </div>
-
-        <div className="min-w-[220px] max-w-[320px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">APQP Project Name</span>
-          <span className="font-extrabold text-foreground truncate block" title={record.apqpProjectName}>
-            {record.apqpProjectName}
-          </span>
-        </div>
-
-        <div className="min-w-[130px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">APQP Number</span>
-          <span className="font-bold text-foreground">{record.apqpNumber}</span>
-        </div>
-
-        <div className="min-w-[140px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">APQP Phase</span>
-          <span className="px-2 py-0.5 rounded font-extrabold text-[10px] bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-800">
-            Phase 3 Process Design
-          </span>
-        </div>
-
-        <div className="min-w-[110px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">Workflow Status</span>
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-            <Clock className="w-3 h-3" /> {record.workflowStatus}
-          </span>
-        </div>
-      </div>
-
-      {/* Row 2 Metadata Cards */}
-      <div className="flex flex-wrap items-center gap-y-3 gap-x-6 pt-2 border-t border-border/40">
-        <div className="min-w-[130px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">Product</span>
-          <span className="font-bold text-foreground">{record.product}</span>
-        </div>
-
-        <div className="min-w-[90px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">Product Revision</span>
-          <span className="font-bold text-foreground">{record.productRevision}</span>
-        </div>
-
-        <div className="min-w-[160px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">Customer</span>
-          <span className="font-bold text-foreground truncate block" title={record.customer}>{record.customer}</span>
-        </div>
-
-        <div className="min-w-[130px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">Project Manager</span>
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[9px] font-bold text-primary">
-              RS
-            </div>
-            <span className="font-bold text-foreground">{record.projectManager}</span>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+            <span className="text-[11px] font-semibold text-muted-foreground bg-muted/60 px-1.5 py-0.5 rounded border border-border/50 font-mono whitespace-nowrap">
+              Phase 3
+            </span>
+            <span className="whitespace-nowrap">Product: <strong className="text-foreground">{record.product} ({record.productRevision})</strong></span>
+            <span className="text-muted-foreground/60">•</span>
+            <span className="whitespace-nowrap">Customer: <strong className="text-foreground">{record.customer}</strong></span>
+            <span className="text-muted-foreground/60">•</span>
+            <span className="whitespace-nowrap">Manager: <strong className="text-foreground">{record.projectManager}</strong></span>
           </div>
         </div>
 
-        <div className="min-w-[100px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">Target SOP Date</span>
-          <span className="font-semibold text-foreground">{record.targetSopDate}</span>
-        </div>
+        {/* Right: Actions Toolbar */}
+        <div className="flex items-center gap-2 shrink-0 self-end lg:self-center">
+          <Button
+            size="sm"
+            onClick={onNewProject}
+            className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            New APQP
+          </Button>
 
-        <div className="min-w-[100px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">Program Status</span>
-          <span className="px-2 py-0.5 rounded font-bold text-[10px] bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300">
-            {record.programStatus}
-          </span>
-        </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onSaveDraft}
+            className="gap-1.5 border-border hover:bg-muted text-xs font-semibold"
+          >
+            <Save className="h-3.5 w-3.5 text-muted-foreground" />
+            Save Draft
+          </Button>
 
-        <div className="min-w-[80px]">
-          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">Priority</span>
-          <span className="px-2 py-0.5 rounded font-bold text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300">
-            {record.priority}
-          </span>
+          <Button
+            size="sm"
+            onClick={onSubmitForReview}
+            className="gap-1.5 bg-blue-600 hover:bg-blue-700 text-white shadow-xs text-xs font-semibold"
+          >
+            <Send className="h-3.5 w-3.5" />
+            Submit for Review
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onExport}
+            className="gap-1.5 border-border hover:bg-muted text-xs font-semibold"
+          >
+            <Printer className="h-3.5 w-3.5 text-muted-foreground" />
+            Export
+          </Button>
         </div>
       </div>
     </div>

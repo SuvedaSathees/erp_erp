@@ -17,7 +17,7 @@ export const AiRoutingAssessmentPanel: React.FC<AiRoutingAssessmentPanelProps> =
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2">
           <div className="flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-            <h2 className="font-bold text-foreground text-xs">7. AI Routing Assessment</h2>
+            <h2 className="font-bold text-foreground text-xs">AI Routing Assessment</h2>
           </div>
           <div className="flex items-center gap-1 bg-purple-50 dark:bg-purple-950/50 px-2 py-0.5 rounded-full border border-purple-200 dark:border-purple-800">
             <span className="text-[9px] text-muted-foreground font-semibold">AI Health Score</span>

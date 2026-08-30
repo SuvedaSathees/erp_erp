@@ -10,7 +10,14 @@ interface ProcessValidationPlanCardProps {
 export const ProcessValidationPlanCard: React.FC<ProcessValidationPlanCardProps> = ({
   record,
 }) => {
-  const { trialRunSummary, defectDistribution } = record;
+  const trialRunSummary = record.trialRunSummary || {
+    totalPartsProduced: 1500,
+    conformingParts: 1487,
+    nonConformingParts: 13,
+    currentFpy: 99.13,
+    defectRate: 0.87,
+  };
+  const defectDistribution = record.defectDistribution || [];
 
   const steps = [
     { name: "Plan", shortName: "Plan", status: "Completed" },
@@ -34,14 +41,11 @@ export const ProcessValidationPlanCard: React.FC<ProcessValidationPlanCardProps>
           {/* Card Header */}
           <div className="flex items-center justify-between pb-2.5 border-b border-border/60 mb-3">
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs">
-                3
-              </div>
               <h2 className="font-bold text-foreground text-xs tracking-tight">Validation Plan</h2>
             </div>
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
               <Clock className="w-3 h-3" />
-              Stage 3 of 6
+              In Progress
             </span>
           </div>
 
@@ -76,8 +80,8 @@ export const ProcessValidationPlanCard: React.FC<ProcessValidationPlanCardProps>
                           <Clock className="w-3.5 h-3.5" />
                         </div>
                       ) : (
-                        <div className="w-5 h-5 rounded-full bg-muted border border-border flex items-center justify-center text-[10px] font-bold text-muted-foreground">
-                          {idx + 1}
+                        <div className="w-5 h-5 rounded-full bg-muted border border-border flex items-center justify-center">
+                          <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50" />
                         </div>
                       )}
                       <span className="text-[9px] font-bold text-foreground mt-1 truncate max-w-full px-0.5">
@@ -86,7 +90,7 @@ export const ProcessValidationPlanCard: React.FC<ProcessValidationPlanCardProps>
                     </div>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="text-xs">
-                    <p className="font-bold">{idx + 1}. {st.name}</p>
+                    <p className="font-bold">{st.name}</p>
                     <p className="text-[10px] text-muted-foreground">Status: {st.status}</p>
                   </TooltipContent>
                 </Tooltip>

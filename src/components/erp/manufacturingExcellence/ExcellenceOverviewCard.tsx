@@ -1,6 +1,5 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -50,47 +49,28 @@ export const ExcellenceOverviewCard: React.FC<ExcellenceOverviewCardProps> = ({
   onChange,
   isEditing = true,
 }) => {
-  const MaicwBadge = ({ type, tooltip }: { type: "M" | "A" | "I" | "C" | "W"; tooltip: string }) => {
-    const colors = {
-      M: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 border-red-200",
-      A: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-200",
-      I: "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200",
-      C: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-200",
-      W: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 border-indigo-200",
-    };
-    return (
-      <span
-        title={tooltip}
-        className={`ml-1.5 inline-flex items-center justify-center rounded px-1.5 py-0.5 text-[10px] font-extrabold uppercase border ${colors[type]}`}
-      >
-        {type}
-      </span>
-    );
-  };
-
   return (
-    <Card className="border-border shadow-sm">
+    <Card className="border-border rounded-xl shadow-xs">
       <CardHeader className="border-b border-border/60 pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-bold text-foreground">
-            1. Excellence Initiative Overview
+            Excellence Initiative Overview
           </CardTitle>
-          <span className="text-xs font-semibold text-muted-foreground">MAICW Classification</span>
+          <span className="text-xs font-semibold text-muted-foreground">
+            Continuous Improvement Profile
+          </span>
         </div>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 gap-4 pt-4 md:grid-cols-2">
+      <CardContent className="grid grid-cols-1 gap-4 pt-4 md:grid-cols-2 text-xs">
         {/* Initiative Category */}
         <div className="flex flex-col gap-1.5 md:col-span-2">
-          <label className="text-xs font-semibold text-foreground">
-            Initiative Category
-            <MaicwBadge type="M" tooltip="Mandatory Dropdown" />
-          </label>
+          <label className="font-semibold text-foreground">Initiative Category</label>
           {isEditing ? (
             <Select
               value={record.initiativeCategory}
               onValueChange={(val) => onChange("initiativeCategory", val as InitiativeCategory)}
             >
-              <SelectTrigger className="h-9 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+              <SelectTrigger className="h-9 text-xs font-semibold">
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
@@ -102,117 +82,97 @@ export const ExcellenceOverviewCard: React.FC<ExcellenceOverviewCardProps> = ({
               </SelectContent>
             </Select>
           ) : (
-            <span className="inline-flex rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-              {record.initiativeCategory}
-            </span>
+            <span className="font-medium text-foreground">{record.initiativeCategory}</span>
           )}
         </div>
 
         {/* Business Objective */}
         <div className="flex flex-col gap-1.5 md:col-span-2">
-          <label className="text-xs font-semibold text-foreground">
-            Business Objective
-            <MaicwBadge type="M" tooltip="Mandatory Field" />
-          </label>
+          <label className="font-semibold text-foreground">Business Objective</label>
           {isEditing ? (
             <Textarea
               rows={2}
               value={record.businessObjective}
               onChange={(e) => onChange("businessObjective", e.target.value)}
-              placeholder="Outline quantifiable business objectives..."
-              className="text-xs"
+              placeholder="State clear business objective and operational problem..."
+              className="text-xs resize-none"
             />
           ) : (
-            <p className="rounded-md bg-muted/40 p-2.5 text-xs text-foreground">{record.businessObjective}</p>
+            <p className="text-muted-foreground">{record.businessObjective}</p>
           )}
         </div>
 
         {/* Current Performance */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-foreground">
-            Current Performance
-            <MaicwBadge type="M" tooltip="Mandatory Field" />
-          </label>
+          <label className="font-semibold text-foreground">Current Performance (Baseline)</label>
           {isEditing ? (
             <Textarea
               rows={2}
               value={record.currentPerformance}
               onChange={(e) => onChange("currentPerformance", e.target.value)}
-              placeholder="Describe current baseline performance..."
-              className="text-xs"
+              placeholder="e.g. OEE 72.65%, defect rate 1.80%, downtime 8.5%"
+              className="text-xs resize-none font-mono"
             />
           ) : (
-            <p className="rounded-md bg-muted/40 p-2.5 text-xs text-foreground">{record.currentPerformance}</p>
+            <p className="text-muted-foreground">{record.currentPerformance}</p>
           )}
         </div>
 
         {/* Target Performance */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-foreground">
-            Target Performance
-            <MaicwBadge type="M" tooltip="Mandatory Field" />
-          </label>
+          <label className="font-semibold text-foreground">Target Performance (Goal)</label>
           {isEditing ? (
             <Textarea
               rows={2}
               value={record.targetPerformance}
               onChange={(e) => onChange("targetPerformance", e.target.value)}
-              placeholder="Describe target performance KPIs..."
-              className="text-xs"
+              placeholder="e.g. OEE 85.00%, defect rate < 0.50%, downtime < 4%"
+              className="text-xs resize-none font-mono"
             />
           ) : (
-            <p className="rounded-md bg-muted/40 p-2.5 text-xs text-foreground">{record.targetPerformance}</p>
+            <p className="text-muted-foreground">{record.targetPerformance}</p>
           )}
         </div>
 
         {/* Improvement Strategy */}
         <div className="flex flex-col gap-1.5 md:col-span-2">
-          <label className="text-xs font-semibold text-foreground">
-            Improvement Strategy
-            <MaicwBadge type="M" tooltip="Mandatory Field" />
-          </label>
+          <label className="font-semibold text-foreground">Improvement Strategy</label>
           {isEditing ? (
             <Textarea
               rows={2}
               value={record.improvementStrategy}
               onChange={(e) => onChange("improvementStrategy", e.target.value)}
-              placeholder="Detail lean, six sigma, TPM and AI strategy..."
-              className="text-xs"
+              placeholder="e.g. Lean Value Stream Mapping, TPM, Six Sigma DMAIC, automated Vision Inspection"
+              className="text-xs resize-none"
             />
           ) : (
-            <p className="rounded-md bg-muted/40 p-2.5 text-xs text-foreground">{record.improvementStrategy}</p>
+            <p className="text-muted-foreground">{record.improvementStrategy}</p>
           )}
         </div>
 
-        {/* Expected Business Benefits */}
+        {/* Expected Benefits */}
         <div className="flex flex-col gap-1.5 md:col-span-2">
-          <label className="text-xs font-semibold text-foreground">
-            Expected Business Benefits
-            <MaicwBadge type="M" tooltip="Mandatory Field" />
-          </label>
+          <label className="font-semibold text-foreground">Expected Business Benefits</label>
           {isEditing ? (
             <Textarea
               rows={2}
               value={record.expectedBusinessBenefits}
               onChange={(e) => onChange("expectedBusinessBenefits", e.target.value)}
-              placeholder="Detail cost savings, quality gains, energy reduction..."
-              className="text-xs"
+              placeholder="e.g. Annualized cost savings of ₹ 18.75 Lakhs, 12.35% OEE uplift"
+              className="text-xs resize-none"
             />
           ) : (
-            <p className="rounded-md bg-muted/40 p-2.5 text-xs text-foreground">{record.expectedBusinessBenefits}</p>
+            <p className="text-muted-foreground">{record.expectedBusinessBenefits}</p>
           )}
         </div>
 
         {/* Priority */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-foreground">
-            Priority
-            <MaicwBadge type="M" tooltip="Mandatory Dropdown" />
-          </label>
+          <label className="font-semibold text-foreground">Priority</label>
           {isEditing ? (
             <Select
               value={record.priority}
-              onValueChange={(val) => onChange("priority", val)}
+              onValueChange={(val) => onChange("priority", val as "Low" | "Medium" | "High" | "Critical")}
             >
               <SelectTrigger className="h-9 text-xs">
                 <SelectValue placeholder="Select Priority" />
@@ -220,23 +180,18 @@ export const ExcellenceOverviewCard: React.FC<ExcellenceOverviewCardProps> = ({
               <SelectContent>
                 <SelectItem value="Low" className="text-xs">Low</SelectItem>
                 <SelectItem value="Medium" className="text-xs">Medium</SelectItem>
-                <SelectItem value="High" className="text-xs">High</SelectItem>
-                <SelectItem value="Critical" className="text-xs">Critical</SelectItem>
+                <SelectItem value="High" className="text-xs font-semibold text-amber-600">High</SelectItem>
+                <SelectItem value="Critical" className="text-xs font-semibold text-destructive">Critical</SelectItem>
               </SelectContent>
             </Select>
           ) : (
-            <Badge variant="outline" className="w-fit">
-              {record.priority}
-            </Badge>
+            <span className="font-medium text-foreground">{record.priority}</span>
           )}
         </div>
 
         {/* Initiative Status */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-foreground">
-            Initiative Status
-            <MaicwBadge type="W" tooltip="Workflow Dropdown" />
-          </label>
+          <label className="font-semibold text-foreground">Initiative Status</label>
           {isEditing ? (
             <Select
               value={record.initiativeStatus}
@@ -254,9 +209,7 @@ export const ExcellenceOverviewCard: React.FC<ExcellenceOverviewCardProps> = ({
               </SelectContent>
             </Select>
           ) : (
-            <Badge className="w-fit bg-primary text-primary-foreground">
-              {record.initiativeStatus}
-            </Badge>
+            <span className="font-medium text-foreground">{record.initiativeStatus}</span>
           )}
         </div>
       </CardContent>

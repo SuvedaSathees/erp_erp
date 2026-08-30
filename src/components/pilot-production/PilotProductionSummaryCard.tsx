@@ -56,7 +56,7 @@ export const PilotProductionSummaryCard: React.FC<PilotProductionSummaryCardProp
   return (
     <div className="bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm space-y-4">
       <h3 className="text-sm font-bold text-foreground border-b border-border pb-2">
-        Section 8 · Pilot Production Summary
+        Pilot Production Summary
       </h3>
 
       <div className="space-y-2 text-xs">

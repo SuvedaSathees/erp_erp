@@ -53,7 +53,7 @@ export const LeanStandardWorkReleasePanel: React.FC<LeanStandardWorkReleasePanel
         <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
           <div className="flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-blue-500" />
-            <span className="font-bold text-foreground">1. Release Standard Work</span>
+            <span className="font-bold text-foreground">Release Standard Work</span>
           </div>
           <p className="text-[11px] text-muted-foreground">Publish updated Standard Work documents to Standard Work module.</p>
           {actions.releaseStandardWork ? (
@@ -64,7 +64,7 @@ export const LeanStandardWorkReleasePanel: React.FC<LeanStandardWorkReleasePanel
             <button
               disabled={!isAuthorized}
               onClick={() => onFireAction("releaseStandardWork")}
-              className="w-full py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors"
+              className="w-full py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors cursor-pointer"
             >
               Release Standard Work
             </button>
@@ -75,7 +75,7 @@ export const LeanStandardWorkReleasePanel: React.FC<LeanStandardWorkReleasePanel
         <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
           <div className="flex items-center gap-2">
             <FileCheck className="w-4 h-4 text-purple-500" />
-            <span className="font-bold text-foreground">2. Deploy New Standards</span>
+            <span className="font-bold text-foreground">Deploy New Standards</span>
           </div>
           <p className="text-[11px] text-muted-foreground">Update Process Engineering, Routing, and Work Instructions.</p>
           {actions.deployNewStandards ? (
@@ -86,7 +86,7 @@ export const LeanStandardWorkReleasePanel: React.FC<LeanStandardWorkReleasePanel
             <button
               disabled={!isAuthorized}
               onClick={() => onFireAction("deployNewStandards")}
-              className="w-full py-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors"
+              className="w-full py-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors cursor-pointer"
             >
               Deploy Standards
             </button>
@@ -97,7 +97,7 @@ export const LeanStandardWorkReleasePanel: React.FC<LeanStandardWorkReleasePanel
         <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-emerald-500" />
-            <span className="font-bold text-foreground">3. Initiate CI Tracking</span>
+            <span className="font-bold text-foreground">Initiate CI Tracking</span>
           </div>
           <p className="text-[11px] text-muted-foreground">Activate sustained improvement KPI tracking.</p>
           {actions.initiateContinuousImprovement ? (
@@ -108,7 +108,7 @@ export const LeanStandardWorkReleasePanel: React.FC<LeanStandardWorkReleasePanel
             <button
               disabled={!isAuthorized}
               onClick={() => onFireAction("initiateContinuousImprovement")}
-              className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded text-xs transition-colors"
+              className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded text-xs transition-colors cursor-pointer"
             >
               Initiate CI Tracking
             </button>

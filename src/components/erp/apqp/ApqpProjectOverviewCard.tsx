@@ -15,7 +15,7 @@ export const ApqpProjectOverviewCard: React.FC<ApqpProjectOverviewCardProps> = (
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
           <div className="flex items-center gap-1.5">
             <Layers className="w-4 h-4 text-primary" />
-            <h2 className="font-bold text-foreground text-xs">1. Project Overview</h2>
+            <h2 className="font-bold text-foreground text-xs">Project Overview</h2>
           </div>
         </div>
 

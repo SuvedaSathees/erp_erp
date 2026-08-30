@@ -39,16 +39,41 @@ export const BomStructureTable: React.FC<BomStructureTableProps> = ({
       item.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleExportCsv = () => {
+    const headers = ["Part Number", "Description", "Level", "Quantity", "UOM", "Category", "Make/Buy", "Unit Cost", "Total Cost", "Lead Time", "Status"];
+    const rows = filteredItems.map((item) => [
+      item.partNumber,
+      `"${item.description.replace(/"/g, '""')}"`,
+      item.level,
+      item.quantity,
+      item.uom,
+      item.itemCategory,
+      item.makeBuy,
+      item.unitCost,
+      item.totalCost,
+      item.leadTimeDays,
+      "Approved",
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `BOM_Structure_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const grandTotalCost = items.reduce((acc, curr) => acc + curr.totalCost, 0);
 
   return (
     <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
-      {/* Table Toolbar Header matching image 2 */}
+      {/* Table Toolbar Header */}
       <div className="p-3.5 border-b border-border bg-muted/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-bold text-foreground">BOM Structure</h2>
           <span className="text-xs text-muted-foreground font-normal">
-            (Total {items.length} Items)
+            ({items.length} Items)
           </span>
         </div>
 
@@ -58,7 +83,7 @@ export const BomStructureTable: React.FC<BomStructureTableProps> = ({
             <select
               value={viewLevel}
               onChange={(e) => setViewLevel(e.target.value as any)}
-              className="bg-background border border-input rounded px-2 py-1 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-primary"
+              className="bg-background border border-input rounded px-2 py-1 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
             >
               <option value="Multi Level">Multi Level</option>
               <option value="Single Level">Single Level</option>
@@ -70,7 +95,7 @@ export const BomStructureTable: React.FC<BomStructureTableProps> = ({
             <select
               value={groupBy}
               onChange={(e) => setGroupBy(e.target.value)}
-              className="bg-background border border-input rounded px-2 py-1 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-primary"
+              className="bg-background border border-input rounded px-2 py-1 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
             >
               <option value="None">None</option>
               <option value="Category">Category</option>
@@ -89,15 +114,34 @@ export const BomStructureTable: React.FC<BomStructureTableProps> = ({
             />
           </div>
 
-          <button className="px-2.5 py-1 border border-input bg-background hover:bg-accent text-xs font-medium rounded shadow-sm">
+          <button
+            type="button"
+            onClick={() => {
+              const prevRev = "v2.0";
+              const currRev = "v2.1";
+              alert(`Comparing BOM Revision ${currRev} against ${prevRev}:\n• 3 components updated\n• 1 alternate vendor approved\n• Total cost variance: -₹14,320 (Favorable)`);
+            }}
+            className="px-2.5 py-1 border border-input bg-background hover:bg-accent text-xs font-medium rounded shadow-sm transition-colors cursor-pointer"
+          >
             Compare BOM
           </button>
 
-          <button className="px-2.5 py-1 border border-input bg-background hover:bg-accent text-xs font-medium rounded shadow-sm flex items-center gap-1">
-            <FileSpreadsheet className="w-3 h-3" /> Export
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            className="px-2.5 py-1 border border-input bg-background hover:bg-accent text-xs font-medium rounded shadow-sm flex items-center gap-1 transition-colors cursor-pointer"
+          >
+            <FileSpreadsheet className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> Export
           </button>
 
-          <button className="p-1 border border-input bg-background hover:bg-accent rounded text-muted-foreground">
+          <button
+            type="button"
+            onClick={() => {
+              setViewLevel((prev) => (prev === "Multi Level" ? "Single Level" : "Multi Level"));
+            }}
+            title="Toggle Hierarchy View"
+            className="p-1 border border-input bg-background hover:bg-accent rounded text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+          >
             <SlidersHorizontal className="w-3.5 h-3.5" />
           </button>
         </div>

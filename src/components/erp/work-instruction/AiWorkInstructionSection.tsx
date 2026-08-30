@@ -61,15 +61,10 @@ export function AiWorkInstructionSection({
     <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-              7
-            </span>
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-amber-500" />
-              AI Work Instruction Assessment & Optimization Engine
-            </CardTitle>
-          </div>
+          <CardTitle className="text-base font-bold flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-amber-500" />
+            AI Work Instruction Assessment & Optimization Engine
+          </CardTitle>
           <CardDescription className="text-xs">
             Algorithmic assembly step validation, ESD risk detection, process cycle optimization & knowledge gap analysis.
           </CardDescription>

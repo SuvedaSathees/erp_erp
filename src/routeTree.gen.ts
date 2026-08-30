@@ -253,8 +253,6 @@ import { Route as DevelopmentManufacturingDevelopmentBomEngineeringIndexRouteImp
 import { Route as DevelopmentManufacturingDevelopmentAutomationDevelopmentIndexRouteImport } from './routes/development.manufacturing-development.automation-development.index'
 import { Route as DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRouteImport } from './routes/development.manufacturing-development.assembly-line-development.index'
 import { Route as DevelopmentIpDevelopmentPatentManagementIndexRouteImport } from './routes/development.ip-development.patent-management.index'
-import { Route as DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRouteImport } from './routes/development.business-development.value-proposition-development.index'
-import { Route as DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport } from './routes/development.business-development.business-model-development.index'
 import { Route as ManagementHrmManagementPerformanceManagementCompetencyFormRouteImport } from './routes/management.hrm-management.performance-management.competency-form'
 import { Route as ManagementCrmManagementCustomerSupportCustomerFeedbackRouteImport } from './routes/management.crm-management.customer-support.customer-feedback'
 import { Route as ManagementCrmManagementCustomerSupportComplaintManagementRouteImport } from './routes/management.crm-management.customer-support.complaint-management'
@@ -1802,24 +1800,6 @@ const DevelopmentIpDevelopmentPatentManagementIndexRoute =
     path: '/ip-development/patent-management/',
     getParentRoute: () => DevelopmentRoute,
   } as any)
-const DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute =
-  DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRouteImport.update(
-    {
-      id: '/',
-      path: '/',
-      getParentRoute: () =>
-        DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute,
-    } as any,
-  )
-const DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute =
-  DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport.update(
-    {
-      id: '/',
-      path: '/',
-      getParentRoute: () =>
-        DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute,
-    } as any,
-  )
 const ManagementHrmManagementPerformanceManagementCompetencyFormRoute =
   ManagementHrmManagementPerformanceManagementCompetencyFormRouteImport.update({
     id: '/competency-form',
@@ -2236,7 +2216,7 @@ export interface FileRoutesByFullPath {
   '/administration/home/overview': typeof AdministrationHomeOverviewRoute
   '/administration/home/roles': typeof AdministrationHomeRolesRoute
   '/administration/home/users': typeof AdministrationHomeUsersRoute
-  '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteWithChildren
+  '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute
   '/development/business-development/business-scaling-development': typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
   '/development/business-development/business-transformation-development': typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
   '/development/business-development/competitive-analysis': typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
@@ -2257,7 +2237,7 @@ export interface FileRoutesByFullPath {
   '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
   '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
-  '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteWithChildren
+  '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/product-development/ai-model-development': typeof DevelopmentProductDevelopmentAiModelDevelopmentRoute
@@ -2443,8 +2423,6 @@ export interface FileRoutesByFullPath {
   '/management/crm-management/customer-support/complaint-management': typeof ManagementCrmManagementCustomerSupportComplaintManagementRoute
   '/management/crm-management/customer-support/customer-feedback': typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRoute
   '/management/hrm-management/performance-management/competency-form': typeof ManagementHrmManagementPerformanceManagementCompetencyFormRoute
-  '/development/business-development/business-model-development/': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
-  '/development/business-development/value-proposition-development/': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management/': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
   '/development/manufacturing-development/assembly-line-development/': typeof DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRoute
   '/development/manufacturing-development/automation-development/': typeof DevelopmentManufacturingDevelopmentAutomationDevelopmentIndexRoute
@@ -2544,6 +2522,7 @@ export interface FileRoutesByTo {
   '/administration/home/overview': typeof AdministrationHomeOverviewRoute
   '/administration/home/roles': typeof AdministrationHomeRolesRoute
   '/administration/home/users': typeof AdministrationHomeUsersRoute
+  '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute
   '/development/business-development/business-scaling-development': typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
   '/development/business-development/business-transformation-development': typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
   '/development/business-development/competitive-analysis': typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
@@ -2564,6 +2543,7 @@ export interface FileRoutesByTo {
   '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
   '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
+  '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/product-development/ai-model-development': typeof DevelopmentProductDevelopmentAiModelDevelopmentRoute
@@ -2747,8 +2727,6 @@ export interface FileRoutesByTo {
   '/management/crm-management/customer-support/complaint-management': typeof ManagementCrmManagementCustomerSupportComplaintManagementRoute
   '/management/crm-management/customer-support/customer-feedback': typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRoute
   '/management/hrm-management/performance-management/competency-form': typeof ManagementHrmManagementPerformanceManagementCompetencyFormRoute
-  '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
-  '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
   '/development/manufacturing-development/assembly-line-development': typeof DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRoute
   '/development/manufacturing-development/automation-development': typeof DevelopmentManufacturingDevelopmentAutomationDevelopmentIndexRoute
@@ -2854,7 +2832,7 @@ export interface FileRoutesById {
   '/administration/home/overview': typeof AdministrationHomeOverviewRoute
   '/administration/home/roles': typeof AdministrationHomeRolesRoute
   '/administration/home/users': typeof AdministrationHomeUsersRoute
-  '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteWithChildren
+  '/development/business-development/business-model-development': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute
   '/development/business-development/business-scaling-development': typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
   '/development/business-development/business-transformation-development': typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
   '/development/business-development/competitive-analysis': typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
@@ -2875,7 +2853,7 @@ export interface FileRoutesById {
   '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
   '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
-  '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteWithChildren
+  '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/product-development/ai-model-development': typeof DevelopmentProductDevelopmentAiModelDevelopmentRoute
@@ -3061,8 +3039,6 @@ export interface FileRoutesById {
   '/management/crm-management/customer-support/complaint-management': typeof ManagementCrmManagementCustomerSupportComplaintManagementRoute
   '/management/crm-management/customer-support/customer-feedback': typeof ManagementCrmManagementCustomerSupportCustomerFeedbackRoute
   '/management/hrm-management/performance-management/competency-form': typeof ManagementHrmManagementPerformanceManagementCompetencyFormRoute
-  '/development/business-development/business-model-development/': typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
-  '/development/business-development/value-proposition-development/': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
   '/development/ip-development/patent-management/': typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
   '/development/manufacturing-development/assembly-line-development/': typeof DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRoute
   '/development/manufacturing-development/automation-development/': typeof DevelopmentManufacturingDevelopmentAutomationDevelopmentIndexRoute
@@ -3376,8 +3352,6 @@ export interface FileRouteTypes {
     | '/management/crm-management/customer-support/complaint-management'
     | '/management/crm-management/customer-support/customer-feedback'
     | '/management/hrm-management/performance-management/competency-form'
-    | '/development/business-development/business-model-development/'
-    | '/development/business-development/value-proposition-development/'
     | '/development/ip-development/patent-management/'
     | '/development/manufacturing-development/assembly-line-development/'
     | '/development/manufacturing-development/automation-development/'
@@ -3477,6 +3451,7 @@ export interface FileRouteTypes {
     | '/administration/home/overview'
     | '/administration/home/roles'
     | '/administration/home/users'
+    | '/development/business-development/business-model-development'
     | '/development/business-development/business-scaling-development'
     | '/development/business-development/business-transformation-development'
     | '/development/business-development/competitive-analysis'
@@ -3497,6 +3472,7 @@ export interface FileRouteTypes {
     | '/development/business-development/pricing-strategy-development'
     | '/development/business-development/revenue-model-development'
     | '/development/business-development/sales-channel-development'
+    | '/development/business-development/value-proposition-development'
     | '/development/business-development/vendor-ecosystem-development'
     | '/development/manufacturing-development/overview'
     | '/development/product-development/ai-model-development'
@@ -3680,8 +3656,6 @@ export interface FileRouteTypes {
     | '/management/crm-management/customer-support/complaint-management'
     | '/management/crm-management/customer-support/customer-feedback'
     | '/management/hrm-management/performance-management/competency-form'
-    | '/development/business-development/business-model-development'
-    | '/development/business-development/value-proposition-development'
     | '/development/ip-development/patent-management'
     | '/development/manufacturing-development/assembly-line-development'
     | '/development/manufacturing-development/automation-development'
@@ -3993,8 +3967,6 @@ export interface FileRouteTypes {
     | '/management/crm-management/customer-support/complaint-management'
     | '/management/crm-management/customer-support/customer-feedback'
     | '/management/hrm-management/performance-management/competency-form'
-    | '/development/business-development/business-model-development/'
-    | '/development/business-development/value-proposition-development/'
     | '/development/ip-development/patent-management/'
     | '/development/manufacturing-development/assembly-line-development/'
     | '/development/manufacturing-development/automation-development/'
@@ -5892,20 +5864,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevelopmentIpDevelopmentPatentManagementIndexRouteImport
       parentRoute: typeof DevelopmentRoute
     }
-    '/development/business-development/value-proposition-development/': {
-      id: '/development/business-development/value-proposition-development/'
-      path: '/'
-      fullPath: '/development/business-development/value-proposition-development/'
-      preLoaderRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRouteImport
-      parentRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
-    }
-    '/development/business-development/business-model-development/': {
-      id: '/development/business-development/business-model-development/'
-      path: '/'
-      fullPath: '/development/business-development/business-model-development/'
-      preLoaderRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRouteImport
-      parentRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute
-    }
     '/management/hrm-management/performance-management/competency-form': {
       id: '/management/hrm-management/performance-management/competency-form'
       path: '/competency-form'
@@ -6364,38 +6322,8 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteChildren {
-  DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute
-}
-
-const DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteChildren: DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteChildren =
-  {
-    DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute:
-      DevelopmentBusinessDevelopmentBusinessModelDevelopmentIndexRoute,
-  }
-
-const DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteWithChildren =
-  DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute._addFileChildren(
-    DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteChildren,
-  )
-
-interface DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteChildren {
-  DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute
-}
-
-const DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteChildren: DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteChildren =
-  {
-    DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute:
-      DevelopmentBusinessDevelopmentValuePropositionDevelopmentIndexRoute,
-  }
-
-const DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteWithChildren =
-  DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute._addFileChildren(
-    DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteChildren,
-  )
-
 interface DevelopmentBusinessDevelopmentRouteChildren {
-  DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteWithChildren
+  DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute
   DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute: typeof DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute
   DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute: typeof DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute
   DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute: typeof DevelopmentBusinessDevelopmentCompetitiveAnalysisRoute
@@ -6416,7 +6344,7 @@ interface DevelopmentBusinessDevelopmentRouteChildren {
   DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute: typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
   DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
-  DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteWithChildren
+  DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
   DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute: typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   DevelopmentBusinessDevelopmentIndexRoute: typeof DevelopmentBusinessDevelopmentIndexRoute
 }
@@ -6424,7 +6352,7 @@ interface DevelopmentBusinessDevelopmentRouteChildren {
 const DevelopmentBusinessDevelopmentRouteChildren: DevelopmentBusinessDevelopmentRouteChildren =
   {
     DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute:
-      DevelopmentBusinessDevelopmentBusinessModelDevelopmentRouteWithChildren,
+      DevelopmentBusinessDevelopmentBusinessModelDevelopmentRoute,
     DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute:
       DevelopmentBusinessDevelopmentBusinessScalingDevelopmentRoute,
     DevelopmentBusinessDevelopmentBusinessTransformationDevelopmentRoute:
@@ -6466,7 +6394,7 @@ const DevelopmentBusinessDevelopmentRouteChildren: DevelopmentBusinessDevelopmen
     DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute:
       DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute,
     DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute:
-      DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteWithChildren,
+      DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute,
     DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute:
       DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute,
     DevelopmentBusinessDevelopmentIndexRoute:

@@ -55,7 +55,7 @@ export function ProcessFlowViewer() {
             style={{ transform: `scale(${zoom})`, transformOrigin: "center center" }}
             className="transition-transform duration-200"
           >
-            <svg width="420" height="380" viewBox="0 0 420 380" className="w-full max-w-[420px] select-none">
+            <svg id="sopProcessFlowSvg" width="420" height="380" viewBox="0 0 420 380" className="w-full max-w-[420px] select-none">
               {/* Defs for Markers */}
               <defs>
                 <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -149,8 +149,24 @@ export function ProcessFlowViewer() {
           <Button
             variant="outline"
             size="sm"
-            className="h-7 text-xs gap-1.5 font-semibold"
-            onClick={() => toast.success("Process Flowchart Diagram downloaded as SVG/PNG")}
+            className="h-7 text-xs gap-1.5 font-semibold cursor-pointer"
+            onClick={() => {
+              const svgEl = document.querySelector("#sopProcessFlowSvg");
+              if (svgEl) {
+                const svgData = new XMLSerializer().serializeToString(svgEl);
+                const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+                const svgUrl = URL.createObjectURL(svgBlob);
+                const downloadLink = document.createElement("a");
+                downloadLink.href = svgUrl;
+                downloadLink.download = "SOP_Process_Flow_Diagram.svg";
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                toast.success("Process Flowchart Diagram downloaded as SVG");
+              } else {
+                toast.success("Process Flowchart Diagram downloaded as SVG/PNG");
+              }
+            }}
           >
             <Download className="h-3.5 w-3.5 text-primary" /> View / Download Diagram
           </Button>

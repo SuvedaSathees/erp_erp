@@ -2,6 +2,7 @@ import { UseFormReturn } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import type { FactoryLayoutFormInput } from "@/services/types";
 
 export function InfrastructureSection({
@@ -39,12 +40,7 @@ export function InfrastructureSection({
     <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-              3
-            </span>
-            <CardTitle className="text-base font-bold">Manufacturing Infrastructure</CardTitle>
-          </div>
+          <CardTitle className="text-base font-bold">Manufacturing Infrastructure</CardTitle>
           <CardDescription className="text-xs">
             Shop floor allocation, production zones, warehousing capacity & maintenance workshops.
           </CardDescription>
@@ -66,10 +62,10 @@ export function InfrastructureSection({
       </CardHeader>
 
       <CardContent className="space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-xs">
           {/* Warehouse Capacity */}
-          <div className="space-y-1">
-            <label className="font-semibold text-foreground">Warehouse Capacity (m²)</label>
+          <div className="space-y-1.5">
+            <label className="font-semibold text-foreground block">Warehouse Capacity (m²)</label>
             <Input
               type="number"
               {...register("warehouseCapacityM2", { valueAsNumber: true })}
@@ -78,8 +74,8 @@ export function InfrastructureSection({
           </div>
 
           {/* Loading Bays */}
-          <div className="space-y-1">
-            <label className="font-semibold text-foreground">Loading & Unloading Bays</label>
+          <div className="space-y-1.5">
+            <label className="font-semibold text-foreground block">Loading & Unloading Bays</label>
             <Input
               type="number"
               {...register("loadingUnloadingBays", { valueAsNumber: true })}
@@ -88,64 +84,64 @@ export function InfrastructureSection({
           </div>
 
           {/* Maintenance Workshop Checkbox */}
-          <div className="space-y-1 flex flex-col justify-center">
-            <label className="font-semibold text-foreground mb-1">Maintenance Workshop</label>
-            <div className="flex items-center gap-2 h-9 px-3 border border-border rounded-md bg-slate-50 dark:bg-slate-800/50">
+          <div className="space-y-1.5">
+            <label className="font-semibold text-foreground block">Maintenance Workshop</label>
+            <div className="flex items-center gap-2.5 h-9 px-3 border border-border rounded-md bg-slate-50 dark:bg-slate-800/50">
               <Checkbox
                 id="maintenanceWorkshop"
                 checked={watch("maintenanceWorkshop") ?? true}
                 onCheckedChange={(val) => setValue("maintenanceWorkshop", Boolean(val))}
               />
-              <label htmlFor="maintenanceWorkshop" className="text-xs font-medium cursor-pointer">
+              <label htmlFor="maintenanceWorkshop" className="text-xs font-medium cursor-pointer whitespace-nowrap">
                 Dedicated Tool & Maintenance Bay ✓
               </label>
             </div>
           </div>
+        </div>
 
-          {/* Production Areas Pills */}
-          <div className="space-y-1.5 md:col-span-2 lg:col-span-3">
-            <label className="font-semibold text-foreground block">Production Areas</label>
-            <div className="flex flex-wrap items-center gap-2">
-              {availableProdAreas.map((p) => {
-                const isSelected = selectedProdAreas.includes(p);
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-border/60">
+          {/* Production Areas */}
+          <div className="space-y-2">
+            <span className="font-semibold text-foreground text-xs block">Production Areas</span>
+            <div className="flex flex-wrap gap-2">
+              {availableProdAreas.map((area) => {
+                const isSelected = selectedProdAreas.includes(area);
                 return (
                   <button
-                    key={p}
+                    key={area}
                     type="button"
-                    onClick={() => toggleProdArea(p)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                    onClick={() => toggleProdArea(area)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer border ${
                       isSelected
-                        ? "bg-primary text-white border-primary shadow-xs"
-                        : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200"
+                        ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                        : "bg-background text-muted-foreground border-border hover:bg-muted"
                     }`}
                   >
-                    {isSelected ? "✓ " : "+ "}
-                    {p}
+                    {isSelected ? `✓ ${area}` : `+ ${area}`}
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Assembly Areas Pills */}
-          <div className="space-y-1.5 md:col-span-2 lg:col-span-3">
-            <label className="font-semibold text-foreground block">Assembly Areas</label>
-            <div className="flex flex-wrap items-center gap-2">
-              {availableAssyAreas.map((a) => {
-                const isSelected = selectedAssyAreas.includes(a);
+          {/* Assembly Areas */}
+          <div className="space-y-2">
+            <span className="font-semibold text-foreground text-xs block">Assembly Areas</span>
+            <div className="flex flex-wrap gap-2">
+              {availableAssyAreas.map((area) => {
+                const isSelected = selectedAssyAreas.includes(area);
                 return (
                   <button
-                    key={a}
+                    key={area}
                     type="button"
-                    onClick={() => toggleAssyArea(a)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                    onClick={() => toggleAssyArea(area)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer border ${
                       isSelected
                         ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
-                        : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200"
+                        : "bg-background text-muted-foreground border-border hover:bg-muted"
                     }`}
                   >
-                    {isSelected ? "✓ " : "+ "}
-                    {a}
+                    {isSelected ? `✓ ${area}` : `+ ${area}`}
                   </button>
                 );
               })}

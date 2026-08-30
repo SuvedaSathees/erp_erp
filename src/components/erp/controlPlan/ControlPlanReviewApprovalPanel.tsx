@@ -28,7 +28,7 @@ export const ControlPlanReviewApprovalPanel: React.FC<ControlPlanReviewApprovalP
       <div className="flex justify-between items-center pb-2 border-b border-border">
         <div className="flex items-center gap-1.5">
           <UserCheck className="w-4 h-4 text-primary" />
-          <h2 className="font-bold text-foreground text-xs">8. Review & Approval Status</h2>
+          <h2 className="font-bold text-foreground text-xs">Review & Approval Status</h2>
         </div>
       </div>
 

@@ -10,13 +10,13 @@ export const ResourceAllocationCard: React.FC<ResourceAllocationCardProps> = ({
   record,
 }) => {
   return (
-    <div className="bg-card border border-border rounded-lg shadow-sm p-3.5 flex flex-col justify-between text-xs">
+    <div className="bg-card border border-border rounded-lg shadow-sm p-3.5 flex flex-col justify-between text-xs hover:border-border/80 transition-all">
       <div>
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
-          <h3 className="font-bold text-foreground text-xs">3. Resource Allocation</h3>
-          <span className="px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-bold text-[10px]">
-            {record.resourceReadinessScore} / 100
-          </span>
+          <div className="flex items-center gap-1.5">
+            <Wrench className="w-3.5 h-3.5 text-blue-500" />
+            <h3 className="font-bold text-foreground text-xs">Resource Allocation</h3>
+          </div>
         </div>
 
         <div className="space-y-1.5 text-[11px]">
@@ -53,11 +53,6 @@ export const ResourceAllocationCard: React.FC<ResourceAllocationCardProps> = ({
             </span>
           </div>
         </div>
-      </div>
-
-      <div className="pt-2 border-t border-border mt-2 flex justify-between items-center">
-        <span className="font-semibold text-muted-foreground text-[10px]">Resource Readiness Score</span>
-        <span className="font-extrabold text-blue-600 dark:text-blue-400">{record.resourceReadinessScore} / 100</span>
       </div>
     </div>
   );

@@ -101,9 +101,9 @@ function AutomationDevelopmentNewPage() {
         {/* Wizard Stepper */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { num: 1, title: "1. Scope & Context Snapshot" },
-            { num: 2, title: "2. Category & Objectives" },
-            { num: 3, title: "3. Review & Create Project" },
+            { num: 1, title: "Scope & Context Snapshot" },
+            { num: 2, title: "Category & Objectives" },
+            { num: 3, title: "Review & Create Project" },
           ].map((s) => (
             <div
               key={s.num}
@@ -124,7 +124,7 @@ function AutomationDevelopmentNewPage() {
         {step === 1 && (
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
             <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-              Step 1: Select Plant, Production Line & Product/Process
+              Select Plant, Production Line & Product/Process
             </h2>
             <div className="grid grid-cols-2 gap-4 text-xs">
               <div>
@@ -133,7 +133,7 @@ function AutomationDevelopmentNewPage() {
                   type="text"
                   value={productProcess}
                   onChange={(e) => setProductProcess(e.target.value)}
-                  className="w-full p-2 bg-background border border-input rounded text-foreground font-semibold"
+                  className="w-full p-2.5 bg-background border border-input rounded-md font-semibold text-foreground"
                 />
               </div>
 
@@ -159,12 +159,12 @@ function AutomationDevelopmentNewPage() {
                 >
                   <option value="Battery Assembly Line-01">Battery Assembly Line-01</option>
                   <option value="Battery Assembly Line-02">Battery Assembly Line-02</option>
-                  <option value="Battery Assembly Line-03">Battery Assembly Line-03</option>
+                  <option value="EV Charger Line-03">EV Charger Line-03</option>
                 </select>
               </div>
 
               <div>
-                <label className="text-muted-foreground font-semibold block mb-1">Target Deployment</label>
+                <label className="text-muted-foreground font-semibold block mb-1">Target Deployment Date</label>
                 <input
                   type="date"
                   value={targetDeployment}
@@ -174,24 +174,27 @@ function AutomationDevelopmentNewPage() {
               </div>
             </div>
 
-            {/* Context Snapshot Preview */}
+            {/* Auto-Derived Line Context Preview */}
             <div className="p-4 bg-muted/40 rounded-lg border border-border space-y-2 text-xs">
-              <span className="font-bold text-foreground block">Auto-Derived Context Snapshot (Process & PLM)</span>
+              <span className="font-bold text-foreground block">Auto-Derived Line Context Snapshot</span>
               <div className="grid grid-cols-3 gap-2 text-muted-foreground">
                 <div>
-                  Process Flow: <span className="font-bold text-foreground">PF-BA-001</span>
+                  Current Manual Cycle: <span className="font-bold text-foreground">185 sec</span>
                 </div>
                 <div>
-                  BOM Ref: <span className="font-bold text-foreground">BOM-BA-REV2.1</span>
+                  Target Auto Cycle: <span className="font-bold text-emerald-600">42 sec</span>
                 </div>
                 <div>
-                  Current Cycle Time: <span className="font-bold text-foreground">120 sec</span>
+                  Throughput Target: <span className="font-bold text-foreground">120 UPH</span>
                 </div>
                 <div>
-                  Drawings Ref: <span className="font-bold text-foreground">DWG-BA-1004</span>
+                  Labor Replaced: <span className="font-bold text-foreground">6 FTE</span>
                 </div>
                 <div>
-                  Specs Ref: <span className="font-bold text-foreground">SPEC-BA-09</span>
+                  Safety Risk: <span className="font-bold text-amber-600">Ergonomic Repetitive Strain</span>
+                </div>
+                <div>
+                  Quality Baseline FPY: <span className="font-bold text-foreground">92.4%</span>
                 </div>
               </div>
             </div>
@@ -211,7 +214,7 @@ function AutomationDevelopmentNewPage() {
         {step === 2 && (
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
             <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-              Step 2: Define Automation Category & Objectives
+              Define Automation Category & Objectives
             </h2>
             <div className="grid grid-cols-2 gap-4 text-xs">
               <div>
@@ -294,7 +297,7 @@ function AutomationDevelopmentNewPage() {
         {step === 3 && (
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
             <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-              Step 3: Confirm & Create Automation Record
+              Confirm & Create Automation Record
             </h2>
 
             <div className="p-4 bg-muted/30 rounded-lg border border-border space-y-3 text-xs">

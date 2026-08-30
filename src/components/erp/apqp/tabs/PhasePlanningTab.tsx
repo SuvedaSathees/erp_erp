@@ -31,9 +31,7 @@ export const PhasePlanningTab: React.FC<PhasePlanningTabProps> = ({ record }) =>
           <div key={d.phaseNumber} className="bg-card border border-border rounded-lg p-4 space-y-3">
             <div className="flex justify-between items-center pb-2 border-b border-border">
               <div className="flex items-center gap-2 font-bold text-sm text-foreground">
-                <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs">
-                  {d.phaseNumber}
-                </span>
+                <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                 <span>{d.phaseName}</span>
               </div>
               <span className={`px-2.5 py-0.5 rounded text-xs font-bold ${

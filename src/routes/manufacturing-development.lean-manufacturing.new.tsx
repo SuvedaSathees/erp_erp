@@ -101,9 +101,9 @@ function LeanManufacturingNewPage() {
         {/* Wizard Stepper */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { num: 1, title: "1. Scope & Baseline Snapshot" },
-            { num: 2, title: "2. Improvement Category & Goal" },
-            { num: 3, title: "3. Review & Create Project" },
+            { num: 1, title: "Scope & Baseline Snapshot" },
+            { num: 2, title: "Improvement Category & Goal" },
+            { num: 3, title: "Review & Create Project" },
           ].map((s) => (
             <div
               key={s.num}
@@ -124,7 +124,7 @@ function LeanManufacturingNewPage() {
         {step === 1 && (
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
             <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-              Step 1: Select Plant, Production Line & Timeline
+              Select Plant, Production Line & Timeline
             </h2>
             <div className="grid grid-cols-2 gap-4 text-xs">
               <div>
@@ -214,7 +214,7 @@ function LeanManufacturingNewPage() {
         {step === 2 && (
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
             <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-              Step 2: Define Improvement Category & Goals
+              Define Improvement Category & Goals
             </h2>
             <div className="grid grid-cols-2 gap-4 text-xs">
               <div>
@@ -295,7 +295,7 @@ function LeanManufacturingNewPage() {
         {step === 3 && (
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
             <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-              Step 3: Confirm & Create Lean Project
+              Confirm & Create Lean Project
             </h2>
 
             <div className="p-4 bg-muted/30 rounded-lg border border-border space-y-3 text-xs">

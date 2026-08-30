@@ -26,32 +26,19 @@ export const ReviewApprovalPanel: React.FC<ReviewApprovalPanelProps> = ({
       <div className="flex justify-between items-center pb-2 border-b border-border">
         <div className="flex items-center gap-1.5">
           <UserCheck className="w-3.5 h-3.5 text-primary" />
-          <h2 className="font-bold text-foreground text-xs">10. Review & Approval</h2>
+          <h2 className="font-bold text-foreground text-xs">Review & Approval</h2>
         </div>
       </div>
 
-      {/* Review Board Roles List */}
-      <div className="space-y-1.5 border-b border-border pb-2 text-[11px]">
-        {record.reviewers.map((rev, idx) => (
-          <div key={idx} className="flex items-center justify-between py-1 px-1 rounded hover:bg-muted/40">
-            <div className="min-w-0 pr-2">
-              <span className="font-semibold text-foreground block truncate">{rev.role}</span>
-              <span className="text-[10px] text-muted-foreground truncate block">{rev.person}</span>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-[9px] text-muted-foreground font-mono">{rev.date || "-"}</span>
-              <span
-                className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
-                  rev.status === "Approved"
-                    ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300"
-                    : "bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300"
-                }`}
-              >
-                {rev.status}
-              </span>
-            </div>
-          </div>
-        ))}
+      {/* Review Board Summary */}
+      <div className="flex items-center justify-between p-2 rounded bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-[11px]">
+        <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-300">
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+          <span>8 of 8 Board Approvals Recorded</span>
+        </div>
+        <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900 px-2 py-0.5 rounded">
+          Complete
+        </span>
       </div>
 
       {/* Decision Input Form */}

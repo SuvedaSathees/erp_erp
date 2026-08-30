@@ -71,13 +71,9 @@ export const ApqpPhaseStepper: React.FC<ApqpPhaseStepperProps> = ({ record }) =>
                     {isCompleted ? (
                       <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     ) : isInProgress ? (
-                      <div className="w-4 h-4 rounded-full bg-blue-600 text-white text-[10px] flex items-center justify-center font-bold">
-                        3
-                      </div>
+                      <Clock className="w-4 h-4 text-blue-600 animate-spin" />
                     ) : (
-                      <div className="w-4 h-4 rounded-full bg-muted-foreground/30 text-muted-foreground text-[10px] flex items-center justify-center font-bold">
-                        {p.number}
-                      </div>
+                      <div className="w-3.5 h-3.5 rounded-full border-2 border-muted-foreground/40" />
                     )}
                     <span className="text-foreground font-extrabold">{p.name}</span>
                   </div>

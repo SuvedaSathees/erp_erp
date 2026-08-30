@@ -16,12 +16,39 @@ import { ApqpAttachmentsRow } from "../ApqpAttachmentsRow";
 interface OverviewTabProps {
   record: ApqpRecord;
   onNavigateTab: (tab: any) => void;
+  onReviewDecision?: (decision: any, comments: string) => void;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({
   record,
   onNavigateTab,
+  onReviewDecision,
 }) => {
+  const handleQuickAction = (actionName: string) => {
+    switch (actionName) {
+      case "Create DFMEA":
+      case "Upload Requirements":
+        onNavigateTab("inputs");
+        break;
+      case "Create PFMEA":
+      case "Create Control Plan":
+      case "Create PPAP":
+        onNavigateTab("validation");
+        break;
+      case "Upload Process Flow":
+        onNavigateTab("attachments");
+        break;
+      case "Schedule Review":
+        onNavigateTab("approval");
+        break;
+      case "View APQP Dashboard":
+        onNavigateTab("summary");
+        break;
+      default:
+        onNavigateTab("phases");
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Top 5 APQP Phase Stepper Bar */}
@@ -47,7 +74,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             </div>
           </div>
 
-          {/* Row 2: 2. Phase Key Deliverables Table & Recent Activities Feed */}
+          {/* Row 2: Phase Key Deliverables Table & Recent Activities Feed */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             <div className="lg:col-span-8">
               <ApqpDeliverablesTable deliverables={record.deliverables} />
@@ -69,10 +96,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
         {/* Right Sidebar Stack */}
         <div className="xl:col-span-3 space-y-3">
-          <ApqpQuickActionsPanel />
+          <ApqpQuickActionsPanel onAction={handleQuickAction} />
           <ApqpDocumentControlPanel record={record} onViewHistory={() => onNavigateTab("history")} />
           <ApqpMilestonesPanel milestones={record.upcomingMilestones} onViewAll={() => onNavigateTab("phases")} />
-          <ApqpReviewApprovalPanel record={record} />
+          <ApqpReviewApprovalPanel record={record} onReviewDecision={onReviewDecision} />
         </div>
       </div>
     </div>

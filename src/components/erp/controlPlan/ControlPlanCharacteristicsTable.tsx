@@ -18,7 +18,7 @@ export const ControlPlanCharacteristicsTable: React.FC<ControlPlanCharacteristic
       <div className="p-3 border-b border-border bg-muted/20 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-bold text-foreground">
-            2. Process & Product Characteristics
+            Process & Product Characteristics
           </h2>
           <span className="text-xs text-muted-foreground font-normal">
             ({characteristics.length} Operations Defined)

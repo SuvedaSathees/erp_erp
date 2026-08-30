@@ -14,7 +14,7 @@ export const RoutingSummaryPanel: React.FC<RoutingSummaryPanelProps> = ({
       <div className="flex justify-between items-center pb-2 border-b border-border">
         <div className="flex items-center gap-1.5">
           <FileSpreadsheet className="w-3.5 h-3.5 text-primary" />
-          <h2 className="font-bold text-foreground text-xs">8. Routing Summary</h2>
+          <h2 className="font-bold text-foreground text-xs">Routing Summary</h2>
         </div>
       </div>
 

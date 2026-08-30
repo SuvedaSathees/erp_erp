@@ -3,23 +3,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
-import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { BomEngineeringHeader } from "@/components/erp/bom-engineering/BomEngineeringHeader";
-import { BomScoresHeader } from "@/components/erp/bom-engineering/BomScoresHeader";
-import { BomEngineeringTabBar, type BomTabType } from "@/components/erp/bom-engineering/BomEngineeringTabBar";
 import { AddComponentModal } from "@/components/erp/bom-engineering/AddComponentModal";
-
 import { OverviewTab } from "@/components/erp/bom-engineering/tabs/OverviewTab";
-import { StructureTab } from "@/components/erp/bom-engineering/tabs/StructureTab";
-import { MaterialComponentsTab } from "@/components/erp/bom-engineering/tabs/MaterialComponentsTab";
-import { ManufacturingReadinessTab } from "@/components/erp/bom-engineering/tabs/ManufacturingReadinessTab";
-import { QualityComplianceTab } from "@/components/erp/bom-engineering/tabs/QualityComplianceTab";
-import { CostEngineeringTab } from "@/components/erp/bom-engineering/tabs/CostEngineeringTab";
-import { AiAssessmentTab } from "@/components/erp/bom-engineering/tabs/AiAssessmentTab";
-import { SummaryTab } from "@/components/erp/bom-engineering/tabs/SummaryTab";
-import { ReviewApprovalTab } from "@/components/erp/bom-engineering/tabs/ReviewApprovalTab";
-import { ActivityHistoryTab } from "@/components/erp/bom-engineering/tabs/ActivityHistoryTab";
 
 import {
   fetchBomRecord,
@@ -27,7 +14,6 @@ import {
   submitBomForReview,
   addBomComponent,
 } from "@/services/bomEngineeringService";
-import type { BomItemNode } from "@/services/types";
 
 export const Route = createFileRoute(
   "/development/research-innovation/bom-engineering/new",
@@ -43,7 +29,6 @@ export function BomEngineeringPage({
   tabs?: React.ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<BomTabType>("overview");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const { data: record, isLoading } = useQuery({
@@ -83,7 +68,7 @@ export function BomEngineeringPage({
       <AppShell
         title="BOM Engineering"
         breadcrumb={breadcrumb ?? "Research & Innovation Development"}
-        tabs={tabs ?? <InnovationAreaTabs sub={<BomEngineeringTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+        tabs={tabs ?? <InnovationAreaTabs />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading BOM Engineering Master Record...
@@ -97,90 +82,51 @@ export function BomEngineeringPage({
       title="BOM Engineering"
       breadcrumb={breadcrumb ?? "Development > Research & Innovation > BOM Engineering"}
       description="Manage manufacturing bill of materials (MBOM), Phantom BOMs, component structures, effectivity dates, and alternate parts."
-      tabs={tabs ?? <InnovationAreaTabs sub={<BomEngineeringTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+      tabs={tabs ?? <InnovationAreaTabs />}
     >
-      <div className="space-y-0 min-h-screen bg-background text-foreground">
-        {/* Top Header Bar */}
+      <div className="p-4 sm:p-6 space-y-5">
+        {/* Top Header Box */}
         <BomEngineeringHeader
           record={record}
           onSaveDraft={() => saveDraftMutation.mutate({})}
           onSubmitForReview={() => submitMutation.mutate()}
-          onExport={() => toast.info("Exporting BOM to Excel/PDF...")}
+          onExport={() => {
+            const headers = ["Part Number", "Description", "Level", "Quantity", "UOM", "Category", "Make/Buy", "Unit Cost", "Total Cost", "Lead Time", "Status"];
+            const rows = record.items.map((item) => [
+              item.partNumber,
+              `"${item.description.replace(/"/g, '""')}"`,
+              item.level,
+              item.quantity,
+              item.uom,
+              item.itemCategory,
+              item.makeBuy,
+              item.unitCost,
+              item.totalCost,
+              item.leadTimeDays,
+              "Approved",
+            ]);
+            const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `BOM_Export_${record.bomNumber}_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            toast.success("BOM Master exported to CSV/Excel successfully");
+          }}
           onNewBom={() => {
             setIsAddModalOpen(true);
-            toast.info("Creating new BOM entry...");
+            toast.info("Opening Add Component Modal...");
           }}
         />
 
-        {/* 6 Score Ring Gauges */}
-        <BomScoresHeader record={record} />
-
-        {/* 10 Horizontal Navigation Tabs */}
-        <BomEngineeringTabBar
-          activeTab={activeTab}
-          onTabChange={(tab) => setActiveTab(tab)}
+        {/* Unified Main View */}
+        <OverviewTab
+          record={record}
+          onAddComponent={() => setIsAddModalOpen(true)}
+          onNavigateTab={(t) => toast.info(`Viewing ${t} section`)}
         />
-
-        {/* Tab View Container */}
-        <div className="p-4 sm:p-6">
-          {activeTab === "overview" && (
-            <OverviewTab
-              record={record}
-              onAddComponent={() => setIsAddModalOpen(true)}
-              onNavigateTab={(t) => setActiveTab(t)}
-            />
-          )}
-
-          {activeTab === "structure" && (
-            <StructureTab
-              record={record}
-              onAddComponent={() => setIsAddModalOpen(true)}
-            />
-          )}
-
-          {activeTab === "material" && (
-            <MaterialComponentsTab record={record} />
-          )}
-
-          {activeTab === "manufacturing" && (
-            <ManufacturingReadinessTab record={record} />
-          )}
-
-          {activeTab === "quality" && (
-            <QualityComplianceTab record={record} />
-          )}
-
-          {activeTab === "cost" && (
-            <CostEngineeringTab record={record} />
-          )}
-
-          {activeTab === "ai" && (
-            <AiAssessmentTab record={record} />
-          )}
-
-          {activeTab === "summary" && (
-            <SummaryTab
-              record={record}
-              onUpdateRecommendation={(rec) =>
-                saveDraftMutation.mutate({ recommendation: rec })
-              }
-            />
-          )}
-
-          {activeTab === "approval" && (
-            <ReviewApprovalTab
-              record={record}
-              onReviewDecision={(decision, comments) => {
-                saveDraftMutation.mutate({ approvalDecision: decision });
-                toast.success(`Review decision submitted: ${decision}`);
-              }}
-            />
-          )}
-
-          {activeTab === "history" && (
-            <ActivityHistoryTab record={record} />
-          )}
-        </div>
 
         {/* Add Component Modal */}
         <AddComponentModal

@@ -86,9 +86,9 @@ function MassProductionReadinessNewPage() {
         {/* Wizard Stepper */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { num: 1, title: "1. Select Pilot Reference" },
-            { num: 2, title: "2. Confirm PPAP Status" },
-            { num: 3, title: "3. Review & Create Gate" },
+            { num: 1, title: "Select Pilot Reference" },
+            { num: 2, title: "Confirm PPAP Status" },
+            { num: 3, title: "Review & Create Gate" },
           ].map((s) => (
             <div
               key={s.num}
@@ -109,7 +109,7 @@ function MassProductionReadinessNewPage() {
         {step === 1 && (
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
             <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-              Step 1: Select Pilot Production Reference
+              Select Pilot Production Reference
             </h2>
             <div className="space-y-3 text-xs">
               <div>
@@ -168,7 +168,7 @@ function MassProductionReadinessNewPage() {
         {step === 2 && (
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
             <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-              Step 2: Confirm PPAP Status & Target Parameters
+              Confirm PPAP Status & Target Parameters
             </h2>
             <div className="space-y-4 text-xs">
               <div className="p-4 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 rounded-lg space-y-2">
@@ -247,7 +247,7 @@ function MassProductionReadinessNewPage() {
         {step === 3 && (
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
             <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-              Step 3: Confirm & Create Readiness Record
+              Confirm & Create Readiness Record
             </h2>
 
             <div className="p-4 bg-muted/30 rounded-lg border border-border space-y-3 text-xs">

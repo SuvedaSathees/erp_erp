@@ -27,7 +27,7 @@ export const ReviewApprovalTab: React.FC<ReviewApprovalTabProps> = ({
       <div className="bg-card p-4 rounded-lg border border-border flex justify-between items-center">
         <div>
           <h2 className="text-base font-bold text-foreground">
-            Executive Review Board & Gate Approvals (8-Role Sign-off)
+            Executive Review Board & Gate Approvals
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
             Sequential cross-functional approval matrix for Design, Manufacturing, Quality, Costing, Supply Chain, and Executive sign-off.

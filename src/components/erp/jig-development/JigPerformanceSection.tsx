@@ -35,9 +35,6 @@ export function JigPerformanceSection({
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-              6
-            </span>
             <CardTitle className="text-base font-bold">Performance Monitoring</CardTitle>
           </div>
           <CardDescription className="text-xs">

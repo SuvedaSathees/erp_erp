@@ -1,9 +1,10 @@
 import React from "react";
 import { FileText, Download, ArrowRight } from "lucide-react";
-import type { ValidationAttachment } from "@/services/types";
+import { toast } from "sonner";
+import type { ProcessValidationAttachment } from "@/services/types";
 
 interface ProcessValidationDocumentLinksCardProps {
-  attachments: ValidationAttachment[];
+  attachments: ProcessValidationAttachment[];
   onViewAll?: () => void;
 }
 
@@ -16,7 +17,7 @@ export const ProcessValidationDocumentLinksCard: React.FC<ProcessValidationDocum
       <div>
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
           <h2 className="font-bold text-foreground text-xs">
-            9. Attachments
+            Attachments
           </h2>
         </div>
 
@@ -37,7 +38,22 @@ export const ProcessValidationDocumentLinksCard: React.FC<ProcessValidationDocum
 
               <div className="flex items-center gap-2 shrink-0">
                 <span className="font-mono text-[10px] text-muted-foreground">{att.uploadedDate}</span>
-                <button className="p-1 text-muted-foreground hover:text-primary transition-colors">
+                <button
+                  onClick={() => {
+                    const content = `PROCESS VALIDATION ATTACHMENT: ${att.fileName}\nDocument Type: ${att.documentType}\nVersion: ${att.version}\nUploaded Date: ${att.uploadedDate}\nStatus: Verified`;
+                    const blob = new Blob([content], { type: "text/plain" });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = att.fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    toast.success(`Downloaded ${att.fileName}`);
+                  }}
+                  className="p-1 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                  title={`Download ${att.fileName}`}
+                >
                   <Download className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -48,7 +64,7 @@ export const ProcessValidationDocumentLinksCard: React.FC<ProcessValidationDocum
 
       <button
         onClick={onViewAll}
-        className="mt-3 w-full py-1 text-[11px] font-bold text-primary hover:underline flex items-center justify-center gap-1 transition-colors border border-border rounded bg-muted/20"
+        className="mt-3 w-full py-1 text-[11px] font-bold text-primary hover:underline flex items-center justify-center gap-1 transition-colors border border-border rounded bg-muted/20 cursor-pointer"
       >
         View All Attachments <ArrowRight className="w-3.5 h-3.5" />
       </button>

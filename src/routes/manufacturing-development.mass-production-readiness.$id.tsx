@@ -205,7 +205,59 @@ function MassProductionReadinessDetailPage() {
             onSaveDraft={handleSaveDraft}
             onSubmitForApproval={handleSubmitForApproval}
             onDuplicate={() => toast.info("Record duplicated")}
-            onExportPdf={() => toast.info("Exporting PDF report...")}
+            onExportPdf={() => {
+              const content = `=====================================================
+MASS PRODUCTION READINESS (SOP) SPECIFICATION: ${record.readinessTitle}
+=====================================================
+Readiness ID: ${record.id}
+Readiness Number: ${record.readinessNumber}
+Product: ${record.product} (Revision ${record.productRevision})
+Workflow Status: ${record.workflowStatus}
+Launch Target: ${record.productionLaunchTarget}
+Program Reference: ${record.productionProgramRef}
+Manufacturing Strategy: ${record.manufacturingStrategy}
+Launch Phase: ${record.launchPhase}
+Process Owner: ${record.processOwner}
+Priority: ${record.readinessPriority}
+Launch Objective: ${record.launchObjective}
+
+READINESS SCORES BREAKDOWN:
+-----------------------------------------------------
+Overall Readiness: ${overallScore}/100
+Manufacturing Readiness Score: ${mfgScore}/100
+Quality Readiness Score: ${qualScore}/100
+Supply Chain Score: ${scScore}/100
+Performance Score: ${record.performanceScore}/100
+Operational Readiness Score: ${opsScore}/100
+AI Production Readiness Score: ${record.aiProductionReadinessScore}/100
+PPAP Status: ${record.ppapStatus}
+
+CARRIED PILOT TELEMETRY:
+-----------------------------------------------------
+Planned Monthly Capacity: ${record.plannedProductionCapacityUnitsPerMonth} Units/Month
+Expected Daily Output: ${record.expectedDailyOutputUnits} Units/Day
+OEE: ${record.oee}%
+First Pass Yield (FPY): ${record.fpy}%
+Scrap Rate: ${record.scrapRate}%
+Process Capability: Cp: ${record.cp} | Cpk: ${record.cpk}
+
+APPROVAL MATRIX:
+-----------------------------------------------------
+${record.reviewers.map((r) => `${r.role}: ${r.reviewer} - ${r.status}`).join("\n")}
+Executive Decision: ${record.approvalDecision}
+Executive Comments: ${record.executiveComments || "N/A"}
+=====================================================`;
+
+              const blob = new Blob([content], { type: "text/plain" });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = `${record.readinessNumber}_Mass_Production_Readiness_Report.txt`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              toast.success("Mass Production Readiness Report exported & downloaded successfully!");
+            }}
             onPrint={() => window.print()}
             onArchive={() => toast.warning("Record archived")}
             onRevalidate={() => {
@@ -231,7 +283,7 @@ function MassProductionReadinessDetailPage() {
               <button
                 key={tab.id}
                 onClick={() => scrollToSection(tab.id as TabKey, tab.ref)}
-                className={`px-3 py-1.5 rounded-md whitespace-nowrap transition-colors ${
+                className={`px-3 py-1.5 rounded-md whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === tab.id
                     ? "bg-primary text-primary-foreground font-bold shadow-sm"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -275,7 +327,7 @@ function MassProductionReadinessDetailPage() {
                 {/* Section 1 — Production Readiness Overview */}
                 <div ref={sec1Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    1. Production Readiness Overview
+                    Production Readiness Overview
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Left Col */}
@@ -379,7 +431,7 @@ function MassProductionReadinessDetailPage() {
                 {/* Section 2 — Manufacturing Readiness */}
                 <div ref={sec2Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    2. Manufacturing Readiness
+                    Manufacturing Readiness
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Left Col */}
@@ -438,7 +490,7 @@ function MassProductionReadinessDetailPage() {
                 {/* Section 3 — Quality Readiness */}
                 <div ref={sec3Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    3. Quality Readiness
+                    Quality Readiness
                   </h2>
                   <div className="space-y-2.5 text-xs">
                     {[
@@ -508,7 +560,7 @@ function MassProductionReadinessDetailPage() {
                 {/* Section 4 — Supply Chain Readiness */}
                 <div ref={sec4Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    4. Supply Chain Readiness
+                    Supply Chain Readiness
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-2.5">
@@ -554,7 +606,7 @@ function MassProductionReadinessDetailPage() {
                 {/* Section 5 — Production Performance */}
                 <div ref={sec5Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    5. Production Performance (Carried from Pilot)
+                    Production Performance (Carried from Pilot)
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-2">
@@ -611,7 +663,7 @@ function MassProductionReadinessDetailPage() {
                 {/* Section 6 — Operational Readiness */}
                 <div ref={sec6Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    6. Operational Readiness
+                    Operational Readiness
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-2.5">
@@ -667,7 +719,7 @@ function MassProductionReadinessDetailPage() {
                 {/* Section 7 — AI Production Readiness Assessment */}
                 <div ref={sec7Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <div className="flex items-center justify-between border-b border-border pb-2">
-                    <h2 className="text-sm font-bold text-foreground">7. AI Production Readiness Assessment</h2>
+                    <h2 className="text-sm font-bold text-foreground">AI Production Readiness Assessment</h2>
                     <span className="px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-extrabold text-xs rounded">
                       AI Readiness Score: {record.aiProductionReadinessScore}/100
                     </span>
@@ -700,7 +752,7 @@ function MassProductionReadinessDetailPage() {
                 {/* Section 8 — Executive Summary (Horizontal Bar Chart) */}
                 <div ref={sec8Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <div className="flex items-center justify-between border-b border-border pb-2">
-                    <h2 className="text-sm font-bold text-foreground">8. Executive Summary (Scores)</h2>
+                    <h2 className="text-sm font-bold text-foreground">Executive Summary (Scores)</h2>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-muted-foreground">Overall Readiness:</span>
                       <span className="text-lg font-black text-emerald-600 dark:text-emerald-400">
@@ -731,7 +783,7 @@ function MassProductionReadinessDetailPage() {
                 {/* Section 9 — Review & Approval (TABLE-based) */}
                 <div ref={sec9Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    9. Review & Approval
+                    Review & Approval
                   </h2>
                   <MassProductionReviewTable
                     reviewers={record.reviewers}

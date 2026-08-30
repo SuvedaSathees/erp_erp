@@ -36,7 +36,7 @@ export const SmartFactorySystemInfoCard: React.FC<SmartFactorySystemInfoCardProp
           <div className="flex items-center gap-2">
             <History className="h-4 w-4 text-primary" />
             <CardTitle className="text-base font-bold text-foreground">
-              11. System Information & Audit Trail
+              System Information & Audit Trail
             </CardTitle>
           </div>
           <Badge variant="outline" className="text-xs font-bold">

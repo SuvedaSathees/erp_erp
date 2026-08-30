@@ -1,58 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import {
-  Award,
-  CheckCircle2,
-  Clock,
-  Download,
-  FileText,
-  History,
-  Info,
-  Layers,
-  Paperclip,
-  Printer,
-  Save,
-  Send,
-  Sparkles,
-  User,
-  Workflow,
-  Plus,
-  ArrowRight,
-} from "lucide-react";
-
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
-import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 
-import {
-  JigDevelopmentTabBar,
-  type JigDevelopmentTabId,
-} from "@/components/erp/jig-development/JigDevelopmentTabBar";
 import { JigDevelopmentHeader } from "@/components/erp/jig-development/JigDevelopmentHeader";
 import { JigOverviewSection } from "@/components/erp/jig-development/JigOverviewSection";
 import { JigDesignSection } from "@/components/erp/jig-development/JigDesignSection";
 import { JigManufacturingSection } from "@/components/erp/jig-development/JigManufacturingSection";
 import { JigValidationSection } from "@/components/erp/jig-development/JigValidationSection";
 import { JigCommissioningSection } from "@/components/erp/jig-development/JigCommissioningSection";
-import { JigPerformanceSection } from "@/components/erp/jig-development/JigPerformanceSection";
-import { JigAiAssessmentSection } from "@/components/erp/jig-development/JigAiAssessmentSection";
-import { JigSummarySection } from "@/components/erp/jig-development/JigSummarySection";
 import { JigAttachmentManager } from "@/components/erp/jig-development/JigAttachmentManager";
 import { JigApprovalSection } from "@/components/erp/jig-development/JigApprovalSection";
-import { JigActivityHistorySection } from "@/components/erp/jig-development/JigActivityHistorySection";
-import { JigActionBar } from "@/components/erp/jig-development/JigActionBar";
 
 import { jigDevelopmentService } from "@/services/jigDevelopmentService";
 import type { JigFormInput, JigRecord } from "@/services/types";
 import { JigDevelopmentMasterSchema } from "@/lib/validation/jigDevelopmentSchemas";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute(
   "/development/research-innovation/jig-development/new",
@@ -68,7 +35,6 @@ export function JigDevelopmentNewPage({
   tabs?: React.ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<JigDevelopmentTabId>("overview");
 
   // TanStack Query for record retrieval
   const { data: record, isLoading } = useQuery<JigRecord>({
@@ -81,7 +47,6 @@ export function JigDevelopmentNewPage({
     resolver: zodResolver(JigDevelopmentMasterSchema) as any,
     defaultValues: record || {},
   });
-
 
   useEffect(() => {
     if (record) {
@@ -108,7 +73,64 @@ export function JigDevelopmentNewPage({
   });
 
   const handleExportReport = () => {
-    toast.success("Generating complete Jig Development engineering PDF report...");
+    if (!record) return;
+    const content = `=====================================================
+JIG DEVELOPMENT SPECIFICATION: ${record.jigName}
+=====================================================
+Jig Development ID: ${record.jigDevelopmentId}
+Form Code: ${record.formCode}
+Jig Number: ${record.jigNumber}
+Jig Version: ${record.jigVersion}
+Workflow Status: ${record.workflowStatus}
+Linked Product: ${record.linkedProduct}
+Linked Process: ${record.linkedProcess}
+Design Engineer: ${record.jigDesignEngineer}
+Manufacturing Plant: ${record.manufacturingPlant}
+Production Line: ${record.productionLine}
+Workstation: ${record.workstation}
+Jig Category: ${record.jigCategory}
+Development Stage: ${record.developmentStage}
+Priority: ${record.priority}
+Next Review Date: ${record.nextReviewDate}
+
+PURPOSE & PARAMETERS:
+-----------------------------------------------------
+Purpose: ${record.jigPurpose}
+Target Component: ${record.targetComponent}
+Locating System: ${record.locatingSystem}
+Clamping Mechanism: ${record.clampingMechanism}
+Positional Accuracy: ${record.positionalAccuracy}
+
+ENGINEERING READINESS SCORES:
+-----------------------------------------------------
+Overall Jig Score: ${record.overallJigScore}/100
+Design Score: ${record.designScore}/100
+Manufacturing Score: ${record.manufacturingScore}/100
+Validation Score: ${record.validationScore}/100
+Commissioning Score: ${record.commissioningScore}/100
+Performance Score: ${record.performanceScore}/100
+AI Feasibility Score: ${record.aiScore}/100
+
+MILESTONE TIMELINE:
+-----------------------------------------------------
+${record.timeline.map((m) => `[${m.status}] ${m.label}: ${m.date}`).join("\n")}
+
+AUDIT HISTORY:
+-----------------------------------------------------
+Created By: ${record.createdBy} (${record.createdDate})
+Last Modified By: ${record.lastModifiedBy} (${record.lastModifiedDate})
+Stage: ${record.workflowStageLabel}
+=====================================================`;
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${record.jigNumber}_Jig_Specification.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Jig Development specification report generated & downloaded successfully!");
   };
 
   if (isLoading || !record) {
@@ -116,7 +138,7 @@ export function JigDevelopmentNewPage({
       <AppShell
         title="Jig Development"
         breadcrumb={breadcrumb ?? "Research & Innovation Development"}
-        tabs={tabs ?? <InnovationAreaTabs sub={<JigDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+        tabs={tabs ?? <InnovationAreaTabs />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Jig Development Master Record...
@@ -132,10 +154,9 @@ export function JigDevelopmentNewPage({
       title="Jig Development"
       breadcrumb={breadcrumb ?? "Development > Research & Innovation > Jig Development"}
       description="Fabricate precision drilling, alignment, soldering, and testing jigs for shop floor operations."
-      tabs={tabs ?? <InnovationAreaTabs sub={<JigDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+      tabs={tabs ?? <InnovationAreaTabs />}
     >
-      <div className="space-y-4">
-
+      <div className="p-4 sm:p-6 space-y-5">
         {/* Executive Header Card */}
         <JigDevelopmentHeader
           record={currentRecordData as JigRecord}
@@ -144,149 +165,29 @@ export function JigDevelopmentNewPage({
           onExportReport={handleExportReport}
         />
 
-        {/* Module Tab Navigation Bar */}
-        <JigDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Unified Jig Sections */}
+        <div className="space-y-5">
+          <JigOverviewSection form={form} />
+          <JigDesignSection form={form} />
 
-        {/* Main Content Layout Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Column (Primary Form / Tab Sections) */}
-          <div className="lg:col-span-8 space-y-6">
-            {(activeTab === "overview" || activeTab === "summary") && (
-              <JigOverviewSection form={form} />
-            )}
+          <JigManufacturingSection form={form} />
 
-            {(activeTab === "design" || activeTab === "summary") && (
-              <JigDesignSection form={form} />
-            )}
-
-            {(activeTab === "manufacturing" || activeTab === "summary") && (
-              <JigManufacturingSection form={form} />
-            )}
-
-            {(activeTab === "validation" || activeTab === "summary") && (
-              <JigValidationSection form={form} />
-            )}
-
-            {(activeTab === "commissioning" || activeTab === "summary") && (
-              <JigCommissioningSection form={form} />
-            )}
-
-            {(activeTab === "performance" || activeTab === "summary") && (
-              <JigPerformanceSection form={form} />
-            )}
-
-            {(activeTab === "ai_assessment" || activeTab === "summary") && (
-              <JigAiAssessmentSection form={form} />
-            )}
-
-            {activeTab === "summary" && <JigSummarySection form={form} />}
-
-            {(activeTab === "summary" || activeTab === "overview") && (
-              <JigAttachmentManager
-                attachments={record.attachments}
-                onAttachmentsChange={(atts) => {
-                  queryClient.setQueryData(["jig-development", "current"], {
-                    ...record,
-                    attachments: atts,
-                  });
-                }}
-              />
-            )}
-
-            {(activeTab === "review_approval" || activeTab === "summary") && (
-              <JigApprovalSection form={form} reviewers={record.reviewers} />
-            )}
-
-            {(activeTab === "activity_history" || activeTab === "summary") && (
-              <JigActivityHistorySection activities={record.auditTrail} />
-            )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <JigValidationSection form={form} />
+            <JigCommissioningSection form={form} />
           </div>
 
-          {/* Right Column: Quick Highlights, Actions, Timeline & System Info */}
-          <div className="lg:col-span-4 space-y-5">
+          <JigApprovalSection form={form} reviewers={record.reviewers} />
 
-
-            {/* Jig Timeline Progress */}
-            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <Workflow className="h-4 w-4 text-primary" />
-                  Jig Milestone Timeline
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-xs">
-                {record.timeline.map((m) => {
-                  const isDone = m.status === "Completed";
-                  const isInProgress = m.status === "In Progress";
-                  return (
-                    <div key={m.label} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`h-2.5 w-2.5 rounded-full ${
-                            isDone
-                              ? "bg-emerald-500"
-                              : isInProgress
-                              ? "bg-blue-500 animate-pulse"
-                              : "bg-slate-300 dark:bg-slate-700"
-                          }`}
-                        />
-                        <span
-                          className={
-                            isDone
-                              ? "font-semibold text-foreground"
-                              : isInProgress
-                              ? "font-bold text-blue-600 dark:text-blue-400"
-                              : "text-muted-foreground"
-                          }
-                        >
-                          {m.label}
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-muted-foreground font-mono">
-                        {m.date}
-                      </span>
-                    </div>
-                  );
-                })}
-              </CardContent>
-            </Card>
-
-            {/* System Information Panel */}
-            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <Info className="h-4 w-4 text-slate-500" />
-                  System Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Created By</span>
-                  <span className="font-medium text-foreground">{record.createdBy}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Created Date</span>
-                  <span className="font-mono text-foreground">{record.createdDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Last Modified By</span>
-                  <span className="font-medium text-foreground">{record.lastModifiedBy}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Last Modified Date</span>
-                  <span className="font-mono text-foreground">{record.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Workflow Stage</span>
-                  <span className="font-semibold text-primary">{record.workflowStageLabel}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Version</span>
-                  <span className="font-mono text-foreground">{record.jigVersion}</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <JigAttachmentManager
+            attachments={record.attachments}
+            onAttachmentsChange={(atts) => {
+              queryClient.setQueryData(["jig-development", "current"], {
+                ...record,
+                attachments: atts,
+              });
+            }}
+          />
         </div>
       </div>
     </AppShell>

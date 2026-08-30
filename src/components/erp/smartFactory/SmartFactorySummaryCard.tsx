@@ -63,7 +63,7 @@ export const SmartFactorySummaryCard: React.FC<SmartFactorySummaryCardProps> = (
           <div className="flex items-center gap-2">
             <Gauge className="h-4 w-4 text-primary" />
             <CardTitle className="text-base font-bold text-foreground">
-              8. Smart Factory Summary
+              Smart Factory Summary
             </CardTitle>
           </div>
           <div className="flex items-center gap-1.5">

@@ -1,5 +1,5 @@
+import React, { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
 import {
@@ -1830,3 +1830,5 @@ export function BusinessModelDevelopmentPage() {
     </AppShell>
   );
 }
+
+export default BusinessModelDevelopmentPage;

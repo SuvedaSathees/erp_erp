@@ -222,7 +222,65 @@ function LeanManufacturingDetailPage() {
             onSaveDraft={handleSaveDraft}
             onSubmitForApproval={handleSubmitForApproval}
             onDuplicate={() => toast.info("Record duplicated")}
-            onExportPdf={() => toast.info("Exporting PDF report...")}
+            onExportPdf={() => {
+              const content = `=====================================================
+LEAN MANUFACTURING & CONTINUOUS IMPROVEMENT (CI): ${record.projectTitle}
+=====================================================
+Project ID: ${record.id}
+Project Number: ${record.projectNumber}
+Plant: ${record.plant}
+Production Line: ${record.productionLine}
+Workflow Status: ${record.workflowStatus}
+Project Status: ${record.projectStatus}
+Improvement Category: ${record.improvementCategory}
+Lean Methodologies: ${record.leanMethodologies.join(", ")}
+Timeline: ${record.timelineStart} to ${record.timelineEnd}
+Project Priority: ${record.projectPriority}
+Improvement Objective: ${record.improvementObjective}
+Current State Summary: ${record.currentStateSummary}
+Target State: ${record.targetState}
+
+LEAN PERFORMANCE SCORES:
+-----------------------------------------------------
+Overall Lean Readiness: ${overallScore}/100
+Waste Severity Score: ${wasteScore}/100
+Process Efficiency Score: ${procScore}/100
+Operational Performance Score: ${opsScore}/100
+Continuous Improvement (CI) Score: ${ciScore}/100
+AI Lean Health Score: ${record.aiLeanHealthScore}/100
+
+CYCLE TIME & PROCESS METRICS:
+-----------------------------------------------------
+Current Cycle Time: ${record.currentCycleTimeSec.toFixed(2)} sec
+Takt Time: ${record.taktTimeSec.toFixed(2)} sec
+Lead Time: ${record.leadTimeHr.toFixed(2)} hr
+Changeover Time: ${record.changeoverTimeMin.toFixed(2)} min
+Value-Added Ratio: ${record.valueAddedRatio}%
+Bottleneck Process: ${record.bottleneckProcess}
+Expected Cost Saving: ₹${record.expectedCostSaving.toLocaleString()}
+Realized Cost Saving: ₹${record.realizedCostSaving.toLocaleString()}
+
+8 WASTES (DOWNTIME) AUDIT:
+-----------------------------------------------------
+${record.wastes.map((w) => ` - ${w.wasteType} [${w.category}]: Level ${w.severityLevel}/5 (${w.severity}) | Monthly Loss: ₹${w.costImpactInr.toLocaleString()} | Root Cause: ${w.rootCause}`).join("\n")}
+
+APPROVAL MATRIX:
+-----------------------------------------------------
+${record.reviewers.map((r) => `${r.role}: ${r.reviewer} - ${r.status}`).join("\n")}
+Approval Decision: ${record.approvalDecision}
+Review Comments: ${record.reviewComments || "N/A"}
+=====================================================`;
+
+              const blob = new Blob([content], { type: "text/plain" });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = `${record.projectNumber}_Lean_Continuous_Improvement_Report.txt`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              toast.success("Lean Project Report exported & downloaded successfully!");
+            }}
             onPrint={() => window.print()}
             onArchive={() => toast.warning("Record archived")}
             onCloneFollowup={() => toast.success("Cloned as Follow-up Kaizen Project!")}
@@ -246,7 +304,7 @@ function LeanManufacturingDetailPage() {
               <button
                 key={tab.id}
                 onClick={() => scrollToSection(tab.id as TabKey, tab.ref)}
-                className={`px-3 py-1.5 rounded-md whitespace-nowrap transition-colors ${
+                className={`px-3 py-1.5 rounded-md whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === tab.id
                     ? "bg-primary text-primary-foreground font-bold shadow-sm"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -288,7 +346,7 @@ function LeanManufacturingDetailPage() {
                 {/* Section 1 — Lean Improvement Overview */}
                 <div ref={sec1Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    1. Lean Improvement Overview
+                    Lean Improvement Overview
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Left Col */}
@@ -406,7 +464,7 @@ function LeanManufacturingDetailPage() {
                 {/* Section 2 — Waste Identification (8 Wastes) */}
                 <div ref={sec2Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    2. Waste Identification (8 Wastes DOWNTIME Framework)
+                    Waste Identification (8 Wastes DOWNTIME Framework)
                   </h2>
                   <LeanWastesGrid
                     wastes={record.wastes}
@@ -418,7 +476,7 @@ function LeanManufacturingDetailPage() {
                 {/* Section 3 — Process Analysis */}
                 <div ref={sec3Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    3. Process Analysis
+                    Process Analysis
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Left Col */}
@@ -466,7 +524,7 @@ function LeanManufacturingDetailPage() {
                 {/* Section 4 — Lean Action Plan (Table) */}
                 <div ref={sec4Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    4. Lean Action Plan
+                    Lean Action Plan
                   </h2>
                   <LeanActionPlanTable
                     actionPlan={record.actionPlan}
@@ -481,7 +539,7 @@ function LeanManufacturingDetailPage() {
                 {/* Section 5 — Operational Performance (Before/After Table) */}
                 <div ref={sec5Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    5. Operational Performance (Before / After Comparison)
+                    Operational Performance (Before / After Comparison)
                   </h2>
                   <LeanBeforeAfterTable metrics={record.performanceMetrics} score={opsScore} />
                 </div>
@@ -489,7 +547,7 @@ function LeanManufacturingDetailPage() {
                 {/* Section 6 — Continuous Improvement (Kaizen) */}
                 <div ref={sec6Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    6. Continuous Improvement (Kaizen Activities)
+                    Continuous Improvement (Kaizen Activities)
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                     {record.kaizenActivities.map((k, idx) => (
@@ -533,7 +591,7 @@ function LeanManufacturingDetailPage() {
                 {/* Section 7 — AI Lean Assessment */}
                 <div ref={sec7Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <div className="flex items-center justify-between border-b border-border pb-2">
-                    <h2 className="text-sm font-bold text-foreground">7. AI Lean Assessment</h2>
+                    <h2 className="text-sm font-bold text-foreground">AI Lean Assessment</h2>
                     <span className="px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-extrabold text-xs rounded">
                       AI Lean Health Score: {record.aiLeanHealthScore}/100
                     </span>
@@ -573,7 +631,7 @@ function LeanManufacturingDetailPage() {
                 {/* Section 9 — Review & Approval (TABLE-based) */}
                 <div ref={sec9Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    9. Review & Approval
+                    Review & Approval
                   </h2>
                   <LeanReviewTable
                     reviewers={record.reviewers}

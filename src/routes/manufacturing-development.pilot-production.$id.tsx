@@ -147,12 +147,73 @@ function PilotProductionDetailPage() {
       <AppShell title="Pilot Production">
         <div className="space-y-4">
           {/* Header Component */}
+          {/* Header Component */}
           <PilotProductionHeader
             record={record}
             onSaveDraft={handleSaveDraft}
             onSubmitForReview={handleSubmitForReview}
             onDuplicate={() => toast.info("Record duplicated")}
-            onExportPdf={() => toast.info("Exporting PDF report...")}
+            onExportPdf={() => {
+              const content = `=====================================================
+PILOT PRODUCTION BATCH SPECIFICATION: ${record.pilotBatchTitle}
+=====================================================
+Pilot Production ID: ${record.id}
+Batch Number: ${record.pilotBatchNumber}
+Product: ${record.product} (Revision ${record.productRevision})
+Workflow Status: ${record.workflowStatus}
+Pilot Objective: ${record.pilotObjective}
+Production Scope: ${record.productionScope}
+Location: ${record.productionLocation}
+Process Owner: ${record.processOwner}
+Schedule: ${record.scheduleStart} to ${record.scheduleEnd}
+Priority: ${record.priority}
+Lifecycle Stage: ${record.lifecycleStage}
+
+PLANNING & RESOURCES:
+-----------------------------------------------------
+Production Order: ${record.productionOrderRef}
+BOM Reference: ${record.bomReference}
+Routing Reference: ${record.routingReference}
+Planned Quantity: ${record.plannedQuantity} Units
+Actual Quantity: ${record.actualQuantity} Units
+Material Availability: ${record.materialAvailability}
+Machine Allocations: ${record.machineAllocations.join(", ")}
+Operator Assignment: ${record.operatorAssignment}
+
+EXECUTION & KPI TELEMETRY:
+-----------------------------------------------------
+Production Period: ${record.productionStart} - ${record.productionEnd}
+Status: ${record.productionStatus}
+Machine Utilization: ${record.machineUtilization}%
+Cycle Time: ${record.cycleTimeMinutes} Min
+Throughput: ${record.throughputUnitsPerHour} Units/Hour
+Downtime: ${record.downtimeHours} Hours
+OEE: ${record.oee}%
+FPY (First Pass Yield): ${record.fpy}%
+Defect Rate: ${record.defectRate}%
+Quality Score: ${record.qualityScore}/100
+Process Performance Score: ${record.performanceScore}/100
+Overall Readiness: ${calculatedOverall}/100
+AI Health Score: ${record.aiProductionHealthScore}/100
+Recommendation: ${calculatedRec}
+
+APPROVAL MATRIX:
+-----------------------------------------------------
+${record.reviewers.map((r) => `${r.role}: ${r.reviewer} - ${r.status}`).join("\n")}
+Approval Decision: ${record.approvalDecision}
+Approval Comments: ${record.reviewComments || "N/A"}
+=====================================================`;
+
+              const blob = new Blob([content], { type: "text/plain" });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = `${record.pilotBatchNumber}_Pilot_Production_Report.txt`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              toast.success("Pilot Production Batch Report exported & downloaded successfully!");
+            }}
             onPrint={() => window.print()}
             onArchive={() => toast.warning("Record archived")}
           />
@@ -174,7 +235,7 @@ function PilotProductionDetailPage() {
               <button
                 key={tab.id}
                 onClick={() => scrollToSection(tab.id as TabKey, tab.ref)}
-                className={`px-3 py-1.5 rounded-md whitespace-nowrap transition-colors ${
+                className={`px-3 py-1.5 rounded-md whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === tab.id
                     ? "bg-primary text-primary-foreground font-bold shadow-sm"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -204,7 +265,7 @@ function PilotProductionDetailPage() {
                 {/* Section 1 — Pilot Production Overview */}
                 <div ref={sec1Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    1. Pilot Production Overview
+                    Pilot Production Overview
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Left Col */}
@@ -314,7 +375,7 @@ function PilotProductionDetailPage() {
                 {/* Section 2 — Production Planning */}
                 <div ref={sec2Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    2. Production Planning
+                    Production Planning
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Left Col */}
@@ -411,7 +472,7 @@ function PilotProductionDetailPage() {
                 {/* Section 3 — Production Execution */}
                 <div ref={sec3Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    3. Production Execution
+                    Production Execution
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Left Col */}
@@ -470,7 +531,7 @@ function PilotProductionDetailPage() {
                 {/* Section 4 — Quality Verification */}
                 <div ref={sec4Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    4. Quality Verification
+                    Quality Verification
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
                     {/* Left Col: 3 Inspection Gates */}
@@ -532,7 +593,7 @@ function PilotProductionDetailPage() {
                 {/* Section 5 — Process Performance */}
                 <div ref={sec5Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    5. Process Performance
+                    Process Performance
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
                     {/* SPC/MSA Metrics */}
@@ -595,7 +656,7 @@ function PilotProductionDetailPage() {
                 {/* Section 6 — Production Readiness */}
                 <div ref={sec6Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    6. Production Readiness
+                    Production Readiness
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center text-xs">
                     {/* 6 Checkboxes */}
@@ -653,7 +714,7 @@ function PilotProductionDetailPage() {
                 {/* Section 7 — AI Production Assessment */}
                 <div ref={sec7Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <div className="flex items-center justify-between border-b border-border pb-2">
-                    <h2 className="text-sm font-bold text-foreground">7. AI Production Assessment</h2>
+                    <h2 className="text-sm font-bold text-foreground">AI Production Assessment</h2>
                     <span className="px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-extrabold text-xs rounded">
                       AI Health Score: {record.aiProductionHealthScore}/100
                     </span>
@@ -686,7 +747,7 @@ function PilotProductionDetailPage() {
                 {/* Section 10 — Review & Approval (TABLE-based) */}
                 <div ref={sec10Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    10. Review & Approval
+                    Review & Approval
                   </h2>
                   <PilotProductionReviewTable
                     reviewers={record.reviewers}
@@ -700,7 +761,7 @@ function PilotProductionDetailPage() {
                 {/* Section 11 — System Information */}
                 <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    11. System Information
+                    System Information
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-xs">
                     <div>

@@ -16,7 +16,7 @@ export const RoutingSystemInfoPanel: React.FC<RoutingSystemInfoPanelProps> = ({
       <div className="flex justify-between items-center pb-2 border-b border-border">
         <div className="flex items-center gap-1.5">
           <Database className="w-3.5 h-3.5 text-primary" />
-          <h2 className="font-bold text-foreground text-xs">11. System Information</h2>
+          <h2 className="font-bold text-foreground text-xs">System Information</h2>
         </div>
       </div>
 

@@ -35,13 +35,13 @@ export const BomOverviewGrid: React.FC<BomOverviewGridProps> = ({
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {/* 1. Material & Component Summary */}
-      <div className="bg-card border border-border rounded-lg shadow-sm p-4 flex flex-col justify-between">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Material & Component Summary */}
+      <div className="bg-card border border-border rounded-lg shadow-sm p-4 flex flex-col justify-between hover:border-border/80 transition-all">
         <div>
           <div className="flex items-center gap-2 pb-2.5 border-b border-border mb-3">
             <PieChart className="w-4 h-4 text-blue-500" />
-            <h3 className="text-xs font-bold text-foreground">Material & Component Summary</h3>
+            <h3 className="text-xs font-bold text-foreground">Material & Component Distribution</h3>
           </div>
 
           <div className="space-y-2 text-xs">
@@ -63,18 +63,22 @@ export const BomOverviewGrid: React.FC<BomOverviewGridProps> = ({
           </div>
         </div>
 
-        <div className="pt-3 border-t border-border mt-3 flex justify-between items-center text-xs font-bold">
-          <span className="text-muted-foreground">Total Items:</span>
-          <span className="text-foreground">{record.totalItemsCount}</span>
-        </div>
+        <button
+          type="button"
+          onClick={() => onNavigateTab?.("material")}
+          className="pt-3 border-t border-border mt-3 text-[11px] font-bold text-primary hover:underline flex items-center justify-between w-full"
+        >
+          <span>Total Items: <strong className="text-foreground">{record.totalItemsCount}</strong></span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
       </div>
 
-      {/* 2. Top 5 Costly Components */}
-      <div className="bg-card border border-border rounded-lg shadow-sm p-4 flex flex-col justify-between">
+      {/* Top Costly Components */}
+      <div className="bg-card border border-border rounded-lg shadow-sm p-4 flex flex-col justify-between hover:border-border/80 transition-all">
         <div>
           <div className="flex items-center gap-2 pb-2.5 border-b border-border mb-3">
             <DollarSign className="w-4 h-4 text-emerald-500" />
-            <h3 className="text-xs font-bold text-foreground">Top 5 Costly Components</h3>
+            <h3 className="text-xs font-bold text-foreground">Top Cost Drivers</h3>
           </div>
 
           <div className="space-y-2 text-xs">
@@ -93,6 +97,7 @@ export const BomOverviewGrid: React.FC<BomOverviewGridProps> = ({
         </div>
 
         <button
+          type="button"
           onClick={() => onNavigateTab?.("cost")}
           className="pt-3 border-t border-border mt-3 text-[11px] font-bold text-primary hover:underline flex items-center justify-between w-full"
         >
@@ -100,8 +105,8 @@ export const BomOverviewGrid: React.FC<BomOverviewGridProps> = ({
         </button>
       </div>
 
-      {/* 3. Compliance Status */}
-      <div className="bg-card border border-border rounded-lg shadow-sm p-4 flex flex-col justify-between">
+      {/* Compliance Status */}
+      <div className="bg-card border border-border rounded-lg shadow-sm p-4 flex flex-col justify-between hover:border-border/80 transition-all">
         <div>
           <div className="flex items-center gap-2 pb-2.5 border-b border-border mb-3">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
@@ -121,6 +126,7 @@ export const BomOverviewGrid: React.FC<BomOverviewGridProps> = ({
         </div>
 
         <button
+          type="button"
           onClick={() => onNavigateTab?.("quality")}
           className="pt-3 border-t border-border mt-3 text-[11px] font-bold text-primary hover:underline flex items-center justify-between w-full"
         >
@@ -128,44 +134,47 @@ export const BomOverviewGrid: React.FC<BomOverviewGridProps> = ({
         </button>
       </div>
 
-      {/* 4. BOM Health Summary */}
-      <div className="bg-card border border-border rounded-lg shadow-sm p-4 flex flex-col justify-between">
+      {/* Sourcing & Lead Time Insights (Replaced duplicate score list) */}
+      <div className="bg-card border border-border rounded-lg shadow-sm p-4 flex flex-col justify-between hover:border-border/80 transition-all">
         <div>
           <div className="flex items-center gap-2 pb-2.5 border-b border-border mb-3">
             <Activity className="w-4 h-4 text-purple-500" />
-            <h3 className="text-xs font-bold text-foreground">BOM Health Summary</h3>
+            <h3 className="text-xs font-bold text-foreground">Sourcing & Operational Profile</h3>
           </div>
 
           <div className="space-y-2 text-xs">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Structure Validation</span>
-              <span className="font-bold font-mono text-emerald-600">92 / 100</span>
+              <span className="text-muted-foreground">Make / Buy Strategy</span>
+              <span className="font-bold text-foreground">74% Make / 26% Buy</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Material Validation</span>
-              <span className="font-bold font-mono text-blue-600">88 / 100</span>
+              <span className="text-muted-foreground">Primary Material</span>
+              <span className="font-semibold text-foreground">{record.materialGrade}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Manufacturing Validation</span>
-              <span className="font-bold font-mono text-amber-600">90 / 100</span>
+              <span className="text-muted-foreground">Approved Vendor</span>
+              <span className="font-semibold text-foreground">{record.approvedVendor}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Quality Validation</span>
-              <span className="font-bold font-mono text-purple-600">86 / 100</span>
+              <span className="text-muted-foreground">Max Component Lead Time</span>
+              <span className="font-bold font-mono text-amber-600 dark:text-amber-400">{record.leadTimeDays} Days</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Cost Validation</span>
-              <span className="font-bold font-mono text-teal-600">87 / 100</span>
+              <span className="text-muted-foreground">Supply Risk Profile</span>
+              <span className="inline-flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400 text-[10px]">
+                <CheckCircle2 className="w-3 h-3" /> Low Risk
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="pt-3 border-t border-border mt-3 flex justify-between items-center text-xs">
-          <span className="font-bold text-foreground">Overall Health Score</span>
-          <span className="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-black text-xs border border-emerald-300 dark:border-emerald-800">
-            {record.overallReadinessScore} / 100
-          </span>
-        </div>
+        <button
+          type="button"
+          onClick={() => onNavigateTab?.("manufacturing")}
+          className="pt-3 border-t border-border mt-3 text-[11px] font-bold text-primary hover:underline flex items-center justify-between w-full"
+        >
+          View Manufacturing Details <ArrowRight className="w-3.5 h-3.5" />
+        </button>
       </div>
     </div>
   );

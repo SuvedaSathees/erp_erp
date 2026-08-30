@@ -58,7 +58,7 @@ export const AutomationDeploymentReleasePanel: React.FC<AutomationDeploymentRele
         <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
           <div className="flex items-center gap-2">
             <Cpu className="w-4 h-4 text-blue-500" />
-            <span className="font-bold text-foreground">1. Release Production</span>
+            <span className="font-bold text-foreground">Release Production</span>
           </div>
           <p className="text-[11px] text-muted-foreground">Notify MES that Line is now Automation-Ready.</p>
           {actions.releaseAutomatedProduction ? (
@@ -69,7 +69,7 @@ export const AutomationDeploymentReleasePanel: React.FC<AutomationDeploymentRele
             <button
               disabled={!isAuthorized}
               onClick={() => onFireAction("releaseAutomatedProduction")}
-              className="w-full py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors"
+              className="w-full py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors cursor-pointer"
             >
               Release Production Line
             </button>
@@ -80,7 +80,7 @@ export const AutomationDeploymentReleasePanel: React.FC<AutomationDeploymentRele
         <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
           <div className="flex items-center gap-2">
             <Wrench className="w-4 h-4 text-purple-500" />
-            <span className="font-bold text-foreground">2. Register Assets</span>
+            <span className="font-bold text-foreground">Register Assets</span>
           </div>
           <p className="text-[11px] text-muted-foreground">Create hardware asset records in Maintenance Management.</p>
           {actions.registerAutomationAssets ? (
@@ -91,7 +91,7 @@ export const AutomationDeploymentReleasePanel: React.FC<AutomationDeploymentRele
             <button
               disabled={!isAuthorized}
               onClick={() => onFireAction("registerAutomationAssets")}
-              className="w-full py-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors"
+              className="w-full py-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors cursor-pointer"
             >
               Register Assets
             </button>
@@ -102,7 +102,7 @@ export const AutomationDeploymentReleasePanel: React.FC<AutomationDeploymentRele
         <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
           <div className="flex items-center gap-2">
             <Archive className="w-4 h-4 text-indigo-500" />
-            <span className="font-bold text-foreground">3. Archive Docs</span>
+            <span className="font-bold text-foreground">Archive Docs</span>
           </div>
           <p className="text-[11px] text-muted-foreground">Freeze files as Rev 1.0 in Enterprise Repository.</p>
           {actions.archiveAutomationDocumentation ? (
@@ -113,7 +113,7 @@ export const AutomationDeploymentReleasePanel: React.FC<AutomationDeploymentRele
             <button
               disabled={!isAuthorized}
               onClick={() => onFireAction("archiveAutomationDocumentation")}
-              className="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors"
+              className="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors cursor-pointer"
             >
               Archive Documentation
             </button>
@@ -124,7 +124,7 @@ export const AutomationDeploymentReleasePanel: React.FC<AutomationDeploymentRele
         <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            <span className="font-bold text-foreground">4. Approve Deployment</span>
+            <span className="font-bold text-foreground">Approve Deployment</span>
           </div>
           <p className="text-[11px] text-muted-foreground">Set official deployment approval timestamp.</p>
           {actions.markProductionDeploymentApproved ? (
@@ -135,7 +135,7 @@ export const AutomationDeploymentReleasePanel: React.FC<AutomationDeploymentRele
             <button
               disabled={!isAuthorized}
               onClick={() => onFireAction("markProductionDeploymentApproved")}
-              className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded text-xs transition-colors"
+              className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded text-xs transition-colors cursor-pointer"
             >
               Approve Deployment
             </button>

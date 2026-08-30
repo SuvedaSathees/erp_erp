@@ -49,7 +49,7 @@ export const ExcellenceAiCard: React.FC<ExcellenceAiCardProps> = ({
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-400" />
             <CardTitle className="text-base font-bold text-foreground">
-              7. AI Excellence Assessment
+              AI Excellence Assessment
             </CardTitle>
           </div>
           <div className="flex items-center gap-2">

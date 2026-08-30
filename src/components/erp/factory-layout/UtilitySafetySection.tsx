@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Download, Eye, FileText, ShieldCheck, Zap } from "lucide-react";
+import { Download, Eye, FileText, ShieldCheck } from "lucide-react";
 import type { FactoryLayoutFormInput } from "@/services/types";
 import { toast } from "sonner";
 
@@ -25,78 +25,73 @@ export function UtilitySafetySection({
   ];
 
   return (
-    <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-      <CardHeader className="pb-3 flex flex-row items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-              5
-            </span>
-            <CardTitle className="text-base font-bold">Utilities & Safety Compliance</CardTitle>
-          </div>
-          <CardDescription className="text-xs">
-            High-voltage electrical distribution, pneumatic piping, fire suppression & emergency evacuation planning.
-          </CardDescription>
-        </div>
-
-        <div className="flex items-center gap-3 bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800 rounded-xl px-4 py-2">
+    <Card className="border-border rounded-xl shadow-xs bg-card flex flex-col justify-between">
+      <div>
+        <CardHeader className="pb-3 flex flex-row items-center justify-between border-b border-border/60">
           <div>
-            <span className="text-[10px] font-semibold uppercase text-teal-600 dark:text-teal-400 block tracking-wider">
-              Utility & Safety Score
-            </span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-extrabold text-teal-700 dark:text-teal-300 font-mono">
-                {utilitySafetyScore}
+            <CardTitle className="text-base font-bold text-foreground">
+              Utilities & Safety Compliance
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Electrical distribution, piping, fire suppression & evacuation.
+            </CardDescription>
+          </div>
+
+          <div className="flex items-center gap-2 bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800 rounded-xl px-3 py-1.5 shrink-0">
+            <div>
+              <span className="text-[10px] font-semibold uppercase text-teal-600 dark:text-teal-400 block tracking-wider">
+                Utility Score
               </span>
-              <span className="text-xs text-teal-500 font-semibold">/100</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-lg font-extrabold text-teal-700 dark:text-teal-300 font-mono">
+                  {utilitySafetyScore}
+                </span>
+                <span className="text-[10px] text-teal-500 font-semibold">/100</span>
+              </div>
             </div>
           </div>
-        </div>
-      </CardHeader>
+        </CardHeader>
 
-      <CardContent className="space-y-5">
-        <div className="rounded-lg border border-border/80 overflow-hidden bg-slate-50/50 dark:bg-slate-800/30">
-          <div className="grid grid-cols-12 gap-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-muted-foreground uppercase tracking-wider border-b border-border">
-            <div className="col-span-4">Utility / Safety Drawing</div>
-            <div className="col-span-5">Attached Schematic</div>
-            <div className="col-span-3 text-right">Actions</div>
-          </div>
-
-          <div className="divide-y divide-border/60 text-xs">
+        <CardContent className="space-y-4 pt-4 text-xs">
+          {/* Schematic Documents List */}
+          <div className="rounded-lg border border-border/80 divide-y divide-border/60 overflow-hidden bg-background">
             {utilityDocs.map((doc, idx) => (
               <div
                 key={doc.label}
-                className="grid grid-cols-12 gap-2 px-4 py-2.5 items-center hover:bg-white dark:hover:bg-slate-800/80 transition-colors"
+                className="p-2.5 flex items-center justify-between gap-3 hover:bg-muted/30 transition-colors"
               >
-                <div className="col-span-4 font-semibold text-foreground flex items-center gap-2">
-                  <span className="text-slate-400 font-mono text-[10px]">{idx + 1}.</span>
-                  {doc.label}
+                {/* Drawing Label & File */}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-muted-foreground font-mono text-[10px] shrink-0">{idx + 1}.</span>
+                    <span className="font-semibold text-foreground truncate">{doc.label}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-0.5 pl-3.5">
+                    <FileText className="h-3.5 w-3.5 text-teal-600 shrink-0" />
+                    <span className="font-mono text-[11px] text-primary truncate cursor-pointer hover:underline font-medium">
+                      {doc.filename}
+                    </span>
+                    <Badge variant="outline" className="text-[9px] px-1.5 py-0 font-mono shrink-0">
+                      {doc.size}
+                    </Badge>
+                  </div>
                 </div>
 
-                <div className="col-span-5 flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-teal-600 shrink-0" />
-                  <span className="font-mono text-xs truncate text-primary font-medium cursor-pointer hover:underline">
-                    {doc.filename}
-                  </span>
-                  <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                    {doc.size}
-                  </Badge>
-                </div>
-
-                <div className="col-span-3 flex items-center justify-end gap-1.5">
+                {/* Actions */}
+                <div className="flex items-center gap-1.5 shrink-0">
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
-                    className="h-7 px-2 text-[11px] gap-1 hover:text-primary"
+                    className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer border-border"
                     onClick={() => toast.info(`Previewing ${doc.filename}`)}
                   >
                     <Eye className="h-3.5 w-3.5" />
                     Preview
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
-                    className="h-7 px-2 text-[11px] gap-1 hover:text-teal-600"
+                    className="h-7 px-2 text-[11px] hover:text-teal-600 cursor-pointer border-border"
                     onClick={() => toast.success(`Downloading ${doc.filename}`)}
                   >
                     <Download className="h-3.5 w-3.5" />
@@ -105,25 +100,27 @@ export function UtilitySafetySection({
               </div>
             ))}
           </div>
-        </div>
 
-        {/* EHS Compliance Banner Checkbox */}
-        <div className="p-3.5 border border-emerald-200 dark:border-emerald-800 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/40 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="ehsCompliance"
-              checked={watch("ehsCompliance") ?? true}
-              onCheckedChange={(val) => setValue("ehsCompliance", Boolean(val))}
-            />
-            <label htmlFor="ehsCompliance" className="font-bold text-emerald-800 dark:text-emerald-300 cursor-pointer">
-              Environment, Health & Safety (EHS) Compliance Verified ✓
-            </label>
+          {/* EHS Compliance Banner Checkbox */}
+          <div className="p-3 border border-emerald-200 dark:border-emerald-800 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/40 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="ehsCompliance"
+                checked={watch("ehsCompliance") ?? true}
+                onCheckedChange={(val) => setValue("ehsCompliance", Boolean(val))}
+              />
+              <label htmlFor="ehsCompliance" className="font-semibold text-emerald-900 dark:text-emerald-300 cursor-pointer whitespace-nowrap">
+                Environment, Health & Safety (EHS) Compliance Verified ✓
+              </label>
+            </div>
+
+            <div className="flex items-center gap-1 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold whitespace-nowrap">
+              <ShieldCheck className="h-4 w-4 shrink-0" />
+              Certified Safe
+            </div>
           </div>
-          <span className="text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1">
-            <ShieldCheck className="h-4 w-4" /> Certified Safe
-          </span>
-        </div>
-      </CardContent>
+        </CardContent>
+      </div>
     </Card>
   );
 }

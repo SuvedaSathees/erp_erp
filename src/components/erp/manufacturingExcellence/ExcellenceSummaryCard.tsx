@@ -64,7 +64,7 @@ export const ExcellenceSummaryCard: React.FC<ExcellenceSummaryCardProps> = ({
           <div className="flex items-center gap-2">
             <Award className="h-4 w-4 text-primary" />
             <CardTitle className="text-base font-bold text-foreground">
-              8. Manufacturing Excellence Summary
+              Manufacturing Excellence Summary
             </CardTitle>
           </div>
           <div className="flex items-center gap-1.5">

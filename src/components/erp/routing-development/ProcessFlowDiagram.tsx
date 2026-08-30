@@ -1,165 +1,111 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   GitCommit,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
-  RefreshCw,
-  ArrowDown,
-  Layers,
+  ArrowRight,
   CheckCircle2,
+  AlertTriangle,
+  Layers,
+  Sparkles,
 } from "lucide-react";
 
+interface FlowStep {
+  opNo: string;
+  name: string;
+  workCentre: string;
+  critical?: boolean;
+  type?: "standard" | "critical" | "parallel";
+}
+
+const FLOW_STEPS: FlowStep[] = [
+  { opNo: "OP-10", name: "Incoming Inspection", workCentre: "QC-01" },
+  { opNo: "OP-20", name: "Laser Cutting", workCentre: "MC-01" },
+  { opNo: "OP-30", name: "Bending", workCentre: "MC-02" },
+  { opNo: "OP-40", name: "Welding", workCentre: "MC-03", critical: true },
+  { opNo: "OP-50", name: "Surface Grinding", workCentre: "MC-04" },
+  { opNo: "OP-60", name: "Powder Coating", workCentre: "MC-05" },
+  { opNo: "OP-70", name: "PCB Assembly", workCentre: "MC-06", critical: true },
+  { opNo: "OP-80", name: "Module Assembly", workCentre: "AS-01" },
+  { opNo: "OP-90", name: "Sub Assembly", workCentre: "AS-02" },
+  { opNo: "OP-100", name: "Final Assembly", workCentre: "AS-03" },
+  { opNo: "OP-110", name: "Functional Testing", workCentre: "QC-02", critical: true },
+  { opNo: "OP-120", name: "Inspection & Packing", workCentre: "PK-01" },
+];
+
 export const ProcessFlowDiagram: React.FC = () => {
-  const [zoomLevel, setZoomLevel] = useState(1);
-
-  const handleZoomIn = () => setZoomLevel((prev) => Math.min(prev + 0.15, 1.5));
-  const handleZoomOut = () => setZoomLevel((prev) => Math.max(prev - 0.15, 0.7));
-  const handleReset = () => setZoomLevel(1);
-
   return (
-    <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col h-full text-xs">
-      <div className="p-3 border-b border-border bg-muted/20 flex justify-between items-center">
-        <div className="flex items-center gap-1.5">
+    <div className="bg-card border border-border rounded-lg shadow-sm p-4 text-xs space-y-4">
+      {/* Header */}
+      <div className="flex justify-between items-center pb-2.5 border-b border-border">
+        <div className="flex items-center gap-2">
           <GitCommit className="w-4 h-4 text-primary" />
-          <h2 className="font-bold text-foreground text-xs">Process Flow Diagram</h2>
+          <h2 className="font-bold text-foreground text-xs">Process Flow Pipeline Diagram</h2>
         </div>
-
-        <div className="flex items-center gap-1">
-          <button
-            onClick={handleZoomIn}
-            title="Zoom In"
-            className="p-1 hover:bg-muted rounded text-muted-foreground"
-          >
-            <ZoomIn className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={handleZoomOut}
-            title="Zoom Out"
-            className="p-1 hover:bg-muted rounded text-muted-foreground"
-          >
-            <ZoomOut className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={handleReset}
-            title="Reset"
-            className="p-1 hover:bg-muted rounded text-muted-foreground"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-          </button>
+        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" /> Standard Op
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-amber-500" /> Critical Gate
+          </span>
+          <span className="font-bold text-foreground">12 Total Stages</span>
         </div>
       </div>
 
-      {/* Interactive Process Flowchart Viewport */}
-      <div className="relative flex-1 min-h-[380px] max-h-[520px] bg-muted/10 overflow-y-auto p-4 flex flex-col items-center">
-        <div
-          className="flex flex-col items-center space-y-2 transition-transform duration-300 w-full max-w-sm"
-          style={{ transform: `scale(${zoomLevel})`, transformOrigin: "top center" }}
-        >
-          {/* Start Pill */}
-          <div className="px-4 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-bold shadow">
-            Start
+      {/* Full-Size Connected Pipeline Grid (No internal scrollbars) */}
+      <div className="p-3 rounded-lg bg-muted/15 border border-border/60">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 justify-start">
+          {/* Start Badge */}
+          <div className="px-3.5 py-2 rounded-lg bg-emerald-600 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Start
           </div>
 
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
+          <ArrowRight className="w-4 h-4 text-muted-foreground/60 shrink-0 hidden sm:block" />
 
-          {/* OP-10 */}
-          <div className="w-full text-center p-2 rounded-lg bg-card border border-border shadow-sm hover:border-primary transition-colors">
-            <div className="font-bold text-foreground">Incoming Material Inspection</div>
-            <span className="text-[10px] text-muted-foreground font-mono">OP-10</span>
-          </div>
+          {/* Pipeline Nodes */}
+          {FLOW_STEPS.map((step, idx) => (
+            <React.Fragment key={step.opNo}>
+              <div
+                className={`p-2.5 rounded-lg border transition-all shrink-0 min-w-[135px] max-w-[170px] shadow-sm ${
+                  step.critical
+                    ? "bg-amber-50/80 dark:bg-amber-950/40 border-amber-300 dark:border-amber-700"
+                    : "bg-card border-border hover:border-primary/50"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-1 mb-1">
+                  <span
+                    className={`font-mono text-[10px] font-extrabold ${
+                      step.critical
+                        ? "text-amber-700 dark:text-amber-400"
+                        : "text-primary"
+                    }`}
+                  >
+                    {step.opNo}
+                  </span>
+                  <span className="text-[9px] text-muted-foreground font-mono bg-muted/60 px-1 py-0.2 rounded">
+                    {step.workCentre}
+                  </span>
+                </div>
+                <div className="font-bold text-foreground text-xs truncate" title={step.name}>
+                  {step.name}
+                </div>
+                {step.critical && (
+                  <span className="inline-block mt-1 text-[9px] font-extrabold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                    Critical Gate
+                  </span>
+                )}
+              </div>
 
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
+              {idx < FLOW_STEPS.length - 1 && (
+                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 shrink-0" />
+              )}
+            </React.Fragment>
+          ))}
 
-          {/* OP-20 */}
-          <div className="w-full text-center p-2 rounded-lg bg-card border border-border shadow-sm hover:border-primary transition-colors">
-            <div className="font-bold text-foreground">Cutting</div>
-            <span className="text-[10px] text-muted-foreground font-mono">OP-20</span>
-          </div>
+          <ArrowRight className="w-4 h-4 text-muted-foreground/60 shrink-0 hidden sm:block" />
 
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
-
-          {/* OP-30 */}
-          <div className="w-full text-center p-2 rounded-lg bg-card border border-border shadow-sm hover:border-primary transition-colors">
-            <div className="font-bold text-foreground">Bending</div>
-            <span className="text-[10px] text-muted-foreground font-mono">OP-30</span>
-          </div>
-
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
-
-          {/* OP-40 */}
-          <div className="w-full text-center p-2 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 shadow-sm">
-            <div className="font-bold text-amber-900 dark:text-amber-200">Welding</div>
-            <span className="text-[10px] font-mono text-amber-700 dark:text-amber-400 font-bold">OP-40 (Critical)</span>
-          </div>
-
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
-
-          {/* OP-50 */}
-          <div className="w-full text-center p-2 rounded-lg bg-card border border-border shadow-sm">
-            <div className="font-bold text-foreground">Grinding</div>
-            <span className="text-[10px] text-muted-foreground font-mono">OP-50</span>
-          </div>
-
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
-
-          {/* Parallel Flow: OP-60 Coating & OP-70 PCB Assembly */}
-          <div className="grid grid-cols-2 gap-2 w-full">
-            <div className="text-center p-2 rounded-lg bg-card border border-border shadow-sm">
-              <div className="font-bold text-foreground">Coating</div>
-              <span className="text-[10px] text-muted-foreground font-mono">OP-60</span>
-            </div>
-            <div className="text-center p-2 rounded-lg bg-purple-50 dark:bg-purple-950/40 border border-purple-300 dark:border-purple-800 shadow-sm">
-              <div className="font-bold text-purple-900 dark:text-purple-200">PCB Assembly</div>
-              <span className="text-[10px] font-mono text-purple-700 dark:text-purple-400 font-bold">OP-70</span>
-            </div>
-          </div>
-
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
-
-          {/* OP-80 */}
-          <div className="w-full text-center p-2 rounded-lg bg-card border border-border shadow-sm">
-            <div className="font-bold text-foreground">Module Assembly</div>
-            <span className="text-[10px] text-muted-foreground font-mono">OP-80</span>
-          </div>
-
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
-
-          {/* OP-90 */}
-          <div className="w-full text-center p-2 rounded-lg bg-card border border-border shadow-sm">
-            <div className="font-bold text-foreground">Sub Assembly</div>
-            <span className="text-[10px] text-muted-foreground font-mono">OP-90</span>
-          </div>
-
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
-
-          {/* OP-100 */}
-          <div className="w-full text-center p-2 rounded-lg bg-card border border-border shadow-sm">
-            <div className="font-bold text-foreground">Final Assembly</div>
-            <span className="text-[10px] text-muted-foreground font-mono">OP-100</span>
-          </div>
-
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
-
-          {/* OP-110 */}
-          <div className="w-full text-center p-2 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-300 dark:border-blue-800 shadow-sm">
-            <div className="font-bold text-blue-900 dark:text-blue-200">Functional Testing</div>
-            <span className="text-[10px] font-mono text-blue-700 dark:text-blue-400 font-bold">OP-110 (22kW Test)</span>
-          </div>
-
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
-
-          {/* OP-120 */}
-          <div className="w-full text-center p-2 rounded-lg bg-card border border-border shadow-sm">
-            <div className="font-bold text-foreground">Final Inspection & Packing</div>
-            <span className="text-[10px] text-muted-foreground font-mono">OP-120</span>
-          </div>
-
-          <ArrowDown className="w-3 h-3 text-muted-foreground" />
-
-          {/* End Pill */}
-          <div className="px-4 py-1 rounded-full bg-slate-800 text-white text-[10px] font-bold shadow">
-            End
+          {/* End Badge */}
+          <div className="px-3.5 py-2 rounded-lg bg-slate-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Complete Release
           </div>
         </div>
       </div>

@@ -12,7 +12,7 @@ export const ProcessValidationSummaryCard: React.FC<ProcessValidationSummaryCard
     <div className="bg-card border border-border rounded-lg shadow-sm p-3.5 text-xs flex flex-col justify-between">
       <div>
         <h2 className="font-bold text-foreground text-xs pb-2 border-b border-border mb-2.5">
-          8. Validation Summary
+          Validation Summary
         </h2>
 
         <div className="space-y-2 text-[11px]">

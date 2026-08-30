@@ -16,7 +16,7 @@ export const ControlPlanProcessControlCard: React.FC<ControlPlanProcessControlCa
       <div>
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
           <h2 className="font-bold text-foreground text-xs">
-            4. Process Control
+            Process Control
           </h2>
         </div>
 

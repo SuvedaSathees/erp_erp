@@ -20,7 +20,7 @@ export const ControlPlanAiCard: React.FC<ControlPlanAiCardProps> = ({
           <div className="flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
             <h2 className="font-bold text-foreground text-xs">
-              6. AI Control Plan Assessment
+              AI Control Plan Assessment
             </h2>
           </div>
         </div>

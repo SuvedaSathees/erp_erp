@@ -30,12 +30,7 @@ export function CapacitySummarySection({
   return (
     <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
       <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <span className="h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-            8
-          </span>
-          <CardTitle className="text-base font-bold">Capacity Planning Summary & Decision Scorecard</CardTitle>
-        </div>
+        <CardTitle className="text-base font-bold">Capacity Planning Summary & Decision Scorecard</CardTitle>
         <CardDescription className="text-xs">
           Executive readiness scorecard, weighted metric summary & final plant sign-off recommendation.
         </CardDescription>

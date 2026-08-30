@@ -137,11 +137,12 @@ const NAV_GROUPS: GroupItem[] = [
         children: [
           {
             kind: "leaf",
-            to: "/development/business-development/business-model-development",
+            to: "/development/business-development/overview",
             matchPrefix: "/development/business-development",
             label: "Business Development",
             icon: Briefcase,
             subItems: [
+              { to: "/development/business-development/overview", label: "Overview" },
               { to: "/development/business-development/business-model-development", label: "Business Model Development" },
               { to: "/development/business-development/value-proposition-development", label: "Value Proposition Development" },
               { to: "/development/business-development/customer-discovery", label: "Customer Discovery" },
@@ -212,13 +213,8 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/manufacturing-development/production-engineering", label: "Process" },
               { to: "/development/manufacturing-development/control-plan", label: "Control Plan" },
               { to: "/development/manufacturing-development/pfmea-development", label: "PFMEA" },
-              { to: "/development/manufacturing-development/pilot-production", label: "Pilot" },
               { to: "/development/manufacturing-development/process-validation", label: "PPAP" },
-              { to: "/development/manufacturing-development/mass-production-readiness", label: "Readiness" },
-              { to: "/development/manufacturing-development/lean-manufacturing", label: "Lean" },
               { to: "/development/manufacturing-development/six-sigma-projects", label: "Six Sigma" },
-              { to: "/development/manufacturing-development/automation-development", label: "Automation" },
-              { to: "/development/manufacturing-development/robotics-integration", label: "Robotics" },
               { to: "/development/manufacturing-development/assembly-line-development", label: "Assembly Line" },
               { to: "/development/manufacturing-development/fixture-development", label: "Fixture" },
               { to: "/development/manufacturing-development/tooling-development", label: "Tooling" },

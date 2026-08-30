@@ -16,12 +16,14 @@ interface OverviewTabProps {
   record: PfmeaRecord;
   onNavigateTab: (tab: any) => void;
   onAddFailureMode: () => void;
+  onReviewDecision?: (decision: any, comments: string) => void;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({
   record,
   onNavigateTab,
   onAddFailureMode,
+  onReviewDecision,
 }) => {
   return (
     <div className="space-y-4">
@@ -80,7 +82,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             onViewAnalysis={() => onNavigateTab("ai")}
           />
           <PfmeaRiskPrioritySummary failureModes={record.failureModes} />
-          <PfmeaReviewApprovalPanel record={record} />
+          <PfmeaReviewApprovalPanel record={record} onReviewDecision={onReviewDecision} />
         </div>
       </div>
     </div>

@@ -1,31 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
-import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 
-import {
-  WorkInstructionTabBar,
-  type WorkInstructionTabId,
-} from "@/components/erp/work-instruction/WorkInstructionTabBar";
 import { WorkInstructionHeader } from "@/components/erp/work-instruction/WorkInstructionHeader";
 import { WorkInstructionOverviewSection } from "@/components/erp/work-instruction/WorkInstructionOverviewSection";
 import { StepByStepInstructionBuilder } from "@/components/erp/work-instruction/StepByStepInstructionBuilder";
 import { ToolsMaterialsSection } from "@/components/erp/work-instruction/ToolsMaterialsSection";
 import { QualityRequirementsSection } from "@/components/erp/work-instruction/QualityRequirementsSection";
 import { SafetyComplianceSection } from "@/components/erp/work-instruction/SafetyComplianceSection";
-import { TrainingCompetencySection } from "@/components/erp/work-instruction/TrainingCompetencySection";
-import { AiWorkInstructionSection } from "@/components/erp/work-instruction/AiWorkInstructionSection";
-import { WorkInstructionSummarySection } from "@/components/erp/work-instruction/WorkInstructionSummarySection";
 import { WorkInstructionAttachmentManager } from "@/components/erp/work-instruction/WorkInstructionAttachmentManager";
 import { WorkInstructionApprovalSection } from "@/components/erp/work-instruction/WorkInstructionApprovalSection";
-import { WorkInstructionActivityHistorySection } from "@/components/erp/work-instruction/WorkInstructionActivityHistorySection";
-import { WorkInstructionActionBar } from "@/components/erp/work-instruction/WorkInstructionActionBar";
 
 import { workInstructionDevelopmentService } from "@/services/workInstructionDevelopmentService";
 import type { WorkInstructionFormInput, WorkInstructionRecord } from "@/services/types";
@@ -45,7 +35,6 @@ export function WorkInstructionDevelopmentNewPage({
   tabs?: React.ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<WorkInstructionTabId>("overview");
 
   const { data: record, isLoading } = useQuery<WorkInstructionRecord>({
     queryKey: ["work-instruction", "current"],
@@ -81,7 +70,47 @@ export function WorkInstructionDevelopmentNewPage({
   });
 
   const handleExportReport = () => {
-    toast.success("Generating complete Work Instruction engineering PDF report...");
+    if (!record) return;
+    const currentData = { ...record, ...form.getValues() };
+    const content = `=====================================================
+WORK INSTRUCTION: ${currentData.title}
+=====================================================
+Work Instruction ID: ${currentData.workInstructionId}
+Form Code: ${currentData.formCode}
+Document Number: ${currentData.documentNumber}
+Revision: Rev ${currentData.revision}
+Workflow Status: ${currentData.workflowStatus}
+Plant: ${currentData.plant}
+Department: ${currentData.department}
+Process Owner: ${currentData.processOwner}
+Workstation: ${currentData.workstation}
+Production Line: ${currentData.productionLine}
+Product Family: ${currentData.productFamily}
+Product Model: ${currentData.productModel}
+Effective Date: ${currentData.effectiveDate}
+Next Review Date: ${currentData.nextReviewDate}
+
+Operation Description:
+${currentData.operationDescription}
+
+-----------------------------------------------------
+STEP-BY-STEP INSTRUCTIONS:
+-----------------------------------------------------
+${(currentData.steps || []).map((st) => `Step ${st.stepNumber}: ${st.instruction}\n  - Key Points: ${st.keyPoints}\n  - Time: ${st.timeSeconds}s\n  - Quality Checks: ${st.qualityChecks || "Visual inspection"}\n  - Safety Notes: ${st.safetyNotes || "Wear standard PPE"}`).join("\n\n")}
+
+-----------------------------------------------------
+Total Estimated Cycle Time: ${currentData.totalCycleTimeSec || 230} seconds
+=====================================================`;
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${currentData.documentNumber}_Work_Instruction.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Work Instruction exported successfully");
   };
 
   if (isLoading || !record) {
@@ -89,7 +118,7 @@ export function WorkInstructionDevelopmentNewPage({
       <AppShell
         title="Work Instruction Development"
         breadcrumb={breadcrumb ?? "Research & Innovation Development"}
-        tabs={tabs ?? <InnovationAreaTabs sub={<WorkInstructionTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+        tabs={tabs ?? <InnovationAreaTabs />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Work Instruction Master Record...
@@ -105,10 +134,9 @@ export function WorkInstructionDevelopmentNewPage({
       title="Work Instruction Development"
       breadcrumb={breadcrumb ?? "Development > Research & Innovation > Work Instruction Development"}
       description="Author, review and control shop floor assembly work instructions with step sequencing, visual guides, quality checkpoints & AI risk validation."
-      tabs={tabs ?? <InnovationAreaTabs sub={<WorkInstructionTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+      tabs={tabs ?? <InnovationAreaTabs />}
     >
-      <div className="space-y-4">
-
+      <div className="p-4 sm:p-6 space-y-5">
         <WorkInstructionHeader
           record={currentRecordData as WorkInstructionRecord}
           onSaveDraft={() => saveDraftMutation.mutate(form.getValues())}
@@ -116,62 +144,34 @@ export function WorkInstructionDevelopmentNewPage({
           onExportReport={handleExportReport}
         />
 
-        <WorkInstructionTabBar activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Unified Work Instruction Sections */}
+        <div className="space-y-5">
+          <WorkInstructionOverviewSection
+            form={form}
+            record={currentRecordData as WorkInstructionRecord}
+            onNavigateTab={(tab) => toast.info(`Viewing ${tab} section`)}
+          />
 
-        <div className="space-y-6">
-          {(activeTab === "overview" || activeTab === "summary") && (
-            <WorkInstructionOverviewSection
-              form={form}
-              record={currentRecordData as WorkInstructionRecord}
-              onNavigateTab={(tab) => setActiveTab(tab as WorkInstructionTabId)}
-            />
-          )}
+          <StepByStepInstructionBuilder form={form} />
 
-          {(activeTab === "operation_details" || activeTab === "summary") && (
-            <StepByStepInstructionBuilder form={form} />
-          )}
+          <ToolsMaterialsSection form={form} />
 
-          {(activeTab === "tools_materials" || activeTab === "summary") && (
-            <ToolsMaterialsSection form={form} />
-          )}
-
-          {(activeTab === "quality_requirements" || activeTab === "summary") && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <QualityRequirementsSection form={form} />
-          )}
-
-          {(activeTab === "safety_compliance" || activeTab === "summary") && (
             <SafetyComplianceSection form={form} />
-          )}
+          </div>
 
-          {(activeTab === "training_competency" || activeTab === "summary") && (
-            <TrainingCompetencySection form={form} />
-          )}
+          <WorkInstructionApprovalSection form={form} reviewers={record.reviewers} />
 
-          {(activeTab === "ai_assessment" || activeTab === "summary") && (
-            <AiWorkInstructionSection form={form} />
-          )}
-
-          {activeTab === "summary" && <WorkInstructionSummarySection form={form} />}
-
-          {(activeTab === "summary" || activeTab === "overview") && (
-            <WorkInstructionAttachmentManager
-              attachments={record.attachments}
-              onAttachmentsChange={(atts) => {
-                queryClient.setQueryData(["work-instruction", "current"], {
-                  ...record,
-                  attachments: atts,
-                });
-              }}
-            />
-          )}
-
-          {(activeTab === "review_approval" || activeTab === "summary") && (
-            <WorkInstructionApprovalSection form={form} reviewers={record.reviewers} />
-          )}
-
-          {(activeTab === "activity_history" || activeTab === "summary") && (
-            <WorkInstructionActivityHistorySection activities={record.auditTrail} />
-          )}
+          <WorkInstructionAttachmentManager
+            attachments={record.attachments}
+            onAttachmentsChange={(atts) => {
+              queryClient.setQueryData(["work-instruction", "current"], {
+                ...record,
+                attachments: atts,
+              });
+            }}
+          />
         </div>
       </div>
     </AppShell>

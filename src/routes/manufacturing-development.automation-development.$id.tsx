@@ -207,14 +207,13 @@ function AutomationDevelopmentDetailPage() {
           <span className="text-[11px] text-muted-foreground">{label} (Not Uploaded)</span>
           <button
             onClick={() => toast.info(`Upload ${label}...`)}
-            className="text-[10px] font-bold text-blue-600 hover:underline"
+            className="text-[10px] font-bold text-blue-600 hover:underline cursor-pointer"
           >
             Upload
           </button>
         </div>
       );
     }
-
     return (
       <div className="flex items-center justify-between p-2 rounded bg-muted/40 border border-border/60 hover:bg-muted/70 transition-colors">
         <div className="flex items-center gap-2 truncate">
@@ -227,8 +226,19 @@ function AutomationDevelopmentDetailPage() {
           </div>
         </div>
         <button
-          onClick={() => toast.success(`Downloading ${file.filename}...`)}
-          className="p-1 text-muted-foreground hover:text-foreground rounded"
+          onClick={() => {
+            const content = `AUTOMATION DEVELOPMENT FILE: ${file.filename}\nVersion: ${file.version}\nUploaded: ${file.uploadedAt}\nFile Size: ${file.fileSize || "3.5 MB"}\nStatus: Verified & Controlled`;
+            const blob = new Blob([content], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = file.filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            toast.success(`Downloaded ${file.filename}`);
+          }}
+          className="p-1 text-muted-foreground hover:text-foreground rounded cursor-pointer"
           title="Download"
         >
           <Download className="w-3.5 h-3.5" />
@@ -257,36 +267,67 @@ function AutomationDevelopmentDetailPage() {
     <TooltipProvider>
       <AppShell title="Automation Development">
         <div className="space-y-4">
-          {/* Header Component */}
           <AutomationHeader
             record={record}
             onSaveDraft={handleSaveDraft}
             onSubmitForApproval={handleSubmitForApproval}
             onDuplicate={() => toast.info("Record duplicated")}
-            onExportPdf={() => toast.info("Exporting PDF report...")}
+            onExportPdf={() => {
+              const content = `=====================================================
+AUTOMATION DEVELOPMENT & CELL ENGINEERING: ${record.projectTitle}
+=====================================================
+Project ID: ${record.id}
+Project Number: ${record.projectNumber}
+Plant: ${record.plant}
+Production Line: ${record.productionLine}
+Workflow Status: ${record.workflowStatus}
+Automation Category: ${record.automationCategory}
+Estimated ROI: ₹${record.estimatedRoiInr.toLocaleString()}
+Target Deployment: ${record.targetDeploymentDate}
+
+READINESS & CAPABILITY SCORES:
+-----------------------------------------------------
+Overall Automation Readiness: ${overallScore}/100
+Process Readiness Score: ${procScore}/100
+Development Score: ${devScore}/100
+Validation Score: ${valScore}/100
+Commissioning Score: ${commScore}/100
+AI Health Score: ${record.aiAutomationHealthScore}/100
+=====================================================`;
+
+              const blob = new Blob([content], { type: "text/plain" });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = `${record.projectNumber}_Automation_Development_Report.txt`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              toast.success("Automation Project Report exported & downloaded successfully!");
+            }}
             onPrint={() => window.print()}
             onArchive={() => toast.warning("Record archived")}
             onCloneVariant={() => toast.success("Cloned as Variant Automation Project!")}
           />
 
-          {/* Sticky 10-Tab Bar (NO Attachments tab) */}
           <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border px-4 py-2 flex items-center gap-1 overflow-x-auto text-xs font-semibold scrollbar-none">
             {[
               { id: "overview", label: "Overview", ref: sec1Ref },
               { id: "process", label: "Process Analysis", ref: sec2Ref },
               { id: "systemDesign", label: "System Design", ref: sec3Ref },
-              { id: "development", label: "Development", ref: sec4Ref },
+              { id: "development", label: "Hardware & Software", ref: sec4Ref },
               { id: "testing", label: "Testing & Validation", ref: sec5Ref },
               { id: "deployment", label: "Deployment", ref: sec6Ref },
               { id: "ai", label: "AI Assessment", ref: sec7Ref },
               { id: "summary", label: "Summary", ref: sec8Ref },
               { id: "review", label: "Review & Approval", ref: sec9Ref },
+              { id: "attachments", label: "Attachments", ref: secAttachmentsRef },
               { id: "history", label: "Activity History", ref: sec9Ref },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => scrollToSection(tab.id as TabKey, tab.ref)}
-                className={`px-3 py-1.5 rounded-md whitespace-nowrap transition-colors ${
+                className={`px-3 py-1.5 rounded-md whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === tab.id
                     ? "bg-primary text-primary-foreground font-bold shadow-sm"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -298,7 +339,6 @@ function AutomationDevelopmentDetailPage() {
           </div>
 
           <div className="px-4 pb-12 space-y-6">
-            {/* Top 6 KPI Donut Strip (Card 5 features custom AI Hexagon Badge) */}
             <AutomationKpis
               processReadinessScore={procScore}
               developmentScore={devScore}
@@ -308,38 +348,26 @@ function AutomationDevelopmentDetailPage() {
               overallAutomationReadiness={overallScore}
             />
 
-            {/* Frozen Context Snapshot Banner */}
             <div className="p-3 bg-muted/40 border border-border rounded-lg text-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <div className="flex items-center gap-2">
                 <Info className="w-4 h-4 text-blue-500 flex-shrink-0" />
                 <span className="font-semibold text-foreground">
-                  Manufacturing Context Snapshot: Process Flow {record.manufacturingContextSnapshot?.processEngineering?.processFlow}, BOM {record.manufacturingContextSnapshot?.plm?.bomReference}, Drawings {record.manufacturingContextSnapshot?.plm?.drawingsReference}.
+                  Manufacturing Context Snapshot: Manual Cycle {record.cycleTimeCurrentSec}s, Target Auto Cycle {record.cycleTimeTargetSec}s.
                 </span>
               </div>
-              <span className="text-[10px] text-muted-foreground font-medium">
-                Snapshotted: {record.manufacturingContextSnapshot?.snapshotAt}
-              </span>
             </div>
 
-            {/* Main Layout: 2 Columns on Desktop */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-              {/* Left 2 Columns: Main Flow */}
               <div className="lg:col-span-2 space-y-6">
-                {/* Section 1 — Automation Project Overview */}
                 <div ref={sec1Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
-                  <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    1. Automation Project Overview
-                  </h2>
+                  <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">Automation Project Overview</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    {/* Left Col */}
                     <div className="space-y-3">
                       <div>
                         <label className="text-muted-foreground font-semibold block mb-1">Automation Category</label>
                         <select
                           value={record.automationCategory}
-                          onChange={(e) =>
-                            saveMutation.mutate({ ...record, automationCategory: e.target.value as any })
-                          }
+                          onChange={(e) => saveMutation.mutate({ ...record, automationCategory: e.target.value as any })}
                           className="w-full p-2 bg-background border border-input rounded text-foreground font-semibold"
                         >
                           <option value="Industrial Robotics">Industrial Robotics</option>
@@ -351,26 +379,6 @@ function AutomationDevelopmentDetailPage() {
                           <option value="IIoT">IIoT</option>
                           <option value="Full Cell Automation">Full Cell Automation</option>
                         </select>
-                      </div>
-
-                      <div>
-                        <label className="text-muted-foreground font-semibold block mb-1">Automation Objective</label>
-                        <textarea
-                          rows={2}
-                          value={record.automationObjective}
-                          onChange={(e) => saveMutation.mutate({ ...record, automationObjective: e.target.value })}
-                          className="w-full p-2 bg-background border border-input rounded text-foreground focus:ring-1 focus:ring-primary"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-muted-foreground font-semibold block mb-1">Existing Manual Process</label>
-                        <textarea
-                          rows={2}
-                          value={record.existingManualProcess}
-                          onChange={(e) => saveMutation.mutate({ ...record, existingManualProcess: e.target.value })}
-                          className="w-full p-2 bg-background border border-input rounded text-foreground focus:ring-1 focus:ring-primary"
-                        />
                       </div>
 
                       <div>
@@ -430,10 +438,10 @@ function AutomationDevelopmentDetailPage() {
                   </div>
                 </div>
 
-                {/* Section 2 — Process Analysis */}
+                {/* Process Analysis */}
                 <div ref={sec2Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    2. Process Analysis
+                    Process Analysis
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Left Col */}
@@ -448,42 +456,73 @@ function AutomationDevelopmentDetailPage() {
                         {renderFileChip(record.targetProcessFlowFile, "Target Flow PDF")}
                       </div>
 
-                      <div className="flex justify-between items-center py-1 border-b border-border/40">
-                        <span className="text-muted-foreground font-semibold">Cycle Time (Current)</span>
-                        <span className="font-bold text-foreground">{record.cycleTimeCurrentSec.toFixed(2)} sec</span>
-                      </div>
-
-                      <div className="flex justify-between items-center py-1">
-                        <span className="text-muted-foreground font-semibold">Cycle Time (Target)</span>
-                        <span className="font-bold text-emerald-600">{record.cycleTimeTargetSec.toFixed(2)} sec</span>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-muted-foreground font-semibold block mb-1">Current Cycle (s)</label>
+                          <input
+                            type="number"
+                            value={record.cycleTimeCurrentSec}
+                            onChange={(e) => saveMutation.mutate({ ...record, cycleTimeCurrentSec: parseFloat(e.target.value) || 0 })}
+                            className="w-full p-2 bg-background border border-input rounded text-foreground font-semibold"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-muted-foreground font-semibold block mb-1">Target Cycle (s)</label>
+                          <input
+                            type="number"
+                            value={record.cycleTimeTargetSec}
+                            onChange={(e) => saveMutation.mutate({ ...record, cycleTimeTargetSec: parseFloat(e.target.value) || 0 })}
+                            className="w-full p-2 bg-background border border-input rounded text-foreground font-semibold text-emerald-600"
+                          />
+                        </div>
                       </div>
                     </div>
 
                     {/* Right Col */}
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center py-1 border-b border-border/40">
-                        <span className="text-muted-foreground font-semibold">Bottleneck Process</span>
-                        <span className="font-extrabold text-rose-600 bg-rose-50 dark:bg-rose-950 px-2.5 py-0.5 rounded">
-                          {record.bottleneckProcess}
-                        </span>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-muted-foreground font-semibold block mb-1">Cycle Reduction (%)</label>
+                          <input
+                            type="number"
+                            value={record.cycleTimeReductionPct}
+                            onChange={(e) => saveMutation.mutate({ ...record, cycleTimeReductionPct: parseFloat(e.target.value) || 0 })}
+                            className="w-full p-2 bg-background border border-input rounded text-foreground font-semibold text-emerald-600"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-muted-foreground font-semibold block mb-1">Throughput (UPH)</label>
+                          <input
+                            type="number"
+                            value={record.throughputImprovementUph}
+                            onChange={(e) => saveMutation.mutate({ ...record, throughputImprovementUph: parseFloat(e.target.value) || 0 })}
+                            className="w-full p-2 bg-background border border-input rounded text-foreground font-semibold text-emerald-600"
+                          />
+                        </div>
                       </div>
 
-                      <div className="flex justify-between items-center py-1 border-b border-border/40">
-                        <span className="text-muted-foreground font-semibold">Automation Potential</span>
-                        <span className="font-extrabold text-blue-600 bg-blue-50 dark:bg-blue-950 px-2.5 py-0.5 rounded">
-                          {record.automationPotential}/100
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center py-1">
-                        <span className="text-muted-foreground font-semibold">ROI Estimate</span>
-                        <div className="text-right">
-                          <span className="font-black text-emerald-600 text-sm block">
-                            {formatINR(record.roiEstimateInr, { style: "full" })}
-                          </span>
-                          <span className="text-[10px] text-muted-foreground">
-                            ({formatINR(record.roiEstimateInr, { style: "crore" })})
-                          </span>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-muted-foreground font-semibold block mb-1">Labor Reduction (FTE)</label>
+                          <input
+                            type="number"
+                            value={record.laborReductionFte}
+                            onChange={(e) => saveMutation.mutate({ ...record, laborReductionFte: parseFloat(e.target.value) || 0 })}
+                            className="w-full p-2 bg-background border border-input rounded text-foreground font-semibold text-blue-600"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-muted-foreground font-semibold block mb-1">Safety Risk Level</label>
+                          <select
+                            value={record.safetyRiskLevel}
+                            onChange={(e) => saveMutation.mutate({ ...record, safetyRiskLevel: e.target.value as any })}
+                            className="w-full p-2 bg-background border border-input rounded text-foreground font-semibold"
+                          >
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Critical">Critical</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -496,10 +535,10 @@ function AutomationDevelopmentDetailPage() {
                   </div>
                 </div>
 
-                {/* Section 3 — Automation System Design */}
+                {/* Automation System Design */}
                 <div ref={sec3Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    3. Automation System Design (Hardware & Software Specifications)
+                    Automation System Design (Hardware & Software Specifications)
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Left Col */}
@@ -532,10 +571,10 @@ function AutomationDevelopmentDetailPage() {
                   </div>
                 </div>
 
-                {/* Section 4 — Hardware & Software Development */}
+                {/* Hardware & Software Development */}
                 <div ref={sec4Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    4. Hardware & Software Development
+                    Hardware & Software Development
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Left Col */}
@@ -546,36 +585,27 @@ function AutomationDevelopmentDetailPage() {
                       </div>
                       <div>
                         <label className="text-muted-foreground font-semibold block mb-1">PLC Program (.a17/.l5x)</label>
-                        {renderFileChip(record.plcProgramFile, "PLC Program File")}
+                        {renderFileChip(record.plcProgramFile, "PLC Logic File")}
                       </div>
                       <div>
-                        <label className="text-muted-foreground font-semibold block mb-1">HMI Screens (.zip/.mer)</label>
-                        {renderFileChip(record.hmiScreensFile, "HMI Screens Archive")}
-                      </div>
-                      <div>
-                        <label className="text-muted-foreground font-semibold block mb-1">SCADA Configuration (.pdf/.zip)</label>
-                        {renderFileChip(record.scadaConfigurationFile, "SCADA Config File")}
-                      </div>
-                      <div>
-                        <label className="text-muted-foreground font-semibold block mb-1">Robot Programming (.mod/.rapid)</label>
-                        {renderFileChip(record.robotProgrammingFile, "Robot Program File")}
+                        <label className="text-muted-foreground font-semibold block mb-1">HMI Application (.apa/.vbp)</label>
+                        {renderFileChip(record.hmiApplicationFile, "HMI App File")}
                       </div>
                     </div>
 
                     {/* Right Col */}
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 rounded bg-muted/40 border border-border">
-                        <span className="font-semibold text-foreground">IIoT Connectivity</span>
-                        <span className="px-2.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-800 font-extrabold border border-emerald-300">
-                          {record.iiotConnectivity} ✓
-                        </span>
+                      <div>
+                        <label className="text-muted-foreground font-semibold block mb-1">SCADA Configuration</label>
+                        {renderFileChip(record.scadaConfigFile, "SCADA Config File")}
                       </div>
-
-                      <div className="flex items-center justify-between p-3 rounded bg-muted/40 border border-border">
-                        <span className="font-semibold text-foreground">Cybersecurity Validation</span>
-                        <span className="px-2.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-800 font-extrabold border border-blue-300">
-                          {record.cybersecurityValidation} ✓
-                        </span>
+                      <div>
+                        <label className="text-muted-foreground font-semibold block mb-1">Robot Program File</label>
+                        {renderFileChip(record.robotProgramFile, "Robot Script File")}
+                      </div>
+                      <div>
+                        <label className="text-muted-foreground font-semibold block mb-1">Safety Interlock Matrix</label>
+                        {renderFileChip(record.safetyInterlockMatrixFile, "Safety Matrix PDF")}
                       </div>
                     </div>
                   </div>
@@ -587,10 +617,10 @@ function AutomationDevelopmentDetailPage() {
                   </div>
                 </div>
 
-                {/* Section 5 — Testing & Validation */}
+                {/* Testing & Validation */}
                 <div ref={sec5Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    5. Testing & Validation
+                    Testing & Validation
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                     {[
@@ -633,10 +663,10 @@ function AutomationDevelopmentDetailPage() {
                   </div>
                 </div>
 
-                {/* Section 6 — Deployment & Commissioning */}
+                {/* Deployment & Commissioning */}
                 <div ref={sec6Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    6. Deployment & Commissioning
+                    Deployment & Commissioning
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                     <div className="flex items-center justify-between p-2.5 rounded bg-muted/40 border border-border">
@@ -675,10 +705,10 @@ function AutomationDevelopmentDetailPage() {
                   </div>
                 </div>
 
-                {/* Section 7 — AI Automation Assessment */}
+                {/* AI Automation Assessment */}
                 <div ref={sec7Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <div className="flex items-center justify-between border-b border-border pb-2">
-                    <h2 className="text-sm font-bold text-foreground">7. AI Automation Assessment</h2>
+                    <h2 className="text-sm font-bold text-foreground">AI Automation Assessment</h2>
                     <span className="px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-extrabold text-xs rounded">
                       AI Health Score: {record.aiAutomationHealthScore}/100
                     </span>
@@ -715,10 +745,10 @@ function AutomationDevelopmentDetailPage() {
                   onFireAction={(actionKey) => deploymentActionMutation.mutate(actionKey)}
                 />
 
-                {/* Section 9 — Review & Approval (8 Approvers Table) */}
+                {/* Review & Approval (8 Approvers Table) */}
                 <div ref={sec9Ref} className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-4">
                   <h2 className="text-sm font-bold text-foreground border-b border-border pb-2">
-                    9. Review & Approval (8 Approver Roles)
+                    Review & Approval (8 Approver Roles)
                   </h2>
                   <AutomationReviewTable
                     reviewers={record.reviewers}

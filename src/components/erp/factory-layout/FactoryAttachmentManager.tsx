@@ -51,9 +51,6 @@ export function FactoryAttachmentManager({
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-              9
-            </span>
             <CardTitle className="text-base font-bold">Document & Master Layout Attachments</CardTitle>
           </div>
           <CardDescription className="text-xs">
@@ -163,9 +160,20 @@ export function FactoryAttachmentManager({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7 text-blue-600"
+                    className="h-7 w-7 text-blue-600 cursor-pointer"
                     title="Download"
-                    onClick={() => toast.success(`Downloading ${att.fileName}`)}
+                    onClick={() => {
+                      const content = `FACTORY LAYOUT ATTACHMENT: ${att.fileName}\nDocument Type: ${att.documentType}\nVersion: ${att.version}\nUploaded By: ${att.uploadedBy}\nSize: ${att.fileSize}\nStatus: Active`;
+                      const blob = new Blob([content], { type: "text/plain" });
+                      const url = URL.createObjectURL(blob);
+                      const link = document.createElement("a");
+                      link.href = url;
+                      link.download = att.fileName;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                      toast.success(`Downloaded ${att.fileName}`);
+                    }}
                   >
                     <Download className="h-3.5 w-3.5" />
                   </Button>

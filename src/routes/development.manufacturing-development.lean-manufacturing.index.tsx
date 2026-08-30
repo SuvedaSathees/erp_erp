@@ -1,12 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { LeanManufacturingListPage } from "@/routes/manufacturing-development.lean-manufacturing.index";
-import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/development/manufacturing-development/lean-manufacturing/")({
-  component: () => (
-    <LeanManufacturingListPage
-      breadcrumb="Development > Manufacturing Development"
-      tabs={<ManufacturingDevelopmentTabBar />}
-    />
-  ),
+  component: () => <Navigate to="/development/manufacturing-development/overview" replace />,
 });

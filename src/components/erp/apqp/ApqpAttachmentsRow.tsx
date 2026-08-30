@@ -1,5 +1,5 @@
-import React from "react";
 import { Paperclip, FileText, Download, Image as ImageIcon, Archive, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 import type { ApqpRecord } from "@/services/types";
 
 interface ApqpAttachmentsRowProps {
@@ -30,7 +30,7 @@ export const ApqpAttachmentsRow: React.FC<ApqpAttachmentsRowProps> = ({
 
         <button
           onClick={() => onNavigateTab?.("attachments")}
-          className="text-[11px] font-bold text-primary hover:underline flex items-center gap-1"
+          className="text-[11px] font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer"
         >
           View All Attachments <ArrowRight className="w-3.5 h-3.5" />
         </button>
@@ -56,7 +56,22 @@ export const ApqpAttachmentsRow: React.FC<ApqpAttachmentsRowProps> = ({
 
             <div className="flex items-center justify-between pt-1 border-t border-border/40 text-[9px] text-muted-foreground">
               <span>{att.fileSize}</span>
-              <button className="p-0.5 hover:text-primary transition-colors">
+              <button
+                onClick={() => {
+                  const content = `APQP QUALITY ATTACHMENT: ${att.fileName}\nDocument Type: ${att.documentType}\nVersion: ${att.version}\nUploaded By: ${att.uploadedBy}\nDate: ${att.uploadedDate}\nStatus: Verified`;
+                  const blob = new Blob([content], { type: "text/plain" });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.download = att.fileName;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  toast.success(`Downloaded ${att.fileName}`);
+                }}
+                className="p-0.5 hover:text-primary transition-colors cursor-pointer"
+                title={`Download ${att.fileName}`}
+              >
                 <Download className="w-3 h-3" />
               </button>
             </div>

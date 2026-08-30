@@ -16,7 +16,7 @@ export const ControlPlanQualityVerificationCard: React.FC<ControlPlanQualityVeri
       <div>
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
           <h2 className="font-bold text-foreground text-xs">
-            5. Quality Verification
+            Quality Verification
           </h2>
         </div>
 

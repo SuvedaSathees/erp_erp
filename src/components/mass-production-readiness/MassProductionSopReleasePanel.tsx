@@ -56,7 +56,7 @@ export const MassProductionSopReleasePanel: React.FC<MassProductionSopReleasePan
           <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
             <div className="flex items-center gap-2">
               <Box className="w-4 h-4 text-blue-500" />
-              <span className="font-bold text-foreground">1. Release Production Orders</span>
+              <span className="font-bold text-foreground">Release Production Orders</span>
             </div>
             <p className="text-[11px] text-muted-foreground">Activate draft Production Orders in Production Planning.</p>
             {sopActions.releaseProductionOrders ? (
@@ -67,7 +67,7 @@ export const MassProductionSopReleasePanel: React.FC<MassProductionSopReleasePan
               <button
                 disabled={!isAuthorized}
                 onClick={() => onFireAction("releaseProductionOrders")}
-                className="w-full py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors"
+                className="w-full py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors cursor-pointer"
               >
                 Release Orders
               </button>
@@ -78,7 +78,7 @@ export const MassProductionSopReleasePanel: React.FC<MassProductionSopReleasePan
           <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
             <div className="flex items-center gap-2">
               <Truck className="w-4 h-4 text-purple-500" />
-              <span className="font-bold text-foreground">2. Authorize Supplier Deliveries</span>
+              <span className="font-bold text-foreground">Authorize Supplier Deliveries</span>
             </div>
             <p className="text-[11px] text-muted-foreground">Send delivery release signal to Supply Chain Management.</p>
             {sopActions.authorizeSupplierDeliveries ? (
@@ -89,7 +89,7 @@ export const MassProductionSopReleasePanel: React.FC<MassProductionSopReleasePan
               <button
                 disabled={!isAuthorized}
                 onClick={() => onFireAction("authorizeSupplierDeliveries")}
-                className="w-full py-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors"
+                className="w-full py-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors cursor-pointer"
               >
                 Authorize Deliveries
               </button>
@@ -100,7 +100,7 @@ export const MassProductionSopReleasePanel: React.FC<MassProductionSopReleasePan
           <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
             <div className="flex items-center gap-2">
               <Package className="w-4 h-4 text-indigo-500" />
-              <span className="font-bold text-foreground">3. Release Production Materials</span>
+              <span className="font-bold text-foreground">Release Production Materials</span>
             </div>
             <p className="text-[11px] text-muted-foreground">Move raw materials from staged to allocated in Inventory.</p>
             {sopActions.releaseProductionMaterials ? (
@@ -111,7 +111,7 @@ export const MassProductionSopReleasePanel: React.FC<MassProductionSopReleasePan
               <button
                 disabled={!isAuthorized}
                 onClick={() => onFireAction("releaseProductionMaterials")}
-                className="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors"
+                className="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold rounded text-xs transition-colors cursor-pointer"
               >
                 Release Materials
               </button>
@@ -122,7 +122,7 @@ export const MassProductionSopReleasePanel: React.FC<MassProductionSopReleasePan
           <div className="p-3 bg-background border border-border rounded-lg space-y-2 flex flex-col justify-between">
             <div className="flex items-center gap-2">
               <Rocket className="w-4 h-4 text-emerald-500" />
-              <span className="font-bold text-foreground">4. Release SOP (Start of Production)</span>
+              <span className="font-bold text-foreground">Release SOP (Start of Production)</span>
             </div>
             <p className="text-[11px] text-muted-foreground">Set Production Program to Mass Production Active.</p>
             {sopActions.releaseSop ? (
@@ -133,7 +133,7 @@ export const MassProductionSopReleasePanel: React.FC<MassProductionSopReleasePan
               <button
                 disabled={!isAuthorized}
                 onClick={() => onFireAction("releaseSop")}
-                className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded text-xs transition-colors"
+                className="w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded text-xs transition-colors cursor-pointer"
               >
                 Release Start of Prod
               </button>

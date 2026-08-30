@@ -17,15 +17,10 @@ export function TrainingCompetencySection({
     <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-              6
-            </span>
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <GraduationCap className="h-4 w-4 text-purple-600" />
-              Operator Training & Competency Framework
-            </CardTitle>
-          </div>
+          <CardTitle className="text-base font-bold flex items-center gap-2">
+            <GraduationCap className="h-4 w-4 text-purple-600" />
+            Operator Training & Competency Framework
+          </CardTitle>
           <CardDescription className="text-xs">
             Operator skill levels, certification requirements, authorized operator count & training materials.
           </CardDescription>

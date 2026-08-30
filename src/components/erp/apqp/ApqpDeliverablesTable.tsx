@@ -13,7 +13,7 @@ export const ApqpDeliverablesTable: React.FC<ApqpDeliverablesTableProps> = ({
     <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden text-xs">
       <div className="p-3 border-b border-border bg-muted/20 flex justify-between items-center">
         <h2 className="text-sm font-bold text-foreground">
-          2. Phase Key Deliverables
+          Phase Key Deliverables
         </h2>
         <span className="text-xs text-muted-foreground font-normal">
           ({deliverables.length} APQP Phases)

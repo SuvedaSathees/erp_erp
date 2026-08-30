@@ -1,5 +1,6 @@
 import React from "react";
 import { Paperclip, FileText, Download } from "lucide-react";
+import { toast } from "sonner";
 import type { PfmeaRecord } from "@/services/types";
 
 interface AttachmentsTabProps {
@@ -43,7 +44,22 @@ export const AttachmentsTab: React.FC<AttachmentsTabProps> = ({ record }) => {
                 <td className="py-2.5 px-3 text-muted-foreground font-mono">{att.uploadedDate}</td>
                 <td className="py-2.5 px-3 text-muted-foreground font-mono">{att.fileSize}</td>
                 <td className="py-2.5 px-3 text-center">
-                  <button className="p-1 hover:bg-muted rounded text-primary transition-colors">
+                  <button
+                    onClick={() => {
+                      const content = `PFMEA QUALITY ATTACHMENT: ${att.fileName}\nDocument Type: ${att.documentType}\nVersion: ${att.version}\nUploaded Date: ${att.uploadedDate}\nStatus: Verified`;
+                      const blob = new Blob([content], { type: "text/plain" });
+                      const url = URL.createObjectURL(blob);
+                      const link = document.createElement("a");
+                      link.href = url;
+                      link.download = att.fileName;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                      toast.success(`Downloaded ${att.fileName}`);
+                    }}
+                    className="p-1 hover:bg-muted rounded text-primary transition-colors cursor-pointer"
+                    title={`Download ${att.fileName}`}
+                  >
                     <Download className="w-3.5 h-3.5" />
                   </button>
                 </td>

@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Paperclip, Upload, FileText, Download, Eye, CheckCircle } from "lucide-react";
+import { Paperclip, Upload, FileText, Download, Eye, CheckCircle2 } from "lucide-react";
 import type { ExcellenceAttachment, ManufacturingExcellenceRecord } from "@/services/types";
+import { toast } from "sonner";
 
 interface ExcellenceAttachmentsCardProps {
   record: ManufacturingExcellenceRecord;
@@ -45,88 +46,146 @@ export const ExcellenceAttachmentsCard: React.FC<ExcellenceAttachmentsCardProps>
     input.click();
   };
 
-  const MaicwBadge = ({ type, tooltip }: { type: "M" | "A" | "I" | "C" | "W"; tooltip: string }) => (
-    <span
-      title={tooltip}
-      className="ml-1.5 inline-flex items-center justify-center rounded border border-red-200 bg-red-100 px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300"
-    >
-      {type}
-    </span>
-  );
+  const handlePreview = (attachment: ExcellenceAttachment) => {
+    toast.info(`Previewing ${attachment.fileName}`, {
+      description: `Viewing ${attachment.documentType} (${attachment.fileSize}).`,
+    });
+  };
+
+  const handleDownload = (attachment: ExcellenceAttachment) => {
+    const blob = new Blob(
+      [
+        `Magnertia ERP Manufacturing Excellence Document\n\nTitle: ${attachment.documentType}\nFile: ${attachment.fileName}\nVersion: ${attachment.version}\nUploaded By: ${attachment.uploadedBy}\nDate: ${attachment.uploadDate}\nSize: ${attachment.fileSize}\nStatus: Verified Control Baseline`,
+      ],
+      { type: "text/plain;charset=utf-8" }
+    );
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = attachment.fileName.replace(/\.[^/.]+$/, "") + ".txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success(`Downloading ${attachment.fileName}`);
+  };
 
   return (
-    <Card className="border-border shadow-sm">
+    <Card className="border-border rounded-xl shadow-xs">
       <CardHeader className="border-b border-border/60 pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Paperclip className="h-4 w-4 text-primary" />
             <CardTitle className="text-base font-bold text-foreground">
-              9. Attachments ({(record?.attachments || []).length} files)
+              Attachments & Improvement Roadmaps
             </CardTitle>
           </div>
-          <Button size="sm" onClick={handleSimulatedUpload} className="gap-1.5 text-xs font-semibold">
+          <Button
+            size="sm"
+            onClick={handleSimulatedUpload}
+            className="gap-1.5 text-xs font-semibold cursor-pointer bg-primary hover:bg-primary/90"
+          >
             <Upload className="h-3.5 w-3.5" />
             Upload File
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="pt-4">
-        {/* Required Document Slots Status Bar */}
-        <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
+      <CardContent className="pt-4 space-y-4 text-xs">
+        {/* Document Slots Selector Bar */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
           {REQUIRED_ATTACHMENT_SLOTS.map((slot) => {
             const uploaded = (record?.attachments || []).find((a) => a.documentType === slot);
+            const isSelected = selectedSlot === slot;
             return (
               <div
                 key={slot}
                 onClick={() => setSelectedSlot(slot)}
-                className={`flex cursor-pointer items-center justify-between rounded-lg border p-2 text-xs transition-all ${
+                className={`flex cursor-pointer items-center justify-between rounded-lg border p-2.5 transition-all ${
+                  isSelected ? "ring-2 ring-primary border-primary" : "border-border/60 hover:bg-muted/30"
+                } ${
                   uploaded
-                    ? "border-emerald-200 bg-emerald-50/60 dark:border-emerald-900/50 dark:bg-emerald-950/20"
-                    : "border-amber-200 bg-amber-50/50 dark:border-amber-900/50 dark:bg-amber-950/20"
+                    ? "bg-emerald-500/5 dark:bg-emerald-950/20"
+                    : "bg-muted/10"
                 }`}
               >
-                <div className="flex items-center gap-2">
-                  <CheckCircle className={`h-4 w-4 ${uploaded ? "text-emerald-600" : "text-amber-500"}`} />
-                  <span className="font-semibold text-foreground">{slot}</span>
-                  <MaicwBadge type="M" tooltip="Mandatory Document" />
+                <div className="flex items-center gap-2 min-w-0">
+                  <CheckCircle2 className={`h-4 w-4 shrink-0 ${uploaded ? "text-emerald-600" : "text-muted-foreground/40"}`} />
+                  <span className="font-semibold text-foreground truncate">{slot}</span>
                 </div>
-                <span className="text-[10px] font-bold text-muted-foreground">
+                <Badge variant={uploaded ? "outline" : "secondary"} className="text-[10px] shrink-0 font-mono px-1.5 py-0">
                   {uploaded ? uploaded.version : "Pending"}
-                </span>
+                </Badge>
               </div>
             );
           })}
         </div>
 
-        {/* Uploaded Documents Grid */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-          {(record?.attachments || []).map((att) => (
-            <div
-              key={att.id}
-              className="flex flex-col justify-between rounded-xl border border-border bg-card p-3 shadow-2xs transition-shadow hover:shadow-xs"
-            >
-              <div className="flex items-start gap-2.5">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-950 dark:text-rose-400">
-                  <FileText className="h-4 w-4" />
-                </div>
-                <div className="flex-1 truncate">
-                  <span className="block truncate font-bold text-foreground text-xs">{att.fileName}</span>
-                  <span className="block text-[10px] text-muted-foreground">{att.documentType} • {att.fileSize}</span>
-                </div>
-              </div>
-              <div className="mt-3 flex items-center justify-between border-t border-border/40 pt-2 text-[10px]">
-                <span className="font-medium text-muted-foreground">{att.uploadedDate}</span>
-                <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => alert(`Previewing ${att.fileName}`)}>
-                    <Eye className="h-3 w-3" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => alert(`Downloading ${att.fileName}`)}>
-                    <Download className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* Uploaded Documents List */}
+        <div className="rounded-lg border border-border/80 overflow-hidden bg-background">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-muted/50 border-b border-border text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                  <th className="py-2.5 px-3 font-semibold whitespace-nowrap">Document Type</th>
+                  <th className="py-2.5 px-3 font-semibold whitespace-nowrap">File Name</th>
+                  <th className="py-2.5 px-3 font-semibold whitespace-nowrap">Uploaded By</th>
+                  <th className="py-2.5 px-3 font-semibold whitespace-nowrap">Date</th>
+                  <th className="py-2.5 px-3 font-semibold whitespace-nowrap">Size</th>
+                  <th className="py-2.5 px-3 text-right font-semibold whitespace-nowrap">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/60">
+                {(record?.attachments || []).map((att) => (
+                  <tr key={att.id} className="hover:bg-muted/30 transition-colors">
+                    <td className="py-2.5 px-3 font-semibold text-foreground whitespace-nowrap">
+                      {att.documentType}
+                    </td>
+                    <td className="py-2.5 px-3 whitespace-nowrap">
+                      <div className="flex items-center gap-1.5">
+                        <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
+                        <span className="font-mono text-primary font-medium hover:underline cursor-pointer">
+                          {att.fileName}
+                        </span>
+                        <Badge variant="outline" className="text-[10px] px-1 py-0 font-mono">
+                          {att.version}
+                        </Badge>
+                      </div>
+                    </td>
+                    <td className="py-2.5 px-3 text-muted-foreground whitespace-nowrap">
+                      {att.uploadedBy}
+                    </td>
+                    <td className="py-2.5 px-3 text-muted-foreground whitespace-nowrap font-mono text-[11px]">
+                      {att.uploadDate}
+                    </td>
+                    <td className="py-2.5 px-3 font-mono text-[11px] whitespace-nowrap">
+                      {att.fileSize}
+                    </td>
+                    <td className="py-2.5 px-3 text-right whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer"
+                          onClick={() => handlePreview(att)}
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          Preview
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 px-2 text-[11px] gap-1 hover:text-emerald-600 cursor-pointer"
+                          onClick={() => handleDownload(att)}
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </CardContent>
     </Card>

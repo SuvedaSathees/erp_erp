@@ -1,53 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import {
-  Sparkles,
-  CheckCircle2,
-  FileText,
-  Workflow,
-  Info,
-  ArrowRight,
-} from "lucide-react";
-
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 
-import {
-  FactoryLayoutTabBar,
-  type FactoryLayoutTabId,
-} from "@/components/erp/factory-layout/FactoryLayoutTabBar";
 import { FactoryLayoutHeader } from "@/components/erp/factory-layout/FactoryLayoutHeader";
 import { FactoryOverviewSection } from "@/components/erp/factory-layout/FactoryOverviewSection";
 import { LayoutPlanningSection } from "@/components/erp/factory-layout/LayoutPlanningSection";
 import { InfrastructureSection } from "@/components/erp/factory-layout/InfrastructureSection";
 import { MaterialFlowSection } from "@/components/erp/factory-layout/MaterialFlowSection";
 import { UtilitySafetySection } from "@/components/erp/factory-layout/UtilitySafetySection";
-import { FactoryPerformanceSection } from "@/components/erp/factory-layout/FactoryPerformanceSection";
-import { AiFactoryAssessmentSection } from "@/components/erp/factory-layout/AiFactoryAssessmentSection";
 import { DigitalTwinPanel } from "@/components/erp/factory-layout/DigitalTwinPanel";
-import { FactoryLayoutSummarySection } from "@/components/erp/factory-layout/FactoryLayoutSummarySection";
 import { FactoryAttachmentManager } from "@/components/erp/factory-layout/FactoryAttachmentManager";
 import { FactoryApprovalSection } from "@/components/erp/factory-layout/FactoryApprovalSection";
-import { FactoryActivityHistorySection } from "@/components/erp/factory-layout/FactoryActivityHistorySection";
-import { FactoryActionBar } from "@/components/erp/factory-layout/FactoryActionBar";
 
 import { factoryLayoutDesignService } from "@/services/factoryLayoutDesignService";
 import type { FactoryLayoutFormInput, FactoryLayoutRecord } from "@/services/types";
 import { FactoryLayoutMasterSchema } from "@/lib/validation/factoryLayoutSchemas";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const Route = createFileRoute(
   "/development/research-innovation/factory-layout-design/new",
 )({
   component: FactoryLayoutDesignNewPage,
 });
-
-import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 
 export function FactoryLayoutDesignNewPage({
   breadcrumb,
@@ -57,7 +36,6 @@ export function FactoryLayoutDesignNewPage({
   tabs?: React.ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<FactoryLayoutTabId>("overview");
 
   const { data: record, isLoading } = useQuery<FactoryLayoutRecord>({
     queryKey: ["factory-layout", "current"],
@@ -93,7 +71,58 @@ export function FactoryLayoutDesignNewPage({
   });
 
   const handleExportReport = () => {
-    toast.success("Generating complete Factory Layout Design engineering PDF report...");
+    if (!record) return;
+    const content = `=====================================================
+FACTORY LAYOUT DESIGN SPECIFICATION: ${record.factoryName}
+=====================================================
+Layout Project ID: ${record.factoryLayoutId}
+Form Code: ${record.formCode}
+Project Name: ${record.layoutProjectName}
+Layout Version: ${record.layoutVersion}
+Workflow Status: ${record.workflowStatus}
+Plant Name: ${record.plantName}
+Facility Location: ${record.facilityLocation}
+Layout Engineer: ${record.factoryLayoutEngineer}
+Total Land Area: ${record.totalLandArea} m²
+Built-up Area: ${record.builtUpArea} m²
+Production Capacity: ${record.productionCapacity} units/year
+Development Stage: ${record.developmentStage}
+Priority: ${record.priority}
+Next Review Date: ${record.nextReviewDate}
+
+FACILITY OBJECTIVE:
+-----------------------------------------------------
+${record.factoryObjective}
+
+LAYOUT READINESS SCORES:
+-----------------------------------------------------
+Overall Layout Score: ${record.overallLayoutScore}/100
+Space Utilization Index: ${record.spaceUtilizationIndex}%
+Material Transport Distance: ${record.materialTransportDistance} m/unit
+Annual Throughput Capacity: ${record.annualThroughputCapacity} units
+Safety Clearance Compliance: ${record.safetyClearanceCompliance}%
+Energy Efficiency Rating: ${record.energyEfficiencyRating}
+
+MILESTONE TIMELINE:
+-----------------------------------------------------
+${record.timeline.map((m) => `[${m.status}] ${m.label}: ${m.date}`).join("\n")}
+
+AUDIT HISTORY:
+-----------------------------------------------------
+Created By: ${record.createdBy} (${record.createdDate})
+Last Modified By: ${record.lastModifiedBy} (${record.lastModifiedDate})
+Stage: ${record.workflowStageLabel}
+=====================================================`;
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${record.factoryLayoutId}_Plant_Layout_Specification.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Factory Layout specification report generated & downloaded successfully!");
   };
 
   if (isLoading || !record) {
@@ -101,7 +130,7 @@ export function FactoryLayoutDesignNewPage({
       <AppShell
         title="Factory Layout Design"
         breadcrumb={breadcrumb ?? "Research & Innovation Development"}
-        tabs={tabs ?? <InnovationAreaTabs sub={<FactoryLayoutTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+        tabs={tabs ?? <InnovationAreaTabs />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Factory Layout Design module data...
@@ -117,10 +146,9 @@ export function FactoryLayoutDesignNewPage({
       title="Factory Layout Design"
       breadcrumb={breadcrumb ?? "Development > Research & Innovation > Factory Layout Design"}
       description="CAD layout blueprints, material logistics flow, utility planning, digital twin simulation & EHS compliance."
-      tabs={tabs ?? <InnovationAreaTabs sub={<FactoryLayoutTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+      tabs={tabs ?? <InnovationAreaTabs />}
     >
-      <div className="space-y-4">
-
+      <div className="p-4 sm:p-6 space-y-5">
         <FactoryLayoutHeader
           record={currentRecordData as FactoryLayoutRecord}
           onSaveDraft={() => saveDraftMutation.mutate(form.getValues())}
@@ -128,147 +156,31 @@ export function FactoryLayoutDesignNewPage({
           onExportReport={handleExportReport}
         />
 
-        <FactoryLayoutTabBar activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Unified Layout Sections */}
+        <div className="space-y-5">
+          <FactoryOverviewSection form={form} />
+          <LayoutPlanningSection form={form} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-8 space-y-6">
-            {(activeTab === "overview" || activeTab === "summary") && (
-              <FactoryOverviewSection form={form} />
-            )}
+          <InfrastructureSection form={form} />
 
-            {(activeTab === "planning" || activeTab === "summary") && (
-              <LayoutPlanningSection form={form} />
-            )}
-
-            {(activeTab === "infrastructure" || activeTab === "summary") && (
-              <InfrastructureSection form={form} />
-            )}
-
-            {(activeTab === "logistics" || activeTab === "summary") && (
-              <MaterialFlowSection form={form} />
-            )}
-
-            {(activeTab === "utilities_safety" || activeTab === "summary") && (
-              <UtilitySafetySection form={form} />
-            )}
-
-            {(activeTab === "performance" || activeTab === "summary") && (
-              <FactoryPerformanceSection form={form} />
-            )}
-
-            {(activeTab === "ai_assessment" || activeTab === "summary") && (
-              <AiFactoryAssessmentSection form={form} />
-            )}
-
-            {(activeTab === "ai_assessment" || activeTab === "planning" || activeTab === "summary") && (
-              <DigitalTwinPanel layoutId={record.id} />
-            )}
-
-            {activeTab === "summary" && <FactoryLayoutSummarySection form={form} />}
-
-            {(activeTab === "summary" || activeTab === "overview") && (
-              <FactoryAttachmentManager
-                attachments={record.attachments}
-                onAttachmentsChange={(atts) => {
-                  queryClient.setQueryData(["factory-layout", "current"], {
-                    ...record,
-                    attachments: atts,
-                  });
-                }}
-              />
-            )}
-
-            {(activeTab === "review_approval" || activeTab === "summary") && (
-              <FactoryApprovalSection form={form} reviewers={record.reviewers} />
-            )}
-
-            {(activeTab === "activity_history" || activeTab === "summary") && (
-              <FactoryActivityHistorySection activities={record.auditTrail} />
-            )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <MaterialFlowSection form={form} />
+            <UtilitySafetySection form={form} />
           </div>
 
-          <div className="lg:col-span-4 space-y-5">
+          <DigitalTwinPanel layoutId={record.id} />
 
+          <FactoryApprovalSection form={form} reviewers={record.reviewers} />
 
-            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <Workflow className="h-4 w-4 text-primary" />
-                  Layout Milestone Timeline
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-xs">
-                {record.timeline.map((m) => {
-                  const isDone = m.status === "Completed";
-                  const isInProgress = m.status === "In Progress";
-                  return (
-                    <div key={m.label} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`h-2.5 w-2.5 rounded-full ${
-                            isDone
-                              ? "bg-emerald-500"
-                              : isInProgress
-                              ? "bg-blue-500 animate-pulse"
-                              : "bg-slate-300 dark:bg-slate-700"
-                          }`}
-                        />
-                        <span
-                          className={
-                            isDone
-                              ? "font-semibold text-foreground"
-                              : isInProgress
-                              ? "font-bold text-blue-600 dark:text-blue-400"
-                              : "text-muted-foreground"
-                          }
-                        >
-                          {m.label}
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-muted-foreground font-mono">
-                        {m.date}
-                      </span>
-                    </div>
-                  );
-                })}
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <Info className="h-4 w-4 text-slate-500" />
-                  System Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Created By</span>
-                  <span className="font-medium text-foreground">{record.createdBy}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Created Date</span>
-                  <span className="font-mono text-foreground">{record.createdDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Last Modified By</span>
-                  <span className="font-medium text-foreground">{record.lastModifiedBy}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Last Modified Date</span>
-                  <span className="font-mono text-foreground">{record.lastModifiedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Workflow Stage</span>
-                  <span className="font-semibold text-primary">{record.workflowStageLabel}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Version</span>
-                  <span className="font-mono text-foreground">{record.layoutVersion}</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <FactoryAttachmentManager
+            attachments={record.attachments}
+            onAttachmentsChange={(atts) => {
+              queryClient.setQueryData(["factory-layout", "current"], {
+                ...record,
+                attachments: atts,
+              });
+            }}
+          />
         </div>
       </div>
     </AppShell>

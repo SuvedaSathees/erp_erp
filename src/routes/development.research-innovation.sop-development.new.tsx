@@ -1,30 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
-import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
-
-import {
-  SopTabBar,
-  type SopTabId,
-} from "@/components/erp/sop-development/SopTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { SopHeader } from "@/components/erp/sop-development/SopHeader";
 import { SopOverviewSection } from "@/components/erp/sop-development/SopOverviewSection";
 import { ProcedureBuilderSection } from "@/components/erp/sop-development/ProcedureBuilderSection";
 import { ResourcesRequirementsSection } from "@/components/erp/sop-development/ResourcesRequirementsSection";
 import { QualityComplianceSection } from "@/components/erp/sop-development/QualityComplianceSection";
 import { RiskSafetySection } from "@/components/erp/sop-development/RiskSafetySection";
-import { TrainingImplementationSection } from "@/components/erp/sop-development/TrainingImplementationSection";
-import { AiSopAssessmentSection } from "@/components/erp/sop-development/AiSopAssessmentSection";
-import { SopSummarySection } from "@/components/erp/sop-development/SopSummarySection";
 import { SopAttachmentManager } from "@/components/erp/sop-development/SopAttachmentManager";
 import { SopApprovalSection } from "@/components/erp/sop-development/SopApprovalSection";
-import { SopActivityHistorySection } from "@/components/erp/sop-development/SopActivityHistorySection";
 
 import { sopDevelopmentService } from "@/services/sopDevelopmentService";
 import type { SopFormInput, SopRecord } from "@/services/types";
@@ -44,7 +34,6 @@ export function SopDevelopmentNewPage({
   tabs?: React.ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<SopTabId>("overview");
 
   const { data: record, isLoading } = useQuery<SopRecord>({
     queryKey: ["sop-development", "current"],
@@ -80,7 +69,45 @@ export function SopDevelopmentNewPage({
   });
 
   const handleExportReport = () => {
-    toast.success("Generating complete Standard Operating Procedure (SOP) PDF document...");
+    if (!record) return;
+    const currentData = { ...record, ...form.getValues() };
+    const content = `=====================================================
+STANDARD OPERATING PROCEDURE: ${currentData.title}
+=====================================================
+SOP ID: ${currentData.sopId}
+Form Code: ${currentData.formCode}
+SOP Number: ${currentData.sopNumber}
+Revision: Rev ${currentData.revision}
+Workflow Status: ${currentData.workflowStatus}
+Department: ${currentData.department}
+Process Owner: ${currentData.processOwner}
+Effective Date: ${currentData.effectiveDate}
+Next Review Date: ${currentData.nextReviewDate}
+
+Objective:
+${currentData.processObjective}
+
+Scope & Applicability:
+${currentData.scope} ${currentData.applicability}
+
+-----------------------------------------------------
+PROCEDURE STEPS:
+-----------------------------------------------------
+${(currentData.steps || []).map((st) => `Step ${st.stepNumber}: ${st.description}\n  - Role: ${st.responsibleRole}\n  - Duration: ${st.durationMins} mins\n  - Quality Check: ${st.qualityCheck || "Visual Inspection"}\n  - Safety: ${st.safetyCheck || "Standard PPE"}`).join("\n\n")}
+
+-----------------------------------------------------
+Total Estimated Duration: ${currentData.totalDurationMins || 45} mins
+=====================================================`;
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${currentData.sopNumber}_SOP_Report.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Standard Operating Procedure report exported successfully");
   };
 
   if (isLoading || !record) {
@@ -88,7 +115,7 @@ export function SopDevelopmentNewPage({
       <AppShell
         title="SOP Development"
         breadcrumb={breadcrumb ?? "Research & Innovation Development"}
-        tabs={tabs ?? <InnovationAreaTabs sub={<SopTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+        tabs={tabs ?? <InnovationAreaTabs />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Standard Operating Procedure (SOP) module data...
@@ -104,10 +131,9 @@ export function SopDevelopmentNewPage({
       title="SOP Development"
       breadcrumb={breadcrumb ?? "Development > Research & Innovation > SOP Development"}
       description="Author, review, control & distribute Standard Operating Procedures across manufacturing operations with interactive process flow diagrams & ISO compliance audits."
-      tabs={tabs ?? <InnovationAreaTabs sub={<SopTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+      tabs={tabs ?? <InnovationAreaTabs />}
     >
-      <div className="space-y-4">
-
+      <div className="p-4 sm:p-6 space-y-5">
         <SopHeader
           record={currentRecordData as SopRecord}
           onSaveDraft={() => saveDraftMutation.mutate(form.getValues())}
@@ -115,62 +141,34 @@ export function SopDevelopmentNewPage({
           onExportReport={handleExportReport}
         />
 
-        <SopTabBar activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Unified Procedure Builder & Overview */}
+        <div className="space-y-5">
+          <SopOverviewSection
+            form={form}
+            record={currentRecordData as SopRecord}
+            onNavigateTab={(tab) => toast.info(`Viewing ${tab} section`)}
+          />
 
-        <div className="space-y-6">
-          {(activeTab === "overview" || activeTab === "summary") && (
-            <SopOverviewSection
-              form={form}
-              record={currentRecordData as SopRecord}
-              onNavigateTab={(tab) => setActiveTab(tab as SopTabId)}
-            />
-          )}
+          <ProcedureBuilderSection form={form} />
 
-          {(activeTab === "procedure_definition" || activeTab === "summary") && (
-            <ProcedureBuilderSection form={form} />
-          )}
+          <ResourcesRequirementsSection form={form} />
 
-          {(activeTab === "resources_requirements" || activeTab === "summary") && (
-            <ResourcesRequirementsSection form={form} />
-          )}
-
-          {(activeTab === "quality_compliance" || activeTab === "summary") && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <QualityComplianceSection form={form} />
-          )}
-
-          {(activeTab === "risk_safety" || activeTab === "summary") && (
             <RiskSafetySection form={form} />
-          )}
+          </div>
 
-          {(activeTab === "training_implementation" || activeTab === "summary") && (
-            <TrainingImplementationSection form={form} />
-          )}
+          <SopApprovalSection form={form} reviewers={record.reviewers} />
 
-          {(activeTab === "ai_assessment" || activeTab === "summary") && (
-            <AiSopAssessmentSection form={form} />
-          )}
-
-          {activeTab === "summary" && <SopSummarySection form={form} />}
-
-          {(activeTab === "summary" || activeTab === "overview") && (
-            <SopAttachmentManager
-              attachments={record.attachments}
-              onAttachmentsChange={(atts) => {
-                queryClient.setQueryData(["sop-development", "current"], {
-                  ...record,
-                  attachments: atts,
-                });
-              }}
-            />
-          )}
-
-          {(activeTab === "review_approval" || activeTab === "summary") && (
-            <SopApprovalSection form={form} reviewers={record.reviewers} />
-          )}
-
-          {(activeTab === "activity_history" || activeTab === "summary") && (
-            <SopActivityHistorySection activities={record.auditTrail} />
-          )}
+          <SopAttachmentManager
+            attachments={record.attachments}
+            onAttachmentsChange={(atts) => {
+              queryClient.setQueryData(["sop-development", "current"], {
+                ...record,
+                attachments: atts,
+              });
+            }}
+          />
         </div>
       </div>
     </AppShell>

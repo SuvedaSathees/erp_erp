@@ -2,33 +2,29 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { RefreshCw, Sparkles, Gauge } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Sparkles, Gauge } from "lucide-react";
 
 import { manufacturingExcellenceService } from "@/services";
 import type { ManufacturingExcellenceRecord } from "@/services/types";
 import { AppShell } from "@/components/erp/AppShell";
-import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
-import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
-import { ManufacturingExcellenceTabBar, type ExcellenceTabId } from "@/components/erp/ManufacturingExcellenceTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { ExcellenceHeader } from "@/components/erp/manufacturingExcellence/ExcellenceHeader";
-import { ExcellenceTopBadges } from "@/components/erp/manufacturingExcellence/ExcellenceTopBadges";
 import { ExcellenceOverviewCard } from "@/components/erp/manufacturingExcellence/ExcellenceOverviewCard";
 import { ExcellenceAssessmentCard } from "@/components/erp/manufacturingExcellence/ExcellenceAssessmentCard";
 import { ExcellenceProgramsCard } from "@/components/erp/manufacturingExcellence/ExcellenceProgramsCard";
-import { ExcellenceSmartCard } from "@/components/erp/manufacturingExcellence/ExcellenceSmartCard";
 import { ExcellenceQualityCard } from "@/components/erp/manufacturingExcellence/ExcellenceQualityCard";
 import { ExcellenceSustainabilityCard } from "@/components/erp/manufacturingExcellence/ExcellenceSustainabilityCard";
-import { ExcellenceAiCard } from "@/components/erp/manufacturingExcellence/ExcellenceAiCard";
-import { ExcellenceSummaryCard } from "@/components/erp/manufacturingExcellence/ExcellenceSummaryCard";
 import { ExcellenceAttachmentsCard } from "@/components/erp/manufacturingExcellence/ExcellenceAttachmentsCard";
 import { ExcellenceReviewApprovalCard } from "@/components/erp/manufacturingExcellence/ExcellenceReviewApprovalCard";
-import { ExcellenceSystemInfoCard } from "@/components/erp/manufacturingExcellence/ExcellenceSystemInfoCard";
-import { ExcellenceAiInsightsPanel } from "@/components/erp/manufacturingExcellence/ExcellenceAiInsightsPanel";
-import { ExcellenceKpiSnapshotCard } from "@/components/erp/manufacturingExcellence/ExcellenceKpiSnapshotCard";
-import { ExcellenceWorkflowStepper } from "@/components/erp/manufacturingExcellence/ExcellenceWorkflowStepper";
 import { NewExcellenceInitiativeDialog } from "@/components/erp/manufacturingExcellence/NewExcellenceInitiativeDialog";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute(
   "/development/research-innovation/manufacturing-excellence/new",
@@ -154,7 +150,6 @@ export function ManufacturingExcellencePage({
   tabs?: React.ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<ExcellenceTabId>("overview");
   const [isNewDialogOpen, setIsNewDialogOpen] = useState(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [isKpiModalOpen, setIsKpiModalOpen] = useState(false);
@@ -189,7 +184,7 @@ export function ManufacturingExcellencePage({
     onSuccess: (updated) => {
       queryClient.setQueryData(["excellenceRecord"], updated);
       toast.success("Submitted for Executive Board Review!", {
-        description: "Review notifications sent to all 9 authorization roles.",
+        description: "Review notifications sent to all authorization roles.",
       });
     },
   });
@@ -213,7 +208,7 @@ export function ManufacturingExcellencePage({
       <AppShell
         title="Manufacturing Excellence"
         breadcrumb={breadcrumb ?? "Research & Innovation Development"}
-        tabs={tabs ?? <InnovationAreaTabs sub={<ManufacturingExcellenceTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+        tabs={tabs ?? <InnovationAreaTabs />}
       >
         <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
           Loading Manufacturing Excellence Master Record...
@@ -250,8 +245,58 @@ export function ManufacturingExcellencePage({
   };
 
   const handlePreview = () => {
-    toast.info("Generating Manufacturing Excellence Report (PDF)...");
+    if (!safeRecord) return;
+    const content = `=====================================================
+MANUFACTURING EXCELLENCE INITIATIVE: ${safeRecord.initiativeTitle}
+=====================================================
+Excellence ID: ${safeRecord.manufacturingExcellenceId}
+Form Code: ${safeRecord.formCode}
+Initiative Number: ${safeRecord.initiativeNumber}
+Workflow Status: ${safeRecord.workflowStatus}
+Manufacturing Plant: ${safeRecord.manufacturingPlant}
+Business Unit: ${safeRecord.businessUnit}
+Process Owner: ${safeRecord.processOwner}
+Target Completion: ${safeRecord.targetCompletion}
+Priority: ${safeRecord.priority}
+Initiative Category: ${safeRecord.initiativeCategory}
+
+PERFORMANCE SCORES:
+-----------------------------------------------------
+Overall Manufacturing Excellence Score: ${safeRecord.overallManufacturingExcellenceScore}/100
+Operational Excellence Score: ${safeRecord.operationalExcellenceScore}/100
+Digital Excellence Score: ${safeRecord.digitalExcellenceScore}/100
+Quality Excellence Score: ${safeRecord.qualityExcellenceScore}/100
+Sustainability Score: ${safeRecord.sustainabilityScore}/100
+AI Excellence Score: ${safeRecord.aiExcellenceScore}/100
+
+KPI BENCHMARKS:
+-----------------------------------------------------
+OEE: ${safeRecord.oeePercentage}%
+First Pass Yield: ${safeRecord.firstPassYield}%
+Customer PPM: ${safeRecord.customerPpm}
+Energy Consumption: ${safeRecord.energyConsumption} MWh/Unit
+Carbon Emissions: ${safeRecord.carbonEmissions} tCO2e/Unit
+Waste Reduction: ${safeRecord.wasteReduction}%
+
+Business Objective: ${safeRecord.businessObjective}
+Current Performance: ${safeRecord.currentPerformance}
+Target Performance: ${safeRecord.targetPerformance}
+Improvement Strategy: ${safeRecord.improvementStrategy}
+Recommendation: ${safeRecord.recommendation}
+=====================================================`;
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${safeRecord.initiativeNumber}_Excellence_Report.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Manufacturing Excellence Report generated & downloaded successfully!");
   };
+
+  const handleExportReport = handlePreview;
 
   const handleCreateNewInitiative = (newInit: any) => {
     if (!record) {
@@ -314,7 +359,7 @@ export function ManufacturingExcellencePage({
       title="Manufacturing Excellence"
       breadcrumb={breadcrumb ?? "Development > Research & Innovation > Manufacturing Excellence"}
       description="Govern continuous improvement, operational excellence, productivity, quality optimization, cost reduction, sustainability, and AI performance benchmarking."
-      tabs={tabs ?? <InnovationAreaTabs sub={<ManufacturingExcellenceTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+      tabs={tabs ?? <InnovationAreaTabs />}
     >
       <div className="flex flex-col gap-5 p-4 sm:p-6">
         {/* Header Bar */}
@@ -324,113 +369,48 @@ export function ManufacturingExcellencePage({
           onSubmitForApproval={handleSubmitForApproval}
           onPreview={handlePreview}
           onNewInitiative={() => setIsNewDialogOpen(true)}
+          onExportReport={handleExportReport}
           isSubmitting={submitReviewMutation.isPending}
         />
 
-        {/* Top Score Gauge Cards */}
-        <ExcellenceTopBadges record={safeRecord} />
+        {/* Full-Width Unified Sections */}
+        <div className="flex flex-col gap-6">
+          <ExcellenceOverviewCard
+            record={safeRecord}
+            onChange={handleFieldChange}
+          />
 
-        {/* Workflow Process Stepper */}
-        <ExcellenceWorkflowStepper currentStage={safeRecord.workflowStage} />
-
-        {/* Sub-Tab Bar Navigation */}
-        <ManufacturingExcellenceTabBar activeTab={activeTab} onTabChange={setActiveTab} />
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-          {/* Left Column: Sections based on Active Tab or Full Stack */}
-          <div className="flex flex-col gap-6 lg:col-span-8">
-            {(activeTab === "overview" || activeTab === "summary") && (
-              <ExcellenceOverviewCard
-                record={safeRecord}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "assessment" || activeTab === "summary") && (
-              <ExcellenceAssessmentCard
-                record={safeRecord}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "programs" || activeTab === "summary") && (
-              <ExcellenceProgramsCard
-                record={safeRecord}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "smart" || activeTab === "summary") && (
-              <ExcellenceSmartCard
-                record={safeRecord}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "quality" || activeTab === "summary") && (
-              <ExcellenceQualityCard
-                record={safeRecord}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "sustainability" || activeTab === "summary") && (
-              <ExcellenceSustainabilityCard
-                record={safeRecord}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "ai" || activeTab === "summary") && (
-              <ExcellenceAiCard
-                record={safeRecord}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {activeTab === "summary" && (
-              <ExcellenceSummaryCard
-                record={safeRecord}
-                onChange={handleFieldChange}
-              />
-            )}
-
-            {(activeTab === "summary" || activeTab === "overview") && (
-              <ExcellenceAttachmentsCard
-                record={safeRecord}
-                onUploadAttachment={handleUploadAttachment}
-              />
-            )}
-
-            {(activeTab === "review" || activeTab === "summary") && (
-              <ExcellenceReviewApprovalCard
-                record={safeRecord}
-                onDecisionChange={handleReviewDecision}
-              />
-            )}
-
-            {(activeTab === "history" || activeTab === "summary") && (
-              <ExcellenceSystemInfoCard record={safeRecord} />
-            )}
-          </div>
-
-          {/* Right Column: AI Insights Panel & Quick KPI Snapshot Widgets */}
-          <div className="flex flex-col gap-6 lg:col-span-4">
-            <ExcellenceAiInsightsPanel
-              onViewFullAnalysis={() => setIsAiModalOpen(true)}
-            />
-
-            <ExcellenceKpiSnapshotCard
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <ExcellenceAssessmentCard
               record={safeRecord}
-              onViewDashboard={() => setIsKpiModalOpen(true)}
+              onChange={handleFieldChange}
             />
-
-            <ExcellenceSummaryCard
+            <ExcellenceProgramsCard
               record={safeRecord}
               onChange={handleFieldChange}
             />
           </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <ExcellenceQualityCard
+              record={safeRecord}
+              onChange={handleFieldChange}
+            />
+            <ExcellenceSustainabilityCard
+              record={safeRecord}
+              onChange={handleFieldChange}
+            />
+          </div>
+
+          <ExcellenceReviewApprovalCard
+            record={safeRecord}
+            onDecisionChange={handleReviewDecision}
+          />
+
+          <ExcellenceAttachmentsCard
+            record={safeRecord}
+            onUploadAttachment={handleUploadAttachment}
+          />
         </div>
       </div>
 

@@ -17,11 +17,13 @@ interface OverviewTabProps {
   record: ProcessValidationRecord;
   onNavigateTab: (tab: any) => void;
   onLogTrialRun: () => void;
+  onReviewDecision?: (decision: any, comments: string) => void;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({
   record,
   onNavigateTab,
+  onReviewDecision,
 }) => {
   return (
     <div className="space-y-4">
@@ -67,10 +69,11 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             </div>
           </div>
 
-          {/* Row 4: 10. Review & Approval Status Board */}
+          {/* Row 4: Review & Approval Status Board */}
           <ProcessValidationReviewApprovalPanel
             record={record}
             onViewApprovalFlow={() => onNavigateTab("approval")}
+            onReviewDecision={onReviewDecision}
           />
 
           {/* Row 5: Attachments & Validation Documents */}

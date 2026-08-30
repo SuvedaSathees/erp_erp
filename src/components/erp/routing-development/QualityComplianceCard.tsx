@@ -10,13 +10,13 @@ export const QualityComplianceCard: React.FC<QualityComplianceCardProps> = ({
   record,
 }) => {
   return (
-    <div className="bg-card border border-border rounded-lg shadow-sm p-3.5 flex flex-col justify-between text-xs">
+    <div className="bg-card border border-border rounded-lg shadow-sm p-3.5 flex flex-col justify-between text-xs hover:border-border/80 transition-all">
       <div>
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
-          <h3 className="font-bold text-foreground text-xs">5. Quality & Compliance</h3>
-          <span className="px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-bold text-[10px]">
-            {record.qualityScore} / 100
-          </span>
+          <div className="flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-purple-500" />
+            <h3 className="font-bold text-foreground text-xs">Quality & Compliance</h3>
+          </div>
         </div>
 
         <div className="space-y-1.5 text-[11px]">
@@ -44,7 +44,7 @@ export const QualityComplianceCard: React.FC<QualityComplianceCardProps> = ({
           </div>
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Regulatory Standards</span>
-            <span className="font-bold text-foreground text-[10px] truncate max-w-[120px]">
+            <span className="font-bold text-foreground text-[10px] truncate max-w-[120px]" title={record.regulatoryStandards.join(", ")}>
               {record.regulatoryStandards.join(", ")}
             </span>
           </div>
@@ -55,11 +55,6 @@ export const QualityComplianceCard: React.FC<QualityComplianceCardProps> = ({
             </span>
           </div>
         </div>
-      </div>
-
-      <div className="pt-2 border-t border-border mt-2 flex justify-between items-center">
-        <span className="font-semibold text-muted-foreground text-[10px]">Quality Score</span>
-        <span className="font-extrabold text-purple-600 dark:text-purple-400">{record.qualityScore} / 100</span>
       </div>
     </div>
   );

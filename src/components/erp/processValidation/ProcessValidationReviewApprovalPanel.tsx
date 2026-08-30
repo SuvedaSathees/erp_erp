@@ -28,7 +28,7 @@ export const ProcessValidationReviewApprovalPanel: React.FC<ProcessValidationRev
       <div className="flex justify-between items-center pb-2.5 border-b border-border">
         <div className="flex items-center gap-1.5">
           <UserCheck className="w-4 h-4 text-primary" />
-          <h2 className="font-bold text-foreground text-xs">10. Review & Approval Status Board</h2>
+          <h2 className="font-bold text-foreground text-xs">Review & Approval Status Board</h2>
         </div>
       </div>
 

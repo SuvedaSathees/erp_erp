@@ -62,8 +62,19 @@ export const AutomationAttachmentsCard: React.FC<AutomationAttachmentsCardProps>
                 </div>
 
                 <button
-                  onClick={() => toast.success(`Downloading ${item.filename}...`)}
-                  className="p-1 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
+                  onClick={() => {
+                    const content = `AUTOMATION DEVELOPMENT ATTACHMENT: ${item.filename}\nUploaded: ${item.uploadedAt}\nFile Size: ${item.fileSize || "3.5 MB"}\nSource: ${item.source}\nStatus: Verified`;
+                    const blob = new Blob([content], { type: "text/plain" });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = item.filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    toast.success(`Downloaded ${item.filename}`);
+                  }}
+                  className="p-1 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors cursor-pointer"
                   aria-label={`Download ${item.filename}`}
                 >
                   <Download className="w-3.5 h-3.5" />
@@ -92,7 +103,7 @@ export const AutomationAttachmentsCard: React.FC<AutomationAttachmentsCardProps>
         <div className="border-t border-border pt-2 text-right">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+            className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
           >
             View All Attachments →
           </button>
@@ -101,7 +112,7 @@ export const AutomationAttachmentsCard: React.FC<AutomationAttachmentsCardProps>
 
       {/* Attachments Modal Dialog */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-card text-card-foreground border border-border rounded-xl shadow-xl w-full max-w-2xl p-6 space-y-4 max-h-[85vh] flex flex-col">
             <div className="flex justify-between items-center border-b border-border pb-3">
               <h3 className="text-base font-bold text-foreground">
@@ -109,7 +120,7 @@ export const AutomationAttachmentsCard: React.FC<AutomationAttachmentsCardProps>
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 text-muted-foreground hover:text-foreground rounded-lg"
+                className="p-1.5 text-muted-foreground hover:text-foreground rounded-lg cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -131,8 +142,19 @@ export const AutomationAttachmentsCard: React.FC<AutomationAttachmentsCardProps>
                     </div>
                   </div>
                   <button
-                    onClick={() => toast.success(`Downloading ${item.filename}...`)}
-                    className="px-3 py-1.5 bg-primary text-primary-foreground font-semibold rounded text-xs flex items-center gap-1.5 shadow"
+                    onClick={() => {
+                      const content = `AUTOMATION DEVELOPMENT ATTACHMENT: ${item.filename}\nUploaded: ${item.uploadedAt}\nFile Size: ${item.fileSize || "3.5 MB"}\nSource: ${item.source}\nStatus: Verified`;
+                      const blob = new Blob([content], { type: "text/plain" });
+                      const url = URL.createObjectURL(blob);
+                      const link = document.createElement("a");
+                      link.href = url;
+                      link.download = item.filename;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                      toast.success(`Downloaded ${item.filename}`);
+                    }}
+                    className="px-3 py-1.5 bg-primary text-primary-foreground font-semibold rounded text-xs flex items-center gap-1.5 shadow cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" /> Download
                   </button>

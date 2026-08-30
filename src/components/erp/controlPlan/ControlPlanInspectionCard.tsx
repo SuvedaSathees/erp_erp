@@ -16,7 +16,7 @@ export const ControlPlanInspectionCard: React.FC<ControlPlanInspectionCardProps>
       <div>
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
           <h2 className="font-bold text-foreground text-xs">
-            3. Inspection & Monitoring Plan
+            Inspection & Monitoring Plan
           </h2>
         </div>
 

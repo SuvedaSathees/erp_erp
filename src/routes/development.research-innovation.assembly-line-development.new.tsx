@@ -1,73 +1,21 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import React, { useState, useMemo, useEffect, type ReactNode } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import {
   Save,
   Send,
-  MoreHorizontal,
-  ExternalLink,
-  Calendar,
-  Building2,
   FileText,
   Download,
-  Upload,
-  X,
-  Sparkles,
-  CheckCircle2,
-  AlertTriangle,
-  History,
-  Activity,
-  Layers,
-  Target,
-  Zap,
-  Map,
-  Award,
-  Paperclip,
   Eye,
-  Check,
-  ClipboardCheck,
-  Cpu,
-  ShieldAlert,
-  UserCheck,
-  FileSpreadsheet,
-  FileCode,
-  Info,
+  CheckCircle2,
   Clock,
-  ChevronRight,
-  TrendingUp,
-  Maximize2,
-  Share2,
   Printer,
-  FileCheck,
-  User,
   ShieldCheck,
-  Radio,
-  HardDrive,
-  Database,
-  Lock,
-  Workflow,
-  Repeat,
-  Plus,
-  ArrowRight,
-  Palette,
-  Box,
-  Star,
-  Ruler,
-  Weight,
-  PenTool,
-  Factory,
-  CheckSquare,
-  Search,
-  SlidersHorizontal,
-  ChevronDown,
-  Play,
-  HelpCircle,
-  BarChart3,
-  PieChart,
-  CheckSquare2,
-  RefreshCw,
-  Settings,
+  UserCheck,
+  Layers,
+  Activity,
+  Upload,
 } from "lucide-react";
 
 import { assemblyLineDevelopmentService } from "@/services/assemblyLineDevelopmentService";
@@ -75,35 +23,29 @@ import type {
   AssemblyLineRecord,
   AssemblyLineFormInput,
   AssemblyLineApprovalDecision,
-  AssemblyLineChecklistItem,
-  AssemblyLineReviewer,
-  AssemblyLineAttachment,
-  AssemblyLineAuditEntry,
-  AssemblyLineMilestone,
 } from "@/services/types";
-import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
-import { AssemblyLineDevelopmentTabBar, type AssemblyLineTabId } from "@/components/erp/AssemblyLineDevelopmentTabBar";
+import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AppShell } from "@/components/erp/AppShell";
 
 export const Route = createFileRoute(
   "/development/research-innovation/assembly-line-development/new",
 )({
   head: () => ({
-    meta: [{ title: "Assembly Line Development Form · Magnertia ERP" }],
+    meta: [{ title: "Assembly Line Development · Magnertia ERP" }],
   }),
   component: AssemblyLineDevelopmentNewPage,
 });
-
-import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 
 export function AssemblyLineDevelopmentNewPage({
   breadcrumb = "Development > Manufacturing Development",
@@ -113,15 +55,6 @@ export function AssemblyLineDevelopmentNewPage({
   tabs?: React.ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-
-  // Tab State & Settings
-  const [activeTab, setActiveTab] = useState<AssemblyLineTabId>("overview");
-  const [isTelemetryMode, setIsTelemetryMode] = useState(false);
-  const [selectedDiagram, setSelectedDiagram] = useState<string | null>(null);
-  const [isUploadOpen, setIsUploadOpen] = useState(false);
-  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<any | null>(null);
 
   // Approval Decision Form
   const [reviewDecision, setReviewDecision] = useState<AssemblyLineApprovalDecision>("Approved");
@@ -167,86 +100,27 @@ export function AssemblyLineDevelopmentNewPage({
       <AppShell
         title="Assembly Line Development"
         breadcrumb={breadcrumb ?? "Research & Innovation Development"}
-        description="Govern assembly line layout design, workstations planning, takt time line balancing, automation level, OEE targets, and AI quality checks."
-        tabs={tabs ?? <InnovationAreaTabs sub={<AssemblyLineDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+        tabs={tabs ?? <InnovationAreaTabs />}
       >
-        <div className="flex h-[70vh] w-full flex-col items-center justify-center gap-4">
-          <RefreshCw className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm font-medium text-muted-foreground">Loading Assembly Line Development Module...</p>
+        <div className="p-8 text-center text-muted-foreground animate-pulse font-semibold">
+          Loading Assembly Line Development Master Record...
         </div>
       </AppShell>
     );
   }
 
-  // Quick helper handlers
   const handleSaveDraft = () => {
     saveDraftMutation.mutate({
       projectName: record.projectName,
-      plantName: record.manufacturingPlant,
       productionLine: record.productionLine,
       productFamily: record.productFamily,
+      manufacturingPlant: record.manufacturingPlant,
       assemblyLineType: record.assemblyLineType,
-      productionObjective: record.productionObjective,
       developmentStage: record.developmentStage,
       priority: record.priority,
-      
-      // Design
-      factoryLayout: record.factoryLayout,
-      assemblyLineLayout: record.assemblyLineLayout,
-      workstationLayoutFile: record.workstationLayoutFile,
-      materialFlowDiagram: record.materialFlowDiagram,
-      lineConfiguration: record.lineConfiguration,
-      numberOfWorkstations: record.numberOfWorkstations,
-      layoutDesignScore: record.layoutDesignScore,
-      
-      // Workstations
-      workstationList: record.workstationList,
-      workInstructions: record.workInstructions,
-      cycleTimePerStation: record.cycleTimePerStation,
-      operatorRequirement: record.operatorRequirement,
-      machineAllocation: record.machineAllocation,
-      ergonomicAssessment: record.ergonomicAssessment,
-      workstationReadinessScore: record.workstationReadinessScore,
-      
-      // Line Balancing
-      taktTime: record.taktTime,
-      lineBalancingCompleted: record.lineBalancingCompleted,
-      bottleneckAnalysis: record.bottleneckAnalysis,
-      pilotLineRun: record.pilotLineRun,
-      throughputValidation: record.throughputValidation,
-      validationRemarks: record.validationRemarks,
-      validationScore: record.validationScore,
-      
-      // Automation
-      automationLevel: record.automationLevel,
-      robotStations: record.robotStations,
-      visionInspection: record.visionInspection,
-      pokaYoke: record.pokaYoke,
-      inlineTesting: record.inlineTesting,
-      qualityGates: record.qualityGates,
-      automationScore: record.automationScore,
-      
-      // Performance
-      plannedOutput: record.plannedOutput,
-      lineCapacity: record.lineCapacity,
-      oeeTarget: record.oeeTarget,
-      yieldTarget: record.yieldTarget,
-      scrapTarget: record.scrapTarget,
-      overallEfficiency: record.overallEfficiency,
-      performanceScore: record.performanceScore,
-      
-      // AI
-      aiLineOptimization: record.aiLineOptimization,
-      aiBottleneckPrediction: record.aiBottleneckPrediction,
-      aiResourceUtilization: record.aiResourceUtilization,
-      aiMaintenanceSuggestions: record.aiMaintenanceSuggestions,
-      aiProductivityRecommendations: record.aiProductivityRecommendations,
-      aiReadinessScore: record.aiReadinessScore,
-
+      productionObjective: record.productionObjective,
       approvalDecision: record.approvalDecision,
       reviewComments: record.reviewComments,
-      approvalDate: record.approvalDate,
-      recommendation: record.recommendation,
     });
   };
 
@@ -258,21 +132,73 @@ export function AssemblyLineDevelopmentNewPage({
     });
   };
 
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    toast.success(`Copied ${label}`, { description: text });
+  const handleExportReport = () => {
+    const content = `=====================================================
+ASSEMBLY LINE DEVELOPMENT SPECIFICATION: ${record.projectName}
+=====================================================
+Assembly Line ID: ${record.assemblyLineId}
+Form Code: ${record.formCode}
+Line Name: ${record.productionLine}
+Version: ${record.assemblyLineVersion}
+Workflow Status: ${record.workflowStatus}
+Manufacturing Plant: ${record.manufacturingPlant}
+Product Family: ${record.productFamily}
+Line Type: ${record.assemblyLineType}
+Line Engineer: ${record.assemblyLineEngineer.name}
+Development Stage: ${record.developmentStage}
+Priority: ${record.priority}
+Next Review Date: ${record.nextReviewDate}
+
+OBJECTIVE & LINE SPECIFICATIONS:
+-----------------------------------------------------
+Objective: ${record.productionObjective}
+Workstation Count: ${record.workstationsCount} Workstations
+Target Takt Time: ${record.taktTimeTarget} s
+Actual Cycle Time: ${record.actualCycleTime} s
+Line Balancing Efficiency: ${record.lineBalanceEfficiency}%
+Line Configuration: ${record.lineConfiguration}
+Hourly Output Target: ${record.hourlyOutputTarget} units/hr
+Target OEE: ${record.targetOEE}%
+
+READINESS SCORES:
+-----------------------------------------------------
+Overall Readiness Score: ${record.overallAssemblyReadiness}%
+Layout Score: ${record.layoutDesignScore}/100
+Workstation Score: ${record.workstationScore}/100
+Validation Score: ${record.validationScore}/100
+Automation Score: ${record.automationScore}/100
+Performance Score: ${record.performanceScore}/100
+
+DRAWINGS & DOCUMENTS:
+-----------------------------------------------------
+Factory Layout: ${record.factoryLayout}
+Line Layout: ${record.assemblyLineLayout}
+Material Flow Diagram: ${record.materialFlowDiagram}
+=====================================================`;
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${record.assemblyLineId}_Line_Specification.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Assembly Line specification report downloaded successfully!");
   };
 
-  const handleExportPDF = () => {
-    toast.success("Exporting Assembly Line Specification Report (PDF)...", { description: "Generating factory layouts and line balancing parameters." });
-  };
+  const lineDocuments = [
+    { label: "Factory Master Layout", filename: record.factoryLayout, type: "DWG", size: "14.2 MB" },
+    { label: "Assembly Line Layout Drawing", filename: record.assemblyLineLayout, type: "DWG", size: "8.6 MB" },
+    { label: "Material Flow Diagram", filename: record.materialFlowDiagram, type: "PDF", size: "3.4 MB" },
+    { label: "Workstation Layout Sheet", filename: "ws_layout_sheet.xlsx", type: "XLSX", size: "1.8 MB" },
+  ];
 
-  // Mock Workstation Utilization list for Custom Balancing Visualizer
   const balancingWorkstations = [
-    { id: "WS-1", name: "PCB Loading & Solder", load: 82, target: 90, status: "Under Target" },
-    { id: "WS-2", name: "AC/DC Power Screwing", load: 85, target: 90, status: "Under Target" },
-    { id: "WS-3", name: "Enclosure Wiring Fit", load: 88, target: 90, status: "Near Bottleneck" },
-    { id: "WS-4", name: "Final Functional Test", load: 80, target: 90, status: "Under Target" },
+    { id: "WS-1", name: "PCB Loading & Solder Inspection", cycleTime: "62s", load: "82%", target: "90%", status: "Balanced" },
+    { id: "WS-2", name: "AC/DC Power Sub-Assembly", cycleTime: "65s", load: "85%", target: "90%", status: "Balanced" },
+    { id: "WS-3", name: "Enclosure Wiring & Harness Fit", cycleTime: "68s", load: "88%", target: "90%", status: "Near Bottleneck" },
+    { id: "WS-4", name: "Final Electrical Safety & EOL Test", cycleTime: "60s", load: "80%", target: "90%", status: "Balanced" },
   ];
 
   return (
@@ -280,1220 +206,541 @@ export function AssemblyLineDevelopmentNewPage({
       title="Assembly Line Development"
       breadcrumb={breadcrumb ?? "Development > Research & Innovation > Assembly Line Development"}
       description="Balance assembly lines, takt time distribution, ergonomic workstations, and automated line feeds."
-      tabs={tabs ?? <InnovationAreaTabs sub={<AssemblyLineDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />} />}
+      tabs={tabs ?? <InnovationAreaTabs />}
     >
-      <div className="min-h-screen bg-slate-50/60 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased pb-16">
-        
-        {/* Main Layout Container */}
-        <div className="mx-auto max-w-[1720px] px-4 sm:px-6 lg:px-8 pt-3 space-y-4">
-          
-          {/* ====================================================================
-             1. PAGE HEADER (Assembly Line Info Bar)
-             ==================================================================== */}
-          <div className="rounded-xl border border-border/80 bg-white dark:bg-slate-900 shadow-xs p-4 sm:p-5 transition-all">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              
-              {/* Left Title Parameters */}
-              <div className="space-y-1.5">
-                <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-muted-foreground">
-                  <span className="hover:text-foreground cursor-pointer">Development</span>
-                  <span>/</span>
-                  <span className="hover:text-foreground cursor-pointer">Process Development</span>
-                  <span>/</span>
-                  <span className="text-primary font-semibold">Assembly Line Development Form</span>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-                    <Cpu className="h-6 w-6 text-primary shrink-0 animate-pulse" />
-                    {record.projectName}
-                  </h1>
-                  <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-xs font-semibold px-2.5 py-0.5">
-                    {record.assemblyLineVersion}
-                  </Badge>
-                  <Badge
-                    className={
-                      record.workflowStatus === "Approved"
-                        ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
-                        : record.workflowStatus === "In Review"
-                          ? "bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30"
-                          : "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30"
-                    }
-                  >
-                    <Workflow className="mr-1 h-3 w-3 inline" />
-                    {record.workflowStatus}
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Right Action buttons */}
+      <div className="p-4 sm:p-6 space-y-5">
+        {/* Header Bar */}
+        <div className="bg-card text-card-foreground border-b border-border px-5 py-3 shadow-xs rounded-lg">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+            {/* Left: Identity, Title & Sub-metadata */}
+            <div className="space-y-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <Button
+                <span className="px-2 py-0.5 rounded bg-muted font-mono font-bold text-[11px] border border-border">
+                  {record.assemblyLineId}
+                </span>
+                <h1 className="text-sm sm:text-base font-bold text-foreground">
+                  {record.projectName}
+                </h1>
+                <Badge
                   variant="outline"
-                  size="sm"
-                  onClick={() => setIsTelemetryMode(!isTelemetryMode)}
-                  className="h-9 px-3 text-xs gap-1.5"
+                  className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25 text-[10px] font-bold"
                 >
-                  <RefreshCw className={`h-3.5 w-3.5 ${isTelemetryMode ? "animate-spin text-primary" : ""}`} />
-                  {isTelemetryMode ? "Active SCADA Feed" : "Telemetry Feed"}
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSaveDraft}
-                  disabled={saveDraftMutation.isPending}
-                  className="h-9 px-3 text-xs gap-1.5 border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  <Save className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
-                  Save Draft
-                </Button>
-
-                <Button
-                  size="sm"
-                  onClick={() => submitReviewMutation.mutate(record.id)}
-                  disabled={submitReviewMutation.isPending}
-                  className="h-9 px-4 text-xs font-semibold gap-1.5 bg-primary text-white hover:bg-primary/90 shadow-xs"
-                >
-                  <Send className="h-3.5 w-3.5" />
-                  Submit for Review
-                </Button>
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" className="h-9 w-9 border-slate-300 dark:border-slate-700">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-52">
-                    <DropdownMenuItem onClick={handleExportPDF}>
-                      <Printer className="mr-2 h-4 w-4" /> Export Layout drawings
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => copyToClipboard(JSON.stringify(record, null, 2), "Assembly Line JSON")}>
-                      <FileCode className="mr-2 h-4 w-4" /> Copy Raw Record JSON
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setIsScheduleModalOpen(true)}>
-                      <Calendar className="mr-2 h-4 w-4" /> Schedule Review board
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
-
-            {/* Metadata grid */}
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-3 border-t border-border/60 text-xs">
-              <div>
-                <span className="text-muted-foreground block text-[11px]">Assembly Line ID</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">{record.assemblyLineId}</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground block text-[11px]">Form Code</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">{record.formCode}</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground block text-[11px]">Assembly Engineer</span>
-                <span className="font-medium text-slate-900 dark:text-slate-100 flex items-center gap-1">
-                  <User className="h-3.5 w-3.5 text-muted-foreground" />
-                  {record.assemblyLineEngineer.name}
+                  {record.workflowStatus}
+                </Badge>
+                <span className="text-[10px] font-bold text-muted-foreground bg-muted/60 px-1.5 py-0.5 rounded border border-border/50 font-mono">
+                  {record.assemblyLineVersion}
                 </span>
               </div>
-              <div>
-                <span className="text-muted-foreground block text-[11px]">Manufacturing Plant</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">{record.manufacturingPlant}</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground block text-[11px]">Production Line</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">{record.productionLine}</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground block text-[11px]">Linked Prod Eng</span>
-                <span className="font-semibold text-primary hover:underline cursor-pointer flex items-center gap-0.5">
-                  {record.linkedProductionEngineering.code}
-                  <ExternalLink className="h-2.5 w-2.5 inline" />
-                </span>
-              </div>
-              <div>
-                <span className="text-muted-foreground block text-[11px]">Next Review Date</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">{record.nextReviewDate}</span>
+
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <span>Plant: <strong className="text-foreground">{record.manufacturingPlant}</strong></span>
+                <span>•</span>
+                <span>Line: <strong className="text-foreground">{record.productionLine}</strong></span>
+                <span>•</span>
+                <span>Engineer: <strong className="text-foreground">{record.assemblyLineEngineer.name}</strong></span>
               </div>
             </div>
-          </div>
 
-          {/* ====================================================================
-             2. PROGRESS & LIFECYCLE BAR
-             ==================================================================== */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
-            
-            {/* Assembly readiness gauge */}
-            <Card className="lg:col-span-4 border-border/80 shadow-xs bg-gradient-to-br from-white via-slate-50 to-blue-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/15">
-              <CardContent className="p-4 sm:p-5 flex items-center gap-5">
-                <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
-                  <div className="text-center">
-                    <span className="text-2xl font-black tracking-tight text-primary dark:text-blue-400">
-                      {record.overallAssemblyReadiness}%
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">Overall Assembly Readiness</h3>
-                    <Badge variant="secondary" className="text-[10px] font-bold bg-primary/10 text-primary">
-                      Ready for Mass Prod
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground line-clamp-2">
-                    Evaluation status across takt balance, workstation routing, safety audits, and pilot line trial runs.
-                  </p>
-                  <div className="grid grid-cols-4 gap-2 pt-1 text-[11px]">
-                    <div>
-                      <span className="text-muted-foreground block text-[9px] truncate">Layout</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{record.layoutDesignScore}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block text-[9px] truncate">Stations</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{record.workstationReadinessScore}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block text-[9px] truncate">Validation</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{record.validationScore}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground block text-[9px] truncate">Automation</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{record.automationScore}</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Lifecycle timeline */}
-            <Card className="lg:col-span-8 border-border/80 shadow-xs bg-white dark:bg-slate-900 flex flex-col justify-center">
-              <CardContent className="p-4 sm:p-5 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Assembly Line Timeline Stages
-                  </span>
-                  <span className="text-xs font-semibold text-primary">Stage 4 of 6: Line Balancing Staging</span>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 pt-1">
-                  {record.timeline.map((s: AssemblyLineMilestone, idx: number) => (
-                    <div
-                      key={s.id}
-                      className={`rounded-lg p-2.5 text-center border transition-all ${
-                        s.completed
-                          ? "border-emerald-205 bg-emerald-50/50 dark:border-emerald-900/50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300"
-                          : s.stageNumber === record.stage
-                            ? "border-primary bg-primary/10 text-primary dark:bg-blue-950/30 font-bold ring-1 ring-primary/40"
-                            : "border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900 text-muted-foreground"
-                      }`}
-                    >
-                      <div className="flex items-center justify-center gap-1.5 text-xs">
-                        {s.completed ? (
-                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                        ) : (
-                          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/20 text-[10px] font-semibold">
-                            {s.stageNumber}
-                          </span>
-                        )}
-                        <span className="truncate text-[11px]">{s.title}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* ====================================================================
-             3. STICKY SUB-TAB NAVIGATION
-             ==================================================================== */}
-          <AssemblyLineDevelopmentTabBar activeTab={activeTab} onTabChange={setActiveTab} />
-
-          {/* ====================================================================
-             4. MAIN CONTENT AREA & RIGHT SIDEBAR GRID
-             ==================================================================== */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            
-            {/* Main tab content */}
-            <div className="lg:col-span-8 space-y-6">
-              
-              {/* TAB 1: OVERVIEW */}
-              {(activeTab === "overview" || isTelemetryMode) && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                      <Layers className="h-5 w-5 text-primary" /> Assembly Line Specifications
-                    </h2>
-                    <Badge variant="outline">DELMIA Configuration</Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Panel 1 */}
-                    <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                      <CardHeader className="p-4 pb-2 border-b border-border/40">
-                        <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                          <Info className="h-4 w-4 text-primary" /> Profile Details
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 space-y-3.5 text-xs">
-                        <div className="grid grid-cols-2 gap-3 text-[11px]">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Assembly Line Name</span>
-                            <span className="font-bold text-slate-900 dark:text-white">{record.productionLine}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Product Family</span>
-                            <span className="font-bold text-slate-900 dark:text-white">{record.productFamily}</span>
-                          </div>
-                        </div>
-
-                        <div>
-                          <span className="text-muted-foreground block text-[10px] mb-0.5">Objective</span>
-                          <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-[11px]">
-                            {record.productionObjective}
-                          </p>
-                        </div>
-
-                        <div className="pt-2 flex items-center justify-between border-t text-[11px]">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Development Stage</span>
-                            <Badge className="mt-0.5 bg-blue-500/10 text-blue-700 border-blue-500/20 text-[9px] font-semibold px-2 py-0">
-                              {record.developmentStage}
-                            </Badge>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Priority</span>
-                            <Badge className="mt-0.5 bg-amber-500/10 text-amber-700 border-amber-500/20 text-[9px] font-semibold px-2 py-0">
-                              {record.priority}
-                            </Badge>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Panel 2 */}
-                    <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900 flex flex-col justify-between">
-                      <CardHeader className="p-4 pb-2 border-b border-border/40">
-                        <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                          <Radio className="h-4 w-4 text-emerald-500 shrink-0" /> Line Illustration
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 flex items-center justify-between gap-4">
-                        <div className="space-y-2 text-xs">
-                          <div>
-                            <span className="text-muted-foreground block text-[9px]">Assembly Line Type</span>
-                            <span className="font-bold text-slate-900 dark:text-white">{record.assemblyLineType}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[9px]">Plant Location</span>
-                            <span className="font-bold">{record.manufacturingPlant}</span>
-                          </div>
-                        </div>
-
-                        {/* Graphic layout representation */}
-                        <div className="h-28 w-32 bg-slate-100 dark:bg-slate-800 rounded-lg border flex flex-col items-center justify-center p-2 relative shrink-0">
-                          <div className="flex gap-2">
-                            <span className="h-6 w-6 rounded bg-primary/20 border border-primary flex items-center justify-center font-bold text-[8px]">WS-1</span>
-                            <span className="h-6 w-6 rounded bg-primary/20 border border-primary flex items-center justify-center font-bold text-[8px]">WS-2</span>
-                            <span className="h-6 w-6 rounded bg-amber-500/20 border border-amber-500 flex items-center justify-center font-bold text-[8px]">WS-3</span>
-                          </div>
-                          <span className="text-[8px] font-bold text-muted-foreground mt-2">12 Workstations</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 2: LAYOUT DESIGN */}
-              {activeTab === "design" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <Map className="h-5 w-5 text-primary" /> Assembly Line Layout Design
-                      </h2>
-                      <p className="text-xs text-muted-foreground">U-Shaped line configurations, material flow coordinates, layouts preview, and workstation counts.</p>
-                    </div>
-                    <Badge className="bg-primary/10 text-primary">Score: {record.layoutDesignScore}/100</Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                    {/* Design documents & parameters */}
-                    <div className="md:col-span-5 space-y-4">
-                      <Card className="border-border/80 shadow-xs">
-                        <CardHeader className="p-4 pb-2 border-b">
-                          <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Line Design Files</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-3 text-xs space-y-2">
-                          <div className="flex items-center justify-between p-2 rounded border bg-slate-50/50 dark:bg-slate-800/40">
-                            <span className="font-semibold">{record.factoryLayout}</span>
-                            <Download className="h-3.5 w-3.5 text-muted-foreground hover:text-primary cursor-pointer" />
-                          </div>
-                          <div className="flex items-center justify-between p-2 rounded border bg-slate-50/50 dark:bg-slate-800/40">
-                            <span className="font-semibold">{record.assemblyLineLayout}</span>
-                            <Download className="h-3.5 w-3.5 text-muted-foreground hover:text-primary cursor-pointer" />
-                          </div>
-                          <div className="flex items-center justify-between p-2 rounded border bg-slate-50/50 dark:bg-slate-800/40">
-                            <span className="font-semibold">{record.materialFlowDiagram}</span>
-                            <Download className="h-3.5 w-3.5 text-muted-foreground hover:text-primary cursor-pointer" />
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card className="border-border/80 shadow-xs">
-                        <CardHeader className="p-4 pb-2 border-b">
-                          <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Configuration Specs</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-4 text-xs space-y-3">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px] mb-0.5">Line Configuration</span>
-                            <p className="font-bold text-slate-700 dark:text-slate-300 leading-relaxed text-[11px]">
-                              {record.lineConfiguration}
-                            </p>
-                          </div>
-                          <div className="pt-2 border-t flex justify-between items-center">
-                            <div>
-                              <span className="text-muted-foreground block text-[10px]">Workstations</span>
-                              <span className="text-base font-extrabold text-primary">{record.numberOfWorkstations} Stations</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    {/* Layout diagram preview */}
-                    <div className="md:col-span-7">
-                      <Card className="border-border/80 shadow-xs overflow-hidden">
-                        <div className="relative h-64 bg-slate-950 text-white flex flex-col items-center justify-center p-6 gap-3 group">
-                          <div className="h-14 w-14 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30">
-                            <Layers className="h-7 w-7" />
-                          </div>
-                          <span className="text-sm font-bold text-slate-100">Cellular Assembly Line Layout CAD Blueprint</span>
-                          <span className="text-xs text-slate-400 font-mono">Drawing No: DWG-AL-702 • 12 Workstations • Conveyor Flow</span>
-                          <Button
-                            size="sm"
-                            className="bg-white text-slate-950 hover:bg-slate-100 border text-xs mt-1"
-                            onClick={() => setSelectedDiagram("assembly-layout-blueprint")}
-                          >
-                            <Maximize2 className="h-3.5 w-3.5 mr-1" /> Full Layout Specification
-                          </Button>
-                        </div>
-                        <CardContent className="p-4 space-y-1 text-xs">
-                          <span className="text-muted-foreground block text-[10px]">Layout Design Score</span>
-                          <Badge className="bg-primary/10 text-primary">Score: {record.layoutDesignScore}/100</Badge>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 3: WORKSTATIONS */}
-              {activeTab === "workstations" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <Building2 className="h-5 w-5 text-primary" /> Workstation Planning & Allocation
-                      </h2>
-                      <p className="text-xs text-muted-foreground">Detailed workstation plans, cycle times, operators requirement, machine allocations, and ergonomics.</p>
-                    </div>
-                    <Badge className="bg-primary/10 text-primary">Score: {record.workstationReadinessScore}/100</Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="border-border/80 shadow-xs">
-                      <CardHeader className="p-4 pb-2 border-b">
-                        <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Planning Documents & Cycles</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 space-y-4 text-xs">
-                        <div className="flex justify-between items-center p-2 rounded border bg-slate-50/50 dark:bg-slate-800/40">
-                          <div>
-                            <span className="font-bold text-[11px] block">Workstation List</span>
-                            <span className="text-[10px] text-muted-foreground">{record.workstationList}</span>
-                          </div>
-                          <Download className="h-4 w-4 text-muted-foreground hover:text-primary cursor-pointer" />
-                        </div>
-
-                        <div className="flex justify-between items-center p-2 rounded border bg-slate-50/50 dark:bg-slate-800/40">
-                          <div>
-                            <span className="font-bold text-[11px] block">Standard Work Instructions</span>
-                            <span className="text-[10px] text-muted-foreground">{record.workInstructions}</span>
-                          </div>
-                          <Download className="h-4 w-4 text-muted-foreground hover:text-primary cursor-pointer" />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 pt-2">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Cycle Time per Station</span>
-                            <span className="text-lg font-bold text-slate-900 dark:text-white">{record.cycleTimePerStation} Sec</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Operator Requirement</span>
-                            <span className="text-lg font-bold text-slate-900 dark:text-white">{record.operatorRequirement} Nos</span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-border/80 shadow-xs">
-                      <CardHeader className="p-4 pb-2 border-b">
-                        <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Machine Allocations & Ergonomics</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 space-y-4 text-xs">
-                        <div>
-                          <span className="text-muted-foreground block text-[10px] mb-1">Machine Allocations</span>
-                          <div className="flex flex-wrap gap-1.5">
-                            {record.machineAllocation.map((m, idx) => (
-                              <Badge key={idx} variant="secondary" className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-350">
-                                {m}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <span className="text-muted-foreground block text-[10px] mb-0.5">Ergonomic Assessment Stance</span>
-                          <p className="text-slate-700 dark:text-slate-300 font-semibold">{record.ergonomicAssessment}</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 4: LINE BALANCING */}
-              {activeTab === "balancing" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <ClipboardCheck className="h-5 w-5 text-primary" /> Takt Time & Line Balancing Validation
-                      </h2>
-                      <p className="text-xs text-muted-foreground">Takt time constraints compliance, bottleneck analysis documents, and pilot line validation logs.</p>
-                    </div>
-                    <Badge className="bg-primary/10 text-primary">Score: {record.validationScore}/100</Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                    {/* balancing details */}
-                    <div className="md:col-span-5 space-y-4">
-                      <Card className="border-border/80 shadow-xs">
-                        <CardHeader className="p-4 pb-2 border-b">
-                          <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Takt Constraints</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-4 space-y-4 text-xs">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Takt Time Limit</span>
-                            <span className="text-2xl font-black text-slate-900 dark:text-white">{record.taktTime} Sec</span>
-                          </div>
-
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Bottleneck Analysis Report</span>
-                            <span className="font-semibold text-primary hover:underline cursor-pointer flex items-center gap-1 mt-0.5">
-                              <FileText className="h-3.5 w-3.5" /> {record.bottleneckAnalysis}
-                            </span>
-                          </div>
-
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Validation Summary Remarks</span>
-                            <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
-                              {record.validationRemarks}
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    {/* balancing visualizer */}
-                    <div className="md:col-span-7">
-                      <Card className="border-border/80 shadow-xs">
-                        <CardHeader className="p-4 pb-2 border-b">
-                          <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Workstation Cycle Time utilization vs Takt Limit</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-4 space-y-4">
-                          {/* High-fidelity utilization bars */}
-                          <div className="space-y-3">
-                            {balancingWorkstations.map((ws) => (
-                              <div key={ws.id} className="space-y-1">
-                                <div className="flex justify-between text-xs font-semibold">
-                                  <span>{ws.name} ({ws.id})</span>
-                                  <span className={ws.status === "Near Bottleneck" ? "text-amber-600 font-bold" : "text-emerald-600 font-bold"}>{ws.load}s / {ws.target}s</span>
-                                </div>
-                                <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full ${
-                                      ws.status === "Near Bottleneck"
-                                        ? "bg-amber-500 animate-pulse"
-                                        : "bg-emerald-500"
-                                    }`}
-                                    style={{ width: `${(ws.load / ws.target) * 100}%` }}
-                                  />
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="pt-2 border-t text-[10px] text-muted-foreground text-center font-semibold">
-                            Red Line represents Takt Time Limit (90 Sec)
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 5: AUTOMATION & QUALITY */}
-              {activeTab === "automation" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <ShieldCheck className="h-5 w-5 text-primary" /> Automation Level & Inline Testing
-                      </h2>
-                      <p className="text-xs text-muted-foreground">Workstation automation plans, robotics loading, inline testing checks, and quality gates.</p>
-                    </div>
-                    <Badge className="bg-primary/10 text-primary">Score: {record.automationScore}/100</Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="border-border/80 shadow-xs">
-                      <CardHeader className="p-4 pb-2 border-b">
-                        <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Automation Profile</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 space-y-4 text-xs">
-                        <div>
-                          <span className="text-muted-foreground block text-[10px] mb-0.5">Overall Automation Level</span>
-                          <span className="font-bold text-slate-900 dark:text-white text-base block">{record.automationLevel}</span>
-                        </div>
-
-                        <div>
-                          <span className="text-muted-foreground block text-[10px] mb-0.5">Robot Stations count</span>
-                          <span className="font-bold text-slate-900 dark:text-white text-base block">{record.robotStations} Stations</span>
-                        </div>
-
-                        <div>
-                          <span className="text-muted-foreground block text-[10px] mb-0.5">Quality Inspection Gates</span>
-                          <p className="text-slate-700 dark:text-slate-300 font-semibold">{record.qualityGates}</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-border/80 shadow-xs">
-                      <CardHeader className="p-4 pb-2 border-b">
-                        <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Inline Quality Checks</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 space-y-4 text-xs">
-                        <div className="flex items-center justify-between p-2.5 rounded-lg border bg-slate-50/50 dark:bg-slate-800/40">
-                          <span className="font-bold">Vision Inspection System</span>
-                          <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-500/25">Active</Badge>
-                        </div>
-
-                        <div className="flex items-center justify-between p-2.5 rounded-lg border bg-slate-50/50 dark:bg-slate-800/40">
-                          <span className="font-bold">Poka-Yoke Implementation</span>
-                          <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-500/25">Verified</Badge>
-                        </div>
-
-                        <div className="flex items-center justify-between p-2.5 rounded-lg border bg-slate-50/50 dark:bg-slate-800/40">
-                          <span className="font-bold">Inline Functional Testing</span>
-                          <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-500/25">Active</Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 6: PERFORMANCE */}
-              {activeTab === "performance" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <BarChart3 className="h-5 w-5 text-primary" /> Overall Efficiency & Throughput
-                      </h2>
-                      <p className="text-xs text-muted-foreground">Line design capacities, OEE target compliance levels, scrap targets, and runs yield.</p>
-                    </div>
-                    <Badge className="bg-primary/10 text-primary">Score: {record.performanceScore}/100</Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                    {/* Performance numbers */}
-                    <div className="md:col-span-4 space-y-4">
-                      <Card className="border-border/80 shadow-xs">
-                        <CardHeader className="p-4 pb-2 border-b">
-                          <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">KPI actual vs targets</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-4 space-y-4 text-xs">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Overall Line Efficiency</span>
-                            <span className="text-2xl font-black text-slate-900 dark:text-white">{record.overallEfficiency}%</span>
-                          </div>
-
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">OEE Target</span>
-                            <span className="text-2xl font-black text-slate-900 dark:text-white">{record.oeeTarget}%</span>
-                          </div>
-
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Planned Output Limit</span>
-                            <span className="text-2xl font-black text-slate-900 dark:text-white">{record.plannedOutput} units/day</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    {/* Chart visualization */}
-                    <div className="md:col-span-8">
-                      <Card className="border-border/80 shadow-xs">
-                        <CardHeader className="p-4 pb-2 border-b">
-                          <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Throughput Performance Staging</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-4">
-                          <div className="h-56 w-full bg-slate-50 dark:bg-slate-950 rounded-lg border p-4 flex flex-col justify-between">
-                            <div className="flex justify-between items-center text-[10px] text-muted-foreground border-b pb-1">
-                              <span>Throughput Yield (units/day)</span>
-                            </div>
-
-                            <div className="flex-1 w-full relative flex items-end justify-between px-6 pt-6">
-                              <svg className="absolute inset-0 h-full w-full p-6 overflow-visible" xmlns="http://www.w3.org/2000/svg">
-                                <line x1="0%" y1="0%" x2="100%" y2="0%" stroke="rgba(100,116,139,0.1)" strokeDasharray="3 3" />
-                                <line x1="0%" y1="33%" x2="100%" y2="33%" stroke="rgba(100,116,139,0.1)" strokeDasharray="3 3" />
-                                <line x1="0%" y1="66%" x2="100%" y2="66%" stroke="rgba(100,116,139,0.1)" strokeDasharray="3 3" />
-                                <line x1="0%" y1="100%" x2="100%" y2="100%" stroke="rgba(100,116,139,0.1)" strokeDasharray="3 3" />
-
-                                <path d="M 0 110 L 150 70 L 300 30" fill="none" stroke="#0F62FE" strokeWidth="2.5" strokeLinecap="round" className="opacity-80" style={{ transform: "scaleY(0.7) translateY(20px)" }} />
-                              </svg>
-
-                              {record.kpiTrend.map((run: any) => (
-                                <div key={run.period} className="flex flex-col items-center z-10">
-                                  <div className="text-[9px] font-bold text-slate-800 dark:text-slate-200">{run.throughput} units</div>
-                                  <div className="h-2 w-2 rounded-full bg-primary border border-white" />
-                                  <span className="text-[9px] text-muted-foreground mt-1">{run.period}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 7: AI ASSESSMENT */}
-              {activeTab === "ai_assessment" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 text-purple-750 dark:text-purple-300">
-                        <Sparkles className="h-5 w-5 animate-pulse text-purple-650" /> AI Assembly Line Quality Checks
-                      </h2>
-                      <p className="text-xs text-muted-foreground">Line optimization suggestions, predictive bottlenecks forecasting, and operator allocations advice.</p>
-                    </div>
-                    <Badge className="bg-purple-500/10 text-purple-700 border-purple-300 font-bold">AI Score: {record.aiReadinessScore}/100</Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="border-border/80 shadow-xs bg-gradient-to-br from-purple-50/20 via-white to-slate-50 dark:from-purple-950/10 dark:via-slate-900">
-                      <CardHeader className="p-4 pb-2 border-b">
-                        <CardTitle className="text-xs font-bold text-purple-750 dark:text-purple-300">AI Bottlenecks & Maintenance Prediction</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 space-y-4 text-xs">
-                        <div className="flex items-start gap-2.5">
-                          <AlertTriangle className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
-                          <div>
-                            <span className="font-bold text-[11px] block text-slate-900 dark:text-white">AI Bottleneck Prediction</span>
-                            <p className="text-slate-700 dark:text-slate-300 mt-0.5 leading-relaxed">
-                              {record.aiBottleneckPrediction}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-start gap-2.5 border-t pt-3">
-                          <Clock className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-                          <div>
-                            <span className="font-bold text-[11px] block text-slate-900 dark:text-white">AI Maintenance Suggestions</span>
-                            <p className="text-slate-700 dark:text-slate-300 mt-0.5 leading-relaxed text-amber-700 dark:text-amber-300 font-medium">
-                              {record.aiMaintenanceSuggestions}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-border/80 shadow-xs">
-                      <CardHeader className="p-4 pb-2 border-b">
-                        <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">AI Resource & Optimization Advice</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 space-y-4 text-xs">
-                        <div className="flex items-start gap-2.5">
-                          <Sparkles className="h-5 w-5 text-purple-650 shrink-0 mt-0.5" />
-                          <div>
-                            <span className="font-bold text-[11px] block text-slate-900 dark:text-white">AI Line Optimization Stance</span>
-                            <p className="text-slate-700 dark:text-slate-300 mt-0.5 leading-relaxed">
-                              {record.aiLineOptimization}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-start gap-2.5 border-t pt-3">
-                          <UserCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                          <div>
-                            <span className="font-bold text-[11px] block text-slate-900 dark:text-white">AI Resource Utilization</span>
-                            <p className="text-slate-700 dark:text-slate-300 mt-0.5 leading-relaxed">
-                              {record.aiResourceUtilization}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-start gap-2.5 border-t pt-3">
-                          <Cpu className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                          <div>
-                            <span className="font-bold text-[11px] block text-slate-900 dark:text-white">AI Productivity Recommendations</span>
-                            <p className="text-slate-700 dark:text-slate-300 mt-0.5 leading-relaxed">
-                              {record.aiProductivityRecommendations}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 8: SUMMARY */}
-              {activeTab === "summary" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                      <Award className="h-5 w-5 text-primary" /> Overall Assembly Readiness Summary
-                    </h2>
-                    <Badge variant="outline">Maturity Status: v1.2.0 Baseline</Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="border-border/80 shadow-xs flex flex-col justify-between">
-                      <CardHeader className="p-4 pb-2 border-b">
-                        <CardTitle className="text-xs font-bold uppercase text-slate-900 dark:text-white">Overall Readiness</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 text-center space-y-3">
-                        <div className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
-                          <div className="text-center">
-                            <span className="text-2xl font-black text-primary dark:text-blue-400">{record.overallAssemblyReadiness}%</span>
-                          </div>
-                        </div>
-                        <span className="text-[11px] text-muted-foreground block">
-                          Weighted operational readiness status across all 5 evaluation gates.
-                        </span>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-border/80 shadow-xs md:col-span-2">
-                      <CardHeader className="p-4 pb-2 border-b">
-                        <CardTitle className="text-xs font-bold uppercase text-slate-900 dark:text-white">Gate Scores Breakdown</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 space-y-3">
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-xs font-semibold">
-                            <span>Line Layout & Design</span>
-                            <span className="text-primary">{record.layoutDesignScore}%</span>
-                          </div>
-                          <Progress value={record.layoutDesignScore} className="h-2" />
-                        </div>
-
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-xs font-semibold">
-                            <span>Workstation Planning Stance</span>
-                            <span className="text-primary">{record.workstationReadinessScore}%</span>
-                          </div>
-                          <Progress value={record.workstationReadinessScore} className="h-2" />
-                        </div>
-
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-xs font-semibold">
-                            <span>Takt Validation & Balancing</span>
-                            <span className="text-primary">{record.validationScore}%</span>
-                          </div>
-                          <Progress value={record.validationScore} className="h-2" />
-                        </div>
-
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-xs font-semibold">
-                            <span>Automation Level & Quality Checks</span>
-                            <span className="text-primary">{record.automationScore}%</span>
-                          </div>
-                          <Progress value={record.automationScore} className="h-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 9: ATTACHMENTS */}
-              {activeTab === "attachments" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <Paperclip className="h-5 w-5 text-primary" /> Assembly Attachments Manager
-                      </h2>
-                      <p className="text-xs text-muted-foreground">Manage factory layouts drawings, work instructions, quality plans, and pilot reports.</p>
-                    </div>
-                    <Button size="sm" onClick={() => setIsUploadOpen(true)} className="h-8 text-xs bg-primary text-white">
-                      + Add File
-                    </Button>
-                  </div>
-
-                  <Card className="border-border/80 shadow-xs">
-                    <CardContent className="p-0 overflow-x-auto">
-                      <table className="w-full text-left text-xs min-w-[650px]">
-                        <thead className="bg-slate-50 dark:bg-slate-800 text-muted-foreground font-semibold border-b">
-                          <tr>
-                            <th className="p-2.5">File Name</th>
-                            <th className="p-2.5">Type</th>
-                            <th className="p-2.5">Size</th>
-                            <th className="p-2.5">Upload Date</th>
-                            <th className="p-2.5 text-right">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/60">
-                          {record.attachments.map((att: AssemblyLineAttachment) => (
-                            <tr key={att.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                              <td className="p-2.5 font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                <FileCode className="h-4 w-4 text-primary shrink-0" />
-                                {att.name}
-                              </td>
-                              <td className="p-2.5"><Badge variant="outline" className="text-[10px]">{att.type}</Badge></td>
-                              <td className="p-2.5 text-muted-foreground">{att.size}</td>
-                              <td className="p-2.5 text-muted-foreground">{att.uploadDate}</td>
-                              <td className="p-2.5 text-right">
-                                <Button size="sm" variant="ghost" onClick={() => toast.success(`Downloading ${att.name}`)} className="h-7 text-xs text-primary">
-                                  <Download className="h-3.5 w-3.5 mr-1" /> Download
-                                </Button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* TAB 10: REVIEW & APPROVAL */}
-              {activeTab === "review_approval" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                      <UserCheck className="h-5 w-5 text-primary" /> Review Board Approval Gate
-                    </h2>
-                    <Badge variant="outline" className="bg-purple-500/10 text-purple-700 border-purple-300 font-bold">
-                      {record.workflowStatus}
-                    </Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                    {/* Review workflow state */}
-                    <div className="md:col-span-7 space-y-4">
-                      <Card className="border-border/80 shadow-xs">
-                        <CardHeader className="p-4 pb-2 border-b">
-                          <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Workflow Approval Board</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-4 space-y-3.5 text-xs">
-                          <div className="space-y-2.5">
-                            {record.reviewers.map((rev: AssemblyLineReviewer) => (
-                              <div key={rev.id} className="flex items-center justify-between p-2 rounded-lg border bg-slate-50/50 dark:bg-slate-800/40">
-                                <div className="flex items-center gap-2 min-w-0">
-                                  <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 border flex items-center justify-center font-bold text-[11px] text-primary">
-                                    {rev.person.split(" ").map(w => w[0]).join("")}
-                                  </div>
-                                  <div className="min-w-0">
-                                    <span className="block font-bold text-[11px] text-slate-900 dark:text-white truncate">{rev.person}</span>
-                                    <span className="block text-[9px] text-muted-foreground truncate">{rev.role}</span>
-                                  </div>
-                                </div>
-
-                                <div className="text-right shrink-0">
-                                  <Badge
-                                    className={`text-[8px] px-1.5 py-0 font-bold border ${
-                                      rev.decision === "Approved"
-                                        ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/25"
-                                        : rev.decision === "Pending"
-                                          ? "bg-amber-500/10 text-amber-700 border-amber-500/25"
-                                          : "bg-rose-500/10 text-rose-700 border-rose-500/25"
-                                    }`}
-                                  >
-                                    {rev.decision}
-                                  </Badge>
-                                  {rev.date && <span className="block text-[9px] text-muted-foreground mt-0.5">{rev.date}</span>}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    {/* Action form */}
-                    <div className="md:col-span-5">
-                      <Card className="border-border/80 shadow-xs">
-                        <CardHeader className="p-4 pb-2 border-b">
-                          <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Submit Approval Decision</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-4 space-y-4 text-xs">
-                          <div className="space-y-1.5">
-                            <label className="font-bold text-slate-900 dark:text-white block">Approval Decision:</label>
-                            <div className="flex gap-2">
-                              {(["Approved", "Changes Requested", "Rejected"] as const).map((dec) => (
-                                <Button
-                                  key={dec}
-                                  type="button"
-                                  variant={reviewDecision === dec ? "default" : "outline"}
-                                  size="sm"
-                                  onClick={() => setReviewDecision(dec)}
-                                  className="h-8 text-xs font-semibold"
-                                >
-                                  {dec}
-                                </Button>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="space-y-1.5">
-                            <label className="font-bold text-slate-900 dark:text-white block">Remarks:</label>
-                            <Textarea
-                              rows={3}
-                              value={reviewCommentInput}
-                              onChange={(e) => setReviewCommentInput(e.target.value)}
-                              placeholder="Describe engineering feedback or compliance remarks..."
-                              className="text-xs"
-                            />
-                          </div>
-
-                          <Button
-                            onClick={handleSubmitDecision}
-                            disabled={reviewDecisionMutation.isPending}
-                            className="w-full bg-primary text-white text-xs font-bold"
-                          >
-                            Submit Decision
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 11: SYSTEM INFO / AUDIT TRAIL */}
-              {activeTab === "system_info" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                      <History className="h-5 w-5 text-primary" /> System Audit Trail & History
-                    </h2>
-                    <Badge variant="outline" className="font-mono">v{record.assemblyLineVersion}</Badge>
-                  </div>
-
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 pb-2 border-b">
-                      <CardTitle className="text-xs font-bold text-slate-900 dark:text-white">Audit Entries</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-2.5 text-xs">
-                      {record.auditTrail.map((aud: AssemblyLineAuditEntry) => (
-                        <div key={aud.id} className="rounded-lg border p-3 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/40">
-                          <div>
-                            <span className="font-bold text-slate-900 dark:text-white block">{aud.action}</span>
-                            <span className="text-[10px] text-muted-foreground">{aud.details}</span>
-                          </div>
-                          <div className="text-right shrink-0">
-                            <span className="text-[10px] text-muted-foreground block">{aud.timestamp}</span>
-                            <span className="text-[10px] text-primary font-mono">{aud.user} ({aud.ipAddress})</span>
-                          </div>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-            </div>
-
-            {/* ====================================================================
-               RIGHT SIDEBAR (Readiness score & highlights panel)
-               ==================================================================== */}
-            <div className="lg:col-span-4 space-y-6">
-              
-              {/* Overall Assembly Readiness Score gauge */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
-                    <span>Overall Assembly Readiness</span>
-                    <Award className="h-4 w-4 text-primary animate-pulse" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-5 text-center space-y-4">
-                  <div className="relative mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 p-2">
-                    <div>
-                      <span className="text-3xl font-black text-primary dark:text-blue-400">{record.overallAssemblyReadiness}%</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 text-left text-xs border-t pt-3">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Layout Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.layoutDesignScore}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Workstation Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.workstationReadinessScore}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Validation Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.validationScore}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Automation Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.automationScore}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Performance Score</span>
-                      <span className="font-bold text-primary">{record.performanceScore}%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-
-
-              {/* Vertical Timeline */}
-              <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
-                <CardHeader className="p-4 pb-2 border-b">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Line Timeline</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 text-xs space-y-4">
-                  <div className="relative border-l border-slate-200 dark:border-slate-800 pl-4 ml-2 space-y-4">
-                    <div className="relative">
-                      <span className="absolute -left-[21px] top-0.5 h-3 w-3 rounded-full bg-emerald-500" />
-                      <span className="font-bold block text-slate-900 dark:text-white">Layout Design Completed</span>
-                      <span className="text-[10px] text-muted-foreground">05 Jun 2024</span>
-                    </div>
-                    <div className="relative">
-                      <span className="absolute -left-[21px] top-0.5 h-3 w-3 rounded-full bg-emerald-500" />
-                      <span className="font-bold block text-slate-900 dark:text-white">Workstation Planning Completed</span>
-                      <span className="text-[10px] text-muted-foreground">07 Jun 2024</span>
-                    </div>
-                    <div className="relative">
-                      <span className="absolute -left-[21px] top-0.5 h-3 w-3 rounded-full bg-emerald-500" />
-                      <span className="font-bold block text-slate-900 dark:text-white">Pilot Line Run Completed</span>
-                      <span className="text-[10px] text-muted-foreground">12 Jun 2024</span>
-                    </div>
-                    <div className="relative">
-                      <span className="absolute -left-[21px] top-0.5 h-3 w-3 rounded-full bg-emerald-500" />
-                      <span className="font-bold block text-slate-900 dark:text-white">Line Balancing Verified</span>
-                      <span className="text-[10px] text-muted-foreground">14 Jun 2024</span>
-                    </div>
-                    <div className="relative">
-                      <span className="absolute -left-[21px] top-0.5 h-3 w-3 rounded-full bg-emerald-500" />
-                      <span className="font-bold block text-slate-900 dark:text-white">Quality Validation Verified</span>
-                      <span className="text-[10px] text-muted-foreground">17 Jun 2024</span>
-                    </div>
-                    <div className="relative">
-                      <span className="absolute -left-[21px] top-0.5 h-3 w-3 rounded-full bg-primary" />
-                      <span className="font-bold block text-slate-900 dark:text-white">Review & Approval</span>
-                      <span className="text-[10px] text-muted-foreground">In Progress</span>
-                    </div>
-                    <div className="relative">
-                      <span className="absolute -left-[21px] top-0.5 h-3 w-3 rounded-full bg-slate-200 dark:bg-slate-700" />
-                      <span className="font-bold block text-muted-foreground">Mass Production Staging</span>
-                      <span className="text-[10px] text-muted-foreground">Pending</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+            {/* Right: Actions Toolbar */}
+            <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSaveDraft}
+                disabled={saveDraftMutation.isPending}
+                className="gap-1.5 border-border hover:bg-muted text-xs font-semibold"
+              >
+                <Save className="h-3.5 w-3.5 text-muted-foreground" />
+                Save Draft
+              </Button>
+
+              <Button
+                size="sm"
+                onClick={() => submitReviewMutation.mutate(record.id)}
+                disabled={submitReviewMutation.isPending}
+                className="gap-1.5 bg-blue-600 hover:bg-blue-700 text-white shadow-xs text-xs font-semibold"
+              >
+                <Send className="h-3.5 w-3.5" />
+                Submit for Review
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExportReport}
+                className="gap-1.5 border-border hover:bg-muted text-xs font-semibold"
+              >
+                <Printer className="h-3.5 w-3.5 text-muted-foreground" />
+                Export
+              </Button>
             </div>
           </div>
         </div>
+
+        {/* Unified Layout Stack */}
+        <div className="space-y-5">
+          {/* Section 1: Overview */}
+          <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-bold">Assembly Line Specifications & Profile</CardTitle>
+                <CardDescription className="text-xs">
+                  Line identity, classification, manufacturing context, and operational parameters.
+                </CardDescription>
+              </div>
+              <Badge variant="outline" className="bg-primary/5 text-primary text-xs font-semibold">
+                {record.developmentStage}
+              </Badge>
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Assembly Line Name</span>
+                  <span className="font-bold text-foreground text-sm">{record.productionLine}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Product Family</span>
+                  <span className="font-semibold text-foreground">{record.productFamily}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Plant Location</span>
+                  <span className="font-semibold text-foreground">{record.manufacturingPlant}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Assembly Line Type</span>
+                  <span className="font-semibold text-foreground">{record.assemblyLineType}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Workstation Count</span>
+                  <span className="font-bold text-foreground font-mono">{record.workstationsCount} Workstations</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Line Configuration</span>
+                  <span className="font-semibold text-foreground">{record.lineConfiguration}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Development Stage</span>
+                  <span className="font-semibold text-foreground">{record.developmentStage}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Priority</span>
+                  <Badge variant="outline" className="text-[10px] bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300 border-red-200">
+                    {record.priority}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-border/60 text-xs">
+                <span className="text-muted-foreground block text-[10px] font-semibold">Production Objective</span>
+                <p className="text-foreground mt-0.5 leading-relaxed">{record.productionObjective}</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section 2: CAD Layout & Drawings */}
+          <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-bold">Line Layout & Material Flow CAD Files</CardTitle>
+                <CardDescription className="text-xs">
+                  2D/3D plant layouts, material routing schematics, and workstation arrangement blueprints.
+                </CardDescription>
+              </div>
+              <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200 text-xs font-semibold">
+                Layout Score: {record.layoutDesignScore}/100
+              </Badge>
+            </CardHeader>
+
+            <CardContent>
+              <div className="rounded-lg border border-border/80 overflow-hidden bg-background text-xs shadow-xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="bg-muted/50 border-b border-border text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                        <th className="py-3 px-4 font-semibold whitespace-nowrap">Drawing / Document</th>
+                        <th className="py-3 px-4 font-semibold whitespace-nowrap">Attached File</th>
+                        <th className="py-3 px-4 text-right font-semibold whitespace-nowrap">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/60">
+                      {lineDocuments.map((doc, idx) => (
+                        <tr key={doc.label} className="hover:bg-muted/30 transition-colors">
+                          <td className="py-3 px-4 font-semibold text-foreground whitespace-nowrap">
+                            <span className="text-slate-400 font-mono text-[10px] mr-2">{idx + 1}.</span>
+                            {doc.label}
+                          </td>
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <FileText className="h-4 w-4 text-blue-600 shrink-0" />
+                              <span className="font-mono text-xs text-primary font-medium cursor-pointer hover:underline">
+                                {doc.filename}
+                              </span>
+                              <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                                {doc.size}
+                              </Badge>
+                            </div>
+                          </td>
+                          <td className="py-3 px-4 text-right whitespace-nowrap">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 text-[11px] gap-1 hover:text-primary"
+                                onClick={() => toast.info(`Previewing ${doc.filename}`)}
+                              >
+                                <Eye className="h-3.5 w-3.5" />
+                                Preview
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600"
+                                onClick={() => toast.success(`Downloading ${doc.filename}`)}
+                              >
+                                <Download className="h-3.5 w-3.5" />
+                                Download
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section 3: Takt Time, Cycle Times & Line Balancing Parameters (3-Column Grid) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <Activity className="h-3.5 w-3.5 text-primary" /> Takt Time & Line Balance
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-xs">
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Target Takt Time</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.taktTimeTarget} Seconds</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Actual Bottleneck Cycle Time</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.actualCycleTime} Seconds</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Line Balance Efficiency</span>
+                  <span className="font-bold text-emerald-600 text-sm font-mono">{record.lineBalanceEfficiency}%</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <Layers className="h-3.5 w-3.5 text-primary" /> Workstation Configuration
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-xs">
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Total Workstations</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.workstationsCount} Workstations</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Conveyor Speed</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.conveyorSpeed} m/min</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Buffer Storage Capacity</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.bufferCapacity} Units</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" /> Output & OEE Performance
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-xs">
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Hourly Output Target</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.hourlyOutputTarget} Units / Hour</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Target OEE</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.targetOEE}%</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-[10px]">Shift Pattern</span>
+                  <span className="font-semibold text-foreground">{record.shiftPattern}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Section 4: Workstation Balancing & Utilization Table */}
+          <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-bold">Workstation Balancing & Utilization</CardTitle>
+                <CardDescription className="text-xs">
+                  Line station workload distribution, cycle time balancing, and bottleneck tracking.
+                </CardDescription>
+              </div>
+              <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold">
+                Workstation Score: {record.workstationScore}/100
+              </Badge>
+            </CardHeader>
+
+            <CardContent>
+              <div className="rounded-lg border border-border/80 overflow-hidden bg-background text-xs shadow-xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="bg-muted/50 border-b border-border text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                        <th className="py-3 px-4 font-semibold whitespace-nowrap">Station ID</th>
+                        <th className="py-3 px-4 font-semibold whitespace-nowrap">Operation Name</th>
+                        <th className="py-3 px-4 font-semibold whitespace-nowrap">Actual Cycle Time</th>
+                        <th className="py-3 px-4 font-semibold whitespace-nowrap">Workload %</th>
+                        <th className="py-3 px-4 font-semibold whitespace-nowrap">Target %</th>
+                        <th className="py-3 px-4 text-right font-semibold whitespace-nowrap">Balancing Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/60">
+                      {balancingWorkstations.map((ws) => (
+                        <tr key={ws.id} className="hover:bg-muted/30 transition-colors">
+                          <td className="py-3 px-4 font-bold text-primary font-mono whitespace-nowrap">
+                            {ws.id}
+                          </td>
+                          <td className="py-3 px-4 font-medium text-foreground whitespace-nowrap">
+                            {ws.name}
+                          </td>
+                          <td className="py-3 px-4 font-mono whitespace-nowrap">
+                            {ws.cycleTime}
+                          </td>
+                          <td className="py-3 px-4 font-mono font-bold text-foreground whitespace-nowrap">
+                            {ws.load}
+                          </td>
+                          <td className="py-3 px-4 font-mono text-muted-foreground whitespace-nowrap">
+                            {ws.target}
+                          </td>
+                          <td className="py-3 px-4 text-right whitespace-nowrap">
+                            <Badge
+                              className={
+                                ws.status === "Balanced"
+                                  ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 text-[10px] font-semibold"
+                                  : "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200 text-[10px] font-semibold"
+                              }
+                            >
+                              {ws.status}
+                            </Badge>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section 5: Multi-Level Review & Approval Authorization */}
+          <Card className="border-border shadow-xs bg-white dark:bg-slate-900">
+            <CardHeader className="border-b border-border/60 pb-3 flex flex-row items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
+                <CardTitle className="text-base font-bold text-foreground">
+                  Review & Approval Authorization Matrix
+                </CardTitle>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-muted-foreground">Workflow Stage:</span>
+                <Badge className="bg-blue-600 text-white text-xs font-semibold px-2.5 py-0.5">
+                  {record.workflowStatus}
+                </Badge>
+              </div>
+            </CardHeader>
+
+            <CardContent className="space-y-6 pt-5">
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                {/* Table on Left (8 cols) */}
+                <div className="xl:col-span-8 space-y-2">
+                  <div className="rounded-lg border border-border overflow-hidden text-xs bg-background shadow-xs">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse text-xs">
+                        <thead>
+                          <tr className="bg-muted/50 border-b border-border text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                            <th className="py-3 px-4 font-semibold">Role</th>
+                            <th className="py-3 px-4 font-semibold">Approver</th>
+                            <th className="py-3 px-4 font-semibold">Decision</th>
+                            <th className="py-3 px-4 font-semibold whitespace-nowrap">Date</th>
+                            <th className="py-3 px-4 text-right font-semibold">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/60">
+                          {record.reviewers.map((rev) => {
+                            const isApproved = rev.decision === "Approved";
+                            return (
+                              <tr key={rev.id} className="hover:bg-muted/30 transition-colors">
+                                <td className="py-3 px-4 font-semibold text-foreground whitespace-nowrap">
+                                  {rev.role}
+                                </td>
+                                <td className="py-3 px-4 text-muted-foreground whitespace-nowrap font-medium">
+                                  {rev.person}
+                                </td>
+                                <td className="py-3 px-4 font-medium whitespace-nowrap">
+                                  {isApproved ? (
+                                    <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 font-semibold">
+                                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> Approved
+                                    </span>
+                                  ) : (
+                                    <span className="text-amber-600 dark:text-amber-400 flex items-center gap-1.5 font-semibold">
+                                      <Clock className="h-3.5 w-3.5 shrink-0" /> Pending
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="py-3 px-4 text-muted-foreground font-mono whitespace-nowrap">
+                                  {rev.date || "-"}
+                                </td>
+                                <td className="py-3 px-4 text-right whitespace-nowrap">
+                                  <Badge
+                                    className={
+                                      isApproved
+                                        ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 text-[10px] font-semibold"
+                                        : "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200 text-[10px] font-semibold"
+                                    }
+                                  >
+                                    {rev.decision}
+                                  </Badge>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sign-Off Decision Panel on Right (4 cols) */}
+                <div className="xl:col-span-4 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 space-y-4 text-xs">
+                  <span className="font-bold text-foreground block text-sm flex items-center gap-2">
+                    <UserCheck className="h-4 w-4 text-primary shrink-0" />
+                    Sign-Off Decision Panel
+                  </span>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground block">Approval Decision</label>
+                    <Select
+                      value={reviewDecision}
+                      onValueChange={(val) => setReviewDecision(val as AssemblyLineApprovalDecision)}
+                    >
+                      <SelectTrigger className="h-9 text-xs font-semibold bg-white dark:bg-slate-900 border-border">
+                        <SelectValue placeholder="Select Decision" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Approved" className="text-xs text-emerald-600 font-semibold">Approved</SelectItem>
+                        <SelectItem value="Approved with Conditions" className="text-xs text-blue-600">Approved with Conditions</SelectItem>
+                        <SelectItem value="Revision Required" className="text-xs text-amber-600 font-semibold">Revision Required</SelectItem>
+                        <SelectItem value="Rejected" className="text-xs text-destructive font-semibold">Rejected</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground block">Review Comments</label>
+                    <Textarea
+                      rows={3}
+                      value={reviewCommentInput}
+                      onChange={(e) => setReviewCommentInput(e.target.value)}
+                      placeholder="Enter review board comments, clearance notes, or line stipulations..."
+                      className="text-xs bg-white dark:bg-slate-900 border-border min-h-[85px]"
+                    />
+                  </div>
+
+                  <Button
+                    size="sm"
+                    onClick={handleSubmitDecision}
+                    className="w-full gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-xs"
+                  >
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    Submit Review Decision
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section 6: Document & File Attachments */}
+          <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-bold">Document & File Attachments</CardTitle>
+                <CardDescription className="text-xs">
+                  CAD layouts, line balancing simulations, workstation sheets & validation test reports.
+                </CardDescription>
+              </div>
+              <Badge variant="outline" className="text-xs font-mono">
+                {record.attachments.length} Files Attached
+              </Badge>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="border-2 border-dashed border-border/80 hover:border-primary/50 rounded-xl p-5 text-center bg-slate-50/50 dark:bg-slate-800/30 transition-colors">
+                <Upload className="h-6 w-6 mx-auto text-muted-foreground mb-1" />
+                <span className="text-xs font-semibold text-foreground block">Drag and drop engineering files here, or browse</span>
+                <span className="text-[10px] text-muted-foreground block mt-0.5">Supported formats: .dwg, .dxf, .pdf, .xlsx, .csv (Max 50MB)</span>
+              </div>
+
+              <div className="rounded-lg border border-border/80 overflow-hidden bg-background text-xs shadow-xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="bg-muted/50 border-b border-border text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                        <th className="py-3 px-4 font-semibold whitespace-nowrap">File Name</th>
+                        <th className="py-3 px-4 font-semibold whitespace-nowrap">Document Type</th>
+                        <th className="py-3 px-4 font-semibold whitespace-nowrap">Uploaded By</th>
+                        <th className="py-3 px-4 text-right font-semibold whitespace-nowrap">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/60">
+                      {record.attachments.map((att) => (
+                        <tr key={att.id} className="hover:bg-muted/30 transition-colors">
+                          <td className="py-3 px-4 font-medium text-foreground whitespace-nowrap">
+                            <span className="font-mono text-primary block">{att.name}</span>
+                            <span className="text-[10px] text-muted-foreground font-mono">{att.size}</span>
+                          </td>
+                          <td className="py-3 px-4 text-muted-foreground whitespace-nowrap">
+                            <Badge variant="outline" className="text-[10px]">
+                              {att.documentType}
+                            </Badge>
+                          </td>
+                          <td className="py-3 px-4 text-muted-foreground whitespace-nowrap">
+                            {att.uploadedBy}
+                          </td>
+                          <td className="py-3 px-4 text-right whitespace-nowrap">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600"
+                              onClick={() => toast.success(`Downloading ${att.name}`)}
+                            >
+                              <Download className="h-3.5 w-3.5" />
+                              Download
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-
-      {/* ====================================================================
-         5. MODALS & DIALOGS
-         ==================================================================== */}
-
-      {/* Layout Zoom Dialog */}
-      {selectedDiagram && (
-        <Dialog open={!!selectedDiagram} onOpenChange={() => setSelectedDiagram(null)}>
-          <DialogContent className="max-w-3xl">
-            <DialogHeader>
-              <DialogTitle className="text-sm font-bold flex justify-between items-center">
-                <span>Layout Drawing</span>
-              </DialogTitle>
-            </DialogHeader>
-            <div className="relative h-96 w-full bg-slate-950 rounded-lg flex flex-col items-center justify-center text-white p-6 gap-3 border border-slate-800">
-              <div className="h-16 w-16 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30">
-                <Layers className="h-8 w-8" />
-              </div>
-              <h3 className="text-base font-bold text-slate-100">Cellular Assembly Line Layout Master Blueprint</h3>
-              <p className="text-xs text-slate-400 max-w-md text-center">
-                12 automated and manual workstations, integrated roller conveyors, AGV material delivery paths, and safety light curtains.
-              </p>
-              <div className="flex gap-2 mt-2">
-                <Button size="sm" onClick={() => toast.success("Line layout validated.")}>
-                  <CheckCircle2 className="h-4 w-4 mr-1.5 text-emerald-400" /> Validate Line Clearance
-                </Button>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button size="sm" variant="outline" onClick={() => setSelectedDiagram(null)}>Close</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {/* Upload File Modal */}
-      <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-sm font-bold">Upload Drawings & Layouts</DialogTitle>
-          </DialogHeader>
-          <div className="border-2 border-dashed border-primary/40 rounded-xl p-8 text-center bg-slate-50 dark:bg-slate-800/40 space-y-2">
-            <Upload className="h-8 w-8 text-primary mx-auto" />
-            <p className="text-xs font-semibold">Drop drawings or instructions files here</p>
-          </div>
-          <DialogFooter>
-            <Button size="sm" variant="outline" onClick={() => setIsUploadOpen(false)}>Cancel</Button>
-            <Button size="sm" onClick={() => { setIsUploadOpen(false); toast.success("File uploaded successfully!"); }} className="bg-primary text-white">Upload</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Schedule Safety Review */}
-      <Dialog open={isScheduleModalOpen} onOpenChange={setIsScheduleModalOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-sm font-bold">Schedule Assembly Line Review</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3 text-xs">
-            <div>
-              <label className="font-bold block mb-1">Select Date:</label>
-              <Input type="date" className="text-xs" />
-            </div>
-            <div>
-              <label className="font-bold block mb-1">Attendees:</label>
-              <Input defaultValue="Rahul Sharma, Naresh Verma, Vikram Singh" className="text-xs" />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button size="sm" variant="outline" onClick={() => setIsScheduleModalOpen(false)}>Cancel</Button>
-            <Button size="sm" onClick={() => { setIsScheduleModalOpen(false); toast.success("Review board scheduled!"); }} className="bg-primary text-white">Confirm</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
     </AppShell>
   );
 }

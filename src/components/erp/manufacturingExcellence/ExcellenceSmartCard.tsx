@@ -48,7 +48,7 @@ export const ExcellenceSmartCard: React.FC<ExcellenceSmartCardProps> = ({
           <div className="flex items-center gap-2">
             <Cpu className="h-4 w-4 text-pink-600 dark:text-pink-400" />
             <CardTitle className="text-base font-bold text-foreground">
-              4. Smart Manufacturing Excellence
+              Smart Manufacturing Excellence
             </CardTitle>
           </div>
           <div className="flex items-center gap-2">

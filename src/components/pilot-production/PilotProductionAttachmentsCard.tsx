@@ -31,7 +31,7 @@ export const PilotProductionAttachmentsCard: React.FC<PilotProductionAttachments
       <div className="bg-card text-card-foreground border border-border rounded-lg p-4 shadow-sm space-y-3">
         <div className="flex items-center justify-between border-b border-border pb-2">
           <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">
-            Section 9 · Attachments
+            Attachments
           </h3>
           <span className="text-[10px] text-muted-foreground font-semibold">
             {attachments.length} Files
@@ -85,8 +85,19 @@ export const PilotProductionAttachmentsCard: React.FC<PilotProductionAttachments
                 </div>
 
                 <button
-                  onClick={() => toast.success(`Downloading ${item.filename}...`)}
-                  className="p-1 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
+                  onClick={() => {
+                    const content = `PILOT PRODUCTION ATTACHMENT: ${item.filename}\nUploaded: ${item.uploadedAt}\nFile Size: ${item.fileSize || "1.5 MB"}\nSource: ${item.source}\nStatus: Verified`;
+                    const blob = new Blob([content], { type: "text/plain" });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = item.filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    toast.success(`Downloaded ${item.filename}`);
+                  }}
+                  className="p-1 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors cursor-pointer"
                   aria-label={`Download ${item.filename}`}
                 >
                   <Download className="w-3.5 h-3.5" />

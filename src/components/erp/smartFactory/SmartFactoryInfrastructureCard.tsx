@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FileText, Paperclip, Network, HardDrive, Shield } from "lucide-react";
+import { FileText, Network, Server, Cloud, Cpu } from "lucide-react";
 import type { CloudPlatformOption, SmartFactoryDevelopmentRecord } from "@/services/types";
 
 interface SmartFactoryInfrastructureCardProps {
@@ -32,90 +32,68 @@ export const SmartFactoryInfrastructureCard: React.FC<SmartFactoryInfrastructure
   onChange,
   isEditing = true,
 }) => {
-  const MaicwBadge = ({ type, tooltip }: { type: "M" | "A" | "I" | "C" | "W"; tooltip: string }) => {
-    const colors = {
-      M: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 border-red-200",
-      A: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-200",
-      I: "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200",
-      C: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-200",
-      W: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 border-indigo-200",
-    };
-    return (
-      <span
-        title={tooltip}
-        className={`ml-1.5 inline-flex items-center justify-center rounded px-1.5 py-0.5 text-[10px] font-extrabold uppercase border ${colors[type]}`}
-      >
-        {type}
-      </span>
-    );
-  };
+  const infraScore = record.infrastructureScore ?? 86;
 
   return (
-    <Card className="border-border shadow-sm">
-      <CardHeader className="border-b border-border/60 pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-bold text-foreground">
-            2. Digital Infrastructure
-          </CardTitle>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground">Score:</span>
-            <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-extrabold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-              {record.infrastructureReadinessScore} / 100
-            </span>
+    <Card className="border-border rounded-xl shadow-xs flex flex-col justify-between">
+      <div>
+        <CardHeader className="border-b border-border/60 pb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Network className="h-4 w-4 text-primary" />
+              <CardTitle className="text-base font-bold text-foreground">
+                Digital Infrastructure
+              </CardTitle>
+            </div>
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800">
+              <span className="text-[10px] font-semibold text-purple-600 dark:text-purple-400 uppercase">Score</span>
+              <span className="font-mono font-bold text-purple-700 dark:text-purple-300 text-xs">
+                {infraScore} / 100
+              </span>
+            </div>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent className="grid grid-cols-1 gap-4 pt-4 md:grid-cols-2">
-        {/* Network Architecture File */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-foreground">
-            Network Architecture
-            <MaicwBadge type="M" tooltip="Mandatory File Attachment" />
-          </label>
-          <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 p-2 text-xs">
-            <FileText className="h-4 w-4 text-blue-600" />
-            <span className="flex-1 truncate font-medium">{record.networkArchitectureFile || "Network_Architecture.pdf"}</span>
-            <button
-              type="button"
-              className="text-xs font-semibold text-primary hover:underline"
-              onClick={() => alert("Downloading Network Architecture file...")}
-            >
-              View
-            </button>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 gap-4 pt-4 text-xs">
+          {/* Network Architecture File */}
+          <div className="flex flex-col gap-1.5">
+            <label className="font-semibold text-foreground">Network Architecture Document</label>
+            <div className="flex items-center gap-2">
+              <Input
+                value={record.networkArchitectureDoc || "Network_Architecture.pdf"}
+                onChange={(e) => onChange("networkArchitectureDoc", e.target.value)}
+                placeholder="filename.pdf"
+                className="h-9 font-mono text-xs"
+              />
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 px-3 h-9 rounded-md border border-border bg-muted/40 hover:bg-muted text-xs font-semibold text-foreground shrink-0 cursor-pointer"
+              >
+                <FileText className="h-3.5 w-3.5 text-primary" />
+                View
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Edge Computing Platform */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-foreground">
-            Edge Computing Platform
-            <MaicwBadge type="I" tooltip="Information / Lookup" />
-          </label>
-          {isEditing ? (
+          {/* Edge Computing Platform */}
+          <div className="flex flex-col gap-1.5">
+            <label className="font-semibold text-foreground">Edge Computing Platform</label>
             <Input
-              value={record.edgeComputingPlatform}
+              value={record.edgeComputingPlatform || "Dell Edge Gateway 5000"}
               onChange={(e) => onChange("edgeComputingPlatform", e.target.value)}
-              placeholder="e.g. Dell Edge Gateway 5000"
+              placeholder="e.g. Dell Edge Gateway 5000, Advantech UNO"
               className="h-9 text-xs"
             />
-          ) : (
-            <span className="text-xs font-medium text-foreground">{record.edgeComputingPlatform}</span>
-          )}
-        </div>
+          </div>
 
-        {/* Cloud Platform */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-foreground">
-            Cloud Platform
-            <MaicwBadge type="I" tooltip="Information / Lookup" />
-          </label>
-          {isEditing ? (
+          {/* Cloud Platform */}
+          <div className="flex flex-col gap-1.5">
+            <label className="font-semibold text-foreground">Cloud Platform</label>
             <Select
-              value={record.cloudPlatform}
-              onValueChange={(val) => onChange("cloudPlatform", val as CloudPlatformOption)}
+              value={record.cloudPlatform || "Microsoft Azure IoT"}
+              onValueChange={(val: CloudPlatformOption) => onChange("cloudPlatform", val)}
             >
               <SelectTrigger className="h-9 text-xs">
-                <SelectValue placeholder="Select Cloud Platform" />
+                <SelectValue placeholder="Select Platform" />
               </SelectTrigger>
               <SelectContent>
                 {CLOUD_PLATFORMS.map((cp) => (
@@ -125,76 +103,34 @@ export const SmartFactoryInfrastructureCard: React.FC<SmartFactoryInfrastructure
                 ))}
               </SelectContent>
             </Select>
-          ) : (
-            <span className="text-xs font-medium text-foreground">{record.cloudPlatform}</span>
-          )}
-        </div>
-
-        {/* Data Center Architecture File */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-foreground">
-            Data Center Architecture
-            <MaicwBadge type="M" tooltip="Mandatory File Attachment" />
-          </label>
-          <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 p-2 text-xs">
-            <HardDrive className="h-4 w-4 text-purple-600" />
-            <span className="flex-1 truncate font-medium">{record.dataCenterArchitectureFile || "DataCenter_Arch.pdf"}</span>
-            <button
-              type="button"
-              className="text-xs font-semibold text-primary hover:underline"
-              onClick={() => alert("Downloading Data Center Architecture file...")}
-            >
-              View
-            </button>
-          </div>
-        </div>
-
-        {/* Cybersecurity Architecture File */}
-        <div className="flex flex-col gap-1.5 md:col-span-2">
-          <label className="text-xs font-semibold text-foreground">
-            Cybersecurity Architecture
-            <MaicwBadge type="M" tooltip="Mandatory File Attachment" />
-          </label>
-          <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 p-2 text-xs">
-            <Shield className="h-4 w-4 text-emerald-600" />
-            <span className="flex-1 truncate font-medium">{record.cybersecurityArchitectureFile || "Cyber_Arch.pdf"}</span>
-            <button
-              type="button"
-              className="text-xs font-semibold text-primary hover:underline"
-              onClick={() => alert("Downloading Cybersecurity Architecture file...")}
-            >
-              View
-            </button>
-          </div>
-        </div>
-
-        {/* Checkbox Controls: Industrial Ethernet & 5G Connectivity */}
-        <div className="flex flex-wrap gap-6 pt-2 md:col-span-2">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="industrialEthernet"
-              checked={record.industrialEthernet}
-              onCheckedChange={(checked) => onChange("industrialEthernet", !!checked)}
-            />
-            <label htmlFor="industrialEthernet" className="cursor-pointer text-xs font-medium text-foreground">
-              Industrial Ethernet
-              <MaicwBadge type="W" tooltip="Workflow Checkbox" />
-            </label>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="wifi5gConnectivity"
-              checked={record.wifi5gConnectivity}
-              onCheckedChange={(checked) => onChange("wifi5gConnectivity", !!checked)}
-            />
-            <label htmlFor="wifi5gConnectivity" className="cursor-pointer text-xs font-medium text-foreground">
-              Wi-Fi / 5G Connectivity
-              <MaicwBadge type="W" tooltip="Workflow Checkbox" />
-            </label>
+          {/* Checkboxes Row */}
+          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border/60">
+            <div className="flex items-center justify-between p-2.5 rounded-lg bg-muted/20 border border-border/40">
+              <label htmlFor="industrialEthernet" className="font-medium cursor-pointer whitespace-nowrap">
+                Industrial Ethernet
+              </label>
+              <Checkbox
+                id="industrialEthernet"
+                checked={record.industrialEthernet ?? true}
+                onCheckedChange={(val) => onChange("industrialEthernet", Boolean(val))}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-2.5 rounded-lg bg-muted/20 border border-border/40">
+              <label htmlFor="wifi5g" className="font-medium cursor-pointer whitespace-nowrap">
+                Wi-Fi / 5G Connectivity
+              </label>
+              <Checkbox
+                id="wifi5g"
+                checked={record.wifi5gConnectivity ?? true}
+                onCheckedChange={(val) => onChange("wifi5gConnectivity", Boolean(val))}
+              />
+            </div>
           </div>
-        </div>
-      </CardContent>
+        </CardContent>
+      </div>
     </Card>
   );
 };

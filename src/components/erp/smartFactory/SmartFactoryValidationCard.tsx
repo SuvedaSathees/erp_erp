@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CheckCircle2 } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import type { SmartFactoryDevelopmentRecord } from "@/services/types";
 
 interface SmartFactoryValidationCardProps {
@@ -13,27 +13,9 @@ export const SmartFactoryValidationCard: React.FC<SmartFactoryValidationCardProp
   record,
   onChange,
 }) => {
-  const MaicwBadge = ({ type, tooltip }: { type: "M" | "A" | "I" | "C" | "W"; tooltip: string }) => {
-    const colors = {
-      M: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 border-red-200",
-      A: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-200",
-      I: "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200",
-      C: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-200",
-      W: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 border-indigo-200",
-    };
-    return (
-      <span
-        title={tooltip}
-        className={`ml-1.5 inline-flex items-center justify-center rounded px-1.5 py-0.5 text-[10px] font-extrabold uppercase border ${colors[type]}`}
-      >
-        {type}
-      </span>
-    );
-  };
-
-  const items = [
-    { key: "factoryAcceptanceTest", label: "Factory Acceptance Test (FAT)" },
-    { key: "siteAcceptanceTest", label: "Site Acceptance Test (SAT)" },
+  const validationItems = [
+    { key: "fatCompleted", label: "Factory Acceptance Test (FAT)" },
+    { key: "satCompleted", label: "Site Acceptance Test (SAT)" },
     { key: "cybersecurityValidation", label: "Cybersecurity Validation" },
     { key: "digitalTwinValidation", label: "Digital Twin Validation" },
     { key: "aiValidation", label: "AI Validation" },
@@ -41,30 +23,32 @@ export const SmartFactoryValidationCard: React.FC<SmartFactoryValidationCardProp
   ] as const;
 
   return (
-    <Card className="border-border shadow-sm">
+    <Card className="border-border rounded-xl shadow-xs">
       <CardHeader className="border-b border-border/60 pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            <ShieldCheck className="h-4 w-4 text-primary" />
             <CardTitle className="text-base font-bold text-foreground">
-              7. Validation & Readiness
+              Validation & Readiness
             </CardTitle>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground">Validation Score:</span>
-            <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-extrabold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
+            <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase">Validation</span>
+            <span className="font-mono font-bold text-emerald-700 dark:text-emerald-300 text-xs">
               {record.validationScore} / 100
             </span>
           </div>
         </div>
       </CardHeader>
       <CardContent className="pt-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {items.map((item) => (
-            <div key={item.key} className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {validationItems.map((item) => (
+            <div
+              key={item.key}
+              className="flex items-center justify-between rounded-lg border border-border/60 bg-muted/20 hover:bg-muted/40 p-2.5 transition-colors"
+            >
               <span className="text-xs font-semibold text-foreground">
                 {item.label}
-                <MaicwBadge type="W" tooltip="Workflow Validation Checkbox" />
               </span>
               <Checkbox
                 checked={record[item.key as keyof SmartFactoryDevelopmentRecord] as boolean}

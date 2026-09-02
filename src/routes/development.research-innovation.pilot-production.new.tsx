@@ -1,14 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { PilotProductionListPage } from "@/routes/manufacturing-development.pilot-production.index";
-import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute(
-  "/development/research-innovation/pilot-production/new",
-)({
-  component: () => (
-    <PilotProductionListPage
-      breadcrumb="Development > Research & Innovation > Process Dev"
-      tabs={<InnovationAreaTabs />}
-    />
-  ),
+export const Route = createFileRoute("/development/research-innovation/pilot-production/new")({
+  beforeLoad: () => {
+    throw redirect({ to: "/development/research-innovation/overview" });
+  },
 });

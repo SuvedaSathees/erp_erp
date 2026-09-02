@@ -1,31 +1,61 @@
-import type { CommercializationStatus } from "@/services/types";
-import { ModuleSubTabBar } from "@/components/erp/ModuleSubTabBar";
+import { cn } from "@/lib/utils";
 
-const BASE = "/development/research-innovation/commercialization-planning";
+export type CommercializationTabId = "register" | "form";
 
-/** The module-level Register/Form sub-tab bar. Delegates to the shared
- *  ModuleSubTabBar so alignment, styling, and active-indicator stay identical
- *  across every Research & Innovation module. */
-export function CommercializationPageTabBar() {
+export interface CommercializationTabItem {
+  id: CommercializationTabId;
+  label: string;
+  tooltip: string;
+  badge?: string | number;
+}
+
+export const COMMERCIALIZATION_TABS: CommercializationTabItem[] = [
+  { id: "register", label: "Commercialization Register", tooltip: "Commercialization Plans Register & Pipeline", badge: "2" },
+  { id: "form", label: "Commercialization Planning Form", tooltip: "Edit Commercialization Plan & Milestones" },
+];
+
+export function CommercializationPageTabBar({
+  activeTab = "register",
+  onTabChange,
+}: {
+  activeTab?: CommercializationTabId;
+  onTabChange?: (tab: CommercializationTabId) => void;
+}) {
   return (
-    <ModuleSubTabBar
-      tabs={[
-        { to: BASE, label: "Commercialization Register", tooltip: "Commercialization Register", activeMatch: (p) => !p.startsWith(BASE + "/new") },
-        { to: BASE + "/new", label: "Commercialization Planning Form", tooltip: "Commercialization Planning Form" },
-      ]}
-    />
+    <div className="flex items-center gap-1.5 border-b border-border/80 bg-white/95 backdrop-blur-md dark:bg-slate-900/95 px-4 py-1.5 overflow-x-auto shadow-2xs">
+      {COMMERCIALIZATION_TABS.map((t) => {
+        const isActive = activeTab === t.id;
+        return (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => onTabChange?.(t.id)}
+            className={cn(
+              "group relative flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap select-none",
+              isActive
+                ? "bg-primary text-white shadow-xs font-bold"
+                : "text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800"
+            )}
+            title={t.tooltip}
+          >
+            <span>{t.label}</span>
+            {t.badge && (
+              <span
+                className={cn(
+                  "rounded-full px-1.5 py-0.2 text-[10px] font-bold",
+                  isActive
+                    ? "bg-white/20 text-white"
+                    : "bg-slate-200/80 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                )}
+              >
+                {t.badge}
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
-export const COMMERCIALIZATION_STATUS_LABEL: Record<CommercializationStatus, string> = {
-  draft: "Draft",
-  product_readiness: "Product Readiness",
-  manufacturing_supply_chain: "Manufacturing & Supply Chain",
-  sales_marketing_planning: "Sales & Marketing Planning",
-  executive_review: "Under Review",
-  approved: "Approved",
-  approved_with_conditions: "Approved with Conditions",
-  revision_required: "Revision Required",
-  rejected: "Rejected",
-  archived: "Archived",
-};
+export default CommercializationPageTabBar;

@@ -15073,42 +15073,4 @@ export type ManufacturingExcellenceRecord = {
   lastModifiedBy: string; // Lookup (I)
   lastModifiedDate: string; // DateTime (A)
   workflowStage: string; // Dropdown (W)
-  auditTrail: ExcellenceAuditEntry[]; // System Log (A)
 };
-
-export type ExcellenceFormInput = Partial<ManufacturingExcellenceRecord>;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

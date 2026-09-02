@@ -2,13 +2,22 @@ import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Paperclip, Upload, FileText, Download, Eye, CheckCircle2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Paperclip, Upload, FileText, Download, Eye, CheckCircle2, Trash2 } from "lucide-react";
 import type { SmartFactoryAttachment, SmartFactoryDevelopmentRecord } from "@/services/types";
 import { toast } from "sonner";
 
 interface SmartFactoryAttachmentsCardProps {
   record: SmartFactoryDevelopmentRecord;
   onUploadAttachment: (file: { name: string; type: string; size: number; documentType: string }) => void;
+  onDeleteAttachment?: (id: string) => void;
 }
 
 const REQUIRED_ATTACHMENT_SLOTS = [
@@ -26,8 +35,10 @@ const REQUIRED_ATTACHMENT_SLOTS = [
 export const SmartFactoryAttachmentsCard: React.FC<SmartFactoryAttachmentsCardProps> = ({
   record,
   onUploadAttachment,
+  onDeleteAttachment,
 }) => {
   const [selectedSlot, setSelectedSlot] = useState(REQUIRED_ATTACHMENT_SLOTS[0]);
+  const [previewAttachment, setPreviewAttachment] = useState<SmartFactoryAttachment | null>(null);
 
   const handleSimulatedUpload = () => {
     const input = document.createElement("input");
@@ -46,16 +57,10 @@ export const SmartFactoryAttachmentsCard: React.FC<SmartFactoryAttachmentsCardPr
     input.click();
   };
 
-  const handlePreview = (attachment: SmartFactoryAttachment) => {
-    toast.info(`Previewing ${attachment.fileName}`, {
-      description: `Viewing ${attachment.documentType} (${attachment.fileSize}).`,
-    });
-  };
-
   const handleDownload = (attachment: SmartFactoryAttachment) => {
     const blob = new Blob(
       [
-        `Magnertia ERP Smart Factory Blueprint Document\n\nTitle: ${attachment.documentType}\nFile: ${attachment.fileName}\nVersion: ${attachment.version}\nUploaded By: ${attachment.uploadedBy}\nDate: ${attachment.uploadDate || "17 Jun 2024"}\nSize: ${attachment.fileSize}\nStatus: Verified Control Baseline`,
+        `Magnertia ERP Smart Factory Architecture Blueprint Document\n\nTitle: ${attachment.documentType}\nFile: ${attachment.fileName}\nVersion: ${attachment.version}\nUploaded By: ${attachment.uploadedBy}\nDate: ${attachment.uploadDate || "17 Jun 2024"}\nSize: ${attachment.fileSize}\nStatus: Verified Control Baseline\n\nIndustry 4.0 Infrastructure & Automation Blueprint verified for EVSE Assembly Zone.`,
       ],
       { type: "text/plain;charset=utf-8" }
     );
@@ -67,7 +72,7 @@ export const SmartFactoryAttachmentsCard: React.FC<SmartFactoryAttachmentsCardPr
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    toast.success(`Downloading ${attachment.fileName}`);
+    toast.success(`Downloaded ${attachment.fileName}`);
   };
 
   return (
@@ -83,7 +88,7 @@ export const SmartFactoryAttachmentsCard: React.FC<SmartFactoryAttachmentsCardPr
           <Button
             size="sm"
             onClick={handleSimulatedUpload}
-            className="gap-1.5 text-xs font-semibold cursor-pointer bg-primary hover:bg-primary/90"
+            className="gap-1.5 text-xs font-semibold cursor-pointer bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs"
           >
             <Upload className="h-3.5 w-3.5" />
             Upload File
@@ -143,7 +148,10 @@ export const SmartFactoryAttachmentsCard: React.FC<SmartFactoryAttachmentsCardPr
                     <td className="py-2.5 px-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
-                        <span className="font-mono text-primary font-medium hover:underline cursor-pointer">
+                        <span
+                          onClick={() => setPreviewAttachment(att)}
+                          className="font-mono text-primary font-medium hover:underline cursor-pointer"
+                        >
                           {att.fileName}
                         </span>
                         <Badge variant="outline" className="text-[10px] px-1 py-0 font-mono">
@@ -152,7 +160,7 @@ export const SmartFactoryAttachmentsCard: React.FC<SmartFactoryAttachmentsCardPr
                       </div>
                     </td>
                     <td className="py-2.5 px-3 text-muted-foreground whitespace-nowrap">
-                      {att.uploadedBy || "Vikram Singh"}
+                      {att.uploadedBy}
                     </td>
                     <td className="py-2.5 px-3 text-muted-foreground whitespace-nowrap font-mono text-[11px]">
                       {att.uploadDate || "17 Jun 2024"}
@@ -166,7 +174,7 @@ export const SmartFactoryAttachmentsCard: React.FC<SmartFactoryAttachmentsCardPr
                           variant="ghost"
                           size="sm"
                           className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer"
-                          onClick={() => handlePreview(att)}
+                          onClick={() => setPreviewAttachment(att)}
                         >
                           <Eye className="h-3.5 w-3.5" />
                           Preview
@@ -179,6 +187,16 @@ export const SmartFactoryAttachmentsCard: React.FC<SmartFactoryAttachmentsCardPr
                         >
                           <Download className="h-3.5 w-3.5" />
                         </Button>
+                        {onDeleteAttachment && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-[11px] gap-1 text-muted-foreground hover:text-destructive cursor-pointer"
+                            onClick={() => onDeleteAttachment(att.id)}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -188,6 +206,46 @@ export const SmartFactoryAttachmentsCard: React.FC<SmartFactoryAttachmentsCardPr
           </div>
         </div>
       </CardContent>
+
+      {/* Document Preview Dialog */}
+      <Dialog open={!!previewAttachment} onOpenChange={(open) => !open && setPreviewAttachment(null)}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base font-bold">
+              <FileText className="h-5 w-5 text-primary" />
+              {previewAttachment?.fileName}
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              {previewAttachment?.documentType} • Version {previewAttachment?.version} • {previewAttachment?.fileSize}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs max-h-72 overflow-y-auto space-y-2">
+            <p className="text-emerald-400 font-bold">=== SMART FACTORY ARCHITECTURE SPECIFICATION ===</p>
+            <p>Title: {previewAttachment?.documentType}</p>
+            <p>File: {previewAttachment?.fileName}</p>
+            <p>Uploaded By: {previewAttachment?.uploadedBy} ({previewAttachment?.uploadDate || "17 Jun 2024"})</p>
+            <p>Industry 4.0 Zone: {record.factoryZone} ({record.manufacturingPlant})</p>
+            <div className="mt-3 p-3 rounded bg-slate-800/80 text-slate-300 font-sans text-xs">
+              This blueprint establishes the Industry 4.0 digital infrastructure, cyber-physical automation, and real-time operational telemetry for {record.projectNumber} ({record.smartFactoryProjectTitle}).
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            {previewAttachment && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleDownload(previewAttachment)}
+                className="h-8 text-xs gap-1 cursor-pointer"
+              >
+                <Download className="h-3.5 w-3.5" /> Download Blueprint
+              </Button>
+            )}
+            <Button size="sm" onClick={() => setPreviewAttachment(null)} className="h-8 text-xs bg-primary text-primary-foreground cursor-pointer">
+              Close Preview
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

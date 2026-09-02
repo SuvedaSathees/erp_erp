@@ -66,7 +66,24 @@ export const SmartFactoryInfrastructureCard: React.FC<SmartFactoryInfrastructure
               />
               <button
                 type="button"
-                className="inline-flex items-center gap-1 px-3 h-9 rounded-md border border-border bg-muted/40 hover:bg-muted text-xs font-semibold text-foreground shrink-0 cursor-pointer"
+                onClick={() => {
+                  const docName = record.networkArchitectureDoc || "Network_Architecture.pdf";
+                  const blob = new Blob(
+                    [
+                      `SMART FACTORY NETWORK ARCHITECTURE SPECIFICATION\n\nDocument: ${docName}\nProject: ${record.smartFactoryProjectTitle}\nPlant: ${record.manufacturingPlant}\nZone: ${record.factoryZone}\nEdge Gateway: ${record.edgeComputingPlatform || "Dell Edge Gateway 5000"}\nCloud Platform: ${record.cloudPlatform || "Microsoft Azure IoT"}\nProtocol: Industrial Ethernet (Profinet/EtherCAT) & Wi-Fi 6/5G Private RAN\nStatus: Active Baseline Verified`,
+                    ],
+                    { type: "text/plain;charset=utf-8" }
+                  );
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.download = docName.replace(/\.[^/.]+$/, "") + ".txt";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  URL.revokeObjectURL(url);
+                }}
+                className="inline-flex items-center gap-1 px-3 h-9 rounded-md border border-border bg-muted/40 hover:bg-muted text-xs font-semibold text-foreground shrink-0 cursor-pointer transition-colors"
               >
                 <FileText className="h-3.5 w-3.5 text-primary" />
                 View

@@ -119,7 +119,9 @@ export const BomStructureTable: React.FC<BomStructureTableProps> = ({
             onClick={() => {
               const prevRev = "v2.0";
               const currRev = "v2.1";
-              alert(`Comparing BOM Revision ${currRev} against ${prevRev}:\n• 3 components updated\n• 1 alternate vendor approved\n• Total cost variance: -₹14,320 (Favorable)`);
+              toast.info(`Comparing BOM Revision ${currRev} against ${prevRev}`, {
+                description: "3 components updated • 1 alternate vendor approved • Total cost variance: -₹14,320 (Favorable)",
+              });
             }}
             className="px-2.5 py-1 border border-input bg-background hover:bg-accent text-xs font-medium rounded shadow-sm transition-colors cursor-pointer"
           >

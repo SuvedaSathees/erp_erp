@@ -13,6 +13,15 @@ import { ControlPlanQualityVerificationCard } from "@/components/erp/controlPlan
 import { ReviewApprovalTab } from "@/components/erp/controlPlan/tabs/ReviewApprovalTab";
 import { AttachmentsTab } from "@/components/erp/controlPlan/tabs/AttachmentsTab";
 import { AddCharacteristicModal } from "@/components/erp/controlPlan/AddCharacteristicModal";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ShieldCheck, CheckCircle2, Sliders } from "lucide-react";
 
 import {
   fetchControlPlanRecord,
@@ -20,6 +29,7 @@ import {
   submitControlPlanForReview,
   addCharacteristic,
 } from "@/services/controlPlanService";
+import type { ControlPlanAttachment, ControlPlanRecord } from "@/services/types";
 
 export const Route = createFileRoute(
   "/development/research-innovation/control-plan/new",
@@ -36,8 +46,9 @@ export function ControlPlanDevelopmentPage({
 } = {}) {
   const queryClient = useQueryClient();
   const [isAddCharModalOpen, setIsAddCharModalOpen] = useState(false);
+  const [activeDetailsModal, setActiveDetailsModal] = useState<"inspection" | "process" | "quality" | null>(null);
 
-  const { data: record, isLoading } = useQuery({
+  const { data: record, isLoading } = useQuery<ControlPlanRecord>({
     queryKey: ["control-plan-development-record"],
     queryFn: fetchControlPlanRecord,
   });
@@ -94,8 +105,8 @@ Version: ${record.version}
 Workflow Status: ${record.workflowStatus}
 Product: ${record.product} (Revision ${record.productRevision})
 Process: ${record.manufacturingProcess}
-APQP Reference: ${record.apqpReference}
-PFMEA Reference: ${record.pfmeaReference}
+APQP Reference: ${record.apqpRef}
+PFMEA Reference: ${record.pfmeaRef}
 Process Owner: ${record.processOwner}
 Control Plan Type: ${record.controlPlanType}
 Lifecycle Stage: ${record.lifecycleStage}
@@ -103,15 +114,15 @@ Priority: ${record.priority}
 
 READINESS OVERVIEW:
 -----------------------------------------------------
-Overall Readiness: ${record.overallReadinessScore}/100
-Characteristics Score: ${record.characteristicsScore}/100
-Inspection Score: ${record.inspectionScore}/100
-Process Control Score: ${record.processControlScore}/100
-Validation Score: ${record.validationScore}/100
+Overall Readiness: ${record.overallControlPlanReadinessScore || 84}/100
+Characteristics Score: ${record.characteristicReadinessScore || 86}/100
+Inspection Score: ${record.inspectionReadinessScore || 82}/100
+Process Control Score: ${record.processControlScore || 88}/100
+Validation Score: ${record.validationScore || 80}/100
 
 PROCESS & PRODUCT CHARACTERISTICS:
 -----------------------------------------------------
-${record.characteristics.map((c) => `[${c.operationNumber}] ${c.processStep} | Product: ${c.productCharacteristic} | Process: ${c.processCharacteristic} | Spec: ${c.specificationTolerance} | Method: ${c.controlMethod} | Readiness: ${c.readinessScore}%`).join("\n")}
+${record.characteristics.map((c) => `[${c.operationNo}] ${c.processStep} | Product: ${c.productCharacteristic} | Process: ${c.processCharacteristic} | Spec: ${c.specification} | Method: ${c.controlMethod} | Readiness: ${c.readinessScore}%`).join("\n")}
 
 INSPECTION & REACTION PLAN:
 -----------------------------------------------------
@@ -119,13 +130,13 @@ Method: ${record.inspectionMethod}
 Equipment: ${record.measuringEquipment}
 Sample Size: ${record.sampleSize}
 Frequency: ${record.inspectionFrequency}
-MSA Reference: ${record.msaReference}
-SPC Required: ${record.spcRequired}
+MSA Reference: ${record.msaRef}
+SPC Required: ${record.spcRequired ? "Yes" : "No"}
 Reaction Plan: ${record.reactionPlan}
 
 APPROVAL MATRIX:
 -----------------------------------------------------
-${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.status} (${r.date})`).join("\n")}
+${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.status} (${r.date || "-"})`).join("\n")}
 =====================================================`;
 
     const blob = new Blob([content], { type: "text/plain" });
@@ -137,6 +148,60 @@ ${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.status} (${r.date})`
     link.click();
     document.body.removeChild(link);
     toast.success("Control Plan Worksheet exported & downloaded successfully!");
+  };
+
+  const handleUploadAttachment = (fileInfo: {
+    name: string;
+    type: string;
+    size: number;
+    documentType: string;
+  }) => {
+    const newAtt: ControlPlanAttachment = {
+      id: `att-cp-${Date.now()}`,
+      fileName: fileInfo.name,
+      fileType: fileInfo.type || "PDF Document",
+      documentType: fileInfo.documentType,
+      version: "1.0",
+      uploadedBy: "Current User",
+      uploadedDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      fileSize: `${(fileInfo.size / (1024 * 1024)).toFixed(1)} MB`,
+      status: "Active",
+    };
+    const updated = {
+      ...record,
+      attachments: [newAtt, ...record.attachments],
+    };
+    queryClient.setQueryData(["control-plan-development-record"], updated);
+    toast.success("Document Uploaded", {
+      description: `${fileInfo.name} attached under ${fileInfo.documentType}.`,
+    });
+  };
+
+  const handleDeleteAttachment = (id: string) => {
+    const attToDelete = record.attachments.find((a) => a.id === id);
+    const updated = {
+      ...record,
+      attachments: record.attachments.filter((a) => a.id !== id),
+    };
+    queryClient.setQueryData(["control-plan-development-record"], updated);
+    toast.info(`Removed ${attToDelete?.fileName || "document"}`);
+  };
+
+  const handleNewControlPlan = () => {
+    const newRec: ControlPlanRecord = {
+      ...record,
+      id: `cp-rec-${Date.now()}`,
+      controlPlanId: `CP-2024-${Math.floor(10000 + Math.random() * 90000)}`,
+      formCode: "CPDL-2024-25",
+      controlPlanNumber: `CP-ENCL-AW-${Math.floor(100 + Math.random() * 900)}`,
+      workflowStatus: "In Progress",
+      version: 1.0,
+      createdDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+    };
+    queryClient.setQueryData(["control-plan-development-record"], newRec);
+    toast.success("New Control Plan Initialized!", {
+      description: `Control Plan ID ${newRec.controlPlanId} created.`,
+    });
   };
 
   return (
@@ -153,7 +218,7 @@ ${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.status} (${r.date})`
           onSaveDraft={() => saveDraftMutation.mutate({})}
           onSubmitForReview={() => submitMutation.mutate()}
           onExport={handleExportReport}
-          onNewControlPlan={() => setIsAddCharModalOpen(true)}
+          onNewControlPlan={handleNewControlPlan}
         />
 
         {/* Unified Layout Content */}
@@ -165,13 +230,23 @@ ${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.status} (${r.date})`
           <ControlPlanCharacteristicsTable
             characteristics={record.characteristics}
             onAddCharacteristic={() => setIsAddCharModalOpen(true)}
+            onViewAll={() => toast.info(`Displaying all ${record.characteristics.length} process and product characteristics.`)}
           />
 
           {/* Section 3: Core Planning & Controls (3-Column Grid) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <ControlPlanInspectionCard record={record} />
-            <ControlPlanProcessControlCard record={record} />
-            <ControlPlanQualityVerificationCard record={record} />
+            <ControlPlanInspectionCard
+              record={record}
+              onViewDetails={() => setActiveDetailsModal("inspection")}
+            />
+            <ControlPlanProcessControlCard
+              record={record}
+              onViewDetails={() => setActiveDetailsModal("process")}
+            />
+            <ControlPlanQualityVerificationCard
+              record={record}
+              onViewDetails={() => setActiveDetailsModal("quality")}
+            />
           </div>
 
           {/* Section 4: Multi-Level Review & Approval Authorization */}
@@ -179,12 +254,16 @@ ${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.status} (${r.date})`
             record={record}
             onReviewDecision={(decision, comments) => {
               saveDraftMutation.mutate({ approvalDecision: decision });
-              toast.success(`Control Plan Board decision submitted: ${decision}`);
+              toast.success(`Control Plan Board decision recorded: ${decision}`);
             }}
           />
 
           {/* Section 5: Controlled Documents & Attachments */}
-          <AttachmentsTab record={record} />
+          <AttachmentsTab
+            record={record}
+            onUploadAttachment={handleUploadAttachment}
+            onDeleteAttachment={handleDeleteAttachment}
+          />
         </div>
 
         {/* Add Characteristic Modal */}
@@ -194,6 +273,58 @@ ${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.status} (${r.date})`
           onAdd={(item) => addCharMutation.mutate(item)}
           nextStepNo={record.characteristics.length + 1}
         />
+
+        {/* Details Modal */}
+        <Dialog open={!!activeDetailsModal} onOpenChange={(open) => !open && setActiveDetailsModal(null)}>
+          <DialogContent className="max-w-xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-base font-bold">
+                {activeDetailsModal === "inspection" && <Sliders className="h-5 w-5 text-blue-600" />}
+                {activeDetailsModal === "process" && <ShieldCheck className="h-5 w-5 text-emerald-600" />}
+                {activeDetailsModal === "quality" && <CheckCircle2 className="h-5 w-5 text-purple-600" />}
+                {activeDetailsModal === "inspection" && "Inspection & Monitoring Specifications"}
+                {activeDetailsModal === "process" && "Shop Floor Process Control & Poka-Yoke"}
+                {activeDetailsModal === "quality" && "Quality Verification & PPAP Readiness"}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs max-h-72 overflow-y-auto space-y-2">
+              <p className="text-emerald-400 font-bold">=== CONTROL PLAN PARAMETERS ===</p>
+              <p>Control Plan ID: {record.controlPlanId} ({record.controlPlanNumber})</p>
+              <p>Product: {record.product} ({record.productRevision}) - Line: {record.productionLine}</p>
+              <div className="mt-3 p-3 rounded bg-slate-800/80 text-slate-300 font-sans text-xs space-y-1">
+                {activeDetailsModal === "inspection" && (
+                  <>
+                    <p>• Method: <strong>{record.inspectionMethod}</strong></p>
+                    <p>• Measuring Equipment: <strong>{record.measuringEquipment}</strong></p>
+                    <p>• Sample Size: <strong>{record.sampleSize}</strong> | Frequency: <strong>{record.inspectionFrequency}</strong></p>
+                    <p>• Reaction Plan: {record.reactionPlan}</p>
+                  </>
+                )}
+                {activeDetailsModal === "process" && (
+                  <>
+                    <p>• Work Instruction: <strong>{record.workInstructionRef}</strong></p>
+                    <p>• SOP Reference: <strong>{record.sopRef}</strong></p>
+                    <p>• Control Device: <strong>{record.controlDevice}</strong></p>
+                    <p>• Error Proofing (Poka-Yoke): <strong>Enabled & Verified</strong></p>
+                  </>
+                )}
+                {activeDetailsModal === "quality" && (
+                  <>
+                    <p>• Inspections: Incoming, In-Process, Final - <strong>All Active</strong></p>
+                    <p>• Process Capability (Cp/Cpk): <strong>{record.processCapabilityCpk}</strong></p>
+                    <p>• PPAP Reference: <strong>{record.ppapRef}</strong></p>
+                    <p>• Audit Status: <strong>{record.controlPlanAudit}</strong></p>
+                  </>
+                )}
+              </div>
+            </div>
+            <DialogFooter>
+              <Button size="sm" onClick={() => setActiveDetailsModal(null)} className="h-8 text-xs bg-primary text-primary-foreground cursor-pointer">
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppShell>
   );

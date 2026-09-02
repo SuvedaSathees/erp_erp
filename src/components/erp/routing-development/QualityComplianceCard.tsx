@@ -50,9 +50,25 @@ export const QualityComplianceCard: React.FC<QualityComplianceCardProps> = ({
           </div>
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Quality Checklist</span>
-            <span className="font-bold text-primary flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => {
+                const blob = new Blob([
+                  `QUALITY CHECKLIST SPECIFICATION\nFile: ${record.qualityChecklistFile}\nStandards: ${record.regulatoryStandards.join(", ")}\nCritical Ops: ${record.criticalOperations.join(", ")}\nInspection Points: ${record.inspectionPointsCount}\nTraceability: Required\nStatus: Verified Active`,
+                ], { type: "text/plain;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = record.qualityChecklistFile.replace(/\.[^/.]+$/, "") + ".txt";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+              }}
+              className="font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer"
+            >
               <FileText className="w-3 h-3" /> {record.qualityChecklistFile}
-            </span>
+            </button>
           </div>
         </div>
       </div>

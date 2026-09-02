@@ -204,6 +204,17 @@ Recommendation: ${record.recommendation}
     });
   };
 
+  const handleDeleteAttachment = (id: string) => {
+    if (!record) return;
+    const attToDelete = record.attachments.find((a) => a.id === id);
+    const updated = {
+      ...record,
+      attachments: record.attachments.filter((a) => a.id !== id),
+    };
+    queryClient.setQueryData(["smartFactoryRecord"], updated);
+    toast.info(`Removed ${attToDelete?.fileName || "attachment"}`);
+  };
+
   const handleReviewDecision = (
     decision: "Approved" | "Approved with Conditions" | "Revision Required" | "Rejected",
     comments: string
@@ -272,6 +283,7 @@ Recommendation: ${record.recommendation}
           <SmartFactoryAttachmentsCard
             record={record}
             onUploadAttachment={handleUploadAttachment}
+            onDeleteAttachment={handleDeleteAttachment}
           />
         </div>
       </div>

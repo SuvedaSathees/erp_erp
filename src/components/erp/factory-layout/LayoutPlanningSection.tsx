@@ -1,7 +1,16 @@
+import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Download, Eye, FileText } from "lucide-react";
 import type { FactoryLayoutFormInput } from "@/services/types";
 import { toast } from "sonner";
@@ -12,6 +21,7 @@ export function LayoutPlanningSection({
   form: UseFormReturn<FactoryLayoutFormInput>;
 }) {
   const { watch } = form;
+  const [previewDoc, setPreviewDoc] = useState<{ label: string; filename: string; size: string; type: string } | null>(null);
 
   const planningScore = watch("layoutPlanningScore") ?? 88;
 
@@ -25,6 +35,20 @@ export function LayoutPlanningSection({
     { label: "Warehouse Layout", filename: "warehouse_layout_v1.2.dwg", type: "DWG", size: "4.5 MB" },
     { label: "Office Layout", filename: "office_layout_v1.2.dwg", type: "DWG", size: "2.9 MB" },
   ];
+
+  const handleDownload = (doc: { label: string; filename: string; size: string }) => {
+    const content = `FACTORY LAYOUT DESIGN BLUEPRINT SPECIFICATION\n\nTitle: ${doc.label}\nFile: ${doc.filename}\nSize: ${doc.size}\nPlant: Magnertia EV Plant (Phase 2 Pune Campus)\nStatus: Digital Twin Approved v1.2`;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = doc.filename.replace(/\.[^/.]+$/, "") + ".txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success(`Downloaded ${doc.filename}`);
+  };
 
   return (
     <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
@@ -73,7 +97,10 @@ export function LayoutPlanningSection({
                     <td className="py-3 px-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-blue-600 shrink-0" />
-                        <span className="font-mono text-xs text-primary font-medium cursor-pointer hover:underline">
+                        <span
+                          onClick={() => setPreviewDoc(doc)}
+                          className="font-mono text-xs text-primary font-medium cursor-pointer hover:underline"
+                        >
                           {doc.filename}
                         </span>
                         <Badge variant="outline" className="text-[10px] px-1.5 py-0">
@@ -87,8 +114,8 @@ export function LayoutPlanningSection({
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-7 px-2 text-[11px] gap-1 hover:text-primary"
-                          onClick={() => toast.info(`Previewing ${doc.filename}`)}
+                          className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer"
+                          onClick={() => setPreviewDoc(doc)}
                         >
                           <Eye className="h-3.5 w-3.5" />
                           Preview
@@ -96,8 +123,8 @@ export function LayoutPlanningSection({
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600"
-                          onClick={() => toast.success(`Downloading ${doc.filename}`)}
+                          className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600 cursor-pointer"
+                          onClick={() => handleDownload(doc)}
                         >
                           <Download className="h-3.5 w-3.5" />
                           Download
@@ -111,6 +138,46 @@ export function LayoutPlanningSection({
           </div>
         </div>
       </CardContent>
+
+      {/* Drawing Preview Dialog */}
+      <Dialog open={!!previewDoc} onOpenChange={(open) => !open && setPreviewDoc(null)}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base font-bold">
+              <FileText className="h-5 w-5 text-primary" />
+              {previewDoc?.filename}
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              {previewDoc?.label} • {previewDoc?.size} • Autodesk AutoCAD 2024 DWG/PDF Format
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs max-h-72 overflow-y-auto space-y-2">
+            <p className="text-emerald-400 font-bold">=== CAD BLUEPRINT METADATA ===</p>
+            <p>Title: {previewDoc?.label}</p>
+            <p>File: {previewDoc?.filename}</p>
+            <p>Facility: Magnertia EV Plant (Pune Campus Phase 2)</p>
+            <p>Built-up Area: 45,000 m² | Capacity: 250,000 Units/Year</p>
+            <div className="mt-3 p-3 rounded bg-slate-800/80 text-slate-300 font-sans text-xs">
+              This CAD blueprint defines the engineering layout, lean material routing aisles, machine footprint clearances, and utility hookups conforming to ISO 9001 and OSHA safety regulations.
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            {previewDoc && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleDownload(previewDoc)}
+                className="h-8 text-xs gap-1 cursor-pointer"
+              >
+                <Download className="h-3.5 w-3.5" /> Download Blueprint
+              </Button>
+            )}
+            <Button size="sm" onClick={() => setPreviewDoc(null)} className="h-8 text-xs bg-primary text-primary-foreground cursor-pointer">
+              Close Preview
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

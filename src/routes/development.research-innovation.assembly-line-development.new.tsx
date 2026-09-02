@@ -30,6 +30,14 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -59,6 +67,7 @@ export function AssemblyLineDevelopmentNewPage({
   // Approval Decision Form
   const [reviewDecision, setReviewDecision] = useState<AssemblyLineApprovalDecision>("Approved");
   const [reviewCommentInput, setReviewCommentInput] = useState("");
+  const [previewDoc, setPreviewDoc] = useState<{ label: string; filename: string; size: string; type?: string } | null>(null);
 
   // Data Fetching
   const { data: record, isLoading } = useQuery<AssemblyLineRecord>({
@@ -132,6 +141,20 @@ export function AssemblyLineDevelopmentNewPage({
     });
   };
 
+  const handleDownloadDoc = (doc: { label: string; filename: string; size?: string }) => {
+    const content = `ASSEMBLY LINE BLUEPRINT & SPECIFICATION\n\nTitle: ${doc.label}\nFile: ${doc.filename}\nSize: ${doc.size || "Standard"}\nLine: ${record.productionLine}\nPlant: ${record.manufacturingPlant}\nStatus: Approved Engineering Baseline v1.2.0`;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = (doc.filename || "line_document").replace(/\.[^/.]+$/, "") + ".txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success(`Downloaded ${doc.filename}`);
+  };
+
   const handleExportReport = () => {
     const content = `=====================================================
 ASSEMBLY LINE DEVELOPMENT SPECIFICATION: ${record.projectName}
@@ -144,7 +167,7 @@ Workflow Status: ${record.workflowStatus}
 Manufacturing Plant: ${record.manufacturingPlant}
 Product Family: ${record.productFamily}
 Line Type: ${record.assemblyLineType}
-Line Engineer: ${record.assemblyLineEngineer.name}
+Line Engineer: ${record.assemblyLineEngineer?.name || "Rahul Sharma"}
 Development Stage: ${record.developmentStage}
 Priority: ${record.priority}
 Next Review Date: ${record.nextReviewDate}
@@ -152,31 +175,32 @@ Next Review Date: ${record.nextReviewDate}
 OBJECTIVE & LINE SPECIFICATIONS:
 -----------------------------------------------------
 Objective: ${record.productionObjective}
-Workstation Count: ${record.workstationsCount} Workstations
-Target Takt Time: ${record.taktTimeTarget} s
-Actual Cycle Time: ${record.actualCycleTime} s
-Line Balancing Efficiency: ${record.lineBalanceEfficiency}%
+Workstation Count: ${record.workstationsCount ?? record.numberOfWorkstations ?? 12} Workstations
+Target Takt Time: ${record.taktTimeTarget ?? record.taktTime ?? 90} s
+Actual Cycle Time: ${record.actualCycleTime ?? record.cycleTimePerStation ?? 82} s
+Line Balancing Efficiency: ${record.lineBalanceEfficiency || 92}%
 Line Configuration: ${record.lineConfiguration}
-Hourly Output Target: ${record.hourlyOutputTarget} units/hr
-Target OEE: ${record.targetOEE}%
+Hourly Output Target: ${record.hourlyOutputTarget || 40} units/hr
+Target OEE: ${record.targetOEE || 85}%
+Shift Pattern: ${record.shiftPattern || "2 Shifts (8 hrs/shift)"}
 
 READINESS SCORES:
 -----------------------------------------------------
-Overall Readiness Score: ${record.overallAssemblyReadiness}%
-Layout Score: ${record.layoutDesignScore}/100
-Workstation Score: ${record.workstationScore}/100
-Validation Score: ${record.validationScore}/100
-Automation Score: ${record.automationScore}/100
-Performance Score: ${record.performanceScore}/100
+Overall Readiness Score: ${record.overallAssemblyReadiness || 86}%
+Layout Score: ${record.layoutDesignScore || 88}/100
+Workstation Score: ${record.workstationScore ?? record.workstationReadinessScore ?? 86}/100
+Validation Score: ${record.validationScore || 85}/100
+Automation Score: ${record.automationScore || 87}/100
+Performance Score: ${record.performanceScore || 86}/100
 
 DRAWINGS & DOCUMENTS:
 -----------------------------------------------------
-Factory Layout: ${record.factoryLayout}
-Line Layout: ${record.assemblyLineLayout}
-Material Flow Diagram: ${record.materialFlowDiagram}
+Factory Layout: ${record.factoryLayout || "factory_layout.pdf"}
+Line Layout: ${record.assemblyLineLayout || "line_layout.pdf"}
+Material Flow Diagram: ${record.materialFlowDiagram || "material_flow.pdf"}
 =====================================================`;
 
-    const blob = new Blob([content], { type: "text/plain" });
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -184,13 +208,14 @@ Material Flow Diagram: ${record.materialFlowDiagram}
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
     toast.success("Assembly Line specification report downloaded successfully!");
   };
 
   const lineDocuments = [
-    { label: "Factory Master Layout", filename: record.factoryLayout, type: "DWG", size: "14.2 MB" },
-    { label: "Assembly Line Layout Drawing", filename: record.assemblyLineLayout, type: "DWG", size: "8.6 MB" },
-    { label: "Material Flow Diagram", filename: record.materialFlowDiagram, type: "PDF", size: "3.4 MB" },
+    { label: "Factory Master Layout", filename: record.factoryLayout || "factory_layout.pdf", type: "DWG", size: "14.2 MB" },
+    { label: "Assembly Line Layout Drawing", filename: record.assemblyLineLayout || "line_layout.pdf", type: "DWG", size: "8.6 MB" },
+    { label: "Material Flow Diagram", filename: record.materialFlowDiagram || "material_flow.pdf", type: "PDF", size: "3.4 MB" },
     { label: "Workstation Layout Sheet", filename: "ws_layout_sheet.xlsx", type: "XLSX", size: "1.8 MB" },
   ];
 
@@ -373,7 +398,10 @@ Material Flow Diagram: ${record.materialFlowDiagram}
                           <td className="py-3 px-4 whitespace-nowrap">
                             <div className="flex items-center gap-2">
                               <FileText className="h-4 w-4 text-blue-600 shrink-0" />
-                              <span className="font-mono text-xs text-primary font-medium cursor-pointer hover:underline">
+                              <span
+                                onClick={() => setPreviewDoc(doc)}
+                                className="font-mono text-xs text-primary font-medium cursor-pointer hover:underline"
+                              >
                                 {doc.filename}
                               </span>
                               <Badge variant="outline" className="text-[10px] px-1.5 py-0">
@@ -386,8 +414,8 @@ Material Flow Diagram: ${record.materialFlowDiagram}
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-7 px-2 text-[11px] gap-1 hover:text-primary"
-                                onClick={() => toast.info(`Previewing ${doc.filename}`)}
+                                className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer"
+                                onClick={() => setPreviewDoc(doc)}
                               >
                                 <Eye className="h-3.5 w-3.5" />
                                 Preview
@@ -395,8 +423,8 @@ Material Flow Diagram: ${record.materialFlowDiagram}
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600"
-                                onClick={() => toast.success(`Downloading ${doc.filename}`)}
+                                className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600 cursor-pointer"
+                                onClick={() => handleDownloadDoc(doc)}
                               >
                                 <Download className="h-3.5 w-3.5" />
                                 Download
@@ -423,15 +451,15 @@ Material Flow Diagram: ${record.materialFlowDiagram}
               <CardContent className="space-y-3 text-xs">
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Target Takt Time</span>
-                  <span className="font-bold text-foreground text-sm font-mono">{record.taktTimeTarget} Seconds</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.taktTimeTarget ?? record.taktTime ?? 90} Seconds</span>
                 </div>
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Actual Bottleneck Cycle Time</span>
-                  <span className="font-bold text-foreground text-sm font-mono">{record.actualCycleTime} Seconds</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.actualCycleTime ?? record.cycleTimePerStation ?? 82} Seconds</span>
                 </div>
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Line Balance Efficiency</span>
-                  <span className="font-bold text-emerald-600 text-sm font-mono">{record.lineBalanceEfficiency}%</span>
+                  <span className="font-bold text-emerald-600 text-sm font-mono">{record.lineBalanceEfficiency || 92}%</span>
                 </div>
               </CardContent>
             </Card>
@@ -445,15 +473,15 @@ Material Flow Diagram: ${record.materialFlowDiagram}
               <CardContent className="space-y-3 text-xs">
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Total Workstations</span>
-                  <span className="font-bold text-foreground text-sm font-mono">{record.workstationsCount} Workstations</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.workstationsCount ?? record.numberOfWorkstations ?? 12} Workstations</span>
                 </div>
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Conveyor Speed</span>
-                  <span className="font-bold text-foreground text-sm font-mono">{record.conveyorSpeed} m/min</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.conveyorSpeed || 1.5} m/min</span>
                 </div>
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Buffer Storage Capacity</span>
-                  <span className="font-bold text-foreground text-sm font-mono">{record.bufferCapacity} Units</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.bufferCapacity || 25} Units</span>
                 </div>
               </CardContent>
             </Card>
@@ -467,15 +495,15 @@ Material Flow Diagram: ${record.materialFlowDiagram}
               <CardContent className="space-y-3 text-xs">
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Hourly Output Target</span>
-                  <span className="font-bold text-foreground text-sm font-mono">{record.hourlyOutputTarget} Units / Hour</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.hourlyOutputTarget || 40} Units / Hour</span>
                 </div>
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Target OEE</span>
-                  <span className="font-bold text-foreground text-sm font-mono">{record.targetOEE}%</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{record.targetOEE || 85}%</span>
                 </div>
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Shift Pattern</span>
-                  <span className="font-semibold text-foreground">{record.shiftPattern}</span>
+                  <span className="font-semibold text-foreground">{record.shiftPattern || "2 Shifts (8 hrs/shift)"}</span>
                 </div>
               </CardContent>
             </Card>
@@ -491,7 +519,7 @@ Material Flow Diagram: ${record.materialFlowDiagram}
                 </CardDescription>
               </div>
               <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold">
-                Workstation Score: {record.workstationScore}/100
+                Workstation Score: {record.workstationScore ?? record.workstationReadinessScore ?? 86}/100
               </Badge>
             </CardHeader>
 
@@ -664,7 +692,7 @@ Material Flow Diagram: ${record.materialFlowDiagram}
                   <Button
                     size="sm"
                     onClick={handleSubmitDecision}
-                    className="w-full gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-xs"
+                    className="w-full gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-xs cursor-pointer"
                   >
                     <ShieldCheck className="h-3.5 w-3.5" />
                     Submit Review Decision
@@ -688,7 +716,10 @@ Material Flow Diagram: ${record.materialFlowDiagram}
               </Badge>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="border-2 border-dashed border-border/80 hover:border-primary/50 rounded-xl p-5 text-center bg-slate-50/50 dark:bg-slate-800/30 transition-colors">
+              <div
+                onClick={() => toast.info("Opening file upload selector...")}
+                className="border-2 border-dashed border-border/80 hover:border-primary/50 rounded-xl p-5 text-center bg-slate-50/50 dark:bg-slate-800/30 transition-colors cursor-pointer"
+              >
                 <Upload className="h-6 w-6 mx-auto text-muted-foreground mb-1" />
                 <span className="text-xs font-semibold text-foreground block">Drag and drop engineering files here, or browse</span>
                 <span className="text-[10px] text-muted-foreground block mt-0.5">Supported formats: .dwg, .dxf, .pdf, .xlsx, .csv (Max 50MB)</span>
@@ -709,7 +740,12 @@ Material Flow Diagram: ${record.materialFlowDiagram}
                       {record.attachments.map((att) => (
                         <tr key={att.id} className="hover:bg-muted/30 transition-colors">
                           <td className="py-3 px-4 font-medium text-foreground whitespace-nowrap">
-                            <span className="font-mono text-primary block">{att.name}</span>
+                            <span
+                              onClick={() => setPreviewDoc({ label: att.documentType, filename: att.name, size: att.size })}
+                              className="font-mono text-primary block cursor-pointer hover:underline"
+                            >
+                              {att.name}
+                            </span>
                             <span className="text-[10px] text-muted-foreground font-mono">{att.size}</span>
                           </td>
                           <td className="py-3 px-4 text-muted-foreground whitespace-nowrap">
@@ -721,15 +757,26 @@ Material Flow Diagram: ${record.materialFlowDiagram}
                             {att.uploadedBy}
                           </td>
                           <td className="py-3 px-4 text-right whitespace-nowrap">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600"
-                              onClick={() => toast.success(`Downloading ${att.name}`)}
-                            >
-                              <Download className="h-3.5 w-3.5" />
-                              Download
-                            </Button>
+                            <div className="flex items-center justify-end gap-1.5">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer"
+                                onClick={() => setPreviewDoc({ label: att.documentType, filename: att.name, size: att.size })}
+                              >
+                                <Eye className="h-3.5 w-3.5" />
+                                Preview
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600 cursor-pointer"
+                                onClick={() => handleDownloadDoc({ label: att.documentType, filename: att.name, size: att.size })}
+                              >
+                                <Download className="h-3.5 w-3.5" />
+                                Download
+                              </Button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -741,6 +788,46 @@ Material Flow Diagram: ${record.materialFlowDiagram}
           </Card>
         </div>
       </div>
+
+      {/* Engineering Drawing / Attachment Preview Dialog */}
+      <Dialog open={!!previewDoc} onOpenChange={(open) => !open && setPreviewDoc(null)}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base font-bold">
+              <FileText className="h-5 w-5 text-blue-600" />
+              {previewDoc?.filename}
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              {previewDoc?.label} • {previewDoc?.size} • Assembly Line Engineering Document
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs max-h-72 overflow-y-auto space-y-2">
+            <p className="text-emerald-400 font-bold">=== ASSEMBLY LINE SPECIFICATION METADATA ===</p>
+            <p>Title: {previewDoc?.label}</p>
+            <p>File: {previewDoc?.filename}</p>
+            <p>Line: {record.productionLine} ({record.assemblyLineId})</p>
+            <p>Plant: {record.manufacturingPlant} | Workstations: {record.workstationsCount ?? record.numberOfWorkstations ?? 12}</p>
+            <div className="mt-3 p-3 rounded bg-slate-800/80 text-slate-300 font-sans text-xs">
+              Semi-automated U-shaped assembly line engineered for 7kW Smart EV Charger production. Balanced takt time target of 90s with conveyor feed rate of 1.5 m/min.
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            {previewDoc && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleDownloadDoc(previewDoc)}
+                className="h-8 text-xs gap-1 cursor-pointer"
+              >
+                <Download className="h-3.5 w-3.5" /> Download File
+              </Button>
+            )}
+            <Button size="sm" onClick={() => setPreviewDoc(null)} className="h-8 text-xs bg-primary text-primary-foreground cursor-pointer">
+              Close Preview
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 }

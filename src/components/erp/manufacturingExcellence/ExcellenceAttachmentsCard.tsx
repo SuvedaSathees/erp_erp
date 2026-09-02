@@ -2,13 +2,22 @@ import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Paperclip, Upload, FileText, Download, Eye, CheckCircle2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Paperclip, Upload, FileText, Download, Eye, CheckCircle2, Trash2 } from "lucide-react";
 import type { ExcellenceAttachment, ManufacturingExcellenceRecord } from "@/services/types";
 import { toast } from "sonner";
 
 interface ExcellenceAttachmentsCardProps {
   record: ManufacturingExcellenceRecord;
   onUploadAttachment: (file: { name: string; type: string; size: number; documentType: string }) => void;
+  onDeleteAttachment?: (id: string) => void;
 }
 
 const REQUIRED_ATTACHMENT_SLOTS = [
@@ -26,8 +35,10 @@ const REQUIRED_ATTACHMENT_SLOTS = [
 export const ExcellenceAttachmentsCard: React.FC<ExcellenceAttachmentsCardProps> = ({
   record,
   onUploadAttachment,
+  onDeleteAttachment,
 }) => {
   const [selectedSlot, setSelectedSlot] = useState(REQUIRED_ATTACHMENT_SLOTS[0]);
+  const [previewAttachment, setPreviewAttachment] = useState<ExcellenceAttachment | null>(null);
 
   const handleSimulatedUpload = () => {
     const input = document.createElement("input");
@@ -46,16 +57,10 @@ export const ExcellenceAttachmentsCard: React.FC<ExcellenceAttachmentsCardProps>
     input.click();
   };
 
-  const handlePreview = (attachment: ExcellenceAttachment) => {
-    toast.info(`Previewing ${attachment.fileName}`, {
-      description: `Viewing ${attachment.documentType} (${attachment.fileSize}).`,
-    });
-  };
-
   const handleDownload = (attachment: ExcellenceAttachment) => {
     const blob = new Blob(
       [
-        `Magnertia ERP Manufacturing Excellence Document\n\nTitle: ${attachment.documentType}\nFile: ${attachment.fileName}\nVersion: ${attachment.version}\nUploaded By: ${attachment.uploadedBy}\nDate: ${attachment.uploadDate}\nSize: ${attachment.fileSize}\nStatus: Verified Control Baseline`,
+        `Magnertia ERP Manufacturing Excellence Document\n\nTitle: ${attachment.documentType}\nFile: ${attachment.fileName}\nVersion: ${attachment.version}\nUploaded By: ${attachment.uploadedBy}\nDate: ${attachment.uploadDate}\nSize: ${attachment.fileSize}\nStatus: Verified Control Baseline\n\nContent:\n- Operational baseline verified.\n- Control plan signed off.\n- Action plan items scheduled for implementation.`,
       ],
       { type: "text/plain;charset=utf-8" }
     );
@@ -67,7 +72,7 @@ export const ExcellenceAttachmentsCard: React.FC<ExcellenceAttachmentsCardProps>
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    toast.success(`Downloading ${attachment.fileName}`);
+    toast.success(`Downloaded ${attachment.fileName}`);
   };
 
   return (
@@ -83,7 +88,7 @@ export const ExcellenceAttachmentsCard: React.FC<ExcellenceAttachmentsCardProps>
           <Button
             size="sm"
             onClick={handleSimulatedUpload}
-            className="gap-1.5 text-xs font-semibold cursor-pointer bg-primary hover:bg-primary/90"
+            className="gap-1.5 text-xs font-semibold cursor-pointer bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs"
           >
             <Upload className="h-3.5 w-3.5" />
             Upload File
@@ -143,7 +148,10 @@ export const ExcellenceAttachmentsCard: React.FC<ExcellenceAttachmentsCardProps>
                     <td className="py-2.5 px-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
-                        <span className="font-mono text-primary font-medium hover:underline cursor-pointer">
+                        <span
+                          onClick={() => setPreviewAttachment(att)}
+                          className="font-mono text-primary font-medium hover:underline cursor-pointer"
+                        >
                           {att.fileName}
                         </span>
                         <Badge variant="outline" className="text-[10px] px-1 py-0 font-mono">
@@ -166,7 +174,7 @@ export const ExcellenceAttachmentsCard: React.FC<ExcellenceAttachmentsCardProps>
                           variant="ghost"
                           size="sm"
                           className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer"
-                          onClick={() => handlePreview(att)}
+                          onClick={() => setPreviewAttachment(att)}
                         >
                           <Eye className="h-3.5 w-3.5" />
                           Preview
@@ -179,6 +187,16 @@ export const ExcellenceAttachmentsCard: React.FC<ExcellenceAttachmentsCardProps>
                         >
                           <Download className="h-3.5 w-3.5" />
                         </Button>
+                        {onDeleteAttachment && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-[11px] gap-1 text-muted-foreground hover:text-destructive cursor-pointer"
+                            onClick={() => onDeleteAttachment(att.id)}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -188,6 +206,46 @@ export const ExcellenceAttachmentsCard: React.FC<ExcellenceAttachmentsCardProps>
           </div>
         </div>
       </CardContent>
+
+      {/* Document Preview Dialog */}
+      <Dialog open={!!previewAttachment} onOpenChange={(open) => !open && setPreviewAttachment(null)}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base font-bold">
+              <FileText className="h-5 w-5 text-primary" />
+              {previewAttachment?.fileName}
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              {previewAttachment?.documentType} • Version {previewAttachment?.version} • {previewAttachment?.fileSize}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs max-h-72 overflow-y-auto space-y-2">
+            <p className="text-emerald-400 font-bold">=== DOCUMENT SPECIFICATION ===</p>
+            <p>Title: {previewAttachment?.documentType}</p>
+            <p>File: {previewAttachment?.fileName}</p>
+            <p>Uploaded By: {previewAttachment?.uploadedBy} ({previewAttachment?.uploadDate})</p>
+            <p>Security Classification: Confidential / Manufacturing Control Baseline</p>
+            <div className="mt-3 p-3 rounded bg-slate-800/80 text-slate-300 font-sans text-xs">
+              This document establishes the verified operational baseline and control governance framework for initiative {record.initiativeNumber} ({record.initiativeTitle}) at {record.manufacturingPlant}.
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            {previewAttachment && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleDownload(previewAttachment)}
+                className="h-8 text-xs gap-1 cursor-pointer"
+              >
+                <Download className="h-3.5 w-3.5" /> Download File
+              </Button>
+            )}
+            <Button size="sm" onClick={() => setPreviewAttachment(null)} className="h-8 text-xs bg-primary text-primary-foreground cursor-pointer">
+              Close Preview
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

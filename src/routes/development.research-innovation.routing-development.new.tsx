@@ -7,6 +7,15 @@ import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { RoutingHeader } from "@/components/erp/routing-development/RoutingHeader";
 import { AddOperationModal } from "@/components/erp/routing-development/AddOperationModal";
 import { OverviewTab } from "@/components/erp/routing-development/tabs/OverviewTab";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Sparkles, Eye } from "lucide-react";
 
 import {
   fetchRoutingRecord,
@@ -14,6 +23,7 @@ import {
   submitRoutingForReview,
   addRoutingOperation,
 } from "@/services/routingDevelopmentService";
+import type { RoutingAttachment, RoutingRecord } from "@/services/types";
 
 export const Route = createFileRoute(
   "/development/research-innovation/routing-development/new",
@@ -30,8 +40,10 @@ export function RoutingDevelopmentPage({
 } = {}) {
   const queryClient = useQueryClient();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
-  const { data: record, isLoading } = useQuery({
+  const { data: record, isLoading } = useQuery<RoutingRecord>({
     queryKey: ["routing-development-record"],
     queryFn: fetchRoutingRecord,
   });
@@ -88,18 +100,13 @@ Routing Version: ${record.routingVersion}
 Workflow Status: ${record.workflowStatus}
 Product: ${record.product} (Revision: ${record.productRevision})
 Process Owner: ${record.processOwner}
-Created Date: ${record.createdDate}
-Effective Date: ${record.effectiveDate}
-Next Review Date: ${record.nextReviewDate}
+Effective Date: ${record.effectiveDate || "01 Jul 2024"}
 
-READINESS SCORES:
+TOTALS:
 -----------------------------------------------------
-Overall Routing Readiness: ${record.overallReadinessScore}/100
-Routing Readiness: ${record.routingReadinessScore}/100
-Resource Readiness: ${record.resourceReadinessScore}/100
-Manufacturing Readiness: ${record.manufacturingReadinessScore}/100
-Quality Score: ${record.qualityScore}/100
-Cost Score: ${record.costScore}/100
+Total Setup Time: ${record.totalSetupTimeMins || 225} min
+Total Cycle Time: ${record.totalCycleTimeMins || 108.5} min
+Total Labour: ${record.totalLabourCount || 17} Operators
 
 OPERATIONS MATRIX (${record.operations.length} Operations):
 -----------------------------------------------------
@@ -110,8 +117,12 @@ ${record.operations
   )
   .join("\n")}
 
-COST SUMMARY:
+COST ANALYSIS:
 -----------------------------------------------------
+Machine Cost: ₹${record.costSummary.machineCost.toLocaleString()}
+Labour Cost: ₹${record.costSummary.labourCost.toLocaleString()}
+Tooling Cost: ₹${record.costSummary.toolingCost.toLocaleString()}
+Overhead Cost: ₹${record.costSummary.overheadCost.toLocaleString()}
 Total Routing Cost: ₹${record.costSummary.totalRoutingCost.toLocaleString()}
 Target Cost: ₹${record.costSummary.targetCost.toLocaleString()}
 Cost Variance: ₹${record.costSummary.costVariance.toLocaleString()} (Favorable)
@@ -122,7 +133,6 @@ AI Health Score: ${record.aiAssessment.aiHealthScore}/100
 Optimization: ${record.aiAssessment.routingOptimization}
 Bottleneck Prediction: ${record.aiAssessment.bottleneckPrediction}
 Cycle Time Optimization: ${record.aiAssessment.cycleTimeOptimization}
-Recommendation: ${record.recommendation}
 =====================================================`;
 
     const blob = new Blob([content], { type: "text/plain" });
@@ -134,6 +144,43 @@ Recommendation: ${record.recommendation}
     link.click();
     document.body.removeChild(link);
     toast.success("Routing specification exported and downloaded successfully!");
+  };
+
+  const handleUploadAttachment = (fileInfo: {
+    name: string;
+    type: string;
+    size: number;
+    documentType: string;
+  }) => {
+    const newAtt: RoutingAttachment = {
+      id: `att-rtg-${Date.now()}`,
+      fileName: fileInfo.name,
+      fileType: fileInfo.type || "PDF Document",
+      documentType: fileInfo.documentType,
+      version: "1.0",
+      uploadedBy: "Current User",
+      uploadedDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      fileSize: `${(fileInfo.size / (1024 * 1024)).toFixed(1)} MB`,
+      status: "Active",
+    };
+    const updated = {
+      ...record,
+      attachments: [newAtt, ...record.attachments],
+    };
+    queryClient.setQueryData(["routing-development-record"], updated);
+    toast.success("Attachment Uploaded", {
+      description: `${fileInfo.name} attached to routing.`,
+    });
+  };
+
+  const handleDeleteAttachment = (id: string) => {
+    const attToDelete = record.attachments.find((a) => a.id === id);
+    const updated = {
+      ...record,
+      attachments: record.attachments.filter((a) => a.id !== id),
+    };
+    queryClient.setQueryData(["routing-development-record"], updated);
+    toast.info(`Removed ${attToDelete?.fileName || "document"}`);
   };
 
   return (
@@ -150,22 +197,24 @@ Recommendation: ${record.recommendation}
           onSaveDraft={() => saveDraftMutation.mutate({})}
           onSubmitForReview={() => submitMutation.mutate()}
           onExport={handleExportReport}
-          onNewRouting={() => {
-            setIsAddModalOpen(true);
-            toast.info("Creating new routing operation...");
-          }}
+          onNewRouting={() => setIsAddModalOpen(true)}
         />
 
         {/* Unified Main View */}
         <OverviewTab
           record={record}
           onAddOperation={() => setIsAddModalOpen(true)}
-          onNavigateTab={(tab) => toast.info(`Viewing ${tab} section`)}
+          onNavigateTab={(tab) => {
+            if (tab === "ai") setIsAiModalOpen(true);
+            else toast.info(`Viewing ${tab} section`);
+          }}
           onUpdateOperations={(ops) => saveDraftMutation.mutate({ operations: ops })}
           onReviewDecision={(decision, comments) => {
             saveDraftMutation.mutate({ approvalDecision: decision });
             toast.success(`Review decision recorded: ${decision}`);
           }}
+          onUploadAttachment={handleUploadAttachment}
+          onDeleteAttachment={handleDeleteAttachment}
         />
 
         {/* Add Operation Modal */}
@@ -175,6 +224,34 @@ Recommendation: ${record.recommendation}
           onAdd={(op) => addOpMutation.mutate(op)}
           nextSeq={record.operations.length + 1}
         />
+
+        {/* Full AI Analysis Modal */}
+        <Dialog open={isAiModalOpen} onOpenChange={setIsAiModalOpen}>
+          <DialogContent className="max-w-xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-base font-bold">
+                <Sparkles className="h-5 w-5 text-purple-600" />
+                AI Manufacturing Routing Optimization
+              </DialogTitle>
+            </DialogHeader>
+            <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs max-h-72 overflow-y-auto space-y-2">
+              <p className="text-emerald-400 font-bold">=== AI ROUTING INTELLIGENCE ===</p>
+              <p>AI Health Score: <strong>84 / 100</strong></p>
+              <div className="mt-3 p-3 rounded bg-slate-800/80 text-slate-300 font-sans text-xs space-y-1.5">
+                <p>• <strong>Throughput Gain:</strong> {record.aiAssessment.routingOptimization}</p>
+                <p>• <strong>Bottleneck Prediction:</strong> {record.aiAssessment.bottleneckPrediction}</p>
+                <p>• <strong>Cycle Time Savings:</strong> {record.aiAssessment.cycleTimeOptimization}</p>
+                <p>• <strong>Resource Recommendation:</strong> {record.aiAssessment.resourceOptimization}</p>
+                <p>• <strong>Production Readiness:</strong> {record.aiAssessment.productionRecommendation}</p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button size="sm" onClick={() => setIsAiModalOpen(false)} className="h-8 text-xs bg-primary text-primary-foreground cursor-pointer">
+                Close Analysis
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppShell>
   );

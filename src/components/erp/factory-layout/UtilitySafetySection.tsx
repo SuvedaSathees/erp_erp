@@ -1,8 +1,17 @@
+import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Download, Eye, FileText, ShieldCheck } from "lucide-react";
 import type { FactoryLayoutFormInput } from "@/services/types";
 import { toast } from "sonner";
@@ -13,6 +22,7 @@ export function UtilitySafetySection({
   form: UseFormReturn<FactoryLayoutFormInput>;
 }) {
   const { watch, setValue } = form;
+  const [previewDoc, setPreviewDoc] = useState<{ label: string; filename: string; size: string } | null>(null);
 
   const utilitySafetyScore = watch("utilitySafetyScore") ?? 88;
 
@@ -23,6 +33,20 @@ export function UtilitySafetySection({
     { label: "Fire Safety Layout", filename: "fire_safety_layout_v1.2.pdf", size: "3.1 MB" },
     { label: "Emergency Exit Plan", filename: "emergency_exit_v1.2.pdf", size: "2.4 MB" },
   ];
+
+  const handleDownload = (doc: { label: string; filename: string; size: string }) => {
+    const content = `UTILITY & SAFETY SCHEMATIC BLUEPRINT\n\nTitle: ${doc.label}\nFile: ${doc.filename}\nSize: ${doc.size}\nFacility: Magnertia EV Plant\nStatus: Certified EHS & Fire Department Approved v1.2`;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = doc.filename.replace(/\.[^/.]+$/, "") + ".txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success(`Downloaded ${doc.filename}`);
+  };
 
   return (
     <Card className="border-border rounded-xl shadow-xs bg-card flex flex-col justify-between">
@@ -68,7 +92,10 @@ export function UtilitySafetySection({
                   </div>
                   <div className="flex items-center gap-1.5 mt-0.5 pl-3.5">
                     <FileText className="h-3.5 w-3.5 text-teal-600 shrink-0" />
-                    <span className="font-mono text-[11px] text-primary truncate cursor-pointer hover:underline font-medium">
+                    <span
+                      onClick={() => setPreviewDoc(doc)}
+                      className="font-mono text-[11px] text-primary truncate cursor-pointer hover:underline font-medium"
+                    >
                       {doc.filename}
                     </span>
                     <Badge variant="outline" className="text-[9px] px-1.5 py-0 font-mono shrink-0">
@@ -83,7 +110,7 @@ export function UtilitySafetySection({
                     variant="outline"
                     size="sm"
                     className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer border-border"
-                    onClick={() => toast.info(`Previewing ${doc.filename}`)}
+                    onClick={() => setPreviewDoc(doc)}
                   >
                     <Eye className="h-3.5 w-3.5" />
                     Preview
@@ -92,7 +119,7 @@ export function UtilitySafetySection({
                     variant="outline"
                     size="sm"
                     className="h-7 px-2 text-[11px] hover:text-teal-600 cursor-pointer border-border"
-                    onClick={() => toast.success(`Downloading ${doc.filename}`)}
+                    onClick={() => handleDownload(doc)}
                   >
                     <Download className="h-3.5 w-3.5" />
                   </Button>
@@ -121,6 +148,45 @@ export function UtilitySafetySection({
           </div>
         </CardContent>
       </div>
+
+      {/* Utility Preview Dialog */}
+      <Dialog open={!!previewDoc} onOpenChange={(open) => !open && setPreviewDoc(null)}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base font-bold">
+              <FileText className="h-5 w-5 text-teal-600" />
+              {previewDoc?.filename}
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              {previewDoc?.label} • {previewDoc?.size} • Utilities & EHS Compliance
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs max-h-72 overflow-y-auto space-y-2">
+            <p className="text-emerald-400 font-bold">=== UTILITIES & SAFETY SCHEMATIC ===</p>
+            <p>Title: {previewDoc?.label}</p>
+            <p>File: {previewDoc?.filename}</p>
+            <p>Facility: Magnertia EV Plant (Pune Campus)</p>
+            <div className="mt-3 p-3 rounded bg-slate-800/80 text-slate-300 font-sans text-xs">
+              Conforms to National Building Code (NBC), NFPA 101 Life Safety Code, and Factories Act ventilation and electrical fire suppression requirements.
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            {previewDoc && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleDownload(previewDoc)}
+                className="h-8 text-xs gap-1 cursor-pointer"
+              >
+                <Download className="h-3.5 w-3.5" /> Download Blueprint
+              </Button>
+            )}
+            <Button size="sm" onClick={() => setPreviewDoc(null)} className="h-8 text-xs bg-primary text-primary-foreground cursor-pointer">
+              Close Preview
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

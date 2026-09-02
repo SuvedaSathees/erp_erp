@@ -1,32 +1,61 @@
-import type { TrlStatus } from "@/services/types";
-import { ModuleSubTabBar } from "@/components/erp/ModuleSubTabBar";
+import { cn } from "@/lib/utils";
 
-const BASE = "/development/research-innovation/trl-assessment";
+export type TrlTabId = "register" | "form";
 
-/** The module-level Register/Form sub-tab bar. Delegates to the shared
- *  ModuleSubTabBar so alignment, styling, and active-indicator stay identical
- *  across every Research & Innovation module. */
-export function TrlAssessmentPageTabBar() {
+export interface TrlTabItem {
+  id: TrlTabId;
+  label: string;
+  tooltip: string;
+  badge?: string | number;
+}
+
+export const TRL_TABS: TrlTabItem[] = [
+  { id: "register", label: "TRL Register", tooltip: "TRL Assessment Records Register", badge: "2" },
+  { id: "form", label: "TRL Assessment Form", tooltip: "Assess & Advance Technology Readiness Levels" },
+];
+
+export function TrlAssessmentPageTabBar({
+  activeTab = "register",
+  onTabChange,
+}: {
+  activeTab?: TrlTabId;
+  onTabChange?: (tab: TrlTabId) => void;
+}) {
   return (
-    <ModuleSubTabBar
-      tabs={[
-        { to: BASE, label: "TRL Register", tooltip: "TRL Assessment Register", activeMatch: (p) => !p.startsWith(BASE + "/new") },
-        { to: BASE + "/new", label: "TRL Assessment Form", tooltip: "TRL Assessment Form" },
-      ]}
-    />
+    <div className="flex items-center gap-1.5 border-b border-border/80 bg-white/95 backdrop-blur-md dark:bg-slate-900/95 px-4 py-1.5 overflow-x-auto shadow-2xs">
+      {TRL_TABS.map((t) => {
+        const isActive = activeTab === t.id;
+        return (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => onTabChange?.(t.id)}
+            className={cn(
+              "group relative flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap select-none",
+              isActive
+                ? "bg-primary text-white shadow-xs font-bold"
+                : "text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800"
+            )}
+            title={t.tooltip}
+          >
+            <span>{t.label}</span>
+            {t.badge && (
+              <span
+                className={cn(
+                  "rounded-full px-1.5 py-0.2 text-[10px] font-bold",
+                  isActive
+                    ? "bg-white/20 text-white"
+                    : "bg-slate-200/80 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                )}
+              >
+                {t.badge}
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
-export const TRL_STATUS_LABEL: Record<TrlStatus, string> = {
-  draft: "Draft",
-  technology_assessment: "Technology Assessment",
-  technical_validation: "Technical Validation",
-  demonstration_review: "Demonstration Review",
-  risk_commercial_assessment: "Risk & Commercial Assessment",
-  executive_review: "Under Review",
-  approved: "Approved",
-  approved_with_improvements: "Approved with Improvements",
-  revision_required: "Revision Required",
-  rejected: "Rejected",
-  archived: "Archived",
-};
+export default TrlAssessmentPageTabBar;

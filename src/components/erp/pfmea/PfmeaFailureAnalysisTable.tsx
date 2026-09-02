@@ -100,7 +100,28 @@ export const PfmeaFailureAnalysisTable: React.FC<PfmeaFailureAnalysisTableProps>
             <Plus className="w-3.5 h-3.5" /> Add Failure Mode
           </button>
 
-          <button className="px-2.5 py-1 border border-input bg-background hover:bg-accent text-xs font-medium rounded shadow-sm flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => {
+              const headers = "Step No,Process Step,Potential Failure Mode,Severity (S),Potential Effect,Occurrence (O),Potential Cause,Current Controls,Detection (D),Action Priority (AP),RPN Before,RPN After,Status\n";
+              const rows = filteredModes
+                .map(
+                  (fm) =>
+                    `"${fm.stepNo}","${fm.processStep}","${fm.potentialFailureMode}",${fm.severity},"${fm.potentialEffect}",${fm.occurrence},"${fm.potentialCause}","${fm.currentControls}",${fm.detection},"${fm.actionPriority}",${fm.rpnBefore},${fm.rpnAfter},"${fm.status}"`
+                )
+                .join("\n");
+              const blob = new Blob([headers + rows], { type: "text/csv;charset=utf-8" });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = "PFMEA_Failure_Modes_Register.csv";
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            }}
+            className="px-2.5 py-1 border border-input bg-background hover:bg-accent text-xs font-medium rounded shadow-sm flex items-center gap-1 cursor-pointer transition-colors"
+          >
             <Download className="w-3.5 h-3.5" /> Export
           </button>
         </div>

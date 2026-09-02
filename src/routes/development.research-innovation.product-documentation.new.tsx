@@ -37,7 +37,7 @@ import {
   Save,
   FolderPlus,
   Printer,
-  History,
+  History as HistoryIcon,
   Workflow,
   Sparkle,
   ArrowRight,
@@ -52,6 +52,7 @@ import {
   Factory,
   Paperclip,
   BarChart2,
+  Trash2,
 } from "lucide-react";
 
 import { productDocumentationService } from "@/services/productDocumentationService";
@@ -202,16 +203,45 @@ export function ProductDocumentationPage({
   const [showAiAnalyzerModal, setShowAiAnalyzerModal] = useState(false);
   const [showWorkflowModal, setShowWorkflowModal] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
+  const [showAddReviewerModal, setShowAddReviewerModal] = useState(false);
+  const [newReviewerName, setNewReviewerName] = useState("");
+  const [newReviewerRole, setNewReviewerRole] = useState("");
+  const [showChangesModal, setShowChangesModal] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<{
+    name: string;
+    type: string;
+    size: string;
+    version?: string;
+  } | null>(null);
+  const [linkedEntityModal, setLinkedEntityModal] = useState<{
+    type: string;
+    id: string;
+    title: string;
+    route?: string;
+  } | null>(null);
 
   // New file input state for upload modal
   const [uploadFileName, setUploadFileName] = useState("");
   const [uploadCategory, setUploadCategory] = useState("Engineering");
+  const [uploadFileSize, setUploadFileSize] = useState("2.4 MB");
 
   // Main Data Query
   const { data: record, isLoading } = useQuery({
     queryKey: ["product-documentation"],
     queryFn: productDocumentationService.fetchRecord,
   });
+
+  // Local state for instant interactive updates
+  const [localRecord, setLocalRecord] = useState<ProductDocumentationRecord | null>(null);
+
+  React.useEffect(() => {
+    if (record && !localRecord) {
+      setLocalRecord(record);
+    }
+  }, [record, localRecord]);
+
+  const rec = localRecord || record;
+  const currentRecord = rec;
 
   // Local Form state
   const [formData, setFormData] = useState<Partial<ProductDocumentationFormInput>>({
@@ -234,11 +264,114 @@ export function ProductDocumentationPage({
     recommendation: "Ready for Product Release",
   });
 
-  // Keep form data in sync when record loads
-  const currentRecord = useMemo(() => {
-    if (!record) return null;
-    return record;
-  }, [record]);
+  // Browser download helper
+  const triggerBrowserDownload = (fileName: string, content: string, mimeType = "text/plain;charset=utf-8") => {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  // Toggle Reviewer Decision directly
+  const handleToggleReviewerDecision = (index: number) => {
+    if (!rec) return;
+    const decisions: ProductDocumentationApprovalDecision[] = [
+      "Approved",
+      "Approved with Conditions",
+      "Revision Required",
+      "Rejected",
+    ];
+    const current = rec.reviewers[index]?.decision || "Pending";
+    const nextIdx = (decisions.indexOf(current as ProductDocumentationApprovalDecision) + 1) % decisions.length;
+    const nextDecision = decisions[nextIdx];
+    const updatedReviewers = [...rec.reviewers];
+    updatedReviewers[index] = {
+      ...updatedReviewers[index],
+      decision: nextDecision,
+      date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+    };
+    const updated: ProductDocumentationRecord = { ...rec, reviewers: updatedReviewers };
+    setLocalRecord(updated);
+    queryClient.setQueryData(["product-documentation"], updated);
+    toast.success(`Updated ${updatedReviewers[index].person}'s decision to ${nextDecision}`);
+  };
+
+  // Handle Workflow Status Toggle
+  const handleStatusChange = (status: string) => {
+    if (!rec) return;
+    const updated: ProductDocumentationRecord = { ...rec, workflowStatus: status };
+    setLocalRecord(updated);
+    queryClient.setQueryData(["product-documentation"], updated);
+  };
+
+  // Handle Add Reviewer
+  const handleAddReviewer = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newReviewerName.trim() || !newReviewerRole.trim() || !rec) {
+      toast.error("Please provide reviewer name and role");
+      return;
+    }
+    const newRev = {
+      id: `rev-${Date.now()}`,
+      role: newReviewerRole,
+      person: newReviewerName,
+      decision: "Pending" as const,
+      date: "-",
+      comments: "Pending review",
+    };
+    const updated: ProductDocumentationRecord = {
+      ...rec,
+      reviewers: [...rec.reviewers, newRev],
+    };
+    setLocalRecord(updated);
+    queryClient.setQueryData(["product-documentation"], updated);
+    setShowAddReviewerModal(false);
+    setNewReviewerName("");
+    setNewReviewerRole("");
+    toast.success(`Added ${newRev.person} to Documentation Review Board`);
+  };
+
+  // Handle Delete Attachment
+  const handleDeleteAttachment = (id: string, name: string) => {
+    if (!rec) return;
+    const updated: ProductDocumentationRecord = {
+      ...rec,
+      attachments: rec.attachments.filter((a) => a.id !== id),
+    };
+    setLocalRecord(updated);
+    queryClient.setQueryData(["product-documentation"], updated);
+    toast.success(`Deleted attachment: ${name}`);
+  };
+
+  // Handle Upload Attachment
+  const handleUploadAttachment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!uploadFileName.trim() || !rec) {
+      toast.error("Please enter a file name");
+      return;
+    }
+    const newAtt: ProductDocAttachment = {
+      id: `att-${Date.now()}`,
+      name: uploadFileName.endsWith(".pdf") || uploadFileName.endsWith(".zip") || uploadFileName.endsWith(".xlsx") ? uploadFileName : `${uploadFileName}.pdf`,
+      size: uploadFileSize,
+      type: uploadFileName.endsWith(".zip") ? "zip" : uploadFileName.endsWith(".xlsx") ? "xlsx" : "pdf",
+      uploadDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+    };
+    const updated: ProductDocumentationRecord = {
+      ...rec,
+      attachments: [newAtt, ...rec.attachments],
+    };
+    setLocalRecord(updated);
+    queryClient.setQueryData(["product-documentation"], updated);
+    setShowUploadDialog(false);
+    setUploadFileName("");
+    toast.success(`Uploaded ${newAtt.name} to project dossier`);
+  };
 
   // Save Draft Mutation
   const saveDraftMutation = useMutation({
@@ -308,8 +441,6 @@ export function ProductDocumentationPage({
       </AppShell>
     );
   }
-
-  const rec = currentRecord;
 
   // Key Highlights calculation
   const keyHighlights = [
@@ -395,14 +526,73 @@ export function ProductDocumentationPage({
                 {saveDraftMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5 text-slate-600 dark:text-slate-300" />}
                 Save Draft
               </Button>
+              {rec.workflowStatus === "In Review" ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      size="sm"
+                      className="h-8 px-3 text-xs font-semibold gap-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 hover:border-amber-500/50 shadow-2xs transition-all cursor-pointer"
+                    >
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+                      </span>
+                      <Clock className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                      <span>Under Review</span>
+                      <ChevronDown className="h-3 w-3 opacity-60 ml-0.5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 text-xs">
+                    <DropdownMenuItem
+                      onClick={() => document.getElementById("section-review")?.scrollIntoView({ behavior: "smooth" })}
+                      className="cursor-pointer"
+                    >
+                      <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        toast.success("Expedited review reminder dispatched to Documentation Review Board.");
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => {
+                        handleStatusChange("In Progress");
+                        toast.info("Status reverted to In Progress. You can now modify documentation files.");
+                      }}
+                      className="cursor-pointer text-amber-600 dark:text-amber-400"
+                    >
+                      <ArrowRight className="mr-2 h-4 w-4" /> Revert Status to In Progress
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : rec.workflowStatus === "Approved" ? (
+                <Badge className="h-8 px-3 text-xs font-semibold gap-1.5 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                  {rec.workflowStatus}
+                </Badge>
+              ) : (
+                <Button
+                  size="sm"
+                  onClick={() => submitMutation.mutate()}
+                  disabled={submitMutation.isPending}
+                  className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs font-semibold cursor-pointer h-8"
+                >
+                  {submitMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+                  Submit for Review
+                </Button>
+              )}
+
               <Button
                 size="sm"
-                onClick={() => submitMutation.mutate()}
-                disabled={submitMutation.isPending}
-                className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-xs font-semibold"
+                onClick={() => document.getElementById("section-review")?.scrollIntoView({ behavior: "smooth" })}
+                className="h-8 px-3 text-xs font-semibold gap-1.5 bg-blue-600 hover:bg-blue-700 text-white shadow-xs cursor-pointer"
               >
-                {submitMutation.isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
-                Submit for Review
+                <UserCheck className="h-3.5 w-3.5" />
+                Review Decision
               </Button>
 
               {/* More Actions Dropdown */}
@@ -430,7 +620,7 @@ export function ProductDocumentationPage({
                     Version History
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setShowAuditLogDrawer(true)} className="gap-2 cursor-pointer">
-                    <History className="h-4 w-4 text-slate-600" />
+                    <HistoryIcon className="h-4 w-4 text-slate-600" />
                     View Audit Log
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -462,8 +652,15 @@ export function ProductDocumentationPage({
               </span>
               <button
                 type="button"
-                onClick={() => toast.info(`Navigating to product record: ${rec.linkedProduct.name}`)}
-                className="font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+                onClick={() =>
+                  setLinkedEntityModal({
+                    type: "Linked Product",
+                    id: rec.linkedProduct.code || "PRD-2024-0009",
+                    title: rec.linkedProduct.name,
+                    route: "/development/research-innovation/bom-engineering/new",
+                  })
+                }
+                className="font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer font-mono"
               >
                 <span className="truncate">{rec.linkedProduct.name}</span>
                 <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
@@ -477,8 +674,15 @@ export function ProductDocumentationPage({
               </span>
               <button
                 type="button"
-                onClick={() => toast.info(`Navigating to certification record: ${rec.linkedCertification.code}`)}
-                className="font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer"
+                onClick={() =>
+                  setLinkedEntityModal({
+                    type: "Certification Readiness",
+                    id: rec.linkedCertification.code,
+                    title: "Automotive Safety & CE Certification Readiness",
+                    route: "/development/research-innovation/certification-readiness/new",
+                  })
+                }
+                className="font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer font-mono"
               >
                 <span className="truncate">{rec.linkedCertification.code}</span>
                 <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
@@ -753,15 +957,29 @@ export function ProductDocumentationPage({
                                   {doc.name}
                                 </span>
                               </div>
-                              <div className="flex items-center gap-3 shrink-0">
-                                <span className="text-[11px] text-muted-foreground">{doc.size}</span>
-                                <span className="rounded bg-slate-200/70 dark:bg-slate-700 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300">
+                              <div className="flex items-center gap-1 shrink-0">
+                                <span className="text-[11px] text-muted-foreground mr-1">{doc.size}</span>
+                                <span className="rounded bg-slate-200/70 dark:bg-slate-700 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300 mr-1">
                                   {doc.version}
                                 </span>
                                 <button
                                   type="button"
-                                  onClick={() => toast.success(`Downloading ${doc.name}`)}
-                                  className="text-slate-500 hover:text-blue-600 transition-colors p-1"
+                                  onClick={() => setSelectedDocument({ name: doc.name, type: doc.type, size: doc.size, version: doc.version })}
+                                  className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                                  title="Preview Document"
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    triggerBrowserDownload(
+                                      doc.name,
+                                      `=======================================================\nDOCUMENT: ${doc.name}\nVERSION: ${doc.version}\nSTREAM: Engineering Documentation\nPRODUCT: ${rec.productName}\nINTEGRITY SHA-256: 7a9e102f89b456da87ec1209fb342e67a41289de6b2019f8564\nSTATUS: Active & Verified\n=======================================================`
+                                    );
+                                    toast.success(`Downloading ${doc.name}`);
+                                  }}
+                                  className="text-slate-500 hover:text-blue-600 transition-colors p-1 cursor-pointer"
                                   title="Download File"
                                 >
                                   <Download className="h-3.5 w-3.5" />
@@ -814,15 +1032,29 @@ export function ProductDocumentationPage({
                                   {doc.name}
                                 </span>
                               </div>
-                              <div className="flex items-center gap-3 shrink-0">
-                                <span className="text-[11px] text-muted-foreground">{doc.size}</span>
-                                <span className="rounded bg-slate-200/70 dark:bg-slate-700 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300">
+                              <div className="flex items-center gap-1 shrink-0">
+                                <span className="text-[11px] text-muted-foreground mr-1">{doc.size}</span>
+                                <span className="rounded bg-slate-200/70 dark:bg-slate-700 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300 mr-1">
                                   {doc.version}
                                 </span>
                                 <button
                                   type="button"
-                                  onClick={() => toast.success(`Downloading ${doc.name}`)}
-                                  className="text-slate-500 hover:text-blue-600 transition-colors p-1"
+                                  onClick={() => setSelectedDocument({ name: doc.name, type: doc.type, size: doc.size, version: doc.version })}
+                                  className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                                  title="Preview Document"
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    triggerBrowserDownload(
+                                      doc.name,
+                                      `=======================================================\nDOCUMENT: ${doc.name}\nVERSION: ${doc.version}\nSTREAM: Manufacturing Documentation\nPRODUCT: ${rec.productName}\nINTEGRITY SHA-256: 7a9e102f89b456da87ec1209fb342e67a41289de6b2019f8564\nSTATUS: Active & Verified\n=======================================================`
+                                    );
+                                    toast.success(`Downloading ${doc.name}`);
+                                  }}
+                                  className="text-slate-500 hover:text-blue-600 transition-colors p-1 cursor-pointer"
                                   title="Download File"
                                 >
                                   <Download className="h-3.5 w-3.5" />
@@ -875,15 +1107,29 @@ export function ProductDocumentationPage({
                                   {doc.name}
                                 </span>
                               </div>
-                              <div className="flex items-center gap-3 shrink-0">
-                                <span className="text-[11px] text-muted-foreground">{doc.size}</span>
-                                <span className="rounded bg-slate-200/70 dark:bg-slate-700 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300">
+                              <div className="flex items-center gap-1 shrink-0">
+                                <span className="text-[11px] text-muted-foreground mr-1">{doc.size}</span>
+                                <span className="rounded bg-slate-200/70 dark:bg-slate-700 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300 mr-1">
                                   {doc.version}
                                 </span>
                                 <button
                                   type="button"
-                                  onClick={() => toast.success(`Downloading ${doc.name}`)}
-                                  className="text-slate-500 hover:text-blue-600 transition-colors p-1"
+                                  onClick={() => setSelectedDocument({ name: doc.name, type: doc.type, size: doc.size, version: doc.version })}
+                                  className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                                  title="Preview Document"
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    triggerBrowserDownload(
+                                      doc.name,
+                                      `=======================================================\nDOCUMENT: ${doc.name}\nVERSION: ${doc.version}\nSTREAM: Quality & Compliance Documentation\nPRODUCT: ${rec.productName}\nINTEGRITY SHA-256: 7a9e102f89b456da87ec1209fb342e67a41289de6b2019f8564\nSTATUS: Active & Verified\n=======================================================`
+                                    );
+                                    toast.success(`Downloading ${doc.name}`);
+                                  }}
+                                  className="text-slate-500 hover:text-blue-600 transition-colors p-1 cursor-pointer"
                                   title="Download File"
                                 >
                                   <Download className="h-3.5 w-3.5" />
@@ -936,15 +1182,29 @@ export function ProductDocumentationPage({
                                   {doc.name}
                                 </span>
                               </div>
-                              <div className="flex items-center gap-3 shrink-0">
-                                <span className="text-[11px] text-muted-foreground">{doc.size}</span>
-                                <span className="rounded bg-slate-200/70 dark:bg-slate-700 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300">
+                              <div className="flex items-center gap-1 shrink-0">
+                                <span className="text-[11px] text-muted-foreground mr-1">{doc.size}</span>
+                                <span className="rounded bg-slate-200/70 dark:bg-slate-700 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300 mr-1">
                                   {doc.version}
                                 </span>
                                 <button
                                   type="button"
-                                  onClick={() => toast.success(`Downloading ${doc.name}`)}
-                                  className="text-slate-500 hover:text-blue-600 transition-colors p-1"
+                                  onClick={() => setSelectedDocument({ name: doc.name, type: doc.type, size: doc.size, version: doc.version })}
+                                  className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                                  title="Preview Document"
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    triggerBrowserDownload(
+                                      doc.name,
+                                      `=======================================================\nDOCUMENT: ${doc.name}\nVERSION: ${doc.version}\nSTREAM: Customer Documentation\nPRODUCT: ${rec.productName}\nINTEGRITY SHA-256: 7a9e102f89b456da87ec1209fb342e67a41289de6b2019f8564\nSTATUS: Active & Verified\n=======================================================`
+                                    );
+                                    toast.success(`Downloading ${doc.name}`);
+                                  }}
+                                  className="text-slate-500 hover:text-blue-600 transition-colors p-1 cursor-pointer"
                                   title="Download File"
                                 >
                                   <Download className="h-3.5 w-3.5" />
@@ -1294,14 +1554,38 @@ export function ProductDocumentationPage({
                               <p className="text-[10px] text-muted-foreground">{att.size}</p>
                             </div>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => toast.success(`Downloading ${att.name}`)}
-                            className="p-1 text-slate-500 hover:text-blue-600 transition-colors shrink-0"
-                            title="Download Attachment"
-                          >
-                            <Download className="h-3.5 w-3.5" />
-                          </button>
+                          <div className="flex items-center gap-1 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedDocument({ name: att.name, type: att.type, size: att.size })}
+                              className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                              title="Preview Attachment"
+                            >
+                              <Eye className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                triggerBrowserDownload(
+                                  att.name,
+                                  `=======================================================\nATTACHMENT: ${att.name}\nTYPE: ${att.type}\nSIZE: ${att.size}\nDOCUMENT RECORD: ${rec.documentationId}\nPRODUCT: ${rec.productName}\nINTEGRITY SHA-256: 4f8b92c10a8d76ef32a19e830c239d48291a0c847d9b23e4\nSTATUS: Attached to Master Dossier\n=======================================================`
+                                );
+                                toast.success(`Downloading ${att.name}`);
+                              }}
+                              className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                              title="Download Attachment"
+                            >
+                              <Download className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteAttachment(att.id, att.name)}
+                              className="p-1 text-slate-400 hover:text-red-600 transition-colors cursor-pointer"
+                              title="Delete Attachment"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -1321,7 +1605,7 @@ export function ProductDocumentationPage({
                 {/* ------------------------------------------------------------- */}
                 {/* PANEL 10: Review & Approval */}
                 {/* ------------------------------------------------------------- */}
-                <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
+                <Card id="section-review" className="border-border bg-white dark:bg-slate-900 shadow-xs scroll-mt-24">
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -1330,56 +1614,64 @@ export function ProductDocumentationPage({
                         </div>
                         <CardTitle className="text-base font-bold">Review & Approval</CardTitle>
                       </div>
-                      <Badge variant="outline" className="bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold">
-                        Documentation Review Board
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold">
+                          Documentation Review Board
+                        </Badge>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setShowAddReviewerModal(true)}
+                          className="gap-1 text-xs h-7 cursor-pointer"
+                        >
+                          <Plus className="h-3 w-3" />
+                          Add Reviewer
+                        </Button>
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent className="pt-4 space-y-6">
-                    {/* Reviewers Table */}
-                    <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
-                      <table className="w-full text-left text-xs">
-                        <thead className="bg-slate-100/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-800">
-                          <tr>
-                            <th className="p-2.5">Role</th>
-                            <th className="p-2.5">Person</th>
-                            <th className="p-2.5">Decision</th>
-                            <th className="p-2.5">Date</th>
-                            <th className="p-2.5">Comments</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                          {rec.reviewers.map((rev) => (
-                            <tr key={rev.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                              <td className="p-2.5 font-semibold text-slate-800 dark:text-slate-200">{rev.role}</td>
-                              <td className="p-2.5">
-                                <span className="font-medium text-slate-700 dark:text-slate-300">{rev.person}</span>
-                              </td>
-                              <td className="p-2.5">
-                                {rev.decision === "Approved" ? (
-                                  <span className="inline-flex items-center rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 px-2 py-0.5 text-[10px] font-bold">
-                                    Approved
-                                  </span>
-                                ) : rev.decision === "Approved with Conditions" ? (
-                                  <span className="inline-flex items-center rounded-full bg-teal-100 text-teal-800 dark:bg-teal-950/60 dark:text-teal-300 px-2 py-0.5 text-[10px] font-bold">
-                                    Approved with Conditions
-                                  </span>
-                                ) : rev.decision === "Pending" ? (
-                                  <span className="inline-flex items-center rounded-full bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 px-2 py-0.5 text-[10px] font-medium">
-                                    Pending
-                                  </span>
-                                ) : (
-                                  <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 px-2 py-0.5 text-[10px] font-bold">
-                                    {rev.decision}
-                                  </span>
-                                )}
-                              </td>
-                              <td className="p-2.5 text-slate-500">{rev.date}</td>
-                              <td className="p-2.5 text-slate-600 dark:text-slate-400 font-mono text-[11px]">{rev.comments}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                    {/* Executive Board Consensus Chips */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="font-semibold text-muted-foreground uppercase tracking-wider">
+                          Board Evaluator Consensus (Click to Toggle)
+                        </span>
+                        <span className="text-muted-foreground font-mono">
+                          {rec.reviewers.filter((r) => r.decision === "Approved" || r.decision === "Approved with Conditions").length} of {rec.reviewers.length} Endorsed
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2.5">
+                        {rec.reviewers.map((rev, i) => (
+                          <div
+                            key={rev.id || i}
+                            onClick={() => handleToggleReviewerDecision(i)}
+                            className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 hover:border-blue-400 dark:hover:border-blue-600 transition-all cursor-pointer flex flex-col justify-between gap-1.5"
+                            title="Click to cycle decision status"
+                          >
+                            <div className="flex items-center justify-between gap-1">
+                              <span className="font-bold text-foreground text-xs truncate">{rev.person}</span>
+                              <Badge
+                                className={
+                                  rev.decision === "Approved"
+                                    ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 text-[9px] font-bold"
+                                    : rev.decision === "Approved with Conditions"
+                                    ? "bg-teal-100 text-teal-800 dark:bg-teal-950/60 text-[9px] font-bold"
+                                    : rev.decision === "Revision Required" || rev.decision === "Changes Requested"
+                                    ? "bg-red-100 text-red-800 dark:bg-red-950/60 text-[9px] font-bold"
+                                    : "bg-slate-200 text-slate-700 dark:bg-slate-800 text-[9px] font-medium"
+                                }
+                              >
+                                {rev.decision}
+                              </Badge>
+                            </div>
+                            <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                              <span className="truncate">{rev.role}</span>
+                              <span className="font-mono shrink-0">{rev.date}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
                     {/* Board Decision Controls */}
@@ -1458,7 +1750,7 @@ export function ProductDocumentationPage({
                   <CardHeader className="pb-3 border-b border-border/60">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <History className="h-4 w-4 text-blue-600" />
+                        <HistoryIcon className="h-4 w-4 text-blue-600" />
                         <CardTitle className="text-base font-bold">System Information</CardTitle>
                       </div>
                       <Badge variant="outline" className="text-xs font-mono">
@@ -1516,7 +1808,7 @@ export function ProductDocumentationPage({
                         </button>
                         <button
                           type="button"
-                          onClick={() => toast.info("Opening ECR/ECO Change History modal...")}
+                          onClick={() => setShowChangesModal(true)}
                           className="flex items-center justify-between text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors py-1 cursor-pointer"
                         >
                           <span>View Changes</span>
@@ -1634,12 +1926,8 @@ export function ProductDocumentationPage({
             </Button>
             <Button
               size="sm"
-              className="bg-blue-600 text-white"
-              onClick={() => {
-                toast.success(`Uploaded "${uploadFileName || 'New_Doc_v1.2.pdf'}" to ${uploadCategory} collection!`);
-                setShowUploadDialog(false);
-                setUploadFileName("");
-              }}
+              className="bg-blue-600 text-white cursor-pointer"
+              onClick={handleUploadAttachment}
             >
               Upload & Process
             </Button>
@@ -1846,7 +2134,7 @@ export function ProductDocumentationPage({
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <History className="h-5 w-5 text-blue-600" />
+              <HistoryIcon className="h-5 w-5 text-blue-600" />
               System Audit Trail Log
             </DialogTitle>
             <DialogDescription>
@@ -1914,6 +2202,212 @@ export function ProductDocumentationPage({
             <Input placeholder="Search documents across all engineering streams..." className="h-9 text-xs" />
             <p className="text-muted-foreground text-[11px]">Type document name, ECR number, or standard keyword...</p>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Document Preview Modal */}
+      <Dialog open={!!selectedDocument} onOpenChange={(open) => !open && setSelectedDocument(null)}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <Eye className="h-5 w-5 text-blue-600" />
+              Document Preview & Integrity Verification
+            </DialogTitle>
+            <DialogDescription>
+              Verified encrypted enterprise dossier snapshot for compliance review.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedDocument && (
+            <div className="space-y-4 py-2 text-xs">
+              <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border/80 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center font-bold">
+                    <FileText className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-foreground text-sm">{selectedDocument.name}</h4>
+                    <p className="text-muted-foreground text-[11px]">
+                      Type: <span className="uppercase font-semibold">{selectedDocument.type}</span> • Size: {selectedDocument.size}
+                      {selectedDocument.version ? ` • Version: ${selectedDocument.version}` : ""}
+                    </p>
+                  </div>
+                </div>
+                <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 font-semibold text-[10px]">
+                  Verified Signature
+                </Badge>
+              </div>
+
+              <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-100 font-mono text-[11px] leading-relaxed space-y-2">
+                <div className="text-emerald-400 font-bold border-b border-slate-700 pb-1 flex justify-between">
+                  <span>[PLM REPOSITORY CHECKSUM PASSED]</span>
+                  <span className="text-slate-400">SHA-256: 7A9E10...B2019F</span>
+                </div>
+                <p>FILE NAME: {selectedDocument.name}</p>
+                <p>PRODUCT CLUSTER: {rec.productName}</p>
+                <p>SECURITY LEVEL: ISO 27001 Restricted Access Tier 2</p>
+                <p>WATERMARK: SRI-ERP-CONFIDENTIAL • RELEASE BASELINE {rec.documentationVersion}</p>
+                <p className="text-slate-400">
+                  --- CONTENT SUMMARY ---
+                  <br />
+                  Verified against international standards (IEC 61851, ISO 15118, CE Marking). All diagrams, pinout configurations,
+                  thermal dissipation tolerances, and customer instructions adhere to release baseline specifications.
+                </p>
+              </div>
+            </div>
+          )}
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" size="sm" onClick={() => setSelectedDocument(null)}>
+              Close Preview
+            </Button>
+            {selectedDocument && (
+              <Button
+                size="sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5"
+                onClick={() => {
+                  triggerBrowserDownload(
+                    selectedDocument.name,
+                    `DOCUMENT: ${selectedDocument.name}\nTYPE: ${selectedDocument.type}\nPRODUCT: ${rec.productName}\nSTATUS: Verified Master Dossier\n=======================================================`
+                  );
+                  toast.success(`Downloaded ${selectedDocument.name}`);
+                }}
+              >
+                <Download className="h-4 w-4" /> Download Original
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Reviewer Modal */}
+      <Dialog open={showAddReviewerModal} onOpenChange={setShowAddReviewerModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <UserCheck className="h-5 w-5 text-blue-600" />
+              Add Reviewer to Board
+            </DialogTitle>
+            <DialogDescription>
+              Assign an engineering or quality leader to review this documentation package.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleAddReviewer} className="space-y-3 py-2 text-xs">
+            <div>
+              <label className="font-semibold block mb-1">Reviewer Name</label>
+              <Input
+                placeholder="e.g. Dr. Anand Verma"
+                value={newReviewerName}
+                onChange={(e) => setNewReviewerName(e.target.value)}
+                className="h-8 text-xs"
+                required
+              />
+            </div>
+            <div>
+              <label className="font-semibold block mb-1">Engineering Discipline / Role</label>
+              <Input
+                placeholder="e.g. Principal Firmware Architect"
+                value={newReviewerRole}
+                onChange={(e) => setNewReviewerRole(e.target.value)}
+                className="h-8 text-xs"
+                required
+              />
+            </div>
+            <DialogFooter className="pt-2">
+              <Button type="button" variant="outline" size="sm" onClick={() => setShowAddReviewerModal(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                Add to Board
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Changes (ECR / ECO History) Modal */}
+      <Dialog open={showChangesModal} onOpenChange={setShowChangesModal}>
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Workflow className="h-5 w-5 text-blue-600" />
+              ECR / ECO Change Management Traceability
+            </DialogTitle>
+            <DialogDescription>
+              Engineering Change Requests and Orders linked to documentation baseline {rec.documentationVersion}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-2 text-xs">
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-border space-y-1">
+              <div className="flex justify-between items-center font-bold">
+                <span className="text-blue-600 font-mono">{rec.ecr}</span>
+                <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 text-[10px]">Approved</Badge>
+              </div>
+              <p className="font-semibold text-foreground">Updated AC Type-2 Charging Connector Locking Pinout</p>
+              <p className="text-muted-foreground text-[11px]">
+                Engineering change to enhance pin contact reliability and heat dissipation during 32A sustained charging.
+              </p>
+            </div>
+
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-border space-y-1">
+              <div className="flex justify-between items-center font-bold">
+                <span className="text-purple-600 font-mono">{rec.eco}</span>
+                <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-950/60 text-[10px]">Released</Badge>
+              </div>
+              <p className="font-semibold text-foreground">ECO Order Release & Service Manual Alignment</p>
+              <p className="text-muted-foreground text-[11px]">
+                Implemented into BOM v2.1.0 and synchronized with customer troubleshooting instructions.
+              </p>
+            </div>
+
+            <div className="p-2.5 rounded-md bg-blue-50/50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/60 text-blue-900 dark:text-blue-200 text-[11px]">
+              <strong>Traceability Guarantee:</strong> All document modifications are cross-checked with BOM engineering and testing matrices prior to final production release.
+            </div>
+          </div>
+          <DialogFooter>
+            <Button size="sm" onClick={() => setShowChangesModal(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Linked Entity Modal */}
+      <Dialog open={!!linkedEntityModal} onOpenChange={(open) => !open && setLinkedEntityModal(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <ExternalLink className="h-5 w-5 text-blue-600" />
+              {linkedEntityModal?.type}
+            </DialogTitle>
+            <DialogDescription>
+              Enterprise PLM cross-link to upstream engineering artifact.
+            </DialogDescription>
+          </DialogHeader>
+          {linkedEntityModal && (
+            <div className="space-y-3 py-2 text-xs">
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-lg border">
+                <div className="font-mono text-blue-600 font-bold text-sm">{linkedEntityModal.id}</div>
+                <div className="font-semibold text-foreground mt-1">{linkedEntityModal.title}</div>
+                <div className="text-muted-foreground text-[11px] mt-0.5">Status: Active & Verified</div>
+              </div>
+            </div>
+          )}
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" size="sm" onClick={() => setLinkedEntityModal(null)}>
+              Close
+            </Button>
+            {linkedEntityModal?.route && (
+              <Button
+                size="sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={() => {
+                  if (linkedEntityModal.route) navigate(linkedEntityModal.route);
+                  setLinkedEntityModal(null);
+                }}
+              >
+                Open Record
+              </Button>
+            )}
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

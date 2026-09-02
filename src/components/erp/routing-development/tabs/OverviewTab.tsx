@@ -15,6 +15,8 @@ interface OverviewTabProps {
   onNavigateTab: (tab: any) => void;
   onReviewDecision?: (decision: any, comments: string) => void;
   onUpdateOperations?: (ops: any[]) => void;
+  onUploadAttachment?: (file: { name: string; type: string; size: number; documentType: string }) => void;
+  onDeleteAttachment?: (id: string) => void;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({
@@ -23,6 +25,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   onNavigateTab,
   onReviewDecision,
   onUpdateOperations,
+  onUploadAttachment,
+  onDeleteAttachment,
 }) => {
   return (
     <div className="space-y-5">
@@ -51,7 +55,12 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       </div>
 
       {/* 4. Attachments Tray */}
-      <RoutingAttachmentsRow record={record} onNavigateTab={onNavigateTab} />
+      <RoutingAttachmentsRow
+        record={record}
+        onNavigateTab={onNavigateTab}
+        onUploadAttachment={onUploadAttachment}
+        onDeleteAttachment={onDeleteAttachment}
+      />
     </div>
   );
 };

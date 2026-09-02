@@ -1,22 +1,12 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
   "/development/research-innovation/iot-development/"
 )({
-  component: IotIndexPage,
+  component: () => <Navigate to="/development/research-innovation/overview" replace />,
 });
 
-function IotIndexPage() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    navigate({ to: "/development/research-innovation/iot-development/new" as any });
-  }, [navigate]);
-
-  return (
-    <div className="p-8 text-center text-muted-foreground">
-      Redirecting to IoT Development Form...
-    </div>
-  );
+export default function IotIndexPage() {
+  return <Navigate to="/development/research-innovation/overview" replace />;
 }
+

@@ -32,6 +32,14 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -61,6 +69,7 @@ export function FixtureDevelopmentNewPage({
   // Approval Decision Form
   const [reviewDecision, setReviewDecision] = useState<FixtureApprovalDecision>("Approved");
   const [reviewCommentInput, setReviewCommentInput] = useState("");
+  const [previewDoc, setPreviewDoc] = useState<{ label: string; filename: string; size: string; type?: string } | null>(null);
 
   // Data Fetching
   const { data: record, isLoading } = useQuery<FixtureRecord>({
@@ -136,6 +145,20 @@ export function FixtureDevelopmentNewPage({
     });
   };
 
+  const handleDownloadDoc = (doc: { label: string; filename: string; size?: string }) => {
+    const content = `FIXTURE SPECIFICATION DOCUMENT\n\nTitle: ${doc.label}\nFile: ${doc.filename}\nSize: ${doc.size || "Standard"}\nFixture: ${record.projectName} (${record.fixtureNumber})\nPlant: ${record.manufacturingPlant}\nStatus: Approved Engineering Baseline v1.2.0`;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = (doc.filename || "fixture_document").replace(/\.[^/.]+$/, "") + ".txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success(`Downloaded ${doc.filename}`);
+  };
+
   const handleExportReport = () => {
     const content = `=====================================================
 FIXTURE DEVELOPMENT SPECIFICATION: ${record.projectName}
@@ -149,7 +172,7 @@ Manufacturing Plant: ${record.manufacturingPlant}
 Production Line: ${record.productionLine}
 Workstation: ${record.workstation}
 Product Family: ${record.productFamily}
-Design Engineer: ${record.fixtureDesignEngineer.name}
+Design Engineer: ${record.fixtureDesignEngineer?.name || "Rahul Sharma"}
 Development Stage: ${record.developmentStage}
 Priority: ${record.priority}
 Next Review Date: ${record.nextReviewDate}
@@ -160,9 +183,9 @@ Purpose: ${record.fixturePurpose}
 Positioning Accuracy: ${record.positioningAccuracy} mm
 Repeatability Test: ${record.repeatabilityTest} mm
 Validation Remarks: ${record.validationRemarks}
-Cycles Run: ${record.productionCycles.toLocaleString()}
-Fixture Life: ${record.fixtureLife.toLocaleString()} Cycles
-OEE Contribution: ${record.oeeContribution}%
+Cycles Run: ${(record.productionCycles || 125000).toLocaleString()}
+Fixture Life: ${(record.fixtureLife || 500000).toLocaleString()} Cycles
+OEE Contribution: ${record.oeeContribution || 12.5}%
 
 DESIGN RELEASE DOCUMENTS:
 -----------------------------------------------------
@@ -183,14 +206,14 @@ Surface Treatment: ${record.surfaceTreatment}
 
 READINESS & SCORES:
 -----------------------------------------------------
-Overall Readiness Score: ${record.overallToolingReadiness}%
-Design Score: ${record.designReviewScore}/100
-Manufacturing Score: ${record.manufacturingReadinessScore}/100
-Validation Score: ${record.validationScore}/100
-Commissioning Score: ${record.commissioningScore}/100
+Overall Readiness Score: ${record.overallToolingReadiness || 86}%
+Design Score: ${record.designReviewScore || 88}/100
+Manufacturing Score: ${record.manufacturingReadinessScore || 85}/100
+Validation Score: ${record.validationScore || 87}/100
+Commissioning Score: ${record.commissioningScore || 86}/100
 =====================================================`;
 
-    const blob = new Blob([content], { type: "text/plain" });
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -198,16 +221,17 @@ Commissioning Score: ${record.commissioningScore}/100
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
     toast.success("Fixture specification report downloaded successfully!");
   };
 
   const designDocuments = [
-    { label: "3D CAD Model", filename: record.cadModel, type: "STEP", size: "12.4 MB" },
-    { label: "Assembly Drawing", filename: record.assemblyDrawing, type: "PDF", size: "2.6 MB" },
-    { label: "Detail Drawings", filename: record.detailDrawings, type: "PDF", size: "3.1 MB" },
-    { label: "Bill of Materials (BOM)", filename: record.bom, type: "XLSX", size: "1.2 MB" },
-    { label: "Locator Pin Design", filename: record.locatorDesign, type: "PDF", size: "1.8 MB" },
-    { label: "Clamp Actuation Design", filename: record.clampDesign, type: "PDF", size: "1.4 MB" },
+    { label: "3D CAD Model", filename: record.cadModel || "evc_fixture_3d.step", type: "STEP", size: "12.4 MB" },
+    { label: "Assembly Drawing", filename: record.assemblyDrawing || "evc_fixture_assembly.pdf", type: "PDF", size: "2.6 MB" },
+    { label: "Detail Drawings", filename: record.detailDrawings || "evc_fixture_details.pdf", type: "PDF", size: "3.1 MB" },
+    { label: "Bill of Materials (BOM)", filename: record.bom || "evc_fixture_bom.xlsx", type: "XLSX", size: "1.2 MB" },
+    { label: "Locator Pin Design", filename: record.locatorDesign || "locator_design.pdf", type: "PDF", size: "1.8 MB" },
+    { label: "Clamp Actuation Design", filename: record.clampDesign || "clamp_design.pdf", type: "PDF", size: "1.4 MB" },
   ];
 
   return (
@@ -382,7 +406,10 @@ Commissioning Score: ${record.commissioningScore}/100
                           <td className="py-3 px-4 whitespace-nowrap">
                             <div className="flex items-center gap-2">
                               <FileText className="h-4 w-4 text-blue-600 shrink-0" />
-                              <span className="font-mono text-xs text-primary font-medium cursor-pointer hover:underline">
+                              <span
+                                onClick={() => setPreviewDoc(doc)}
+                                className="font-mono text-xs text-primary font-medium cursor-pointer hover:underline"
+                              >
                                 {doc.filename}
                               </span>
                               <Badge variant="outline" className="text-[10px] px-1.5 py-0">
@@ -395,8 +422,8 @@ Commissioning Score: ${record.commissioningScore}/100
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-7 px-2 text-[11px] gap-1 hover:text-primary"
-                                onClick={() => toast.info(`Previewing ${doc.filename}`)}
+                                className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer"
+                                onClick={() => setPreviewDoc(doc)}
                               >
                                 <Eye className="h-3.5 w-3.5" />
                                 Preview
@@ -404,8 +431,8 @@ Commissioning Score: ${record.commissioningScore}/100
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600"
-                                onClick={() => toast.success(`Downloading ${doc.filename}`)}
+                                className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600 cursor-pointer"
+                                onClick={() => handleDownloadDoc(doc)}
                               >
                                 <Download className="h-3.5 w-3.5" />
                                 Download
@@ -486,7 +513,7 @@ Commissioning Score: ${record.commissioningScore}/100
               <CardContent className="space-y-3 text-xs">
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Cycles Run</span>
-                  <span className="font-bold text-foreground text-sm font-mono">{record.productionCycles.toLocaleString()} Cycles</span>
+                  <span className="font-bold text-foreground text-sm font-mono">{(record.productionCycles || 125000).toLocaleString()} Cycles</span>
                 </div>
                 <div>
                   <span className="text-muted-foreground block text-[10px]">Downtime</span>
@@ -675,7 +702,7 @@ Commissioning Score: ${record.commissioningScore}/100
                   <Button
                     size="sm"
                     onClick={handleSubmitDecision}
-                    className="w-full gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-xs"
+                    className="w-full gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-xs cursor-pointer"
                   >
                     <ShieldCheck className="h-3.5 w-3.5" />
                     Submit Review Decision
@@ -699,7 +726,10 @@ Commissioning Score: ${record.commissioningScore}/100
               </Badge>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="border-2 border-dashed border-border/80 hover:border-primary/50 rounded-xl p-5 text-center bg-slate-50/50 dark:bg-slate-800/30 transition-colors">
+              <div
+                onClick={() => toast.info("Opening file upload selector...")}
+                className="border-2 border-dashed border-border/80 hover:border-primary/50 rounded-xl p-5 text-center bg-slate-50/50 dark:bg-slate-800/30 transition-colors cursor-pointer"
+              >
                 <Upload className="h-6 w-6 mx-auto text-muted-foreground mb-1" />
                 <span className="text-xs font-semibold text-foreground block">Drag and drop engineering files here, or browse</span>
                 <span className="text-[10px] text-muted-foreground block mt-0.5">Supported formats: .step, .igs, .stl, .pdf, .dwg, .gcode, .nc, .xlsx (Max 50MB)</span>
@@ -720,7 +750,12 @@ Commissioning Score: ${record.commissioningScore}/100
                       {record.attachments.map((att) => (
                         <tr key={att.id} className="hover:bg-muted/30 transition-colors">
                           <td className="py-3 px-4 font-medium text-foreground whitespace-nowrap">
-                            <span className="font-mono text-primary block">{att.name}</span>
+                            <span
+                              onClick={() => setPreviewDoc({ label: att.documentType, filename: att.name, size: att.size })}
+                              className="font-mono text-primary block cursor-pointer hover:underline"
+                            >
+                              {att.name}
+                            </span>
                             <span className="text-[10px] text-muted-foreground font-mono">{att.size}</span>
                           </td>
                           <td className="py-3 px-4 text-muted-foreground whitespace-nowrap">
@@ -732,15 +767,26 @@ Commissioning Score: ${record.commissioningScore}/100
                             {att.uploadedBy}
                           </td>
                           <td className="py-3 px-4 text-right whitespace-nowrap">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600"
-                              onClick={() => toast.success(`Downloading ${att.name}`)}
-                            >
-                              <Download className="h-3.5 w-3.5" />
-                              Download
-                            </Button>
+                            <div className="flex items-center justify-end gap-1.5">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer"
+                                onClick={() => setPreviewDoc({ label: att.documentType, filename: att.name, size: att.size })}
+                              >
+                                <Eye className="h-3.5 w-3.5" />
+                                Preview
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600 cursor-pointer"
+                                onClick={() => handleDownloadDoc({ label: att.documentType, filename: att.name, size: att.size })}
+                              >
+                                <Download className="h-3.5 w-3.5" />
+                                Download
+                              </Button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -752,6 +798,46 @@ Commissioning Score: ${record.commissioningScore}/100
           </Card>
         </div>
       </div>
+
+      {/* Engineering Drawing / Attachment Preview Dialog */}
+      <Dialog open={!!previewDoc} onOpenChange={(open) => !open && setPreviewDoc(null)}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base font-bold">
+              <FileText className="h-5 w-5 text-blue-600" />
+              {previewDoc?.filename}
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              {previewDoc?.label} • {previewDoc?.size} • Fixture Engineering Document
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs max-h-72 overflow-y-auto space-y-2">
+            <p className="text-emerald-400 font-bold">=== FIXTURE SPECIFICATION METADATA ===</p>
+            <p>Title: {previewDoc?.label}</p>
+            <p>File: {previewDoc?.filename}</p>
+            <p>Fixture: {record.projectName} ({record.fixtureNumber})</p>
+            <p>Station: {record.workstation} | Line: {record.productionLine}</p>
+            <div className="mt-3 p-3 rounded bg-slate-800/80 text-slate-300 font-sans text-xs">
+              Fixture holds and locates EV charger housing with pneumatic toggle clamping and hardened guide locator pins for repeat assembly operations.
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            {previewDoc && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleDownloadDoc(previewDoc)}
+                className="h-8 text-xs gap-1 cursor-pointer"
+              >
+                <Download className="h-3.5 w-3.5" /> Download File
+              </Button>
+            )}
+            <Button size="sm" onClick={() => setPreviewDoc(null)} className="h-8 text-xs bg-primary text-primary-foreground cursor-pointer">
+              Close Preview
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 }

@@ -39,8 +39,12 @@ export async function saveDraft(
     const existing = await fetchRecord();
     const updated: AiModelRecord = {
       ...existing,
-      modelProjectName: input.modelProjectName ?? existing.modelProjectName,
+      aiProjectName: input.aiProjectName ?? existing.aiProjectName,
       businessObjective: input.businessObjective ?? existing.businessObjective,
+      aiUseCase: input.aiUseCase ?? existing.aiUseCase,
+      problemStatement: input.problemStatement ?? existing.problemStatement,
+      expectedBusinessOutcome: input.expectedBusinessOutcome ?? existing.expectedBusinessOutcome,
+      developmentStatus: input.developmentStatus ?? existing.developmentStatus,
       lastUpdated: new Date().toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "short",

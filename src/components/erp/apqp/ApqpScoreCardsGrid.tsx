@@ -31,7 +31,7 @@ export const ApqpScoreCardsGrid: React.FC<ApqpScoreCardsGridProps> = ({
       ],
       icon: FileCheck,
       color: "#10b981", // Emerald
-      tab: "inputs",
+      tab: "design",
     },
     {
       title: "Validation Readiness",
@@ -83,7 +83,7 @@ export const ApqpScoreCardsGrid: React.FC<ApqpScoreCardsGridProps> = ({
       ],
       icon: Calculator,
       color: "#14b8a6", // Teal
-      tab: "summary",
+      tab: "cost",
     },
   ];
 

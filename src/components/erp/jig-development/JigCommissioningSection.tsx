@@ -16,6 +16,20 @@ export function JigCommissioningSection({
 
   const commissioningScore = watch("commissioningScore") ?? 86;
 
+  const handleDownloadDoc = (title: string, filename: string) => {
+    const content = `JIG PROTOCOL DOCUMENTATION\n\nTitle: ${title}\nFile: ${filename}\nTarget Jig: EV Charger Top Cover Drilling Jig (JD-2024-0067)\nStatus: Commissioned and Verified on Shopfloor WS-12`;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename.replace(/\.[^/.]+$/, "") + ".txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success(`Downloaded ${filename}`);
+  };
+
   return (
     <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900 flex flex-col justify-between">
       <div>
@@ -127,8 +141,8 @@ export function JigCommissioningSection({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600"
-                  onClick={() => toast.success("Downloading maintenance_plan.pdf")}
+                  className="h-7 px-2 text-[11px] gap-1 hover:text-blue-600 cursor-pointer"
+                  onClick={() => handleDownloadDoc("Maintenance Plan", "maintenance_plan.pdf")}
                 >
                   <Download className="h-3.5 w-3.5" />
                 </Button>
@@ -145,8 +159,8 @@ export function JigCommissioningSection({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 px-2 text-[11px] gap-1 hover:text-purple-600"
-                  onClick={() => toast.success("Downloading calibration_schedule.pdf")}
+                  className="h-7 px-2 text-[11px] gap-1 hover:text-purple-600 cursor-pointer"
+                  onClick={() => handleDownloadDoc("Calibration Schedule", "calibration_schedule.pdf")}
                 >
                   <Download className="h-3.5 w-3.5" />
                 </Button>

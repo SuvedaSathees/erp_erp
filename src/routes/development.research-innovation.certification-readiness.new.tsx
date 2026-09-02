@@ -40,7 +40,6 @@ import {
   Paperclip,
   Share2,
   Printer,
-  History,
   FileCheck,
   Globe,
   FileCode,
@@ -49,6 +48,9 @@ import {
   Calendar,
   ShieldCheck,
   BarChart2,
+  ChevronDown,
+  ExternalLink,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -83,10 +85,6 @@ import {
 
 import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
 import { AppShell } from "@/components/erp/AppShell";
-import {
-  CertificationReadinessTabBar,
-  type CertificationTabKey,
-} from "@/components/erp/CertificationReadinessTabBar";
 import { certificationReadinessService } from "@/services/certificationReadinessService";
 import type {
   CertificationApprovalDecision,
@@ -282,9 +280,97 @@ const DEFAULT_CERTIFICATION_RECORD: CertificationReadinessRecord = {
     recommendation: "Ready for Certification Submission",
   },
 
-  attachments: [],
-  reviewers: [],
-  auditTrail: [],
+  attachments: [
+    {
+      id: "att1",
+      name: "technical_file_v1.2.pdf",
+      size: "15.5 MB",
+      type: "PDF Dossier",
+      uploadedBy: "Rahul Sharma",
+      date: "18 Jun 2024",
+      url: "#",
+    },
+    {
+      id: "att2",
+      name: "test_reports_package.zip",
+      size: "32.4 MB",
+      type: "ZIP Archive",
+      uploadedBy: "Nisha Verma",
+      date: "18 Jun 2024",
+      url: "#",
+    },
+    {
+      id: "att3",
+      name: "compliance_matrix.xlsx",
+      size: "1.2 MB",
+      type: "Spreadsheet",
+      uploadedBy: "Rahul Sharma",
+      date: "19 Jun 2024",
+      url: "#",
+    },
+    {
+      id: "att4",
+      name: "tuv_booking_confirmation.pdf",
+      size: "450 KB",
+      type: "PDF Receipt",
+      uploadedBy: "Ananya Iyer",
+      date: "20 Jun 2024",
+      url: "#",
+    },
+  ],
+  reviewers: [
+    {
+      role: "Compliance Manager",
+      person: "Rahul Sharma",
+      decision: "Approved",
+      date: "18 Jun 2024",
+      comments: "All statutory safety directives aligned.",
+    },
+    {
+      role: "Certification Coordinator",
+      person: "Ananya Iyer",
+      decision: "Approved",
+      date: "18 Jun 2024",
+      comments: "TÜV sample delivery package ready.",
+    },
+    {
+      role: "Quality Manager",
+      person: "Vikram Singh",
+      decision: "Approved with Conditions",
+      date: "19 Jun 2024",
+      comments: "Address CAPA-2024-004 thermal offset.",
+    },
+    {
+      role: "Technical Director / CTO",
+      person: "Dr. Anil Patel",
+      decision: "Pending",
+      date: "-",
+      comments: "Pending final review.",
+    },
+  ],
+  auditTrail: [
+    {
+      action: "Record Initialized",
+      details: "Initialized Certification Readiness Record CR-2024-0041.",
+      timestamp: "18 Jun 2024 10:15 AM",
+      user: "Rahul Sharma",
+      ip: "192.168.1.42",
+    },
+    {
+      action: "Standards Mapped",
+      details: "Associated IEC 61851-1, IEC 62196-2 & FCC Part 15B directives.",
+      timestamp: "18 Jun 2024 11:30 AM",
+      user: "Ananya Iyer",
+      ip: "192.168.1.55",
+    },
+    {
+      action: "Lab Schedule Updated",
+      details: "Booked 25 Jun 2024 testing slot with TÜV Rheinland.",
+      timestamp: "20 Jun 2024 02:45 PM",
+      user: "Ananya Iyer",
+      ip: "192.168.1.55",
+    },
+  ],
 };
 
 export function CertificationReadinessNewPage({
@@ -295,7 +381,6 @@ export function CertificationReadinessNewPage({
   tabs?: ReactNode;
 } = {}) {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<CertificationTabKey>("overview");
   const [selectedStandard, setSelectedStandard] = useState<StandardRecord | null>(null);
   const [selectedDoc, setSelectedDoc] = useState<DocReadinessRecord | null>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -311,12 +396,179 @@ export function CertificationReadinessNewPage({
   const [isCapaModalOpen, setIsCapaModalOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
 
+  // Additional Interactive States
+  const [showAddReviewerModal, setShowAddReviewerModal] = useState(false);
+  const [newReviewerName, setNewReviewerName] = useState("");
+  const [newReviewerRole, setNewReviewerRole] = useState("");
+  const [uploadFileName, setUploadFileName] = useState("");
+  const [uploadFileType, setUploadFileType] = useState("PDF Dossier");
+  const [uploadFileSize, setUploadFileSize] = useState("4.2 MB");
+  const [selectedDocPreview, setSelectedDocPreview] = useState<{
+    name: string;
+    file?: string;
+    size?: string;
+    type?: string;
+    status?: string;
+  } | null>(null);
+  const [linkedEntityModal, setLinkedEntityModal] = useState<{
+    type: string;
+    id: string;
+    title: string;
+    description: string;
+  } | null>(null);
+
+  // CAPA actions interactive state
+  const [capaActions, setCapaActions] = useState([
+    {
+      id: "CAPA-2024-004",
+      title: "Thermal Sensor Calibration Adjustment",
+      description: "Recalibrate temperature sensor offset near 70°C prior to final TÜV Rheinland submission.",
+      status: "In Progress",
+      assignedTo: "Vikram Singh",
+      priority: "Critical",
+      dueDate: "24 Jun 2024",
+    },
+    {
+      id: "CAPA-2024-005",
+      title: "Class B Radiated Emissions Snubber Verification",
+      description: "Ensure capacitor snubbers on switching FETs attenuate 120MHz peak below FCC Class B limit.",
+      status: "Closed",
+      assignedTo: "Rahul Sharma",
+      priority: "Medium",
+      dueDate: "19 Jun 2024",
+    },
+  ]);
+
   // Data Fetching
   const { data: record, isLoading } = useQuery<CertificationReadinessRecord>({
     queryKey: ["certificationRecord"],
     queryFn: () => certificationReadinessService.fetchRecord(),
   });
-  const safeRecord = record ?? DEFAULT_CERTIFICATION_RECORD;
+
+  // Local state for instant UI responsiveness
+  const [localRecord, setLocalRecord] = useState<CertificationReadinessRecord | null>(null);
+
+  React.useEffect(() => {
+    if (record && !localRecord) {
+      setLocalRecord({
+        ...DEFAULT_CERTIFICATION_RECORD,
+        ...record,
+        reviewers: record.reviewers?.length ? record.reviewers : DEFAULT_CERTIFICATION_RECORD.reviewers,
+        attachments: record.attachments?.length ? record.attachments : DEFAULT_CERTIFICATION_RECORD.attachments,
+        auditTrail: record.auditTrail?.length ? record.auditTrail : DEFAULT_CERTIFICATION_RECORD.auditTrail,
+      });
+    }
+  }, [record, localRecord]);
+
+  const safeRecord = localRecord ?? record ?? DEFAULT_CERTIFICATION_RECORD;
+
+  // Browser download helper
+  const triggerBrowserDownload = (fileName: string, content: string, mimeType = "text/plain;charset=utf-8") => {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  // Toggle Reviewer Decision directly
+  const handleToggleReviewerDecision = (index: number) => {
+    const currentReviewers = [...(safeRecord.reviewers || [])];
+    if (!currentReviewers[index]) return;
+    const decisions: CertificationApprovalDecision[] = [
+      "Approved",
+      "Approved with Conditions",
+      "Revision Required",
+      "Rejected",
+    ];
+    const current = currentReviewers[index].decision || "Pending";
+    const nextIdx = (decisions.indexOf(current as CertificationApprovalDecision) + 1) % decisions.length;
+    const nextDecision = decisions[nextIdx];
+    currentReviewers[index] = {
+      ...currentReviewers[index],
+      decision: nextDecision,
+      date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+    };
+    const updated = { ...safeRecord, reviewers: currentReviewers };
+    setLocalRecord(updated);
+    queryClient.setQueryData(["certificationRecord"], updated);
+    toast.success(`Updated ${currentReviewers[index].person}'s decision to ${nextDecision}`);
+  };
+
+  // Toggle Workflow Status
+  const handleStatusChange = (status: string) => {
+    const updated = { ...safeRecord, workflowStatus: status as any };
+    setLocalRecord(updated);
+    queryClient.setQueryData(["certificationRecord"], updated);
+  };
+
+  // Add Reviewer
+  const handleAddReviewer = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newReviewerName.trim() || !newReviewerRole.trim()) {
+      toast.error("Please enter reviewer name and role");
+      return;
+    }
+    const newRev = {
+      role: newReviewerRole,
+      person: newReviewerName,
+      decision: "Pending" as const,
+      date: "-",
+      comments: "Pending review",
+    };
+    const updated = {
+      ...safeRecord,
+      reviewers: [...(safeRecord.reviewers || []), newRev],
+    };
+    setLocalRecord(updated);
+    queryClient.setQueryData(["certificationRecord"], updated);
+    setShowAddReviewerModal(false);
+    setNewReviewerName("");
+    setNewReviewerRole("");
+    toast.success(`Added ${newRev.person} to Compliance Review Board`);
+  };
+
+  // Delete Attachment
+  const handleDeleteAttachment = (name: string) => {
+    const updated = {
+      ...safeRecord,
+      attachments: (safeRecord.attachments || []).filter((a) => a.name !== name),
+    };
+    setLocalRecord(updated);
+    queryClient.setQueryData(["certificationRecord"], updated);
+    toast.success(`Removed attachment: ${name}`);
+  };
+
+  // Upload Attachment
+  const handleUploadAttachment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!uploadFileName.trim()) {
+      toast.error("Please enter file name");
+      return;
+    }
+    const newAtt: CertificationAttachment = {
+      id: `att-${Date.now()}`,
+      name: uploadFileName.endsWith(".pdf") || uploadFileName.endsWith(".zip") || uploadFileName.endsWith(".xlsx") ? uploadFileName : `${uploadFileName}.pdf`,
+      size: uploadFileSize,
+      type: uploadFileType,
+      uploadedBy: "Rahul Sharma",
+      date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      url: "#",
+    };
+    const updated = {
+      ...safeRecord,
+      attachments: [newAtt, ...(safeRecord.attachments || [])],
+    };
+    setLocalRecord(updated);
+    queryClient.setQueryData(["certificationRecord"], updated);
+    setIsUploadOpen(false);
+    setUploadFileName("");
+    toast.success(`Uploaded ${newAtt.name} to certification dossier`);
+  };
 
   // Save Draft Mutation
   const saveDraftMutation = useMutation({
@@ -444,10 +696,10 @@ export function CertificationReadinessNewPage({
       description="Track ISO, CE, FCC, UL, and regulatory compliance certification readiness matrix."
       tabs={tabs ?? <ResearchInnovationTabBar />}
     >
-      <div className="space-y-6 pb-12 font-sans text-slate-900 dark:text-slate-100">
-
-            {/* Form Metadata Control Card */}
-            <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
+      <div className="space-y-6 pb-16 font-sans text-slate-900 dark:text-slate-100">
+        {/* Form Metadata Control Card */}
+        <div className="mx-auto max-w-[1600px] px-4 pt-2">
+          <Card className="border-border/80 shadow-xs bg-white dark:bg-slate-900">
               <CardContent className="p-4 sm:p-5 space-y-4">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-border/60 pb-4">
                   <div className="flex items-start gap-3">
@@ -492,15 +744,75 @@ export function CertificationReadinessNewPage({
                       <Save className="h-3.5 w-3.5 text-primary" />
                       {saveDraftMutation.isPending ? "Saving..." : "Save Draft"}
                     </Button>
+                    {safeRecord.workflowStatus === "In Review" ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="sm"
+                            className="h-8 px-3 text-xs font-semibold gap-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 hover:border-amber-500/50 shadow-2xs transition-all cursor-pointer"
+                          >
+                            <span className="relative flex h-2 w-2">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+                            </span>
+                            <Clock className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                            <span>Under Review</span>
+                            <ChevronDown className="h-3 w-3 opacity-60 ml-0.5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-56 text-xs">
+                          <DropdownMenuItem
+                            onClick={() => document.getElementById("section-review")?.scrollIntoView({ behavior: "smooth" })}
+                            className="cursor-pointer"
+                          >
+                            <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              toast.success("Expedited review reminder dispatched to Compliance Review Board.");
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => {
+                              handleStatusChange("In Progress");
+                              toast.info("Status reverted to In Progress. Parameters unlocked.");
+                            }}
+                            className="cursor-pointer text-amber-600 dark:text-amber-400"
+                          >
+                            <ArrowRight className="mr-2 h-4 w-4" /> Revert Status to In Progress
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : safeRecord.workflowStatus === "Approved" ? (
+                      <Badge className="h-8 px-3 text-xs font-semibold gap-1.5 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                        {safeRecord.workflowStatus}
+                      </Badge>
+                    ) : (
+                      <Button
+                        size="sm"
+                        onClick={handleSubmitReview}
+                        disabled={submitReviewMutation.isPending}
+                        className="h-8 text-xs font-semibold gap-1.5 bg-primary text-white hover:bg-primary/90 shadow-xs cursor-pointer"
+                      >
+                        <Send className="h-3.5 w-3.5" />
+                        {submitReviewMutation.isPending ? "Submitting..." : "Submit for Review"}
+                      </Button>
+                    )}
+
                     <Button
                       size="sm"
-                      onClick={handleSubmitReview}
-                      disabled={submitReviewMutation.isPending}
-                      className="h-8 text-xs font-semibold gap-1.5 bg-primary text-white hover:bg-primary/90 shadow-xs cursor-pointer"
+                      onClick={() => document.getElementById("section-review")?.scrollIntoView({ behavior: "smooth" })}
+                      className="h-8 px-3 text-xs font-semibold gap-1.5 bg-blue-600 hover:bg-blue-700 text-white shadow-xs cursor-pointer"
                     >
-                      <Send className="h-3.5 w-3.5" />
-                      {submitReviewMutation.isPending ? "Submitting..." : "Submit for Review"}
+                      <UserCheck className="h-3.5 w-3.5" />
+                      Review Decision
                     </Button>
+
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="outline" size="sm" className="h-8 w-8 p-0 cursor-pointer border-slate-200 dark:border-slate-800">
@@ -553,21 +865,37 @@ export function CertificationReadinessNewPage({
                 {/* Linked References Metadata Ribbon */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs pt-1">
                   <div
-                    onClick={() => toast.info(`Linked Product: ${safeRecord.linkedProductId}`, { description: "Smart EV Charger AC 7kW (Production Series v1.2)" })}
+                    onClick={() =>
+                      setLinkedEntityModal({
+                        type: "Linked Product Record",
+                        id: safeRecord.linkedProductId,
+                        title: "Smart EV Charger AC 7kW (Production Series v1.2)",
+                        description: "Single & dual gun AC Level 2 charger (IEC 61851 compliant with Type 2 connector socket).",
+                      })
+                    }
                     className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60 p-1 rounded transition-colors"
                   >
                     <span className="text-muted-foreground block text-[10px]">Linked Product</span>
-                    <span className="font-bold text-slate-900 dark:text-white truncate block">
+                    <span className="font-bold text-slate-900 dark:text-white truncate block flex items-center gap-1">
                       {safeRecord.linkedProductId}
+                      <ExternalLink className="h-2.5 w-2.5 opacity-60 shrink-0" />
                     </span>
                   </div>
                   <div
-                    onClick={() => toast.info(`Testing & Validation: ${safeRecord.linkedTestingId}`, { description: "All 142 compliance test procedures logged & verified." })}
+                    onClick={() =>
+                      setLinkedEntityModal({
+                        type: "Linked Testing & Validation",
+                        id: safeRecord.linkedTestingId,
+                        title: "Full Lifecycle Prototype Testing Dossier",
+                        description: "All 142 compliance test procedures logged & verified across functional, thermal, EMC, and safety standards.",
+                      })
+                    }
                     className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60 p-1 rounded transition-colors"
                   >
                     <span className="text-muted-foreground block text-[10px]">Linked Testing & Validation</span>
-                    <span className="font-semibold text-primary font-mono text-[11px] underline">
+                    <span className="font-semibold text-primary font-mono text-[11px] underline flex items-center gap-1">
                       {safeRecord.linkedTestingId}
+                      <ExternalLink className="h-2.5 w-2.5 opacity-60 shrink-0" />
                     </span>
                   </div>
                   <div>
@@ -599,998 +927,1100 @@ export function CertificationReadinessNewPage({
             </Card>
           </div>
 
+
+
           {/* ====================================================================
-             2. MAIN CERTIFICATION WORKSPACE (11 Tabs + Right Insights Panel)
+             1. EXECUTIVE CERTIFICATION READINESS & PROBABILITY BANNER (Full Width)
              ==================================================================== */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-8 space-y-6">
-              {/* TAB 1: OVERVIEW */}
-              {activeTab === "overview" && (
-                <div className="space-y-4">
-                  {/* 8 Numbered Section Overview Grid with Perfect Alignment */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-stretch">
-                    {/* Card 1: Certification Project Overview */}
-                    <Card className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between h-full">
-                      <CardHeader className="p-3.5 pb-2.5 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-                          <span className="p-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 shrink-0">
-                            <Award className="h-3.5 w-3.5" />
-                          </span>
-                          Certification Project Overview
-                        </CardTitle>
-                        <Badge className="bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 text-[10px] font-bold px-2 py-0.5">
-                          Priority: High
-                        </Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 space-y-2 text-xs flex-1 flex flex-col justify-between">
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Product Category:</span>
-                          <span className="font-bold text-slate-900 dark:text-white text-[11px]">EV Charger</span>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Target Market:</span>
-                          <div className="flex gap-1.5 justify-end">
-                            {["India", "EU", "USA"].map((m) => (
-                              <Badge key={m} variant="secondary" className="text-[10px] px-1.5 py-0 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold">
-                                {m}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="py-1 border-b border-slate-100 dark:border-slate-800/60 space-y-0.5">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium block">Certification Objective:</span>
-                          <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed">
-                            Obtain mandatory certifications for global market launch.
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-between pt-1">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Authorities:</span>
-                          <span className="font-bold text-purple-600 dark:text-purple-400 text-[11px]">
-                            BIS, IEC, CE, FCC
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 2: Applicable Standards & Regulations */}
-                    <Card className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between h-full">
-                      <CardHeader className="p-3.5 pb-2.5 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-                          <span className="p-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 shrink-0">
-                            <FileCheck className="h-3.5 w-3.5" />
-                          </span>
-                          Applicable Standards & Regulations
-                        </CardTitle>
-                        <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5">
-                          Score: 86/100
-                        </Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 space-y-2 text-xs flex-1 flex flex-col justify-between">
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Applicable Standards:</span>
-                          <span className="font-bold text-slate-900 dark:text-white text-[11px]">6 Selected</span>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Applicable Regulations:</span>
-                          <span className="font-bold text-slate-900 dark:text-white text-[11px]">5 Selected</span>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Mandatory Certifications:</span>
-                          <span className="font-bold text-blue-600 dark:text-blue-400 text-[11px]">4 Selected</span>
-                        </div>
-                        <div className="flex items-center justify-between pt-1">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Gap Analysis:</span>
-                          <Button
-                            size="sm"
-                            variant="link"
-                            onClick={() => setIsGapModalOpen(true)}
-                            className="h-auto p-0 text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-                          >
-                            View Analysis →
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 3: Documentation Readiness */}
-                    <Card className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between h-full">
-                      <CardHeader className="p-3.5 pb-2.5 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-                          <span className="p-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 shrink-0">
-                            <FileText className="h-3.5 w-3.5" />
-                          </span>
-                          Documentation Readiness
-                        </CardTitle>
-                        <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5">
-                          Score: 88/100
-                        </Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 space-y-2 text-xs flex-1 flex flex-col justify-between">
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Technical File:</span>
-                          <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-0">
-                            Uploaded
-                          </Badge>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Design Documents & BOM:</span>
-                          <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-0">
-                            Uploaded
-                          </Badge>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Risk Assessment Report:</span>
-                          <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-0">
-                            Uploaded
-                          </Badge>
-                        </div>
-                        <div className="flex items-center justify-between pt-1">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">User & Installation Manual:</span>
-                          <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-0">
-                            Uploaded
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 4: Testing & Validation Readiness */}
-                    <Card className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between h-full">
-                      <CardHeader className="p-3.5 pb-2.5 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-                          <span className="p-1 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 shrink-0">
-                            <CheckCircle2 className="h-3.5 w-3.5" />
-                          </span>
-                          Testing & Validation Readiness
-                        </CardTitle>
-                        <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5">
-                          Score: 90/100
-                        </Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 space-y-2 text-xs flex-1 flex flex-col justify-between">
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Functional Testing Completed:</span>
-                          <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 text-[11px]">
-                            <CheckCircle2 className="h-3.5 w-3.5" /> Yes
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Performance Testing Completed:</span>
-                          <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 text-[11px]">
-                            <CheckCircle2 className="h-3.5 w-3.5" /> Yes
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Safety Testing Completed:</span>
-                          <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 text-[11px]">
-                            <CheckCircle2 className="h-3.5 w-3.5" /> Yes
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between pt-1">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Validation Report Available:</span>
-                          <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 text-[11px]">
-                            <CheckCircle2 className="h-3.5 w-3.5" /> Yes
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 5: Certification Laboratory Management */}
-                    <Card className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between h-full">
-                      <CardHeader className="p-3.5 pb-2.5 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-                          <span className="p-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 shrink-0">
-                            <Building className="h-3.5 w-3.5" />
-                          </span>
-                          Certification Laboratory Management
-                        </CardTitle>
-                        <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5">
-                          Score: 85/100
-                        </Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 space-y-2 text-xs flex-1 flex flex-col justify-between">
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Lab Name:</span>
-                          <span className="font-bold text-slate-900 dark:text-white text-[11px]">TÜV Rheinland</span>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Contact Person:</span>
-                          <span className="font-semibold text-slate-700 dark:text-slate-300 text-[11px]">Mr. Peter Klaus</span>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Submission Date:</span>
-                          <span className="font-bold text-blue-600 dark:text-blue-400 text-[11px]">25 Jun 2024</span>
-                        </div>
-                        <div className="flex items-center justify-between pt-1">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Status:</span>
-                          <Badge className="bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 text-[10px] font-bold px-2 py-0.5">
-                            Scheduled
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 6: Compliance Assessment */}
-                    <Card className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between h-full">
-                      <CardHeader className="p-3.5 pb-2.5 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-                          <span className="p-1 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 shrink-0">
-                            <ShieldCheck className="h-3.5 w-3.5" />
-                          </span>
-                          Compliance Assessment
-                        </CardTitle>
-                        <Badge className="bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5">
-                          Score: 84/100
-                        </Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 space-y-2 text-xs flex-1 flex flex-col justify-between">
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Non-Conformities:</span>
-                          <span className="font-bold text-amber-600 dark:text-amber-400 text-[11px]">2</span>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Critical Findings:</span>
-                          <span className="font-bold text-rose-600 dark:text-rose-400 text-[11px]">1</span>
-                        </div>
-                        <div className="flex items-center justify-between pt-1">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">CAPA Status:</span>
-                          <Badge className="bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5">
-                            In Progress
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 7: AI Compliance Assessment */}
-                    <Card className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between h-full">
-                      <CardHeader className="p-3.5 pb-2.5 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-                          <span className="p-1 rounded-md bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
-                            <Sparkles className="h-3.5 w-3.5" />
-                          </span>
-                          AI Compliance Assessment
-                        </CardTitle>
-                        <Badge className="bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 text-[10px] font-bold px-2 py-0.5">
-                          AI Score: 89/100
-                        </Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 space-y-2 text-xs flex-1 flex flex-col justify-between">
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Standards Review:</span>
-                          <span className="font-bold text-emerald-600 dark:text-emerald-400 text-[11px]">Completed</span>
-                        </div>
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Risk Assessment:</span>
-                          <span className="font-bold text-emerald-600 dark:text-emerald-400 text-[11px]">Low Risk</span>
-                        </div>
-                        <div className="flex items-center justify-between pt-1">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Prediction:</span>
-                          <span className="font-bold text-purple-600 dark:text-purple-400 text-[11px]">High Probability</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Card 8: Certification Summary & Probability */}
-                    <Card className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between h-full md:col-span-2 xl:col-span-2">
-                      <CardHeader className="p-3.5 pb-2.5 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between">
-                        <CardTitle className="text-xs font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-                          <span className="p-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 shrink-0">
-                            <BarChart2 className="h-3.5 w-3.5" />
-                          </span>
-                          Certification Summary & Probability
-                        </CardTitle>
-                        <Badge className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5">
-                          Overall: 88/100
-                        </Badge>
-                      </CardHeader>
-                      <CardContent className="p-3.5 space-y-2.5 text-xs flex-1 flex flex-col justify-between">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <span className="text-[11px] font-bold text-slate-900 dark:text-white block">
-                              Certification Success Probability:
-                            </span>
-                            <span className="text-[10px] text-muted-foreground">Calculated across all accredited compliance benchmarks</span>
-                          </div>
-                          <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
-                            92%
-                          </span>
-                        </div>
-                        <Progress value={92} className="h-2 bg-slate-100 dark:bg-slate-800" />
-                        <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/60">
-                          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Recommendation:</span>
-                          <span className="font-bold text-blue-600 dark:text-blue-400 text-[11px]">
-                            Ready for Certification Submission
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  {/* Section 2: Global Compliance Traceability & Standards Matrix (Fills entire workspace height) */}
-                  <Card className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-                    <CardHeader className="px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="p-1.5 rounded-lg bg-blue-100/80 dark:bg-blue-950 text-blue-600 dark:text-blue-400 shrink-0">
-                          <Scale className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <CardTitle className="text-sm font-bold text-slate-900 dark:text-white">
-                            Standards Verification & Regulatory Authority Traceability
-                          </CardTitle>
-                          <p className="text-[11px] text-muted-foreground mt-0.5">
-                            Cross-border EV directives, statutory safety mandates & laboratory audit records
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 text-xs font-semibold px-2.5 py-1 flex items-center gap-1.5 shadow-2xs">
-                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          All Directives Compliant
-                        </Badge>
-                        <Button
-                          size="sm"
-                          onClick={() => setIsGapModalOpen(true)}
-                          className="h-8 text-xs bg-primary hover:bg-primary/90 text-white font-medium gap-1.5 shadow-2xs"
-                        >
-                          <Scale className="h-3.5 w-3.5" /> Gap Analysis
-                        </Button>
-                      </div>
-                    </CardHeader>                    <CardContent className="p-0">
-                      {/* Responsive Table Container without side scrolling */}
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="bg-slate-50/80 dark:bg-slate-800/70 text-slate-500 dark:text-slate-400 font-semibold text-[11px] uppercase tracking-wider border-b border-slate-200/80 dark:border-slate-800">
-                            <th className="px-3.5 py-3 font-semibold w-[18%]">Standard Code</th>
-                            <th className="px-3 py-3 font-semibold w-[32%]">Mandate Title & Scope</th>
-                            <th className="px-3 py-3 font-semibold w-[18%]">Authority / Region</th>
-                            <th className="px-3 py-3 font-semibold text-center w-[10%]">Readiness</th>
-                            <th className="px-3 py-3 font-semibold text-center w-[14%]">Audit Status</th>
-                            <th className="px-3.5 py-3 font-semibold text-right w-[8%]">Dossier</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 bg-white dark:bg-slate-900">
-                          {[
-                            {
-                              code: "IEC 61851-1",
-                              title: "Electric Vehicle Conductive Charging System - General Requirements",
-                              authority: "BIS & IEC (Global)",
-                              readiness: "100%",
-                              status: "Fully Verified",
-                            },
-                            {
-                              code: "IEC 62196-2",
-                              title: "Plugs, Socket-Outlets, Vehicle Connectors and Inlets",
-                              authority: "CE & EU RED Directive",
-                              readiness: "100%",
-                              status: "Fully Verified",
-                            },
-                            {
-                              code: "FCC Part 15B",
-                              title: "Unintentional Radiators - Class B Emissions and Immunity",
-                              authority: "FCC (USA)",
-                              readiness: "96%",
-                              status: "Pre-Scan Pass",
-                            },
-                            {
-                              code: "IS 17017-1",
-                              title: "Electric Vehicle Supply Equipment (EVSE) Requirements for India",
-                              authority: "BIS (India)",
-                              readiness: "100%",
-                              status: "Fully Verified",
-                            },
-                            {
-                              code: "ISO 26262 ASIL-B",
-                              title: "Road Vehicles - Functional Safety Architecture",
-                              authority: "Global Automotive",
-                              readiness: "94%",
-                              status: "Sign-Off In Progress",
-                            },
-                          ].map((row) => (
-                            <tr
-                              key={row.code}
-                              className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors group"
-                            >
-                              {/* Standard Code */}
-                              <td className="px-3.5 py-2.5 align-middle">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50/90 dark:bg-blue-950/60 border border-blue-200/70 dark:border-blue-800/60 font-mono font-bold text-[11px] text-blue-700 dark:text-blue-300 whitespace-nowrap shadow-2xs">
-                                  <Award className="h-3 w-3 text-blue-600 dark:text-blue-400 shrink-0" />
-                                  {row.code}
-                                </span>
-                              </td>
-
-                              {/* Mandate Title */}
-                              <td className="px-3 py-2.5 align-middle">
-                                <div className="font-semibold text-slate-900 dark:text-slate-100 text-xs leading-snug">
-                                  {row.title}
-                                </div>
-                              </td>
-
-                              {/* Authority / Region */}
-                              <td className="px-3 py-2.5 align-middle">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100/90 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 text-[11px] font-medium whitespace-nowrap">
-                                  <Globe className="h-2.5 w-2.5 text-slate-500 shrink-0" />
-                                  {row.authority}
-                                </span>
-                              </td>
-
-                              {/* Readiness */}
-                              <td className="px-3 py-2.5 align-middle text-center">
-                                <div className="inline-flex flex-col items-center gap-0.5">
-                                  <span className="font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                                    {row.readiness}
-                                  </span>
-                                  <div className="w-10 h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div
-                                      className="h-full bg-emerald-500 rounded-full"
-                                      style={{ width: row.readiness }}
-                                    />
-                                  </div>
-                                </div>
-                              </td>
-
-                              {/* Audit Status */}
-                              <td className="px-3 py-2.5 align-middle text-center">
-                                {row.status === "Fully Verified" && (
-                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800 whitespace-nowrap shadow-2xs">
-                                    <CheckCircle2 className="h-3 w-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                                    {row.status}
-                                  </span>
-                                )}
-                                {row.status === "Pre-Scan Pass" && (
-                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/80 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800 whitespace-nowrap shadow-2xs">
-                                    <ShieldCheck className="h-3 w-3 text-blue-600 dark:text-blue-400 shrink-0" />
-                                    {row.status}
-                                  </span>
-                                )}
-                                {row.status === "Sign-Off In Progress" && (
-                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800 whitespace-nowrap shadow-2xs">
-                                    <Clock className="h-3 w-3 text-amber-600 dark:text-amber-400 shrink-0" />
-                                    {row.status}
-                                  </span>
-                                )}
-                              </td>
-
-                              {/* Action */}
-                              <td className="px-3.5 py-2.5 align-middle text-right">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => toast.success(`Viewing Dossier for ${row.code}`)}
-                                  className="h-6 px-2 text-[11px] font-medium text-primary border-primary/20 hover:bg-primary/10 hover:border-primary/40 whitespace-nowrap gap-1 transition-all shadow-2xs"
-                                >
-                                  <FileText className="h-3 w-3 text-primary shrink-0" />
-                                  Dossier
-                                </Button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-
-                      {/* Summary Metrics Bar */}
-                      <div className="p-4 bg-slate-50/50 dark:bg-slate-900/40 border-t border-slate-100 dark:border-slate-800">
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                          <div className="p-3 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs">
-                            <span className="text-[11px] text-muted-foreground block font-medium">Standards Verified</span>
-                            <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400 font-mono mt-0.5 block">11 / 11 Pass</span>
-                          </div>
-                          <div className="p-3 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs">
-                            <span className="text-[11px] text-muted-foreground block font-medium">Target Compliance Date</span>
-                            <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 block">30 Sep 2024</span>
-                          </div>
-                          <div className="p-3 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs">
-                            <span className="text-[11px] text-muted-foreground block font-medium">Accreditation Body</span>
-                            <span className="text-sm font-extrabold text-purple-600 dark:text-purple-400 font-mono mt-0.5 block">TÜV Rheinland</span>
-                          </div>
-                          <div className="p-3 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs">
-                            <span className="text-[11px] text-muted-foreground block font-medium">Submission Probability</span>
-                            <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 block">92.0%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* TAB 2: APPLICABLE STANDARDS & REGULATIONS */}
-              {activeTab === "standards_regulations" && (
-                <div className="space-y-6">
-                  <Card className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-                    <CardHeader className="px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-                        <span className="p-1.5 rounded-lg bg-blue-100/80 dark:bg-blue-950 text-blue-600 dark:text-blue-400 shrink-0">
-                          <Scale className="h-4 w-4" />
-                        </span>
-                        Applicable Standards Matrix ({(safeRecord.standardsList || []).length})
-                      </CardTitle>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 text-xs font-semibold px-2.5 py-1 flex items-center gap-1.5 shadow-2xs">
-                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          Standards Score: 86%
-                        </Badge>
-                        <Button
-                          size="sm"
-                          onClick={() => setIsGapModalOpen(true)}
-                          className="h-8 text-xs bg-primary hover:bg-primary/90 text-white font-medium gap-1.5 shadow-2xs"
-                        >
-                          <Plus className="h-3.5 w-3.5" /> Perform Gap Analysis
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="bg-slate-50/80 dark:bg-slate-800/70 text-slate-500 dark:text-slate-400 font-semibold text-[11px] uppercase tracking-wider border-b border-slate-200/80 dark:border-slate-800">
-                            <th className="px-3.5 py-3 font-semibold w-[20%]">Standard Code</th>
-                            <th className="px-3 py-3 font-semibold w-[32%]">Title & Scope</th>
-                            <th className="px-3 py-3 font-semibold w-[18%]">Category</th>
-                            <th className="px-3 py-3 font-semibold text-center w-[15%]">Status</th>
-                            <th className="px-3.5 py-3 font-semibold text-right w-[15%]">Gap Analysis</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 bg-white dark:bg-slate-900">
-                          {(safeRecord.standardsList || []).map((std) => (
-                            <tr key={std.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors group">
-                              <td className="px-3.5 py-2.5 align-middle">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50/90 dark:bg-blue-950/60 border border-blue-200/70 dark:border-blue-800/60 font-mono font-bold text-[11px] text-blue-700 dark:text-blue-300 whitespace-nowrap shadow-2xs">
-                                  <Award className="h-3 w-3 text-blue-600 dark:text-blue-400 shrink-0" />
-                                  {std.code}
-                                </span>
-                              </td>
-                              <td className="px-3 py-2.5 align-middle font-semibold text-slate-900 dark:text-slate-100 text-xs">{std.title}</td>
-                              <td className="px-3 py-2.5 align-middle">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[11px] font-medium whitespace-nowrap">
-                                  {std.category}
-                                </span>
-                              </td>
-                              <td className="px-3 py-2.5 align-middle text-center">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800 whitespace-nowrap shadow-2xs">
-                                  <CheckCircle2 className="h-3 w-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                                  {std.status}
-                                </span>
-                              </td>
-                              <td className="px-3.5 py-2.5 align-middle font-medium text-slate-700 dark:text-slate-300 text-xs text-right">{std.gapAnalysis}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* TAB 3: DOCUMENTATION */}
-              {activeTab === "documentation" && (
-                <div className="space-y-6">
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 pb-2 border-b flex flex-row items-center justify-between">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-primary" /> Required Technical Files & Declarations ({(safeRecord.documentsList || []).length})
-                      </CardTitle>
-                      <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-bold">Doc Score: {safeRecord.documentationScore}%</Badge>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-3">
-                      <div className="rounded-lg border overflow-hidden">
-                        <table className="w-full text-left text-xs">
-                          <thead className="bg-slate-50 dark:bg-slate-800 text-muted-foreground font-semibold border-b">
-                            <tr>
-                              <th className="p-2.5">Document Name</th>
-                              <th className="p-2.5">Category</th>
-                              <th className="p-2.5">Status</th>
-                              <th className="p-2.5">Owner</th>
-                              <th className="p-2.5">Expiry Date</th>
-                              <th className="p-2.5 text-right">File</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-border/60">
-                            {(safeRecord.documentsList || []).map((doc) => (
-                              <tr key={doc.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                                <td className="p-2.5 font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                  <FileText className="h-4 w-4 text-primary" /> {doc.docName}
-                                </td>
-                                <td className="p-2.5"><Badge variant="outline" className="text-[10px]">{doc.category}</Badge></td>
-                                <td className="p-2.5"><Badge className="bg-emerald-500/15 text-emerald-700 text-[10px]">{doc.status}</Badge></td>
-                                <td className="p-2.5 text-muted-foreground">{doc.owner}</td>
-                                <td className="p-2.5 text-muted-foreground">{doc.expiryDate}</td>
-                                <td className="p-2.5 text-right">
-                                  <Button size="sm" variant="ghost" onClick={() => toast.success(`Downloading ${doc.fileName}`)} className="h-7 text-xs text-primary">
-                                    <Download className="h-3.5 w-3.5 mr-1" /> {doc.fileName}
-                                  </Button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* TAB 4: TESTING READINESS */}
-              {activeTab === "testing_readiness" && (
-                <div className="space-y-6">
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 pb-2 border-b flex flex-row items-center justify-between">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-primary" /> Upstream Testing & Validation Traceability
-                      </CardTitle>
-                      <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-bold">Testing Score: {safeRecord.testingScore}%</Badge>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-3">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        {[
-                          { label: "Functional Testing", status: "Completed (24/24 Pass)" },
-                          { label: "Performance Testing", status: "Completed (12,500h MTBF)" },
-                          { label: "Reliability Testing", status: "Completed (2,000 Cycles)" },
-                          { label: "Safety Testing", status: "Completed (IEC 61851)" },
-                          { label: "EMC/EMI Testing", status: "Completed (Class B)" },
-                          { label: "Environmental Testing", status: "Completed (IP54 Verified)" },
-                        ].map((t) => (
-                          <div key={t.label} className="rounded-lg border p-3 bg-slate-50 dark:bg-slate-800 space-y-1">
-                            <span className="font-bold text-xs text-slate-900 dark:text-white block">{t.label}</span>
-                            <span className="text-[10px] font-semibold text-emerald-600 flex items-center gap-1">
-                              <CheckCircle2 className="h-3 w-3 inline" /> {t.status}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* TAB 5: LABORATORY */}
-              {activeTab === "laboratory" && (
-                <div className="space-y-6">
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 pb-2 border-b flex flex-row items-center justify-between">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2">
-                        <Building className="h-4 w-4 text-primary" /> Authorized Certification Laboratory Booking
-                      </CardTitle>
-                      <div className="flex items-center gap-2">
-                        <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-bold">
-                          Lab Score: {safeRecord.laboratoryScore}%
-                        </Badge>
-                        <Button size="sm" onClick={() => setIsLabModalOpen(true)} className="h-8 text-xs bg-primary text-white">
-                          Inspect Booking
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-3">
-                      <div className="rounded-lg border p-4 bg-white dark:bg-slate-900 space-y-3">
-                        <div className="flex justify-between items-center border-b pb-2">
-                          <div>
-                            <h3 className="font-bold text-base text-slate-900 dark:text-white">{safeRecord.labConfig?.labName}</h3>
-                            <p className="text-xs text-muted-foreground">Authorized Regulatory Testing Body</p>
-                          </div>
-                          <Badge className="bg-blue-500/15 text-blue-700 font-bold">{safeRecord.labConfig?.status}</Badge>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 text-xs">
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Contact Person:</span>
-                            <span className="font-semibold text-slate-800 dark:text-slate-200">{safeRecord.labConfig?.contactPerson}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Testing Scope:</span>
-                            <span className="font-semibold text-slate-800 dark:text-slate-200">{safeRecord.labConfig?.scope}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Sample Submission:</span>
-                            <span className="font-bold text-primary">{safeRecord.labConfig?.sampleSubmissionDate}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground block text-[10px]">Target Certification Date:</span>
-                            <span className="font-bold text-emerald-600">{safeRecord.labConfig?.plannedCertificationDate}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* TAB 6: COMPLIANCE */}
-              {activeTab === "compliance" && (
-                <div className="space-y-6">
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 pb-2 border-b flex flex-row items-center justify-between">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-amber-600" /> Non-Conformities & Open CAPAs ({safeRecord.complianceConfig?.nonConformitiesCount})
-                      </CardTitle>
-                      <div className="flex items-center gap-2">
-                        <Badge className="bg-amber-500/15 text-amber-700 dark:text-amber-400 font-bold">
-                          Compliance Score: {safeRecord.complianceScore}%
-                        </Badge>
-                        <Button size="sm" onClick={() => setIsCapaModalOpen(true)} className="h-8 text-xs bg-amber-600 text-white hover:bg-amber-700">
-                          + Manage CAPA
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-3">
-                      <div className="rounded-lg border p-3 bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900 space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold text-xs text-amber-900 dark:text-amber-300">CAPA-2024-004: Thermal Sensor Calibration Adjustment</span>
-                          <Badge className="bg-amber-500/15 text-amber-700 text-[10px]">In Progress</Badge>
-                        </div>
-                        <p className="text-xs text-amber-800 dark:text-amber-200">
-                          Recalibrate temperature sensor offset near 70°C prior to final TÜV Rheinland submission.
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* TAB 7: AI ASSESSMENT */}
-              {activeTab === "ai_assessment" && (
-                <div className="space-y-6">
-                  <Card className="border-border/80 shadow-xs bg-gradient-to-br from-purple-50/40 via-white to-slate-50 dark:from-purple-950/20 dark:via-slate-900">
-                    <CardHeader className="p-4 pb-2 border-b flex flex-row items-center justify-between">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2 text-purple-700 dark:text-purple-300">
-                        <Sparkles className="h-4 w-4" /> Magnertia AI Compliance & Certification Advisory
-                      </CardTitle>
-                      <Badge className="bg-purple-500/15 text-purple-700 dark:text-purple-400 font-bold">
-                        AI Score: {safeRecord.aiScore}%
+          <div className="mx-auto max-w-[1600px] px-4 space-y-6">
+            <Card className="border-border bg-white dark:bg-slate-900 shadow-xs overflow-hidden">
+              <div className="p-4 sm:p-5 flex flex-col xl:flex-row items-center justify-between gap-6">
+                {/* Overall Score Gauge */}
+                <div className="flex items-center gap-5 shrink-0">
+                  <CircularScoreGauge
+                    score={safeRecord.overallReadinessScore}
+                    size={96}
+                    strokeWidth={8}
+                    color="#2563eb"
+                  />
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-foreground">Overall Certification Readiness Score</span>
+                      <Badge className="bg-blue-600 text-white text-[10px]">
+                        TÜV Rheinland Scheduled
                       </Badge>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-4">
-                      <div className="rounded-lg border bg-white dark:bg-slate-800 p-4 space-y-2">
-                        <span className="text-xs font-bold text-slate-900 dark:text-white block">AI Standards & Risk Assessment</span>
-                        <p className="text-xs text-slate-700 dark:text-slate-300">
-                          Standards review completed with low risk detected across mandatory safety and EMC directives.
-                        </p>
-                      </div>
-                      <div className="rounded-lg border bg-white dark:bg-slate-800 p-4 space-y-2">
-                        <span className="text-xs font-bold text-slate-900 dark:text-white block">AI Optimization Suggestions</span>
-                        <p className="text-xs text-purple-600 dark:text-purple-400 font-semibold">
-                          Close CAPA-2024-004 thermal sensor offset item before submitting sample to TÜV Rheinland for 98% pass probability.
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                    <p className="text-xs text-muted-foreground max-w-md">
+                      Calculated across all accredited compliance benchmarks & statutory safety directives.
+                    </p>
+                    <div className="flex items-center gap-2 text-xs pt-1">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">Success Probability:</span>
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+                        {safeRecord.readinessSummary?.certificationProbabilityPct ?? 92}%
+                      </span>
+                      <span className="text-slate-300 dark:text-slate-700">•</span>
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">Recommendation:</span>
+                      <span className="font-bold text-blue-600 dark:text-blue-400">
+                        {safeRecord.readinessSummary?.recommendation ?? "Ready for Certification Submission"}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              )}
 
-              {/* TAB 8: SUMMARY */}
-              {activeTab === "summary" && (
-                <div className="space-y-6">
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 pb-2 border-b">
-                      <CardTitle className="text-sm font-bold">Readiness Summary & Final Submission Recommendation</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-4">
-                      <div className="space-y-3">
-                        {[
-                          { label: "Documentation Readiness", score: safeRecord.documentationScore },
-                          { label: "Testing & Validation", score: safeRecord.testingScore },
-                          { label: "Compliance & CAPA", score: safeRecord.complianceScore },
-                          { label: "Laboratory Submission", score: safeRecord.laboratoryScore },
-                          { label: "AI Predictive Compliance", score: safeRecord.aiScore },
-                        ].map((item) => (
-                          <div key={item.label} className="space-y-1">
-                            <div className="flex justify-between text-xs font-semibold">
-                              <span className="text-slate-700 dark:text-slate-300">{item.label}</span>
-                              <span className="text-primary font-mono">{item.score}%</span>
-                            </div>
-                            <Progress value={item.score} className="h-2" />
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                {/* Component Pillar Progress Bars */}
+                <div className="w-full xl:w-auto flex-1 max-w-xl grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs border-t xl:border-t-0 xl:border-l border-border/80 pt-4 xl:pt-0 xl:pl-6">
+                  <div
+                    onClick={() => document.getElementById("documentation")?.scrollIntoView({ behavior: "smooth" })}
+                    className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                  >
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-muted-foreground font-medium truncate">Documentation</span>
+                      <span className="font-bold text-blue-600">{safeRecord.documentationScore}%</span>
+                    </div>
+                    <Progress value={safeRecord.documentationScore} className="h-1.5" />
+                  </div>
+                  <div
+                    onClick={() => document.getElementById("testing_readiness")?.scrollIntoView({ behavior: "smooth" })}
+                    className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                  >
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-muted-foreground font-medium truncate">Testing</span>
+                      <span className="font-bold text-blue-600">{safeRecord.testingScore}%</span>
+                    </div>
+                    <Progress value={safeRecord.testingScore} className="h-1.5" />
+                  </div>
+                  <div
+                    onClick={() => document.getElementById("compliance")?.scrollIntoView({ behavior: "smooth" })}
+                    className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                  >
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-muted-foreground font-medium truncate">Compliance</span>
+                      <span className="font-bold text-emerald-600">{safeRecord.complianceScore}%</span>
+                    </div>
+                    <Progress value={safeRecord.complianceScore} className="h-1.5" />
+                  </div>
+                  <div
+                    onClick={() => document.getElementById("laboratory")?.scrollIntoView({ behavior: "smooth" })}
+                    className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                  >
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-muted-foreground font-medium truncate">Laboratory</span>
+                      <span className="font-bold text-blue-600">{safeRecord.laboratoryScore}%</span>
+                    </div>
+                    <Progress value={safeRecord.laboratoryScore} className="h-1.5" />
+                  </div>
+                  <div
+                    onClick={() => document.getElementById("ai_assessment")?.scrollIntoView({ behavior: "smooth" })}
+                    className="space-y-1 col-span-2 sm:col-span-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                  >
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-muted-foreground font-medium truncate">AI Score</span>
+                      <span className="font-bold text-purple-600">{safeRecord.aiScore}%</span>
+                    </div>
+                    <Progress value={safeRecord.aiScore} className="h-1.5" />
+                  </div>
                 </div>
-              )}
+              </div>
+            </Card>
 
-              {/* TAB 9: ATTACHMENTS */}
-              {activeTab === "attachments" && (
-                <div className="space-y-6">
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 pb-2 border-b flex flex-row items-center justify-between">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2">
-                        <Paperclip className="h-4 w-4 text-primary" /> Certification Package Assets ({(safeRecord.attachments || []).length})
-                      </CardTitle>
-                      <Button size="sm" onClick={() => setIsUploadOpen(true)} className="h-8 text-xs bg-primary text-white">
-                        + Upload File
-                      </Button>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-2">
-                      <div className="rounded-lg border overflow-hidden">
-                        <table className="w-full text-left text-xs">
-                          <thead className="bg-slate-50 dark:bg-slate-800 text-muted-foreground font-semibold border-b">
-                            <tr>
-                              <th className="p-2.5">File Name</th>
-                              <th className="p-2.5">Type</th>
-                              <th className="p-2.5">Size</th>
-                              <th className="p-2.5">Date</th>
-                              <th className="p-2.5 text-right">Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-border/60">
-                            {(safeRecord.attachments || []).map((att) => (
-                              <tr key={att.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                                <td className="p-2.5 font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                  <FileText className="h-4 w-4 text-primary" /> {att.name}
-                                </td>
-                                <td className="p-2.5"><Badge variant="outline" className="text-[10px]">{att.type}</Badge></td>
-                                <td className="p-2.5 text-muted-foreground">{att.size}</td>
-                                <td className="p-2.5 text-muted-foreground">{att.date}</td>
-                                <td className="p-2.5 text-right">
-                                  <Button size="sm" variant="ghost" onClick={() => toast.success(`Downloading ${att.name}`)} className="h-7 text-xs text-primary">
-                                    <Download className="h-3.5 w-3.5 mr-1" /> Download
-                                  </Button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+            {/* ====================================================================
+               2. BALANCED 2-COLUMN GRID (Cards 1 to 6)
+               ==================================================================== */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+              {/* -----------------------------------------------------------------
+                 CARD 1: Certification Project Overview
+                 ----------------------------------------------------------------- */}
+              <Card id="overview" className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between scroll-mt-24">
+                <div>
+                  <CardHeader className="pb-3 border-b border-border/60">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Award className="h-4 w-4 text-blue-600" />
+                        <CardTitle className="text-sm font-bold">1. Certification Project Overview</CardTitle>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* TAB 10: REVIEW & APPROVAL */}
-              {activeTab === "review_approval" && (
-                <div className="space-y-6">
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 pb-2 border-b">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2">
-                        <UserCheck className="h-4 w-4 text-primary" /> Compliance Review Board Decision Form
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-4">
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-900 dark:text-white">Approval Decision:</label>
-                        <div className="flex flex-wrap gap-2">
-                          {(["Approved", "Approved with Conditions", "Revision Required", "On Hold", "Rejected"] as const).map((dec) => (
-                            <Button
-                              key={dec}
-                              type="button"
-                              variant={reviewDecision === dec ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => setReviewDecision(dec)}
-                              className="h-8 text-xs"
-                            >
-                              {dec}
-                            </Button>
+                      <Badge className="bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 text-xs font-bold">
+                        Priority: High
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4 space-y-3.5 text-xs">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <span className="text-slate-500 dark:text-slate-400 block text-[11px] font-medium mb-1">Product Category:</span>
+                        <span className="font-bold text-slate-900 dark:text-white text-xs">EV Charger</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 dark:text-slate-400 block text-[11px] font-medium mb-1">Target Market:</span>
+                        <div className="flex gap-1.5 flex-wrap">
+                          {["India", "EU", "USA"].map((m) => (
+                            <Badge key={m} variant="secondary" className="text-[10px] px-2 py-0.5 font-semibold">
+                              {m}
+                            </Badge>
                           ))}
                         </div>
                       </div>
+                    </div>
 
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-900 dark:text-white">Review Comments:</label>
-                        <Textarea
-                          rows={3}
-                          value={reviewCommentInput}
-                          onChange={(e) => setReviewCommentInput(e.target.value)}
-                          placeholder="Enter compliance review comments..."
-                          className="text-xs"
-                        />
-                      </div>
+                    <div>
+                      <span className="text-slate-500 dark:text-slate-400 block text-[11px] font-medium mb-1">Certification Objective:</span>
+                      <p className="text-slate-700 dark:text-slate-300 text-xs leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-lg border border-slate-200/70 dark:border-slate-800">
+                        Obtain mandatory certifications for global market launch.
+                      </p>
+                    </div>
 
-                      <Button onClick={handleSubmitDecision} disabled={reviewDecisionMutation.isPending} className="bg-primary text-white text-xs">
-                        Submit Decision
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* TAB 11: SYSTEM INFO */}
-              {activeTab === "system_info" && (
-                <div className="space-y-6">
-                  <Card className="border-border/80 shadow-xs">
-                    <CardHeader className="p-4 pb-2 border-b">
-                      <CardTitle className="text-sm font-bold">System Audit Trail & History</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-3">
-                      <div className="space-y-2">
-                        {(safeRecord.auditTrail || []).map((aud) => (
-                          <div key={aud.id} className="rounded-lg border p-3 text-xs flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/40">
-                            <div>
-                              <span className="font-bold text-slate-900 dark:text-white block">{aud.action}</span>
-                              <span className="text-[10px] text-muted-foreground">{aud.details}</span>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-[10px] text-muted-foreground block">{aud.timestamp}</span>
-                              <span className="text-[10px] text-primary font-mono">{aud.user} ({aud.ipAddress})</span>
-                            </div>
-                          </div>
+                    <div>
+                      <span className="text-slate-500 dark:text-slate-400 block text-[11px] font-medium mb-1">Regulatory Authorities:</span>
+                      <div className="flex gap-2 flex-wrap">
+                        {["BIS", "IEC", "CE", "FCC"].map((auth) => (
+                          <span key={auth} className="inline-flex items-center px-2.5 py-1 rounded-md bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 font-bold text-xs">
+                            {auth}
+                          </span>
                         ))}
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+
+                    {/* Global Regulatory Authority Harmonization Grid */}
+                    <div className="rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-3 space-y-2.5 mt-2">
+                      <div className="flex items-center justify-between pb-1.5 border-b border-border/60">
+                        <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">
+                          Target Market Harmonization Status
+                        </span>
+                        <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 text-[10px] font-semibold">
+                          3 Markets Aligned
+                        </Badge>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2 text-center">
+                        <div className="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+                          <span className="text-[10px] font-medium text-muted-foreground block">India (BIS)</span>
+                          <span className="font-bold text-xs text-emerald-600">100% Verified</span>
+                        </div>
+                        <div className="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+                          <span className="text-[10px] font-medium text-muted-foreground block">EU (CE RED)</span>
+                          <span className="font-bold text-xs text-emerald-600">100% Verified</span>
+                        </div>
+                        <div className="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+                          <span className="text-[10px] font-medium text-muted-foreground block">USA (FCC)</span>
+                          <span className="font-bold text-xs text-blue-600">96% Pre-Scan</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
                 </div>
-              )}
+                <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">Form Code</span>
+                  <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{safeRecord.certificationReadinessId} • {safeRecord.formCode}</span>
+                </div>
+              </Card>
+
+              {/* -----------------------------------------------------------------
+                 CARD 2: Applicable Standards & Regulations
+                 ----------------------------------------------------------------- */}
+              <Card id="standards_regulations" className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between scroll-mt-24">
+                <div>
+                  <CardHeader className="pb-3 border-b border-border/60">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <FileCheck className="h-4 w-4 text-blue-600" />
+                        <CardTitle className="text-sm font-bold">2. Applicable Standards & Regulations</CardTitle>
+                      </div>
+                      <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold">
+                        Score: 86/100
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4 space-y-3.5 text-xs">
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <div className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+                        <span className="text-[10px] text-muted-foreground block font-medium">Standards</span>
+                        <span className="font-extrabold text-sm text-slate-900 dark:text-white">6 Selected</span>
+                      </div>
+                      <div className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+                        <span className="text-[10px] text-muted-foreground block font-medium">Regulations</span>
+                        <span className="font-extrabold text-sm text-slate-900 dark:text-white">5 Selected</span>
+                      </div>
+                      <div className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+                        <span className="text-[10px] text-muted-foreground block font-medium">Mandatory</span>
+                        <span className="font-extrabold text-sm text-blue-600 dark:text-blue-400">4 Selected</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block">
+                        Core Directives Baseline:
+                      </span>
+                      {[
+                        { code: "IEC 61851-1", title: "EV Conductive Charging General", authority: "BIS & IEC" },
+                        { code: "IEC 62196-2", title: "Plugs & Connectors Directive", authority: "CE & RED" },
+                        { code: "FCC Part 15B", title: "Class B Emissions & Immunity", authority: "FCC USA" },
+                        { code: "IS 17017-1", title: "EVSE Requirements India", authority: "BIS India" },
+                        { code: "ISO 26262", title: "Road Vehicles Functional Safety", authority: "ASIL-B" },
+                      ].map((std) => (
+                        <div
+                          key={std.code}
+                          className="flex items-center justify-between rounded-lg border border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 px-3 py-2 text-xs"
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Award className="h-3.5 w-3.5 text-blue-600 shrink-0" />
+                            <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{std.code}</span>
+                            <span className="text-muted-foreground truncate text-[11px]">{std.title}</span>
+                          </div>
+                          <Badge variant="outline" className="text-[10px] font-mono shrink-0">
+                            {std.authority}
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-slate-500 dark:text-slate-400 text-xs font-medium">Gap Analysis:</span>
+                      <Button
+                        size="sm"
+                        variant="link"
+                        onClick={() => setIsGapModalOpen(true)}
+                        className="h-auto p-0 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                      >
+                        View Analysis →
+                      </Button>
+                    </div>
+                  </CardContent>
+                </div>
+
+                <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Standards & Regulations Score
+                  </span>
+                  <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
+                    <span>86</span>
+                    <span className="text-xs font-normal opacity-80">/100</span>
+                  </div>
+                </div>
+              </Card>
+
+              {/* -----------------------------------------------------------------
+                 CARD 3: Documentation Readiness
+                 ----------------------------------------------------------------- */}
+              <Card id="documentation" className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between scroll-mt-24">
+                <div>
+                  <CardHeader className="pb-3 border-b border-border/60">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-blue-600" />
+                        <CardTitle className="text-sm font-bold">3. Documentation Readiness</CardTitle>
+                      </div>
+                      <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold">
+                        Score: 88/100
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4 space-y-2.5 text-xs">
+                    {[
+                      { name: "Technical File", status: "Uploaded", file: "technical_file_v1.2.pdf", size: "15.5 MB" },
+                      { name: "Design Documents & BOM", status: "Uploaded", file: "BOM_Smart_EV_Charger_v1.2.xlsx", size: "1.25 MB" },
+                      { name: "Risk Assessment Report", status: "Uploaded", file: "Risk_Assessment_v1.2.pdf", size: "1.78 MB" },
+                      { name: "User & Installation Manual", status: "Uploaded", file: "User_Manual_v1.2.pdf", size: "3.45 MB" },
+                    ].map((doc) => (
+                      <div
+                        key={doc.name}
+                        className="flex items-center justify-between rounded-lg border border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 px-3 py-2"
+                      >
+                        <div className="min-w-0 pr-2">
+                          <span className="font-semibold text-slate-800 dark:text-slate-200 block text-xs truncate">
+                            {doc.name}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground font-mono">
+                            {doc.file} ({doc.size})
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-0.5">
+                            {doc.status}
+                          </Badge>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedDocPreview({ name: doc.name, file: doc.file, size: doc.size, status: doc.status })}
+                            className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                            title="Preview Document"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              triggerBrowserDownload(
+                                doc.file,
+                                `=======================================================\nDOCUMENT: ${doc.name}\nFILE: ${doc.file}\nSIZE: ${doc.size}\nRECORD: ${safeRecord.certificationReadinessId}\nPRODUCT: ${safeRecord.linkedProductId}\nSTATUS: Verified for Laboratory Submission\n=======================================================`
+                              );
+                              toast.success(`Downloading ${doc.file}`);
+                            }}
+                            className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                            title="Download Document"
+                          >
+                            <Download className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </div>
+
+                <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Documentation Readiness Score
+                  </span>
+                  <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
+                    <span>88</span>
+                    <span className="text-xs font-normal opacity-80">/100</span>
+                  </div>
+                </div>
+              </Card>
+
+              {/* -----------------------------------------------------------------
+                 CARD 4: Testing & Validation Readiness
+                 ----------------------------------------------------------------- */}
+              <Card id="testing_readiness" className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between scroll-mt-24">
+                <div>
+                  <CardHeader className="pb-3 border-b border-border/60">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                        <CardTitle className="text-sm font-bold">4. Testing & Validation Readiness</CardTitle>
+                      </div>
+                      <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold">
+                        Score: 90/100
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4 space-y-2.5 text-xs">
+                    {[
+                      { label: "Functional Testing Completed", val: "Yes", desc: "100% nominal & boundary conditions verified" },
+                      { label: "Performance Testing Completed", val: "Yes", desc: "Thermal & efficiency limits validated" },
+                      { label: "Safety Testing Completed", val: "Yes", desc: "High voltage insulation & dielectric pass" },
+                      { label: "Validation Report Available", val: "Yes", desc: "Accredited summary report TV-2024-0075 signed" },
+                    ].map((item) => (
+                      <div
+                        key={item.label}
+                        className="flex items-center justify-between rounded-lg border border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 px-3 py-2.5"
+                      >
+                        <div>
+                          <span className="font-semibold text-slate-800 dark:text-slate-200 block text-xs">
+                            {item.label}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">{item.desc}</span>
+                        </div>
+                        <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 text-xs shrink-0">
+                          <CheckCircle2 className="h-3.5 w-3.5" /> {item.val}
+                        </span>
+                      </div>
+                    ))}
+                  </CardContent>
+                </div>
+
+                <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Testing & Validation Score
+                  </span>
+                  <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
+                    <span>90</span>
+                    <span className="text-xs font-normal opacity-80">/100</span>
+                  </div>
+                </div>
+              </Card>
+
+              {/* -----------------------------------------------------------------
+                 CARD 5: Certification Laboratory Management
+                 ----------------------------------------------------------------- */}
+              <Card id="laboratory" className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between scroll-mt-24">
+                <div>
+                  <CardHeader className="pb-3 border-b border-border/60">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Building className="h-4 w-4 text-indigo-600" />
+                        <CardTitle className="text-sm font-bold">5. Certification Laboratory Management</CardTitle>
+                      </div>
+                      <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold">
+                        Score: 85/100
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4 space-y-3 text-xs">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium block mb-1">Lab Name:</span>
+                        <span className="font-bold text-slate-900 dark:text-white text-xs">TÜV Rheinland</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium block mb-1">Contact Person:</span>
+                        <span className="font-semibold text-slate-700 dark:text-slate-300 text-xs">Mr. Peter Klaus</span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium block mb-1">Submission Date:</span>
+                        <span className="font-bold text-blue-600 dark:text-blue-400 text-xs font-mono">25 Jun 2024</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium block mb-1">Status:</span>
+                        <Badge className="bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 text-[10px] font-bold px-2 py-0.5">
+                          Scheduled
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-500 dark:text-slate-400 text-[11px] font-medium block mb-1">Testing Scope:</span>
+                      <p className="text-slate-700 dark:text-slate-300 text-[11px] bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg border border-slate-200/70 dark:border-slate-800">
+                        EMC, Safety, Performance, Environmental
+                      </p>
+                    </div>
+
+                    <div className="pt-1">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setIsLabModalOpen(true)}
+                        className="w-full text-xs font-semibold border-indigo-200 dark:border-indigo-900/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 cursor-pointer"
+                      >
+                        <Building className="h-3.5 w-3.5 mr-1.5" /> Schedule Lab Booking
+                      </Button>
+                    </div>
+                  </CardContent>
+                </div>
+
+                <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Laboratory Readiness Score
+                  </span>
+                  <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-md font-bold text-sm">
+                    <span>85</span>
+                    <span className="text-xs font-normal opacity-80">/100</span>
+                  </div>
+                </div>
+              </Card>
+
+              {/* -----------------------------------------------------------------
+                 CARD 6: Compliance Assessment & CAPA
+                 ----------------------------------------------------------------- */}
+              <Card id="compliance" className="border-border bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between scroll-mt-24">
+                <div>
+                  <CardHeader className="pb-3 border-b border-border/60">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                        <CardTitle className="text-sm font-bold">6. Compliance Assessment & CAPA</CardTitle>
+                      </div>
+                      <Badge className="bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-bold">
+                        Score: 84/100
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4 space-y-3 text-xs">
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <div className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+                        <span className="text-[10px] text-muted-foreground block font-medium">Non-Conformities</span>
+                        <span className="font-extrabold text-sm text-amber-600 dark:text-amber-400">2</span>
+                      </div>
+                      <div className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+                        <span className="text-[10px] text-muted-foreground block font-medium">Critical Findings</span>
+                        <span className="font-extrabold text-sm text-rose-600 dark:text-rose-400">1</span>
+                      </div>
+                      <div className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+                        <span className="text-[10px] text-muted-foreground block font-medium">CAPA Status</span>
+                        <Badge className="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold mt-0.5">
+                          In Progress
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <div className="rounded-lg border p-3 bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900 space-y-1.5">
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-xs text-amber-900 dark:text-amber-300">
+                          CAPA-2024-004: Thermal Sensor Calibration Adjustment
+                        </span>
+                        <Badge className="bg-amber-500/15 text-amber-700 text-[10px]">In Progress</Badge>
+                      </div>
+                      <p className="text-[11px] text-amber-800 dark:text-amber-200">
+                        Recalibrate temperature sensor offset near 70°C prior to final TÜV Rheinland submission.
+                      </p>
+                    </div>
+
+                    <div className="pt-1">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setIsCapaModalOpen(true)}
+                        className="w-full text-xs font-semibold border-amber-300 text-amber-800 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/30 cursor-pointer"
+                      >
+                        <Shield className="h-3.5 w-3.5 mr-1.5 text-amber-600" /> Manage CAPA Actions
+                      </Button>
+                    </div>
+                  </CardContent>
+                </div>
+
+                <div className="p-3 border-t border-border/60 bg-slate-50/60 dark:bg-slate-800/40 rounded-b-xl flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Compliance Assessment Score
+                  </span>
+                  <div className="flex items-center gap-1 bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 px-3 py-1 rounded-md font-bold text-sm">
+                    <span>84</span>
+                    <span className="text-xs font-normal opacity-80">/100</span>
+                  </div>
+                </div>
+              </Card>
             </div>
 
             {/* ====================================================================
-               RIGHT INSIGHTS PANEL (4 cols on desktop)
+               3. AI COMPLIANCE ASSESSMENT (Full Width)
                ==================================================================== */}
-            <div className="lg:col-span-4 space-y-4 lg:sticky lg:top-6 max-h-[calc(100vh-2rem)] overflow-y-auto pr-1">
-              {/* Overall Score Card matching reference screenshot */}
-              <Card className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="p-4 pb-2 border-b border-slate-100 dark:border-slate-800">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center justify-between">
-                    <span>Overall Readiness Score</span>
-                    <Award className="h-4 w-4 text-blue-600" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-5 text-center space-y-4">
-                  <CircularScoreGauge
-                    score={safeRecord.overallReadinessScore}
-                    size={110}
-                    strokeWidth={10}
-                    color="#2563eb"
-                  />
-
-                  <div className="w-full mt-4 space-y-2.5 text-xs border-t border-slate-100 dark:border-slate-800/60 pt-3">
-                    <div className="space-y-1">
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-600 dark:text-slate-400 font-medium">Documentation</span>
-                        <span className="font-bold text-slate-900 dark:text-slate-100 font-mono">
-                          {safeRecord.documentationScore}%
-                        </span>
-                      </div>
-                      <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-500 rounded-full transition-all" style={{ width: `${safeRecord.documentationScore}%` }} />
-                      </div>
+            <Card id="ai_assessment" className="border-border bg-white dark:bg-slate-900 shadow-xs scroll-mt-24">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-purple-600" />
+                    <CardTitle className="text-sm font-bold">7. AI Compliance Assessment</CardTitle>
+                  </div>
+                  <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold text-xs">
+                    <Sparkles className="h-3 w-3 text-purple-600" />
+                    AI Score: 89/100
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                  <div className="md:col-span-9 space-y-2.5 text-xs">
+                    <div className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 p-2.5 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 w-1/3">
+                        Standards Review
+                      </span>
+                      <span className="text-slate-600 dark:text-slate-400 font-medium flex-1">
+                        Completed
+                      </span>
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 ml-2" />
                     </div>
 
-                    <div className="space-y-1">
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-600 dark:text-slate-400 font-medium">Testing</span>
-                        <span className="font-bold text-slate-900 dark:text-slate-100 font-mono">
-                          {safeRecord.testingScore}%
-                        </span>
-                      </div>
-                      <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-500 rounded-full transition-all" style={{ width: `${safeRecord.testingScore}%` }} />
-                      </div>
+                    <div className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 p-2.5 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 w-1/3">
+                        Risk Assessment
+                      </span>
+                      <span className="text-slate-600 dark:text-slate-400 font-medium flex-1">
+                        Low Risk
+                      </span>
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 ml-2" />
                     </div>
 
-                    <div className="space-y-1">
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-600 dark:text-slate-400 font-medium">Compliance</span>
-                        <span className="font-bold text-emerald-600 font-mono">
-                          {safeRecord.complianceScore}%
-                        </span>
-                      </div>
-                      <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-500 rounded-full transition-all" style={{ width: `${safeRecord.complianceScore}%` }} />
-                      </div>
+                    <div className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 p-2.5 bg-slate-50/50 dark:bg-slate-800/40">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 w-1/3">
+                        Prediction
+                      </span>
+                      <span className="text-purple-600 dark:text-purple-400 font-bold flex-1">
+                        High Probability
+                      </span>
+                      <Sparkles className="h-4 w-4 text-purple-500 shrink-0 ml-2" />
                     </div>
 
-                    <div className="space-y-1">
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-600 dark:text-slate-400 font-medium">Laboratory</span>
-                        <span className="font-bold text-slate-900 dark:text-slate-100 font-mono">
-                          {safeRecord.laboratoryScore}%
-                        </span>
-                      </div>
-                      <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-500 rounded-full transition-all" style={{ width: `${safeRecord.laboratoryScore}%` }} />
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-600 dark:text-slate-400 font-medium">AI Assessment</span>
-                        <span className="font-bold text-purple-600 font-mono">
-                          {safeRecord.aiScore}%
-                        </span>
-                      </div>
-                      <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-purple-500 rounded-full transition-all" style={{ width: `${safeRecord.aiScore}%` }} />
-                      </div>
+                    <div className="flex items-center justify-between rounded-lg border border-amber-200/80 dark:border-amber-900/40 p-2.5 bg-amber-50/40 dark:bg-amber-950/20">
+                      <span className="font-semibold text-amber-900 dark:text-amber-300 w-1/3">
+                        AI Improvement Suggestion
+                      </span>
+                      <span className="text-amber-800 dark:text-amber-200 font-medium flex-1">
+                        Close CAPA-2024-004 thermal sensor offset item before submitting sample to TÜV Rheinland for 98% pass probability.
+                      </span>
+                      <Sparkles className="h-4 w-4 text-amber-600 shrink-0 ml-2" />
                     </div>
                   </div>
-                </CardContent>
-              </Card>
 
+                  {/* AI Graphic Card */}
+                  <div className="md:col-span-3 flex flex-col items-center justify-center rounded-xl bg-gradient-to-b from-purple-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 border border-purple-200/60 dark:border-slate-700 p-4 text-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 text-white font-bold shadow-sm mb-2">
+                      AI
+                    </div>
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Compliance Predictor</span>
+                    <div className="mt-2 flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-lg font-bold text-lg">
+                      <span>89</span>
+                      <span className="text-xs font-normal opacity-80">/100</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-            </div>
+            {/* ====================================================================
+               4. CERTIFICATION SUMMARY & STANDARDS VERIFICATION TABLE (Full Width)
+               ==================================================================== */}
+            <Card id="summary" className="border-border bg-white dark:bg-slate-900 shadow-xs scroll-mt-24">
+              <CardHeader className="px-5 py-3.5 border-b border-border/60 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-1.5 rounded-lg bg-blue-100/80 dark:bg-blue-950 text-blue-600 dark:text-blue-400 shrink-0">
+                    <Scale className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-sm font-bold text-slate-900 dark:text-white">
+                      8. Standards Verification & Regulatory Authority Traceability
+                    </CardTitle>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      Cross-border EV directives, statutory safety mandates & laboratory audit records
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 text-xs font-semibold px-2.5 py-1 flex items-center gap-1.5 shadow-2xs">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    All Directives Compliant
+                  </Badge>
+                  <Button
+                    size="sm"
+                    onClick={() => setIsGapModalOpen(true)}
+                    className="h-8 text-xs bg-primary hover:bg-primary/90 text-white font-medium gap-1.5 shadow-2xs cursor-pointer"
+                  >
+                    <Scale className="h-3.5 w-3.5" /> Gap Analysis
+                  </Button>
+                </div>
+              </CardHeader>
+
+              <CardContent className="p-0">
+                {/* Responsive Table Container without side scrolling */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-slate-50/80 dark:bg-slate-800/70 text-slate-500 dark:text-slate-400 font-semibold text-[11px] uppercase tracking-wider border-b border-slate-200/80 dark:border-slate-800">
+                        <th className="px-3.5 py-3 font-semibold w-[18%]">Standard Code</th>
+                        <th className="px-3 py-3 font-semibold w-[32%]">Mandate Title & Scope</th>
+                        <th className="px-3 py-3 font-semibold w-[18%]">Authority / Region</th>
+                        <th className="px-3 py-3 font-semibold text-center w-[10%]">Readiness</th>
+                        <th className="px-3 py-3 font-semibold text-center w-[14%]">Audit Status</th>
+                        <th className="px-3.5 py-3 font-semibold text-right w-[8%]">Dossier</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 bg-white dark:bg-slate-900">
+                      {[
+                        {
+                          code: "IEC 61851-1",
+                          title: "Electric Vehicle Conductive Charging System - General Requirements",
+                          authority: "BIS & IEC (Global)",
+                          readiness: "100%",
+                          status: "Fully Verified",
+                        },
+                        {
+                          code: "IEC 62196-2",
+                          title: "Plugs, Socket-Outlets, Vehicle Connectors and Inlets",
+                          authority: "CE & EU RED Directive",
+                          readiness: "100%",
+                          status: "Fully Verified",
+                        },
+                        {
+                          code: "FCC Part 15B",
+                          title: "Unintentional Radiators - Class B Emissions and Immunity",
+                          authority: "FCC (USA)",
+                          readiness: "96%",
+                          status: "Pre-Scan Pass",
+                        },
+                        {
+                          code: "IS 17017-1",
+                          title: "Electric Vehicle Supply Equipment (EVSE) Requirements for India",
+                          authority: "BIS (India)",
+                          readiness: "100%",
+                          status: "Fully Verified",
+                        },
+                        {
+                          code: "ISO 26262 ASIL-B",
+                          title: "Road Vehicles - Functional Safety Architecture",
+                          authority: "Global Automotive",
+                          readiness: "94%",
+                          status: "Sign-Off In Progress",
+                        },
+                      ].map((row) => (
+                        <tr
+                          key={row.code}
+                          className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors group"
+                        >
+                          <td className="px-3.5 py-2.5 align-middle">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50/90 dark:bg-blue-950/60 border border-blue-200/70 dark:border-blue-800/60 font-mono font-bold text-[11px] text-blue-700 dark:text-blue-300 whitespace-nowrap shadow-2xs">
+                              <Award className="h-3 w-3 text-blue-600 dark:text-blue-400 shrink-0" />
+                              {row.code}
+                            </span>
+                          </td>
+
+                          <td className="px-3 py-2.5 align-middle">
+                            <div className="font-semibold text-slate-900 dark:text-slate-100 text-xs leading-snug">
+                              {row.title}
+                            </div>
+                          </td>
+
+                          <td className="px-3 py-2.5 align-middle">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100/90 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 text-[11px] font-medium whitespace-nowrap">
+                              <Globe className="h-2.5 w-2.5 text-slate-500 shrink-0" />
+                              {row.authority}
+                            </span>
+                          </td>
+
+                          <td className="px-3 py-2.5 align-middle text-center">
+                            <div className="inline-flex flex-col items-center gap-0.5">
+                              <span className="font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                                {row.readiness}
+                              </span>
+                              <div className="w-10 h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-emerald-500 rounded-full"
+                                  style={{ width: row.readiness }}
+                                />
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="px-3 py-2.5 align-middle text-center">
+                            {row.status === "Fully Verified" && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800 whitespace-nowrap shadow-2xs">
+                                <CheckCircle2 className="h-3 w-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                                {row.status}
+                              </span>
+                            )}
+                            {row.status === "Pre-Scan Pass" && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/80 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800 whitespace-nowrap shadow-2xs">
+                                <ShieldCheck className="h-3 w-3 text-blue-600 dark:text-blue-400 shrink-0" />
+                                {row.status}
+                              </span>
+                            )}
+                            {row.status === "Sign-Off In Progress" && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800 whitespace-nowrap shadow-2xs">
+                                <Clock className="h-3 w-3 text-amber-600 dark:text-amber-400 shrink-0" />
+                                {row.status}
+                              </span>
+                            )}
+                          </td>
+
+                          <td className="px-3.5 py-2.5 align-middle text-right">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                setSelectedDocPreview({
+                                  name: `${row.code}_Compliance_Dossier.pdf`,
+                                  type: "PDF Standard Dossier",
+                                  size: "3.8 MB",
+                                  status: row.status,
+                                })
+                              }
+                              className="h-6 px-2 text-[11px] font-medium text-primary border-primary/20 hover:bg-primary/10 hover:border-primary/40 whitespace-nowrap gap-1 transition-all shadow-2xs cursor-pointer"
+                            >
+                              <FileText className="h-3 w-3 text-primary shrink-0" />
+                              Dossier
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Summary Metrics Bar */}
+                <div className="p-4 bg-slate-50/50 dark:bg-slate-900/40 border-t border-slate-100 dark:border-slate-800">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="p-3 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs">
+                      <span className="text-[11px] text-muted-foreground block font-medium">Standards Verified</span>
+                      <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400 font-mono mt-0.5 block">11 / 11 Pass</span>
+                    </div>
+                    <div className="p-3 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs">
+                      <span className="text-[11px] text-muted-foreground block font-medium">Target Compliance Date</span>
+                      <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 block">30 Sep 2024</span>
+                    </div>
+                    <div className="p-3 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs">
+                      <span className="text-[11px] text-muted-foreground block font-medium">Accreditation Body</span>
+                      <span className="text-sm font-extrabold text-purple-600 dark:text-purple-400 font-mono mt-0.5 block">TÜV Rheinland</span>
+                    </div>
+                    <div className="p-3 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs">
+                      <span className="text-[11px] text-muted-foreground block font-medium">Submission Probability</span>
+                      <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 block">92.0%</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ====================================================================
+               5. ATTACHMENTS (Full Width)
+               ==================================================================== */}
+            <Card id="attachments" className="border-border bg-white dark:bg-slate-900 shadow-xs scroll-mt-24">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Paperclip className="h-4 w-4 text-blue-600" />
+                    <CardTitle className="text-sm font-bold">9. Attachments</CardTitle>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs font-mono">
+                      {safeRecord.attachments?.length || 0} Files
+                    </Badge>
+                    <Button
+                      size="sm"
+                      onClick={() => setIsUploadOpen(true)}
+                      className="h-8 text-xs bg-primary text-white hover:bg-primary/90 cursor-pointer"
+                    >
+                      <Upload className="h-3.5 w-3.5 mr-1" /> Upload File
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                  {(safeRecord.attachments || []).map((att) => (
+                    <div
+                      key={att.name}
+                      className="flex items-center justify-between rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-2.5 transition-hover hover:bg-slate-100/60 dark:hover:bg-slate-800/80"
+                    >
+                      <div className="flex items-center gap-2 min-w-0 pr-2">
+                        <FileText className="h-4 w-4 text-blue-600 shrink-0" />
+                        <div className="truncate">
+                          <p className="font-semibold text-slate-800 dark:text-slate-200 truncate" title={att.name}>
+                            {att.name}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground font-mono">{att.size} • {att.date}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedDocPreview({ name: att.name, size: att.size, type: att.type, status: "Verified Attachment" })}
+                          className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                          title="Preview Attachment"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            triggerBrowserDownload(
+                              att.name,
+                              `=======================================================\nATTACHMENT: ${att.name}\nTYPE: ${att.type}\nSIZE: ${att.size}\nRECORD: ${safeRecord.certificationReadinessId}\nPRODUCT: ${safeRecord.linkedProductId}\nSTATUS: Verified Master Dossier\n=======================================================`
+                            );
+                            toast.success(`Downloading ${att.name}`);
+                          }}
+                          className="p-1 text-slate-500 hover:text-blue-600 transition-colors shrink-0 cursor-pointer"
+                          title="Download Attachment"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteAttachment(att.name)}
+                          className="p-1 text-slate-400 hover:text-red-600 transition-colors shrink-0 cursor-pointer"
+                          title="Delete Attachment"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ====================================================================
+               6. REVIEW & APPROVAL (Full Width)
+               ==================================================================== */}
+            <Card id="section-review" className="border-border bg-white dark:bg-slate-900 shadow-xs scroll-mt-24">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <UserCheck className="h-4 w-4 text-blue-600" />
+                    <CardTitle className="text-sm font-bold">10. Review & Approval</CardTitle>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold">
+                      Compliance Review Board
+                    </Badge>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setShowAddReviewerModal(true)}
+                      className="gap-1 text-xs h-7 cursor-pointer"
+                    >
+                      <Plus className="h-3 w-3" />
+                      Add Reviewer
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-5">
+                {/* Executive Board Consensus Chips */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-semibold text-muted-foreground uppercase tracking-wider">
+                      Board Evaluator Consensus (Click to Toggle)
+                    </span>
+                    <span className="text-muted-foreground font-mono">
+                      {(safeRecord.reviewers || []).filter((r) => r.decision === "Approved" || r.decision === "Approved with Conditions").length} of {(safeRecord.reviewers || []).length} Endorsed
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+                    {(safeRecord.reviewers || []).map((rev, i) => (
+                      <div
+                        key={rev.role || i}
+                        onClick={() => handleToggleReviewerDecision(i)}
+                        className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 hover:border-blue-400 dark:hover:border-blue-600 transition-all cursor-pointer flex flex-col justify-between gap-1.5"
+                        title="Click to cycle decision status"
+                      >
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="font-bold text-foreground text-xs truncate">{rev.person}</span>
+                          <Badge
+                            className={
+                              rev.decision === "Approved"
+                                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 text-[9px] font-bold"
+                                : rev.decision === "Approved with Conditions"
+                                ? "bg-teal-100 text-teal-800 dark:bg-teal-950/60 text-[9px] font-bold"
+                                : rev.decision === "Revision Required" || rev.decision === "Changes Requested"
+                                ? "bg-red-100 text-red-800 dark:bg-red-950/60 text-[9px] font-bold"
+                                : "bg-slate-200 text-slate-700 dark:bg-slate-800 text-[9px] font-medium"
+                            }
+                          >
+                            {rev.decision}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                          <span className="truncate">{rev.role}</span>
+                          <span className="font-mono shrink-0">{rev.date}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Decision Form Controls */}
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <label className="text-xs font-bold text-slate-900 dark:text-white block mb-1.5">Approval Decision:</label>
+                    <div className="flex flex-wrap gap-2">
+                      {(["Approved", "Approved with Conditions", "Revision Required", "On Hold", "Rejected"] as const).map((dec) => (
+                        <Button
+                          key={dec}
+                          type="button"
+                          variant={reviewDecision === dec ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setReviewDecision(dec)}
+                          className="h-8 text-xs cursor-pointer"
+                        >
+                          {dec}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-900 dark:text-white block mb-1">Review Comments:</label>
+                    <Textarea
+                      rows={2}
+                      value={reviewCommentInput}
+                      onChange={(e) => setReviewCommentInput(e.target.value)}
+                      placeholder="Enter compliance review comments..."
+                      className="text-xs"
+                    />
+                  </div>
+
+                  <Button
+                    onClick={handleSubmitDecision}
+                    disabled={reviewDecisionMutation.isPending}
+                    className="bg-primary text-white text-xs font-bold h-8 cursor-pointer"
+                  >
+                    Submit Decision
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ====================================================================
+               7. SYSTEM INFORMATION (Full Width)
+               ==================================================================== */}
+            <Card id="system_info" className="border-border bg-white dark:bg-slate-900 shadow-xs scroll-mt-24">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-blue-600" />
+                    <CardTitle className="text-sm font-bold">11. System Information</CardTitle>
+                  </div>
+                  <Badge variant="outline" className="text-xs font-mono">
+                    Audit Trail Active
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 text-xs">
+                  <div className="md:col-span-8 grid grid-cols-2 gap-y-3 gap-x-6">
+                    <div>
+                      <span className="text-muted-foreground block font-medium text-[10px]">Created By</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">Rahul Sharma</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-medium text-[10px]">Created Date</span>
+                      <span className="font-medium text-slate-700 dark:text-slate-300">18 Jun 2024 10:15 AM</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-medium text-[10px]">Last Modified By</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">Ananya Iyer</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-medium text-[10px]">Last Modified Date</span>
+                      <span className="font-medium text-slate-700 dark:text-slate-300">20 Jun 2024 02:45 PM</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-medium text-[10px]">Workflow Stage</span>
+                      <span className="font-semibold text-blue-600 dark:text-blue-400">In Progress</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block font-medium text-[10px]">Version</span>
+                      <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{safeRecord.certificationVersion}</span>
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-4 flex flex-col justify-center space-y-2 border-t md:border-t-0 md:border-l border-border pt-4 md:pt-0 md:pl-6">
+                    <button
+                      type="button"
+                      onClick={() => setIsAuditModalOpen(true)}
+                      className="flex items-center justify-between text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors py-1 cursor-pointer"
+                    >
+                      <span>View Audit Log</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsGapModalOpen(true)}
+                      className="flex items-center justify-between text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors py-1 cursor-pointer"
+                    >
+                      <span>View Gap Matrix</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsLabModalOpen(true)}
+                      className="flex items-center justify-between text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors py-1 cursor-pointer"
+                    >
+                      <span>View Lab Booking</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Audit trail entries */}
+                <div className="mt-4 pt-3 border-t border-border/60 space-y-2">
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block">Recent Audit Logs:</span>
+                  {[
+                    { action: "Record Initialized", details: "Initialized Certification Readiness Record CR-2024-0041.", timestamp: "18 Jun 2024 10:15 AM", user: "Rahul Sharma", ip: "192.168.1.42" },
+                    { action: "Standards Mapped", details: "Associated IEC 61851-1, IEC 62196-2 & FCC Part 15B directives.", timestamp: "18 Jun 2024 11:30 AM", user: "Ananya Iyer", ip: "192.168.1.55" },
+                    { action: "Lab Schedule Updated", details: "Booked 25 Jun 2024 testing slot with TÜV Rheinland.", timestamp: "20 Jun 2024 02:45 PM", user: "Ananya Iyer", ip: "192.168.1.55" },
+                  ].map((aud) => (
+                    <div key={aud.action} className="rounded-lg border p-2 text-xs flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/40">
+                      <div>
+                        <span className="font-bold text-slate-900 dark:text-white block text-[11px]">{aud.action}</span>
+                        <span className="text-[10px] text-muted-foreground">{aud.details}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] text-muted-foreground block">{aud.timestamp}</span>
+                        <span className="text-[10px] text-primary font-mono">{aud.user} ({aud.ip})</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
         {/* ====================================================================
@@ -1643,27 +2073,59 @@ export function CertificationReadinessNewPage({
                 Upload test certificates, schematics, or regulatory declaration forms (.pdf, .zip, .xlsx).
               </DialogDescription>
             </DialogHeader>
-            <div className="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg p-6 text-center space-y-2 bg-slate-50/50">
-              <Upload className="h-8 w-8 text-muted-foreground mx-auto" />
-              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
-                Drag and drop files here or click to browse
-              </span>
-              <span className="text-[10px] text-muted-foreground block">
-                Supports .pdf, .docx, .zip, .xlsx up to 50 MB
-              </span>
-            </div>
-            <DialogFooter>
-              <Button
-                size="sm"
-                onClick={() => {
-                  setIsUploadOpen(false);
-                  toast.success("Document uploaded & linked to certification file!");
-                }}
-                className="bg-primary text-white text-xs font-bold"
-              >
-                Upload & Save
-              </Button>
-            </DialogFooter>
+            <form onSubmit={handleUploadAttachment} className="space-y-3 py-2 text-xs">
+              <div>
+                <label className="font-semibold block mb-1">Document / File Name</label>
+                <Input
+                  placeholder="e.g. BIS_Test_Report_Final.pdf"
+                  value={uploadFileName}
+                  onChange={(e) => setUploadFileName(e.target.value)}
+                  className="h-8 text-xs"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-semibold block mb-1">Document Category</label>
+                  <select
+                    value={uploadFileType}
+                    onChange={(e) => setUploadFileType(e.target.value)}
+                    className="w-full h-8 rounded-md border border-input bg-background px-2 text-xs"
+                  >
+                    <option value="PDF Dossier">PDF Dossier</option>
+                    <option value="ZIP Archive">ZIP Archive</option>
+                    <option value="Spreadsheet">Spreadsheet (XLSX)</option>
+                    <option value="PDF Receipt">PDF Receipt</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-semibold block mb-1">File Size</label>
+                  <Input
+                    placeholder="e.g. 5.4 MB"
+                    value={uploadFileSize}
+                    onChange={(e) => setUploadFileSize(e.target.value)}
+                    className="h-8 text-xs"
+                  />
+                </div>
+              </div>
+              <div className="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg p-5 text-center space-y-1.5 bg-slate-50/50">
+                <Upload className="h-6 w-6 text-muted-foreground mx-auto" />
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                  Drag and drop files here or click to browse
+                </span>
+                <span className="text-[10px] text-muted-foreground block">
+                  Supports .pdf, .docx, .zip, .xlsx up to 50 MB
+                </span>
+              </div>
+              <DialogFooter>
+                <Button type="button" variant="outline" size="sm" onClick={() => setIsUploadOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" size="sm" className="bg-primary text-white text-xs font-bold">
+                  Upload & Save
+                </Button>
+              </DialogFooter>
+            </form>
           </DialogContent>
         </Dialog>
 
@@ -1703,13 +2165,229 @@ export function CertificationReadinessNewPage({
                     description: "Formal booking confirmation sent to coordinator.",
                   });
                 }}
-                className="bg-indigo-600 text-white text-xs font-bold"
+                className="bg-indigo-600 text-white text-xs font-bold cursor-pointer"
               >
                 Confirm Booking
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Audit Log Modal */}
+        <Dialog open={isAuditModalOpen} onOpenChange={setIsAuditModalOpen}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="text-sm font-bold flex items-center gap-2">
+                <Clock className="h-4 w-4 text-blue-600" /> Certification System Audit Trail
+              </DialogTitle>
+              <DialogDescription className="text-xs">
+                Immutable compliance event log for record {safeRecord.certificationReadinessId}.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2 max-h-96 overflow-y-auto py-2 text-xs">
+              {(safeRecord.auditTrail || []).map((aud, i) => (
+                <div key={i} className="p-2.5 rounded-lg border border-border/80 bg-slate-50/60 dark:bg-slate-800/40 space-y-1">
+                  <div className="flex justify-between items-center font-bold">
+                    <span className="text-slate-900 dark:text-white">{aud.action}</span>
+                    <span className="text-[10px] text-muted-foreground font-mono">{aud.timestamp}</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300">{aud.details}</p>
+                  <p className="text-[10px] text-primary font-mono">{aud.user} ({aud.ip})</p>
+                </div>
+              ))}
+            </div>
+            <DialogFooter>
+              <Button size="sm" onClick={() => setIsAuditModalOpen(false)}>
+                Close Log
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* CAPA Management Modal */}
+        <Dialog open={isCapaModalOpen} onOpenChange={setIsCapaModalOpen}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="text-sm font-bold flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-emerald-600" /> Corrective & Preventive Actions (CAPA)
+              </DialogTitle>
+              <DialogDescription className="text-xs">
+                Resolution tracking for non-conformities before statutory submission.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-3 py-2 text-xs">
+              {capaActions.map((capa) => (
+                <div key={capa.id} className="p-3 rounded-lg border border-border bg-slate-50/60 dark:bg-slate-800/40 space-y-2">
+                  <div className="flex justify-between items-center font-bold">
+                    <span className="text-blue-600 font-mono">{capa.id}</span>
+                    <Badge className={capa.status === "Closed" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}>
+                      {capa.status}
+                    </Badge>
+                  </div>
+                  <p className="font-semibold text-slate-900 dark:text-white">{capa.title}</p>
+                  <p className="text-[11px] text-muted-foreground">{capa.description}</p>
+                  <div className="flex justify-between items-center pt-1 text-[10px] text-muted-foreground">
+                    <span>Assigned: {capa.assignedTo} • Due: {capa.dueDate}</span>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-6 text-[10px] px-2"
+                      onClick={() => {
+                        const updated = capaActions.map((c) =>
+                          c.id === capa.id ? { ...c, status: c.status === "Closed" ? "In Progress" : "Closed" } : c
+                        );
+                        setCapaActions(updated);
+                        toast.success(`Updated ${capa.id} status to ${capa.status === "Closed" ? "In Progress" : "Closed"}`);
+                      }}
+                    >
+                      {capa.status === "Closed" ? "Re-open" : "Mark Resolved"}
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <DialogFooter>
+              <Button size="sm" onClick={() => setIsCapaModalOpen(false)}>
+                Done
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Document Preview Modal */}
+        <Dialog open={!!selectedDocPreview} onOpenChange={(open) => !open && setSelectedDocPreview(null)}>
+          <DialogContent className="max-w-xl">
+            <DialogHeader>
+              <DialogTitle className="text-sm font-bold flex items-center gap-2">
+                <Eye className="h-4 w-4 text-blue-600" /> Document Dossier Preview
+              </DialogTitle>
+              <DialogDescription className="text-xs">
+                Accredited compliance file verification and cryptographic hash checksum.
+              </DialogDescription>
+            </DialogHeader>
+            {selectedDocPreview && (
+              <div className="space-y-3 py-2 text-xs">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <FileText className="h-6 w-6 text-blue-600" />
+                    <div>
+                      <h4 className="font-bold text-foreground">{selectedDocPreview.name}</h4>
+                      <p className="text-[11px] text-muted-foreground">{selectedDocPreview.type || "PDF Document"} • {selectedDocPreview.size || "3.2 MB"}</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-emerald-100 text-emerald-800 text-[10px] font-semibold">
+                    {selectedDocPreview.status || "Verified"}
+                  </Badge>
+                </div>
+                <div className="p-3.5 bg-slate-900 text-slate-100 rounded-lg font-mono text-[11px] leading-relaxed space-y-1">
+                  <div className="text-emerald-400 font-bold border-b border-slate-700 pb-1 flex justify-between">
+                    <span>[SHA-256 COMPLIANCE HASH]</span>
+                    <span>PASS: E4A9...71D2</span>
+                  </div>
+                  <p>RECORD: {safeRecord.certificationReadinessId} ({safeRecord.formCode})</p>
+                  <p>PRODUCT: {safeRecord.linkedProductId}</p>
+                  <p>REGULATORY SCOPE: BIS, IEC, CE, FCC</p>
+                  <p className="text-slate-400 mt-2">
+                    Dossier verified by Certification Coordinator {safeRecord.certificationCoordinatorName} and Compliance Manager {safeRecord.complianceManagerName}.
+                  </p>
+                </div>
+              </div>
+            )}
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button variant="outline" size="sm" onClick={() => setSelectedDocPreview(null)}>
+                Close
+              </Button>
+              {selectedDocPreview && (
+                <Button
+                  size="sm"
+                  className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5"
+                  onClick={() => {
+                    triggerBrowserDownload(
+                      selectedDocPreview.file || selectedDocPreview.name,
+                      `DOCUMENT: ${selectedDocPreview.name}\nRECORD: ${safeRecord.certificationReadinessId}\nPRODUCT: ${safeRecord.linkedProductId}\nSTATUS: Verified Dossier\n=======================================================`
+                    );
+                    toast.success(`Downloaded ${selectedDocPreview.name}`);
+                  }}
+                >
+                  <Download className="h-3.5 w-3.5" /> Download File
+                </Button>
+              )}
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Add Reviewer Modal */}
+        <Dialog open={showAddReviewerModal} onOpenChange={setShowAddReviewerModal}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-sm font-bold flex items-center gap-2">
+                <UserCheck className="h-4 w-4 text-blue-600" /> Add Reviewer to Board
+              </DialogTitle>
+              <DialogDescription className="text-xs">
+                Assign a compliance or engineering stakeholder to review this certification package.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleAddReviewer} className="space-y-3 py-2 text-xs">
+              <div>
+                <label className="font-semibold block mb-1">Reviewer Name</label>
+                <Input
+                  placeholder="e.g. Dr. Rajesh Pillai"
+                  value={newReviewerName}
+                  onChange={(e) => setNewReviewerName(e.target.value)}
+                  className="h-8 text-xs"
+                  required
+                />
+              </div>
+              <div>
+                <label className="font-semibold block mb-1">Reviewer Role / Discipline</label>
+                <Input
+                  placeholder="e.g. Regulatory Affairs Director"
+                  value={newReviewerRole}
+                  onChange={(e) => setNewReviewerRole(e.target.value)}
+                  className="h-8 text-xs"
+                  required
+                />
+              </div>
+              <DialogFooter className="pt-2">
+                <Button type="button" variant="outline" size="sm" onClick={() => setShowAddReviewerModal(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                  Add to Board
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Linked Entity Modal */}
+        <Dialog open={!!linkedEntityModal} onOpenChange={(open) => !open && setLinkedEntityModal(null)}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-sm font-bold flex items-center gap-2">
+                <ExternalLink className="h-4 w-4 text-blue-600" /> {linkedEntityModal?.type}
+              </DialogTitle>
+              <DialogDescription className="text-xs">
+                Cross-linked enterprise artifact in the Research & Innovation lifecycle.
+              </DialogDescription>
+            </DialogHeader>
+            {linkedEntityModal && (
+              <div className="space-y-3 py-2 text-xs">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-lg border space-y-1">
+                  <span className="font-mono font-bold text-blue-600 text-sm block">{linkedEntityModal.id}</span>
+                  <p className="font-semibold text-slate-900 dark:text-white">{linkedEntityModal.title}</p>
+                  <p className="text-muted-foreground text-[11px]">{linkedEntityModal.description}</p>
+                </div>
+              </div>
+            )}
+            <DialogFooter>
+              <Button size="sm" onClick={() => setLinkedEntityModal(null)}>
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </AppShell>
   );
 }

@@ -42,7 +42,8 @@ export type WidgetCategory =
   | "hrm"
   | "admin"
   | "pd"
-  | "md";
+  | "md"
+  | "pm";
 
 /**
  * Simulated roles for access control. There is no auth system yet — identity is
@@ -80,7 +81,11 @@ export type WidgetPageId =
   // Procurement Management Overview
   | "procurement-overview"
   // Business Development Overview
-  | "bd-overview";
+  | "bd-overview"
+  // Project Management Overview
+  | "pm-overview"
+  // Asset Management Overview
+  | "asset-overview";
 
 /** Grid spans per breakpoint tier, expressed in that tier's column count. */
 export type WidgetSpan = {

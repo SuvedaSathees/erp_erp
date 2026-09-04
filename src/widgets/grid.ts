@@ -60,10 +60,24 @@ export function resolveSize(size: WidgetSize, def: WidgetDefinition): Exclude<Wi
  */
 export function resolveSpan(instance: WidgetInstance, def: WidgetDefinition): Required<WidgetSpan> {
   const preset = SIZE_SPANS[resolveSize(instance.size, def)];
+
+  // Smart responsive spans for 6-card PM KPIs and 50/50 panels so they perfectly fill rows without blank whitespace or cramped columns
+  let smartOverride: Partial<WidgetSpan> | undefined;
+  if (instance.widgetId.startsWith("kpi.pm.")) {
+    smartOverride = { xl: 10, lg: 1, md: 2 };
+  } else if (
+    instance.widgetId === "chart.pm.execution-status" ||
+    instance.widgetId === "chart.pm.resource-utilization" ||
+    instance.widgetId === "table.pm.top-risks" ||
+    instance.widgetId === "table.pm.milestones"
+  ) {
+    smartOverride = { xl: 30, lg: 3, md: 6 };
+  }
+
   return {
-    md: instance.spanOverride?.md ?? preset.md,
-    lg: instance.spanOverride?.lg ?? preset.lg,
-    xl: instance.spanOverride?.xl ?? preset.xl,
+    md: instance.spanOverride?.md ?? smartOverride?.md ?? preset.md,
+    lg: instance.spanOverride?.lg ?? smartOverride?.lg ?? preset.lg,
+    xl: instance.spanOverride?.xl ?? smartOverride?.xl ?? preset.xl,
   };
 }
 

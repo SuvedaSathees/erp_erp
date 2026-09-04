@@ -9969,6 +9969,14 @@ export type SimulationRecord = {
 export type UiUxDevelopmentStatus = "In Progress" | "In Review" | "Approved" | "Changes Requested" | "Archived";
 export type UiUxDevelopmentApprovalDecision = "Approved" | "Approved with Conditions" | "Changes Requested" | "Rejected" | "Pending";
 
+export type UiUxPainPoint = {
+  id: string;
+  issue: string;
+  severity: "Low" | "Medium" | "High" | "Critical" | string;
+  category: string;
+  impact: string;
+};
+
 export type UiUxUserPersona = {
   id: string;
   name: string;
@@ -10080,6 +10088,7 @@ export type UiUxDevelopmentRecord = {
   designerId: string;
   designerName: string;
   designerAvatar: string;
+  leadDesigner?: { name?: string; avatar?: string } | string;
 
   // Overview
   productName: string;
@@ -10097,7 +10106,7 @@ export type UiUxDevelopmentRecord = {
   customerFeedbackScore: number;
   competitorsAnalyzed: number;
   personas: UiUxUserPersona[];
-  painPoints?: (string | { id: string; issue: string; severity: string; category: string; impact: string })[];
+  painPoints?: UiUxPainPoint[];
   competitors?: any[];
 
   // Information Architecture & UX

@@ -170,33 +170,31 @@
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(1, minmax(0, 1fr));
-  /* `stretch` (the default) is load-bearing: before the widget system each card
-     WAS the grid item and stretched to its row height. Cells stretch, and the
-     shell passes that height down, so cards in a row stay equal height. */
   align-items: stretch;
 
   & > * {
-    grid-column: span 1 / span 1;
+    grid-column: span 1;
     min-width: 0;
   }
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     & > * {
-      grid-column: span var(--ws-md, 6) / span var(--ws-md, 6);
+      grid-column: span var(--ws-md, 6);
     }
   }
 
   @media (min-width: 1024px) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     & > * {
-      grid-column: span var(--ws-lg, 6) / span var(--ws-lg, 6);
+      grid-column: span var(--ws-lg, 6);
     }
   }
 
   @media (min-width: 1280px) {
     grid-template-columns: repeat(60, minmax(0, 1fr));
     & > * {
-      grid-column: span var(--ws-xl, 60) / span var(--ws-xl, 60);
+      grid-column: span var(--ws-xl, 60);
     }
   }
 }

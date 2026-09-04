@@ -45,6 +45,18 @@ import { Route as ManufacturingDevelopmentLeanManufacturingIdRouteImport } from 
 import { Route as ManufacturingDevelopmentAutomationDevelopmentNewRouteImport } from './routes/manufacturing-development.automation-development.new'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentIdRouteImport } from './routes/manufacturing-development.automation-development.$id'
 import { Route as ManagementSalesManagementCustomerOrdersManagementRouteImport } from './routes/management.sales-management.customer-orders-management'
+import { Route as ManagementProjectManagementWbsRouteImport } from './routes/management.project-management.wbs'
+import { Route as ManagementProjectManagementTimeTrackingRouteImport } from './routes/management.project-management.time-tracking'
+import { Route as ManagementProjectManagementTaskManagementRouteImport } from './routes/management.project-management.task-management'
+import { Route as ManagementProjectManagementRiskManagementRouteImport } from './routes/management.project-management.risk-management'
+import { Route as ManagementProjectManagementResourceAllocationRouteImport } from './routes/management.project-management.resource-allocation'
+import { Route as ManagementProjectManagementProjectPlanningRouteImport } from './routes/management.project-management.project-planning'
+import { Route as ManagementProjectManagementProjectBillingRouteImport } from './routes/management.project-management.project-billing'
+import { Route as ManagementProjectManagementProjectAnalyticsRouteImport } from './routes/management.project-management.project-analytics'
+import { Route as ManagementProjectManagementOverviewRouteImport } from './routes/management.project-management.overview'
+import { Route as ManagementProjectManagementMilestonesRouteImport } from './routes/management.project-management.milestones'
+import { Route as ManagementProjectManagementIssueManagementRouteImport } from './routes/management.project-management.issue-management'
+import { Route as ManagementProjectManagementBudgetControlRouteImport } from './routes/management.project-management.budget-control'
 import { Route as ManagementProcurementManagementVendorQuotationRouteImport } from './routes/management.procurement-management.vendor-quotation'
 import { Route as ManagementProcurementManagementVendorPaymentRouteImport } from './routes/management.procurement-management.vendor-payment'
 import { Route as ManagementProcurementManagementVendorEvaluationRouteImport } from './routes/management.procurement-management.vendor-evaluation'
@@ -103,6 +115,17 @@ import { Route as ManagementCrmManagementContactManagementRouteImport } from './
 import { Route as ManagementCrmManagementComplaintManagementRouteImport } from './routes/management.crm-management.complaint-management'
 import { Route as ManagementCrmManagementAccountsRouteImport } from './routes/management.crm-management.accounts'
 import { Route as ManagementCrmManagementAccountManagementRouteImport } from './routes/management.crm-management.account-management'
+import { Route as ManagementAssetManagementToolManagementRouteImport } from './routes/management.asset-management.tool-management'
+import { Route as ManagementAssetManagementPreventiveMaintenanceRouteImport } from './routes/management.asset-management.preventive-maintenance'
+import { Route as ManagementAssetManagementPredictiveMaintenanceRouteImport } from './routes/management.asset-management.predictive-maintenance'
+import { Route as ManagementAssetManagementOverviewRouteImport } from './routes/management.asset-management.overview'
+import { Route as ManagementAssetManagementMaintenanceRouteImport } from './routes/management.asset-management.maintenance'
+import { Route as ManagementAssetManagementFixedAssetsRouteImport } from './routes/management.asset-management.fixed-assets'
+import { Route as ManagementAssetManagementEquipmentRouteImport } from './routes/management.asset-management.equipment'
+import { Route as ManagementAssetManagementCalibrationRouteImport } from './routes/management.asset-management.calibration'
+import { Route as ManagementAssetManagementAssetTrackingRouteImport } from './routes/management.asset-management.asset-tracking'
+import { Route as ManagementAssetManagementAssetLifecycleRouteImport } from './routes/management.asset-management.asset-lifecycle'
+import { Route as ManagementAssetManagementAssetDepreciationRouteImport } from './routes/management.asset-management.asset-depreciation'
 import { Route as ManagementAdministrationManagementUserRoleManagementRouteImport } from './routes/management.administration-management.user-role-management'
 import { Route as ManagementAdministrationManagementPolicyManagementRouteImport } from './routes/management.administration-management.policy-management'
 import { Route as ManagementAdministrationManagementOverviewRouteImport } from './routes/management.administration-management.overview'
@@ -523,6 +546,78 @@ const ManagementSalesManagementCustomerOrdersManagementRoute =
     path: '/management/sales-management/customer-orders-management',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementProjectManagementWbsRoute =
+  ManagementProjectManagementWbsRouteImport.update({
+    id: '/management/project-management/wbs',
+    path: '/management/project-management/wbs',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementTimeTrackingRoute =
+  ManagementProjectManagementTimeTrackingRouteImport.update({
+    id: '/management/project-management/time-tracking',
+    path: '/management/project-management/time-tracking',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementTaskManagementRoute =
+  ManagementProjectManagementTaskManagementRouteImport.update({
+    id: '/management/project-management/task-management',
+    path: '/management/project-management/task-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementRiskManagementRoute =
+  ManagementProjectManagementRiskManagementRouteImport.update({
+    id: '/management/project-management/risk-management',
+    path: '/management/project-management/risk-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementResourceAllocationRoute =
+  ManagementProjectManagementResourceAllocationRouteImport.update({
+    id: '/management/project-management/resource-allocation',
+    path: '/management/project-management/resource-allocation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementProjectPlanningRoute =
+  ManagementProjectManagementProjectPlanningRouteImport.update({
+    id: '/management/project-management/project-planning',
+    path: '/management/project-management/project-planning',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementProjectBillingRoute =
+  ManagementProjectManagementProjectBillingRouteImport.update({
+    id: '/management/project-management/project-billing',
+    path: '/management/project-management/project-billing',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementProjectAnalyticsRoute =
+  ManagementProjectManagementProjectAnalyticsRouteImport.update({
+    id: '/management/project-management/project-analytics',
+    path: '/management/project-management/project-analytics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementOverviewRoute =
+  ManagementProjectManagementOverviewRouteImport.update({
+    id: '/management/project-management/overview',
+    path: '/management/project-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementMilestonesRoute =
+  ManagementProjectManagementMilestonesRouteImport.update({
+    id: '/management/project-management/milestones',
+    path: '/management/project-management/milestones',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementIssueManagementRoute =
+  ManagementProjectManagementIssueManagementRouteImport.update({
+    id: '/management/project-management/issue-management',
+    path: '/management/project-management/issue-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementProjectManagementBudgetControlRoute =
+  ManagementProjectManagementBudgetControlRouteImport.update({
+    id: '/management/project-management/budget-control',
+    path: '/management/project-management/budget-control',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementProcurementManagementVendorQuotationRoute =
   ManagementProcurementManagementVendorQuotationRouteImport.update({
     id: '/management/procurement-management/vendor-quotation',
@@ -864,6 +959,72 @@ const ManagementCrmManagementAccountManagementRoute =
   ManagementCrmManagementAccountManagementRouteImport.update({
     id: '/management/crm-management/account-management',
     path: '/management/crm-management/account-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementToolManagementRoute =
+  ManagementAssetManagementToolManagementRouteImport.update({
+    id: '/management/asset-management/tool-management',
+    path: '/management/asset-management/tool-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementPreventiveMaintenanceRoute =
+  ManagementAssetManagementPreventiveMaintenanceRouteImport.update({
+    id: '/management/asset-management/preventive-maintenance',
+    path: '/management/asset-management/preventive-maintenance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementPredictiveMaintenanceRoute =
+  ManagementAssetManagementPredictiveMaintenanceRouteImport.update({
+    id: '/management/asset-management/predictive-maintenance',
+    path: '/management/asset-management/predictive-maintenance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementOverviewRoute =
+  ManagementAssetManagementOverviewRouteImport.update({
+    id: '/management/asset-management/overview',
+    path: '/management/asset-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementMaintenanceRoute =
+  ManagementAssetManagementMaintenanceRouteImport.update({
+    id: '/management/asset-management/maintenance',
+    path: '/management/asset-management/maintenance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementFixedAssetsRoute =
+  ManagementAssetManagementFixedAssetsRouteImport.update({
+    id: '/management/asset-management/fixed-assets',
+    path: '/management/asset-management/fixed-assets',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementEquipmentRoute =
+  ManagementAssetManagementEquipmentRouteImport.update({
+    id: '/management/asset-management/equipment',
+    path: '/management/asset-management/equipment',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementCalibrationRoute =
+  ManagementAssetManagementCalibrationRouteImport.update({
+    id: '/management/asset-management/calibration',
+    path: '/management/asset-management/calibration',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementAssetTrackingRoute =
+  ManagementAssetManagementAssetTrackingRouteImport.update({
+    id: '/management/asset-management/asset-tracking',
+    path: '/management/asset-management/asset-tracking',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementAssetLifecycleRoute =
+  ManagementAssetManagementAssetLifecycleRouteImport.update({
+    id: '/management/asset-management/asset-lifecycle',
+    path: '/management/asset-management/asset-lifecycle',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAssetManagementAssetDepreciationRoute =
+  ManagementAssetManagementAssetDepreciationRouteImport.update({
+    id: '/management/asset-management/asset-depreciation',
+    path: '/management/asset-management/asset-depreciation',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementAdministrationManagementUserRoleManagementRoute =
@@ -2280,6 +2441,17 @@ export interface FileRoutesByFullPath {
   '/management/administration-management/overview': typeof ManagementAdministrationManagementOverviewRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
+  '/management/asset-management/asset-depreciation': typeof ManagementAssetManagementAssetDepreciationRoute
+  '/management/asset-management/asset-lifecycle': typeof ManagementAssetManagementAssetLifecycleRoute
+  '/management/asset-management/asset-tracking': typeof ManagementAssetManagementAssetTrackingRoute
+  '/management/asset-management/calibration': typeof ManagementAssetManagementCalibrationRoute
+  '/management/asset-management/equipment': typeof ManagementAssetManagementEquipmentRoute
+  '/management/asset-management/fixed-assets': typeof ManagementAssetManagementFixedAssetsRoute
+  '/management/asset-management/maintenance': typeof ManagementAssetManagementMaintenanceRoute
+  '/management/asset-management/overview': typeof ManagementAssetManagementOverviewRoute
+  '/management/asset-management/predictive-maintenance': typeof ManagementAssetManagementPredictiveMaintenanceRoute
+  '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
+  '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
   '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
   '/management/crm-management/complaint-management': typeof ManagementCrmManagementComplaintManagementRoute
@@ -2338,6 +2510,18 @@ export interface FileRoutesByFullPath {
   '/management/procurement-management/vendor-evaluation': typeof ManagementProcurementManagementVendorEvaluationRoute
   '/management/procurement-management/vendor-payment': typeof ManagementProcurementManagementVendorPaymentRoute
   '/management/procurement-management/vendor-quotation': typeof ManagementProcurementManagementVendorQuotationRoute
+  '/management/project-management/budget-control': typeof ManagementProjectManagementBudgetControlRoute
+  '/management/project-management/issue-management': typeof ManagementProjectManagementIssueManagementRoute
+  '/management/project-management/milestones': typeof ManagementProjectManagementMilestonesRoute
+  '/management/project-management/overview': typeof ManagementProjectManagementOverviewRoute
+  '/management/project-management/project-analytics': typeof ManagementProjectManagementProjectAnalyticsRoute
+  '/management/project-management/project-billing': typeof ManagementProjectManagementProjectBillingRoute
+  '/management/project-management/project-planning': typeof ManagementProjectManagementProjectPlanningRoute
+  '/management/project-management/resource-allocation': typeof ManagementProjectManagementResourceAllocationRoute
+  '/management/project-management/risk-management': typeof ManagementProjectManagementRiskManagementRoute
+  '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
+  '/management/project-management/time-tracking': typeof ManagementProjectManagementTimeTrackingRoute
+  '/management/project-management/wbs': typeof ManagementProjectManagementWbsRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -2584,6 +2768,17 @@ export interface FileRoutesByTo {
   '/management/administration-management/overview': typeof ManagementAdministrationManagementOverviewRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
+  '/management/asset-management/asset-depreciation': typeof ManagementAssetManagementAssetDepreciationRoute
+  '/management/asset-management/asset-lifecycle': typeof ManagementAssetManagementAssetLifecycleRoute
+  '/management/asset-management/asset-tracking': typeof ManagementAssetManagementAssetTrackingRoute
+  '/management/asset-management/calibration': typeof ManagementAssetManagementCalibrationRoute
+  '/management/asset-management/equipment': typeof ManagementAssetManagementEquipmentRoute
+  '/management/asset-management/fixed-assets': typeof ManagementAssetManagementFixedAssetsRoute
+  '/management/asset-management/maintenance': typeof ManagementAssetManagementMaintenanceRoute
+  '/management/asset-management/overview': typeof ManagementAssetManagementOverviewRoute
+  '/management/asset-management/predictive-maintenance': typeof ManagementAssetManagementPredictiveMaintenanceRoute
+  '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
+  '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
   '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
   '/management/crm-management/complaint-management': typeof ManagementCrmManagementComplaintManagementRoute
@@ -2642,6 +2837,18 @@ export interface FileRoutesByTo {
   '/management/procurement-management/vendor-evaluation': typeof ManagementProcurementManagementVendorEvaluationRoute
   '/management/procurement-management/vendor-payment': typeof ManagementProcurementManagementVendorPaymentRoute
   '/management/procurement-management/vendor-quotation': typeof ManagementProcurementManagementVendorQuotationRoute
+  '/management/project-management/budget-control': typeof ManagementProjectManagementBudgetControlRoute
+  '/management/project-management/issue-management': typeof ManagementProjectManagementIssueManagementRoute
+  '/management/project-management/milestones': typeof ManagementProjectManagementMilestonesRoute
+  '/management/project-management/overview': typeof ManagementProjectManagementOverviewRoute
+  '/management/project-management/project-analytics': typeof ManagementProjectManagementProjectAnalyticsRoute
+  '/management/project-management/project-billing': typeof ManagementProjectManagementProjectBillingRoute
+  '/management/project-management/project-planning': typeof ManagementProjectManagementProjectPlanningRoute
+  '/management/project-management/resource-allocation': typeof ManagementProjectManagementResourceAllocationRoute
+  '/management/project-management/risk-management': typeof ManagementProjectManagementRiskManagementRoute
+  '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
+  '/management/project-management/time-tracking': typeof ManagementProjectManagementTimeTrackingRoute
+  '/management/project-management/wbs': typeof ManagementProjectManagementWbsRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -2896,6 +3103,17 @@ export interface FileRoutesById {
   '/management/administration-management/overview': typeof ManagementAdministrationManagementOverviewRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
+  '/management/asset-management/asset-depreciation': typeof ManagementAssetManagementAssetDepreciationRoute
+  '/management/asset-management/asset-lifecycle': typeof ManagementAssetManagementAssetLifecycleRoute
+  '/management/asset-management/asset-tracking': typeof ManagementAssetManagementAssetTrackingRoute
+  '/management/asset-management/calibration': typeof ManagementAssetManagementCalibrationRoute
+  '/management/asset-management/equipment': typeof ManagementAssetManagementEquipmentRoute
+  '/management/asset-management/fixed-assets': typeof ManagementAssetManagementFixedAssetsRoute
+  '/management/asset-management/maintenance': typeof ManagementAssetManagementMaintenanceRoute
+  '/management/asset-management/overview': typeof ManagementAssetManagementOverviewRoute
+  '/management/asset-management/predictive-maintenance': typeof ManagementAssetManagementPredictiveMaintenanceRoute
+  '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
+  '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
   '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
   '/management/crm-management/complaint-management': typeof ManagementCrmManagementComplaintManagementRoute
@@ -2954,6 +3172,18 @@ export interface FileRoutesById {
   '/management/procurement-management/vendor-evaluation': typeof ManagementProcurementManagementVendorEvaluationRoute
   '/management/procurement-management/vendor-payment': typeof ManagementProcurementManagementVendorPaymentRoute
   '/management/procurement-management/vendor-quotation': typeof ManagementProcurementManagementVendorQuotationRoute
+  '/management/project-management/budget-control': typeof ManagementProjectManagementBudgetControlRoute
+  '/management/project-management/issue-management': typeof ManagementProjectManagementIssueManagementRoute
+  '/management/project-management/milestones': typeof ManagementProjectManagementMilestonesRoute
+  '/management/project-management/overview': typeof ManagementProjectManagementOverviewRoute
+  '/management/project-management/project-analytics': typeof ManagementProjectManagementProjectAnalyticsRoute
+  '/management/project-management/project-billing': typeof ManagementProjectManagementProjectBillingRoute
+  '/management/project-management/project-planning': typeof ManagementProjectManagementProjectPlanningRoute
+  '/management/project-management/resource-allocation': typeof ManagementProjectManagementResourceAllocationRoute
+  '/management/project-management/risk-management': typeof ManagementProjectManagementRiskManagementRoute
+  '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
+  '/management/project-management/time-tracking': typeof ManagementProjectManagementTimeTrackingRoute
+  '/management/project-management/wbs': typeof ManagementProjectManagementWbsRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -3209,6 +3439,17 @@ export interface FileRouteTypes {
     | '/management/administration-management/overview'
     | '/management/administration-management/policy-management'
     | '/management/administration-management/user-role-management'
+    | '/management/asset-management/asset-depreciation'
+    | '/management/asset-management/asset-lifecycle'
+    | '/management/asset-management/asset-tracking'
+    | '/management/asset-management/calibration'
+    | '/management/asset-management/equipment'
+    | '/management/asset-management/fixed-assets'
+    | '/management/asset-management/maintenance'
+    | '/management/asset-management/overview'
+    | '/management/asset-management/predictive-maintenance'
+    | '/management/asset-management/preventive-maintenance'
+    | '/management/asset-management/tool-management'
     | '/management/crm-management/account-management'
     | '/management/crm-management/accounts'
     | '/management/crm-management/complaint-management'
@@ -3267,6 +3508,18 @@ export interface FileRouteTypes {
     | '/management/procurement-management/vendor-evaluation'
     | '/management/procurement-management/vendor-payment'
     | '/management/procurement-management/vendor-quotation'
+    | '/management/project-management/budget-control'
+    | '/management/project-management/issue-management'
+    | '/management/project-management/milestones'
+    | '/management/project-management/overview'
+    | '/management/project-management/project-analytics'
+    | '/management/project-management/project-billing'
+    | '/management/project-management/project-planning'
+    | '/management/project-management/resource-allocation'
+    | '/management/project-management/risk-management'
+    | '/management/project-management/task-management'
+    | '/management/project-management/time-tracking'
+    | '/management/project-management/wbs'
     | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
@@ -3513,6 +3766,17 @@ export interface FileRouteTypes {
     | '/management/administration-management/overview'
     | '/management/administration-management/policy-management'
     | '/management/administration-management/user-role-management'
+    | '/management/asset-management/asset-depreciation'
+    | '/management/asset-management/asset-lifecycle'
+    | '/management/asset-management/asset-tracking'
+    | '/management/asset-management/calibration'
+    | '/management/asset-management/equipment'
+    | '/management/asset-management/fixed-assets'
+    | '/management/asset-management/maintenance'
+    | '/management/asset-management/overview'
+    | '/management/asset-management/predictive-maintenance'
+    | '/management/asset-management/preventive-maintenance'
+    | '/management/asset-management/tool-management'
     | '/management/crm-management/account-management'
     | '/management/crm-management/accounts'
     | '/management/crm-management/complaint-management'
@@ -3571,6 +3835,18 @@ export interface FileRouteTypes {
     | '/management/procurement-management/vendor-evaluation'
     | '/management/procurement-management/vendor-payment'
     | '/management/procurement-management/vendor-quotation'
+    | '/management/project-management/budget-control'
+    | '/management/project-management/issue-management'
+    | '/management/project-management/milestones'
+    | '/management/project-management/overview'
+    | '/management/project-management/project-analytics'
+    | '/management/project-management/project-billing'
+    | '/management/project-management/project-planning'
+    | '/management/project-management/resource-allocation'
+    | '/management/project-management/risk-management'
+    | '/management/project-management/task-management'
+    | '/management/project-management/time-tracking'
+    | '/management/project-management/wbs'
     | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
@@ -3824,6 +4100,17 @@ export interface FileRouteTypes {
     | '/management/administration-management/overview'
     | '/management/administration-management/policy-management'
     | '/management/administration-management/user-role-management'
+    | '/management/asset-management/asset-depreciation'
+    | '/management/asset-management/asset-lifecycle'
+    | '/management/asset-management/asset-tracking'
+    | '/management/asset-management/calibration'
+    | '/management/asset-management/equipment'
+    | '/management/asset-management/fixed-assets'
+    | '/management/asset-management/maintenance'
+    | '/management/asset-management/overview'
+    | '/management/asset-management/predictive-maintenance'
+    | '/management/asset-management/preventive-maintenance'
+    | '/management/asset-management/tool-management'
     | '/management/crm-management/account-management'
     | '/management/crm-management/accounts'
     | '/management/crm-management/complaint-management'
@@ -3882,6 +4169,18 @@ export interface FileRouteTypes {
     | '/management/procurement-management/vendor-evaluation'
     | '/management/procurement-management/vendor-payment'
     | '/management/procurement-management/vendor-quotation'
+    | '/management/project-management/budget-control'
+    | '/management/project-management/issue-management'
+    | '/management/project-management/milestones'
+    | '/management/project-management/overview'
+    | '/management/project-management/project-analytics'
+    | '/management/project-management/project-billing'
+    | '/management/project-management/project-planning'
+    | '/management/project-management/resource-allocation'
+    | '/management/project-management/risk-management'
+    | '/management/project-management/task-management'
+    | '/management/project-management/time-tracking'
+    | '/management/project-management/wbs'
     | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
@@ -4078,6 +4377,17 @@ export interface RootRouteChildren {
   ManagementAdministrationManagementOverviewRoute: typeof ManagementAdministrationManagementOverviewRoute
   ManagementAdministrationManagementPolicyManagementRoute: typeof ManagementAdministrationManagementPolicyManagementRoute
   ManagementAdministrationManagementUserRoleManagementRoute: typeof ManagementAdministrationManagementUserRoleManagementRoute
+  ManagementAssetManagementAssetDepreciationRoute: typeof ManagementAssetManagementAssetDepreciationRoute
+  ManagementAssetManagementAssetLifecycleRoute: typeof ManagementAssetManagementAssetLifecycleRoute
+  ManagementAssetManagementAssetTrackingRoute: typeof ManagementAssetManagementAssetTrackingRoute
+  ManagementAssetManagementCalibrationRoute: typeof ManagementAssetManagementCalibrationRoute
+  ManagementAssetManagementEquipmentRoute: typeof ManagementAssetManagementEquipmentRoute
+  ManagementAssetManagementFixedAssetsRoute: typeof ManagementAssetManagementFixedAssetsRoute
+  ManagementAssetManagementMaintenanceRoute: typeof ManagementAssetManagementMaintenanceRoute
+  ManagementAssetManagementOverviewRoute: typeof ManagementAssetManagementOverviewRoute
+  ManagementAssetManagementPredictiveMaintenanceRoute: typeof ManagementAssetManagementPredictiveMaintenanceRoute
+  ManagementAssetManagementPreventiveMaintenanceRoute: typeof ManagementAssetManagementPreventiveMaintenanceRoute
+  ManagementAssetManagementToolManagementRoute: typeof ManagementAssetManagementToolManagementRoute
   ManagementCrmManagementAccountManagementRoute: typeof ManagementCrmManagementAccountManagementRoute
   ManagementCrmManagementAccountsRoute: typeof ManagementCrmManagementAccountsRoute
   ManagementCrmManagementComplaintManagementRoute: typeof ManagementCrmManagementComplaintManagementRoute
@@ -4136,6 +4446,18 @@ export interface RootRouteChildren {
   ManagementProcurementManagementVendorEvaluationRoute: typeof ManagementProcurementManagementVendorEvaluationRoute
   ManagementProcurementManagementVendorPaymentRoute: typeof ManagementProcurementManagementVendorPaymentRoute
   ManagementProcurementManagementVendorQuotationRoute: typeof ManagementProcurementManagementVendorQuotationRoute
+  ManagementProjectManagementBudgetControlRoute: typeof ManagementProjectManagementBudgetControlRoute
+  ManagementProjectManagementIssueManagementRoute: typeof ManagementProjectManagementIssueManagementRoute
+  ManagementProjectManagementMilestonesRoute: typeof ManagementProjectManagementMilestonesRoute
+  ManagementProjectManagementOverviewRoute: typeof ManagementProjectManagementOverviewRoute
+  ManagementProjectManagementProjectAnalyticsRoute: typeof ManagementProjectManagementProjectAnalyticsRoute
+  ManagementProjectManagementProjectBillingRoute: typeof ManagementProjectManagementProjectBillingRoute
+  ManagementProjectManagementProjectPlanningRoute: typeof ManagementProjectManagementProjectPlanningRoute
+  ManagementProjectManagementResourceAllocationRoute: typeof ManagementProjectManagementResourceAllocationRoute
+  ManagementProjectManagementRiskManagementRoute: typeof ManagementProjectManagementRiskManagementRoute
+  ManagementProjectManagementTaskManagementRoute: typeof ManagementProjectManagementTaskManagementRoute
+  ManagementProjectManagementTimeTrackingRoute: typeof ManagementProjectManagementTimeTrackingRoute
+  ManagementProjectManagementWbsRoute: typeof ManagementProjectManagementWbsRoute
   ManagementSalesManagementCustomerOrdersManagementRoute: typeof ManagementSalesManagementCustomerOrdersManagementRoute
   ManufacturingDevelopmentAutomationDevelopmentIdRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   ManufacturingDevelopmentAutomationDevelopmentNewRoute: typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -4406,6 +4728,90 @@ declare module '@tanstack/react-router' {
       path: '/management/sales-management/customer-orders-management'
       fullPath: '/management/sales-management/customer-orders-management'
       preLoaderRoute: typeof ManagementSalesManagementCustomerOrdersManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/wbs': {
+      id: '/management/project-management/wbs'
+      path: '/management/project-management/wbs'
+      fullPath: '/management/project-management/wbs'
+      preLoaderRoute: typeof ManagementProjectManagementWbsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/time-tracking': {
+      id: '/management/project-management/time-tracking'
+      path: '/management/project-management/time-tracking'
+      fullPath: '/management/project-management/time-tracking'
+      preLoaderRoute: typeof ManagementProjectManagementTimeTrackingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/task-management': {
+      id: '/management/project-management/task-management'
+      path: '/management/project-management/task-management'
+      fullPath: '/management/project-management/task-management'
+      preLoaderRoute: typeof ManagementProjectManagementTaskManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/risk-management': {
+      id: '/management/project-management/risk-management'
+      path: '/management/project-management/risk-management'
+      fullPath: '/management/project-management/risk-management'
+      preLoaderRoute: typeof ManagementProjectManagementRiskManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/resource-allocation': {
+      id: '/management/project-management/resource-allocation'
+      path: '/management/project-management/resource-allocation'
+      fullPath: '/management/project-management/resource-allocation'
+      preLoaderRoute: typeof ManagementProjectManagementResourceAllocationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/project-planning': {
+      id: '/management/project-management/project-planning'
+      path: '/management/project-management/project-planning'
+      fullPath: '/management/project-management/project-planning'
+      preLoaderRoute: typeof ManagementProjectManagementProjectPlanningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/project-billing': {
+      id: '/management/project-management/project-billing'
+      path: '/management/project-management/project-billing'
+      fullPath: '/management/project-management/project-billing'
+      preLoaderRoute: typeof ManagementProjectManagementProjectBillingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/project-analytics': {
+      id: '/management/project-management/project-analytics'
+      path: '/management/project-management/project-analytics'
+      fullPath: '/management/project-management/project-analytics'
+      preLoaderRoute: typeof ManagementProjectManagementProjectAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/overview': {
+      id: '/management/project-management/overview'
+      path: '/management/project-management/overview'
+      fullPath: '/management/project-management/overview'
+      preLoaderRoute: typeof ManagementProjectManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/milestones': {
+      id: '/management/project-management/milestones'
+      path: '/management/project-management/milestones'
+      fullPath: '/management/project-management/milestones'
+      preLoaderRoute: typeof ManagementProjectManagementMilestonesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/issue-management': {
+      id: '/management/project-management/issue-management'
+      path: '/management/project-management/issue-management'
+      fullPath: '/management/project-management/issue-management'
+      preLoaderRoute: typeof ManagementProjectManagementIssueManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/project-management/budget-control': {
+      id: '/management/project-management/budget-control'
+      path: '/management/project-management/budget-control'
+      fullPath: '/management/project-management/budget-control'
+      preLoaderRoute: typeof ManagementProjectManagementBudgetControlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/procurement-management/vendor-quotation': {
@@ -4812,6 +5218,83 @@ declare module '@tanstack/react-router' {
       path: '/management/crm-management/account-management'
       fullPath: '/management/crm-management/account-management'
       preLoaderRoute: typeof ManagementCrmManagementAccountManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/tool-management': {
+      id: '/management/asset-management/tool-management'
+      path: '/management/asset-management/tool-management'
+      fullPath: '/management/asset-management/tool-management'
+      preLoaderRoute: typeof ManagementAssetManagementToolManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/preventive-maintenance': {
+      id: '/management/asset-management/preventive-maintenance'
+      path: '/management/asset-management/preventive-maintenance'
+      fullPath: '/management/asset-management/preventive-maintenance'
+      preLoaderRoute: typeof ManagementAssetManagementPreventiveMaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/predictive-maintenance': {
+      id: '/management/asset-management/predictive-maintenance'
+      path: '/management/asset-management/predictive-maintenance'
+      fullPath: '/management/asset-management/predictive-maintenance'
+      preLoaderRoute: typeof ManagementAssetManagementPredictiveMaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/overview': {
+      id: '/management/asset-management/overview'
+      path: '/management/asset-management/overview'
+      fullPath: '/management/asset-management/overview'
+      preLoaderRoute: typeof ManagementAssetManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/maintenance': {
+      id: '/management/asset-management/maintenance'
+      path: '/management/asset-management/maintenance'
+      fullPath: '/management/asset-management/maintenance'
+      preLoaderRoute: typeof ManagementAssetManagementMaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/fixed-assets': {
+      id: '/management/asset-management/fixed-assets'
+      path: '/management/asset-management/fixed-assets'
+      fullPath: '/management/asset-management/fixed-assets'
+      preLoaderRoute: typeof ManagementAssetManagementFixedAssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/equipment': {
+      id: '/management/asset-management/equipment'
+      path: '/management/asset-management/equipment'
+      fullPath: '/management/asset-management/equipment'
+      preLoaderRoute: typeof ManagementAssetManagementEquipmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/calibration': {
+      id: '/management/asset-management/calibration'
+      path: '/management/asset-management/calibration'
+      fullPath: '/management/asset-management/calibration'
+      preLoaderRoute: typeof ManagementAssetManagementCalibrationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/asset-tracking': {
+      id: '/management/asset-management/asset-tracking'
+      path: '/management/asset-management/asset-tracking'
+      fullPath: '/management/asset-management/asset-tracking'
+      preLoaderRoute: typeof ManagementAssetManagementAssetTrackingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/asset-lifecycle': {
+      id: '/management/asset-management/asset-lifecycle'
+      path: '/management/asset-management/asset-lifecycle'
+      fullPath: '/management/asset-management/asset-lifecycle'
+      preLoaderRoute: typeof ManagementAssetManagementAssetLifecycleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/asset-management/asset-depreciation': {
+      id: '/management/asset-management/asset-depreciation'
+      path: '/management/asset-management/asset-depreciation'
+      fullPath: '/management/asset-management/asset-depreciation'
+      preLoaderRoute: typeof ManagementAssetManagementAssetDepreciationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/administration-management/user-role-management': {
@@ -7088,6 +7571,28 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementAdministrationManagementPolicyManagementRoute,
   ManagementAdministrationManagementUserRoleManagementRoute:
     ManagementAdministrationManagementUserRoleManagementRoute,
+  ManagementAssetManagementAssetDepreciationRoute:
+    ManagementAssetManagementAssetDepreciationRoute,
+  ManagementAssetManagementAssetLifecycleRoute:
+    ManagementAssetManagementAssetLifecycleRoute,
+  ManagementAssetManagementAssetTrackingRoute:
+    ManagementAssetManagementAssetTrackingRoute,
+  ManagementAssetManagementCalibrationRoute:
+    ManagementAssetManagementCalibrationRoute,
+  ManagementAssetManagementEquipmentRoute:
+    ManagementAssetManagementEquipmentRoute,
+  ManagementAssetManagementFixedAssetsRoute:
+    ManagementAssetManagementFixedAssetsRoute,
+  ManagementAssetManagementMaintenanceRoute:
+    ManagementAssetManagementMaintenanceRoute,
+  ManagementAssetManagementOverviewRoute:
+    ManagementAssetManagementOverviewRoute,
+  ManagementAssetManagementPredictiveMaintenanceRoute:
+    ManagementAssetManagementPredictiveMaintenanceRoute,
+  ManagementAssetManagementPreventiveMaintenanceRoute:
+    ManagementAssetManagementPreventiveMaintenanceRoute,
+  ManagementAssetManagementToolManagementRoute:
+    ManagementAssetManagementToolManagementRoute,
   ManagementCrmManagementAccountManagementRoute:
     ManagementCrmManagementAccountManagementRoute,
   ManagementCrmManagementAccountsRoute: ManagementCrmManagementAccountsRoute,
@@ -7187,6 +7692,29 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementProcurementManagementVendorPaymentRoute,
   ManagementProcurementManagementVendorQuotationRoute:
     ManagementProcurementManagementVendorQuotationRoute,
+  ManagementProjectManagementBudgetControlRoute:
+    ManagementProjectManagementBudgetControlRoute,
+  ManagementProjectManagementIssueManagementRoute:
+    ManagementProjectManagementIssueManagementRoute,
+  ManagementProjectManagementMilestonesRoute:
+    ManagementProjectManagementMilestonesRoute,
+  ManagementProjectManagementOverviewRoute:
+    ManagementProjectManagementOverviewRoute,
+  ManagementProjectManagementProjectAnalyticsRoute:
+    ManagementProjectManagementProjectAnalyticsRoute,
+  ManagementProjectManagementProjectBillingRoute:
+    ManagementProjectManagementProjectBillingRoute,
+  ManagementProjectManagementProjectPlanningRoute:
+    ManagementProjectManagementProjectPlanningRoute,
+  ManagementProjectManagementResourceAllocationRoute:
+    ManagementProjectManagementResourceAllocationRoute,
+  ManagementProjectManagementRiskManagementRoute:
+    ManagementProjectManagementRiskManagementRoute,
+  ManagementProjectManagementTaskManagementRoute:
+    ManagementProjectManagementTaskManagementRoute,
+  ManagementProjectManagementTimeTrackingRoute:
+    ManagementProjectManagementTimeTrackingRoute,
+  ManagementProjectManagementWbsRoute: ManagementProjectManagementWbsRoute,
   ManagementSalesManagementCustomerOrdersManagementRoute:
     ManagementSalesManagementCustomerOrdersManagementRoute,
   ManufacturingDevelopmentAutomationDevelopmentIdRoute:

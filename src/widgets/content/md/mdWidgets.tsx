@@ -1,4 +1,5 @@
 import {
+  CheckCircle2,
   CheckSquare,
   Cpu,
   FileCheck,
@@ -111,6 +112,18 @@ export const mdKpis: WidgetDefinition[] = [
     iconColor: "text-cyan-500",
     options: () => ({ queryKey: ["md", "smart-factory-oee"], queryFn: async () => ({ value: "89.4%", statusText: "+2.1% vs Q2" }) }),
     map: (data: any) => ({ value: String(data?.value ?? "89.4%"), delta: { label: "+2.1% vs Q2", direction: "up", tone: "positive" } }),
+  }),
+  makeStatCardWidget({
+    id: "kpi.md.first-pass-yield",
+    title: "First-Pass Yield Rate",
+    description: "Plant-wide end-of-line verification yield with zero scrap rework.",
+    category: "kpi",
+    tags: ["kpi", "md"],
+    icon: CheckCircle2,
+    iconBg: "bg-emerald-500/10",
+    iconColor: "text-emerald-500",
+    options: () => ({ queryKey: ["md", "first-pass-yield"], queryFn: async () => ({ value: "98.6%", statusText: "Target ≥98%" }) }),
+    map: (data: any) => ({ value: String(data?.value ?? "98.6%"), delta: { label: "Target ≥98%", direction: "up", tone: "positive" } }),
   }),
 ];
 

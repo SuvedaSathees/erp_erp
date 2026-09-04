@@ -249,10 +249,10 @@ export function UiUxDevelopmentNewPage({
       setRecord((prev) =>
         prev
           ? {
-              ...prev,
-              reviewers: updatedReviewers,
-              workflowStatus: reviewDecision === "Approved" ? "Approved" : "In Review",
-            }
+            ...prev,
+            reviewers: updatedReviewers,
+            workflowStatus: reviewDecision === "Approved" ? "Approved" : "In Review",
+          }
           : prev
       );
       setIsReviewDecisionOpen(false);
@@ -269,10 +269,10 @@ export function UiUxDevelopmentNewPage({
       setRecord((prev) =>
         prev
           ? {
-              ...prev,
-              reviewers: updatedReviewers,
-              workflowStatus: reviewDecision === "Approved" ? "Approved" : "In Review",
-            }
+            ...prev,
+            reviewers: updatedReviewers,
+            workflowStatus: reviewDecision === "Approved" ? "Approved" : "In Review",
+          }
           : prev
       );
       setIsReviewDecisionOpen(false);
@@ -519,10 +519,10 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
   };
 
   const handleToggleReviewerDecision = (role: string) => {
-    const cycleMap: Record<string, string> = {
+    const cycleMap: Record<UiUxDevelopmentApprovalDecision, UiUxDevelopmentApprovalDecision> = {
       Approved: "Approved with Conditions",
-      "Approved with Conditions": "Revision Required",
-      "Revision Required": "Rejected",
+      "Approved with Conditions": "Changes Requested",
+      "Changes Requested": "Rejected",
       Rejected: "Approved",
       Pending: "Approved",
     };
@@ -617,11 +617,11 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                           type="button"
                           className={cn(
                             "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow-2xs shrink-0 focus-visible:ring-2 focus-visible:ring-primary",
-                            record.workflowStatus === "Approved" || record.workflowStatus === "Production Deployed"
+                            record.workflowStatus === "Approved"
                               ? "bg-emerald-600 text-white hover:bg-emerald-700"
                               : record.workflowStatus === "In Review"
-                              ? "bg-amber-500 text-white hover:bg-amber-600"
-                              : "bg-blue-600 text-white hover:bg-blue-700"
+                                ? "bg-amber-500 text-white hover:bg-amber-600"
+                                : "bg-blue-600 text-white hover:bg-blue-700"
                           )}
                         >
                           <Workflow className="h-3 w-3" />
@@ -630,7 +630,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="start" className="w-48">
-                        {(["In Progress", "In Review", "Approved", "Revision Required", "Rejected"] as const).map((st) => (
+                        {(["In Progress", "In Review", "Approved", "Changes Requested", "Archived"] as const).map((st) => (
                           <DropdownMenuItem
                             key={st}
                             onClick={() => {
@@ -917,7 +917,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                       <span className="text-muted-foreground block text-[11px] font-medium">Lead UX Designer</span>
                       <span className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                         <User className="h-3.5 w-3.5 text-primary" />
-                        {record.designerName || record.leadDesigner?.name || "Rahul Sharma"}
+                        {record.designerName || (typeof record.leadDesigner === "object" ? record.leadDesigner?.name : record.leadDesigner) || "Rahul Sharma"}
                         <span className="text-[10px] text-muted-foreground font-normal">
                           ({record.createdOn || record.lastUpdated || "18 Jun 2024 10:15 AM"})
                         </span>
@@ -1960,7 +1960,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                     const isApproved = rev.decision === "Approved";
                     const isCond = rev.decision === "Approved with Conditions";
                     const isPending = rev.decision === "Pending";
-                    const isRejected = rev.decision === "Rejected" || rev.decision === "Revision Required";
+                    const isRejected = rev.decision === "Rejected" || rev.decision === "Changes Requested";
 
                     return (
                       <div

@@ -55,6 +55,7 @@ import {
   FolderTree,
   GitCommit,
   Users,
+  FolderKanban,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { company, mockUsers } from "@/lib/mock-data";
@@ -366,6 +367,47 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/procurement-management/contract-management", label: "Contract Management" },
               { to: "/management/procurement-management/vendor-evaluation", label: "Vendor Evaluation" },
               { to: "/management/procurement-management/supplier-portal", label: "Supplier Portal" },
+            ],
+          },
+          {
+            kind: "leaf",
+            to: "/management/project-management/overview",
+            matchPrefix: "/management/project-management",
+            label: "Project Management",
+            icon: FolderKanban,
+            subItems: [
+              { to: "/management/project-management/overview", label: "Overview" },
+              { to: "/management/project-management/project-planning", label: "Project Planning" },
+              { to: "/management/project-management/wbs", label: "WBS" },
+              { to: "/management/project-management/milestones", label: "Milestones" },
+              { to: "/management/project-management/task-management", label: "Task Management" },
+              { to: "/management/project-management/time-tracking", label: "Time Tracking" },
+              { to: "/management/project-management/resource-allocation", label: "Resource Allocation" },
+              { to: "/management/project-management/budget-control", label: "Budget Control" },
+              { to: "/management/project-management/risk-management", label: "Risk Management" },
+              { to: "/management/project-management/issue-management", label: "Issue Management" },
+              { to: "/management/project-management/project-billing", label: "Project Billing" },
+              { to: "/management/project-management/project-analytics", label: "Project Analytics" },
+            ],
+          },
+          {
+            kind: "leaf",
+            to: "/management/asset-management/overview",
+            matchPrefix: "/management/asset-management",
+            label: "Asset Management",
+            icon: Package,
+            subItems: [
+              { to: "/management/asset-management/overview", label: "Overview" },
+              { to: "/management/asset-management/fixed-assets", label: "Fixed Assets" },
+              { to: "/management/asset-management/equipment", label: "Equipment" },
+              { to: "/management/asset-management/tool-management", label: "Tool Management" },
+              { to: "/management/asset-management/calibration", label: "Calibration" },
+              { to: "/management/asset-management/maintenance", label: "Maintenance" },
+              { to: "/management/asset-management/preventive-maintenance", label: "Preventive Maintenance" },
+              { to: "/management/asset-management/predictive-maintenance", label: "Predictive Maintenance" },
+              { to: "/management/asset-management/asset-lifecycle", label: "Asset Lifecycle" },
+              { to: "/management/asset-management/asset-depreciation", label: "Asset Depreciation" },
+              { to: "/management/asset-management/asset-tracking", label: "Asset Tracking" },
             ],
           },
         ],
@@ -1275,14 +1317,39 @@ function Topbar({
 
         <div className="min-w-0 flex-1">
           {breadcrumb && (
-            <div className="mb-1 flex items-center gap-1.5 text-[13px]">
-              <span className="font-medium text-primary">
-                {breadcrumb.endsWith(title)
-                  ? breadcrumb.slice(0, -title.length).replace(/\s*[>·›]\s*$/, "")
-                  : breadcrumb}
-              </span>
-              <span className="text-muted-foreground">›</span>
-              <span className="text-muted-foreground">{title}</span>
+            <div className="mb-1 flex flex-wrap items-center gap-1.5 text-[13px]">
+              {(() => {
+                const rawSegments = breadcrumb.split(/\s*[>›→·]\s*/).filter(Boolean);
+                const cleaned = rawSegments.map((s) => s.replace(/\s+Form$/i, "").trim()).filter(Boolean);
+                const segments = cleaned.filter((s, i) => i === 0 || s.toLowerCase() !== cleaned[i - 1].toLowerCase());
+                if (segments.length < 3 && title) {
+                  const cleanTitle = title.replace(/\s+Form$/i, "").trim();
+                  if (
+                    !segments.some(
+                      (s) => s.toLowerCase() === cleanTitle.toLowerCase()
+                    )
+                  ) {
+                    segments.push(cleanTitle);
+                  }
+                }
+                return segments.map((seg, idx) => {
+                  const isLast = idx === segments.length - 1;
+                  return (
+                    <span key={idx} className="flex items-center gap-1.5">
+                      {idx > 0 && <span className="text-muted-foreground/60">›</span>}
+                      <span
+                        className={
+                          isLast
+                            ? "text-muted-foreground font-medium"
+                            : "font-medium text-primary"
+                        }
+                      >
+                        {seg}
+                      </span>
+                    </span>
+                  );
+                });
+              })()}
             </div>
           )}
           <h1 className="font-display text-[26px] font-bold leading-tight tracking-tight text-foreground sm:text-[28px]">

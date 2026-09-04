@@ -249,11 +249,11 @@ export function PrdFormPage({
           {/* TOP ROW: Record Identity, Editable Title, & Action Buttons */}
           <div className="p-4 sm:p-5 pb-4 bg-slate-50/70 dark:bg-slate-900/90 border-b border-border/70 flex flex-col md:flex-row md:items-center justify-between gap-4">
             {/* Left: Identity & Title */}
-            <div className="flex items-start sm:items-center gap-3">
+            <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
               <div className="h-10 w-10 rounded-lg bg-blue-600/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center font-bold shrink-0 border border-blue-200/50 dark:border-blue-800/50 shadow-2xs">
                 <FileText className="h-5 w-5" />
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-border/60">
                     {record.prdId}
@@ -272,13 +272,14 @@ export function PrdFormPage({
                     </Badge>
                   )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full">
                   <input
                     type="text"
                     value={formInput.prdTitle}
                     onChange={(e) => handleInputChange("prdTitle", e.target.value)}
                     disabled={!isEditable}
-                    className="text-base sm:text-lg font-bold text-foreground bg-transparent hover:bg-white dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-primary shadow-none px-2 py-0.5 transition-all rounded-md max-w-lg focus:outline-none"
+                    title={formInput.prdTitle}
+                    className="text-base sm:text-lg font-bold text-foreground bg-transparent hover:bg-white dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-primary shadow-none px-2 py-0.5 transition-all rounded-md w-full min-w-0 focus:outline-none"
                     placeholder="Product Requirements Document Title..."
                   />
                 </div>

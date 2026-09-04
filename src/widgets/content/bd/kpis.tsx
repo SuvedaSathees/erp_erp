@@ -164,4 +164,36 @@ export const BD_KPI_WIDGETS: WidgetDefinition[] = [
       delta: { label: "+18% expansion", direction: "up", tone: "positive" },
     }),
   ),
+  widget(
+    {
+      id: "kpi.bd.open-rfps",
+      title: "Open RFPs & Bids",
+      description: "Active high-value commercial tenders and RFP submissions in review.",
+      icon: Briefcase,
+      iconBg: "bg-rose-500/10",
+      iconColor: "text-rose-500",
+      sourceRoute: "/development/business-development/overview",
+      inLibrary: true,
+    },
+    (d) => ({
+      value: d?.kpis?.openRfps ? String(d.kpis.openRfps) : "16",
+      delta: { label: "₹ 26.4 Cr total ask", direction: "up", tone: "positive" },
+    }),
+  ),
+  widget(
+    {
+      id: "kpi.bd.deal-velocity",
+      title: "Deal Velocity",
+      description: "Average cycle time from initial pitch to commercial contract closure.",
+      icon: Target,
+      iconBg: "bg-teal-500/10",
+      iconColor: "text-teal-500",
+      sourceRoute: "/development/business-development/overview",
+      inLibrary: true,
+    },
+    (d) => ({
+      value: d?.kpis?.dealVelocity ?? "34 Days",
+      delta: { label: "-6 days cycle speed", direction: "up", tone: "positive" },
+    }),
+  ),
 ];

@@ -32,7 +32,16 @@ export function effectiveInstances(
   prefs: WidgetPreferencesDoc,
   pageId: WidgetPageId,
 ): WidgetInstance[] {
-  return prefs.pages[pageId]?.instances ?? getDefaultLayout(pageId);
+  const instances = prefs.pages[pageId]?.instances ?? getDefaultLayout(pageId);
+  return instances.filter(
+    (inst) =>
+      !["hub.pd.submodules", "hub.md.submodules", "hub.ri.submodules", "hub.bd.submodules"].includes(
+        inst.widgetId
+      ) &&
+      !["pd-ovw-submodules-hub", "md-ovw-submodules-hub", "ri-ovw-submodules-hub", "bd-ovw-submodules-hub"].includes(
+        inst.id
+      )
+  );
 }
 
 /** Build a `pages` patch that replaces one page's instances. */

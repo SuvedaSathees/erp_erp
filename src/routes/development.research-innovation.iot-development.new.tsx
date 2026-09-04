@@ -573,11 +573,11 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
           <Card className="border border-border/80 shadow-2xs bg-card overflow-hidden rounded-xl">
             {/* Top Row: Record Identity & Action Buttons */}
             <div className="p-4 sm:p-5 pb-4 bg-slate-50/70 dark:bg-slate-900/90 border-b border-border/70 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-start sm:items-center gap-3">
+              <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
                 <div className="h-10 w-10 rounded-lg bg-blue-600/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center font-bold shrink-0 border border-blue-200/50 dark:border-blue-800/50 shadow-2xs">
                   <Wifi className="h-5 w-5" />
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1 flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-border/60">
                       {rec.iotDevelopmentId}
@@ -631,11 +631,12 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                   </div>
 
                   {/* Project Title Input */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 w-full">
                     <Input
                       value={formData.iotProjectName || rec.iotProjectName}
                       onChange={(e) => setFormData((prev) => ({ ...prev, iotProjectName: e.target.value }))}
-                      className="h-8 text-base sm:text-lg font-bold text-foreground bg-transparent hover:bg-white dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-primary shadow-none px-2 py-0 transition-all rounded-md max-w-md"
+                      title={formData.iotProjectName || rec.iotProjectName}
+                      className="h-8 text-base sm:text-lg font-bold text-foreground bg-transparent hover:bg-white dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-primary shadow-none px-2 py-0 transition-all rounded-md w-full min-w-0"
                       placeholder="IoT Project Name..."
                     />
                   </div>

@@ -9,6 +9,8 @@ import { CRM_WIDGETS } from "./content/crm";
 import { HRM_WIDGETS } from "./content/hrm";
 import { ADMIN_WIDGETS } from "./content/admin";
 import { BD_WIDGETS } from "./content/bd";
+import { PM_WIDGETS } from "./content/pm";
+import { ASSET_WIDGETS } from "./content/asset";
 
 /* ===========================================================================
    Widget registry
@@ -31,6 +33,8 @@ const ALL_DEFINITIONS: WidgetDefinition[] = [
   ...HRM_WIDGETS,
   ...ADMIN_WIDGETS,
   ...BD_WIDGETS,
+  ...PM_WIDGETS,
+  ...ASSET_WIDGETS,
   // Future modules append here: ...INVENTORY_WIDGETS, ...FLEET_WIDGETS, ...
 ];
 

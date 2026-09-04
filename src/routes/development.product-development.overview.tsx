@@ -39,21 +39,36 @@ function ProductDevelopmentOverview() {
 function OverviewSkeleton() {
   return (
     <div className="space-y-6">
+      {/* 9 KPI Cards Skeleton */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-24 rounded-xl" />
+        {Array.from({ length: 9 }).map((_, i) => (
+          <Skeleton key={i} className="h-[100px] rounded-xl" />
         ))}
       </div>
+
+      {/* Row 2: Trend (2 of 3) + Funnel (1 of 3) */}
       <div className="grid gap-6 lg:grid-cols-3">
         <Skeleton className="h-[350px] rounded-xl lg:col-span-2" />
         <Skeleton className="h-[350px] rounded-xl" />
       </div>
-      <div className="grid gap-6">
-        <Skeleton className="h-[300px] rounded-xl" />
+
+      {/* Row 3: Mix (1 of 3) + Curve (2 of 3) */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Skeleton className="h-[350px] rounded-xl" />
+        <Skeleton className="h-[350px] rounded-xl lg:col-span-2" />
       </div>
+
+      {/* Row 4: Operations Ledger (2 of 3) + Alerts (1 of 3) */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Skeleton className="h-[350px] rounded-xl lg:col-span-2" />
+        <Skeleton className="h-[350px] rounded-xl" />
+      </div>
+
+      {/* Row 5: AI Center */}
       <div className="grid gap-6">
-        <Skeleton className="h-[200px] rounded-xl" />
+        <Skeleton className="h-[220px] rounded-xl" />
       </div>
     </div>
   );
 }
+

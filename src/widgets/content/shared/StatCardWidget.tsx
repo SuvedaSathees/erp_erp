@@ -89,7 +89,8 @@ export function makeStatCardWidget<TData, TKey extends readonly unknown[]>({
     );
   });
 
-  const dataKey = options().queryKey;
+  const queryOpts = typeof options === "function" ? options() : options;
+  const dataKey = queryOpts?.queryKey;
 
   return {
     id,

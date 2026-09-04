@@ -171,7 +171,7 @@ export const WidgetShell = memo(function WidgetShell({
           onToggleDashboard={handleToggleDashboard}
           onToggleOverview={handleToggleOverview}
           onTogglePin={handleTogglePin}
-          position="left"
+          position={instance.size === "sm" ? "left" : "top-right"}
           size={instance.size === "sm" ? "small" : "normal"}
         />
       )}

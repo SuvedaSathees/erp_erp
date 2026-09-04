@@ -173,6 +173,8 @@ export function getPageIdFromPathname(pathname: string): WidgetPageId | null {
   if (pathname.startsWith("/management/hrm-management/overview")) return "hrm-overview";
   if (pathname.startsWith("/management/admin-management/overview")) return "admin-overview";
   if (pathname.startsWith("/development/business-development/overview")) return "bd-overview";
+  if (pathname.startsWith("/management/project-management/overview")) return "pm-overview";
+  if (pathname.startsWith("/management/asset-management/overview")) return "asset-overview";
   return null;
 }
 
@@ -282,7 +284,7 @@ type WidgetActionsProps = {
   onToggleDashboard: () => void;
   onToggleOverview: () => void;
   onTogglePin: () => void;
-  position?: "left" | "right";
+  position?: "left" | "right" | "top-right";
   size?: "small" | "normal";
 };
 
@@ -307,22 +309,27 @@ export function WidgetActions({
     setTimeout(() => setSuccessType(null), 800);
   };
 
-  // Toolbar layout: a VERTICAL column anchored to the left (or right) edge and
-  // centered vertically. The KPI icon fades out on hover (see StatCard), leaving
-  // room for the column to sit where the icon was. Small = KPI boxes (22px
-  // buttons); normal = larger chart/table widgets (28px buttons).
-  const edgeClass =
-    size === "small"
+  const isTopRight = position === "top-right";
+  const edgeClass = isTopRight
+    ? "top-3 right-3"
+    : size === "small"
       ? position === "right"
-        ? "right-1.5"
-        : "left-1.5"
+        ? "top-1/2 -translate-y-1/2 right-1.5"
+        : "top-1/2 -translate-y-1/2 left-1.5"
       : position === "right"
-        ? "right-2"
-        : "left-2";
-  const slideDir = position === "right" ? "slide-in-from-right-1" : "slide-in-from-left-1";
+        ? "top-1/2 -translate-y-1/2 right-2"
+        : "top-1/2 -translate-y-1/2 left-2";
+
+  const slideDir = isTopRight
+    ? "slide-in-from-top-1"
+    : position === "right"
+      ? "slide-in-from-right-1"
+      : "slide-in-from-left-1";
+
   const layoutClass = cn(
-    "absolute top-1/2 -translate-y-1/2 z-30 flex flex-col items-center rounded-full bg-white/70 backdrop-blur-md border border-white/20 shadow-sm animate-in fade-in duration-150 pointer-events-auto",
-    size === "small" ? "gap-0.5 p-[2px]" : "gap-1 p-[3px]",
+    "absolute z-30 flex items-center rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/80 shadow-md animate-in fade-in duration-150 pointer-events-auto",
+    isTopRight ? "flex-row gap-1 p-[3px]" : "flex-col",
+    !isTopRight && (size === "small" ? "gap-0.5 p-[2px]" : "gap-1 p-[3px]"),
     edgeClass,
     slideDir,
   );

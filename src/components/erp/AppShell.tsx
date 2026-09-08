@@ -410,6 +410,27 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/asset-management/asset-tracking", label: "Asset Tracking" },
             ],
           },
+          {
+            kind: "leaf",
+            to: "/management/quality-management/overview",
+            matchPrefix: "/management/quality-management",
+            label: "Quality Management",
+            icon: ShieldCheck,
+            subItems: [
+              { to: "/management/quality-management/overview", label: "Overview" },
+              { to: "/management/quality-management/quality-planning", label: "Quality Planning" },
+              { to: "/management/quality-management/incoming-inspection", label: "Incoming Inspection" },
+              { to: "/management/quality-management/in-process-inspection", label: "In-Process Inspection" },
+              { to: "/management/quality-management/final-inspection", label: "Final Inspection" },
+              { to: "/management/quality-management/ncr-management", label: "NCR Management" },
+              { to: "/management/quality-management/capa", label: "CAPA Management" },
+              { to: "/management/quality-management/root-cause-analysis", label: "Root Cause Analysis" },
+              { to: "/management/quality-management/audit-management", label: "Audit Management" },
+              { to: "/management/quality-management/calibration", label: "Calibration" },
+              { to: "/management/quality-management/compliance", label: "Compliance" },
+              { to: "/management/quality-management/quality-analytics", label: "Quality Analytics" },
+            ],
+          },
         ],
       },
     ],
@@ -1552,7 +1573,7 @@ export function AppShell({
         {/* Main Content Area */}
         <div
           className={cn(
-            "transition-[padding-left] duration-250 ease-in-out min-h-screen flex flex-col",
+            "transition-[padding-left] duration-250 ease-in-out min-h-screen flex flex-col min-w-0 max-w-full overflow-x-hidden",
             isCollapsed ? "lg:pl-[72px]" : "lg:pl-[280px]",
           )}
         >
@@ -1566,7 +1587,7 @@ export function AppShell({
               tabs={tabs}
             />
           )}
-          <main className="flex-1 px-4 py-6 lg:px-8 lg:py-7">{children}</main>
+          <main className="flex-1 px-4 py-6 lg:px-8 lg:py-7 min-w-0 max-w-full overflow-x-hidden">{children}</main>
         </div>
       </div>
     </TooltipProvider>

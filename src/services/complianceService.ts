@@ -1,33 +1,172 @@
-import { apiRequest } from "./apiClient";
-import { mockComplianceSummary, mockTaxReconciliations } from "@/lib/mock-data";
-import type { ComplianceSummary, TaxReconciliation, DashboardQuery } from "./types";
+import { ComplianceRecord } from "./complianceTypes";
 
-export function fetchComplianceOverview(query: DashboardQuery): Promise<ComplianceSummary> {
-  return apiRequest(
-    `/api/financial/tax/compliance?fy=${query.fiscalYear}`,
-    () => mockComplianceSummary,
-  );
-}
+export const INITIAL_COMPLIANCE_RECORD: ComplianceRecord = {
+  complianceId: "cmp-rec-2026-0015",
+  complianceNumber: "CMP-2026-0015",
+  title: "ISO 9001:2015 Clause 8.5.1 - Control of Production and Service Provision",
+  category: "ISO Standard",
+  subCategory: "Quality Management System (QMS)",
+  standardBody: "International Organization for Standardization (ISO)",
+  standardReference: "ISO 9001:2015",
+  clauseReference: "Clause 8.5.1 (a to h)",
+  complianceType: "Mandatory",
+  scope: "Manufacturing Operations - Plant 1 & 2",
+  responsibleOwner: "Dr. Anita Desai",
+  department: "Quality Assurance & Operations",
+  riskLevel: "High",
+  assessmentFrequency: "Quarterly",
+  registrationDate: "15-Jan-2026",
+  nextAssessmentDate: "15-Oct-2026",
+  complianceStatus: "Compliant",
+  workflowStatus: "Approved",
+  complianceScore: 94,
 
-export function fetchReconciliations(query: DashboardQuery): Promise<TaxReconciliation[]> {
-  return apiRequest(
-    `/api/financial/tax/reconciliations?fy=${query.fiscalYear}`,
-    () => mockTaxReconciliations,
-  );
-}
+  description:
+    "The organization shall implement production and service provision under controlled conditions. Controlled conditions shall include, as applicable: availability of documented information defining product characteristics and activities to be performed; availability and use of suitable monitoring and measuring resources; implementation of monitoring and measurement activities at appropriate stages.",
+  applicabilityNote:
+    "Applies to all discrete assembly lines, SMT fabrication units, in-line testing booths, and packaging cells in Facility 1 and 2.",
+  consequencesOfNonCompliance:
+    "Risk of ISO 9001:2015 major audit non-conformance, potential suspension of QMS certification, customer contractual penalties, and compromised product build consistency.",
 
-export function performTaxReconciliation(
-  query: DashboardQuery,
-): Promise<{ success: boolean; reconciledCount: number; varianceResolved: number }> {
-  return apiRequest(`/api/financial/tax/reconciliations/run?fy=${query.fiscalYear}`, () => {
-    // Mark mismatched reconciliations as reconciled for simulation
-    mockTaxReconciliations.forEach((r) => {
-      if (r.status === "Mismatched") {
-        r.status = "Reconciled";
-        r.difference = 0.0;
-        r.booksLiability = r.returnsLiability;
-      }
-    });
-    return { success: true, reconciledCount: 2, varianceResolved: 2000.0 };
-  });
-}
+  obligations: [
+    {
+      id: "obl-1",
+      clauseRef: "8.5.1 (a)",
+      requirement: "Availability of documented information defining characteristics of products & results to be achieved",
+      applicableFunction: "Process Engineering / Production",
+      evaluation: "Compliant",
+      evidenceNote: "Work Instructions (WI-ENG-042) and Control Plans in active ERP release",
+      status: "Verified",
+    },
+    {
+      id: "obl-2",
+      clauseRef: "8.5.1 (b)",
+      requirement: "Availability and use of suitable monitoring and measuring resources",
+      applicableFunction: "Quality Control / Calibration",
+      evaluation: "Compliant",
+      evidenceNote: "Calibrated multimeters, torque gauges, and AOI inspection stations mapped to ERP",
+      status: "Verified",
+    },
+    {
+      id: "obl-3",
+      clauseRef: "8.5.1 (c)",
+      requirement: "Implementation of monitoring and measurement activities at appropriate stages",
+      applicableFunction: "Quality Management (IPQC / FQC)",
+      evaluation: "Compliant",
+      evidenceNote: "Mandatory IPQC gates configured before final assembly handover",
+      status: "Verified",
+    },
+    {
+      id: "obl-4",
+      clauseRef: "8.5.1 (d)",
+      requirement: "Use of suitable infrastructure and environment for the operation of processes",
+      applicableFunction: "Facilities & Maintenance",
+      evaluation: "Minor Gap",
+      evidenceNote: "Cleanroom humidity logging occasionally spikes ±5% above target; HVAC preventive maintenance scheduled",
+      status: "Pending Action",
+    },
+    {
+      id: "obl-5",
+      clauseRef: "8.5.1 (e)",
+      requirement: "Appointment of competent persons, including any required qualification",
+      applicableFunction: "Human Resources / Operations",
+      evaluation: "Compliant",
+      evidenceNote: "Operator skill matrix and IPC-A-610 certification logs verified",
+      status: "Verified",
+    },
+    {
+      id: "obl-6",
+      clauseRef: "8.5.1 (f)",
+      requirement: "Validation, and periodic re-validation, of the ability to achieve planned results",
+      applicableFunction: "Manufacturing Excellence",
+      evaluation: "Compliant",
+      evidenceNote: "Annual wave-soldering thermal profile process validation completed Q2 2026",
+      status: "Verified",
+    },
+  ],
+
+  evidence: [
+    {
+      id: "ev-1",
+      documentTitle: "QMS Manual Section 8.5 Controlled Production Procedures",
+      documentRef: "DOC-QMS-851-V4",
+      category: "Procedure / SOP",
+      uploadDate: "10-Feb-2026",
+      expiryDate: "10-Feb-2027",
+      verifiedBy: "Dr. Anita Desai",
+      fileSize: "2.4 MB",
+    },
+    {
+      id: "ev-2",
+      documentTitle: "Calibration Master Schedule & Certificate Logs 2026",
+      documentRef: "DOC-CAL-SCH-2026",
+      category: "Calibration Records",
+      uploadDate: "05-Sep-2026",
+      verifiedBy: "Priya S",
+      fileSize: "4.1 MB",
+    },
+    {
+      id: "ev-3",
+      documentTitle: "Internal Audit Compliance Checklist Report Clause 8.5",
+      documentRef: "AUD-REP-2026-08",
+      category: "Audit Evidence",
+      uploadDate: "20-Aug-2026",
+      verifiedBy: "Marcus Chen",
+      fileSize: "1.8 MB",
+    },
+  ],
+
+  linkedAuditId: "AUD-2026-0018",
+  linkedNcrId: "NCR-2026-0089",
+  linkedCapaId: "CAPA-2026-0012",
+
+  aiInsights: [
+    {
+      id: "ai-cmp-1",
+      text: "94% overall clause fulfillment index. High readiness for upcoming ISO surveillance audit.",
+      type: "success",
+    },
+    {
+      id: "ai-cmp-2",
+      text: "Clause 8.5.1 (d) environmental fluctuation requires CAPA-2026-0012 resolution by next week.",
+      type: "warning",
+    },
+    {
+      id: "ai-cmp-3",
+      text: "All 12 critical measuring instruments have valid calibration certificates traceable to NABL.",
+      type: "info",
+    },
+    {
+      id: "ai-cmp-4",
+      text: "Operator certification renewals for soldering operations are 100% up to date.",
+      type: "success",
+    },
+  ],
+
+  history: [
+    {
+      id: "h-1",
+      date: "15-Jul-2026",
+      assessor: "Marcus Chen (Lead Auditor)",
+      score: 94,
+      result: "Compliant",
+      notes: "Quarterly surveillance assessment conducted. 1 minor observation noted on cleanroom humidity.",
+    },
+    {
+      id: "h-2",
+      date: "15-Apr-2026",
+      assessor: "Dr. Anita Desai",
+      score: 91,
+      result: "Compliant",
+      notes: "Quarterly review. All work instructions up to date.",
+    },
+    {
+      id: "h-3",
+      date: "15-Jan-2026",
+      assessor: "External ISO Registrar",
+      score: 96,
+      result: "Compliant",
+      notes: "Annual certification renewal audit passed with zero major non-conformances.",
+    },
+  ],
+};

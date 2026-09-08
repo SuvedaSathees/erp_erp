@@ -447,93 +447,363 @@
       "userId": "Priya Sharma",
       "role": "CEO",
       "pages": {
-        "pm-overview": {
+        "finance-overview": {
+          "instances": [
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-revenue",
+              "widgetId": "kpi.total-revenue",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-expenses",
+              "widgetId": "kpi.total-expenses",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-cash",
+              "widgetId": "kpi.cash-balance",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-net-profit",
+              "widgetId": "kpi.net-profit",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-accounts",
+              "widgetId": "kpi.total-accounts",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-posted",
+              "widgetId": "kpi.posted-journals",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-trial-diff",
+              "widgetId": "kpi.trial-balance-diff",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-ap",
+              "widgetId": "kpi.pending-payables",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-kpi-ar",
+              "widgetId": "kpi.pending-receivables",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-trend",
+              "widgetId": "chart.overview-trend",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-cash-flow",
+              "widgetId": "list.overview-cash-flow",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-bank-balances",
+              "widgetId": "list.bank-balances",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-net-income",
+              "widgetId": "chart.net-income-area",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-ops-ledger",
+              "widgetId": "table.operations-ledger",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-alerts",
+              "widgetId": "insight.system-alerts",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "ovw-ai",
+              "widgetId": "ai.financial-intelligence",
+              "size": "full"
+            },
+            {
+              "id": "ce39bd52-68e5-4e8d-8971-c8017d6683e9",
+              "widgetId": "pipeline.quality.lifecycle",
+              "size": "full",
+              "theme": "default",
+              "pinned": false
+            }
+          ],
+          "updatedAt": "2026-09-08T11:19:32.419Z"
+        },
+        "dashboard": {
+          "instances": [
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-kpi-revenue",
+              "widgetId": "kpi.total-revenue",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-kpi-net-profit",
+              "widgetId": "kpi.net-profit",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-kpi-expenses",
+              "widgetId": "kpi.total-expenses",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-kpi-cash",
+              "widgetId": "kpi.cash-balance",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-kpi-current-ratio",
+              "widgetId": "kpi.current-ratio",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-trend",
+              "widgetId": "chart.revenue-expense-trend",
+              "size": "lg"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-cash-flow",
+              "widgetId": "list.cash-flow-summary",
+              "size": "md",
+              "spanOverride": {
+                "xl": 15,
+                "lg": 3,
+                "md": 3
+              }
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-expense-donut",
+              "widgetId": "chart.expense-donut",
+              "size": "md",
+              "spanOverride": {
+                "xl": 15,
+                "lg": 3,
+                "md": 3
+              }
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-aging-ar",
+              "widgetId": "chart.aging-receivable",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-aging-ap",
+              "widgetId": "chart.aging-payable",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-recent-txn",
+              "widgetId": "table.recent-transactions",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "dash-insights",
+              "widgetId": "insight.quick-financial",
+              "size": "full"
+            },
+            {
+              "id": "2ae20a5f-c0dc-4311-8c4a-b4cf2010d508",
+              "widgetId": "pipeline.quality.lifecycle",
+              "size": "full",
+              "theme": "default",
+              "pinned": false
+            }
+          ],
+          "updatedAt": "2026-09-08T11:19:33.307Z"
+        },
+        "quality-overview": {
           "instances": [
             {
               "theme": "default",
               "pinned": true,
-              "id": "pm-ovw-total-projects",
-              "widgetId": "kpi.pm.total-projects",
-              "size": "sm"
+              "id": "qm-panel-lifecycle",
+              "widgetId": "pipeline.quality.lifecycle",
+              "size": "full"
             },
             {
               "theme": "default",
               "pinned": false,
-              "id": "pm-ovw-on-schedule",
-              "widgetId": "kpi.pm.on-schedule",
-              "size": "sm"
+              "id": "qm-kpi-fpy",
+              "widgetId": "kpi.quality.fpy",
+              "size": "sm",
+              "spanOverride": {
+                "xl": 10,
+                "lg": 1,
+                "md": 2
+              }
             },
             {
               "theme": "default",
               "pinned": false,
-              "id": "pm-ovw-at-risk",
-              "widgetId": "kpi.pm.at-risk",
-              "size": "sm"
+              "id": "qm-kpi-defect-ppm",
+              "widgetId": "kpi.quality.defect-ppm",
+              "size": "sm",
+              "spanOverride": {
+                "xl": 10,
+                "lg": 1,
+                "md": 2
+              }
             },
             {
               "theme": "default",
               "pinned": false,
-              "id": "pm-ovw-delayed",
-              "widgetId": "kpi.pm.delayed",
-              "size": "sm"
+              "id": "qm-kpi-iqc",
+              "widgetId": "kpi.quality.iqc-clearance",
+              "size": "sm",
+              "spanOverride": {
+                "xl": 10,
+                "lg": 1,
+                "md": 2
+              }
             },
             {
               "theme": "default",
               "pinned": false,
-              "id": "pm-ovw-budget-util",
-              "widgetId": "kpi.pm.budget-utilization",
-              "size": "sm"
+              "id": "qm-kpi-open-ncrs",
+              "widgetId": "kpi.quality.open-ncrs",
+              "size": "sm",
+              "spanOverride": {
+                "xl": 10,
+                "lg": 1,
+                "md": 2
+              }
             },
             {
               "theme": "default",
               "pinned": false,
-              "id": "pm-ovw-resources",
-              "widgetId": "kpi.pm.resources-allocated",
-              "size": "sm"
+              "id": "qm-kpi-capa-rate",
+              "widgetId": "kpi.quality.capa-rate",
+              "size": "sm",
+              "spanOverride": {
+                "xl": 10,
+                "lg": 1,
+                "md": 2
+              }
             },
             {
               "theme": "default",
               "pinned": false,
-              "id": "pm-ovw-execution",
-              "widgetId": "chart.pm.execution-status",
-              "size": "xl"
+              "id": "qm-kpi-audit-index",
+              "widgetId": "kpi.quality.audit-index",
+              "size": "sm",
+              "spanOverride": {
+                "xl": 10,
+                "lg": 1,
+                "md": 2
+              }
             },
             {
               "theme": "default",
               "pinned": false,
-              "id": "pm-ovw-utilization",
-              "widgetId": "chart.pm.resource-utilization",
-              "size": "md"
+              "id": "qm-panel-trend",
+              "widgetId": "chart.quality.fpy-trend",
+              "size": "lg",
+              "spanOverride": {
+                "xl": 30,
+                "lg": 3,
+                "md": 6
+              }
             },
             {
               "theme": "default",
               "pinned": false,
-              "id": "pm-ovw-risks",
-              "widgetId": "table.pm.top-risks",
-              "size": "xl"
+              "id": "qm-panel-stage-yield",
+              "widgetId": "chart.quality.stage-yield",
+              "size": "lg",
+              "spanOverride": {
+                "xl": 30,
+                "lg": 3,
+                "md": 6
+              }
             },
             {
               "theme": "default",
               "pinned": false,
-              "id": "pm-ovw-milestones",
-              "widgetId": "table.pm.milestones",
-              "size": "md"
+              "id": "qm-panel-incidents",
+              "widgetId": "table.quality.incidents",
+              "size": "full"
             },
             {
               "theme": "default",
               "pinned": false,
-              "id": "pm-ovw-ai",
-              "widgetId": "ai.pm.planning-insights",
+              "id": "qm-panel-ai",
+              "widgetId": "ai.quality.intelligence",
               "size": "full"
             }
           ],
-          "updatedAt": "2026-09-03T17:45:45.699Z"
+          "updatedAt": "2026-09-08T11:19:34.092Z"
         }
       },
       "favorites": [],
       "recentlyUsed": [],
       "templates": [],
-      "updatedAt": "2026-09-03T17:45:48.467Z"
+      "updatedAt": "2026-09-08T11:19:34.098Z"
     }
   ]
 }

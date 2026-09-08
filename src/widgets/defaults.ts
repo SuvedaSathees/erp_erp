@@ -305,6 +305,28 @@ export const DEFAULT_LAYOUTS: Record<WidgetPageId, WidgetInstance[]> = {
 
     { ...base, id: "ast-ai", widgetId: "ai.asset-intelligence", size: "full" },
   ],
+  "quality-overview": [
+    // 6 Quality KPIs
+    { ...base, id: "qm-kpi-fpy", widgetId: "kpi.quality.fpy", size: "sm", spanOverride: { xl: 10, lg: 1, md: 2 } },
+    { ...base, id: "qm-kpi-defect-ppm", widgetId: "kpi.quality.defect-ppm", size: "sm", spanOverride: { xl: 10, lg: 1, md: 2 } },
+    { ...base, id: "qm-kpi-iqc", widgetId: "kpi.quality.iqc-clearance", size: "sm", spanOverride: { xl: 10, lg: 1, md: 2 } },
+    { ...base, id: "qm-kpi-open-ncrs", widgetId: "kpi.quality.open-ncrs", size: "sm", spanOverride: { xl: 10, lg: 1, md: 2 } },
+    { ...base, id: "qm-kpi-capa-rate", widgetId: "kpi.quality.capa-rate", size: "sm", spanOverride: { xl: 10, lg: 1, md: 2 } },
+    { ...base, id: "qm-kpi-audit-index", widgetId: "kpi.quality.audit-index", size: "sm", spanOverride: { xl: 10, lg: 1, md: 2 } },
+
+    // Closed-Loop Quality Lifecycle Pipeline (Full Width)
+    { ...base, id: "qm-panel-lifecycle", widgetId: "pipeline.quality.lifecycle", size: "full" },
+
+    // Charts: Trend (50%) + Stage Yield Breakdown (50%)
+    { ...base, id: "qm-panel-trend", widgetId: "chart.quality.fpy-trend", size: "lg", spanOverride: { xl: 30, lg: 3, md: 6 } },
+    { ...base, id: "qm-panel-stage-yield", widgetId: "chart.quality.stage-yield", size: "lg", spanOverride: { xl: 30, lg: 3, md: 6 } },
+
+    // Open NCRs & Containment Register (Full Width)
+    { ...base, id: "qm-panel-incidents", widgetId: "table.quality.incidents", size: "full" },
+
+    // AI Quality Intelligence (Full Width)
+    { ...base, id: "qm-panel-ai", widgetId: "ai.quality.intelligence", size: "full" },
+  ],
 };
 
 /** Display metadata for each widget surface. */
@@ -332,6 +354,7 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
   "bd-overview": { label: "Business Development Overview", route: "/development/business-development/overview" },
   "pm-overview": { label: "Project Management Overview", route: "/management/project-management/overview" },
   "asset-overview": { label: "Asset Management Overview", route: "/management/asset-management/overview" },
+  "quality-overview": { label: "Quality Overview", route: "/management/quality-management/overview" },
 };
 
 /**
@@ -351,6 +374,7 @@ export const PLACEABLE_PAGES: WidgetPageId[] = [
   "ri-overview",
   "pm-overview",
   "asset-overview",
+  "quality-overview",
 ];
 
 /** Deep-copy a default layout so callers can never mutate the shared constant. */

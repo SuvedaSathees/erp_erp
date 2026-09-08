@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FileCheck,
   Factory,
@@ -9,16 +9,19 @@ import {
 } from "lucide-react";
 import type { ApqpRecord } from "@/services/types";
 import { Badge } from "@/components/ui/badge";
+import { ReadinessDetailsModal } from "./ReadinessDetailsModal";
 
 interface ApqpScoreCardsGridProps {
   record: ApqpRecord;
-  onNavigateTab: (tab: any) => void;
 }
 
 export const ApqpScoreCardsGrid: React.FC<ApqpScoreCardsGridProps> = ({
   record,
-  onNavigateTab,
 }) => {
+  const [activeModalDomain, setActiveModalDomain] = useState<
+    "design" | "validation" | "supplier" | "risk" | "cost" | null
+  >(null);
+
   const cards = [
     {
       title: "Design Readiness",
@@ -31,7 +34,7 @@ export const ApqpScoreCardsGrid: React.FC<ApqpScoreCardsGridProps> = ({
       ],
       icon: FileCheck,
       color: "#10b981", // Emerald
-      tab: "design",
+      domain: "design" as const,
     },
     {
       title: "Validation Readiness",
@@ -44,7 +47,7 @@ export const ApqpScoreCardsGrid: React.FC<ApqpScoreCardsGridProps> = ({
       ],
       icon: Factory,
       color: "#3b82f6", // Blue
-      tab: "validation",
+      domain: "validation" as const,
     },
     {
       title: "Supplier Quality",
@@ -57,7 +60,7 @@ export const ApqpScoreCardsGrid: React.FC<ApqpScoreCardsGridProps> = ({
       ],
       icon: Users,
       color: "#f97316", // Orange
-      tab: "supplier",
+      domain: "supplier" as const,
     },
     {
       title: "Risk Readiness",
@@ -70,7 +73,7 @@ export const ApqpScoreCardsGrid: React.FC<ApqpScoreCardsGridProps> = ({
       ],
       icon: ShieldAlert,
       color: "#ef4444", // Red
-      tab: "risk",
+      domain: "risk" as const,
     },
     {
       title: "Cost Readiness",
@@ -83,79 +86,104 @@ export const ApqpScoreCardsGrid: React.FC<ApqpScoreCardsGridProps> = ({
       ],
       icon: Calculator,
       color: "#14b8a6", // Teal
-      tab: "cost",
+      domain: "cost" as const,
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-xs">
-      {cards.map((c, idx) => {
-        const Icon = c.icon;
-        return (
-          <div
-            key={idx}
-            className="bg-card border border-border rounded-xl shadow-xs p-4 flex flex-col justify-between hover:shadow-md transition-all min-w-0"
-          >
-            {/* Top Row: Title & Icon */}
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="font-bold text-foreground text-xs leading-snug whitespace-nowrap truncate" title={c.title}>
-                  {c.title}
-                </span>
-                <div
-                  className="p-1.5 rounded-lg shrink-0"
-                  style={{ backgroundColor: `${c.color}15`, color: c.color }}
-                >
-                  <Icon className="w-4 h-4" />
-                </div>
-              </div>
-
-              {/* Big Score Block */}
-              <div className="p-3 rounded-lg bg-muted/20 border border-border/40 space-y-2">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-baseline gap-1 shrink-0">
-                    <span className="text-2xl font-black text-foreground font-mono whitespace-nowrap">{c.score}</span>
-                    <span className="text-[11px] text-muted-foreground font-semibold whitespace-nowrap">/ 100</span>
-                  </div>
-                  <Badge variant="outline" className={`text-[10px] font-semibold px-2 py-0.5 whitespace-nowrap shrink-0 ${c.badgeClass}`}>
-                    {c.status}
-                  </Badge>
-                </div>
-
-                {/* Progress Meter */}
-                <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all"
-                    style={{
-                      width: `${c.score}%`,
-                      backgroundColor: c.color,
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Micro-Metrics Parameter List */}
-              <div className="mt-3 space-y-2 px-0.5">
-                {c.metrics.map((m, mIdx) => (
-                  <div key={mIdx} className="flex justify-between items-center text-xs gap-2">
-                    <span className="text-muted-foreground whitespace-nowrap">{m.label}:</span>
-                    <span className="font-semibold text-foreground font-mono text-[11px] whitespace-nowrap">{m.value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Bottom: Action link */}
-            <button
-              type="button"
-              onClick={() => onNavigateTab(c.tab)}
-              className="mt-4 text-xs font-bold text-primary hover:underline flex items-center justify-end gap-1 cursor-pointer pt-2 border-t border-border/40"
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 text-xs w-full max-w-full min-w-0">
+        {cards.map((c, idx) => {
+          const Icon = c.icon;
+          return (
+            <div
+              key={idx}
+              className="bg-card border border-border rounded-xl shadow-xs p-3.5 flex flex-col justify-between hover:shadow-md transition-all min-w-0"
             >
-              View Details <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        );
-      })}
-    </div>
+              {/* Top Row: Title & Icon */}
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2.5">
+                  <span
+                    className="font-bold text-foreground text-xs leading-snug whitespace-nowrap truncate"
+                    title={c.title}
+                  >
+                    {c.title}
+                  </span>
+                  <div
+                    className="p-1.5 rounded-lg shrink-0"
+                    style={{ backgroundColor: `${c.color}15`, color: c.color }}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </div>
+                </div>
+
+                {/* Big Score Block */}
+                <div className="p-2.5 rounded-lg bg-muted/20 border border-border/40 space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-baseline gap-1 shrink-0">
+                      <span className="text-xl font-black text-foreground font-mono whitespace-nowrap">
+                        {c.score}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground font-semibold whitespace-nowrap">
+                        / 100
+                      </span>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className={`text-[10px] font-semibold px-2 py-0.5 whitespace-nowrap shrink-0 ${c.badgeClass}`}
+                    >
+                      {c.status}
+                    </Badge>
+                  </div>
+
+                  {/* Progress Meter */}
+                  <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{
+                        width: `${c.score}%`,
+                        backgroundColor: c.color,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Micro-Metrics Parameter List */}
+                <div className="mt-2.5 space-y-1.5 px-0.5">
+                  {c.metrics.map((m, mIdx) => (
+                    <div key={mIdx} className="flex justify-between items-center text-xs gap-2">
+                      <span className="text-muted-foreground whitespace-nowrap text-[11px]">
+                        {m.label}:
+                      </span>
+                      <span className="font-semibold text-foreground font-mono text-[11px] whitespace-nowrap">
+                        {m.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom: Action link opening interactive modal */}
+              <button
+                type="button"
+                onClick={() => setActiveModalDomain(c.domain)}
+                className="mt-3 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center justify-end gap-1 cursor-pointer pt-2 border-t border-border/40"
+              >
+                <span>View Details</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Interactive Detail Modal */}
+      <ReadinessDetailsModal
+        open={activeModalDomain !== null}
+        onOpenChange={(open) => !open && setActiveModalDomain(null)}
+        domain={activeModalDomain}
+        record={record}
+      />
+    </>
   );
 };

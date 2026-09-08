@@ -30,6 +30,7 @@ import { Route as ManufacturingDevelopmentPilotProductionIndexRouteImport } from
 import { Route as ManufacturingDevelopmentMassProductionReadinessIndexRouteImport } from './routes/manufacturing-development.mass-production-readiness.index'
 import { Route as ManufacturingDevelopmentLeanManufacturingIndexRouteImport } from './routes/manufacturing-development.lean-manufacturing.index'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentIndexRouteImport } from './routes/manufacturing-development.automation-development.index'
+import { Route as ManagementQualityManagementIndexRouteImport } from './routes/management.quality-management.index'
 import { Route as DevelopmentResearchInnovationIndexRouteImport } from './routes/development.research-innovation.index'
 import { Route as DevelopmentProductDevelopmentIndexRouteImport } from './routes/development.product-development.index'
 import { Route as DevelopmentManufacturingDevelopmentIndexRouteImport } from './routes/development.manufacturing-development.index'
@@ -45,6 +46,18 @@ import { Route as ManufacturingDevelopmentLeanManufacturingIdRouteImport } from 
 import { Route as ManufacturingDevelopmentAutomationDevelopmentNewRouteImport } from './routes/manufacturing-development.automation-development.new'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentIdRouteImport } from './routes/manufacturing-development.automation-development.$id'
 import { Route as ManagementSalesManagementCustomerOrdersManagementRouteImport } from './routes/management.sales-management.customer-orders-management'
+import { Route as ManagementQualityManagementRootCauseAnalysisRouteImport } from './routes/management.quality-management.root-cause-analysis'
+import { Route as ManagementQualityManagementQualityPlanningRouteImport } from './routes/management.quality-management.quality-planning'
+import { Route as ManagementQualityManagementQualityAnalyticsRouteImport } from './routes/management.quality-management.quality-analytics'
+import { Route as ManagementQualityManagementOverviewRouteImport } from './routes/management.quality-management.overview'
+import { Route as ManagementQualityManagementNcrManagementRouteImport } from './routes/management.quality-management.ncr-management'
+import { Route as ManagementQualityManagementIncomingInspectionRouteImport } from './routes/management.quality-management.incoming-inspection'
+import { Route as ManagementQualityManagementInProcessInspectionRouteImport } from './routes/management.quality-management.in-process-inspection'
+import { Route as ManagementQualityManagementFinalInspectionRouteImport } from './routes/management.quality-management.final-inspection'
+import { Route as ManagementQualityManagementComplianceRouteImport } from './routes/management.quality-management.compliance'
+import { Route as ManagementQualityManagementCapaRouteImport } from './routes/management.quality-management.capa'
+import { Route as ManagementQualityManagementCalibrationRouteImport } from './routes/management.quality-management.calibration'
+import { Route as ManagementQualityManagementAuditManagementRouteImport } from './routes/management.quality-management.audit-management'
 import { Route as ManagementProjectManagementWbsRouteImport } from './routes/management.project-management.wbs'
 import { Route as ManagementProjectManagementTimeTrackingRouteImport } from './routes/management.project-management.time-tracking'
 import { Route as ManagementProjectManagementTaskManagementRouteImport } from './routes/management.project-management.task-management'
@@ -456,6 +469,12 @@ const ManufacturingDevelopmentAutomationDevelopmentIndexRoute =
     path: '/manufacturing-development/automation-development/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementQualityManagementIndexRoute =
+  ManagementQualityManagementIndexRouteImport.update({
+    id: '/management/quality-management/',
+    path: '/management/quality-management/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DevelopmentResearchInnovationIndexRoute =
   DevelopmentResearchInnovationIndexRouteImport.update({
     id: '/',
@@ -544,6 +563,78 @@ const ManagementSalesManagementCustomerOrdersManagementRoute =
   ManagementSalesManagementCustomerOrdersManagementRouteImport.update({
     id: '/management/sales-management/customer-orders-management',
     path: '/management/sales-management/customer-orders-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementRootCauseAnalysisRoute =
+  ManagementQualityManagementRootCauseAnalysisRouteImport.update({
+    id: '/management/quality-management/root-cause-analysis',
+    path: '/management/quality-management/root-cause-analysis',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementQualityPlanningRoute =
+  ManagementQualityManagementQualityPlanningRouteImport.update({
+    id: '/management/quality-management/quality-planning',
+    path: '/management/quality-management/quality-planning',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementQualityAnalyticsRoute =
+  ManagementQualityManagementQualityAnalyticsRouteImport.update({
+    id: '/management/quality-management/quality-analytics',
+    path: '/management/quality-management/quality-analytics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementOverviewRoute =
+  ManagementQualityManagementOverviewRouteImport.update({
+    id: '/management/quality-management/overview',
+    path: '/management/quality-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementNcrManagementRoute =
+  ManagementQualityManagementNcrManagementRouteImport.update({
+    id: '/management/quality-management/ncr-management',
+    path: '/management/quality-management/ncr-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementIncomingInspectionRoute =
+  ManagementQualityManagementIncomingInspectionRouteImport.update({
+    id: '/management/quality-management/incoming-inspection',
+    path: '/management/quality-management/incoming-inspection',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementInProcessInspectionRoute =
+  ManagementQualityManagementInProcessInspectionRouteImport.update({
+    id: '/management/quality-management/in-process-inspection',
+    path: '/management/quality-management/in-process-inspection',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementFinalInspectionRoute =
+  ManagementQualityManagementFinalInspectionRouteImport.update({
+    id: '/management/quality-management/final-inspection',
+    path: '/management/quality-management/final-inspection',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementComplianceRoute =
+  ManagementQualityManagementComplianceRouteImport.update({
+    id: '/management/quality-management/compliance',
+    path: '/management/quality-management/compliance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementCapaRoute =
+  ManagementQualityManagementCapaRouteImport.update({
+    id: '/management/quality-management/capa',
+    path: '/management/quality-management/capa',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementCalibrationRoute =
+  ManagementQualityManagementCalibrationRouteImport.update({
+    id: '/management/quality-management/calibration',
+    path: '/management/quality-management/calibration',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementAuditManagementRoute =
+  ManagementQualityManagementAuditManagementRouteImport.update({
+    id: '/management/quality-management/audit-management',
+    path: '/management/quality-management/audit-management',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementProjectManagementWbsRoute =
@@ -2522,6 +2613,18 @@ export interface FileRoutesByFullPath {
   '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
   '/management/project-management/time-tracking': typeof ManagementProjectManagementTimeTrackingRoute
   '/management/project-management/wbs': typeof ManagementProjectManagementWbsRoute
+  '/management/quality-management/audit-management': typeof ManagementQualityManagementAuditManagementRoute
+  '/management/quality-management/calibration': typeof ManagementQualityManagementCalibrationRoute
+  '/management/quality-management/capa': typeof ManagementQualityManagementCapaRoute
+  '/management/quality-management/compliance': typeof ManagementQualityManagementComplianceRoute
+  '/management/quality-management/final-inspection': typeof ManagementQualityManagementFinalInspectionRoute
+  '/management/quality-management/in-process-inspection': typeof ManagementQualityManagementInProcessInspectionRoute
+  '/management/quality-management/incoming-inspection': typeof ManagementQualityManagementIncomingInspectionRoute
+  '/management/quality-management/ncr-management': typeof ManagementQualityManagementNcrManagementRoute
+  '/management/quality-management/overview': typeof ManagementQualityManagementOverviewRoute
+  '/management/quality-management/quality-analytics': typeof ManagementQualityManagementQualityAnalyticsRoute
+  '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
+  '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -2537,6 +2640,7 @@ export interface FileRoutesByFullPath {
   '/development/manufacturing-development/': typeof DevelopmentManufacturingDevelopmentIndexRoute
   '/development/product-development/': typeof DevelopmentProductDevelopmentIndexRoute
   '/development/research-innovation/': typeof DevelopmentResearchInnovationIndexRoute
+  '/management/quality-management/': typeof ManagementQualityManagementIndexRoute
   '/manufacturing-development/automation-development/': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing/': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   '/manufacturing-development/mass-production-readiness/': typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -2849,6 +2953,18 @@ export interface FileRoutesByTo {
   '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
   '/management/project-management/time-tracking': typeof ManagementProjectManagementTimeTrackingRoute
   '/management/project-management/wbs': typeof ManagementProjectManagementWbsRoute
+  '/management/quality-management/audit-management': typeof ManagementQualityManagementAuditManagementRoute
+  '/management/quality-management/calibration': typeof ManagementQualityManagementCalibrationRoute
+  '/management/quality-management/capa': typeof ManagementQualityManagementCapaRoute
+  '/management/quality-management/compliance': typeof ManagementQualityManagementComplianceRoute
+  '/management/quality-management/final-inspection': typeof ManagementQualityManagementFinalInspectionRoute
+  '/management/quality-management/in-process-inspection': typeof ManagementQualityManagementInProcessInspectionRoute
+  '/management/quality-management/incoming-inspection': typeof ManagementQualityManagementIncomingInspectionRoute
+  '/management/quality-management/ncr-management': typeof ManagementQualityManagementNcrManagementRoute
+  '/management/quality-management/overview': typeof ManagementQualityManagementOverviewRoute
+  '/management/quality-management/quality-analytics': typeof ManagementQualityManagementQualityAnalyticsRoute
+  '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
+  '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -2864,6 +2980,7 @@ export interface FileRoutesByTo {
   '/development/manufacturing-development': typeof DevelopmentManufacturingDevelopmentIndexRoute
   '/development/product-development': typeof DevelopmentProductDevelopmentIndexRoute
   '/development/research-innovation': typeof DevelopmentResearchInnovationIndexRoute
+  '/management/quality-management': typeof ManagementQualityManagementIndexRoute
   '/manufacturing-development/automation-development': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   '/manufacturing-development/mass-production-readiness': typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -3184,6 +3301,18 @@ export interface FileRoutesById {
   '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
   '/management/project-management/time-tracking': typeof ManagementProjectManagementTimeTrackingRoute
   '/management/project-management/wbs': typeof ManagementProjectManagementWbsRoute
+  '/management/quality-management/audit-management': typeof ManagementQualityManagementAuditManagementRoute
+  '/management/quality-management/calibration': typeof ManagementQualityManagementCalibrationRoute
+  '/management/quality-management/capa': typeof ManagementQualityManagementCapaRoute
+  '/management/quality-management/compliance': typeof ManagementQualityManagementComplianceRoute
+  '/management/quality-management/final-inspection': typeof ManagementQualityManagementFinalInspectionRoute
+  '/management/quality-management/in-process-inspection': typeof ManagementQualityManagementInProcessInspectionRoute
+  '/management/quality-management/incoming-inspection': typeof ManagementQualityManagementIncomingInspectionRoute
+  '/management/quality-management/ncr-management': typeof ManagementQualityManagementNcrManagementRoute
+  '/management/quality-management/overview': typeof ManagementQualityManagementOverviewRoute
+  '/management/quality-management/quality-analytics': typeof ManagementQualityManagementQualityAnalyticsRoute
+  '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
+  '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -3199,6 +3328,7 @@ export interface FileRoutesById {
   '/development/manufacturing-development/': typeof DevelopmentManufacturingDevelopmentIndexRoute
   '/development/product-development/': typeof DevelopmentProductDevelopmentIndexRoute
   '/development/research-innovation/': typeof DevelopmentResearchInnovationIndexRoute
+  '/management/quality-management/': typeof ManagementQualityManagementIndexRoute
   '/manufacturing-development/automation-development/': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing/': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   '/manufacturing-development/mass-production-readiness/': typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -3520,6 +3650,18 @@ export interface FileRouteTypes {
     | '/management/project-management/task-management'
     | '/management/project-management/time-tracking'
     | '/management/project-management/wbs'
+    | '/management/quality-management/audit-management'
+    | '/management/quality-management/calibration'
+    | '/management/quality-management/capa'
+    | '/management/quality-management/compliance'
+    | '/management/quality-management/final-inspection'
+    | '/management/quality-management/in-process-inspection'
+    | '/management/quality-management/incoming-inspection'
+    | '/management/quality-management/ncr-management'
+    | '/management/quality-management/overview'
+    | '/management/quality-management/quality-analytics'
+    | '/management/quality-management/quality-planning'
+    | '/management/quality-management/root-cause-analysis'
     | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
@@ -3535,6 +3677,7 @@ export interface FileRouteTypes {
     | '/development/manufacturing-development/'
     | '/development/product-development/'
     | '/development/research-innovation/'
+    | '/management/quality-management/'
     | '/manufacturing-development/automation-development/'
     | '/manufacturing-development/lean-manufacturing/'
     | '/manufacturing-development/mass-production-readiness/'
@@ -3847,6 +3990,18 @@ export interface FileRouteTypes {
     | '/management/project-management/task-management'
     | '/management/project-management/time-tracking'
     | '/management/project-management/wbs'
+    | '/management/quality-management/audit-management'
+    | '/management/quality-management/calibration'
+    | '/management/quality-management/capa'
+    | '/management/quality-management/compliance'
+    | '/management/quality-management/final-inspection'
+    | '/management/quality-management/in-process-inspection'
+    | '/management/quality-management/incoming-inspection'
+    | '/management/quality-management/ncr-management'
+    | '/management/quality-management/overview'
+    | '/management/quality-management/quality-analytics'
+    | '/management/quality-management/quality-planning'
+    | '/management/quality-management/root-cause-analysis'
     | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
@@ -3862,6 +4017,7 @@ export interface FileRouteTypes {
     | '/development/manufacturing-development'
     | '/development/product-development'
     | '/development/research-innovation'
+    | '/management/quality-management'
     | '/manufacturing-development/automation-development'
     | '/manufacturing-development/lean-manufacturing'
     | '/manufacturing-development/mass-production-readiness'
@@ -4181,6 +4337,18 @@ export interface FileRouteTypes {
     | '/management/project-management/task-management'
     | '/management/project-management/time-tracking'
     | '/management/project-management/wbs'
+    | '/management/quality-management/audit-management'
+    | '/management/quality-management/calibration'
+    | '/management/quality-management/capa'
+    | '/management/quality-management/compliance'
+    | '/management/quality-management/final-inspection'
+    | '/management/quality-management/in-process-inspection'
+    | '/management/quality-management/incoming-inspection'
+    | '/management/quality-management/ncr-management'
+    | '/management/quality-management/overview'
+    | '/management/quality-management/quality-analytics'
+    | '/management/quality-management/quality-planning'
+    | '/management/quality-management/root-cause-analysis'
     | '/management/sales-management/customer-orders-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
@@ -4196,6 +4364,7 @@ export interface FileRouteTypes {
     | '/development/manufacturing-development/'
     | '/development/product-development/'
     | '/development/research-innovation/'
+    | '/management/quality-management/'
     | '/manufacturing-development/automation-development/'
     | '/manufacturing-development/lean-manufacturing/'
     | '/manufacturing-development/mass-production-readiness/'
@@ -4458,6 +4627,18 @@ export interface RootRouteChildren {
   ManagementProjectManagementTaskManagementRoute: typeof ManagementProjectManagementTaskManagementRoute
   ManagementProjectManagementTimeTrackingRoute: typeof ManagementProjectManagementTimeTrackingRoute
   ManagementProjectManagementWbsRoute: typeof ManagementProjectManagementWbsRoute
+  ManagementQualityManagementAuditManagementRoute: typeof ManagementQualityManagementAuditManagementRoute
+  ManagementQualityManagementCalibrationRoute: typeof ManagementQualityManagementCalibrationRoute
+  ManagementQualityManagementCapaRoute: typeof ManagementQualityManagementCapaRoute
+  ManagementQualityManagementComplianceRoute: typeof ManagementQualityManagementComplianceRoute
+  ManagementQualityManagementFinalInspectionRoute: typeof ManagementQualityManagementFinalInspectionRoute
+  ManagementQualityManagementInProcessInspectionRoute: typeof ManagementQualityManagementInProcessInspectionRoute
+  ManagementQualityManagementIncomingInspectionRoute: typeof ManagementQualityManagementIncomingInspectionRoute
+  ManagementQualityManagementNcrManagementRoute: typeof ManagementQualityManagementNcrManagementRoute
+  ManagementQualityManagementOverviewRoute: typeof ManagementQualityManagementOverviewRoute
+  ManagementQualityManagementQualityAnalyticsRoute: typeof ManagementQualityManagementQualityAnalyticsRoute
+  ManagementQualityManagementQualityPlanningRoute: typeof ManagementQualityManagementQualityPlanningRoute
+  ManagementQualityManagementRootCauseAnalysisRoute: typeof ManagementQualityManagementRootCauseAnalysisRoute
   ManagementSalesManagementCustomerOrdersManagementRoute: typeof ManagementSalesManagementCustomerOrdersManagementRoute
   ManufacturingDevelopmentAutomationDevelopmentIdRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   ManufacturingDevelopmentAutomationDevelopmentNewRoute: typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
@@ -4469,6 +4650,7 @@ export interface RootRouteChildren {
   ManufacturingDevelopmentPilotProductionNewRoute: typeof ManufacturingDevelopmentPilotProductionNewRoute
   ManufacturingDevelopmentRoboticsIntegrationIdRoute: typeof ManufacturingDevelopmentRoboticsIntegrationIdRoute
   ManufacturingDevelopmentRoboticsIntegrationNewRoute: typeof ManufacturingDevelopmentRoboticsIntegrationNewRoute
+  ManagementQualityManagementIndexRoute: typeof ManagementQualityManagementIndexRoute
   ManufacturingDevelopmentAutomationDevelopmentIndexRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   ManufacturingDevelopmentLeanManufacturingIndexRoute: typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   ManufacturingDevelopmentMassProductionReadinessIndexRoute: typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -4625,6 +4807,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/quality-management/': {
+      id: '/management/quality-management/'
+      path: '/management/quality-management'
+      fullPath: '/management/quality-management/'
+      preLoaderRoute: typeof ManagementQualityManagementIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/development/research-innovation/': {
       id: '/development/research-innovation/'
       path: '/'
@@ -4728,6 +4917,90 @@ declare module '@tanstack/react-router' {
       path: '/management/sales-management/customer-orders-management'
       fullPath: '/management/sales-management/customer-orders-management'
       preLoaderRoute: typeof ManagementSalesManagementCustomerOrdersManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/root-cause-analysis': {
+      id: '/management/quality-management/root-cause-analysis'
+      path: '/management/quality-management/root-cause-analysis'
+      fullPath: '/management/quality-management/root-cause-analysis'
+      preLoaderRoute: typeof ManagementQualityManagementRootCauseAnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/quality-planning': {
+      id: '/management/quality-management/quality-planning'
+      path: '/management/quality-management/quality-planning'
+      fullPath: '/management/quality-management/quality-planning'
+      preLoaderRoute: typeof ManagementQualityManagementQualityPlanningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/quality-analytics': {
+      id: '/management/quality-management/quality-analytics'
+      path: '/management/quality-management/quality-analytics'
+      fullPath: '/management/quality-management/quality-analytics'
+      preLoaderRoute: typeof ManagementQualityManagementQualityAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/overview': {
+      id: '/management/quality-management/overview'
+      path: '/management/quality-management/overview'
+      fullPath: '/management/quality-management/overview'
+      preLoaderRoute: typeof ManagementQualityManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/ncr-management': {
+      id: '/management/quality-management/ncr-management'
+      path: '/management/quality-management/ncr-management'
+      fullPath: '/management/quality-management/ncr-management'
+      preLoaderRoute: typeof ManagementQualityManagementNcrManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/incoming-inspection': {
+      id: '/management/quality-management/incoming-inspection'
+      path: '/management/quality-management/incoming-inspection'
+      fullPath: '/management/quality-management/incoming-inspection'
+      preLoaderRoute: typeof ManagementQualityManagementIncomingInspectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/in-process-inspection': {
+      id: '/management/quality-management/in-process-inspection'
+      path: '/management/quality-management/in-process-inspection'
+      fullPath: '/management/quality-management/in-process-inspection'
+      preLoaderRoute: typeof ManagementQualityManagementInProcessInspectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/final-inspection': {
+      id: '/management/quality-management/final-inspection'
+      path: '/management/quality-management/final-inspection'
+      fullPath: '/management/quality-management/final-inspection'
+      preLoaderRoute: typeof ManagementQualityManagementFinalInspectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/compliance': {
+      id: '/management/quality-management/compliance'
+      path: '/management/quality-management/compliance'
+      fullPath: '/management/quality-management/compliance'
+      preLoaderRoute: typeof ManagementQualityManagementComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/capa': {
+      id: '/management/quality-management/capa'
+      path: '/management/quality-management/capa'
+      fullPath: '/management/quality-management/capa'
+      preLoaderRoute: typeof ManagementQualityManagementCapaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/calibration': {
+      id: '/management/quality-management/calibration'
+      path: '/management/quality-management/calibration'
+      fullPath: '/management/quality-management/calibration'
+      preLoaderRoute: typeof ManagementQualityManagementCalibrationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/audit-management': {
+      id: '/management/quality-management/audit-management'
+      path: '/management/quality-management/audit-management'
+      fullPath: '/management/quality-management/audit-management'
+      preLoaderRoute: typeof ManagementQualityManagementAuditManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/project-management/wbs': {
@@ -7715,6 +7988,29 @@ const rootRouteChildren: RootRouteChildren = {
   ManagementProjectManagementTimeTrackingRoute:
     ManagementProjectManagementTimeTrackingRoute,
   ManagementProjectManagementWbsRoute: ManagementProjectManagementWbsRoute,
+  ManagementQualityManagementAuditManagementRoute:
+    ManagementQualityManagementAuditManagementRoute,
+  ManagementQualityManagementCalibrationRoute:
+    ManagementQualityManagementCalibrationRoute,
+  ManagementQualityManagementCapaRoute: ManagementQualityManagementCapaRoute,
+  ManagementQualityManagementComplianceRoute:
+    ManagementQualityManagementComplianceRoute,
+  ManagementQualityManagementFinalInspectionRoute:
+    ManagementQualityManagementFinalInspectionRoute,
+  ManagementQualityManagementInProcessInspectionRoute:
+    ManagementQualityManagementInProcessInspectionRoute,
+  ManagementQualityManagementIncomingInspectionRoute:
+    ManagementQualityManagementIncomingInspectionRoute,
+  ManagementQualityManagementNcrManagementRoute:
+    ManagementQualityManagementNcrManagementRoute,
+  ManagementQualityManagementOverviewRoute:
+    ManagementQualityManagementOverviewRoute,
+  ManagementQualityManagementQualityAnalyticsRoute:
+    ManagementQualityManagementQualityAnalyticsRoute,
+  ManagementQualityManagementQualityPlanningRoute:
+    ManagementQualityManagementQualityPlanningRoute,
+  ManagementQualityManagementRootCauseAnalysisRoute:
+    ManagementQualityManagementRootCauseAnalysisRoute,
   ManagementSalesManagementCustomerOrdersManagementRoute:
     ManagementSalesManagementCustomerOrdersManagementRoute,
   ManufacturingDevelopmentAutomationDevelopmentIdRoute:
@@ -7737,6 +8033,7 @@ const rootRouteChildren: RootRouteChildren = {
     ManufacturingDevelopmentRoboticsIntegrationIdRoute,
   ManufacturingDevelopmentRoboticsIntegrationNewRoute:
     ManufacturingDevelopmentRoboticsIntegrationNewRoute,
+  ManagementQualityManagementIndexRoute: ManagementQualityManagementIndexRoute,
   ManufacturingDevelopmentAutomationDevelopmentIndexRoute:
     ManufacturingDevelopmentAutomationDevelopmentIndexRoute,
   ManufacturingDevelopmentLeanManufacturingIndexRoute:

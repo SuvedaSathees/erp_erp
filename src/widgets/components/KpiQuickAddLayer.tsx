@@ -4,6 +4,7 @@ import { CRM_PAGE_KPIS } from "../content/crm/crmKpiMap";
 import { HRM_PAGE_KPIS } from "../content/hrm/hrmKpiMap";
 import { ADMIN_PAGE_KPIS } from "../content/admin/adminKpiMap";
 import { PROCUREMENT_PAGE_KPIS } from "../content/procurement/procurementKpiMap";
+import { QUALITY_PAGE_KPIS } from "../content/quality/qualityKpiMap";
 import type { WidgetPageId } from "../types";
 
 /* ===========================================================================
@@ -46,7 +47,8 @@ export function KpiQuickAddLayer({ pageId, onOpen }: KpiQuickAddLayerProps) {
       PROCUREMENT_PAGE_KPIS[pageId] ??
       CRM_PAGE_KPIS[pageId] ??
       HRM_PAGE_KPIS[pageId] ??
-      ADMIN_PAGE_KPIS[pageId];
+      ADMIN_PAGE_KPIS[pageId] ??
+      QUALITY_PAGE_KPIS[pageId];
     if (!map) return;
     const root = document.querySelector("main");
     if (!root) return;

@@ -85,7 +85,9 @@ export type WidgetPageId =
   // Project Management Overview
   | "pm-overview"
   // Asset Management Overview
-  | "asset-overview";
+  | "asset-overview"
+  // Quality Management Overview
+  | "quality-overview";
 
 /** Grid spans per breakpoint tier, expressed in that tier's column count. */
 export type WidgetSpan = {

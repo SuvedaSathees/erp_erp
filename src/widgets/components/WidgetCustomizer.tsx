@@ -35,6 +35,7 @@ import { HRM_PAGE_KPIS } from "../content/hrm/hrmKpiMap";
 import { ADMIN_PAGE_KPIS } from "../content/admin/adminKpiMap";
 import { PROCUREMENT_PAGE_KPIS } from "../content/procurement/procurementKpiMap";
 import { BD_PAGE_KPIS } from "../content/bd/bdKpiMap";
+import { QUALITY_PAGE_KPIS } from "../content/quality/qualityKpiMap";
 
 // ===========================================================================
 // 1. WidgetPreferenceService
@@ -175,6 +176,7 @@ export function getPageIdFromPathname(pathname: string): WidgetPageId | null {
   if (pathname.startsWith("/development/business-development/overview")) return "bd-overview";
   if (pathname.startsWith("/management/project-management/overview")) return "pm-overview";
   if (pathname.startsWith("/management/asset-management/overview")) return "asset-overview";
+  if (pathname.startsWith("/management/quality-management/overview")) return "quality-overview";
   return null;
 }
 
@@ -423,7 +425,8 @@ export function KPIWidgetCard({
          CRM_PAGE_KPIS[pageId]?.[label] ??
          HRM_PAGE_KPIS[pageId]?.[label] ??
          ADMIN_PAGE_KPIS[pageId]?.[label] ??
-         BD_PAGE_KPIS[pageId]?.[label])
+         BD_PAGE_KPIS[pageId]?.[label] ??
+         QUALITY_PAGE_KPIS[pageId]?.[label])
       : undefined;
 
     if (!id) {
@@ -437,7 +440,15 @@ export function KPIWidgetCard({
     }
 
     if (!id) {
-      const allMaps = [FINANCE_PAGE_KPIS, PROCUREMENT_PAGE_KPIS, CRM_PAGE_KPIS, HRM_PAGE_KPIS, ADMIN_PAGE_KPIS, BD_PAGE_KPIS];
+      const allMaps = [
+        FINANCE_PAGE_KPIS,
+        PROCUREMENT_PAGE_KPIS,
+        CRM_PAGE_KPIS,
+        HRM_PAGE_KPIS,
+        ADMIN_PAGE_KPIS,
+        BD_PAGE_KPIS,
+        QUALITY_PAGE_KPIS,
+      ];
       for (const m of allMaps) {
         for (const pid of Object.keys(m)) {
           const kpiMap = (m as any)[pid];

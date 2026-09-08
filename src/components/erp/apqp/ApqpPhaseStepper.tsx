@@ -1,99 +1,99 @@
 import React from "react";
-import { CheckCircle2, Clock, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
 import type { ApqpRecord } from "@/services/types";
 
-interface ApqpPhaseStepperProps {
-  record: ApqpRecord;
+export interface ApqpPhaseStep {
+  step: number;
+  title: string;
+  subtitle: string;
 }
 
-export const ApqpPhaseStepper: React.FC<ApqpPhaseStepperProps> = ({ record }) => {
-  const phases = [
-    {
-      number: 1,
-      name: "Phase 1",
-      subtitle: "Plan & Define Program",
-      status: "Completed",
-      percentage: 100,
-    },
-    {
-      number: 2,
-      name: "Phase 2",
-      subtitle: "Product Design & Development",
-      status: "Completed",
-      percentage: 100,
-    },
-    {
-      number: 3,
-      name: "Phase 3",
-      subtitle: "Process Design & Development",
-      status: "In Progress",
-      percentage: 65,
-    },
-    {
-      number: 4,
-      name: "Phase 4",
-      subtitle: "Product & Process Validation",
-      status: "Pending",
-      percentage: 25,
-    },
-    {
-      number: 5,
-      name: "Phase 5",
-      subtitle: "Launch & Continuous Improvement",
-      status: "Pending",
-      percentage: 0,
-    },
-  ];
+interface ApqpPhaseStepperProps {
+  record?: ApqpRecord;
+  currentStep?: number;
+  onStepClick?: (step: number) => void;
+}
 
+export const APQP_STEPS: ApqpPhaseStep[] = [
+  { step: 1, title: "Plan & Define Program", subtitle: "Gate 1 Approved (100%)" },
+  { step: 2, title: "Product Design & Dev", subtitle: "Gate 2 Approved (100%)" },
+  { step: 3, title: "Process Design & Dev", subtitle: "Phase 3 Active (65%)" },
+  { step: 4, title: "Validation & PPAP", subtitle: "Pilot Run Sign-Off (25%)" },
+  { step: 5, title: "Launch & SOP Handover", subtitle: "Mass Production (0%)" },
+];
+
+export const ApqpPhaseStepper: React.FC<ApqpPhaseStepperProps> = ({
+  currentStep = 3,
+  onStepClick,
+}) => {
   return (
-    <div className="bg-card border-b border-border p-4 shadow-sm text-xs">
-      <h3 className="font-bold text-foreground mb-3 text-xs">APQP Phase Progress</h3>
-
-      <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-        {phases.map((p, idx) => {
-          const isCompleted = p.status === "Completed";
-          const isInProgress = p.status === "In Progress";
+    <div className="w-full bg-card rounded-xl border border-border/80 p-3.5 sm:p-4 shadow-xs overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden min-w-0">
+      <div className="flex items-center min-w-[640px] md:min-w-0 justify-between relative">
+        {APQP_STEPS.map((s, index) => {
+          const isActive = s.step === currentStep;
+          const isCompleted = s.step < currentStep;
 
           return (
-            <div
-              key={p.number}
-              className={`p-3 rounded-lg border flex flex-col justify-between transition-all relative ${
-                isCompleted
-                  ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800"
-                  : isInProgress
-                  ? "bg-blue-50/60 dark:bg-blue-950/40 border-2 border-blue-500 shadow-sm"
-                  : "bg-muted/20 border-border"
-              }`}
-            >
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <div className="flex items-center gap-1.5 font-bold">
-                    {isCompleted ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                    ) : isInProgress ? (
-                      <Clock className="w-4 h-4 text-blue-600 animate-spin" />
-                    ) : (
-                      <div className="w-3.5 h-3.5 rounded-full border-2 border-muted-foreground/40" />
+            <div key={s.step} className="flex items-center flex-1 last:flex-none min-w-0">
+              {/* Step Item Button */}
+              <button
+                type="button"
+                onClick={() => onStepClick?.(s.step)}
+                className="flex items-center gap-2.5 text-left group focus:outline-hidden select-none cursor-pointer"
+              >
+                {/* Number Circle / Checkmark */}
+                <div
+                  className={cn(
+                    "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-all",
+                    isActive
+                      ? "bg-[#0B3B7B] text-white shadow-xs ring-4 ring-blue-100 dark:ring-blue-950"
+                      : isCompleted
+                      ? "bg-emerald-600 text-white shadow-xs"
+                      : "bg-muted text-muted-foreground border border-border group-hover:border-muted-foreground/50"
+                  )}
+                >
+                  {isCompleted ? <Check className="w-4 h-4 stroke-[2.5]" /> : s.step}
+                </div>
+
+                {/* Labels */}
+                <div className="flex flex-col min-w-0">
+                  <span
+                    className={cn(
+                      "text-xs font-semibold whitespace-nowrap transition-colors",
+                      isActive
+                        ? "text-foreground font-bold"
+                        : isCompleted
+                        ? "text-foreground group-hover:text-blue-600"
+                        : "text-muted-foreground group-hover:text-foreground"
                     )}
-                    <span className="text-foreground font-extrabold">{p.name}</span>
-                  </div>
+                  >
+                    {s.title}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-[10px] font-medium whitespace-nowrap",
+                      isActive
+                        ? "text-blue-600 dark:text-blue-400 font-semibold"
+                        : isCompleted
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-muted-foreground/70"
+                    )}
+                  >
+                    {s.subtitle}
+                  </span>
                 </div>
+              </button>
 
-                <div className="text-[11px] font-semibold text-muted-foreground mt-1 truncate">
-                  {p.subtitle}
-                </div>
-              </div>
-
-              <div className="mt-3 pt-2 border-t border-border/40 flex items-center justify-between">
-                <span className={`text-[10px] font-bold ${
-                  isCompleted ? "text-emerald-600 dark:text-emerald-400" : isInProgress ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"
-                }`}>
-                  {p.status}
-                </span>
-                <span className="font-mono font-bold text-foreground text-xs">
-                  {p.percentage}%
-                </span>
-              </div>
+              {/* Connecting Line (except last item) */}
+              {index < APQP_STEPS.length - 1 && (
+                <div
+                  className={cn(
+                    "flex-1 mx-2.5 h-0.5 transition-colors",
+                    isCompleted ? "bg-emerald-600/70" : "bg-muted-foreground/20"
+                  )}
+                />
+              )}
             </div>
           );
         })}

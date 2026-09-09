@@ -33,15 +33,21 @@ export function effectiveInstances(
   pageId: WidgetPageId,
 ): WidgetInstance[] {
   const instances = prefs.pages[pageId]?.instances ?? getDefaultLayout(pageId);
-  return instances.filter(
-    (inst) =>
-      !["hub.pd.submodules", "hub.md.submodules", "hub.ri.submodules", "hub.bd.submodules"].includes(
-        inst.widgetId
-      ) &&
-      !["pd-ovw-submodules-hub", "md-ovw-submodules-hub", "ri-ovw-submodules-hub", "bd-ovw-submodules-hub"].includes(
-        inst.id
-      )
-  );
+  return instances
+    .filter(
+      (inst) =>
+        !["hub.pd.submodules", "hub.md.submodules", "hub.ri.submodules", "hub.bd.submodules", "card.sales.scorecard"].includes(
+          inst.widgetId
+        ) &&
+        !["pd-ovw-submodules-hub", "md-ovw-submodules-hub", "ri-ovw-submodules-hub", "bd-ovw-submodules-hub", "sales-scorecard"].includes(
+          inst.id
+        )
+    )
+    .map((inst) =>
+      inst.id === "sales-recent-orders" && inst.size === "xl"
+        ? { ...inst, size: "full" as const }
+        : inst
+    );
 }
 
 /** Build a `pages` patch that replaces one page's instances. */

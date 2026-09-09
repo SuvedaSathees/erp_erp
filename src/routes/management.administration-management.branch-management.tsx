@@ -73,7 +73,7 @@ function BranchManagementPage() {
     parentBranch: "Select parent branch",
     branchType: "Corporate Branch",
     branchCategory: "Corporate",
-    branchHead: "Rajeev Malhotra",
+    branchHead: "Sanjay Mathur",
     branchStatus: "Active",
     effectiveFrom: "2024-04-01",
     effectiveTo: "",
@@ -84,8 +84,8 @@ function BranchManagementPage() {
 
   // Dynamic Branches Directory State
   const [branchesList, setBranchesList] = useState([
-    { code: "BR-DEL-001", name: "Delhi Corporate Branch", city: "Noida, UP", head: "Rajeev Malhotra", count: 156, cc: "CC-BR-DEL-001", pc: "PC-BR-DEL-001", status: "Active" },
-    { code: "BR-BLR-002", name: "Bengaluru Innovation Hub", city: "Bengaluru, KA", head: "Vikram Singh", count: 1256, cc: "CC-BR-BLR-002", pc: "PC-BR-BLR-002", status: "Active" },
+    { code: "BR-DEL-001", name: "Delhi Corporate Branch", city: "Noida, UP", head: "Sanjay Mathur", count: 156, cc: "CC-BR-DEL-001", pc: "PC-BR-DEL-001", status: "Active" },
+    { code: "BR-BLR-002", name: "Bengaluru Innovation Hub", city: "Bengaluru, KA", head: "Karthik Nambiar", count: 1256, cc: "CC-BR-BLR-002", pc: "PC-BR-BLR-002", status: "Active" },
     { code: "BR-HYD-003", name: "Hyderabad Engineering Center", city: "Hyderabad, TS", head: "Sandeep Iyer", count: 856, cc: "CC-BR-HYD-003", pc: "PC-BR-HYD-003", status: "Active" },
     { code: "BR-PNE-004", name: "Pune Production Complex", city: "Pune, MH", head: "Ramesh Sharma", count: 872, cc: "CC-BR-PNE-004", pc: "PC-BR-PNE-004", status: "Active" },
   ]);
@@ -95,7 +95,7 @@ function BranchManagementPage() {
     code: "",
     name: "",
     city: "Mumbai, MH",
-    head: "Rajeev Malhotra",
+    head: "Sanjay Mathur",
     count: "50",
     cc: "CC-NEW",
     pc: "PC-NEW",
@@ -280,8 +280,8 @@ function BranchManagementPage() {
                   onChange={(e) => setBranchMaster({ ...branchMaster, branchHead: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Rajeev Malhotra">Rajeev Malhotra</option>
-                  <option value="Vikram Singh">Vikram Singh</option>
+                  <option value="Sanjay Mathur">Sanjay Mathur</option>
+                  <option value="Karthik Nambiar">Karthik Nambiar</option>
                   <option value="Sandeep Iyer">Sandeep Iyer</option>
                   <option value="Ramesh Sharma">Ramesh Sharma</option>
                 </select>

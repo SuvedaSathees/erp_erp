@@ -228,18 +228,10 @@ export function CapaPage() {
 
             {/* Phase 3 & 4: Risk Assessment & RCA Linkage */}
             {(viewMode === "all" || activeStep === 3 || activeStep === 4) && (
-              <>
-                <CapaRiskAssessmentCard
-                  record={record}
-                  onChange={handleFieldChange}
-                />
-                {viewMode === "phase" && (
-                  <CapaProblemScopeCard
-                    record={record}
-                    onChange={handleFieldChange}
-                  />
-                )}
-              </>
+              <CapaRiskAssessmentCard
+                record={record}
+                onChange={handleFieldChange}
+              />
             )}
 
             {/* Phase 5: Action Implementation Tasks */}

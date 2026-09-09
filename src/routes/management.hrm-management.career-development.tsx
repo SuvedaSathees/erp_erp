@@ -113,11 +113,11 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/management/hrm-management/career-development")({
   head: () => ({
     meta: [
-      { title: "Career Development · HRM Management · Magnertia ERP" },
+      { title: "Career Development & Succession · HRM Management · Magnertia ERP" },
       {
         name: "description",
         content:
-          "The Career Development Form manages the employee's long-term career progression from current role → career aspiration → target role → competency gap → skill gap → development plan → learning → experience → readiness → succession → promotion → career review → career history.",
+          "Strategic employee career progression, succession planning, promotion readiness benchmarks, job rotations, and executive mentoring pathways.",
       },
     ],
   }),
@@ -143,27 +143,27 @@ const SUCCESSOR_PIPELINE_PIE = [
 ];
 
 const COMPETENCY_GAPS = [
-  { name: "Leadership", req: 4, cur: 3, gap: 1, priority: "High" },
-  { name: "Strategic Thinking", req: 4, cur: 3, gap: 1, priority: "High" },
-  { name: "Communication", req: 4, cur: 3, gap: 1, priority: "Medium" },
-  { name: "People Management", req: 4, cur: 3, gap: 1, priority: "Medium" },
-  { name: "Financial Acumen", req: 3, cur: 2, gap: 1, priority: "Medium" },
+  { name: "Leadership & Mentoring", req: 4, cur: 3, gap: 1, priority: "High" },
+  { name: "Strategic Architectural Thinking", req: 4, cur: 3, gap: 1, priority: "High" },
+  { name: "Cross-Functional Influence", req: 4, cur: 3, gap: 1, priority: "Medium" },
+  { name: "Talent Bench Development", req: 4, cur: 3, gap: 1, priority: "Medium" },
+  { name: "Capital & R&D Budgeting", req: 3, cur: 2, gap: 1, priority: "Medium" },
 ];
 
 const DEVELOPMENT_PLANS = [
-  { area: "Leadership", plan: "Leadership Program", target: "30 Sep 2024", progress: 70, status: "In Progress" },
-  { area: "Strategic Thinking", plan: "Strategy Workshop", target: "31 Aug 2024", progress: 60, status: "In Progress" },
-  { area: "Communication", plan: "Communication Training", target: "30 Jun 2024", progress: 80, status: "In Progress" },
-  { area: "Project Management", plan: "PMP Certification", target: "15 Nov 2024", progress: 40, status: "In Progress" },
-  { area: "Mentoring", plan: "Monthly Mentoring", target: "Ongoing", progress: 75, status: "In Progress" },
+  { area: "Architecture Rotation", plan: "Executive Architecture Shadowing with VP Engineering", target: "30 Sep 2024", progress: 70, status: "In Progress" },
+  { area: "Strategic Initiative", plan: "Lead Cross-Functional Electric Powertrain Pilot Team", target: "31 Aug 2024", progress: 60, status: "In Progress" },
+  { area: "Succession Bench", plan: "Key Role Succession Shadowing for Lead Mechanical Engineer", target: "30 Jun 2024", progress: 80, status: "In Progress" },
+  { area: "Enterprise Governance", plan: "Shadow FY25 R&D Budget Planning & Capital Allocation", target: "15 Nov 2024", progress: 40, status: "In Progress" },
+  { area: "Mentorship Cadence", plan: "Bi-Weekly Executive Leadership Mentoring with Arun Kumar", target: "Ongoing", progress: 75, status: "In Progress" },
 ];
 
 const MILESTONES = [
-  { title: "Complete Leadership Program", target: "30 Sep 2024", progress: 70, status: "On Track" },
-  { title: "Improve Communication Skills", target: "30 Jun 2024", progress: 80, status: "On Track" },
-  { title: "Lead Cross-functional Project", target: "31 Jul 2024", progress: 40, status: "On Track" },
-  { title: "PMP Certification", target: "15 Nov 2024", progress: 20, status: "On Track" },
-  { title: "Ready for Lead Engineer Role", target: "30 Sep 2026", progress: 0, status: "Upcoming" },
+  { title: "Complete 6-Month Architecture Shadowing Rotation", target: "30 Sep 2024", progress: 70, status: "On Track" },
+  { title: "Deliver Lead Mechanical System Design Review for Alpha Prototype", target: "30 Jun 2024", progress: 80, status: "On Track" },
+  { title: "Conduct 3 Junior Engineer Mentorship Cohorts", target: "31 Jul 2024", progress: 40, status: "On Track" },
+  { title: "Attain Senior Engineering Board Readiness Clearance", target: "15 Nov 2024", progress: 20, status: "On Track" },
+  { title: "Promotion Gate Review for Lead Engineer Role", target: "30 Sep 2026", progress: 0, status: "Upcoming" },
 ];
 
 const CAREER_REVIEWS = [
@@ -188,9 +188,9 @@ export function CareerDevelopmentPage() {
 
   return (
     <AppShell
-      title="Career Development"
+      title="Career Development & Succession"
       breadcrumb="Management > HRM Management > Career Development"
-      description="The Career Development Form manages the employee's long-term career progression from current role → career aspiration → target role → competency gap → skill gap → development plan → learning → experience → readiness → succession → promotion → career review → career history."
+      description="Strategic employee career progression, succession planning, promotion readiness benchmarks, job rotations, and executive mentoring pathways."
       tabs={<HrmManagementTabBar />}
     >
       <div className="flex flex-col w-full text-slate-800 space-y-6 pt-2 pb-16">
@@ -200,7 +200,7 @@ export function CareerDevelopmentPage() {
             {/* Title */}
             <div className="flex items-center gap-3">
               <h2 className="text-base font-bold tracking-tight text-slate-900 flex items-center gap-2">
-                Career Development Form
+                Career Progression & Succession Bench
               </h2>
             </div>
 

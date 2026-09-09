@@ -838,11 +838,9 @@ export function ProductDocumentationPage({
         </div>
       </div>
 
-      {/* 4. Main Dashboard Grid Layout */}
+      {/* 4. Main Dashboard Layout */}
       <div className="mx-auto max-w-[1600px] px-4 pt-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Main Content Column */}
-          <div className="lg:col-span-9 space-y-6">
+        <div className="space-y-6">
             {/* ------------------------------------------------------------- */}
             {/* PANEL 1: Documentation Overview */}
             {/* ------------------------------------------------------------- */}
@@ -1828,51 +1826,6 @@ export function ProductDocumentationPage({
                   </CardContent>
                 </Card>
           </div>
-
-          {/* Right Sticky Sidebar Panel */}
-          <div className="lg:col-span-3 space-y-6">
-            <div className="sticky top-6 space-y-4">
-              {/* Overall Documentation Score Gauge Card */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-xs">
-                <CardHeader className="pb-2 border-b border-border/60">
-                  <CardTitle className="text-sm font-bold">Overall Documentation Score</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-4 flex flex-col items-center">
-                  <CircularScoreGauge
-                    score={rec.overallDocumentationScore}
-                    size={110}
-                    strokeWidth={10}
-                    color="#059669"
-                  />
-
-                  {/* Breakdown List */}
-                  <div className="w-full mt-4 space-y-2 text-xs border-t border-border/60 pt-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600 dark:text-slate-400">Engineering Docs</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.engineeringScore}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600 dark:text-slate-400">Manufacturing Docs</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.manufacturingScore}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600 dark:text-slate-400">Compliance Docs</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.qualityComplianceScore}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600 dark:text-slate-400">Customer Docs</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.customerScore}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600 dark:text-slate-400">Version Control</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">{rec.versionControlScore}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* --------------------------------------------------------------------- */}

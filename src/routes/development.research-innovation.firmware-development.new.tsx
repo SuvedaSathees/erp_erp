@@ -1016,38 +1016,65 @@ export function FirmwareDevelopmentNewPage({
                   </Badge>
                 </CardHeader>
 
-                <CardContent className="pt-4 space-y-3.5 text-xs">
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Firmware Readiness</span>
-                      <span>{record.summary.firmwareReadiness} / 100</span>
+                <CardContent className="pt-4 flex flex-col md:flex-row items-center gap-6 text-xs">
+                  <div className="shrink-0 flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border">
+                    <div className="relative inline-flex items-center justify-center">
+                      <svg width={96} height={96} className="transform -rotate-90">
+                        <circle
+                          cx={48}
+                          cy={48}
+                          r={40}
+                          className="stroke-slate-100 dark:stroke-slate-800 fill-none"
+                          strokeWidth={8}
+                        />
+                        <circle
+                          cx={48}
+                          cy={48}
+                          r={40}
+                          className="fill-none transition-all duration-1000 ease-out text-teal-600 stroke-teal-600 dark:text-teal-400 dark:stroke-teal-400"
+                          strokeWidth={8}
+                          strokeDasharray={2 * Math.PI * 40}
+                          strokeDashoffset={2 * Math.PI * 40 * (1 - record.summary.overallFirmwareScore / 100)}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center text-center">
+                        <span className="text-xl font-bold tracking-tight text-foreground">
+                          {record.summary.overallFirmwareScore}%
+                        </span>
+                      </div>
                     </div>
-                    <Progress value={record.summary.firmwareReadiness} className="h-2" />
+                    <span className="text-[11px] font-bold text-muted-foreground mt-2 uppercase tracking-wide">Overall Firmware Score</span>
                   </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Code Quality</span>
-                      <span>{record.summary.codeQuality} / 100</span>
+                  <div className="flex-1 w-full space-y-3">
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Firmware Readiness</span>
+                        <span>{record.summary.firmwareReadiness} / 100</span>
+                      </div>
+                      <Progress value={record.summary.firmwareReadiness} className="h-2" />
                     </div>
-                    <Progress value={record.summary.codeQuality} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Security Readiness</span>
-                      <span>{record.summary.securityReadiness} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Code Quality</span>
+                        <span>{record.summary.codeQuality} / 100</span>
+                      </div>
+                      <Progress value={record.summary.codeQuality} className="h-2" />
                     </div>
-                    <Progress value={record.summary.securityReadiness} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Test Coverage</span>
-                      <span>{record.summary.testCoverage} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Security Readiness</span>
+                        <span>{record.summary.securityReadiness} / 100</span>
+                      </div>
+                      <Progress value={record.summary.securityReadiness} className="h-2" />
                     </div>
-                    <Progress value={record.summary.testCoverage} className="h-2" />
-                  </div>
-                  <div className="pt-2 border-t border-border flex justify-between items-center font-bold text-foreground">
-                    <span>Overall Firmware Score</span>
-                    <span className="text-base text-teal-600">{record.summary.overallFirmwareScore} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Test Coverage</span>
+                        <span>{record.summary.testCoverage} / 100</span>
+                      </div>
+                      <Progress value={record.summary.testCoverage} className="h-2" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1278,67 +1305,6 @@ export function FirmwareDevelopmentNewPage({
               =========================================================================== */}
           <div className="lg:col-span-1 space-y-6">
             <div className="sticky top-6 space-y-6">
-              {/* Overall Score Gauge Box */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
-                <CardHeader className="pb-2 border-b border-border text-center">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Firmware Quality Score
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent className="pt-5 flex flex-col items-center">
-                  <div className="relative inline-flex items-center justify-center">
-                    <svg width={110} height={110} className="transform -rotate-90">
-                      <circle
-                        cx={55}
-                        cy={55}
-                        r={47}
-                        className="stroke-slate-100 dark:stroke-slate-800 fill-none"
-                        strokeWidth={8}
-                      />
-                      <circle
-                        cx={55}
-                        cy={55}
-                        r={47}
-                        className="fill-none transition-all duration-1000 ease-out text-teal-600 stroke-teal-600 dark:text-teal-400 dark:stroke-teal-400"
-                        strokeWidth={8}
-                        strokeDasharray={2 * Math.PI * 47}
-                        strokeDashoffset={2 * Math.PI * 47 * (1 - record.summary.overallFirmwareScore / 100)}
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center text-center">
-                      <span className="text-2xl font-bold tracking-tight text-foreground">
-                        {record.summary.overallFirmwareScore}%
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="w-full mt-5 space-y-2 border-t border-border pt-4 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Code Quality</span>
-                      <span className="font-bold text-foreground">{record.summary.codeQuality}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Performance</span>
-                      <span className="font-bold text-foreground">90%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Security</span>
-                      <span className="font-bold text-foreground">{record.summary.securityReadiness}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Test Coverage</span>
-                      <span className="font-bold text-foreground">{record.summary.testCoverage}%</span>
-                    </div>
-                    <div className="flex justify-between items-center pt-2 border-t border-border font-bold text-teal-600 dark:text-teal-400">
-                      <span>Overall Score</span>
-                      <span>{record.summary.overallFirmwareScore}%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Key Highlights Card */}
               <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
                 <CardHeader className="pb-2 border-b border-border">

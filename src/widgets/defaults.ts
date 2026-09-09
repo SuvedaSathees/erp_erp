@@ -327,6 +327,35 @@ export const DEFAULT_LAYOUTS: Record<WidgetPageId, WidgetInstance[]> = {
     // AI Quality Intelligence (Full Width)
     { ...base, id: "qm-panel-ai", widgetId: "ai.quality.intelligence", size: "full" },
   ],
+  "sales-overview": [
+    // 9 Sales Executive KPIs
+    { ...base, id: "sales-kpi-revenue", widgetId: "kpi.sales.total-revenue", size: "sm" },
+    { ...base, id: "sales-kpi-pipeline", widgetId: "kpi.sales.pipeline-value", size: "sm" },
+    { ...base, id: "sales-kpi-orders", widgetId: "kpi.sales.active-orders", size: "sm" },
+    { ...base, id: "sales-kpi-margin", widgetId: "kpi.sales.gross-margin", size: "sm" },
+    { ...base, id: "sales-kpi-forecast", widgetId: "kpi.sales.forecast-accuracy", size: "sm" },
+    { ...base, id: "sales-kpi-new-cust", widgetId: "kpi.sales.new-customers", size: "sm" },
+    { ...base, id: "sales-kpi-partners", widgetId: "kpi.sales.channel-partners", size: "sm" },
+    { ...base, id: "sales-kpi-territories", widgetId: "kpi.sales.territories-governed", size: "sm" },
+    { ...base, id: "sales-kpi-deal-size", widgetId: "kpi.sales.avg-deal-size", size: "sm" },
+
+    // 10 Sales Submodules Operations Hub (Full Width)
+    { ...base, id: "sales-hub-modules", widgetId: "grid.sales.submodules-hub", size: "full" },
+
+    // Revenue Trend (spans 2 of 3) + Product Revenue Donut (1 of 3)
+    { ...base, id: "sales-trend", widgetId: "chart.sales.revenue-trend", size: "xl" },
+    { ...base, id: "sales-product-donut", widgetId: "chart.sales.product-distribution", size: "md" },
+
+    // Pipeline Funnel (1 of 3) + Territory Quota Performance (spans 2 of 3)
+    { ...base, id: "sales-funnel", widgetId: "chart.sales.pipeline-funnel", size: "md" },
+    { ...base, id: "sales-territory-table", widgetId: "table.sales.territory-performance", size: "xl" },
+
+    // Recent Confirmed Orders (Full Width)
+    { ...base, id: "sales-recent-orders", widgetId: "table.sales.recent-orders", size: "full" },
+
+    // AI Commercial Intelligence & Margin Copilot (Full Width)
+    { ...base, id: "sales-ai", widgetId: "ai.sales.commercial-intelligence", size: "full" },
+  ],
 };
 
 /** Display metadata for each widget surface. */
@@ -355,6 +384,7 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
   "pm-overview": { label: "Project Management Overview", route: "/management/project-management/overview" },
   "asset-overview": { label: "Asset Management Overview", route: "/management/asset-management/overview" },
   "quality-overview": { label: "Quality Overview", route: "/management/quality-management/overview" },
+  "sales-overview": { label: "Sales Overview", route: "/management/sales-management/overview" },
 };
 
 /**
@@ -375,6 +405,7 @@ export const PLACEABLE_PAGES: WidgetPageId[] = [
   "pm-overview",
   "asset-overview",
   "quality-overview",
+  "sales-overview",
 ];
 
 /** Deep-copy a default layout so callers can never mutate the shared constant. */

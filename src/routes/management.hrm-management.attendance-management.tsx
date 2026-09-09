@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -157,7 +157,6 @@ export default function AttendanceManagementPage() {
   // Modals
   const [isPunchModalOpen, setIsPunchModalOpen] = useState(false);
   const [isRegularizationModalOpen, setIsRegularizationModalOpen] = useState(false);
-  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
 
   // Form State
   const [punchType, setPunchType] = useState<PunchRecord["type"]>("Check In");
@@ -851,14 +850,16 @@ export default function AttendanceManagementPage() {
                     Apply for Regularization
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={() => setIsLeaveModalOpen(true)}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-200 hover:border-emerald-600 hover:bg-emerald-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
+                  <Link
+                    to="/management/hrm-management/leave-management"
+                    className="flex items-center justify-between p-2 rounded-lg border border-slate-200 hover:border-emerald-600 hover:bg-emerald-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
                   >
-                    <Calendar className="h-3.5 w-3.5 text-emerald-600" />
-                    Apply for Leave
-                  </button>
+                    <span className="flex items-center gap-2">
+                      <Calendar className="h-3.5 w-3.5 text-emerald-600" />
+                      Apply for Leave
+                    </span>
+                    <span className="text-[10px] text-emerald-700 font-medium">Leave Module &rarr;</span>
+                  </Link>
 
                   <button
                     type="button"
@@ -1224,81 +1225,6 @@ export default function AttendanceManagementPage() {
                   className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer"
                 >
                   Submit Request
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Modal: Apply for Leave */}
-      {isLeaveModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-emerald-600" />
-                Apply for Leave
-              </h3>
-              <button
-                type="button"
-                onClick={() => setIsLeaveModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
-              >
-                <XCircle className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setIsLeaveModalOpen(false);
-                toast.success("Leave application submitted for approval");
-              }}
-              className="space-y-3.5 text-xs"
-            >
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Leave Type *</label>
-                <select className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden bg-white">
-                  <option>Casual Leave (Balance: 6.5 Days)</option>
-                  <option>Earned Leave (Balance: 10.0 Days)</option>
-                  <option>Sick Leave (Balance: 8.0 Days)</option>
-                  <option>Comp Off (Balance: 2.0 Days)</option>
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">From Date</label>
-                  <input
-                    type="date"
-                    defaultValue="2024-05-20"
-                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">To Date</label>
-                  <input
-                    type="date"
-                    defaultValue="2024-05-21"
-                    className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setIsLeaveModalOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 font-semibold cursor-pointer"
-                >
-                  Submit Leave
                 </button>
               </div>
             </form>

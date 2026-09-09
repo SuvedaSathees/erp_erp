@@ -508,7 +508,7 @@ function ExportDevelopmentPage() {
         )}
 
         {/* Form Header Action Strip & Top Metadata Cards */}
-        <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-sm">
+        <div className="relative rounded-2xl border border-border bg-card p-5 shadow-xs space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-3">
             <div className="flex items-center gap-3">
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary font-bold shadow-inner">
@@ -532,7 +532,7 @@ function ExportDevelopmentPage() {
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Export Development ID: <span className="font-mono font-bold text-foreground">{formData.exportId}</span> · Code:{" "}
+                  EXP ID: <span className="font-mono font-bold text-foreground">{formData.exportId}</span> · Code:{" "}
                   <span className="font-mono font-bold text-foreground">{formData.formCode}</span> · Number:{" "}
                   <span className="font-mono font-bold text-foreground">{formData.exportNumber}</span>
                 </p>
@@ -606,7 +606,7 @@ function ExportDevelopmentPage() {
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
                 Product Category <MAICWBadge type="I" />
               </span>
-              <span className="font-bold text-primary block truncate mt-0.5">{formData.productCategory}</span>
+              <span className="font-bold text-foreground block truncate mt-0.5">{formData.productCategory}</span>
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">

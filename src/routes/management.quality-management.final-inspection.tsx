@@ -406,20 +406,12 @@ export function FinalInspectionPage() {
               </div>
             )}
 
-            {/* In "View All" mode, render characteristics table and defects here */}
+            {/* In "View All" mode, render defect segregation register */}
             {viewMode === "all" && (
-              <>
-                <FqcCharacteristicsTable
-                  characteristics={record.characteristics}
-                  onAddCharacteristic={handleAddCharacteristic}
-                  onUpdateStatus={handleUpdateStatus}
-                  onExportReport={handlePrint}
-                />
-                <FqcRecentDefectsCard
-                  defects={record.defects}
-                  onAddDefect={handleAddDefect}
-                />
-              </>
+              <FqcRecentDefectsCard
+                defects={record.defects}
+                onAddDefect={handleAddDefect}
+              />
             )}
           </div>
 

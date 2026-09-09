@@ -138,7 +138,7 @@ function TopRisksPanel() {
           </CardTitle>
           <CardDescription className="text-xs">Identified project threats and mitigation strategies.</CardDescription>
         </div>
-        <a href="/management/project-management/risks" className="text-xs text-primary font-semibold hover:underline">
+        <a href="/management/project-management/risk-management" className="text-xs text-primary font-semibold hover:underline">
           View All Risks →
         </a>
       </CardHeader>

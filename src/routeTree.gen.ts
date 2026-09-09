@@ -45,7 +45,18 @@ import { Route as ManufacturingDevelopmentLeanManufacturingNewRouteImport } from
 import { Route as ManufacturingDevelopmentLeanManufacturingIdRouteImport } from './routes/manufacturing-development.lean-manufacturing.$id'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentNewRouteImport } from './routes/manufacturing-development.automation-development.new'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentIdRouteImport } from './routes/manufacturing-development.automation-development.$id'
+import { Route as ManagementSalesManagementTerritoryManagementRouteImport } from './routes/management.sales-management.territory-management'
+import { Route as ManagementSalesManagementSalesPlanningRouteImport } from './routes/management.sales-management.sales-planning'
+import { Route as ManagementSalesManagementSalesOrdersRouteImport } from './routes/management.sales-management.sales-orders'
+import { Route as ManagementSalesManagementSalesForecastingRouteImport } from './routes/management.sales-management.sales-forecasting'
+import { Route as ManagementSalesManagementSalesCommissionRouteImport } from './routes/management.sales-management.sales-commission'
+import { Route as ManagementSalesManagementSalesAnalyticsRouteImport } from './routes/management.sales-management.sales-analytics'
+import { Route as ManagementSalesManagementPricingRouteImport } from './routes/management.sales-management.pricing'
+import { Route as ManagementSalesManagementOverviewRouteImport } from './routes/management.sales-management.overview'
+import { Route as ManagementSalesManagementDiscountsRouteImport } from './routes/management.sales-management.discounts'
 import { Route as ManagementSalesManagementCustomerOrdersManagementRouteImport } from './routes/management.sales-management.customer-orders-management'
+import { Route as ManagementSalesManagementContractsRouteImport } from './routes/management.sales-management.contracts'
+import { Route as ManagementSalesManagementChannelPartnersRouteImport } from './routes/management.sales-management.channel-partners'
 import { Route as ManagementQualityManagementRootCauseAnalysisRouteImport } from './routes/management.quality-management.root-cause-analysis'
 import { Route as ManagementQualityManagementQualityPlanningRouteImport } from './routes/management.quality-management.quality-planning'
 import { Route as ManagementQualityManagementQualityAnalyticsRouteImport } from './routes/management.quality-management.quality-analytics'
@@ -559,10 +570,76 @@ const ManufacturingDevelopmentAutomationDevelopmentIdRoute =
     path: '/manufacturing-development/automation-development/$id',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementSalesManagementTerritoryManagementRoute =
+  ManagementSalesManagementTerritoryManagementRouteImport.update({
+    id: '/management/sales-management/territory-management',
+    path: '/management/sales-management/territory-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSalesManagementSalesPlanningRoute =
+  ManagementSalesManagementSalesPlanningRouteImport.update({
+    id: '/management/sales-management/sales-planning',
+    path: '/management/sales-management/sales-planning',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSalesManagementSalesOrdersRoute =
+  ManagementSalesManagementSalesOrdersRouteImport.update({
+    id: '/management/sales-management/sales-orders',
+    path: '/management/sales-management/sales-orders',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSalesManagementSalesForecastingRoute =
+  ManagementSalesManagementSalesForecastingRouteImport.update({
+    id: '/management/sales-management/sales-forecasting',
+    path: '/management/sales-management/sales-forecasting',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSalesManagementSalesCommissionRoute =
+  ManagementSalesManagementSalesCommissionRouteImport.update({
+    id: '/management/sales-management/sales-commission',
+    path: '/management/sales-management/sales-commission',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSalesManagementSalesAnalyticsRoute =
+  ManagementSalesManagementSalesAnalyticsRouteImport.update({
+    id: '/management/sales-management/sales-analytics',
+    path: '/management/sales-management/sales-analytics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSalesManagementPricingRoute =
+  ManagementSalesManagementPricingRouteImport.update({
+    id: '/management/sales-management/pricing',
+    path: '/management/sales-management/pricing',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSalesManagementOverviewRoute =
+  ManagementSalesManagementOverviewRouteImport.update({
+    id: '/management/sales-management/overview',
+    path: '/management/sales-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSalesManagementDiscountsRoute =
+  ManagementSalesManagementDiscountsRouteImport.update({
+    id: '/management/sales-management/discounts',
+    path: '/management/sales-management/discounts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementSalesManagementCustomerOrdersManagementRoute =
   ManagementSalesManagementCustomerOrdersManagementRouteImport.update({
     id: '/management/sales-management/customer-orders-management',
     path: '/management/sales-management/customer-orders-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSalesManagementContractsRoute =
+  ManagementSalesManagementContractsRouteImport.update({
+    id: '/management/sales-management/contracts',
+    path: '/management/sales-management/contracts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSalesManagementChannelPartnersRoute =
+  ManagementSalesManagementChannelPartnersRouteImport.update({
+    id: '/management/sales-management/channel-partners',
+    path: '/management/sales-management/channel-partners',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementQualityManagementRootCauseAnalysisRoute =
@@ -2625,7 +2702,18 @@ export interface FileRoutesByFullPath {
   '/management/quality-management/quality-analytics': typeof ManagementQualityManagementQualityAnalyticsRoute
   '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
   '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
+  '/management/sales-management/channel-partners': typeof ManagementSalesManagementChannelPartnersRoute
+  '/management/sales-management/contracts': typeof ManagementSalesManagementContractsRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
+  '/management/sales-management/discounts': typeof ManagementSalesManagementDiscountsRoute
+  '/management/sales-management/overview': typeof ManagementSalesManagementOverviewRoute
+  '/management/sales-management/pricing': typeof ManagementSalesManagementPricingRoute
+  '/management/sales-management/sales-analytics': typeof ManagementSalesManagementSalesAnalyticsRoute
+  '/management/sales-management/sales-commission': typeof ManagementSalesManagementSalesCommissionRoute
+  '/management/sales-management/sales-forecasting': typeof ManagementSalesManagementSalesForecastingRoute
+  '/management/sales-management/sales-orders': typeof ManagementSalesManagementSalesOrdersRoute
+  '/management/sales-management/sales-planning': typeof ManagementSalesManagementSalesPlanningRoute
+  '/management/sales-management/territory-management': typeof ManagementSalesManagementTerritoryManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   '/manufacturing-development/lean-manufacturing/$id': typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -2965,7 +3053,18 @@ export interface FileRoutesByTo {
   '/management/quality-management/quality-analytics': typeof ManagementQualityManagementQualityAnalyticsRoute
   '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
   '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
+  '/management/sales-management/channel-partners': typeof ManagementSalesManagementChannelPartnersRoute
+  '/management/sales-management/contracts': typeof ManagementSalesManagementContractsRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
+  '/management/sales-management/discounts': typeof ManagementSalesManagementDiscountsRoute
+  '/management/sales-management/overview': typeof ManagementSalesManagementOverviewRoute
+  '/management/sales-management/pricing': typeof ManagementSalesManagementPricingRoute
+  '/management/sales-management/sales-analytics': typeof ManagementSalesManagementSalesAnalyticsRoute
+  '/management/sales-management/sales-commission': typeof ManagementSalesManagementSalesCommissionRoute
+  '/management/sales-management/sales-forecasting': typeof ManagementSalesManagementSalesForecastingRoute
+  '/management/sales-management/sales-orders': typeof ManagementSalesManagementSalesOrdersRoute
+  '/management/sales-management/sales-planning': typeof ManagementSalesManagementSalesPlanningRoute
+  '/management/sales-management/territory-management': typeof ManagementSalesManagementTerritoryManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   '/manufacturing-development/lean-manufacturing/$id': typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -3313,7 +3412,18 @@ export interface FileRoutesById {
   '/management/quality-management/quality-analytics': typeof ManagementQualityManagementQualityAnalyticsRoute
   '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
   '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
+  '/management/sales-management/channel-partners': typeof ManagementSalesManagementChannelPartnersRoute
+  '/management/sales-management/contracts': typeof ManagementSalesManagementContractsRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
+  '/management/sales-management/discounts': typeof ManagementSalesManagementDiscountsRoute
+  '/management/sales-management/overview': typeof ManagementSalesManagementOverviewRoute
+  '/management/sales-management/pricing': typeof ManagementSalesManagementPricingRoute
+  '/management/sales-management/sales-analytics': typeof ManagementSalesManagementSalesAnalyticsRoute
+  '/management/sales-management/sales-commission': typeof ManagementSalesManagementSalesCommissionRoute
+  '/management/sales-management/sales-forecasting': typeof ManagementSalesManagementSalesForecastingRoute
+  '/management/sales-management/sales-orders': typeof ManagementSalesManagementSalesOrdersRoute
+  '/management/sales-management/sales-planning': typeof ManagementSalesManagementSalesPlanningRoute
+  '/management/sales-management/territory-management': typeof ManagementSalesManagementTerritoryManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   '/manufacturing-development/lean-manufacturing/$id': typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -3662,7 +3772,18 @@ export interface FileRouteTypes {
     | '/management/quality-management/quality-analytics'
     | '/management/quality-management/quality-planning'
     | '/management/quality-management/root-cause-analysis'
+    | '/management/sales-management/channel-partners'
+    | '/management/sales-management/contracts'
     | '/management/sales-management/customer-orders-management'
+    | '/management/sales-management/discounts'
+    | '/management/sales-management/overview'
+    | '/management/sales-management/pricing'
+    | '/management/sales-management/sales-analytics'
+    | '/management/sales-management/sales-commission'
+    | '/management/sales-management/sales-forecasting'
+    | '/management/sales-management/sales-orders'
+    | '/management/sales-management/sales-planning'
+    | '/management/sales-management/territory-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
     | '/manufacturing-development/lean-manufacturing/$id'
@@ -4002,7 +4123,18 @@ export interface FileRouteTypes {
     | '/management/quality-management/quality-analytics'
     | '/management/quality-management/quality-planning'
     | '/management/quality-management/root-cause-analysis'
+    | '/management/sales-management/channel-partners'
+    | '/management/sales-management/contracts'
     | '/management/sales-management/customer-orders-management'
+    | '/management/sales-management/discounts'
+    | '/management/sales-management/overview'
+    | '/management/sales-management/pricing'
+    | '/management/sales-management/sales-analytics'
+    | '/management/sales-management/sales-commission'
+    | '/management/sales-management/sales-forecasting'
+    | '/management/sales-management/sales-orders'
+    | '/management/sales-management/sales-planning'
+    | '/management/sales-management/territory-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
     | '/manufacturing-development/lean-manufacturing/$id'
@@ -4349,7 +4481,18 @@ export interface FileRouteTypes {
     | '/management/quality-management/quality-analytics'
     | '/management/quality-management/quality-planning'
     | '/management/quality-management/root-cause-analysis'
+    | '/management/sales-management/channel-partners'
+    | '/management/sales-management/contracts'
     | '/management/sales-management/customer-orders-management'
+    | '/management/sales-management/discounts'
+    | '/management/sales-management/overview'
+    | '/management/sales-management/pricing'
+    | '/management/sales-management/sales-analytics'
+    | '/management/sales-management/sales-commission'
+    | '/management/sales-management/sales-forecasting'
+    | '/management/sales-management/sales-orders'
+    | '/management/sales-management/sales-planning'
+    | '/management/sales-management/territory-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
     | '/manufacturing-development/lean-manufacturing/$id'
@@ -4639,7 +4782,18 @@ export interface RootRouteChildren {
   ManagementQualityManagementQualityAnalyticsRoute: typeof ManagementQualityManagementQualityAnalyticsRoute
   ManagementQualityManagementQualityPlanningRoute: typeof ManagementQualityManagementQualityPlanningRoute
   ManagementQualityManagementRootCauseAnalysisRoute: typeof ManagementQualityManagementRootCauseAnalysisRoute
+  ManagementSalesManagementChannelPartnersRoute: typeof ManagementSalesManagementChannelPartnersRoute
+  ManagementSalesManagementContractsRoute: typeof ManagementSalesManagementContractsRoute
   ManagementSalesManagementCustomerOrdersManagementRoute: typeof ManagementSalesManagementCustomerOrdersManagementRoute
+  ManagementSalesManagementDiscountsRoute: typeof ManagementSalesManagementDiscountsRoute
+  ManagementSalesManagementOverviewRoute: typeof ManagementSalesManagementOverviewRoute
+  ManagementSalesManagementPricingRoute: typeof ManagementSalesManagementPricingRoute
+  ManagementSalesManagementSalesAnalyticsRoute: typeof ManagementSalesManagementSalesAnalyticsRoute
+  ManagementSalesManagementSalesCommissionRoute: typeof ManagementSalesManagementSalesCommissionRoute
+  ManagementSalesManagementSalesForecastingRoute: typeof ManagementSalesManagementSalesForecastingRoute
+  ManagementSalesManagementSalesOrdersRoute: typeof ManagementSalesManagementSalesOrdersRoute
+  ManagementSalesManagementSalesPlanningRoute: typeof ManagementSalesManagementSalesPlanningRoute
+  ManagementSalesManagementTerritoryManagementRoute: typeof ManagementSalesManagementTerritoryManagementRoute
   ManufacturingDevelopmentAutomationDevelopmentIdRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   ManufacturingDevelopmentAutomationDevelopmentNewRoute: typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   ManufacturingDevelopmentLeanManufacturingIdRoute: typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -4912,11 +5066,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/sales-management/territory-management': {
+      id: '/management/sales-management/territory-management'
+      path: '/management/sales-management/territory-management'
+      fullPath: '/management/sales-management/territory-management'
+      preLoaderRoute: typeof ManagementSalesManagementTerritoryManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sales-management/sales-planning': {
+      id: '/management/sales-management/sales-planning'
+      path: '/management/sales-management/sales-planning'
+      fullPath: '/management/sales-management/sales-planning'
+      preLoaderRoute: typeof ManagementSalesManagementSalesPlanningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sales-management/sales-orders': {
+      id: '/management/sales-management/sales-orders'
+      path: '/management/sales-management/sales-orders'
+      fullPath: '/management/sales-management/sales-orders'
+      preLoaderRoute: typeof ManagementSalesManagementSalesOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sales-management/sales-forecasting': {
+      id: '/management/sales-management/sales-forecasting'
+      path: '/management/sales-management/sales-forecasting'
+      fullPath: '/management/sales-management/sales-forecasting'
+      preLoaderRoute: typeof ManagementSalesManagementSalesForecastingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sales-management/sales-commission': {
+      id: '/management/sales-management/sales-commission'
+      path: '/management/sales-management/sales-commission'
+      fullPath: '/management/sales-management/sales-commission'
+      preLoaderRoute: typeof ManagementSalesManagementSalesCommissionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sales-management/sales-analytics': {
+      id: '/management/sales-management/sales-analytics'
+      path: '/management/sales-management/sales-analytics'
+      fullPath: '/management/sales-management/sales-analytics'
+      preLoaderRoute: typeof ManagementSalesManagementSalesAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sales-management/pricing': {
+      id: '/management/sales-management/pricing'
+      path: '/management/sales-management/pricing'
+      fullPath: '/management/sales-management/pricing'
+      preLoaderRoute: typeof ManagementSalesManagementPricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sales-management/overview': {
+      id: '/management/sales-management/overview'
+      path: '/management/sales-management/overview'
+      fullPath: '/management/sales-management/overview'
+      preLoaderRoute: typeof ManagementSalesManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sales-management/discounts': {
+      id: '/management/sales-management/discounts'
+      path: '/management/sales-management/discounts'
+      fullPath: '/management/sales-management/discounts'
+      preLoaderRoute: typeof ManagementSalesManagementDiscountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/sales-management/customer-orders-management': {
       id: '/management/sales-management/customer-orders-management'
       path: '/management/sales-management/customer-orders-management'
       fullPath: '/management/sales-management/customer-orders-management'
       preLoaderRoute: typeof ManagementSalesManagementCustomerOrdersManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sales-management/contracts': {
+      id: '/management/sales-management/contracts'
+      path: '/management/sales-management/contracts'
+      fullPath: '/management/sales-management/contracts'
+      preLoaderRoute: typeof ManagementSalesManagementContractsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sales-management/channel-partners': {
+      id: '/management/sales-management/channel-partners'
+      path: '/management/sales-management/channel-partners'
+      fullPath: '/management/sales-management/channel-partners'
+      preLoaderRoute: typeof ManagementSalesManagementChannelPartnersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/quality-management/root-cause-analysis': {
@@ -8011,8 +8242,29 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementQualityManagementQualityPlanningRoute,
   ManagementQualityManagementRootCauseAnalysisRoute:
     ManagementQualityManagementRootCauseAnalysisRoute,
+  ManagementSalesManagementChannelPartnersRoute:
+    ManagementSalesManagementChannelPartnersRoute,
+  ManagementSalesManagementContractsRoute:
+    ManagementSalesManagementContractsRoute,
   ManagementSalesManagementCustomerOrdersManagementRoute:
     ManagementSalesManagementCustomerOrdersManagementRoute,
+  ManagementSalesManagementDiscountsRoute:
+    ManagementSalesManagementDiscountsRoute,
+  ManagementSalesManagementOverviewRoute:
+    ManagementSalesManagementOverviewRoute,
+  ManagementSalesManagementPricingRoute: ManagementSalesManagementPricingRoute,
+  ManagementSalesManagementSalesAnalyticsRoute:
+    ManagementSalesManagementSalesAnalyticsRoute,
+  ManagementSalesManagementSalesCommissionRoute:
+    ManagementSalesManagementSalesCommissionRoute,
+  ManagementSalesManagementSalesForecastingRoute:
+    ManagementSalesManagementSalesForecastingRoute,
+  ManagementSalesManagementSalesOrdersRoute:
+    ManagementSalesManagementSalesOrdersRoute,
+  ManagementSalesManagementSalesPlanningRoute:
+    ManagementSalesManagementSalesPlanningRoute,
+  ManagementSalesManagementTerritoryManagementRoute:
+    ManagementSalesManagementTerritoryManagementRoute,
   ManufacturingDevelopmentAutomationDevelopmentIdRoute:
     ManufacturingDevelopmentAutomationDevelopmentIdRoute,
   ManufacturingDevelopmentAutomationDevelopmentNewRoute:

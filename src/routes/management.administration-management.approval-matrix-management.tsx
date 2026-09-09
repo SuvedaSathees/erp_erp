@@ -86,11 +86,11 @@ const ESCALATION_RULES_DATA = [
 ];
 
 const RECENT_APPROVAL_REQUESTS = [
-  { id: "APR-2024-01576", tx: "Purchase Order", amount: "75,00,000", initiator: "Amit Verma", level: "Level 3", approver: "Head - Procurement", status: "Pending", due: "15 May 2024 05:00 PM", age: "5h 20m", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
-  { id: "APR-2024-01575", tx: "Purchase Order", amount: "8,50,000", initiator: "Neha Kapoor", level: "Level 2", approver: "Finance Manager", status: "Pending", due: "15 May 2024 02:00 PM", age: "2h 10m", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
-  { id: "APR-2024-01574", tx: "Purchase Order", amount: "45,00,000", initiator: "Vikram Singh", level: "Level 3", approver: "Head - Procurement", status: "Approved", due: "14 May 2024 06:00 PM", age: "-", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "APR-2024-01573", tx: "Purchase Order", amount: "90,000", initiator: "Pooja Mehta", level: "Level 1", approver: "Purchase Manager", status: "Approved", due: "14 May 2024 11:00 AM", age: "-", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "APR-2024-01572", tx: "Purchase Order", amount: "5,75,000", initiator: "Karan Malhotra", level: "Level 2", approver: "Finance Manager", status: "Rejected", due: "14 May 2024 01:00 PM", age: "-", badge: "bg-rose-500/10 text-rose-600 border-rose-500/20" },
+  { id: "APR-2024-01576", tx: "Capex Machinery Acquisition", amount: "75,00,000", initiator: "Dinesh Patil", level: "Level 4", approver: "CFO & Capex Board", status: "Pending", due: "15 May 2024 05:00 PM", age: "5h 20m", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
+  { id: "APR-2024-01575", tx: "Vendor Service Agreement", amount: "18,50,000", initiator: "Tanvi Saxena", level: "Level 2", approver: "Legal & CFO", status: "Pending", due: "15 May 2024 02:00 PM", age: "2h 10m", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
+  { id: "APR-2024-01574", tx: "Cloud Infrastructure Expansion", amount: "14,20,000", initiator: "Priya Menon", level: "Level 3", approver: "CTO (Vikram Singh)", status: "Approved", due: "14 May 2024 06:00 PM", age: "-", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "APR-2024-01573", tx: "Executive Talent Onboarding", amount: "3,40,000", initiator: "Karan Johar", level: "Level 1", approver: "VP - HR (Meera Nair)", status: "Approved", due: "14 May 2024 11:00 AM", age: "-", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "APR-2024-01572", tx: "International Freight Clearance", amount: "5,75,000", initiator: "Rajesh Pillai", level: "Level 2", approver: "Head - Supply Chain", status: "Rejected", due: "14 May 2024 01:00 PM", age: "-", badge: "bg-rose-500/10 text-rose-600 border-rose-500/20" },
 ];
 
 function ApprovalMatrixManagementPage() {
@@ -125,10 +125,10 @@ function ApprovalMatrixManagementPage() {
 
   // Dynamic Live Requests
   const [requestsList, setRequestsList] = useState([
-    { id: "APR-2024-01576", tx: "Purchase Order", amount: "₹ 75,00,000", initiator: "Amit Verma", level: "Level 3", approver: "Head - Procurement", status: "Pending", due: "15 May 2024 05:00 PM" },
-    { id: "APR-2024-01575", tx: "Purchase Order", amount: "₹ 8,50,000", initiator: "Neha Kapoor", level: "Level 2", approver: "Finance Manager", status: "Pending", due: "15 May 2024 02:00 PM" },
-    { id: "APR-2024-01574", tx: "Purchase Order", amount: "₹ 45,00,000", initiator: "Vikram Singh", level: "Level 3", approver: "Head - Procurement", status: "Approved", due: "14 May 2024 06:00 PM" },
-    { id: "APR-2024-01573", tx: "Purchase Order", amount: "₹ 90,000", initiator: "Pooja Mehta", level: "Level 1", approver: "Purchase Manager", status: "Approved", due: "14 May 2024 11:00 AM" },
+    { id: "APR-2024-01576", tx: "Capex Machinery Acquisition", amount: "₹ 75,00,000", initiator: "Dinesh Patil", level: "Level 4", approver: "CFO & Capex Board", status: "Pending", due: "15 May 2024 05:00 PM" },
+    { id: "APR-2024-01575", tx: "Vendor Service Agreement", amount: "₹ 18,50,000", initiator: "Tanvi Saxena", level: "Level 2", approver: "Legal & CFO", status: "Pending", due: "15 May 2024 02:00 PM" },
+    { id: "APR-2024-01574", tx: "Cloud Infrastructure Expansion", amount: "₹ 14,20,000", initiator: "Priya Menon", level: "Level 3", approver: "CTO (Vikram Singh)", status: "Approved", due: "14 May 2024 06:00 PM" },
+    { id: "APR-2024-01573", tx: "Executive Talent Onboarding", amount: "₹ 3,40,000", initiator: "Karan Johar", level: "Level 1", approver: "VP - HR (Meera Nair)", status: "Approved", due: "14 May 2024 11:00 AM" },
   ]);
 
   const [conditionsList, setConditionsList] = useState([

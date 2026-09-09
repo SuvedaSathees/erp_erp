@@ -79,19 +79,19 @@ const DOCUMENT_TYPES = [
 ];
 
 const REVIEW_APPROVAL_STEPS = [
-  { level: 1, type: "Technical Review", person: "Pooja Mehta", status: "Approved", date: "10 Apr 2024", comments: "Looks good" },
-  { level: 2, type: "Functional Review", person: "Neha Kapoor", status: "Approved", date: "11 Apr 2024", comments: "Approved" },
-  { level: 3, type: "Compliance Review", person: "Anita Deshmukh", status: "Approved", date: "12 Apr 2024", comments: "Compliant" },
-  { level: 4, type: "Management Approval", person: "Rahul Sharma", status: "Approved", date: "15 Apr 2024", comments: "Approved" },
-  { level: 5, type: "Publication", person: "Amit Verma", status: "Published", date: "15 Apr 2024", comments: "Published" },
+  { level: 1, type: "Engineering Author", person: "Devendra Rao", status: "Approved", date: "10 Apr 2024", comments: "CAD drawings and tolerances updated to ISO 2768-mK." },
+  { level: 2, type: "Quality Assurance", person: "Harini Krishnan", status: "Approved", date: "11 Apr 2024", comments: "FMEA risk assessment verified and closed." },
+  { level: 3, type: "Regulatory Affairs", person: "Siddharth Roy", status: "Approved", date: "12 Apr 2024", comments: "CE & ARAI homologation compliance verified." },
+  { level: 4, type: "VP Engineering Approval", person: "Vikram Singh", status: "Approved", date: "15 Apr 2024", comments: "Approved for production line deployment." },
+  { level: 5, type: "Document Controller", person: "Meenakshi Iyer", status: "Published", date: "15 Apr 2024", comments: "Released to shop floor document kiosks." },
 ];
 
 const RECENT_DOCUMENTS_DATA = [
-  { id: "DOC-001", name: "Financial Approval Policy", version: "v1.2", status: "Published", updatedOn: "15 Apr 2024", updatedBy: "Amit Verma", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "DOC-002", name: "Procurement Policy", version: "v2.0", status: "Published", updatedOn: "12 Apr 2024", updatedBy: "Neha Kapoor", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "DOC-003", name: "Expense Claim SOP", version: "v1.3", status: "Under Review", updatedOn: "10 Apr 2024", updatedBy: "Pooja Mehta", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
-  { id: "DOC-004", name: "Vendor Onboarding Procedure", version: "v1.1", status: "Draft", updatedOn: "08 Apr 2024", updatedBy: "Karan Malhotra", badge: "bg-blue-500/10 text-blue-600 border-blue-500/20" },
-  { id: "DOC-005", name: "Investment Approval Policy", version: "v1.0", status: "Published", updatedOn: "05 Apr 2024", updatedBy: "Rahul Sharma", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "DOC-001", name: "SOP: High-Voltage Inverter Assembly", version: "v2.4", status: "Published", updatedOn: "15 Apr 2024", updatedBy: "Devendra Rao", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "DOC-002", name: "WI: Robotic Stator Winding & Soldering", version: "v3.1", status: "Published", updatedOn: "12 Apr 2024", updatedBy: "Anil Kulkarni", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "DOC-003", name: "SPEC: ISO 9001:2015 Quality Manual", version: "v4.0", status: "Under Review", updatedOn: "10 Apr 2024", updatedBy: "Harini Krishnan", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
+  { id: "DOC-004", name: "DWG: Motor Chassis Gen-3 Schematic", version: "v1.8", status: "Draft", updatedOn: "08 Apr 2024", updatedBy: "Priya Menon", badge: "bg-blue-500/10 text-blue-600 border-blue-500/20" },
+  { id: "DOC-005", name: "FORM: In-Line Thermal Stress Test Log", version: "v2.0", status: "Published", updatedOn: "05 Apr 2024", updatedBy: "Sunil Joshi", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
 ];
 
 function DocumentControlManagementPage() {
@@ -100,48 +100,48 @@ function DocumentControlManagementPage() {
   // Master Form State
   const [docMaster, setDocMaster] = useState({
     docId: "DOC-2024-000256",
-    docNumber: "FIN-POL-001",
-    docTitle: "Financial Approval Policy",
-    docType: "Policy",
-    docCategory: "Financial",
-    module: "Finance",
-    submodule: "Financial Control",
-    process: "Financial Approvals",
-    processOwner: "Vikram Singh",
-    department: "Finance & Accounts",
-    branch: "Corporate - Noida",
+    docNumber: "SOP-ENG-001",
+    docTitle: "Standard Operating Procedure: Inverter Assembly",
+    docType: "SOP",
+    docCategory: "Technical Document",
+    module: "Engineering",
+    submodule: "Manufacturing Operations",
+    process: "Inverter Line Production",
+    processOwner: "Devendra Rao",
+    department: "Plant Production Line A/B",
+    branch: "Pune Plant Complex",
     docStatus: "Published",
     effectiveDate: "2024-04-01",
     expiryDate: "2026-03-31",
-    currentVersion: "v1.2",
-    description: "Defines the policy for financial approvals including limits, authority levels, escalation path and compliance requirements for all financial transactions.",
+    currentVersion: "v2.4",
+    description: "Standard operating procedure detailing step-by-step robotic stator insertion, busbar torque parameters (12.5 Nm), dielectric testing, and potting compound curing guidelines.",
   });
 
   // Dynamic Document Repository
   const [documentsList, setDocumentsList] = useState([
-    { id: "DOC-001", num: "FIN-POL-001", name: "Financial Approval Policy", type: "Policy", dept: "Finance & Accounts", ver: "v1.2", status: "Published", date: "15 Apr 2024", owner: "Vikram Singh" },
-    { id: "DOC-002", num: "PRC-POL-002", name: "Procurement & Vendor Policy", type: "Policy", dept: "Procurement", ver: "v2.0", status: "Published", date: "12 Apr 2024", owner: "Neha Kapoor" },
-    { id: "DOC-003", num: "FIN-SOP-003", name: "Expense Claim SOP & Guidelines", type: "SOP", dept: "Finance", ver: "v1.3", status: "Under Review", date: "10 Apr 2024", owner: "Pooja Mehta" },
-    { id: "DOC-004", num: "OPS-PRC-004", name: "Vendor Onboarding Procedure", type: "Procedure", dept: "Operations", ver: "v1.1", status: "Draft", date: "08 Apr 2024", owner: "Karan Malhotra" },
-    { id: "DOC-005", num: "SEC-POL-005", name: "Information Security Policy", type: "Policy", dept: "Cybersecurity", ver: "v3.0", status: "Published", date: "01 Apr 2024", owner: "Anita Deshmukh" },
+    { id: "DOC-001", num: "SOP-ENG-001", name: "SOP: High-Voltage Inverter Assembly", type: "SOP", dept: "Plant Production", ver: "v2.4", status: "Published", date: "15 Apr 2024", owner: "Devendra Rao" },
+    { id: "DOC-002", num: "WI-MFG-004", name: "WI: Robotic Stator Winding & Soldering", type: "Work Instruction", dept: "Manufacturing", ver: "v3.1", status: "Published", date: "12 Apr 2024", owner: "Anil Kulkarni" },
+    { id: "DOC-003", num: "SPEC-ISO-9001", name: "SPEC: ISO 9001:2015 Quality Manual", type: "Specification", dept: "Quality Assurance", ver: "v4.0", status: "Under Review", date: "10 Apr 2024", owner: "Harini Krishnan" },
+    { id: "DOC-004", num: "DWG-CHG-180", name: "DWG: Motor Chassis Gen-3 Schematic", type: "Drawing", dept: "R&D Systems", ver: "v1.8", status: "Draft", date: "08 Apr 2024", owner: "Priya Menon" },
+    { id: "DOC-005", num: "FORM-QC-012", name: "FORM: In-Line Thermal Stress Test Log", type: "Form", dept: "Quality Control", ver: "v2.0", status: "Published", date: "05 Apr 2024", owner: "Sunil Joshi" },
   ]);
 
   const [reviewSteps, setReviewSteps] = useState([
-    { level: 1, type: "Technical Review", person: "Pooja Mehta", status: "Approved", date: "10 Apr 2024", comments: "Verified standard compliance." },
-    { level: 2, type: "Functional Review", person: "Neha Kapoor", status: "Approved", date: "11 Apr 2024", comments: "Aligned with procurement matrix." },
-    { level: 3, type: "Compliance Review", person: "Anita Deshmukh", status: "Approved", date: "12 Apr 2024", comments: "Statutory requirements verified." },
-    { level: 4, type: "Management Approval", person: "Rahul Sharma", status: "Approved", date: "15 Apr 2024", comments: "Approved for enterprise rollout." },
-    { level: 5, type: "Publication", person: "Amit Verma", status: "Published", date: "15 Apr 2024", comments: "Published to employee portal." },
+    { level: 1, type: "Engineering Author", person: "Devendra Rao", status: "Approved", date: "10 Apr 2024", comments: "CAD drawings and tolerances updated to ISO 2768-mK." },
+    { level: 2, type: "Quality Assurance", person: "Harini Krishnan", status: "Approved", date: "11 Apr 2024", comments: "FMEA risk assessment verified and closed." },
+    { level: 3, type: "Regulatory Affairs", person: "Siddharth Roy", status: "Approved", date: "12 Apr 2024", comments: "CE & ARAI homologation compliance verified." },
+    { level: 4, type: "VP Engineering Approval", person: "Vikram Singh", status: "Approved", date: "15 Apr 2024", comments: "Approved for production line deployment." },
+    { level: 5, type: "Document Controller", person: "Meenakshi Iyer", status: "Published", date: "15 Apr 2024", comments: "Released to shop floor document kiosks." },
   ]);
 
   const [showUploadDocModal, setShowUploadDocModal] = useState(false);
   const [newDocForm, setNewDocForm] = useState({
     num: "",
     name: "",
-    type: "Policy",
-    dept: "Finance & Accounts",
+    type: "SOP",
+    dept: "Plant Production",
     ver: "v1.0",
-    owner: "Vikram Singh",
+    owner: "Devendra Rao",
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -321,9 +321,9 @@ function DocumentControlManagementPage() {
                   onChange={(e) => setDocMaster({ ...docMaster, module: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Finance">Finance</option>
-                  <option value="Procurement">Procurement</option>
-                  <option value="HRMS">HRMS</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Manufacturing">Manufacturing</option>
+                  <option value="Quality Assurance">Quality Assurance</option>
                 </select>
               </div>
 
@@ -337,8 +337,8 @@ function DocumentControlManagementPage() {
                   onChange={(e) => setDocMaster({ ...docMaster, submodule: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Financial Control">Financial Control</option>
-                  <option value="Accounts Payable">Accounts Payable</option>
+                  <option value="Manufacturing Operations">Manufacturing Operations</option>
+                  <option value="Quality Inspection">Quality Inspection</option>
                 </select>
               </div>
 
@@ -352,7 +352,8 @@ function DocumentControlManagementPage() {
                   onChange={(e) => setDocMaster({ ...docMaster, process: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Financial Approvals">Financial Approvals</option>
+                  <option value="Inverter Line Production">Inverter Line Production</option>
+                  <option value="Torque Quality Control">Torque Quality Control</option>
                 </select>
               </div>
 
@@ -366,8 +367,9 @@ function DocumentControlManagementPage() {
                   onChange={(e) => setDocMaster({ ...docMaster, processOwner: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Vikram Singh">Vikram Singh</option>
-                  <option value="Neha Kapoor">Neha Kapoor</option>
+                  <option value="Devendra Rao">Devendra Rao</option>
+                  <option value="Anil Kulkarni">Anil Kulkarni</option>
+                  <option value="Harini Krishnan">Harini Krishnan</option>
                 </select>
               </div>
 
@@ -381,7 +383,8 @@ function DocumentControlManagementPage() {
                   onChange={(e) => setDocMaster({ ...docMaster, department: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Finance & Accounts">Finance & Accounts</option>
+                  <option value="Plant Production Line A/B">Plant Production Line A/B</option>
+                  <option value="Quality Assurance & Testing">Quality Assurance & Testing</option>
                 </select>
               </div>
 
@@ -395,7 +398,8 @@ function DocumentControlManagementPage() {
                   onChange={(e) => setDocMaster({ ...docMaster, branch: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Corporate - Noida">Corporate - Noida</option>
+                  <option value="Pune Plant Complex">Pune Plant Complex</option>
+                  <option value="Bengaluru Innovation Hub">Bengaluru Innovation Hub</option>
                 </select>
               </div>
 
@@ -484,7 +488,7 @@ function DocumentControlManagementPage() {
               <div className="space-y-2 pt-2 text-xs">
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Current Version</span>
-                  <span className="font-bold text-foreground font-mono">v1.2</span>
+                  <span className="font-bold text-foreground font-mono">{docMaster.currentVersion}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Published On</span>

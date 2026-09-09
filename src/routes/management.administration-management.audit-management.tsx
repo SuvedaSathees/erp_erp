@@ -33,16 +33,16 @@ export const Route = createFileRoute("/management/administration-management/audi
 // --- Data & Mock Definitions ---
 
 const CHANGE_DETAILS_DATA = [
-  { id: "CHG-1", field: "Amount", label: "Invoice Amount", type: "Currency", prev: "₹95,000.00", next: "₹97,500.00", changeType: "Modification", by: "Amit Verma", time: "15 Apr 2024 10:15:32 AM" },
-  { id: "CHG-2", field: "Last Updated On", label: "Last Updated On", type: "DateTime", prev: "15 Apr 2024 09:30:10 AM", next: "15 Apr 2024 10:15:32 AM", changeType: "Modification", by: "Amit Verma", time: "15 Apr 2024 10:15:32 AM" },
+  { id: "CHG-1", field: "Assigned Role", label: "Executive Role Title", type: "SecurityRole", prev: "Principal Enterprise Architect", next: "Chief Technology Officer", changeType: "Role Upgrade", by: "Rajeev Malhotra (CEO)", time: "15 Apr 2024 10:15:32 AM" },
+  { id: "CHG-2", field: "Data Access Scope", label: "Permission Boundary", type: "SecurityScope", prev: "Division Level (Engineering)", next: "Enterprise Scope (Global)", changeType: "Scope Elevation", by: "Rajeev Malhotra (CEO)", time: "15 Apr 2024 10:15:32 AM" },
 ];
 
 const AUDIT_TIMELINE_DATA = [
-  { id: "TL-1", time: "15 Apr 2024 08:55:12 AM", type: "Create", action: "Create", by: "Amit Verma", module: "Finance", record: "INV-000458", status: "Success", desc: "Supplier Invoice created", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "TL-2", time: "15 Apr 2024 09:46:21 AM", type: "Approval", action: "Submit", by: "Amit Verma", module: "Finance", record: "INV-000458", status: "Success", desc: "Invoice submitted for approval", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "TL-3", time: "15 Apr 2024 09:52:14 AM", type: "Approval", action: "Approve", by: "Neha Kapoor", module: "Finance", record: "INV-000458", status: "Success", desc: "Invoice approved", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "TL-4", time: "15 Apr 2024 10:15:32 AM", type: "Data Change", action: "Update", by: "Amit Verma", module: "Finance", record: "INV-000458", status: "Success", desc: "Invoice amount updated (₹95,000.00 → ₹97,500.00)", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "TL-5", time: "15 Apr 2024 10:16:05 AM", type: "System", action: "Log", by: "System", module: "Finance", record: "INV-000458", status: "Success", desc: "System updated invoice totals", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "TL-1", time: "15 Apr 2024 08:30:12 AM", type: "Security", action: "MFA Verify", by: "Vikram Singh", module: "Administration", record: "USR-VIK-001", status: "Success", desc: "Hardware FIDO2 Token verified on corporate VPN", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "TL-2", time: "15 Apr 2024 09:15:20 AM", type: "Governance", action: "Entity Add", by: "Sanjay Mathur", module: "Administration", record: "ENT-USA-02", status: "Success", desc: "Corporate Legal Entity registered: Magnertia Americas Inc.", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "TL-3", time: "15 Apr 2024 09:42:15 AM", type: "Compliance", action: "Publish", by: "Meera Nair", module: "Administration", record: "FIN-POL-005", status: "Success", desc: "Travel & Expense Policy v1.2 published to staff portal", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "TL-4", time: "15 Apr 2024 10:15:32 AM", type: "Security", action: "Authorize", by: "Rajeev Malhotra", module: "Administration", record: "ROL-EXE-001", status: "Success", desc: "CTO Executive Role & global scopes granted to USR-VIK-001", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "TL-5", time: "15 Apr 2024 10:45:00 AM", type: "Document Control", action: "ECO Release", by: "Devendra Rao", module: "Administration", record: "SOP-ENG-001", status: "Success", desc: "Released SOP: High-Voltage Inverter Assembly v2.4 to manufacturing kiosks", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
 ];
 
 function AuditManagementPage() {
@@ -53,20 +53,20 @@ function AuditManagementPage() {
     auditId: "AUD-2024-000458",
     auditNumber: "AUD-2024-04-000458",
     eventId: "EVT-2024-04-15-001258",
-    eventType: "Data Change",
-    eventCategory: "Business",
-    module: "Finance",
-    submodule: "Accounts Payable",
-    businessFunction: "Finance Operations",
-    transactionType: "Supplier Invoice",
-    recordType: "Supplier Invoice",
-    recordId: "INV-000458",
-    action: "Update",
+    eventType: "Privilege Escalation / Role Assignment",
+    eventCategory: "Security & Governance",
+    module: "Administration",
+    submodule: "User & Role Management",
+    businessFunction: "IAM & Identity Governance",
+    transactionType: "Role Assignment",
+    recordType: "User Role Binding",
+    recordId: "USR-VIK-001 / ROL-EXE-001",
+    action: "Authorize",
     status: "Success",
-    severity: "Medium",
+    severity: "High",
     timestamp: "15 Apr 2024 10:15:32 AM",
-    source: "ERP Application",
-    ipAddress: "192.168.10.245",
+    source: "Enterprise IAM Console",
+    ipAddress: "103.21.45.67",
     requestId: "REQ-8F7A9D2C1B4E",
     sessionId: "SID-7D9E1C2A3B4F",
     correlationId: "CORR-93A1B2C3D4E5",
@@ -710,6 +710,7 @@ function AuditManagementPage() {
                     className="rounded-lg border border-border bg-background px-2.5 py-1 text-xs text-foreground"
                   >
                     <option value="ALL">All Modules</option>
+                    <option value="Administration">Administration</option>
                     <option value="Finance">Finance</option>
                     <option value="HR">HR</option>
                     <option value="CRM">CRM</option>

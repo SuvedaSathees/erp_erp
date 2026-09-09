@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { AssetManagementTabBar } from "@/components/erp/AssetManagementTabBar";
 import { DataTablePagination } from "@/components/erp/DataTablePagination";
@@ -166,6 +166,7 @@ const INITIAL_EQUIPMENT: EquipmentItem[] = Array.from({ length: 186 }, (_, i) =>
 });
 
 export function EquipmentFormPage() {
+  const navigate = useNavigate();
   const [equipmentList, setEquipmentList] = useState<EquipmentItem[]>(INITIAL_EQUIPMENT);
   const [activeItem, setActiveItem] = useState<EquipmentItem>(INITIAL_EQUIPMENT[0]);
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -702,7 +703,7 @@ export function EquipmentFormPage() {
 
               <button
                 type="button"
-                onClick={() => toast.info("Opening Maintenance Work Order Schedule")}
+                onClick={() => navigate({ to: "/management/asset-management/maintenance" })}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer block pt-1 text-center w-full"
               >
                 View Maintenance Calendar &rarr;

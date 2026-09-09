@@ -37,7 +37,6 @@ import { MassProductionHorizontalBarChart } from "@/components/mass-production-r
 import { MassProductionReviewTable } from "@/components/mass-production-readiness/MassProductionReviewTable";
 import { MassProductionSopReleasePanel } from "@/components/mass-production-readiness/MassProductionSopReleasePanel";
 import { MassProductionSummaryCard } from "@/components/mass-production-readiness/MassProductionSummaryCard";
-import { MassProductionAiInsightsCard } from "@/components/mass-production-readiness/MassProductionAiInsightsCard";
 import { MassProductionAttachmentsCard } from "@/components/mass-production-readiness/MassProductionAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
@@ -850,11 +849,6 @@ Executive Comments: ${record.executiveComments || "N/A"}
 
               {/* Right Rail Sidebar Column (Float Cards) */}
               <div className="space-y-6">
-                {/* AI Insights Card */}
-                <MassProductionAiInsightsCard
-                  onJumpToAiSection={() => scrollToSection("ai", sec7Ref)}
-                />
-
                 {/* Executive Summary Card */}
                 <MassProductionSummaryCard
                   manufacturingScore={mfgScore}

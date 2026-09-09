@@ -112,9 +112,9 @@ const KEY_ATTRIBUTES_DATA = [
 ];
 
 const RECENT_MASTER_VERSIONS = [
-  { id: "VER-203", version: "v1.2", effectiveFrom: "01 Apr 2024", effectiveTo: "-", changeType: "Minor Update", changedBy: "Neha Kapoor", status: "Active", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "VER-202", version: "v1.1", effectiveFrom: "01 Jan 2024", effectiveTo: "31 Mar 2024", changeType: "Attribute Update", changedBy: "Amit Verma", status: "Superseded", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
-  { id: "VER-201", version: "v1.0", effectiveFrom: "01 Jan 2023", effectiveTo: "31 Dec 2023", changeType: "Initial Version", changedBy: "Amit Verma", status: "Superseded", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
+  { id: "VER-203", version: "v1.2", effectiveFrom: "01 Apr 2024", effectiveTo: "-", changeType: "Minor Update", changedBy: "Kavita Shah", status: "Active", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "VER-202", version: "v1.1", effectiveFrom: "01 Jan 2024", effectiveTo: "31 Mar 2024", changeType: "Attribute Update", changedBy: "Kavita Shah", status: "Superseded", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
+  { id: "VER-201", version: "v1.0", effectiveFrom: "01 Jan 2023", effectiveTo: "31 Dec 2023", changeType: "Initial Version", changedBy: "Kavita Shah", status: "Superseded", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
 ];
 
 function MasterDataManagementPage() {
@@ -132,8 +132,8 @@ function MasterDataManagementPage() {
     submodule: "Customer Management",
     businessFunction: "Sales & Marketing",
     organization: "Magnertia Pvt. Ltd.",
-    dataOwner: "Neha Kapoor",
-    dataSteward: "Amit Verma",
+    dataOwner: "Deepak Rao",
+    dataSteward: "Kavita Shah",
     status: "Active",
     effectiveFrom: "2024-04-01",
     effectiveTo: "",
@@ -155,10 +155,10 @@ function MasterDataManagementPage() {
 
   // Dynamic Master Registry Records
   const [masterRegistryList, setMasterRegistryList] = useState([
-    { id: "MD-001", code: "CUST-000245", name: "ABC Technologies Pvt. Ltd.", type: "CUSTOMER", mod: "CRM", steward: "Amit Verma", ver: "v1.2", status: "Active" },
-    { id: "MD-002", code: "SUPP-000102", name: "Delta Global Hardware Corp", type: "SUPPLIER", mod: "Procurement", steward: "Neha Kapoor", ver: "v2.0", status: "Active" },
-    { id: "MD-003", code: "PROD-000891", name: "Enterprise ERP Cloud License", type: "PRODUCT", mod: "Inventory", steward: "Vikram Singh", ver: "v1.0", status: "Active" },
-    { id: "MD-004", code: "GL-000450", name: "Accounts Receivable - Domestic", type: "CHART OF ACCOUNT", mod: "Finance", steward: "Rahul Sharma", ver: "v3.1", status: "Active" },
+    { id: "MD-001", code: "CUST-000245", name: "ABC Technologies Pvt. Ltd.", type: "CUSTOMER", mod: "CRM", steward: "Kavita Shah", ver: "v1.2", status: "Active" },
+    { id: "MD-002", code: "SUPP-000102", name: "Delta Global Hardware Corp", type: "SUPPLIER", mod: "Procurement", steward: "Tanvi Saxena", ver: "v2.0", status: "Active" },
+    { id: "MD-003", code: "PROD-000891", name: "Enterprise ERP Cloud License", type: "PRODUCT", mod: "Inventory", steward: "Dinesh Patil", ver: "v1.0", status: "Active" },
+    { id: "MD-004", code: "GL-000450", name: "Accounts Receivable - Domestic", type: "CHART OF ACCOUNT", mod: "Finance", steward: "Raghavan Sundaram", ver: "v3.1", status: "Active" },
   ]);
 
   const [showAddAttrModal, setShowAddAttrModal] = useState(false);
@@ -411,7 +411,7 @@ function MasterDataManagementPage() {
                   onChange={(e) => setMasterData({ ...masterData, dataOwner: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Neha Kapoor">Neha Kapoor (Sales Director)</option>
+                  <option value="Deepak Rao">Deepak Rao (Commercial Director)</option>
                 </select>
               </div>
 
@@ -425,7 +425,7 @@ function MasterDataManagementPage() {
                   onChange={(e) => setMasterData({ ...masterData, dataSteward: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Amit Verma">Amit Verma (CRM Data Steward)</option>
+                  <option value="Kavita Shah">Kavita Shah (CRM Data Steward)</option>
                 </select>
               </div>
 

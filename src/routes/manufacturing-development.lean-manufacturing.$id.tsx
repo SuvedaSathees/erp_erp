@@ -41,7 +41,6 @@ import { LeanBeforeAfterTable } from "@/components/lean-manufacturing/LeanBefore
 import { LeanStandardWorkReleasePanel } from "@/components/lean-manufacturing/LeanStandardWorkReleasePanel";
 import { LeanReviewTable } from "@/components/lean-manufacturing/LeanReviewTable";
 import { LeanSummaryCard } from "@/components/lean-manufacturing/LeanSummaryCard";
-import { LeanAiInsightsCard } from "@/components/lean-manufacturing/LeanAiInsightsCard";
 import { LeanAttachmentsCard } from "@/components/lean-manufacturing/LeanAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
@@ -697,11 +696,6 @@ Review Comments: ${record.reviewComments || "N/A"}
 
               {/* Right Rail Sidebar Column (Float Cards) */}
               <div className="space-y-6">
-                {/* AI Insights Card */}
-                <LeanAiInsightsCard
-                  onJumpToAiSection={() => scrollToSection("ai", sec7Ref)}
-                />
-
                 {/* Section 8 Summary Card */}
                 <div ref={sec8Ref}>
                   <LeanSummaryCard

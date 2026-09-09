@@ -82,11 +82,11 @@ const NOTIFICATION_TYPES = [
 ];
 
 const AUDIENCE_SUMMARY_DATA = [
-  { id: "AUD-1", type: "Role", count: 45, rule: "Accounts Receivable Team", status: "Active" },
-  { id: "AUD-2", type: "Department", count: 25, rule: "Finance Department", status: "Active" },
-  { id: "AUD-3", type: "User Group", count: 30, rule: "Collections Team", status: "Active" },
-  { id: "AUD-4", type: "Manager", count: 10, rule: "Invoice Owner Manager", status: "Active" },
-  { id: "AUD-5", type: "Dynamic Rule", count: 18, rule: "Invoice Created By", status: "Active" },
+  { id: "AUD-1", type: "Role", count: 68, rule: "Department Approvers & Managers", status: "Active" },
+  { id: "AUD-2", type: "Department", count: 142, rule: "Quality & Plant Operations", status: "Active" },
+  { id: "AUD-3", type: "User Group", count: 12, rule: "Corporate Security & IAM Administrators", status: "Active" },
+  { id: "AUD-4", type: "Executive Committee", count: 8, rule: "C-Suite & Steering Committee Leads", status: "Active" },
+  { id: "AUD-5", type: "Dynamic Rule", count: 320, rule: "Active System Session Users", status: "Active" },
 ];
 
 const CHANNEL_CONFIG_DATA = [
@@ -98,11 +98,11 @@ const CHANNEL_CONFIG_DATA = [
 ];
 
 const RECENT_NOTIFICATIONS_DATA = [
-  { id: "NTF-0003487", recipient: "Rahul Sharma", channel: "Email", status: "Delivered", sentAt: "15 Apr 2024 09:00 AM", ackAt: "15 Apr 2024 09:15 AM", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "NTF-0003488", recipient: "Neha Kapoor", channel: "In-App", status: "Read", sentAt: "15 Apr 2024 09:01 AM", ackAt: "15 Apr 2024 09:20 AM", badge: "bg-blue-500/10 text-blue-600 border-blue-500/20" },
-  { id: "NTF-0003489", recipient: "Amit Verma", channel: "Email", status: "Delivered", sentAt: "15 Apr 2024 09:02 AM", ackAt: "-", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "NTF-0003490", recipient: "Pooja Mehta", channel: "SMS", status: "Sent", sentAt: "15 Apr 2024 09:03 AM", ackAt: "-", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
-  { id: "NTF-0003491", recipient: "Vikram Singh", channel: "Email", status: "Failed", sentAt: "15 Apr 2024 09:03 AM", ackAt: "-", badge: "bg-rose-500/10 text-rose-600 border-rose-500/20" },
+  { id: "NTF-0003487", recipient: "Raghavan Sundaram", channel: "Email", status: "Delivered", sentAt: "15 Apr 2024 09:00 AM", ackAt: "15 Apr 2024 09:15 AM", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "NTF-0003488", recipient: "Anita Verma (CFO)", channel: "In-App", status: "Read", sentAt: "15 Apr 2024 09:01 AM", ackAt: "15 Apr 2024 09:20 AM", badge: "bg-blue-500/10 text-blue-600 border-blue-500/20" },
+  { id: "NTF-0003489", recipient: "Sanjay Mathur (GM)", channel: "Email", status: "Delivered", sentAt: "15 Apr 2024 09:02 AM", ackAt: "-", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "NTF-0003490", recipient: "Meera Nair (VP HR)", channel: "SMS", status: "Sent", sentAt: "15 Apr 2024 09:03 AM", ackAt: "-", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
+  { id: "NTF-0003491", recipient: "Vikram Singh (CTO)", channel: "Email", status: "Delivered", sentAt: "15 Apr 2024 09:03 AM", ackAt: "15 Apr 2024 09:05 AM", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
 ];
 
 function NotificationsManagementPage() {
@@ -111,18 +111,18 @@ function NotificationsManagementPage() {
   // Master Form State
   const [notifMaster, setNotifMaster] = useState({
     notifId: "NTF-2024-00087",
-    notifCode: "INV-DUE-REM-03",
-    notifTitle: "Invoice Due Date Reminder",
-    notifType: "Reminder",
-    notifCategory: "Financial",
-    description: "Remind users about upcoming invoice due date 3 days before due date.",
-    module: "Finance",
-    submodule: "Accounts Receivable",
-    businessFunction: "Collections",
-    eventType: "Deadline Approaching",
+    notifCode: "SYS-MFA-ROT-01",
+    notifTitle: "Enterprise Security Key & Credential Rotation Alert",
+    notifType: "Security Notification",
+    notifCategory: "System Security",
+    description: "Automated alert sent to all privileged administrators when credential renewal or policy rotation is required within 7 days.",
+    module: "Administration",
+    submodule: "User & Role Management",
+    businessFunction: "Security Governance",
+    eventType: "Credential Expiry Warning",
     priority: "High",
     severity: "Warning",
-    owner: "Amit Verma",
+    owner: "Vikram Singh (CTO)",
     status: "Active",
     effectiveFrom: "2024-04-01",
     effectiveTo: "2026-03-31",
@@ -130,18 +130,18 @@ function NotificationsManagementPage() {
 
   // Dynamic Templates State
   const [templatesList, setTemplatesList] = useState([
-    { id: "TMP-1", code: "INV-DUE-EML", name: "Invoice Due Reminder (Email)", channel: "Email", subject: "Payment Due: Invoice #{{invoice_no}}", status: "Active" },
-    { id: "TMP-2", code: "INV-DUE-APP", name: "Invoice Due Push/In-App", channel: "In-App", subject: "Invoice #{{invoice_no}} due in 3 days", status: "Active" },
-    { id: "TMP-3", code: "INV-DUE-SMS", name: "Invoice Due SMS Urgent", channel: "SMS", subject: "Dear {{customer}}, your invoice is due on {{due_date}}.", status: "Active" },
-    { id: "TMP-4", code: "PO-APPR-EML", name: "PO Approval Notification", channel: "Email", subject: "Action Required: PO #{{po_no}} Pending Approval", status: "Active" },
+    { id: "TMP-1", code: "SEC-MFA-EML", name: "Security Credential Expiry (Email)", channel: "Email", subject: "Action Required: API Key & MFA Renewal for {{user_name}}", status: "Active" },
+    { id: "TMP-2", code: "SOP-REV-APP", name: "Controlled SOP Review In-App", channel: "In-App", subject: "Document {{doc_number}} assigned for your engineering sign-off", status: "Active" },
+    { id: "TMP-3", code: "CAP-APP-SMS", name: "High-Value Capex SMS Alert", channel: "SMS", subject: "Urgent: Capex approval {{req_id}} awaits Executive Board sign-off.", status: "Active" },
+    { id: "TMP-4", code: "POL-PUB-EML", name: "Corporate Policy Release Notification", channel: "Email", subject: "New Enterprise Policy Published: {{policy_title}}", status: "Active" },
   ]);
 
   // Dynamic Dispatch Logs
   const [dispatchLogs, setDispatchLogs] = useState([
-    { id: "NTF-0003487", recipient: "Rahul Sharma (Finance)", channel: "Email", event: "Invoice Due Alert", status: "Delivered", sentAt: "15 Apr 2024 09:00 AM" },
-    { id: "NTF-0003488", recipient: "Neha Kapoor (Head Sales)", channel: "In-App", event: "PO Approval Request", status: "Read", sentAt: "15 Apr 2024 09:01 AM" },
-    { id: "NTF-0003489", recipient: "Amit Verma (Admin)", channel: "Email", event: "Daily Digest", status: "Delivered", sentAt: "15 Apr 2024 09:02 AM" },
-    { id: "NTF-0003490", recipient: "Pooja Mehta (Compliance)", channel: "SMS", event: "Audit Warning", status: "Sent", sentAt: "15 Apr 2024 09:03 AM" },
+    { id: "NTF-0003487", recipient: "Raghavan Sundaram (Finance Head)", channel: "Email", event: "Q1 Budget Allocation", status: "Delivered", sentAt: "15 Apr 2024 09:00 AM" },
+    { id: "NTF-0003488", recipient: "Anita Verma (CFO)", channel: "In-App", event: "Capex Board Request", status: "Read", sentAt: "15 Apr 2024 09:01 AM" },
+    { id: "NTF-0003489", recipient: "Sanjay Mathur (Delhi GM)", channel: "Email", event: "Branch Audit Digest", status: "Delivered", sentAt: "15 Apr 2024 09:02 AM" },
+    { id: "NTF-0003490", recipient: "Meera Nair (VP HR)", channel: "SMS", event: "Policy Acknowledgment Milestone", status: "Sent", sentAt: "15 Apr 2024 09:03 AM" },
   ]);
 
   const [showAddTemplateModal, setShowAddTemplateModal] = useState(false);
@@ -325,6 +325,7 @@ function NotificationsManagementPage() {
                   onChange={(e) => setNotifMaster({ ...notifMaster, module: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
+                  <option value="Administration">Administration</option>
                   <option value="Finance">Finance</option>
                   <option value="Procurement">Procurement</option>
                   <option value="HRMS">HRMS</option>
@@ -341,6 +342,7 @@ function NotificationsManagementPage() {
                   onChange={(e) => setNotifMaster({ ...notifMaster, submodule: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
+                  <option value="User & Role Management">User & Role Management</option>
                   <option value="Accounts Receivable">Accounts Receivable</option>
                   <option value="Accounts Payable">Accounts Payable</option>
                 </select>
@@ -356,6 +358,7 @@ function NotificationsManagementPage() {
                   onChange={(e) => setNotifMaster({ ...notifMaster, businessFunction: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
+                  <option value="Security Governance">Security Governance</option>
                   <option value="Collections">Collections</option>
                 </select>
               </div>

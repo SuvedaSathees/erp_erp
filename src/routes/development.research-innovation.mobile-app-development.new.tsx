@@ -1016,38 +1016,40 @@ export function MobileDevelopmentNewPage({
                   </Badge>
                 </CardHeader>
 
-                <CardContent className="pt-4 space-y-3.5 text-xs">
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Development Progress</span>
-                      <span>{record.summary.developmentProgress}%</span>
-                    </div>
-                    <Progress value={record.summary.developmentProgress} className="h-2" />
+                <CardContent className="pt-4 flex flex-col md:flex-row items-center gap-6 text-xs">
+                  <div className="shrink-0 flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border">
+                    <CircularScoreGauge score={record.summary.overallMobileScore} />
+                    <span className="text-[11px] font-bold text-muted-foreground mt-2 uppercase tracking-wide">Overall Mobile Score</span>
                   </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>UI / UX Readiness</span>
-                      <span>{record.summary.uiReadiness}%</span>
+                  <div className="flex-1 w-full space-y-3">
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Development Progress</span>
+                        <span>{record.summary.developmentProgress}%</span>
+                      </div>
+                      <Progress value={record.summary.developmentProgress} className="h-2" />
                     </div>
-                    <Progress value={record.summary.uiReadiness} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Performance Readiness</span>
-                      <span>{record.summary.performanceReadiness}%</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>UI / UX Readiness</span>
+                        <span>{record.summary.uiReadiness}%</span>
+                      </div>
+                      <Progress value={record.summary.uiReadiness} className="h-2" />
                     </div>
-                    <Progress value={record.summary.performanceReadiness} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>App Store Readiness</span>
-                      <span>{record.summary.storeReadiness}%</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Performance Readiness</span>
+                        <span>{record.summary.performanceReadiness}%</span>
+                      </div>
+                      <Progress value={record.summary.performanceReadiness} className="h-2" />
                     </div>
-                    <Progress value={record.summary.storeReadiness} className="h-2" />
-                  </div>
-                  <div className="pt-2 border-t border-border flex justify-between items-center font-bold text-foreground">
-                    <span>Overall Mobile App Score</span>
-                    <span className="text-base text-cyan-600">{record.summary.overallMobileScore}%</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>App Store Readiness</span>
+                        <span>{record.summary.storeReadiness}%</span>
+                      </div>
+                      <Progress value={record.summary.storeReadiness} className="h-2" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1278,44 +1280,6 @@ export function MobileDevelopmentNewPage({
               =========================================================================== */}
           <div className="lg:col-span-1 space-y-6">
             <div className="sticky top-6 space-y-6">
-              {/* Overall Score Gauge Box */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
-                <CardHeader className="pb-2 border-b border-border text-center">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Overall Mobile App Score
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent className="pt-5 flex flex-col items-center">
-                  <CircularScoreGauge
-                    score={record.summary.overallMobileScore}
-                  />
-
-                  <div className="w-full mt-5 space-y-2 border-t border-border pt-4 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">UI / UX</span>
-                      <span className="font-bold text-foreground">{record.summary.uiReadiness}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Performance</span>
-                      <span className="font-bold text-foreground">{record.summary.performanceReadiness}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Security</span>
-                      <span className="font-bold text-foreground">{formInput.securityScore}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Test Coverage</span>
-                      <span className="font-bold text-foreground">{formInput.codeCoverage}%</span>
-                    </div>
-                    <div className="flex justify-between items-center pt-2 border-t border-border font-bold text-cyan-600 dark:text-cyan-400">
-                      <span>Overall Score</span>
-                      <span>{record.summary.overallMobileScore}%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Key Highlights Card */}
               <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
                 <CardHeader className="pb-2 border-b border-border">

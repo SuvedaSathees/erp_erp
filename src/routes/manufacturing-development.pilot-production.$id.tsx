@@ -24,7 +24,6 @@ import { PilotProductionKpis } from "@/components/pilot-production/PilotProducti
 import { PilotProductionTrendChart } from "@/components/pilot-production/PilotProductionTrendChart";
 import { PilotProductionReviewTable } from "@/components/pilot-production/PilotProductionReviewTable";
 import { PilotProductionSummaryCard } from "@/components/pilot-production/PilotProductionSummaryCard";
-import { PilotProductionAiInsightsCard } from "@/components/pilot-production/PilotProductionAiInsightsCard";
 import { PilotProductionAttachmentsCard } from "@/components/pilot-production/PilotProductionAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
@@ -813,11 +812,6 @@ Approval Comments: ${record.reviewComments || "N/A"}
 
               {/* Right Rail Sidebar Column (Float Cards) */}
               <div className="space-y-6">
-                {/* AI Insights Card */}
-                <PilotProductionAiInsightsCard
-                  onJumpToAiSection={() => scrollToSection("ai", sec7Ref)}
-                />
-
                 {/* Section 8 Aggregate Summary Card */}
                 <div ref={sec8Ref}>
                   <PilotProductionSummaryCard

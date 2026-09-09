@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -165,9 +165,9 @@ export function TravelManagementPage() {
 
   return (
     <AppShell
-      title="Travel & Expense"
+      title="Travel & Expense Management"
       breadcrumb="Management > HRM Management > Travel & Expense"
-      description="The Travel Form manages the complete employee/business travel lifecycle from travel request → purpose → itinerary → approval → booking → advance → travel execution → expenses → settlement → reimbursement → compliance → analytics."
+      description="Corporate business travel itineraries, flight & hotel reservations, travel per-diems, cash advances, and trip settlement."
       tabs={<HrmManagementTabBar />}
     >
       <div className="flex flex-col w-full text-slate-800 space-y-6 pt-2 pb-16">
@@ -177,7 +177,7 @@ export function TravelManagementPage() {
             {/* Title & Airplane Icon */}
             <div className="flex items-center gap-3">
               <h2 className="text-base font-bold tracking-tight text-slate-900 flex items-center gap-2">
-                Travel Form
+                Business Travel Logistics & Advance Desk
               </h2>
             </div>
 
@@ -226,6 +226,22 @@ export function TravelManagementPage() {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Boundary Notice Banner */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 bg-sky-50/70 border border-sky-200/80 rounded-xl text-xs text-sky-950">
+          <div className="flex items-center gap-2.5">
+            <Plane className="h-4 w-4 text-sky-600 shrink-0" />
+            <div>
+              <span className="font-bold">Business Travel Scope:</span> This module manages flights, trains, hotel bookings, itineraries, and trip advances.
+            </div>
+          </div>
+          <Link
+            to="/management/hrm-management/expense-claims"
+            className="shrink-0 font-semibold text-sky-700 hover:text-sky-900 hover:underline flex items-center gap-1 text-[11px]"
+          >
+            Claiming home internet, mobile bills, office supplies or training? Go to Expense Claims &rarr;
+          </Link>
         </div>
 
         {/* 1. Travel Requisition Header (Clean enterprise layout, no profile photos, no stars) */}

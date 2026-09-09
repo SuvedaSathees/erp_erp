@@ -35,6 +35,9 @@ import {
   Send,
   Save,
   FileSpreadsheet,
+  ArrowRight,
+  GitCommit,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -84,7 +87,6 @@ export function ProjectPlanningPage() {
   const [ganttView, setGanttView] = useState<"Day" | "Week" | "Month">("Week");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isRecalculating, setIsRecalculating] = useState(false);
-  const [resourceView, setResourceView] = useState<"By Dept" | "By Role" | "By Allocation %">("By Dept");
 
   // Modals
   const [isBaselineOpen, setIsBaselineOpen] = useState(false);
@@ -900,231 +902,263 @@ ${record.wbsList.map((w) => `${w.code} ${w.name} (${w.weightage}% weightage) - $
           </div>
 
           {/* ====================================================================
-             5. BOTTOM SECTION (4 CARDS): BUDGET SUMMARY, TOP RISKS, RESOURCE UTILIZATION, AI INSIGHTS
+             5. CRITICAL PATH METHOD (CPM) & SCHEDULE COMPRESSION COCKPIT
              ==================================================================== */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Card 1: Budget Summary */}
-            <Card className="border-border/80 shadow-2xs bg-white dark:bg-slate-900 flex flex-col justify-between">
-              <CardHeader className="p-4 pb-2 border-b border-border/40">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                  Budget Summary
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 space-y-4">
-                {/* Visual Donut Ring */}
-                <div className="relative mx-auto flex h-28 w-28 items-center justify-center">
-                  <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="38" stroke="#0284c7" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
-                    <circle cx="50" cy="50" r="38" stroke="#9333ea" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="120" />
-                    <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="180" />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                    <span className="text-xs font-bold font-mono text-slate-900 dark:text-white">₹ 1.67 Cr</span>
-                    <span className="text-[9px] text-muted-foreground uppercase">Total Budget</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            {/* CPM Float & Precedence Network (7 Cols) */}
+            <Card className="lg:col-span-7 border-border/80 shadow-2xs bg-white dark:bg-slate-900 flex flex-col justify-between">
+              <CardHeader className="p-4 pb-3 border-b border-border/40 flex flex-row items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                      <GitCommit className="h-4 w-4 text-rose-600 dark:text-rose-400" />
+                      Critical Path Method (CPM) & Precedence Network
+                    </CardTitle>
+                    <Badge variant="outline" className="text-[10px] font-bold border-rose-200 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900">
+                      Zero Float: 42 Days
+                    </Badge>
                   </div>
+                  <CardDescription className="text-[11px] text-muted-foreground mt-0.5">
+                    Critical driving path where any task slip directly delays final project delivery (10 Nov).
+                  </CardDescription>
                 </div>
-
-                {/* Legend */}
-                <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
-                  <div className="flex items-center gap-1.5 truncate">
-                    <div className="h-2 w-2 rounded-full bg-blue-500 shrink-0" />
-                    <span className="truncate">Engineering: ₹12L</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 truncate">
-                    <div className="h-2 w-2 rounded-full bg-purple-600 shrink-0" />
-                    <span className="truncate">Procurement: ₹85L</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 truncate">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500 shrink-0" />
-                    <span className="truncate">Production: ₹32L</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 truncate">
-                    <div className="h-2 w-2 rounded-full bg-cyan-500 shrink-0" />
-                    <span className="truncate">Installation: ₹18L</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 truncate">
-                    <div className="h-2 w-2 rounded-full bg-amber-500 shrink-0" />
-                    <span className="truncate">Testing: ₹8L</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 truncate">
-                    <div className="h-2 w-2 rounded-full bg-slate-400 shrink-0" />
-                    <span className="truncate">Contingency: ₹12L</span>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => navigate({ to: "/management/project-management/budget-control" })}
-                  className="text-[11px] text-primary font-semibold hover:underline cursor-pointer block text-left"
-                >
-                  View Budget Details →
-                </button>
-              </CardContent>
-            </Card>
-
-            {/* Card 2: Top Risks */}
-            <Card className="border-border/80 shadow-2xs bg-white dark:bg-slate-900 flex flex-col justify-between">
-              <CardHeader className="p-4 pb-2 border-b border-border/40">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                  Top Risks
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-3 text-xs space-y-2">
-                <div className="flex justify-between text-[10px] font-semibold text-muted-foreground pb-1 border-b border-border/40">
-                  <span>Risk Item</span>
-                  <span>Score & Status</span>
-                </div>
-                {[
-                  { name: "Material Delay", score: 9, status: "Mitigate", color: "text-rose-600 bg-rose-50" },
-                  { name: "Design Change", score: 6, status: "Control", color: "text-amber-600 bg-amber-50" },
-                  { name: "Machine Breakdown", score: 6, status: "Mitigate", color: "text-amber-600 bg-amber-50" },
-                  { name: "Resource Shortage", score: 4, status: "Transfer", color: "text-yellow-700 bg-yellow-50" },
-                  { name: "Quality Rejection", score: 3, status: "Prevent", color: "text-emerald-700 bg-emerald-50" },
-                ].map((r) => (
-                  <div
-                    key={r.name}
-                    onClick={() => navigate({ to: "/management/project-management/risk-management" })}
-                    className="flex items-center justify-between p-1 rounded hover:bg-muted/30 cursor-pointer transition-colors"
-                  >
-                    <span className="font-semibold text-slate-900 dark:text-white truncate">{r.name}</span>
-                    <div className="flex items-center gap-1.5 shrink-0 font-mono">
-                      <span className="font-bold text-xs">{r.score}</span>
-                      <span className={cn("px-1.5 py-0.2 rounded text-[10px] font-bold border", r.color)}>
-                        {r.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => navigate({ to: "/management/project-management/risk-management" })}
-                  className="text-[11px] text-primary font-semibold hover:underline cursor-pointer block text-left pt-1"
-                >
-                  View All Risks →
-                </button>
-              </CardContent>
-            </Card>
-
-            {/* Card 3: Resource Utilization */}
-            <Card className="border-border/80 shadow-2xs bg-white dark:bg-slate-900 flex flex-col justify-between">
-              <CardHeader className="p-4 pb-2 border-b border-border/40 flex flex-row items-center justify-between">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                  Resource Utilization
-                </CardTitle>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      type="button"
-                      className="text-[10px] text-muted-foreground hover:text-foreground cursor-pointer flex items-center gap-1 border border-border/50 px-1.5 py-0.5 rounded"
-                    >
-                      <span>{resourceView}</span>
-                      <ChevronDown className="h-3 w-3 opacity-60" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-36 text-xs">
-                    <DropdownMenuItem onClick={() => setResourceView("By Dept")} className="cursor-pointer">
-                      By Department
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setResourceView("By Role")} className="cursor-pointer">
-                      By Key Role
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setResourceView("By Allocation %")} className="cursor-pointer">
-                      By Allocation %
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Badge variant="outline" className="text-[10px] font-mono text-emerald-700 bg-emerald-50 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900 shrink-0">
+                  +29d Float Available
+                </Badge>
               </CardHeader>
               <CardContent className="p-4 space-y-3">
-                <div className="flex items-end justify-between gap-2 h-28 pt-2 px-1">
-                  {(resourceView === "By Role"
-                    ? [
-                        { dept: "Lead", util: 88 },
-                        { dept: "Arch", util: 75 },
-                        { dept: "Spec", util: 92 },
-                        { dept: "Dev", util: 78 },
-                        { dept: "QA", util: 60 },
-                        { dept: "PM", util: 65 },
-                      ]
-                    : resourceView === "By Allocation %"
-                    ? [
-                        { dept: ">90%", util: 94 },
-                        { dept: "85%", util: 85 },
-                        { dept: "80%", util: 82 },
-                        { dept: "70%", util: 72 },
-                        { dept: "65%", util: 65 },
-                        { dept: "60%", util: 61 },
-                      ]
-                    : [
-                        { dept: "Eng", util: 85 },
-                        { dept: "Prod", util: 82 },
-                        { dept: "Proc", util: 61 },
-                        { dept: "QA", util: 72 },
-                        { dept: "Inst", util: 94 },
-                        { dept: "PM", util: 65 },
-                      ]
-                  ).map((c) => (
-                    <div key={c.dept} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                      <span className="text-[10px] font-bold font-mono text-slate-700 dark:text-slate-300">
-                        {c.util}%
-                      </span>
-                      <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-t h-full flex items-end">
-                        <div
-                          style={{ height: `${c.util}%` }}
-                          className={cn(
-                            "w-full rounded-t transition-all duration-300",
-                            c.util > 90 ? "bg-amber-500" : "bg-primary",
+                {/* Critical Path Sequence Visualizer */}
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">
+                    Driving Critical Sequence (Zero Total Float)
+                  </span>
+                  <div className="space-y-1.5">
+                    {[
+                      { code: "ACT-023", name: "Detailed Circuit Drawing & Specification Freeze", dur: "10d", float: "0d", state: "In Progress" },
+                      { code: "PRC-004", name: "DC Fast-Charge Busbars & High-Current Contactors", dur: "14d", float: "0d", state: "Critical Lead Time" },
+                      { code: "ENG-012", name: "Heavy-Gauge Enclosure Stamping & Tooling Release", dur: "6d", float: "0d", state: "Predecessor Dependent" },
+                      { code: "PRD-019", name: "Power Module Assembly & High-Voltage Harnessing", dur: "8d", float: "0d", state: "Scheduled" },
+                      { code: "QA-008", name: "Factory Acceptance Test (FAT) & Isolation Check", dur: "4d", float: "0d", state: "Scheduled" },
+                      { code: "OPS-003", name: "Grid Connection & Customer Acceptance Handover", dur: "Milestone", float: "0d", state: "Gate 4 Target" },
+                    ].map((item, idx, arr) => (
+                      <div
+                        key={item.code}
+                        className="flex items-center justify-between p-2 rounded-lg border border-border/60 bg-muted/20 hover:bg-muted/40 transition-colors text-xs"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 shrink-0">
+                            {item.code}
+                          </span>
+                          <span className="font-semibold text-slate-900 dark:text-white truncate">
+                            {item.name}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0 font-mono text-[11px]">
+                          <span className="text-muted-foreground">{item.dur}</span>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40">
+                            Float: {item.float}
+                          </span>
+                          {idx < arr.length - 1 && (
+                            <ArrowRight className="h-3 w-3 text-muted-foreground/60 hidden sm:inline" />
                           )}
-                        />
+                        </div>
                       </div>
-                      <span className="text-[9px] text-muted-foreground font-medium truncate">{c.dept}</span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Non-Critical Activities Buffer Pool */}
+                <div className="pt-2 border-t border-border/40">
+                  <div className="flex items-center justify-between pb-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      Non-Critical Tasks with Available Float (Buffer Slack)
+                    </span>
+                    <span className="text-[10px] text-muted-foreground">Protected against slippage</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                    <div className="flex items-center justify-between p-2 rounded border border-border/40 bg-slate-50/50 dark:bg-slate-800/30">
+                      <span className="truncate">Firmware Baseline v2.1 Verification</span>
+                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 shrink-0">+14d Slack</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2 rounded border border-border/40 bg-slate-50/50 dark:bg-slate-800/30">
+                      <span className="truncate">Thermal Runaway CFD Simulation</span>
+                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 shrink-0">+8d Slack</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2 rounded border border-border/40 bg-slate-50/50 dark:bg-slate-800/30">
+                      <span className="truncate">Cable Harness 3D Routing Mockup</span>
+                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 shrink-0">+7d Slack</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2 rounded border border-border/40 bg-slate-50/50 dark:bg-slate-800/30">
+                      <span className="truncate">Site Foundation Leveling Audit</span>
+                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 shrink-0">+5d Slack</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Schedule Compression & What-If Fast-Track Simulator (5 Cols) */}
+            <Card className="lg:col-span-5 border-border/80 shadow-2xs bg-white dark:bg-slate-900 flex flex-col justify-between">
+              <CardHeader className="p-4 pb-3 border-b border-border/40">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                    <Zap className="h-4 w-4 text-amber-500" />
+                    Schedule Compression & Fast-Tracking
+                  </CardTitle>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setIsScenariosOpen(true)}
+                    className="h-7 text-[11px] gap-1 px-2 cursor-pointer"
+                  >
+                    <Sparkles className="h-3.5 w-3.5 text-primary" />
+                    Model Scenarios
+                  </Button>
+                </div>
+                <CardDescription className="text-[11px] text-muted-foreground mt-0.5">
+                  Evaluate schedule crashing (overtime/air freight) and fast-tracking (parallel execution) trade-offs.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-4 space-y-3">
+                {/* Scenario Option Tiles */}
+                <div className="space-y-2">
+                  {[
+                    {
+                      id: "baseline",
+                      title: "V1.0 Approved Baseline",
+                      duration: "71 Days",
+                      deltaDur: "0d",
+                      cost: "₹1.67 Cr",
+                      deltaCost: "Baseline",
+                      technique: "Sequential Finish-to-Start logic",
+                    },
+                    {
+                      id: "fastTrack",
+                      title: "Fast-Track & Crashing (+Overtime)",
+                      duration: "58 Days",
+                      deltaDur: "-13 Days",
+                      cost: "₹1.82 Cr",
+                      deltaCost: "+₹15 Lakhs",
+                      technique: "Air-freight busbars + dual-shift PCB assembly",
+                    },
+                    {
+                      id: "lowCost",
+                      title: "Economic Low-Cost Buffer",
+                      duration: "79 Days",
+                      deltaDur: "+8 Days",
+                      cost: "₹1.54 Cr",
+                      deltaCost: "-₹13 Lakhs",
+                      technique: "Consolidated freight + single-threaded testing",
+                    },
+                  ].map((sc) => (
+                    <div
+                      key={sc.id}
+                      onClick={() => setSelectedScenario(sc.id as any)}
+                      className={cn(
+                        "p-3 rounded-xl border transition-all cursor-pointer",
+                        selectedScenario === sc.id
+                          ? "border-primary ring-2 ring-primary/20 bg-primary/5"
+                          : "border-border/60 hover:bg-muted/30 bg-card",
+                      )}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                          {sc.title}
+                          {selectedScenario === sc.id && (
+                            <Badge className="text-[9px] h-4 px-1.5 bg-primary text-white">Active Simulation</Badge>
+                          )}
+                        </span>
+                        <span className="font-mono font-bold text-xs text-primary">{sc.duration}</span>
+                      </div>
+                      <div className="mt-1.5 flex items-center justify-between text-[11px] text-muted-foreground">
+                        <span>{sc.technique}</span>
+                        <span className="font-mono font-semibold text-slate-700 dark:text-slate-300">{sc.deltaCost}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => navigate({ to: "/management/project-management/resource-allocation" })}
-                  className="text-[11px] text-primary font-semibold hover:underline cursor-pointer block text-left"
-                >
-                  View Resource Load →
-                </button>
-              </CardContent>
-            </Card>
 
-            {/* Card 4: AI Insights & Recommendations */}
-            <Card className="border-border/80 shadow-2xs bg-white dark:bg-slate-900 flex flex-col justify-between">
-              <CardHeader className="p-4 pb-2 border-b border-border/40">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <Sparkles className="h-3.5 w-3.5 text-primary" />
-                  AI Insights & Recommendations
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-3 text-xs space-y-2.5">
-                <div className="p-2 rounded-lg bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200/60 flex items-start gap-2">
-                  <AlertTriangle className="h-3.5 w-3.5 text-rose-600 shrink-0 mt-0.5" />
-                  <p className="text-[11px] text-slate-700 dark:text-slate-300">
-                    Controller procurement is on critical path. Expedite vendor confirmation.
-                  </p>
+                {/* Compression Parameters Summary */}
+                <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-border/50 text-[11px] space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Max Crashing Potential:</span>
+                    <span className="font-mono font-bold text-slate-800 dark:text-slate-200">13 Working Days</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Crashing Cost per Day Saved:</span>
+                    <span className="font-mono font-bold text-amber-600 dark:text-amber-400">₹1.15 Lakhs / Day</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Governing Constraint:</span>
+                    <span className="font-medium text-slate-700 dark:text-slate-300">PCB Tooling Precedence Gate</span>
+                  </div>
                 </div>
-                <div className="p-2 rounded-lg bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/60 flex items-start gap-2">
-                  <Clock className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" />
-                  <p className="text-[11px] text-slate-700 dark:text-slate-300">
-                    Electrical engineer resource is overloaded in next 3 weeks. Add 1 resource.
-                  </p>
+
+                <div className="pt-1 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setIsScenariosOpen(true)}
+                    className="text-[11px] text-primary font-semibold hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    Open AI What-If Scenario Matrix →
+                  </button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => toast.success("CPM schedule floats successfully validated against baseline V1.0")}
+                    className="h-7 text-[11px] text-muted-foreground hover:text-foreground cursor-pointer"
+                  >
+                    Validate Float Integrity
+                  </Button>
                 </div>
-                <div className="p-2 rounded-lg bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/60 flex items-start gap-2">
-                  <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" />
-                  <p className="text-[11px] text-slate-700 dark:text-slate-300">
-                    Manufacturing capacity will be at 92% in Oct. Plan overtime or additional shift.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsScenariosOpen(true)}
-                  className="text-[11px] text-primary font-semibold hover:underline cursor-pointer block text-left pt-1"
-                >
-                  View All Insights →
-                </button>
               </CardContent>
             </Card>
+          </div>
+
+          {/* Quick-Launch Execution Hub (Deep-Links to all specialized PM sub-modules) */}
+          <div className="rounded-xl border border-border/70 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-900/80 dark:to-slate-900 p-4 shadow-2xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border/50">
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <FolderKanban className="h-4 w-4 text-primary" />
+                  Project Execution Modules Navigation Hub
+                </h3>
+                <p className="text-[11px] text-muted-foreground">
+                  Access dedicated operational modules for WBS breakdowns, live task execution, time logging, cost EVM, and risk controls.
+                </p>
+              </div>
+              <Badge variant="outline" className="text-[10px] w-fit font-semibold text-primary border-primary/30">
+                Integrated PM Suite
+              </Badge>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5 pt-3">
+              {[
+                { title: "WBS Tree", path: "/management/project-management/wbs", desc: "Hierarchy & Dictionary" },
+                { title: "Milestones", path: "/management/project-management/milestones", desc: "Gates & Sign-Offs" },
+                { title: "Task Kanban", path: "/management/project-management/task-management", desc: "Live Sprint Boards" },
+                { title: "Time Tracking", path: "/management/project-management/time-tracking", desc: "Billable Timesheets" },
+                { title: "Resource Load", path: "/management/project-management/resource-allocation", desc: "Capacity & Staffing" },
+                { title: "Budget & EVM", path: "/management/project-management/budget-control", desc: "Cost & Variance" },
+                { title: "Risk Register", path: "/management/project-management/risk-management", desc: "5x5 Matrix & Mitigations" },
+              ].map((item) => (
+                <button
+                  key={item.path}
+                  type="button"
+                  onClick={() => navigate({ to: item.path })}
+                  className="p-2.5 rounded-lg border border-border/60 bg-white dark:bg-slate-800/80 hover:border-primary/60 hover:shadow-xs transition-all text-left group cursor-pointer"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors">
+                      {item.title}
+                    </span>
+                    <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                  </div>
+                  <span className="text-[10px] text-muted-foreground block truncate mt-0.5">
+                    {item.desc}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
         {/* ====================================================================

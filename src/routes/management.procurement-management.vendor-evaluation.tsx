@@ -78,7 +78,7 @@ export const Route = createFileRoute("/management/procurement-management/vendor-
       {
         name: "description",
         content:
-          "Vendor Evaluation & Supplier Portal — weighted scoring (Quality, Price, Delivery, Technical, Compliance, Risk), classification, supplier portal dashboard, and corrective action plans.",
+          "Vendor Evaluation Form — weighted scoring (Quality, Price, Delivery, Technical, Compliance, Risk), classification, audit scorecard, and corrective action plans (CAPA).",
       },
     ],
   }),
@@ -106,6 +106,69 @@ interface VendorOpenPO {
 
 // --- INITIAL MASTER DATA ---
 
+const EVALUATION_VENDORS = [
+  {
+    id: "SUP-000184",
+    name: "ElectroMax Solutions Pvt. Ltd.",
+    code: "EMS-184",
+    score: 88.5,
+    tier: "Preferred Supplier (Tier 1)",
+    badge: "Verified Supplier",
+    qualityScore: 92,
+    qualityPpm: "142 PPM",
+    otifScore: 88,
+    otifPercent: "94.8%",
+    priceScore: 85,
+    priceSavings: "-3.2% vs Benchmark",
+    complianceScore: 95,
+  },
+  {
+    id: "SUP-00131",
+    name: "PowerGrid Components",
+    code: "PGC-131",
+    score: 84.2,
+    tier: "Approved Supplier (Tier 2)",
+    badge: "Audited Supplier",
+    qualityScore: 89,
+    qualityPpm: "210 PPM",
+    otifScore: 95,
+    otifPercent: "97.2%",
+    priceScore: 82,
+    priceSavings: "+1.1% vs Benchmark",
+    complianceScore: 90,
+  },
+  {
+    id: "SUP-00241",
+    name: "VoltTech Engineers",
+    code: "VTE-241",
+    score: 81.0,
+    tier: "Under Observation",
+    badge: "Probationary",
+    qualityScore: 95,
+    qualityPpm: "98 PPM",
+    otifScore: 75,
+    otifPercent: "82.4%",
+    priceScore: 78,
+    priceSavings: "+4.5% vs Benchmark",
+    complianceScore: 92,
+  },
+  {
+    id: "SUP-00095",
+    name: "Schneider Electric India Pvt Ltd",
+    code: "SEI-095",
+    score: 94.0,
+    tier: "Strategic Partner (Tier 1)",
+    badge: "Global Partner",
+    qualityScore: 98,
+    qualityPpm: "45 PPM",
+    otifScore: 96,
+    otifPercent: "98.5%",
+    priceScore: 91,
+    priceSavings: "-5.0% vs Benchmark",
+    complianceScore: 99,
+  },
+];
+
 const INITIAL_VENDOR_HEADER = {
   vendorName: "ElectroMax Solutions Pvt. Ltd.",
   vendorBadge: "Verified Supplier",
@@ -114,16 +177,20 @@ const INITIAL_VENDOR_HEADER = {
   sinceDate: "15 Mar 2022",
   overallScore: 88.5,
   stars: 5,
-  classification: "Preferred Supplier",
-  accountStatus: "Active",
-  lastLogin: "26 Aug 2026 09:15 AM",
-  // KPIs
-  openRfqs: 12,
-  quotations: 8,
-  activePos: 6,
-  pendingDeliveries: 4,
-  pendingInvoices: 5,
-  pendingPaymentValue: "₹ 12.4 L",
+  classification: "Preferred Supplier (Tier 1)",
+  accountStatus: "Approved & Certified",
+  auditPeriod: "FY 2026-27 (Annual Audit Cycle)",
+  auditLead: "Quality & Sourcing Audit Council",
+  auditDate: "26 Aug 2026",
+  // Evaluation Performance Metrics
+  qualityScore: 92,
+  qualityPpm: "142 PPM",
+  otifScore: 88,
+  otifPercent: "94.8%",
+  priceScore: 85,
+  priceSavings: "-3.2% vs Benchmark",
+  complianceScore: 95,
+  capaSummary: "1 In Progress, 1 Resolved",
 };
 
 const INITIAL_DOC_EXPIRIES: VendorDocExpiry[] = [
@@ -229,18 +296,53 @@ export function VendorEvaluationPage() {
       tabs={<ProcurementManagementTabBar />}
     >
       <div className="space-y-6">
-        {/* TOP SUPPLIER BANNER - Standard ERP Header Card (No solid blue background) */}
+        {/* TOP EVALUATION BANNER - Internal Procurement Audit Docket Header */}
         <div className="rounded-xl border border-border/80 bg-card p-5 shadow-sm space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-6">
-            {/* Left: Supplier Logo + Identity */}
+            {/* Left: Supplier Selector + Audit Identity */}
             <div className="flex items-center gap-4">
               <div className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 text-primary font-black text-xl border border-primary/20 shadow-xs">
-                M
+                <Award className="h-6 w-6" />
               </div>
               <div>
-                <div className="text-xs text-muted-foreground font-medium">Welcome back,</div>
+                <div className="text-xs text-muted-foreground font-medium flex items-center gap-2">
+                  <span>Audited Vendor Dossier</span>
+                  <span>·</span>
+                  <span className="text-primary font-semibold">{vendor.auditPeriod}</span>
+                </div>
                 <div className="flex items-center gap-2.5 mt-0.5">
-                  <h1 className="text-lg font-extrabold tracking-tight text-foreground">{vendor.vendorName}</h1>
+                  <select
+                    value={vendor.supplierCode}
+                    onChange={(e) => {
+                      const selected = EVALUATION_VENDORS.find((v) => v.code === e.target.value);
+                      if (selected) {
+                        setVendor({
+                          ...vendor,
+                          vendorName: selected.name,
+                          supplierId: selected.id,
+                          supplierCode: selected.code,
+                          overallScore: selected.score,
+                          classification: selected.tier,
+                          vendorBadge: selected.badge,
+                          qualityScore: selected.qualityScore,
+                          qualityPpm: selected.qualityPpm,
+                          otifScore: selected.otifScore,
+                          otifPercent: selected.otifPercent,
+                          priceScore: selected.priceScore,
+                          priceSavings: selected.priceSavings,
+                          complianceScore: selected.complianceScore,
+                        });
+                        toast.success(`Loaded evaluation dossier for ${selected.name}`);
+                      }
+                    }}
+                    className="text-lg font-extrabold tracking-tight text-foreground bg-transparent border border-border/60 rounded-lg px-2 py-0.5 cursor-pointer hover:border-primary focus:outline-hidden"
+                  >
+                    {EVALUATION_VENDORS.map((v) => (
+                      <option key={v.code} value={v.code} className="bg-card text-foreground font-medium text-sm">
+                        {v.name} ({v.code})
+                      </option>
+                    ))}
+                  </select>
                   <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
                     {vendor.vendorBadge}
                   </span>
@@ -248,9 +350,9 @@ export function VendorEvaluationPage() {
                 <div className="text-xs text-muted-foreground mt-1 flex items-center gap-3">
                   <span>Supplier ID: <strong className="text-foreground font-mono">{vendor.supplierId}</strong></span>
                   <span>·</span>
-                  <span>Supplier Code: <strong className="text-foreground font-mono">{vendor.supplierCode}</strong></span>
+                  <span>Lead Auditor: <strong className="text-foreground">{vendor.auditLead}</strong></span>
                   <span>·</span>
-                  <span>Since: <strong className="text-foreground">{vendor.sinceDate}</strong></span>
+                  <span>Audit Date: <strong className="text-foreground">{vendor.auditDate}</strong></span>
                 </div>
               </div>
             </div>
@@ -280,9 +382,9 @@ export function VendorEvaluationPage() {
                 </div>
               </div>
 
-              {/* Account Status Pill */}
+              {/* Audit Status Pill */}
               <div>
-                <div className="text-[11px] text-muted-foreground font-medium">Account Status</div>
+                <div className="text-[11px] text-muted-foreground font-medium">Audit Approval Status</div>
                 <div className="mt-1">
                   <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
                     {vendor.accountStatus}
@@ -293,7 +395,7 @@ export function VendorEvaluationPage() {
           </div>
 
           <div className="pt-3 border-t border-border/80 flex items-center justify-between text-xs text-muted-foreground">
-            <div>Last Login: <strong className="text-foreground">{vendor.lastLogin}</strong></div>
+            <div>Evaluation Cycle: <strong className="text-foreground">{vendor.auditPeriod}</strong></div>
             <div className="flex items-center gap-3 font-semibold">
               <button
                 type="button"
@@ -314,78 +416,78 @@ export function VendorEvaluationPage() {
           </div>
         </div>
 
-        {/* 6 TOP KPI CARDS (Pixel-Matched with Screenshot!) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          {/* Card 1: Open RFQs */}
-          <div className="rounded-xl border border-blue-200/60 dark:border-blue-900/40 bg-blue-50/40 dark:bg-blue-950/20 p-4 shadow-xs flex flex-col justify-between space-y-3">
-            <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
-              <FileCheck className="h-5 w-5" />
-              <span className="text-xs font-bold text-foreground">Open RFQs</span>
+        {/* 4 AUTHENTIC VENDOR EVALUATION KPI CARDS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Card 1: Quality Performance */}
+          <div className="rounded-xl border border-border/80 bg-card p-4 shadow-xs flex flex-col justify-between space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                <ShieldCheck className="h-5 w-5" />
+                <span className="text-xs font-bold text-foreground">Quality Performance</span>
+              </div>
+              <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-bold text-emerald-600">Grade A</span>
             </div>
-            <div className="text-2xl font-black text-foreground font-mono">{vendor.openRfqs}</div>
-            <Link to="/management/procurement-management/rfq-quotation" className="text-[11px] font-semibold text-primary hover:underline">
-              View All RFQs →
-            </Link>
+            <div>
+              <div className="text-2xl font-black text-foreground font-mono">{vendor.qualityScore}%</div>
+              <div className="text-xs text-muted-foreground mt-0.5">Defect Rate: <strong className="text-foreground">{vendor.qualityPpm}</strong></div>
+            </div>
+            <button type="button" onClick={() => setActiveTab("quality")} className="text-[11px] font-semibold text-primary hover:underline text-left cursor-pointer">
+              View Quality Rubric →
+            </button>
           </div>
 
-          {/* Card 2: Quotations */}
-          <div className="rounded-xl border border-emerald-200/60 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-950/20 p-4 shadow-xs flex flex-col justify-between space-y-3">
-            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="text-xs font-bold text-foreground">Quotations</span>
+          {/* Card 2: Delivery & OTIF */}
+          <div className="rounded-xl border border-border/80 bg-card p-4 shadow-xs flex flex-col justify-between space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                <Truck className="h-5 w-5" />
+                <span className="text-xs font-bold text-foreground">Delivery (OTIF SLA)</span>
+              </div>
+              <span className="rounded bg-blue-500/10 px-1.5 py-0.5 text-[10px] font-bold text-blue-600">On Target</span>
             </div>
-            <div className="text-2xl font-black text-foreground font-mono">{vendor.quotations}</div>
-            <Link to="/management/procurement-management/vendor-quotation" className="text-[11px] font-semibold text-emerald-600 hover:underline">
-              View All Quotations →
-            </Link>
+            <div>
+              <div className="text-2xl font-black text-foreground font-mono">{vendor.otifPercent}</div>
+              <div className="text-xs text-muted-foreground mt-0.5">Delivery Score: <strong className="text-foreground">{vendor.otifScore}%</strong></div>
+            </div>
+            <button type="button" onClick={() => setActiveTab("commercialDelivery")} className="text-[11px] font-semibold text-blue-600 hover:underline text-left cursor-pointer">
+              View Delivery History →
+            </button>
           </div>
 
-          {/* Card 3: Active POs */}
-          <div className="rounded-xl border border-amber-200/60 dark:border-amber-900/40 bg-amber-50/40 dark:bg-amber-950/20 p-4 shadow-xs flex flex-col justify-between space-y-3">
-            <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
-              <FileBadge className="h-5 w-5" />
-              <span className="text-xs font-bold text-foreground">Active POs</span>
+          {/* Card 3: Price Competitiveness */}
+          <div className="rounded-xl border border-border/80 bg-card p-4 shadow-xs flex flex-col justify-between space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                <Percent className="h-5 w-5" />
+                <span className="text-xs font-bold text-foreground">Price Competitiveness</span>
+              </div>
+              <span className="rounded bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-bold text-amber-600">Cost Saver</span>
             </div>
-            <div className="text-2xl font-black text-foreground font-mono">{vendor.activePos}</div>
-            <Link to="/management/procurement-management/purchase-order" className="text-[11px] font-semibold text-amber-600 hover:underline">
-              View All POs →
-            </Link>
+            <div>
+              <div className="text-2xl font-black text-foreground font-mono">{vendor.priceScore}%</div>
+              <div className="text-xs text-muted-foreground mt-0.5">Variance: <strong className="text-foreground">{vendor.priceSavings}</strong></div>
+            </div>
+            <button type="button" onClick={() => setActiveTab("commercialDelivery")} className="text-[11px] font-semibold text-amber-600 hover:underline text-left cursor-pointer">
+              View Price Variance →
+            </button>
           </div>
 
-          {/* Card 4: Pending Deliveries */}
-          <div className="rounded-xl border border-purple-200/60 dark:border-purple-900/40 bg-purple-50/40 dark:bg-purple-950/20 p-4 shadow-xs flex flex-col justify-between space-y-3">
-            <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
-              <Truck className="h-5 w-5" />
-              <span className="text-xs font-bold text-foreground">Pending Deliveries</span>
+          {/* Card 4: CAPA Corrective Actions */}
+          <div className="rounded-xl border border-border/80 bg-card p-4 shadow-xs flex flex-col justify-between space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
+                <AlertTriangle className="h-5 w-5" />
+                <span className="text-xs font-bold text-foreground">Corrective Actions (CAPA)</span>
+              </div>
+              <span className="rounded bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-bold text-purple-600">Active</span>
             </div>
-            <div className="text-2xl font-black text-foreground font-mono">{vendor.pendingDeliveries}</div>
-            <Link to="/management/procurement-management/goods-receipt" className="text-[11px] font-semibold text-purple-600 hover:underline">
-              View All Deliveries →
-            </Link>
-          </div>
-
-          {/* Card 5: Pending Invoices */}
-          <div className="rounded-xl border border-teal-200/60 dark:border-teal-900/40 bg-teal-50/40 dark:bg-teal-950/20 p-4 shadow-xs flex flex-col justify-between space-y-3">
-            <div className="flex items-center gap-2 text-teal-600 dark:text-teal-400">
-              <Receipt className="h-5 w-5" />
-              <span className="text-xs font-bold text-foreground">Pending Invoices</span>
+            <div>
+              <div className="text-xl font-black text-foreground font-mono">{vendor.capaSummary}</div>
+              <div className="text-xs text-muted-foreground mt-0.5">Statutory Compliance: <strong className="text-emerald-600 font-bold">{vendor.complianceScore}%</strong></div>
             </div>
-            <div className="text-2xl font-black text-foreground font-mono">{vendor.pendingInvoices}</div>
-            <Link to="/management/procurement-management/invoice-verification" className="text-[11px] font-semibold text-teal-600 hover:underline">
-              View All Invoices →
-            </Link>
-          </div>
-
-          {/* Card 6: Pending Payment */}
-          <div className="rounded-xl border border-rose-200/60 dark:border-rose-900/40 bg-rose-50/40 dark:bg-rose-950/20 p-4 shadow-xs flex flex-col justify-between space-y-3">
-            <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
-              <CreditCard className="h-5 w-5" />
-              <span className="text-xs font-bold text-foreground">Pending Payment</span>
-            </div>
-            <div className="text-xl font-black text-foreground font-mono">{vendor.pendingPaymentValue}</div>
-            <Link to="/management/procurement-management/vendor-payment" className="text-[11px] font-semibold text-rose-600 hover:underline">
-              View All Payments →
-            </Link>
+            <button type="button" onClick={() => setActiveTab("cap")} className="text-[11px] font-semibold text-purple-600 hover:underline text-left cursor-pointer">
+              Manage CAPA Tickets ({capTickets.length}) →
+            </button>
           </div>
         </div>
 

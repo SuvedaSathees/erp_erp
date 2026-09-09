@@ -81,18 +81,18 @@ const POLICY_TYPES = [
 ];
 
 const POLICY_REVIEW_APPROVAL_STEPS = [
-  { level: 1, type: "Functional Review", person: "Rahul Sharma", status: "Approved", date: "08 Apr 2024", comments: "Looks good" },
-  { level: 2, type: "Compliance Review", person: "Pooja Mehta", status: "Approved", date: "09 Apr 2024", comments: "Compliant" },
-  { level: 3, type: "Risk Assessment", person: "Anita Deshmukh", status: "Approved", date: "10 Apr 2024", comments: "Risk acceptable" },
-  { level: 4, type: "Management Review", person: "Neha Kapoor", status: "Approved", date: "11 Apr 2024", comments: "Approved" },
-  { level: 5, type: "Final Approval", person: "Sanjay Gupta", status: "Approved", date: "12 Apr 2024", comments: "Approved" },
-  { level: 6, type: "Publication", person: "Amit Verma", status: "Published", date: "15 Apr 2024", comments: "Published" },
+  { level: 1, type: "HR Operations Review", person: "Deepa Nair", status: "Approved", date: "08 Apr 2024", comments: "Operational alignment verified." },
+  { level: 2, type: "Legal & Statutory Review", person: "Pooja Hegde", status: "Approved", date: "09 Apr 2024", comments: "Statutory compliance confirmed." },
+  { level: 3, type: "Risk Assessment", person: "Anita Deshmukh", status: "Approved", date: "10 Apr 2024", comments: "Enterprise risk acceptable." },
+  { level: 4, type: "HR Leadership Review", person: "Meera Nair", status: "Approved", date: "11 Apr 2024", comments: "Policy terms approved." },
+  { level: 5, type: "Executive Committee Approval", person: "Rajeev Malhotra", status: "Approved", date: "12 Apr 2024", comments: "Approved for enterprise release." },
+  { level: 6, type: "Policy Secretariat", person: "Rohan Kapoor", status: "Published", date: "15 Apr 2024", comments: "Published to staff handbook." },
 ];
 
 const RECENT_POLICY_VERSIONS = [
-  { id: "VER-103", version: "v1.2", effectiveDate: "01 Apr 2024", publishedOn: "15 Apr 2024", changeType: "Minor Revision", changedBy: "Amit Verma", status: "Active", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
-  { id: "VER-102", version: "v1.1", effectiveDate: "01 Jan 2024", publishedOn: "05 Jan 2024", changeType: "Minor Revision", changedBy: "Amit Verma", status: "Superseded", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
-  { id: "VER-101", version: "v1.0", effectiveDate: "01 Apr 2023", publishedOn: "01 Apr 2023", changeType: "Initial Version", changedBy: "Amit Verma", status: "Superseded", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
+  { id: "VER-103", version: "v1.2", effectiveDate: "01 Apr 2024", publishedOn: "15 Apr 2024", changeType: "Minor Revision", changedBy: "Meera Nair", status: "Active", badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" },
+  { id: "VER-102", version: "v1.1", effectiveDate: "01 Jan 2024", publishedOn: "05 Jan 2024", changeType: "Minor Revision", changedBy: "Meera Nair", status: "Superseded", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
+  { id: "VER-101", version: "v1.0", effectiveDate: "01 Apr 2023", publishedOn: "01 Apr 2023", changeType: "Initial Version", changedBy: "Pooja Hegde", status: "Superseded", badge: "bg-amber-500/10 text-amber-600 border-amber-500/20" },
 ];
 
 function PolicyManagementPage() {
@@ -108,8 +108,8 @@ function PolicyManagementPage() {
     module: "Human Capital Management",
     process: "Employee Management",
     department: "Human Resources",
-    policyOwner: "Neha Kapoor",
-    policyAdmin: "Amit Verma",
+    policyOwner: "Meera Nair",
+    policyAdmin: "Pooja Hegde",
     policyStatus: "Published",
     effectiveDate: "2024-04-01",
     reviewDate: "2025-04-01",
@@ -121,20 +121,20 @@ function PolicyManagementPage() {
 
   // Dynamic Enterprise Policies
   const [policiesList, setPoliciesList] = useState([
-    { id: "POL-001", num: "FIN-POL-005", title: "Travel & Expense Policy", type: "Operational Policy", dept: "Human Resources", ver: "v1.2", status: "Published", owner: "Neha Kapoor", date: "15 Apr 2024" },
+    { id: "POL-001", num: "FIN-POL-005", title: "Travel & Expense Policy", type: "Operational Policy", dept: "Human Resources", ver: "v1.2", status: "Published", owner: "Meera Nair", date: "15 Apr 2024" },
     { id: "POL-002", num: "SEC-POL-001", title: "Information Security Policy", type: "IT Policy", dept: "Cybersecurity", ver: "v2.0", status: "Published", owner: "Anita Deshmukh", date: "10 Apr 2024" },
-    { id: "POL-003", num: "HR-POL-012", title: "Remote Working & Hybrid Policy", type: "HR Policy", dept: "Human Resources", ver: "v1.1", status: "Under Review", owner: "Pooja Mehta", date: "08 Apr 2024" },
-    { id: "POL-004", num: "GOV-POL-003", title: "Anti-Bribery & Whistleblower Policy", type: "Compliance Policy", dept: "Legal & Compliance", ver: "v3.0", status: "Published", owner: "Rahul Sharma", date: "01 Apr 2024" },
-    { id: "POL-005", num: "OPS-POL-007", title: "Procurement Delegation Policy", type: "Financial Policy", dept: "Procurement", ver: "v1.0", status: "Draft", owner: "Karan Malhotra", date: "28 Mar 2024" },
+    { id: "POL-003", num: "HR-POL-012", title: "Remote Working & Hybrid Policy", type: "HR Policy", dept: "Human Resources", ver: "v1.1", status: "Under Review", owner: "Deepa Nair", date: "08 Apr 2024" },
+    { id: "POL-004", num: "GOV-POL-003", title: "Anti-Bribery & Whistleblower Policy", type: "Compliance Policy", dept: "Legal & Compliance", ver: "v3.0", status: "Published", owner: "Pooja Hegde", date: "01 Apr 2024" },
+    { id: "POL-005", num: "OPS-POL-007", title: "Procurement Delegation Policy", type: "Financial Policy", dept: "Procurement", ver: "v1.0", status: "Draft", owner: "Tanvi Saxena", date: "28 Mar 2024" },
   ]);
 
   const [reviewSteps, setReviewSteps] = useState([
-    { level: 1, type: "Functional Review", person: "Rahul Sharma", status: "Approved", date: "08 Apr 2024", comments: "Operational feasibility verified." },
-    { level: 2, type: "Compliance Review", person: "Pooja Mehta", status: "Approved", date: "09 Apr 2024", comments: "Statutory checks passed." },
-    { level: 3, type: "Risk Assessment", person: "Anita Deshmukh", status: "Approved", date: "10 Apr 2024", comments: "Zero enterprise risk flag." },
-    { level: 4, type: "Management Review", person: "Neha Kapoor", status: "Approved", date: "11 Apr 2024", comments: "Budget impacts aligned." },
-    { level: 5, type: "Final Approval", person: "Sanjay Gupta", status: "Approved", date: "12 Apr 2024", comments: "Approved for organization." },
-    { level: 6, type: "Publication", person: "Amit Verma", status: "Published", date: "15 Apr 2024", comments: "Distributed enterprise-wide." },
+    { level: 1, type: "HR Operations Review", person: "Deepa Nair", status: "Approved", date: "08 Apr 2024", comments: "Operational alignment verified." },
+    { level: 2, type: "Legal & Statutory Review", person: "Pooja Hegde", status: "Approved", date: "09 Apr 2024", comments: "Statutory compliance confirmed." },
+    { level: 3, type: "Risk Assessment", person: "Anita Deshmukh", status: "Approved", date: "10 Apr 2024", comments: "Enterprise risk acceptable." },
+    { level: 4, type: "HR Leadership Review", person: "Meera Nair", status: "Approved", date: "11 Apr 2024", comments: "Policy terms approved." },
+    { level: 5, type: "Executive Committee Approval", person: "Rajeev Malhotra", status: "Approved", date: "12 Apr 2024", comments: "Approved for enterprise release." },
+    { level: 6, type: "Policy Secretariat", person: "Rohan Kapoor", status: "Published", date: "15 Apr 2024", comments: "Published to staff handbook." },
   ]);
 
   const [showCreatePolicyModal, setShowCreatePolicyModal] = useState(false);
@@ -144,7 +144,7 @@ function PolicyManagementPage() {
     type: "Operational Policy",
     dept: "Human Resources",
     ver: "v1.0",
-    owner: "Neha Kapoor",
+    owner: "Meera Nair",
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -365,7 +365,7 @@ function PolicyManagementPage() {
                   onChange={(e) => setPolicyMaster({ ...policyMaster, policyOwner: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Neha Kapoor">Neha Kapoor (HR Director)</option>
+                  <option value="Meera Nair">Meera Nair (VP - Human Resources)</option>
                 </select>
               </div>
 
@@ -379,7 +379,7 @@ function PolicyManagementPage() {
                   onChange={(e) => setPolicyMaster({ ...policyMaster, policyAdmin: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Amit Verma">Amit Verma (HR Manager)</option>
+                  <option value="Pooja Hegde">Pooja Hegde (Chief Legal Counsel)</option>
                 </select>
               </div>
 

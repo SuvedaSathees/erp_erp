@@ -1121,38 +1121,40 @@ export function ElectricalDesignNewPage({
                   </Badge>
                 </CardHeader>
 
-                <CardContent className="pt-4 space-y-3.5 text-xs">
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Power System Readiness</span>
-                      <span>{record.summary.powerSystemReadiness} / 100</span>
-                    </div>
-                    <Progress value={record.summary.powerSystemReadiness} className="h-2" />
+                <CardContent className="pt-4 flex flex-col md:flex-row items-center gap-6 text-xs">
+                  <div className="shrink-0 flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border">
+                    <CircularScoreGauge score={record.summary.overallElectricalDesignScore} />
+                    <span className="text-[11px] font-bold text-muted-foreground mt-2 uppercase tracking-wide">Overall Electrical Score</span>
                   </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Circuit Readiness</span>
-                      <span>{record.summary.circuitReadiness} / 100</span>
+                  <div className="flex-1 w-full space-y-3">
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Power System Readiness</span>
+                        <span>{record.summary.powerSystemReadiness} / 100</span>
+                      </div>
+                      <Progress value={record.summary.powerSystemReadiness} className="h-2" />
                     </div>
-                    <Progress value={record.summary.circuitReadiness} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Electrical Safety Score</span>
-                      <span>{record.summary.electricalSafetyScore} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Circuit Readiness</span>
+                        <span>{record.summary.circuitReadiness} / 100</span>
+                      </div>
+                      <Progress value={record.summary.circuitReadiness} className="h-2" />
                     </div>
-                    <Progress value={record.summary.electricalSafetyScore} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Compliance Score</span>
-                      <span>{record.summary.complianceScore} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Electrical Safety Score</span>
+                        <span>{record.summary.electricalSafetyScore} / 100</span>
+                      </div>
+                      <Progress value={record.summary.electricalSafetyScore} className="h-2" />
                     </div>
-                    <Progress value={record.summary.complianceScore} className="h-2" />
-                  </div>
-                  <div className="pt-2 border-t border-border flex justify-between items-center font-bold text-foreground">
-                    <span>Overall Electrical Design Score</span>
-                    <span className="text-base text-amber-600">{record.summary.overallElectricalDesignScore} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Compliance Score</span>
+                        <span>{record.summary.complianceScore} / 100</span>
+                      </div>
+                      <Progress value={record.summary.complianceScore} className="h-2" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1383,44 +1385,6 @@ export function ElectricalDesignNewPage({
               =========================================================================== */}
           <div className="lg:col-span-1 space-y-6">
             <div className="sticky top-6 space-y-6">
-              {/* Overall Score Gauge Box */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
-                <CardHeader className="pb-2 border-b border-border text-center">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Overall Electrical Design Score
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent className="pt-5 flex flex-col items-center">
-                  <CircularScoreGauge
-                    score={record.summary.overallElectricalDesignScore}
-                  />
-
-                  <div className="w-full mt-5 space-y-2 border-t border-border pt-4 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Power System Readiness</span>
-                      <span className="font-bold text-foreground">{record.summary.powerSystemReadiness}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Circuit Readiness</span>
-                      <span className="font-bold text-foreground">{record.summary.circuitReadiness}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Electrical Safety</span>
-                      <span className="font-bold text-foreground">{record.summary.electricalSafetyScore}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Compliance</span>
-                      <span className="font-bold text-foreground">{record.summary.complianceScore}%</span>
-                    </div>
-                    <div className="flex justify-between items-center pt-2 border-t border-border font-bold text-amber-600 dark:text-amber-400">
-                      <span>Overall Score</span>
-                      <span>{record.summary.overallElectricalDesignScore}%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Key Highlights Card */}
               <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
                 <CardHeader className="pb-2 border-b border-border">

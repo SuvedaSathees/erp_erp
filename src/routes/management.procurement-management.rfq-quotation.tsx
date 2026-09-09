@@ -1598,9 +1598,18 @@ export function RfqQuotationPage() {
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-border text-[11px] text-muted-foreground space-y-0.5">
-                      <div>Delivery: <strong>{q.deliveryLeadTimeDays} Days ({q.deliveryTerms})</strong></div>
-                      <div>Payment: <strong>{q.paymentTerms}</strong></div>
+                    <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
+                      <div className="text-muted-foreground space-y-0.5">
+                        <div>Delivery: <strong>{q.deliveryLeadTimeDays} Days ({q.deliveryTerms})</strong></div>
+                        <div>Payment: <strong>{q.paymentTerms}</strong></div>
+                      </div>
+                      <Link
+                        to="/management/procurement-management/vendor-quotation"
+                        className="font-semibold text-primary hover:underline"
+                        title="View detailed inward quotation dossier"
+                      >
+                        Open Dossier →
+                      </Link>
                     </div>
                   </div>
                 ))}
@@ -1665,114 +1674,178 @@ export function RfqQuotationPage() {
           </div>
         )}
 
-        {/* TAB 7: COMMERCIAL COMPARISON & COMPARATIVE STATEMENT (Matching Prompt Table!) */}
+        {/* TAB 7: COMMERCIAL COMPARISON & AWARD RECOMMENDATION */}
         {activeTab === "commercialEval" && (
           <div className="space-y-6">
             <div className="rounded-xl border border-border/80 bg-card p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
                 <div>
                   <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                     <Scale className="h-4 w-4 text-primary" />
-                    Automated Supplier Comparison Statement (Comparative Matrix)
+                    Sourcing Decision & Commercial Comparison Summary
                   </h3>
-                  <p className="text-xs text-muted-foreground">Comprehensive side-by-side commercial comparison and landed cost computation</p>
+                  <p className="text-xs text-muted-foreground">
+                    Synced with central Vendor Comparison engine · Multi-criteria commercial ranking and landed cost evaluation
+                  </p>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => toast.success("Comparative statement exported to Excel.")}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted cursor-pointer"
-                >
-                  <FileSpreadsheet className="h-3.5 w-3.5" /> Export CS
-                </button>
+                <div className="flex items-center gap-2">
+                  <Link
+                    to="/management/procurement-management/vendor-comparison"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-all cursor-pointer shadow-xs"
+                  >
+                    <Scale className="h-3.5 w-3.5" />
+                    Open Multi-Criteria Decision Engine →
+                  </Link>
+                </div>
               </div>
 
-              <div className="overflow-x-auto no-scrollbar">
-                <table className="w-full text-left text-xs border border-border">
-                  <thead className="bg-muted/50 text-foreground font-bold border-b border-border">
-                    <tr>
-                      <th className="py-3 px-4 w-48 bg-muted/70">Parameter</th>
-                      <th className="py-3 px-4 text-center bg-emerald-500/10 text-emerald-900 dark:text-emerald-200 border-x border-border">
-                        <div>ElectroMex Solutions</div>
-                        <div className="text-[10px] font-normal text-muted-foreground">(Supplier A - Preferred)</div>
-                      </th>
-                      <th className="py-3 px-4 text-center border-r border-border">
-                        <div>PowerGrid Components</div>
-                        <div className="text-[10px] font-normal text-muted-foreground">(Supplier B)</div>
-                      </th>
-                      <th className="py-3 px-4 text-center">
-                        <div>VoltTech Engineers</div>
-                        <div className="text-[10px] font-normal text-muted-foreground">(Supplier C)</div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border/60 text-foreground">
-                    <tr>
-                      <td className="py-2.5 px-4 font-semibold text-muted-foreground">Basic Quoted Price</td>
-                      <td className="py-2.5 px-4 text-center font-bold border-x border-border">₹4,08,500.00</td>
-                      <td className="py-2.5 px-4 text-center font-semibold border-r border-border">₹4,24,300.00</td>
-                      <td className="py-2.5 px-4 text-center font-semibold">₹4,52,600.00</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 font-semibold text-muted-foreground">Freight & Logistics</td>
-                      <td className="py-2.5 px-4 text-center border-x border-border">₹15,000.00</td>
-                      <td className="py-2.5 px-4 text-center border-r border-border">₹22,000.00</td>
-                      <td className="py-2.5 px-4 text-center">₹10,000.00</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 font-semibold text-muted-foreground">Transit Insurance</td>
-                      <td className="py-2.5 px-4 text-center border-x border-border">₹2,500.00</td>
-                      <td className="py-2.5 px-4 text-center border-r border-border">₹3,000.00</td>
-                      <td className="py-2.5 px-4 text-center">₹2,000.00</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 font-semibold text-muted-foreground">Applicable Taxes (18% GST)</td>
-                      <td className="py-2.5 px-4 text-center border-x border-border">₹73,530.00</td>
-                      <td className="py-2.5 px-4 text-center border-r border-border">₹76,374.00</td>
-                      <td className="py-2.5 px-4 text-center">₹81,468.00</td>
-                    </tr>
-                    <tr className="bg-muted/30 font-black text-sm">
-                      <td className="py-3 px-4 text-primary">LANDED COST</td>
-                      <td className="py-3 px-4 text-center text-emerald-600 dark:text-emerald-400 border-x border-border">
-                        ₹4,99,530.00
-                      </td>
-                      <td className="py-3 px-4 text-center border-r border-border">₹5,25,674.00</td>
-                      <td className="py-3 px-4 text-center">₹5,46,068.00</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 font-semibold text-muted-foreground">Delivery Lead Time</td>
-                      <td className="py-2.5 px-4 text-center font-bold border-x border-border text-emerald-600">21 Days</td>
-                      <td className="py-2.5 px-4 text-center font-bold border-r border-border text-blue-600">15 Days</td>
-                      <td className="py-2.5 px-4 text-center text-muted-foreground">30 Days</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 font-semibold text-muted-foreground">Payment Terms</td>
-                      <td className="py-2.5 px-4 text-center border-x border-border font-medium">Net 45 Days</td>
-                      <td className="py-2.5 px-4 text-center border-r border-border font-medium">Net 30 Days</td>
-                      <td className="py-2.5 px-4 text-center font-medium">Net 60 Days</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 font-semibold text-muted-foreground">Technical Score</td>
-                      <td className="py-2.5 px-4 text-center font-bold border-x border-border">92.4%</td>
-                      <td className="py-2.5 px-4 text-center font-bold border-r border-border">89.0%</td>
-                      <td className="py-2.5 px-4 text-center font-bold text-primary">95.2%</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 font-semibold text-muted-foreground">Commercial Rank</td>
-                      <td className="py-2.5 px-4 text-center font-extrabold text-emerald-600 border-x border-border">Rank #1 (L1)</td>
-                      <td className="py-2.5 px-4 text-center font-semibold border-r border-border">Rank #2 (L2)</td>
-                      <td className="py-2.5 px-4 text-center font-semibold text-muted-foreground">Rank #3 (L3)</td>
-                    </tr>
-                    <tr className="bg-primary/5 font-extrabold">
-                      <td className="py-3 px-4 text-foreground">OVERALL EVALUATION RANK</td>
-                      <td className="py-3 px-4 text-center text-primary border-x border-border text-sm">
-                        🏆 Rank #1 (Award)
-                      </td>
-                      <td className="py-3 px-4 text-center border-r border-border text-sm">Rank #2</td>
-                      <td className="py-3 px-4 text-center text-sm">Rank #3</td>
-                    </tr>
-                  </tbody>
-                </table>
+              {/* Sourcing Award Banner */}
+              <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4 flex flex-wrap items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-emerald-600 text-white px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider">
+                      Recommended Awardee (L1)
+                    </span>
+                    <span className="text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+                      Evaluated for RFQ-2026-000089
+                    </span>
+                  </div>
+                  <h4 className="text-base font-extrabold text-foreground">ElectroMax Solutions Pvt. Ltd.</h4>
+                  <p className="text-xs text-muted-foreground">
+                    Lowest qualified landed cost at <strong>₹4,99,530.00</strong> with 92.4% technical score and Net 45 days payment terms.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <div className="text-[11px] text-muted-foreground">Cost Savings Realized</div>
+                    <div className="text-lg font-black text-emerald-600 dark:text-emerald-400 font-mono">₹46,538.00</div>
+                    <div className="text-[10px] text-muted-foreground">8.5% below internal PR cap</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowPoModal(true)}
+                    className="rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+                  >
+                    <FileBadge className="h-3.5 w-3.5" />
+                    Release Purchase Order (PO)
+                  </button>
+                </div>
+              </div>
+
+              {/* 3 Competing Supplier Bids Summary */}
+              <div className="grid gap-4 sm:grid-cols-3 pt-2">
+                {/* L1 Card */}
+                <div className="rounded-xl border-2 border-emerald-500/40 bg-emerald-50/20 dark:bg-emerald-950/10 p-4 space-y-3">
+                  <div className="flex items-center justify-between border-b border-border/80 pb-2">
+                    <div>
+                      <span className="rounded bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 text-[10px] font-black">
+                        RANK #1 (L1)
+                      </span>
+                      <div className="font-bold text-foreground text-sm mt-1">ElectroMax Solutions</div>
+                    </div>
+                    <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
+                      Preferred
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Basic Quote:</span>
+                      <strong className="text-foreground">₹4,08,500.00</strong>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Freight & Tax:</span>
+                      <span>₹91,030.00</span>
+                    </div>
+                    <div className="flex justify-between font-black text-sm text-emerald-700 dark:text-emerald-300 border-t border-border pt-1">
+                      <span>Landed Cost:</span>
+                      <span>₹4,99,530.00</span>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Lead Time:</span>
+                      <strong className="text-foreground">21 Days</strong>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Technical Score:</span>
+                      <strong className="text-primary font-bold">92.4%</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* L2 Card */}
+                <div className="rounded-xl border border-border/80 bg-card p-4 space-y-3">
+                  <div className="flex items-center justify-between border-b border-border pb-2">
+                    <div>
+                      <span className="rounded bg-muted text-muted-foreground px-2 py-0.5 text-[10px] font-bold">
+                        RANK #2 (L2)
+                      </span>
+                      <div className="font-bold text-foreground text-sm mt-1">PowerGrid Components</div>
+                    </div>
+                    <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] font-bold text-blue-600">
+                      Alternate
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Basic Quote:</span>
+                      <strong className="text-foreground">₹4,24,300.00</strong>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Freight & Tax:</span>
+                      <span>₹1,01,374.00</span>
+                    </div>
+                    <div className="flex justify-between font-black text-sm text-foreground border-t border-border pt-1">
+                      <span>Landed Cost:</span>
+                      <span>₹5,25,674.00</span>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Lead Time:</span>
+                      <strong className="text-foreground">15 Days</strong>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Technical Score:</span>
+                      <strong className="text-foreground font-bold">89.0%</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* L3 Card */}
+                <div className="rounded-xl border border-border/80 bg-card p-4 space-y-3">
+                  <div className="flex items-center justify-between border-b border-border pb-2">
+                    <div>
+                      <span className="rounded bg-muted text-muted-foreground px-2 py-0.5 text-[10px] font-bold">
+                        RANK #3 (L3)
+                      </span>
+                      <div className="font-bold text-foreground text-sm mt-1">VoltTech Engineers</div>
+                    </div>
+                    <span className="rounded-full bg-slate-500/10 px-2 py-0.5 text-[10px] font-bold text-slate-600">
+                      Reserve
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Basic Quote:</span>
+                      <strong className="text-foreground">₹4,52,600.00</strong>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Freight & Tax:</span>
+                      <span>₹93,468.00</span>
+                    </div>
+                    <div className="flex justify-between font-black text-sm text-foreground border-t border-border pt-1">
+                      <span>Landed Cost:</span>
+                      <span>₹5,46,068.00</span>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Lead Time:</span>
+                      <strong className="text-foreground">30 Days</strong>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Technical Score:</span>
+                      <strong className="text-primary font-bold">95.2%</strong>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

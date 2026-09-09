@@ -532,11 +532,11 @@ export function AssetLifecycleFormPage() {
             </CardContent>
           </Card>
 
-          {/* Card 2: Asset Value Overview (Compact Side-by-Side) */}
+          {/* Card 2: Fleet Age & Replacement Horizon (Compact Side-by-Side) */}
           <Card className="border-border/80 shadow-2xs bg-white dark:bg-slate-900 flex flex-col justify-between">
             <CardHeader className="p-3 pb-1 border-b border-border/40">
               <CardTitle className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                Asset Value Overview
+                Fleet Age & Refresh Horizon
               </CardTitle>
             </CardHeader>
             <CardContent className="p-3 space-y-2">
@@ -544,37 +544,39 @@ export function AssetLifecycleFormPage() {
                 <div className="relative flex h-24 w-24 shrink-0 items-center justify-center">
                   <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
-                    <circle cx="50" cy="50" r="38" stroke="#38bdf8" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="169.4" />
+                    <circle cx="50" cy="50" r="38" stroke="#38bdf8" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="91.4" />
+                    <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="193.0" />
+                    <circle cx="50" cy="50" r="38" stroke="#ef4444" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="225.4" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                    <span className="text-xs font-bold font-mono text-emerald-600">71%</span>
-                    <span className="text-[7.5px] text-muted-foreground uppercase font-semibold">Net Value</span>
+                    <span className="text-xs font-bold font-mono text-emerald-600">4.8 Yrs</span>
+                    <span className="text-[7.5px] text-muted-foreground uppercase font-semibold">Avg Age</span>
                   </div>
                 </div>
 
-                <div className="flex-1 space-y-1.5 text-[10px]">
+                <div className="flex-1 space-y-1 text-[10px]">
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-700 dark:text-slate-300">Gross Book Value</span>
-                    <span className="font-mono font-bold text-slate-900 dark:text-white">₹18.60 Cr</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Early (0-3 Yrs)</span>
+                    <span className="font-mono font-bold text-slate-900 dark:text-white">164</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-700 dark:text-slate-300">Accum. Deprec.</span>
-                    <span className="font-mono font-semibold text-muted-foreground">₹5.40 Cr</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-sky-400" /> Mid-Life (3-7 Yrs)</span>
+                    <span className="font-mono font-semibold text-slate-700 dark:text-slate-300">182</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-emerald-700 dark:text-emerald-400 font-medium">Net Book Value</span>
-                    <span className="font-mono font-bold text-emerald-600">₹13.20 Cr</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-amber-500" /> Overhaul (7-10 Yrs)</span>
+                    <span className="font-mono font-semibold text-amber-600">58</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-700 dark:text-slate-300">Maint. Spend</span>
-                    <span className="font-mono font-semibold text-amber-600">₹2.10 Cr</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-rose-500" /> EOL (&gt;10 Yrs)</span>
+                    <span className="font-mono font-semibold text-rose-600">24</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex justify-between items-center text-[9.5px] pt-1.5 border-t border-border/40 text-muted-foreground">
-                <span>Deprec. Rate: <strong className="font-mono">29.0%</strong></span>
-                <span>Net Retention: <strong className="font-mono text-emerald-600">71.0%</strong></span>
+                <span>Replacement Queue: <strong className="font-mono text-rose-600">6 Units</strong></span>
+                <span>Salvage Val: <strong className="font-mono text-emerald-600">₹18.40 L</strong></span>
               </div>
             </CardContent>
           </Card>

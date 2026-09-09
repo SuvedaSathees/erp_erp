@@ -85,8 +85,8 @@ const TOP_KPIS_DATA = [
 ];
 
 const RECENT_ACTIVITIES = [
-  { id: "ACT-001", title: "Budget FY 2024-25 approved", by: "Neha Kapoor (CFO)", date: "14 May 2024", icon: DollarSign, color: "text-emerald-500" },
-  { id: "ACT-002", title: "New Position 'Financial Analyst' created", by: "Vikram Singh", date: "13 May 2024", icon: UserCheck, color: "text-blue-500" },
+  { id: "ACT-001", title: "Budget FY 2024-25 approved", by: "Anita Verma (CFO)", date: "14 May 2024", icon: DollarSign, color: "text-emerald-500" },
+  { id: "ACT-002", title: "New Position 'Financial Analyst' created", by: "Raghavan Sundaram", date: "13 May 2024", icon: UserCheck, color: "text-blue-500" },
   { id: "ACT-003", title: "Monthly Financial Closing completed", by: "Priya Malhotra", date: "10 May 2024", icon: CheckCircle2, color: "text-emerald-500" },
   { id: "ACT-004", title: "Internal Audit - Q4 completed", by: "Audit Team", date: "08 May 2024", icon: ShieldCheck, color: "text-amber-500" },
   { id: "ACT-005", title: "Tax Compliance return filed", by: "Rohit Verma", date: "05 May 2024", icon: FileCheck, color: "text-purple-500" },
@@ -108,7 +108,7 @@ function DepartmentManagementPage() {
     division: "Finance Operations",
     parentDept: "Corporate Services",
     deptType: "Functional Department",
-    deptHead: "Vikram Singh",
+    deptHead: "Raghavan Sundaram",
     location: "Noida Head Office",
     costCentre: "CC-FIN-001",
     deptStatus: "Active",
@@ -141,7 +141,7 @@ function DepartmentManagementPage() {
 
   // Department People Roster State
   const [peopleRoster, setPeopleRoster] = useState([
-    { id: "EMP-101", name: "Vikram Singh", role: "Head - Finance & Accounts", email: "vikram.singh@magnertia.com", phone: "+91 98112 34567", rating: "4.8/5", status: "Active" },
+    { id: "EMP-101", name: "Raghavan Sundaram", role: "Head - Finance & Accounts", email: "raghavan.s@magnertia.com", phone: "+91 98112 34567", rating: "4.8/5", status: "Active" },
     { id: "EMP-102", name: "Priya Malhotra", role: "Senior Finance Controller", email: "priya.m@magnertia.com", phone: "+91 98112 34568", rating: "4.7/5", status: "Active" },
     { id: "EMP-103", name: "Rohit Verma", role: "Tax & Compliance Lead", email: "rohit.v@magnertia.com", phone: "+91 98112 34569", rating: "4.9/5", status: "Active" },
     { id: "EMP-104", name: "Sunil Yadav", role: "Treasury Manager", email: "sunil.y@magnertia.com", phone: "+91 98112 34570", rating: "4.6/5", status: "Active" },
@@ -155,7 +155,7 @@ function DepartmentManagementPage() {
     code: "",
     name: "",
     fn: "Finance",
-    head: "Vikram Singh",
+    head: "Raghavan Sundaram",
     count: "25",
     cc: "CC-NEW",
   });
@@ -405,7 +405,7 @@ function DepartmentManagementPage() {
                   onChange={(e) => setDeptMaster({ ...deptMaster, deptHead: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="Vikram Singh">Vikram Singh</option>
+                  <option value="Raghavan Sundaram">Raghavan Sundaram</option>
                   <option value="Anita Verma">Anita Verma</option>
                   <option value="Rajeev Malhotra">Rajeev Malhotra</option>
                 </select>

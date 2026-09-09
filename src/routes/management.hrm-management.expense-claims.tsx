@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -108,11 +108,11 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/management/hrm-management/expense-claims")({
   head: () => ({
     meta: [
-      { title: "Expense Claims · HRM Management · Magnertia ERP" },
+      { title: "Expense Claims (General & Non-Travel) · HRM Management · Magnertia ERP" },
       {
         name: "description",
         content:
-          "The Expense Claims Form manages employee expense reimbursement from expense capture → claim preparation → receipt verification → policy validation → approval → finance review → settlement → reimbursement/recovery → closure → analytics.",
+          "General employee operational expense claims, recurring allowances (internet, mobile, supplies), software tooling, professional certifications, and petty cash settlements.",
       },
     ],
   }),
@@ -134,12 +134,12 @@ interface ExpenseItem {
 }
 
 const INITIAL_EXPENSES: ExpenseItem[] = [
-  { id: 1, date: "20 May 2024", category: "Airfare", description: "CJB → BLR (Return)", merchant: "IndiGo Airlines", amount: 9200.0, eligible: 9200.0, disallowed: 0.0, receiptStatus: "Verified" },
-  { id: 2, date: "20 May 2024", category: "Hotel", description: "2 Nights Stay", merchant: "Lemon Tree, Bengaluru", amount: 5000.0, eligible: 5000.0, disallowed: 0.0, receiptStatus: "Verified" },
-  { id: 3, date: "21 May 2024", category: "Local Transport", description: "Airport Transfer", merchant: "Ola Cab", amount: 2300.0, eligible: 2300.0, disallowed: 0.0, receiptStatus: "Verified" },
-  { id: 4, date: "21 May 2024", category: "Meals", description: "Business Dinner", merchant: "Paradise Restaurant", amount: 1500.0, eligible: 1000.0, disallowed: 500.0, receiptStatus: "Partial" },
-  { id: 5, date: "22 May 2024", category: "Fuel", description: "Local Travel", merchant: "Bharat Petroleum", amount: 2850.0, eligible: 2850.0, disallowed: 0.0, receiptStatus: "Verified" },
-  { id: 6, date: "23 May 2024", category: "Parking", description: "Hotel Parking", merchant: "Lemon Tree Parking", amount: 800.0, eligible: 500.0, disallowed: 300.0, receiptStatus: "Partial" },
+  { id: 1, date: "20 May 2024", category: "Internet & Mobile", description: "High-Speed Fiber Broadband - May 2024", merchant: "Airtel Xstream Fiber", amount: 1499.0, eligible: 1499.0, disallowed: 0.0, receiptStatus: "Verified" },
+  { id: 2, date: "21 May 2024", category: "Office Supplies", description: "Ergonomic Peripherals & Work Desk Supplies", merchant: "Amazon Business India", amount: 3450.0, eligible: 3450.0, disallowed: 0.0, receiptStatus: "Verified" },
+  { id: 3, date: "22 May 2024", category: "Client Hospitality", description: "Strategic Partner Working Luncheon", merchant: "The Bistro Hub", amount: 2800.0, eligible: 2500.0, disallowed: 300.0, receiptStatus: "Partial" },
+  { id: 4, date: "23 May 2024", category: "Software & SaaS", description: "JetBrains Team IDE Cloud License (Pro-rated)", merchant: "JetBrains s.r.o.", amount: 8900.0, eligible: 8900.0, disallowed: 0.0, receiptStatus: "Verified" },
+  { id: 5, date: "24 May 2024", category: "Certification & Training", description: "AWS Solutions Architect Exam Voucher", merchant: "Pearson VUE", amount: 12500.0, eligible: 12500.0, disallowed: 0.0, receiptStatus: "Verified" },
+  { id: 6, date: "25 May 2024", category: "Courier & Logistics", description: "Expedited Legal Contract Document Dispatch", merchant: "BlueDart Express", amount: 650.0, eligible: 500.0, disallowed: 150.0, receiptStatus: "Partial" },
 ];
 
 export function ExpenseClaimsPage() {
@@ -160,14 +160,14 @@ export function ExpenseClaimsPage() {
   const totalClaimed = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   const totalEligible = expenses.reduce((acc, curr) => acc + curr.eligible, 0);
   const totalDisallowed = expenses.reduce((acc, curr) => acc + curr.disallowed, 0);
-  const advanceAdjusted = 15000;
+  const advanceAdjusted = 5000;
   const netPayable = totalEligible - advanceAdjusted;
 
   return (
     <AppShell
-      title="Expense Claims"
+      title="Expense Claims (General & Non-Travel)"
       breadcrumb="Management > HRM Management > Expense Claims"
-      description="The Expense Claims Form manages employee expense reimbursement from expense capture → claim preparation → receipt verification → policy validation → approval → finance review → settlement → reimbursement/recovery → closure → analytics."
+      description="Employee operational expense claims, recurring allowances (internet, mobile, supplies), software subscriptions, certifications, and petty cash settlements."
       tabs={<HrmManagementTabBar />}
     >
       <div className="flex flex-col w-full text-slate-800 space-y-6 pt-2 pb-16">
@@ -228,6 +228,22 @@ export function ExpenseClaimsPage() {
           </div>
         </div>
 
+        {/* Boundary Notice Banner */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-xl text-xs text-blue-950">
+          <div className="flex items-center gap-2.5">
+            <Receipt className="h-4 w-4 text-blue-600 shrink-0" />
+            <div>
+              <span className="font-bold">General Reimbursements Desk:</span> For non-travel workplace expenses, mobile & internet allowances, books, training, and petty cash.
+            </div>
+          </div>
+          <Link
+            to="/management/hrm-management/travel-expense"
+            className="shrink-0 font-semibold text-blue-700 hover:text-blue-900 hover:underline flex items-center gap-1 text-[11px]"
+          >
+            Looking for Flight, Train & Hotel bookings? Go to Travel & Expense &rarr;
+          </Link>
+        </div>
+
         {/* 1. Expense Claim Master Header (Clean enterprise layout, no profile photos, no stars) */}
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-5">
           {/* Top Row Meta Cards */}
@@ -239,7 +255,7 @@ export function ExpenseClaimsPage() {
 
             <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
               <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Claim Type</span>
-              <div className="font-semibold text-slate-900 text-sm truncate">Travel & Out-of-Pocket</div>
+              <div className="font-semibold text-slate-900 text-sm truncate">General Operations & Allowances</div>
             </div>
 
             <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
@@ -526,12 +542,12 @@ export function ExpenseClaimsPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {[
-                      { name: "IndiGo Flight Ticket 6E-4521.pdf", cat: "Airfare", merchant: "IndiGo Airlines", date: "20 May 2024", amount: "₹ 9,200.00", ocr: "100%", status: "Verified" },
-                      { name: "Lemon Tree Hotel Tax Invoice LT9876.pdf", cat: "Hotel", merchant: "Lemon Tree, Bengaluru", date: "20 May 2024", amount: "₹ 5,000.00", ocr: "100%", status: "Verified" },
-                      { name: "Ola Cab Ride Receipt OLA78945.pdf", cat: "Local Transport", merchant: "Ola Cabs India", date: "21 May 2024", amount: "₹ 2,300.00", ocr: "98%", status: "Verified" },
-                      { name: "Paradise Dining Food Bill.pdf", cat: "Meals", merchant: "Paradise Restaurant", date: "21 May 2024", amount: "₹ 1,500.00", ocr: "95%", status: "Partial" },
-                      { name: "BPCL Fuel Cash Memo.pdf", cat: "Fuel", merchant: "Bharat Petroleum", date: "22 May 2024", amount: "₹ 2,850.00", ocr: "100%", status: "Verified" },
-                      { name: "Hotel Parking Fee Receipt.pdf", cat: "Parking", merchant: "Lemon Tree Parking", date: "23 May 2024", amount: "₹ 800.00", ocr: "90%", status: "Partial" },
+                      { name: "Airtel_Fiber_GST_Invoice_May2024.pdf", cat: "Internet & Mobile", merchant: "Airtel Xstream Fiber", date: "20 May 2024", amount: "₹ 1,499.00", ocr: "100%", status: "Verified" },
+                      { name: "Amazon_Business_Tax_Invoice_981.pdf", cat: "Office Supplies", merchant: "Amazon Business India", date: "21 May 2024", amount: "₹ 3,450.00", ocr: "100%", status: "Verified" },
+                      { name: "Bistro_Hub_Lunch_Bill.pdf", cat: "Client Hospitality", merchant: "The Bistro Hub", date: "22 May 2024", amount: "₹ 2,800.00", ocr: "98%", status: "Verified" },
+                      { name: "JetBrains_Subscription_Tax_Receipt.pdf", cat: "Software & SaaS", merchant: "JetBrains s.r.o.", date: "23 May 2024", amount: "₹ 8,900.00", ocr: "95%", status: "Verified" },
+                      { name: "Pearson_VUE_AWS_Exam_Receipt.pdf", cat: "Certification & Training", merchant: "Pearson VUE", date: "24 May 2024", amount: "₹ 12,500.00", ocr: "100%", status: "Verified" },
+                      { name: "BlueDart_Airway_Bill_Receipt.pdf", cat: "Courier & Logistics", merchant: "BlueDart Express", date: "25 May 2024", amount: "₹ 650.00", ocr: "90%", status: "Partial" },
                     ].map((rc) => (
                       <tr key={rc.name} className="hover:bg-slate-50/60">
                         <td className="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
@@ -765,12 +781,13 @@ export function ExpenseClaimsPage() {
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">Expense Category *</label>
                 <select className="w-full h-9 px-2 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden bg-white">
-                  <option>Airfare</option>
-                  <option>Hotel / Lodging</option>
-                  <option>Local Transport / Taxi</option>
-                  <option>Meals / Per Diem</option>
-                  <option>Fuel / Mileage</option>
-                  <option>Parking & Toll</option>
+                  <option>Internet & Mobile Allowance</option>
+                  <option>Office Supplies & Workstation Ergonomics</option>
+                  <option>Client Hospitality & Working Luncheon</option>
+                  <option>Software Tools & SaaS Subscriptions</option>
+                  <option>Professional Certification & Exam Fees</option>
+                  <option>Courier & Confidential Postage</option>
+                  <option>Petty Cash Operational Consumables</option>
                 </select>
               </div>
 
@@ -779,7 +796,7 @@ export function ExpenseClaimsPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Lemon Tree Hotel"
+                  placeholder="e.g. Airtel, Amazon Business, Pearson"
                   className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden"
                 />
               </div>
@@ -863,10 +880,12 @@ export function ExpenseClaimsPage() {
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">Match Expense Item</label>
                 <select className="w-full h-9 px-2 rounded-lg border border-slate-200 text-xs focus:border-primary focus:outline-hidden bg-white">
-                  <option>Airfare - IndiGo (₹9,200)</option>
-                  <option>Hotel - Lemon Tree (₹5,000)</option>
-                  <option>Local Transport - Ola (₹2,300)</option>
-                  <option>Meals - Paradise (₹1,500)</option>
+                  <option>Internet & Mobile - Airtel (₹1,499)</option>
+                  <option>Office Supplies - Amazon (₹3,450)</option>
+                  <option>Client Hospitality - Bistro Hub (₹2,800)</option>
+                  <option>Software - JetBrains (₹8,900)</option>
+                  <option>Certification - Pearson VUE (₹12,500)</option>
+                  <option>Courier - BlueDart (₹650)</option>
                 </select>
               </div>
 

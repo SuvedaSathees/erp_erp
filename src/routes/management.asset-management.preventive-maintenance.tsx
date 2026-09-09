@@ -558,11 +558,11 @@ export function PreventiveMaintenanceFormPage() {
             </CardContent>
           </Card>
 
-          {/* Card 3: PM by Type (Compact Side-by-Side) */}
+          {/* Card 3: PM Trigger Strategy & Intervals (Compact Side-by-Side) */}
           <Card className="border-border/80 shadow-2xs bg-white dark:bg-slate-900 flex flex-col justify-between">
             <CardHeader className="p-3 pb-1 border-b border-border/40">
               <CardTitle className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                PM by Type
+                PM Trigger Strategy & Intervals
               </CardTitle>
             </CardHeader>
             <CardContent className="p-3 space-y-2">
@@ -571,8 +571,8 @@ export function PreventiveMaintenanceFormPage() {
                   <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="38" stroke="#2563eb" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="91.7" />
-                    <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="156.8" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="171.5" />
+                    <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="153.3" />
+                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="173.6" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <span className="text-sm font-bold font-mono text-slate-900 dark:text-white">682</span>
@@ -582,27 +582,27 @@ export function PreventiveMaintenanceFormPage() {
 
                 <div className="flex-1 space-y-1 text-[10px]">
                   <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-blue-600" /> Preventive</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-blue-600" /> Time (Calendar)</span>
                     <span className="font-mono font-bold text-slate-900 dark:text-white">420</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Corrective</span>
-                    <span className="font-mono font-semibold text-slate-700 dark:text-slate-300">186</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Run-Hours Meter</span>
+                    <span className="font-mono font-semibold text-slate-700 dark:text-slate-300">176</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-amber-500" /> Breakdown</span>
-                    <span className="font-mono font-semibold text-amber-600">42</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-amber-500" /> Stroke Cycles</span>
+                    <span className="font-mono font-semibold text-amber-600">58</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> Predictive</span>
-                    <span className="font-mono font-semibold text-purple-600">34</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> Statutory Audit</span>
+                    <span className="font-mono font-semibold text-purple-600">28</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex justify-between items-center text-[9.5px] pt-1.5 border-t border-border/40 text-muted-foreground">
-                <span>Preventive: <strong className="text-emerald-600 font-mono">61.6%</strong></span>
-                <span>Predictive: <strong className="text-purple-600 font-mono">5.0%</strong></span>
+                <span>Calendar PM: <strong className="text-blue-600 font-mono">61.6%</strong></span>
+                <span>Meter/Cycle PM: <strong className="text-emerald-600 font-mono">34.3%</strong></span>
               </div>
             </CardContent>
           </Card>

@@ -106,7 +106,7 @@ function ScoreGauge({
   return (
     <div
       className={cn(
-        "flex flex-col items-center rounded-xl border border-border bg-card shadow-xs text-center transition-all hover:shadow-md hover:border-primary/30",
+        "group relative overflow-hidden flex flex-col items-center rounded-2xl border border-border/80 bg-gradient-to-b from-card via-card to-muted/20 shadow-xs text-center transition-all duration-300 hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5",
         isLarge ? "p-4" : "p-3"
       )}
     >
@@ -118,7 +118,7 @@ function ScoreGauge({
             r={radius}
             stroke="currentColor"
             strokeWidth={stroke}
-            className="text-muted/20"
+            className="text-muted/30 dark:text-muted/20"
             fill="transparent"
           />
           <circle
@@ -135,11 +135,11 @@ function ScoreGauge({
           />
         </svg>
         <div className="absolute flex flex-col items-center justify-center">
-          <span className={cn("font-display font-bold text-foreground", isLarge ? "text-xl" : "text-sm")}>{score}</span>
+          <span className={cn("font-display font-black text-foreground tracking-tight", isLarge ? "text-xl" : "text-sm")}>{score}</span>
           {isLarge && <span className="text-[9px] text-muted-foreground font-semibold">/ {max}</span>}
         </div>
       </div>
-      <span className={cn("font-bold text-foreground truncate max-w-[120px]", isLarge ? "mt-2 text-xs" : "mt-1.5 text-[11px]")}>
+      <span className={cn("font-bold text-foreground truncate max-w-[120px] group-hover:text-primary transition-colors", isLarge ? "mt-2 text-xs" : "mt-1.5 text-[11px]")}>
         {label}
       </span>
       {sub && <span className="text-[10px] text-muted-foreground font-medium">{sub}</span>}
@@ -159,15 +159,17 @@ export function ValuePropositionDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState({
-    vpId: "VP-2024-00048",
-    formCode: "VPD-2024-25",
-    vpTitle: "Smart EV Charging – Reliable, Intelligent, Future-Ready.",
-    vpNumber: "VPD-INT-24-001",
+    vpId: "BM-2024-00045",
+    formCode: "BMD-2024-25",
+    vpTitle: "AIoT Platform Business Model",
+    vpNumber: "BMN-INT-24-001",
     version: "1.0",
     workflowStatus: "In Progress",
+    businessUnit: "Digital Solutions",
     businessModel: "AIoT Platform Business Model",
-    productService: "Smart EV Charging Solution",
+    productService: "AIoT Platform",
     customerSegment: "Fleet Operators",
+    businessOwner: "Rahul Sharma",
     productManager: "Rahul Sharma",
     createdDate: "05 May 2024",
     lastModifiedDate: "17 May 2024",
@@ -342,7 +344,7 @@ export function ValuePropositionDevelopmentPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-3">
             <div className="flex items-center gap-3">
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary font-bold shadow-inner">
-                <Target className="h-6 w-6" />
+                <Building2 className="h-6 w-6" />
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -362,7 +364,7 @@ export function ValuePropositionDevelopmentPage() {
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  VP ID: <span className="font-mono font-bold text-foreground">{formData.vpId}</span> · Code:{" "}
+                  BM ID: <span className="font-mono font-bold text-foreground">{formData.vpId}</span> · Code:{" "}
                   <span className="font-mono font-bold text-foreground">{formData.formCode}</span> · Number:{" "}
                   <span className="font-mono font-bold text-foreground">{formData.vpNumber}</span>
                 </p>
@@ -428,9 +430,9 @@ export function ValuePropositionDevelopmentPage() {
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 text-xs">
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
-                Business Model <MAICWBadge type="I" />
+                Business Unit <MAICWBadge type="I" />
               </span>
-              <span className="font-bold text-foreground block truncate mt-0.5">{formData.businessModel}</span>
+              <span className="font-bold text-foreground block truncate mt-0.5">{formData.businessUnit}</span>
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
@@ -440,15 +442,9 @@ export function ValuePropositionDevelopmentPage() {
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
-                Customer Segment <MAICWBadge type="I" />
+                Business Owner <MAICWBadge type="I" />
               </span>
-              <span className="font-bold text-foreground block truncate mt-0.5">{formData.customerSegment}</span>
-            </div>
-            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
-                Product Manager <MAICWBadge type="I" />
-              </span>
-              <span className="font-bold text-foreground block truncate mt-0.5">{formData.productManager}</span>
+              <span className="font-bold text-foreground block truncate mt-0.5">{formData.businessOwner}</span>
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
@@ -461,6 +457,12 @@ export function ValuePropositionDevelopmentPage() {
                 Last Modified Date <MAICWBadge type="A" />
               </span>
               <span className="font-semibold text-foreground block truncate mt-0.5">{formData.lastModifiedDate}</span>
+            </div>
+            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
+              <span className="text-[11px] font-semibold text-muted-foreground flex items-center justify-between">
+                Workflow Stage <MAICWBadge type="W" />
+              </span>
+              <span className="font-bold text-primary block truncate mt-0.5">{formData.workflowStage}</span>
             </div>
           </div>
         </div>

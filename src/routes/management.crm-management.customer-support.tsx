@@ -62,7 +62,7 @@ export const Route = createFileRoute("/management/crm-management/customer-suppor
 
 export type TicketType =
   | "Technical Support"
-  | "Complaint"
+  | "On-site Field Service"
   | "Service Request"
   | "Product Issue"
   | "Installation Support"
@@ -355,7 +355,7 @@ function CustomerSupportPage() {
                 className="w-full h-8 px-2.5 bg-white border border-slate-300 rounded font-bold text-primary focus:ring-2 focus:ring-primary focus:outline-none"
               >
                 <option value="Technical Support">Technical Support</option>
-                <option value="Complaint">Complaint</option>
+                <option value="On-site Field Service">On-site Field Service</option>
                 <option value="Service Request">Service Request</option>
                 <option value="Product Issue">Product Issue</option>
                 <option value="Warranty Claim">Warranty Claim</option>
@@ -907,26 +907,40 @@ function CustomerSupportPage() {
                       </div>
                     </div>
 
-                    {/* Card 9: Customer Feedback */}
+                    {/* Card 9: Service Sign-Off & Handover */}
                     <div className="bg-slate-50/50 rounded-lg border border-slate-200 p-4 space-y-2 text-xs">
                       <div className="flex justify-between border-b border-slate-200 pb-2">
                         <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                          9. Customer Feedback
+                          9. Service Sign-Off & Handover
                         </h3>
-                        <button onClick={() => showNotification("Sending CSAT Survey...")} className="text-[11px] font-semibold text-primary hover:underline cursor-pointer">
-                          Request Feedback
-                        </button>
+                        <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded border border-emerald-200 text-[10px]">
+                          QA Verified
+                        </span>
                       </div>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-500 font-semibold">Satisfaction Score</span>
-                          <span className="text-amber-500 font-bold text-sm">★★★★☆ 4.2 / 5</span>
+                          <span className="text-slate-500 font-semibold">Client Acceptance</span>
+                          <span className="font-bold text-slate-900">Ankit Verma (Digital Sign)</span>
                         </div>
-                        <div className="bg-white p-2 rounded border text-slate-700 italic text-[11px]">
-                          "{ticket.feedbackQuote}"
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500 font-semibold">Field Engineer</span>
+                          <span className="font-semibold text-blue-700">Vikram Singh (L2 Certified)</span>
                         </div>
-                        <div className="text-[10px] text-slate-400">
-                          Submitted On: <span className="font-semibold text-slate-600">Pending final closure</span>
+                        <div className="bg-white p-2 rounded border border-slate-200 space-y-1">
+                          <div className="text-[10px] font-bold text-slate-500 uppercase">QA Checklist: 4/4 Passed</div>
+                          <div className="flex items-center gap-1.5 text-[11px] text-emerald-700 font-medium">
+                            <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                            <span>Diagnostic, Power & Safety Trip Verified</span>
+                          </div>
+                        </div>
+                        <div className="border-t border-slate-200 pt-1 flex items-center justify-between">
+                          <span className="text-[10px] text-slate-500">CSAT / NPS Survey:</span>
+                          <a
+                            href="/management/crm-management/customer-feedback"
+                            className="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5"
+                          >
+                            Open Feedback Module →
+                          </a>
                         </div>
                       </div>
                     </div>

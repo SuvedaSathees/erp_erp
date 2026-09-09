@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -497,64 +497,98 @@ export function PerformanceManagementPage() {
         {/* Tab 2: Competencies */}
         {activeTab === "competencies" && (
           <div className="space-y-6">
-            <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
+            {/* Competency Index Overview & Deep-Link Card */}
+            <div className="bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-3">
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900">Role–Competency Proficiency Matrix</h4>
-                  <p className="text-xs text-muted-foreground mt-0.5">Core calculation: Required Level − Current Level = Competency Gap</p>
+                  <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                    <Award className="h-4 w-4 text-primary" />
+                    Competency & Behavioral Index Summary
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Aggregated appraisal competency score contributing 30% toward annual performance rating.
+                  </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => toast.success("Competency assessment updated")}
-                  className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer"
+                <Link
+                  to="/management/hrm-management/competency-form"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition shadow-xs cursor-pointer"
                 >
-                  Save Competency Scores
-                </button>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Open Competency Form & Rubrics
+                </Link>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left">
-                  <thead>
-                    <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/60">
-                      <th className="py-2.5 px-3">Competency</th>
-                      <th className="py-2.5 px-3">Category</th>
-                      <th className="py-2.5 px-3 text-center">Required Level</th>
-                      <th className="py-2.5 px-3 text-center">Current Level</th>
-                      <th className="py-2.5 px-3 text-center">Gap</th>
-                      <th className="py-2.5 px-3 text-center">Weightage</th>
-                      <th className="py-2.5 px-3 text-right">Rating Score</th>
-                      <th className="py-2.5 px-3 text-right">Proficiency Band</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {[
-                      { name: "Technical Expertise & Architecture", cat: "Technical", req: 4, cur: 5, gap: 0, weight: "25%", score: "4.8 / 5", band: "Expert", bandColor: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-                      { name: "Problem Solving & Analysis", cat: "Core", req: 4, cur: 4, gap: 0, weight: "20%", score: "4.2 / 5", band: "Advanced", bandColor: "bg-blue-50 text-blue-700 border-blue-200" },
-                      { name: "Team Collaboration & Cross-Functional", cat: "Behavioural", req: 4, cur: 4, gap: 0, weight: "15%", score: "4.3 / 5", band: "Advanced", bandColor: "bg-blue-50 text-blue-700 border-blue-200" },
-                      { name: "Leadership & Team Mentoring", cat: "Leadership", req: 4, cur: 3, gap: 1, weight: "20%", score: "3.2 / 5", band: "Developing", bandColor: "bg-amber-50 text-amber-700 border-amber-200" },
-                      { name: "Strategic Thinking & Planning", cat: "Strategic", req: 4, cur: 3, gap: 1, weight: "20%", score: "3.4 / 5", band: "Developing", bandColor: "bg-amber-50 text-amber-700 border-amber-200" },
-                    ].map((c) => (
-                      <tr key={c.name} className="hover:bg-slate-50/60">
-                        <td className="py-3 px-3 font-bold text-slate-900">{c.name}</td>
-                        <td className="py-3 px-3 text-slate-600 font-medium">{c.cat}</td>
-                        <td className="py-3 px-3 text-center font-mono font-bold text-slate-700">{c.req}</td>
-                        <td className="py-3 px-3 text-center font-mono font-bold text-slate-900">{c.cur}</td>
-                        <td className="py-3 px-3 text-center font-mono font-bold">
-                          <span className={cn(c.gap > 0 ? "text-rose-600 font-extrabold" : "text-emerald-600")}>
-                            {c.gap}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3 text-center font-mono text-slate-500">{c.weight}</td>
-                        <td className="py-3 px-3 text-right font-mono font-bold text-slate-800">{c.score}</td>
-                        <td className="py-3 px-3 text-right">
-                          <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold border", c.bandColor)}>
-                            {c.band}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              {/* High-level Summary Metrics */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
+                  <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Overall Competency Score</div>
+                  <div className="text-2xl font-extrabold text-slate-900 font-mono">4.18 <span className="text-xs text-slate-500 font-normal">/ 5.0</span></div>
+                  <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Advanced Band (83.6%)
+                  </span>
+                </div>
+
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
+                  <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Assessed Competencies</div>
+                  <div className="text-2xl font-extrabold text-slate-900 font-mono">5 <span className="text-xs text-slate-500 font-normal">Core Areas</span></div>
+                  <div className="text-xs text-slate-600">Technical, Core, Behavioural, Leadership, Strategic</div>
+                </div>
+
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
+                  <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Appraisal Weightage</div>
+                  <div className="text-2xl font-extrabold text-blue-700 font-mono">30%</div>
+                  <div className="text-xs text-slate-600">Balance 70% driven by OKR & KPI achievements</div>
+                </div>
+
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
+                  <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Rubric Version</div>
+                  <div className="text-base font-bold text-slate-900 font-mono">v2.4 (2024 Framework)</div>
+                  <div className="text-xs text-emerald-700 font-medium">Synced with Engineering Job Matrix</div>
+                </div>
+              </div>
+
+              {/* Competency Pillar Cards */}
+              <div className="space-y-3 pt-2">
+                <h5 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Pillar Score Summaries</h5>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {[
+                    { name: "Technical Expertise & Architecture", score: "4.8 / 5", pct: 96, band: "Expert", color: "bg-emerald-500" },
+                    { name: "Problem Solving & Analysis", score: "4.2 / 5", pct: 84, band: "Advanced", color: "bg-blue-500" },
+                    { name: "Team Collaboration & Cross-Functional", score: "4.3 / 5", pct: 86, band: "Advanced", color: "bg-blue-500" },
+                    { name: "Leadership & Team Mentoring", score: "3.2 / 5", pct: 64, band: "Developing", color: "bg-amber-500" },
+                    { name: "Strategic Thinking & Planning", score: "3.4 / 5", pct: 68, band: "Developing", color: "bg-amber-500" },
+                  ].map((pillar) => (
+                    <div key={pillar.name} className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/70 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-900 truncate">{pillar.name}</span>
+                        <span className="font-mono text-xs font-extrabold text-slate-800">{pillar.score}</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                        <div className={cn("h-full rounded-full", pillar.color)} style={{ width: `${pillar.pct}%` }} />
+                      </div>
+                      <div className="flex items-center justify-between text-[10px]">
+                        <span className="text-slate-500">{pillar.band}</span>
+                        <span className="font-mono font-semibold text-slate-600">{pillar.pct}% Benchmark</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Informational Callout linking to full Rubrics */}
+              <div className="p-3.5 bg-blue-50/60 border border-blue-200 rounded-xl flex items-center justify-between text-xs text-blue-900">
+                <div className="flex items-center gap-2">
+                  <BrainCircuit className="h-4 w-4 text-blue-600 shrink-0" />
+                  <span>
+                    Need to conduct 5-level rubric behavioral evaluations or view radar spider charts?
+                  </span>
+                </div>
+                <Link
+                  to="/management/hrm-management/competency-form"
+                  className="font-bold text-blue-700 hover:text-blue-900 underline shrink-0 ml-2"
+                >
+                  Go to Competency Form &rarr;
+                </Link>
               </div>
             </div>
           </div>

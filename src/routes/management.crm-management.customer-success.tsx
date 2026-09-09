@@ -336,7 +336,15 @@ function CustomerSuccessPage() {
               <div className="h-3 w-3 rounded-full bg-primary" />
               <h2 className="text-sm font-bold text-slate-900 tracking-wide uppercase">1. Customer Success Master</h2>
             </div>
-            <span className="text-xs font-medium text-slate-400">Post-Sale Relationship Master Record</span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-medium text-slate-500 hidden sm:inline">Post-Sale Product Adoption, Telemetry & Retention</span>
+              <a
+                href="/management/crm-management/account-management"
+                className="text-[11px] text-primary hover:underline font-semibold flex items-center gap-1 bg-primary/5 px-2.5 py-0.5 rounded border border-primary/20"
+              >
+                View Commercial Account →
+              </a>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 text-xs">

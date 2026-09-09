@@ -1117,38 +1117,40 @@ export function SoftwareDevelopmentNewPage({
                   </Badge>
                 </CardHeader>
 
-                <CardContent className="pt-4 space-y-3.5 text-xs">
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Development Progress</span>
-                      <span>{record.summary.developmentProgress} / 100</span>
-                    </div>
-                    <Progress value={record.summary.developmentProgress} className="h-2" />
+                <CardContent className="pt-4 flex flex-col md:flex-row items-center gap-6 text-xs">
+                  <div className="shrink-0 flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border">
+                    <CircularScoreGauge score={record.summary.overallSoftwareScore} />
+                    <span className="text-[11px] font-bold text-muted-foreground mt-2 uppercase tracking-wide">Overall Software Score</span>
                   </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Architecture Readiness</span>
-                      <span>{record.summary.architectureReadiness} / 100</span>
+                  <div className="flex-1 w-full space-y-3">
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Development Progress</span>
+                        <span>{record.summary.developmentProgress} / 100</span>
+                      </div>
+                      <Progress value={record.summary.developmentProgress} className="h-2" />
                     </div>
-                    <Progress value={record.summary.architectureReadiness} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Testing Readiness</span>
-                      <span>{record.summary.testingReadiness} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Architecture Readiness</span>
+                        <span>{record.summary.architectureReadiness} / 100</span>
+                      </div>
+                      <Progress value={record.summary.architectureReadiness} className="h-2" />
                     </div>
-                    <Progress value={record.summary.testingReadiness} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Deployment Readiness</span>
-                      <span>{record.summary.deploymentReadiness} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Testing Readiness</span>
+                        <span>{record.summary.testingReadiness} / 100</span>
+                      </div>
+                      <Progress value={record.summary.testingReadiness} className="h-2" />
                     </div>
-                    <Progress value={record.summary.deploymentReadiness} className="h-2" />
-                  </div>
-                  <div className="pt-2 border-t border-border flex justify-between items-center font-bold text-foreground">
-                    <span>Overall Software Score</span>
-                    <span className="text-base text-blue-600">{record.summary.overallSoftwareScore} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Deployment Readiness</span>
+                        <span>{record.summary.deploymentReadiness} / 100</span>
+                      </div>
+                      <Progress value={record.summary.deploymentReadiness} className="h-2" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1386,44 +1388,6 @@ export function SoftwareDevelopmentNewPage({
               =========================================================================== */}
           <div className="lg:col-span-1 space-y-6">
             <div className="sticky top-6 space-y-6">
-              {/* Overall Software Score Gauge Box */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
-                <CardHeader className="pb-2 border-b border-border text-center">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Software Quality Score
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent className="pt-5 flex flex-col items-center">
-                  <CircularScoreGauge
-                    score={record.summary.overallSoftwareScore}
-                  />
-
-                  <div className="w-full mt-5 space-y-2 border-t border-border pt-4 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Code Quality</span>
-                      <span className="font-bold text-foreground">{record.summary.developmentProgress}/100</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Architecture</span>
-                      <span className="font-bold text-foreground">{record.summary.architectureReadiness}/100</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Security</span>
-                      <span className="font-bold text-foreground">{record.summary.deploymentReadiness}/100</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Test Coverage</span>
-                      <span className="font-bold text-foreground">{record.summary.testingReadiness}%</span>
-                    </div>
-                    <div className="flex justify-between items-center pt-2 border-t border-border font-bold text-blue-600 dark:text-blue-400">
-                      <span>Overall Score</span>
-                      <span>{record.summary.overallSoftwareScore}%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Key Highlights Card */}
               <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
                 <CardHeader className="pb-2 border-b border-border">

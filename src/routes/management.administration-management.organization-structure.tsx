@@ -111,16 +111,14 @@ function OrganizationStructurePage() {
     { name: "Legal & Governance", lead: "Pooja Hegde (GC)", count: 582, depts: 2, budget: "₹ 6.8 Cr", theme: "border-purple-500/30 bg-purple-500/5" },
   ]);
 
-  // Departments State (Fully Interactive)
+  // Corporate Governance & Steering Committees State
   const [departmentsList, setDepartmentsList] = useState([
-    { code: "DEPT-ACC-01", name: "Corporate Accounts & General Ledger", fn: "Finance", head: "Rohan Kapoor", count: 82, cc: "CC-FIN-ACC", status: "Active" },
-    { code: "DEPT-TRS-02", name: "Treasury & Cash Management", fn: "Finance", head: "Sunil Joshi", count: 48, cc: "CC-FIN-TRS", status: "Active" },
-    { code: "DEPT-PRD-03", name: "Plant Production Line A/B", fn: "Operations", head: "Dinesh Patil", count: 214, cc: "CC-OPS-PRD", status: "Active" },
-    { code: "DEPT-QA-04", name: "Quality Assurance & Testing", fn: "Operations", head: "Anjali Gupta", count: 142, cc: "CC-OPS-QA", status: "Active" },
-    { code: "DEPT-DEV-05", name: "Core Product Development", fn: "R&D", head: "Siddharth Roy", count: 172, cc: "CC-RD-DEV", status: "Active" },
-    { code: "DEPT-ENG-06", name: "Systems & Cloud Engineering", fn: "R&D", head: "Priya Menon", count: 126, cc: "CC-RD-ENG", status: "Active" },
-    { code: "DEPT-TA-07", name: "Talent Acquisition & Sourcing", fn: "HR", head: "Karan Johar", count: 68, cc: "CC-HR-TA", status: "Active" },
-    { code: "DEPT-ER-08", name: "Employee Relations & Payroll", fn: "HR", head: "Deepa Nair", count: 86, cc: "CC-HR-ER", status: "Active" },
+    { code: "COMM-AUD-01", name: "Board Audit & Risk Oversight Committee", fn: "Statutory Audit & Risk Governance", head: "Justice R. Swaminathan", count: 5, cc: "CC-GOV-AUD", status: "Active" },
+    { code: "COMM-NRC-02", name: "Nomination & Executive Remuneration Committee", fn: "CXO Appraisal & Board Appointments", head: "Meera Nair (CHRO)", count: 4, cc: "CC-GOV-NRC", status: "Active" },
+    { code: "COMM-ESG-03", name: "Sustainability, ESG & Net-Zero Council", fn: "Clean EV Infra & Decarbonization", head: "Dr. Anand Murthy", count: 6, cc: "CC-GOV-ESG", status: "Active" },
+    { code: "COMM-CAP-04", name: "Capex & M&A Steering Council", fn: "Capital Allocation & Plant Expansion", head: "Anita Verma (CFO)", count: 5, cc: "CC-GOV-CAP", status: "Active" },
+    { code: "COMM-TECH-05", name: "Technology & AI Ethics Advisory Board", fn: "Firmware Safety & Cloud Architecture", head: "Vikram Singh (CTO)", count: 7, cc: "CC-GOV-TECH", status: "Active" },
+    { code: "COMM-ETH-06", name: "Ethics, Compliance & POSH Redressal Council", fn: "Corporate Whistleblower & Conduct", head: "Pooja Hegde (GC)", count: 4, cc: "CC-GOV-ETH", status: "Active" },
   ]);
 
   // Positions State (Fully Interactive)
@@ -134,12 +132,12 @@ function OrganizationStructurePage() {
     { level: "Level 7", grade: "P-04", role: "Associate / Analyst / Technician", total: 2162, filled: 2020, open: 142, auth: "Talent Acquisition" },
   ]);
 
-  // Locations State (Fully Interactive)
+  // Corporate Legal Entities & Global Subsidiaries State
   const [locationsList, setLocationsList] = useState([
-    { name: "Bengaluru Corporate HQ", type: "Corporate Headquarters", count: 1256, area: "85,000 sq ft", head: "Rajeev Malhotra", status: "Active" },
-    { name: "Hyderabad Tech Center", type: "R&D & Engineering Hub", count: 856, area: "62,000 sq ft", head: "Vikram Singh", status: "Active" },
-    { name: "Pune Manufacturing Unit", type: "Plant & Assembly Hub", count: 872, area: "1,20,000 sq ft", head: "Ramesh Sharma", status: "Active" },
-    { name: "Noida Regional Office", type: "Regional Sales & Delivery", count: 272, area: "24,500 sq ft", head: "Amit Desai", status: "Active" },
+    { name: "Magnertia Global Technologies Pvt. Ltd.", type: "Parent Operating Company (India ROC)", count: 2150, area: "Bengaluru Corp HQ", head: "Rajeev Malhotra (CEO)", status: "Active" },
+    { name: "Magnertia Americas Inc.", type: "Wholly-Owned Subsidiary (Delaware, USA)", count: 480, area: "Silicon Valley Hub", head: "Amit Desai (President NA)", status: "Active" },
+    { name: "Magnertia European Mobility GmbH", type: "European Operations & Engineering (Munich)", count: 390, area: "Bavaria Tech Campus", head: "Vikram Singh (Director)", status: "Active" },
+    { name: "Magnertia APAC Pte. Ltd.", type: "Regional Holding & Treasury (Singapore ACRA)", count: 230, area: "Marina Bay Financial Centre", head: "Arjun Mehta (MD APAC)", status: "Active" },
   ]);
 
   // Calculated Metrics
@@ -604,9 +602,9 @@ function OrganizationStructurePage() {
           {[
             { label: "Hierarchy", icon: FolderTree },
             { label: "Units", icon: Building2 },
-            { label: "Departments", icon: Briefcase },
+            { label: "Committees", icon: ShieldCheck },
             { label: "Positions", icon: UserCheck },
-            { label: "Locations", icon: MapPin },
+            { label: "Entities", icon: Landmark },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.label;
@@ -1145,56 +1143,56 @@ function OrganizationStructurePage() {
           </div>
         )}
 
-        {/* 3. DEPARTMENTS WORKSPACE */}
-        {activeTab === "Departments" && (
+        {/* 3. COMMITTEES WORKSPACE */}
+        {activeTab === "Committees" && (
           <div className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-4">
               <div className="rounded-xl border border-border bg-card p-4 space-y-1">
-                <span className="text-xs text-muted-foreground">Total Departments</span>
-                <div className="text-xl font-bold font-mono text-foreground">{departmentsList.length} Depts</div>
-                <p className="text-[10px] text-emerald-600 font-medium">100% Operational</p>
+                <span className="text-xs text-muted-foreground">Active Committees</span>
+                <div className="text-xl font-bold font-mono text-foreground">{departmentsList.length} Bodies</div>
+                <p className="text-[10px] text-emerald-600 font-medium">100% Active Mandate</p>
               </div>
               <div className="rounded-xl border border-border bg-card p-4 space-y-1">
-                <span className="text-xs text-muted-foreground">Department Staff</span>
+                <span className="text-xs text-muted-foreground">Committee Members</span>
                 <div className="text-xl font-bold font-mono text-foreground">
-                  {departmentsList.reduce((acc, d) => acc + Number(d.count), 0).toLocaleString()} Staff
+                  {departmentsList.reduce((acc, d) => acc + Number(d.count), 0)} Leaders
                 </div>
-                <p className="text-[10px] text-blue-600 font-medium">Active Personnel</p>
+                <p className="text-[10px] text-blue-600 font-medium">Advisory & Board</p>
               </div>
               <div className="rounded-xl border border-border bg-card p-4 space-y-1">
-                <span className="text-xs text-muted-foreground">Average Dept Size</span>
+                <span className="text-xs text-muted-foreground">Average Committee Size</span>
                 <div className="text-xl font-bold font-mono text-foreground">
                   {Math.round(departmentsList.reduce((acc, d) => acc + Number(d.count), 0) / (departmentsList.length || 1))} Members
                 </div>
-                <p className="text-[10px] text-purple-600 font-medium">Balanced Distribution</p>
+                <p className="text-[10px] text-purple-600 font-medium">Quorum Compliant</p>
               </div>
               <div className="rounded-xl border border-border bg-card p-4 space-y-1">
-                <span className="text-xs text-muted-foreground">Cost Ledgers</span>
-                <div className="text-xl font-bold font-mono text-foreground">{departmentsList.length} Centres</div>
-                <p className="text-[10px] text-amber-600 font-medium">Mapped to SAP/GL</p>
+                <span className="text-xs text-muted-foreground">Governance Budgets</span>
+                <div className="text-xl font-bold font-mono text-foreground">{departmentsList.length} Ledgers</div>
+                <p className="text-[10px] text-amber-600 font-medium">Corporate Secretarial</p>
               </div>
             </div>
 
             <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                <h4 className="text-xs font-bold text-foreground">Department Rosters ({departmentsList.length} Total Departments)</h4>
+                <h4 className="text-xs font-bold text-foreground">Board Steering & Governance Committees ({departmentsList.length} Total Councils)</h4>
                 <button
                   onClick={() => setShowAddDeptModal(true)}
                   className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
                 >
-                  + Add Department
+                  + Add Committee
                 </button>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="border-b border-border text-muted-foreground font-semibold">
-                      <th className="py-2 px-2">Dept Code</th>
-                      <th className="py-2 px-2">Department Name</th>
-                      <th className="py-2 px-2">Parent Function / BU</th>
-                      <th className="py-2 px-2">Department Manager</th>
-                      <th className="py-2 px-2 text-right">Headcount</th>
-                      <th className="py-2 px-2">Cost Center</th>
+                      <th className="py-2 px-2">Committee Code</th>
+                      <th className="py-2 px-2">Committee Name</th>
+                      <th className="py-2 px-2">Advisory Mandate & Scope</th>
+                      <th className="py-2 px-2">Committee Chair</th>
+                      <th className="py-2 px-2 text-right">Members</th>
+                      <th className="py-2 px-2">Governance Ledger</th>
                       <th className="py-2 px-2">Status</th>
                       <th className="py-2 px-2 text-right">Actions</th>
                     </tr>
@@ -1205,7 +1203,7 @@ function OrganizationStructurePage() {
                         <td className="py-2 px-2 font-mono font-bold text-primary">{dept.code}</td>
                         <td className="py-2 px-2 font-semibold text-foreground">{dept.name}</td>
                         <td className="py-2 px-2 text-muted-foreground">{dept.fn}</td>
-                        <td className="py-2 px-2 text-foreground">{dept.head}</td>
+                        <td className="py-2 px-2 text-foreground font-medium">{dept.head}</td>
                         <td className="py-2 px-2 text-right font-mono font-bold">{dept.count}</td>
                         <td className="py-2 px-2 font-mono text-muted-foreground">{dept.cc}</td>
                         <td className="py-2 px-2">
@@ -1218,7 +1216,7 @@ function OrganizationStructurePage() {
                             type="button"
                             onClick={() => {
                               setDepartmentsList((prev) => prev.filter((item) => item.code !== dept.code));
-                              showNotification(`Department ${dept.code} removed.`);
+                              showNotification(`Committee ${dept.code} removed.`);
                             }}
                             className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
                           >
@@ -1290,30 +1288,30 @@ function OrganizationStructurePage() {
           </div>
         )}
 
-        {/* 5. LOCATIONS & FACILITIES */}
-        {activeTab === "Locations" && (
+        {/* 5. LEGAL ENTITIES & SUBSIDIARIES */}
+        {activeTab === "Entities" && (
           <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
             <div className="flex items-center justify-between border-b border-border/60 pb-2">
-              <h4 className="text-xs font-bold text-foreground">Operating Locations Directory ({locationsList.length} Facilities)</h4>
+              <h4 className="text-xs font-bold text-foreground">Corporate Legal Entities & Global Subsidiaries ({locationsList.length} Entities)</h4>
               <button
                 onClick={() => setShowAddLocationModal(true)}
                 className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
               >
-                + Add Facility
+                + Register Entity
               </button>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {locationsList.map((loc) => (
                 <div key={loc.name} className="rounded-xl border border-border bg-muted/15 p-3.5 space-y-2 relative group">
                   <div className="flex justify-between items-start">
-                    <span className="font-bold text-foreground text-xs block">{loc.name}</span>
+                    <span className="font-bold text-foreground text-xs block leading-tight">{loc.name}</span>
                     <button
                       type="button"
                       onClick={() => {
                         setLocationsList((prev) => prev.filter((l) => l.name !== loc.name));
-                        showNotification(`Location ${loc.name} removed.`);
+                        showNotification(`Entity ${loc.name} deregistered.`);
                       }}
-                      className="text-rose-500 hover:text-rose-700 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                      className="text-rose-500 hover:text-rose-700 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer shrink-0 ml-1"
                     >
                       Delete
                     </button>
@@ -1321,16 +1319,16 @@ function OrganizationStructurePage() {
                   <p className="text-[11px] text-muted-foreground">{loc.type}</p>
                   <div className="pt-2 border-t border-border/50 text-xs space-y-1 font-mono">
                     <div className="flex justify-between text-muted-foreground">
-                      <span>Headcount:</span>
-                      <span className="text-foreground font-bold">{loc.count}</span>
+                      <span>Total Headcount:</span>
+                      <span className="text-foreground font-bold">{loc.count.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-muted-foreground">
-                      <span>Area:</span>
-                      <span className="text-foreground">{loc.area}</span>
+                      <span>Corporate Seat:</span>
+                      <span className="text-foreground text-right">{loc.area}</span>
                     </div>
                     <div className="flex justify-between text-muted-foreground">
-                      <span>Site Head:</span>
-                      <span className="text-foreground">{loc.head}</span>
+                      <span>Entity Lead:</span>
+                      <span className="text-foreground text-right">{loc.head}</span>
                     </div>
                   </div>
                 </div>
@@ -1620,14 +1618,14 @@ function OrganizationStructurePage() {
         </div>
       )}
 
-      {/* --- ADD DEPARTMENT MODAL --- */}
+      {/* --- ADD COMMITTEE MODAL --- */}
       {showAddDeptModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
           <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <div className="flex items-center gap-2">
-                <Briefcase className="h-4 w-4 text-primary" />
-                <h3 className="text-sm font-bold text-foreground">Add New Department</h3>
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-bold text-foreground">Add Governance Committee</h3>
               </div>
               <button onClick={() => setShowAddDeptModal(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="h-4 w-4" />
@@ -1636,10 +1634,10 @@ function OrganizationStructurePage() {
 
             <div className="space-y-3">
               <div>
-                <label className="text-[11px] font-medium text-muted-foreground block">Dept Code *</label>
+                <label className="text-[11px] font-medium text-muted-foreground block">Committee Code *</label>
                 <input
                   type="text"
-                  placeholder="e.g. DEPT-SEC-09"
+                  placeholder="e.g. COMM-SEC-07"
                   value={newDeptForm.code}
                   onChange={(e) => setNewDeptForm({ ...newDeptForm, code: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
@@ -1647,10 +1645,10 @@ function OrganizationStructurePage() {
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-muted-foreground block">Department Name *</label>
+                <label className="text-[11px] font-medium text-muted-foreground block">Committee Name *</label>
                 <input
                   type="text"
-                  placeholder="e.g. Cybersecurity & Compliance"
+                  placeholder="e.g. Cyber Defense & Risk Steering Committee"
                   value={newDeptForm.name}
                   onChange={(e) => setNewDeptForm({ ...newDeptForm, name: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
@@ -1659,59 +1657,58 @@ function OrganizationStructurePage() {
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[11px] font-medium text-muted-foreground block">Parent Function</label>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Mandate Scope</label>
                   <select
                     value={newDeptForm.fn}
                     onChange={(e) => setNewDeptForm({ ...newDeptForm, fn: e.target.value })}
                     className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                   >
-                    {functionsList.map((fn) => (
-                      <option key={fn.name} value={fn.name}>
-                        {fn.name}
-                      </option>
-                    ))}
+                    <option value="Governance & Risk">Governance &amp; Risk</option>
+                    <option value="Audit & Compliance">Audit &amp; Compliance</option>
+                    <option value="ESG & Sustainability">ESG &amp; Sustainability</option>
+                    <option value="Technology & AI">Technology &amp; AI</option>
                   </select>
                 </div>
-
                 <div>
-                  <label className="text-[11px] font-medium text-muted-foreground block">Department Manager</label>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Committee Chair</label>
                   <input
                     type="text"
+                    placeholder="e.g. Justice R. Swaminathan"
                     value={newDeptForm.head}
                     onChange={(e) => setNewDeptForm({ ...newDeptForm, head: e.target.value })}
-                    className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[11px] font-medium text-muted-foreground block">Headcount</label>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Quorum Count</label>
                   <input
                     type="number"
                     value={newDeptForm.count}
                     onChange={(e) => setNewDeptForm({ ...newDeptForm, count: e.target.value })}
-                    className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
-
                 <div>
-                  <label className="text-[11px] font-medium text-muted-foreground block">Cost Centre</label>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Governance Ledger</label>
                   <input
                     type="text"
+                    placeholder="CC-GOV-01"
                     value={newDeptForm.cc}
                     onChange={(e) => setNewDeptForm({ ...newDeptForm, cc: e.target.value })}
-                    className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-border">
+            <div className="flex items-center justify-end gap-2 border-t border-border pt-3">
               <button
                 type="button"
                 onClick={() => setShowAddDeptModal(false)}
-                className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                className="px-3 py-1.5 rounded-lg border border-border text-foreground hover:bg-muted font-medium text-xs"
               >
                 Cancel
               </button>
@@ -1719,7 +1716,7 @@ function OrganizationStructurePage() {
                 type="button"
                 onClick={() => {
                   if (!newDeptForm.code || !newDeptForm.name) {
-                    alert("Please provide department code and name.");
+                    alert("Please provide committee code and name.");
                     return;
                   }
                   setDepartmentsList((prev) => [
@@ -1729,17 +1726,17 @@ function OrganizationStructurePage() {
                       name: newDeptForm.name,
                       fn: newDeptForm.fn,
                       head: newDeptForm.head,
-                      count: Number(newDeptForm.count) || 20,
+                      count: Number(newDeptForm.count) || 5,
                       cc: newDeptForm.cc,
                       status: "Active",
                     },
                   ]);
                   setShowAddDeptModal(false);
-                  showNotification(`Department ${newDeptForm.code.toUpperCase()} successfully added.`);
+                  showNotification(`Committee ${newDeptForm.code.toUpperCase()} successfully added.`);
                 }}
                 className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
               >
-                Add Department
+                Add Committee
               </button>
             </div>
           </div>
@@ -1885,118 +1882,120 @@ function OrganizationStructurePage() {
         </div>
       )}
 
-      {/* --- ADD LOCATION MODAL --- */}
+      {/* Add Location Modal */}
       {showAddLocationModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
           <div className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4 text-xs">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary" />
-                <h3 className="text-sm font-bold text-foreground">Add New Operating Facility</h3>
+                <Landmark className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-bold text-foreground">Register Legal Entity / Subsidiary</h3>
               </div>
               <button onClick={() => setShowAddLocationModal(false)} className="text-muted-foreground hover:text-foreground">
-                <X className="h-4 w-4" />
+                ✕
               </button>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="text-[11px] font-medium text-muted-foreground block">Facility Name *</label>
+                <label className="text-[11px] font-medium text-muted-foreground block">Entity Legal Name *</label>
                 <input
                   type="text"
-                  placeholder="e.g. Chennai Production Center"
+                  placeholder="e.g. Magnertia Japan K.K."
                   value={newLocationForm.name}
                   onChange={(e) => setNewLocationForm({ ...newLocationForm, name: e.target.value })}
-                  className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground font-medium"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-muted-foreground block">Facility Type</label>
+                <label className="text-[11px] font-medium text-muted-foreground block">Legal Entity Type</label>
                 <select
                   value={newLocationForm.type}
                   onChange={(e) => setNewLocationForm({ ...newLocationForm, type: e.target.value })}
-                  className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                  className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground"
                 >
-                  <option value="Corporate Headquarters">Corporate Headquarters</option>
-                  <option value="R&D & Engineering Hub">R&D & Engineering Hub</option>
-                  <option value="Plant & Assembly Hub">Plant & Assembly Hub</option>
-                  <option value="Regional Sales & Delivery">Regional Sales & Delivery</option>
-                  <option value="Warehouse & Logistics">Warehouse & Logistics</option>
+                  <option value="Parent Operating Company (India ROC)">Parent Operating Company (India ROC)</option>
+                  <option value="Wholly-Owned Subsidiary (Delaware, USA)">Wholly-Owned Subsidiary (Delaware, USA)</option>
+                  <option value="European Operations & Engineering (Munich)">European Operations & Engineering (Munich)</option>
+                  <option value="Regional Holding & Treasury (Singapore ACRA)">Regional Holding & Treasury (Singapore ACRA)</option>
+                  <option value="Regional Sales Office">Regional Sales Office</option>
                 </select>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-[11px] font-medium text-muted-foreground block">Headcount</label>
-                  <input
-                    type="number"
-                    value={newLocationForm.count}
-                    onChange={(e) => setNewLocationForm({ ...newLocationForm, count: e.target.value })}
-                    className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-mono text-foreground"
-                  />
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Total Headcount</label>
+                    <input
+                      type="number"
+                      value={newLocationForm.count}
+                      onChange={(e) => setNewLocationForm({ ...newLocationForm, count: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-mono text-foreground"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-medium text-muted-foreground block">Corporate Seat / Location</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. London Tech Hub"
+                      value={newLocationForm.area}
+                      onChange={(e) => setNewLocationForm({ ...newLocationForm, area: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-medium text-muted-foreground block">Built-up Area</label>
+                  <label className="text-[11px] font-medium text-muted-foreground block">Authorized Signatory / Director</label>
                   <input
                     type="text"
-                    value={newLocationForm.area}
-                    onChange={(e) => setNewLocationForm({ ...newLocationForm, area: e.target.value })}
+                    placeholder="e.g. David Sterling (Director)"
+                    value={newLocationForm.head}
+                    onChange={(e) => setNewLocationForm({ ...newLocationForm, head: e.target.value })}
                     className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="text-[11px] font-medium text-muted-foreground block">Site Head / Facility Director</label>
-                <input
-                  type="text"
-                  value={newLocationForm.head}
-                  onChange={(e) => setNewLocationForm({ ...newLocationForm, head: e.target.value })}
-                  className="mt-1 w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
-                />
+              <div className="flex justify-end gap-2 pt-3 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => setShowAddLocationModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newLocationForm.name) {
+                      alert("Please provide entity name.");
+                      return;
+                    }
+                    setLocationsList((prev) => [
+                      ...prev,
+                      {
+                        name: newLocationForm.name,
+                        type: newLocationForm.type,
+                        count: Number(newLocationForm.count) || 50,
+                        area: newLocationForm.area,
+                        head: newLocationForm.head,
+                        status: "Active",
+                      },
+                    ]);
+                    setShowAddLocationModal(false);
+                    showNotification(`Entity ${newLocationForm.name} registered.`);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
+                >
+                  Register Entity
+                </button>
               </div>
             </div>
-
-            <div className="flex justify-end gap-2 pt-3 border-t border-border">
-              <button
-                type="button"
-                onClick={() => setShowAddLocationModal(false)}
-                className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (!newLocationForm.name) {
-                    alert("Please provide facility name.");
-                    return;
-                  }
-                  setLocationsList((prev) => [
-                    ...prev,
-                    {
-                      name: newLocationForm.name,
-                      type: newLocationForm.type,
-                      count: Number(newLocationForm.count) || 50,
-                      area: newLocationForm.area,
-                      head: newLocationForm.head,
-                      status: "Active",
-                    },
-                  ]);
-                  setShowAddLocationModal(false);
-                  showNotification(`Facility ${newLocationForm.name} successfully registered.`);
-                }}
-                className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs shadow-xs hover:bg-primary/90"
-              >
-                Add Facility
-              </button>
-            </div>
           </div>
-        </div>
-      )}
-    </AppShell>
+        )}
+      </AppShell>
   );
 }
 

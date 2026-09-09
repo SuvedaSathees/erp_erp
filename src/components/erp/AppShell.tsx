@@ -56,6 +56,7 @@ import {
   GitCommit,
   Users,
   FolderKanban,
+  TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { company, mockUsers } from "@/lib/mock-data";
@@ -274,6 +275,26 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/administration-management/master-data-management", label: "Master Data Management" },
               { to: "/management/administration-management/notifications-management", label: "Notifications Management" },
               { to: "/management/administration-management/audit-management", label: "Audit Management" },
+            ],
+          },
+          {
+            kind: "leaf",
+            to: "/management/sales-management/overview",
+            matchPrefix: "/management/sales-management",
+            label: "Sales Management",
+            icon: TrendingUp,
+            subItems: [
+              { to: "/management/sales-management/overview", label: "Overview" },
+              { to: "/management/sales-management/sales-planning", label: "Sales Planning" },
+              { to: "/management/sales-management/sales-forecasting", label: "Sales Forecasting" },
+              { to: "/management/sales-management/sales-analytics", label: "Sales Analytics" },
+              { to: "/management/sales-management/sales-orders", label: "Sales Orders" },
+              { to: "/management/sales-management/pricing", label: "Pricing" },
+              { to: "/management/sales-management/discounts", label: "Discounts" },
+              { to: "/management/sales-management/contracts", label: "Contracts" },
+              { to: "/management/sales-management/channel-partners", label: "Channel Partners" },
+              { to: "/management/sales-management/territory-management", label: "Territory Management" },
+              { to: "/management/sales-management/sales-commission", label: "Sales Commission" },
             ],
           },
           {

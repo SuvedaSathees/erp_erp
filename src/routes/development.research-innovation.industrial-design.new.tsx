@@ -971,38 +971,40 @@ export function IndustrialDesignNewPage({
                   </Badge>
                 </CardHeader>
 
-                <CardContent className="pt-4 space-y-3.5 text-xs">
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>User Experience</span>
-                      <span>{record.summary.userExperience} / 100</span>
-                    </div>
-                    <Progress value={record.summary.userExperience} className="h-2" />
+                <CardContent className="pt-4 flex flex-col md:flex-row items-center gap-6 text-xs">
+                  <div className="shrink-0 flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border">
+                    <CircularScoreGauge score={record.summary.overallDesignScore} />
+                    <span className="text-[11px] font-bold text-muted-foreground mt-2 uppercase tracking-wide">Overall Design Score</span>
                   </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Manufacturability</span>
-                      <span>{record.summary.manufacturability} / 100</span>
+                  <div className="flex-1 w-full space-y-3">
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>User Experience</span>
+                        <span>{record.summary.userExperience} / 100</span>
+                      </div>
+                      <Progress value={record.summary.userExperience} className="h-2" />
                     </div>
-                    <Progress value={record.summary.manufacturability} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Sustainability</span>
-                      <span>{record.summary.sustainability} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Manufacturability</span>
+                        <span>{record.summary.manufacturability} / 100</span>
+                      </div>
+                      <Progress value={record.summary.manufacturability} className="h-2" />
                     </div>
-                    <Progress value={record.summary.sustainability} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Brand Alignment</span>
-                      <span>{record.summary.brandAlignment} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Sustainability</span>
+                        <span>{record.summary.sustainability} / 100</span>
+                      </div>
+                      <Progress value={record.summary.sustainability} className="h-2" />
                     </div>
-                    <Progress value={record.summary.brandAlignment} className="h-2" />
-                  </div>
-                  <div className="pt-2 border-t border-border flex justify-between items-center font-bold text-foreground">
-                    <span>Overall Design Score</span>
-                    <span className="text-base text-purple-600">{record.summary.overallDesignScore} / 100</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Brand Alignment</span>
+                        <span>{record.summary.brandAlignment} / 100</span>
+                      </div>
+                      <Progress value={record.summary.brandAlignment} className="h-2" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1233,44 +1235,6 @@ export function IndustrialDesignNewPage({
               =========================================================================== */}
           <div className="lg:col-span-1 space-y-6">
             <div className="sticky top-6 space-y-6">
-              {/* Overall Score Gauge Box */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
-                <CardHeader className="pb-2 border-b border-border text-center">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Overall Design Score
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent className="pt-5 flex flex-col items-center">
-                  <CircularScoreGauge
-                    score={record.summary.overallDesignScore}
-                  />
-
-                  <div className="w-full mt-5 space-y-2 border-t border-border pt-4 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">User Experience</span>
-                      <span className="font-bold text-foreground">{record.summary.userExperience}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Manufacturability</span>
-                      <span className="font-bold text-foreground">{record.summary.manufacturability}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Sustainability</span>
-                      <span className="font-bold text-foreground">{record.summary.sustainability}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Brand Alignment</span>
-                      <span className="font-bold text-foreground">{record.summary.brandAlignment}%</span>
-                    </div>
-                    <div className="flex justify-between items-center pt-2 border-t border-border font-bold text-purple-600 dark:text-purple-400">
-                      <span>Overall Score</span>
-                      <span>{record.summary.overallDesignScore}%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Key Highlights Card */}
               <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
                 <CardHeader className="pb-2 border-b border-border">

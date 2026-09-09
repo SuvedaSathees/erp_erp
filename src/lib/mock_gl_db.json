@@ -798,12 +798,129 @@
             }
           ],
           "updatedAt": "2026-09-08T11:19:34.092Z"
+        },
+        "sales-overview": {
+          "instances": [
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-kpi-revenue",
+              "widgetId": "kpi.sales.total-revenue",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-kpi-pipeline",
+              "widgetId": "kpi.sales.pipeline-value",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-kpi-orders",
+              "widgetId": "kpi.sales.active-orders",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-kpi-margin",
+              "widgetId": "kpi.sales.gross-margin",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-kpi-forecast",
+              "widgetId": "kpi.sales.forecast-accuracy",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-kpi-new-cust",
+              "widgetId": "kpi.sales.new-customers",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-kpi-partners",
+              "widgetId": "kpi.sales.channel-partners",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-kpi-territories",
+              "widgetId": "kpi.sales.territories-governed",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-kpi-deal-size",
+              "widgetId": "kpi.sales.avg-deal-size",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-hub-modules",
+              "widgetId": "grid.sales.submodules-hub",
+              "size": "full"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-trend",
+              "widgetId": "chart.sales.revenue-trend",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-product-donut",
+              "widgetId": "chart.sales.product-distribution",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-funnel",
+              "widgetId": "chart.sales.pipeline-funnel",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-territory-table",
+              "widgetId": "table.sales.territory-performance",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-recent-orders",
+              "widgetId": "table.sales.recent-orders",
+              "size": "full"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "sales-ai",
+              "widgetId": "ai.sales.commercial-intelligence",
+              "size": "full"
+            }
+          ],
+          "updatedAt": "2026-09-09T11:59:43.527Z"
         }
       },
       "favorites": [],
       "recentlyUsed": [],
       "templates": [],
-      "updatedAt": "2026-09-08T11:19:34.098Z"
+      "updatedAt": "2026-09-09T11:59:43.541Z"
     }
   ]
 }

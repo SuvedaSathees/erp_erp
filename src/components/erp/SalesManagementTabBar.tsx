@@ -4,85 +4,205 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const TAB_BASE =
-  "shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent bg-transparent px-0.5 pb-3 text-[13px] font-semibold text-muted-foreground shadow-none transition-colors hover:text-foreground focus-visible:outline-none";
+  "shrink-0 whitespace-nowrap border-b-2 border-transparent bg-transparent px-3 pb-2.5 pt-1 text-[13px] font-semibold text-muted-foreground shadow-none transition-all hover:text-foreground focus-visible:outline-none select-none cursor-pointer";
 const TAB_ACTIVE = "border-primary text-primary hover:text-primary font-bold";
 
-const SALES_TABS = [
-  { to: "/management/sales-management/customer-orders-management", label: "Customer Orders Management" },
-  { to: "/management/crm-management/quotations-management", label: "Quotations Management" },
+export const SALES_TABS = [
+  { to: "/management/sales-management/overview", label: "Overview" },
+  { to: "/management/sales-management/sales-planning", label: "Sales Planning" },
+  { to: "/management/sales-management/sales-forecasting", label: "Sales Forecasting" },
+  { to: "/management/sales-management/sales-analytics", label: "Sales Analytics" },
+  { to: "/management/sales-management/sales-orders", label: "Sales Orders" },
+  { to: "/management/sales-management/pricing", label: "Pricing" },
+  { to: "/management/sales-management/discounts", label: "Discounts" },
+  { to: "/management/sales-management/contracts", label: "Contracts" },
+  { to: "/management/sales-management/channel-partners", label: "Channel Partners" },
+  { to: "/management/sales-management/territory-management", label: "Territory Management" },
+  { to: "/management/sales-management/sales-commission", label: "Sales Commission" },
 ];
 
 export function SalesManagementTabBar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
+  const [showLeftBtn, setShowLeftBtn] = useState(false);
+  const [showRightBtn, setShowRightBtn] = useState(false);
+
+  // Mouse Drag to Scroll state
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   const checkScroll = useCallback(() => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    setCanScrollLeft(scrollLeft > 2);
-    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 2);
+    const container = scrollContainerRef.current;
+    if (container) {
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      setShowLeftBtn(scrollLeft > 5);
+      setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 5);
+    }
   }, []);
 
   useEffect(() => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-    checkScroll();
-    el.addEventListener("scroll", checkScroll, { passive: true });
-    window.addEventListener("resize", checkScroll);
-    return () => {
-      el.removeEventListener("scroll", checkScroll);
-      window.removeEventListener("resize", checkScroll);
-    };
+    const container = scrollContainerRef.current;
+    if (container) {
+      checkScroll();
+      container.addEventListener("scroll", checkScroll, { passive: true });
+      const observer = new ResizeObserver(() => checkScroll());
+      observer.observe(container);
+      return () => {
+        container.removeEventListener("scroll", checkScroll);
+        observer.disconnect();
+      };
+    }
   }, [checkScroll]);
 
-  const handleScroll = (direction: "left" | "right") => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-    const scrollAmount = direction === "left" ? -240 : 240;
-    el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  // Auto-scroll active tab into view whenever route changes or on mount
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const activeEl = container.querySelector<HTMLElement>("[data-active='true']");
+    if (activeEl) {
+      const containerRect = container.getBoundingClientRect();
+      const activeRect = activeEl.getBoundingClientRect();
+
+      if (activeRect.left < containerRect.left || activeRect.right > containerRect.right) {
+        activeEl.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    }
+    setTimeout(checkScroll, 350);
+  }, [pathname, checkScroll]);
+
+  const scroll = (direction: "left" | "right") => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const scrollAmount = 240;
+      container.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+      setTimeout(checkScroll, 350);
+    }
+  };
+
+  // Drag-to-scroll handlers
+  const onMouseDown = (e: React.MouseEvent) => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    isDraggingRef.current = true;
+    setIsDragging(true);
+    startXRef.current = e.pageX - container.offsetLeft;
+    scrollLeftRef.current = container.scrollLeft;
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingRef.current) return;
+    e.preventDefault();
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startXRef.current) * 1.5;
+    container.scrollLeft = scrollLeftRef.current - walk;
+    checkScroll();
+  };
+
+  const stopDragging = () => {
+    isDraggingRef.current = false;
+    setIsDragging(false);
+  };
+
+  const onWheel = (e: React.WheelEvent) => {
+    const container = scrollContainerRef.current;
+    if (container && container.scrollWidth > container.clientWidth) {
+      const isRight = e.deltaY > 0;
+      const isLeft = e.deltaY < 0;
+      const canRight = container.scrollLeft + container.clientWidth < container.scrollWidth - 2;
+      const canLeft = container.scrollLeft > 2;
+      if ((isRight && canRight) || (isLeft && canLeft)) {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY * 1.2;
+        checkScroll();
+      }
+    }
   };
 
   return (
-    <div className="relative flex items-center w-full group">
-      {/* Left Arrow Button */}
-      {canScrollLeft && (
-        <button
-          onClick={() => handleScroll("left")}
-          className="absolute left-0 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/95 border border-border/80 text-foreground shadow-md backdrop-blur-sm transition-all hover:bg-muted hover:scale-105 cursor-pointer -translate-y-1.5"
-          aria-label="Scroll left"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
+    <div className="relative border-b border-border/80 w-full group/tabbar">
+      {/* Left scroll chevron */}
+      {showLeftBtn && (
+        <div className="absolute left-0 top-0 bottom-0 z-10 flex items-center bg-gradient-to-r from-background via-background/90 to-transparent pr-4 pl-0.5 pointer-events-none">
+          <button
+            type="button"
+            onClick={() => scroll("left")}
+            aria-label="Scroll left"
+            className="pointer-events-auto h-6 w-6 rounded-full border border-border/80 bg-background/95 shadow-xs flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all active:scale-95 cursor-pointer"
+          >
+            <ChevronLeft className="h-3.5 w-3.5" />
+          </button>
+        </div>
       )}
 
-      {/* Tab Items Container */}
+      {/* Tabs container */}
       <div
         ref={scrollContainerRef}
-        className="flex items-center gap-6 overflow-x-auto border-b border-border/40 pb-0 scrollbar-none no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth w-full px-1"
+        onWheel={onWheel}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={stopDragging}
+        onMouseLeave={stopDragging}
+        className={cn(
+          "flex items-center gap-1 overflow-x-auto scrollbar-none py-0.5 px-0.5 select-none scroll-smooth",
+          isDragging ? "cursor-grabbing" : "cursor-grab",
+        )}
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {SALES_TABS.map((tab) => {
-          const active = pathname.startsWith(tab.to);
+          const isActive =
+            pathname === tab.to ||
+            (tab.to !== "/management/sales-management/overview" && pathname.startsWith(tab.to));
+
           return (
-            <Link key={tab.to} to={tab.to} className={cn(TAB_BASE, active && TAB_ACTIVE)}>
-              {tab.label}
+            <Link
+              key={tab.to}
+              to={tab.to}
+              data-active={isActive ? "true" : "false"}
+              onClick={(e) => {
+                if (isDragging) e.preventDefault();
+              }}
+              className={cn(
+                TAB_BASE,
+                isActive && TAB_ACTIVE,
+                "relative flex items-center gap-1.5 transition-colors duration-150 py-2",
+              )}
+            >
+              <span>{tab.label}</span>
+              {isActive && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-t-full shadow-[0_-1px_4px_rgba(11,59,123,0.3)]" />
+              )}
             </Link>
           );
         })}
       </div>
 
-      {/* Right Arrow Button */}
-      {canScrollRight && (
-        <button
-          onClick={() => handleScroll("right")}
-          className="absolute right-0 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/95 border border-border/80 text-foreground shadow-md backdrop-blur-sm transition-all hover:bg-muted hover:scale-105 cursor-pointer -translate-y-1.5"
-          aria-label="Scroll right"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
+      {/* Right scroll chevron */}
+      {showRightBtn && (
+        <div className="absolute right-0 top-0 bottom-0 z-10 flex items-center bg-gradient-to-l from-background via-background/90 to-transparent pl-4 pr-0.5 pointer-events-none">
+          <button
+            type="button"
+            onClick={() => scroll("right")}
+            aria-label="Scroll right"
+            className="pointer-events-auto h-6 w-6 rounded-full border border-border/80 bg-background/95 shadow-xs flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all active:scale-95 cursor-pointer"
+          >
+            <ChevronRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
       )}
     </div>
   );
 }
+
+export default SalesManagementTabBar;

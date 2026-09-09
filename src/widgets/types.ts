@@ -43,7 +43,8 @@ export type WidgetCategory =
   | "admin"
   | "pd"
   | "md"
-  | "pm";
+  | "pm"
+  | "sales";
 
 /**
  * Simulated roles for access control. There is no auth system yet — identity is
@@ -87,7 +88,9 @@ export type WidgetPageId =
   // Asset Management Overview
   | "asset-overview"
   // Quality Management Overview
-  | "quality-overview";
+  | "quality-overview"
+  // Sales Management Overview
+  | "sales-overview";
 
 /** Grid spans per breakpoint tier, expressed in that tier's column count. */
 export type WidgetSpan = {

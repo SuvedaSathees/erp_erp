@@ -40,7 +40,6 @@ import { RoboticsKpis } from "@/components/robotics-integration/RoboticsKpis";
 import { RoboticsDeploymentReleasePanel } from "@/components/robotics-integration/RoboticsDeploymentReleasePanel";
 import { RoboticsReviewTable } from "@/components/robotics-integration/RoboticsReviewTable";
 import { RoboticsSummaryCard } from "@/components/robotics-integration/RoboticsSummaryCard";
-import { RoboticsAiInsightsCard } from "@/components/robotics-integration/RoboticsAiInsightsCard";
 import { RoboticsAttachmentsCard } from "@/components/robotics-integration/RoboticsAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
@@ -825,11 +824,6 @@ function RoboticsIntegrationDetailPage() {
 
               {/* Right Rail Sidebar Column (Float Cards) */}
               <div className="space-y-6">
-                {/* AI Insights Card */}
-                <RoboticsAiInsightsCard
-                  onJumpToAiSection={() => scrollToSection("ai", sec7Ref)}
-                />
-
                 {/* Section 8 Summary Card */}
                 <div ref={sec8Ref}>
                   <RoboticsSummaryCard

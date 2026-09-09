@@ -397,11 +397,13 @@ export function NcrManagementPage() {
             {/* NCR Summary Card */}
             <NcrSummaryCard record={record} />
 
-            {/* Containment Status Card */}
-            <NcrContainmentCard
-              record={record}
-              onChange={handleUpdateRecord}
-            />
+            {/* Containment Status Card (Compact overview when not currently on Phase 2 tab) */}
+            {viewMode === "phase" && activeStep !== 2 && (
+              <NcrContainmentCard
+                record={record}
+                onChange={handleUpdateRecord}
+              />
+            )}
 
             {/* Defect Category Donut Card */}
             <NcrDefectCategoryDonutCard />

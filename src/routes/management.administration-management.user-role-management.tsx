@@ -74,16 +74,16 @@ const USER_TYPES = [
 ];
 
 const ROLES_ASSIGNED_DATA = [
-  { id: "R-001", name: "Finance Manager", type: "Management Role", isPrimary: true, scope: "Organization", effectiveFrom: "01 Apr 2024", effectiveTo: "-", status: "Active" },
-  { id: "R-002", name: "Accounts Approver", type: "Approval Role", isPrimary: false, scope: "Department", effectiveFrom: "01 Apr 2024", effectiveTo: "-", status: "Active" },
-  { id: "R-003", name: "Budget Controller", type: "Functional Role", isPrimary: false, scope: "Department", effectiveFrom: "01 Apr 2024", effectiveTo: "-", status: "Active" },
+  { id: "R-001", name: "Chief Technology Officer", type: "Executive Role", isPrimary: true, scope: "Enterprise", effectiveFrom: "01 Apr 2024", effectiveTo: "-", status: "Active" },
+  { id: "R-002", name: "Technology Architecture Board Lead", type: "Governance Role", isPrimary: false, scope: "Enterprise", effectiveFrom: "01 Apr 2024", effectiveTo: "-", status: "Active" },
+  { id: "R-003", name: "Cloud Infrastructure Controller", type: "Functional Role", isPrimary: false, scope: "Division", effectiveFrom: "01 Apr 2024", effectiveTo: "-", status: "Active" },
 ];
 
 const RECENT_USER_ACTIVITY = [
-  { id: "ACT-101", datetime: "15 May 2024 10:45 AM", module: "Finance", action: "Login", ip: "103.21.45.67", status: "Success" },
-  { id: "ACT-102", datetime: "15 May 2024 10:44 AM", module: "AP Invoice", action: "Approve", ip: "103.21.45.67", status: "Success" },
-  { id: "ACT-103", datetime: "15 May 2024 10:20 AM", module: "Budget", action: "Edit", ip: "103.21.45.67", status: "Success" },
-  { id: "ACT-104", datetime: "15 May 2024 09:10 AM", module: "Reports", action: "View", ip: "103.21.45.67", status: "Success" },
+  { id: "ACT-101", datetime: "15 May 2024 10:45 AM", module: "Infrastructure", action: "Login (MFA)", ip: "103.21.45.67", status: "Success" },
+  { id: "ACT-102", datetime: "15 May 2024 10:44 AM", module: "Architecture Review", action: "Approve RFC-108", ip: "103.21.45.67", status: "Success" },
+  { id: "ACT-103", datetime: "15 May 2024 10:20 AM", module: "Security Console", action: "Audit Key Rotation", ip: "103.21.45.67", status: "Success" },
+  { id: "ACT-104", datetime: "15 May 2024 09:10 AM", module: "DevOps Pipeline", action: "View", ip: "103.21.45.67", status: "Success" },
   { id: "ACT-105", datetime: "14 May 2024 05:30 PM", module: "Settings", action: "View", ip: "103.21.45.67", status: "Success" },
 ];
 
@@ -109,8 +109,8 @@ function UserRoleManagementPage() {
 
   // Dynamic Users List State
   const [usersList, setUsersList] = useState([
-    { code: "USR-VIK-001", name: "Vikram Singh", email: "vikram.singh@magnertia.com", role: "Finance Manager", dept: "Finance & Accounts", type: "Employee", status: "Active" },
-    { code: "USR-ANI-002", name: "Anita Verma", email: "anita.verma@magnertia.com", role: "Chief Financial Officer", dept: "Corporate Services", type: "Management", status: "Active" },
+    { code: "USR-VIK-001", name: "Vikram Singh", email: "vikram.singh@magnertia.com", role: "Chief Technology Officer", dept: "Technology & Engineering", type: "Management", status: "Active" },
+    { code: "USR-ANI-002", name: "Anita Verma", email: "anita.verma@magnertia.com", role: "Chief Financial Officer", dept: "Finance & Accounts", type: "Management", status: "Active" },
     { code: "USR-RAJ-003", name: "Rajeev Malhotra", email: "rajeev.m@magnertia.com", role: "Chief Executive Officer", dept: "Executive Office", type: "Management", status: "Active" },
     { code: "USR-PRI-004", name: "Priya Menon", email: "priya.menon@magnertia.com", role: "Lead Systems Architect", dept: "R&D Systems", type: "Employee", status: "Active" },
     { code: "USR-ROH-005", name: "Rohan Kapoor", email: "rohan.k@magnertia.com", role: "Accounts Controller", dept: "Finance & Accounts", type: "Employee", status: "Active" },
@@ -118,22 +118,22 @@ function UserRoleManagementPage() {
 
   // Dynamic Roles List State
   const [rolesList, setRolesList] = useState([
-    { code: "ROL-FIN-001", name: "Finance Manager", type: "Management Role", isPri: "Yes", scope: "Organization", date: "01 Apr 2024", status: "Active" },
-    { code: "ROL-FIN-002", name: "Accounts Approver", type: "Approval Role", isPri: "No", scope: "Department", date: "01 Apr 2024", status: "Active" },
-    { code: "ROL-FIN-003", name: "Budget Controller", type: "Functional Role", isPri: "No", scope: "Department", date: "15 May 2024", status: "Active" },
-    { code: "ROL-SEC-004", name: "Security Administrator", type: "System Role", isPri: "No", scope: "Enterprise", date: "10 Mar 2024", status: "Active" },
+    { code: "ROL-EXE-001", name: "Chief Technology Officer", type: "Executive Role", isPri: "Yes", scope: "Enterprise", date: "01 Apr 2024", status: "Active" },
+    { code: "ROL-ARC-002", name: "Principal Enterprise Architect", type: "Technical Role", isPri: "No", scope: "Enterprise", date: "01 Apr 2024", status: "Active" },
+    { code: "ROL-SEC-003", name: "Security & Compliance Officer", type: "Governance Role", isPri: "No", scope: "Enterprise", date: "15 May 2024", status: "Active" },
+    { code: "ROL-ENG-004", name: "DevOps & Cloud Administrator", type: "System Role", isPri: "No", scope: "Engineering", date: "10 Mar 2024", status: "Active" },
   ]);
 
   // Dynamic Permissions List
   const [permissionsList, setPermissionsList] = useState([
-    { module: "General Ledger", read: true, create: true, edit: true, delete: false },
-    { module: "Accounts Payable", read: true, create: true, edit: true, delete: true },
-    { module: "Accounts Receivable", read: true, create: true, edit: true, delete: false },
-    { module: "Budgeting & Planning", read: true, create: true, edit: true, delete: false },
-    { module: "Fixed Assets", read: true, create: false, edit: false, delete: false },
-    { module: "Tax & Compliance", read: true, create: true, edit: true, delete: false },
-    { module: "Financial Reports", read: true, create: true, edit: true, delete: true },
-    { module: "System Settings", read: true, create: false, edit: false, delete: false },
+    { module: "Core Infrastructure & Cloud", read: true, create: true, edit: true, delete: false },
+    { module: "Security & IAM Policies", read: true, create: true, edit: true, delete: true },
+    { module: "Architecture Blueprints", read: true, create: true, edit: true, delete: false },
+    { module: "DevOps CI/CD Pipelines", read: true, create: true, edit: true, delete: false },
+    { module: "Database Clusters", read: true, create: false, edit: false, delete: false },
+    { module: "Cybersecurity Audits", read: true, create: true, edit: true, delete: false },
+    { module: "Technical Specifications", read: true, create: true, edit: true, delete: true },
+    { module: "System Master Settings", read: true, create: false, edit: false, delete: false },
   ]);
 
   const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -143,8 +143,8 @@ function UserRoleManagementPage() {
     code: "",
     name: "",
     email: "",
-    role: "Finance Manager",
-    dept: "Finance & Accounts",
+    role: "Senior Software Engineer",
+    dept: "Technology & Engineering",
     type: "Employee",
   });
 
@@ -598,17 +598,17 @@ function UserRoleManagementPage() {
                     <div className="grid grid-cols-2 gap-2">
                       <div className="rounded-lg border border-border bg-muted/15 p-2 space-y-0.5">
                         <span className="text-[10px] text-muted-foreground block">Assigned Dept</span>
-                        <span className="font-semibold text-foreground truncate block">Finance & Accounts</span>
+                        <span className="font-semibold text-foreground truncate block">Technology & Engineering</span>
                       </div>
                       <div className="rounded-lg border border-border bg-muted/15 p-2 space-y-0.5">
                         <span className="text-[10px] text-muted-foreground block">Reporting Manager</span>
-                        <span className="font-semibold text-foreground truncate block">Anita Verma (CFO)</span>
+                        <span className="font-semibold text-foreground truncate block">Rajeev Malhotra (CEO)</span>
                       </div>
                     </div>
 
                     <div className="rounded-lg border border-border bg-muted/15 p-2 space-y-0.5">
                       <span className="text-[10px] text-muted-foreground block">Cost Centre Mapping</span>
-                      <span className="font-mono text-xs font-semibold text-primary">CC-FIN-001</span>
+                      <span className="font-mono text-xs font-semibold text-primary">CC-TECH-001</span>
                     </div>
                   </div>
                 </div>

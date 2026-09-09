@@ -350,7 +350,9 @@ export function InProcessInspectionPage() {
             {(viewMode === "all" || activeStep === 4) && (
               <div className="space-y-5 min-w-0">
                 <IpqcSpcTab spc={record.spc} />
-                <IpqcProcessParametersTab parameters={record.parameters} />
+                {viewMode === "phase" && (
+                  <IpqcProcessParametersTab parameters={record.parameters} />
+                )}
               </div>
             )}
 
@@ -412,7 +414,7 @@ export function InProcessInspectionPage() {
             ) : null}
 
             {/* Current Operation Card */}
-            {(viewMode === "all" || activeStep === 1 || activeStep === 2) && (
+            {viewMode === "phase" && (activeStep === 1 || activeStep === 2) && (
               <IpqcCurrentOperationCard record={record} />
             )}
 

@@ -12,6 +12,7 @@ import { BD_WIDGETS } from "./content/bd";
 import { PM_WIDGETS } from "./content/pm";
 import { ASSET_WIDGETS } from "./content/asset";
 import { QUALITY_WIDGETS } from "./content/quality";
+import { SALES_WIDGETS } from "./content/sales";
 
 /* ===========================================================================
    Widget registry
@@ -37,6 +38,7 @@ const ALL_DEFINITIONS: WidgetDefinition[] = [
   ...PM_WIDGETS,
   ...ASSET_WIDGETS,
   ...QUALITY_WIDGETS,
+  ...SALES_WIDGETS,
   // Future modules append here: ...INVENTORY_WIDGETS, ...FLEET_WIDGETS, ...
 ];
 

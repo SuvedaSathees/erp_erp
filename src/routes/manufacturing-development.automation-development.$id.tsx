@@ -39,7 +39,6 @@ import { AutomationKpis } from "@/components/automation-development/AutomationKp
 import { AutomationDeploymentReleasePanel } from "@/components/automation-development/AutomationDeploymentReleasePanel";
 import { AutomationReviewTable } from "@/components/automation-development/AutomationReviewTable";
 import { AutomationSummaryCard } from "@/components/automation-development/AutomationSummaryCard";
-import { AutomationAiInsightsCard } from "@/components/automation-development/AutomationAiInsightsCard";
 import { AutomationAttachmentsCard } from "@/components/automation-development/AutomationAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
@@ -814,11 +813,6 @@ AI Health Score: ${record.aiAutomationHealthScore}/100
 
               {/* Right Rail Sidebar Column (Float Cards) */}
               <div className="space-y-6">
-                {/* AI Insights Card */}
-                <AutomationAiInsightsCard
-                  onJumpToAiSection={() => scrollToSection("ai", sec7Ref)}
-                />
-
                 {/* Section 8 Summary Card */}
                 <div ref={sec8Ref}>
                   <AutomationSummaryCard

@@ -1113,38 +1113,40 @@ export function ProductArchitectureNewPage({
                   </Badge>
                 </CardHeader>
 
-                <CardContent className="pt-4 space-y-3.5 text-xs">
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Functional Coverage</span>
-                      <span>{record.summary.functionalCoverage}%</span>
-                    </div>
-                    <Progress value={record.summary.functionalCoverage} className="h-2" />
+                <CardContent className="pt-4 flex flex-col md:flex-row items-center gap-6 text-xs">
+                  <div className="shrink-0 flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border">
+                    <CircularScoreGauge score={record.summary.overallArchitectureScore} />
+                    <span className="text-[11px] font-bold text-muted-foreground mt-2 uppercase tracking-wide">Overall Architecture Score</span>
                   </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Technical Readiness</span>
-                      <span>{record.summary.technicalReadiness}%</span>
+                  <div className="flex-1 w-full space-y-3">
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Functional Coverage</span>
+                        <span>{record.summary.functionalCoverage}%</span>
+                      </div>
+                      <Progress value={record.summary.functionalCoverage} className="h-2" />
                     </div>
-                    <Progress value={record.summary.technicalReadiness} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Security Readiness</span>
-                      <span>{record.summary.securityReadiness}%</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Technical Readiness</span>
+                        <span>{record.summary.technicalReadiness}%</span>
+                      </div>
+                      <Progress value={record.summary.technicalReadiness} className="h-2" />
                     </div>
-                    <Progress value={record.summary.securityReadiness} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between font-semibold text-foreground mb-1">
-                      <span>Integration Readiness</span>
-                      <span>{record.summary.integrationReadiness}%</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Security Readiness</span>
+                        <span>{record.summary.securityReadiness}%</span>
+                      </div>
+                      <Progress value={record.summary.securityReadiness} className="h-2" />
                     </div>
-                    <Progress value={record.summary.integrationReadiness} className="h-2" />
-                  </div>
-                  <div className="pt-2 border-t border-border flex justify-between items-center font-bold text-foreground">
-                    <span>Overall Architecture Score</span>
-                    <span className="text-base text-indigo-600">{record.summary.overallArchitectureScore}%</span>
+                    <div>
+                      <div className="flex justify-between font-semibold text-foreground mb-1">
+                        <span>Integration Readiness</span>
+                        <span>{record.summary.integrationReadiness}%</span>
+                      </div>
+                      <Progress value={record.summary.integrationReadiness} className="h-2" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1375,44 +1377,6 @@ export function ProductArchitectureNewPage({
               =========================================================================== */}
           <div className="lg:col-span-1 space-y-6">
             <div className="sticky top-6 space-y-6">
-              {/* Overall Score Gauge Box */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
-                <CardHeader className="pb-2 border-b border-border text-center">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Overall Architecture Score
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent className="pt-5 flex flex-col items-center">
-                  <CircularScoreGauge
-                    score={record.summary.overallArchitectureScore}
-                  />
-
-                  <div className="w-full mt-5 space-y-2 border-t border-border pt-4 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Functional Coverage</span>
-                      <span className="font-bold text-foreground">{record.summary.functionalCoverage}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Technical Readiness</span>
-                      <span className="font-bold text-foreground">{record.summary.technicalReadiness}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Security Readiness</span>
-                      <span className="font-bold text-foreground">{record.summary.securityReadiness}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground font-medium">Integration Readiness</span>
-                      <span className="font-bold text-foreground">{record.summary.integrationReadiness}%</span>
-                    </div>
-                    <div className="flex justify-between items-center pt-2 border-t border-border font-bold text-indigo-600 dark:text-indigo-400">
-                      <span>Overall Score</span>
-                      <span>{record.summary.overallArchitectureScore}%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Key Highlights Card */}
               <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
                 <CardHeader className="pb-2 border-b border-border">

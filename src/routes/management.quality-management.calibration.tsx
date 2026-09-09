@@ -13,7 +13,6 @@ import { CalibrationMeasurementTable } from "@/components/erp/calibration/Calibr
 import { CalibrationResultCard } from "@/components/erp/calibration/CalibrationResultCard";
 import { CertificateInformationCard } from "@/components/erp/calibration/CertificateInformationCard";
 import { CalibrationScheduleCard } from "@/components/erp/calibration/CalibrationScheduleCard";
-import { AiCalibrationInsightsCard } from "@/components/erp/calibration/AiCalibrationInsightsCard";
 import { RecentCalibrationsCard } from "@/components/erp/calibration/RecentCalibrationsCard";
 import { CalibrationCertificateModal } from "@/components/erp/calibration/CalibrationCertificateModal";
 import { CreateCalibrationModal } from "@/components/erp/calibration/CreateCalibrationModal";
@@ -427,18 +426,7 @@ export function CalibrationPage() {
               </CardContent>
             </Card>
 
-            {/* AI Calibration Insights */}
-            <AiCalibrationInsightsCard insights={record.aiInsights} />
-
-            {/* If in phase mode and not step 6, show compact schedule */}
-            {viewMode === "phase" && activeStep !== 6 && (
-              <CalibrationScheduleCard record={record} />
-            )}
-
-            {/* In full mode, show recent calibrations */}
-            {viewMode === "all" && (
-              <RecentCalibrationsCard history={record.recentCalibrations} />
-            )}
+            {/* End of Quick Status */}
           </div>
         </div>
       </div>

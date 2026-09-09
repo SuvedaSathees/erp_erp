@@ -252,7 +252,15 @@ function AccountManagementPage() {
               <div className="h-3 w-3 rounded-full bg-primary" />
               <h2 className="text-sm font-bold text-slate-900 tracking-wide uppercase">1. Account Master</h2>
             </div>
-            <span className="text-xs font-medium text-slate-400">Master Account Record</span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-medium text-slate-500 hidden sm:inline">Commercial B2B Legal & Fiscal Entity</span>
+              <a
+                href="/management/crm-management/customer-success"
+                className="text-[11px] text-emerald-700 hover:underline font-semibold flex items-center gap-1 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200"
+              >
+                View Customer Success & Adoption →
+              </a>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 text-xs">

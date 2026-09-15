@@ -154,7 +154,7 @@ function DocumentControlManagementPage() {
   return (
     <AppShell
       title="Document Control Management"
-      breadcrumb="Management > Administration Management > Document Control Management"
+      breadcrumb="Management > Organization > Document Control Management"
       description="Manage the complete lifecycle of organizational documents—from creation, classification, drafting, reviews, approval, version control, publication, distribution, to retention and audit."
       tabs={<AdminManagementTabBar />}
     >

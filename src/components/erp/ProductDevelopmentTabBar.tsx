@@ -33,6 +33,7 @@ export const PRODUCT_DEVELOPMENT_TABS: { to: string; label: string; full: string
   { to: "/development/product-development/product-documentation", label: "Documentation", full: "Product Documentation" },
   { to: "/development/product-development/product-release-management", label: "Release", full: "Product Release Management" },
   { to: "/development/product-development/product-lifecycle-management", label: "Lifecycle", full: "Product Lifecycle Management" },
+  { to: "/development/product-development/reports", label: "Report", full: "Product Development Report" },
 ];
 
 export const PRODUCT_DEV_MODULE_META: Record<string, { shortLabel: string; description: string; recordLabel: string }> = {

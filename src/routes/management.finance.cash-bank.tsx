@@ -64,12 +64,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { company, formatCurrency, formatSignedCurrency } from "@/lib/mock-data";
-import {
-  cashBankService,
-  bankAccountService,
-  bankReconciliatorService,
-  loadCashBankDashboard,
-} from "@/services";
+import { loadCashBankDashboard } from "@/services/financialManagementService";
+import * as cashBankService from "@/services/cashBankService";
+import * as bankAccountService from "@/services/bankAccountService";
+import * as bankReconciliatorService from "@/services/bankReconciliatorService";
 import type {
   BankAccount,
   BankAccountType,

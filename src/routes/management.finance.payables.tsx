@@ -45,14 +45,12 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { company, formatCurrency } from "@/lib/mock-data";
-import {
-  accountsPayableService,
-  analyticsEngineService,
-  loadAccountsPayableDashboard,
-  paymentService,
-  reportingEngineService,
-  vendorManagementService,
-} from "@/services";
+import { loadAccountsPayableDashboard } from "@/services/financialManagementService";
+import * as accountsPayableService from "@/services/accountsPayableService";
+import * as analyticsEngineService from "@/services/analyticsEngineService";
+import * as paymentService from "@/services/paymentService";
+import * as reportingEngineService from "@/services/reportingEngineService";
+import * as vendorManagementService from "@/services/vendorManagementService";
 import type {
   AgingReport,
   DashboardQuery,

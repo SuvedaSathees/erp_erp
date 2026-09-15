@@ -19,6 +19,7 @@ export const ADMIN_MANAGEMENT_TABS = [
   { to: "/management/administration-management/master-data-management", label: "Master Data Management" },
   { to: "/management/administration-management/notifications-management", label: "Notifications Management" },
   { to: "/management/administration-management/audit-management", label: "Audit Management" },
+  { to: "/management/administration-management/reports", label: "Report" },
 ];
 
 export function AdminManagementTabBar() {

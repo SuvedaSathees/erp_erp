@@ -27,8 +27,8 @@ export const Route = createFileRoute("/management/sales-management/overview")({
 function SalesOverview() {
   return (
     <AppShell
-      title="Sales Management Overview"
-      breadcrumb="Management > Sales Management > Overview"
+      title="Sales Overview"
+      breadcrumb="Management"
       description="Executive commercial intelligence, revenue pipeline, order booking, channel distribution, and performance tracking."
       tabs={<SalesManagementTabBar />}
     >

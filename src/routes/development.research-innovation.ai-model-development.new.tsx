@@ -64,6 +64,7 @@ import type {
   AiModelStatus,
 } from "@/services/types";
 import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -1079,94 +1080,8 @@ export function AiModelDevelopmentNewPage({
             </div>
           </div>
 
-          {/* Section 1: EXECUTIVE OVERALL SCORE & READINESS STRIP */}
-          <Card className="border-border bg-white dark:bg-slate-900 shadow-xs overflow-hidden">
-              <div className="p-4 sm:p-5 flex flex-col xl:flex-row items-center justify-between gap-6">
-                {/* Overall Score Gauge */}
-                <div className="flex items-center gap-5 shrink-0">
-                  <CircularScoreGauge
-                    score={record.overallAiModelScore}
-                    size={96}
-                    strokeWidth={8}
-                    color="#2563eb"
-                  />
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-foreground">Overall AI Model Readiness</span>
-                      <Badge className="bg-emerald-600 text-white text-[10px]">Verified & Authorized</Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground max-w-md">
-                      Comprehensive evaluation across dataset quality, architecture design, governance compliance, and live latency benchmarks.
-                    </p>
-                    <div className="flex flex-wrap items-center gap-3 pt-1">
-                      <Badge variant="outline" className="text-xs font-medium text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/40 gap-1.5 py-1 px-2.5">
-                        <Target className="h-3.5 w-3.5" />
-                        Recommendation: {record.readinessSummary.recommendation}
-                      </Badge>
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          setRecord({ ...record, workflowStatus: "Production Deployed" });
-                          toast.success("Model approved and promoted to production!");
-                        }}
-                        className="h-7 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer shadow-xs gap-1.5"
-                      >
-                        <CheckCircle2 className="h-3.5 w-3.5" />
-                        Deploy to Production Now
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 5 Component Metrics with Progress Bars */}
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 w-full xl:w-auto xl:min-w-[620px]">
-                  <div
-                    onClick={() => document.getElementById("section-dataset")?.scrollIntoView({ behavior: "smooth" })}
-                    className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                  >
-                    <span className="text-[11px] text-muted-foreground block font-medium">Dataset Quality</span>
-                    <span className="text-sm font-bold text-foreground font-mono">{record.datasetReadinessScore}%</span>
-                    <Progress value={record.datasetReadinessScore} className="h-1.5" />
-                  </div>
-
-                  <div
-                    onClick={() => document.getElementById("section-architecture")?.scrollIntoView({ behavior: "smooth" })}
-                    className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                  >
-                    <span className="text-[11px] text-muted-foreground block font-medium">Architecture</span>
-                    <span className="text-sm font-bold text-foreground font-mono">{record.modelDesignScore}%</span>
-                    <Progress value={record.modelDesignScore} className="h-1.5" />
-                  </div>
-
-                  <div
-                    onClick={() => document.getElementById("section-deployment")?.scrollIntoView({ behavior: "smooth" })}
-                    className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                  >
-                    <span className="text-[11px] text-muted-foreground block font-medium">Deployment</span>
-                    <span className="text-sm font-bold text-foreground font-mono">{record.deploymentReadinessScore}%</span>
-                    <Progress value={record.deploymentReadinessScore} className="h-1.5" />
-                  </div>
-
-                  <div
-                    onClick={() => document.getElementById("section-governance")?.scrollIntoView({ behavior: "smooth" })}
-                    className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                  >
-                    <span className="text-[11px] text-muted-foreground block font-medium">AI Governance</span>
-                    <span className="text-sm font-bold text-foreground font-mono">{record.governanceScore}%</span>
-                    <Progress value={record.governanceScore} className="h-1.5" />
-                  </div>
-
-                  <div
-                    onClick={() => document.getElementById("section-evaluation")?.scrollIntoView({ behavior: "smooth" })}
-                    className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 col-span-2 sm:col-span-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                  >
-                    <span className="text-[11px] text-muted-foreground block font-medium">Performance</span>
-                    <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 font-mono">{record.aiAssessment.aiPerformanceScore}%</span>
-                    <Progress value={record.aiAssessment.aiPerformanceScore} className="h-1.5" />
-                  </div>
-                </div>
-              </div>
-            </Card>
+          {/* Scores & Health Gauges Banner */}
+          <ProductScoreBanner submoduleKey="ai-model-development" />
 
           {/* Section 2: BALANCED 2-COLUMN GRID */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">

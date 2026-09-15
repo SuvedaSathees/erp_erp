@@ -77,6 +77,7 @@ import {
   CLOUD_PLATFORM_TABS,
   type CloudPlatformDevelopmentTabId,
 } from "@/components/erp/CloudPlatformDevelopmentTabBar";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -410,60 +411,9 @@ export function CloudPlatformDevelopmentNewPage({
             </div>
           </div>
         </div>
-        {/* ====================================================================
-           1. EXECUTIVE OVERALL CLOUD HEALTH & SCORE STRIP (Full Width)
-           ==================================================================== */}
+        {/* Scores & Health Gauges Banner */}
         <div className="mx-auto max-w-[1720px] px-4 sm:px-6 lg:px-8 space-y-6">
-          <Card className="border-border bg-white dark:bg-slate-900 shadow-xs overflow-hidden">
-            <div className="p-4 sm:p-5 flex flex-col xl:flex-row items-center justify-between gap-6">
-              {/* Overall Score Gauge */}
-              <div className="flex items-center gap-5 shrink-0">
-                <CircularScoreGauge score={record.overallCloudPlatformScore} label="Overall Score" />
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-foreground">Overall Cloud Platform Readiness</span>
-                    <Badge className="bg-emerald-600 text-white text-[10px]">Verified & Authorized</Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground max-w-md">
-                    Enterprise cloud infrastructure audit covering microservices architecture, zero-trust security, Kubernetes GitOps, and 99.98% high-availability SLA.
-                  </p>
-                  <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 pt-0.5">
-                    <Target className="h-3.5 w-3.5" />
-                    <span>Recommendation: {record.readinessSummary.recommendation}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 5 Component Metrics with Progress Bars */}
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 w-full xl:w-auto xl:min-w-[620px]">
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">Architecture</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.architectureReadinessScore}%</span>
-                  <Progress value={record.architectureReadinessScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">Security</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.securityScore}%</span>
-                  <Progress value={record.securityScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">Infrastructure</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.infrastructureReadinessScore}%</span>
-                  <Progress value={record.infrastructureReadinessScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">Operations</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.operationsReadinessScore}%</span>
-                  <Progress value={record.operationsReadinessScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 col-span-2 sm:col-span-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">Performance</span>
-                  <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 font-mono">{record.performanceScore}%</span>
-                  <Progress value={record.performanceScore} className="h-1.5" />
-                </div>
-              </div>
-            </div>
-          </Card>
+          <ProductScoreBanner submoduleKey="cloud-platform-development" />
 
           {/* ====================================================================
              2. BALANCED 2-COLUMN GRID (Equal Height, Perfectly Aligned)
@@ -475,7 +425,7 @@ export function CloudPlatformDevelopmentNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Cloud className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">1. Cloud Platform Overview & SLA Scope</CardTitle>
+                    <CardTitle className="text-sm font-bold">Cloud Platform Overview & SLA Scope</CardTitle>
                   </div>
                   <Badge variant="secondary" className="text-xs font-semibold">{record.businessUnit}</Badge>
                 </div>
@@ -580,7 +530,7 @@ export function CloudPlatformDevelopmentNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Layers className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">2. Cloud Architecture & Network Topology</CardTitle>
+                    <CardTitle className="text-sm font-bold">Cloud Architecture & Network Topology</CardTitle>
                   </div>
                   <Badge className="bg-blue-600 text-white font-mono text-xs">
                     Score: {record.architectureConfig.architectureReadinessScore}/100
@@ -622,7 +572,7 @@ export function CloudPlatformDevelopmentNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Database className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">4. Database & Data Infrastructure</CardTitle>
+                    <CardTitle className="text-sm font-bold">Database & Data Infrastructure</CardTitle>
                   </div>
                   <Badge className="bg-emerald-600 text-white font-mono text-xs">
                     Data Score: {record.dataPlatformConfig.dataReadinessScore}/100
@@ -664,7 +614,7 @@ export function CloudPlatformDevelopmentNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">5. Security, Identity & Governance</CardTitle>
+                    <CardTitle className="text-sm font-bold">Security, Identity & Governance</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-purple-600 text-white font-mono text-xs">
@@ -716,7 +666,7 @@ export function CloudPlatformDevelopmentNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Cpu className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">6. DevOps, IaC & GitOps Infrastructure</CardTitle>
+                    <CardTitle className="text-sm font-bold">DevOps, IaC & GitOps Infrastructure</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-blue-600 text-white font-mono text-xs">
@@ -775,7 +725,7 @@ export function CloudPlatformDevelopmentNewPage({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Server className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">3. Cloud Platform Core Services Registry</CardTitle>
+                  <CardTitle className="text-sm font-bold">Cloud Platform Core Services Registry</CardTitle>
                 </div>
                 <Badge className="bg-emerald-600 text-white font-mono text-xs">
                   Service Score: {record.servicesConfig.serviceReadinessScore}/100
@@ -824,7 +774,7 @@ export function CloudPlatformDevelopmentNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Activity className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">7. Performance, Autoscaling & Latency</CardTitle>
+                    <CardTitle className="text-sm font-bold">Performance, Autoscaling & Latency</CardTitle>
                   </div>
                   <Badge className="bg-blue-600 text-white font-mono text-xs">
                     Scalability: {record.scalabilityMetrics.scalabilityScore}/100
@@ -859,7 +809,7 @@ export function CloudPlatformDevelopmentNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-purple-600" />
-                    <CardTitle className="text-sm font-bold">9. AI Cloud Platform Assessment & FinOps</CardTitle>
+                    <CardTitle className="text-sm font-bold">AI Cloud Platform Assessment & FinOps</CardTitle>
                   </div>
                   <Badge className="bg-purple-600 text-white font-mono text-xs">
                     AI Score: {record.aiAssessment.overallAiScore}/100
@@ -889,7 +839,7 @@ export function CloudPlatformDevelopmentNewPage({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Paperclip className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">10. Attachments & Infrastructure Diagrams</CardTitle>
+                  <CardTitle className="text-sm font-bold">Attachments & Infrastructure Diagrams</CardTitle>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-xs">{record.attachments.length} Files</Badge>
@@ -936,7 +886,7 @@ export function CloudPlatformDevelopmentNewPage({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <UserCheck className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">11. Review & Approval Board Timeline</CardTitle>
+                  <CardTitle className="text-sm font-bold">Review & Approval Board Timeline</CardTitle>
                 </div>
                 <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold border-amber-200">
                   Cloud Governance Committee

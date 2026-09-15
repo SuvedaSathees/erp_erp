@@ -55,13 +55,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { company, formatCurrency } from "@/lib/mock-data";
-import {
-  taxManagementService,
-  taxFilingService,
-  taxPaymentService,
-  complianceService,
-  loadTaxManagementDashboard,
-} from "@/services";
+import { loadTaxManagementDashboard } from "@/services/financialManagementService";
+import * as taxManagementService from "@/services/taxManagementService";
+import * as taxFilingService from "@/services/taxFilingService";
+import * as taxPaymentService from "@/services/taxPaymentService";
+import * as complianceService from "@/services/complianceService";
 import type {
   TaxObligation,
   TaxFiling,

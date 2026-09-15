@@ -7,11 +7,11 @@ import { WidgetPage } from "@/widgets/components/WidgetPage";
 export const Route = createFileRoute("/management/asset-management/overview")({
   head: () => ({
     meta: [
-      { title: "Asset Management Overview · Magnertia ERP" },
+      { title: "Asset Overview · Magnertia ERP" },
       {
         name: "description",
         content:
-          "Executive asset management dashboard, portfolio valuation, equipment fleet, depreciation schedules, and AI capital intelligence.",
+          "Executive asset dashboard, portfolio valuation, equipment fleet, depreciation schedules, and AI capital intelligence.",
       },
     ],
   }),
@@ -19,14 +19,14 @@ export const Route = createFileRoute("/management/asset-management/overview")({
 });
 
 /**
- * Asset Management Overview is a full widget surface, identical to Finance Overview
+ * Asset Overview is a full widget surface, identical to Finance Overview
  * and CRM Overview. Its KPI cards, capital horizon charts, operations ledger,
  * alerts and AI intelligence center are fully customizable via the unified Widget system.
  */
 function AssetManagementOverview() {
   return (
     <AppShell
-      title="Asset Management Overview"
+      title="Asset Overview"
       breadcrumb="Management"
       description="Executive asset intelligence, capitalization, equipment fleet, depreciation schedules, and maintenance operations."
       tabs={<AssetManagementTabBar />}

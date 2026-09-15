@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Sparkles } from "lucide-react";
 
-import { smartFactoryDevelopmentService } from "@/services";
+import { smartFactoryDevelopmentService } from "@/services/smartFactoryDevelopmentService";
 import type { SmartFactoryDevelopmentRecord } from "@/services/types";
 import { AppShell } from "@/components/erp/AppShell";
 import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";

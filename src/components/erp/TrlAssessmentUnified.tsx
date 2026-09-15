@@ -64,7 +64,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { trlAssessmentService } from "@/services";
+import { trlAssessmentService } from "@/services/trlAssessmentService";
 import type {
   TrlApprovalDecision,
   TrlFormInput,

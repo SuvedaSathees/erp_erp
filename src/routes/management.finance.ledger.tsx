@@ -66,7 +66,9 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/mock-data";
-import { chartOfAccountsService, generalLedgerService, journalEntryService } from "@/services";
+import * as chartOfAccountsService from "@/services/chartOfAccountsService";
+import * as generalLedgerService from "@/services/generalLedgerService";
+import * as journalEntryService from "@/services/journalEntryService";
 import type {
   AccountFilters,
   AccountNode,

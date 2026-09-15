@@ -64,7 +64,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { company, formatCurrency } from "@/lib/mock-data";
-import { profitabilityService, loadProfitabilityDashboard } from "@/services";
+import { loadProfitabilityDashboard } from "@/services/financialManagementService";
+import * as profitabilityService from "@/services/profitabilityService";
 import type { ProfitabilityRecord, CostAllocationRule, DashboardQuery } from "@/services/types";
 
 export const Route = createFileRoute("/management/finance/profitability")({

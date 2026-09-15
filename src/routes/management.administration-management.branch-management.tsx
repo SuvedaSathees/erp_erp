@@ -104,7 +104,7 @@ function BranchManagementPage() {
   return (
     <AppShell
       title="Branch Management"
-      breadcrumb="Management > Administration Management > Branch Management"
+      breadcrumb="Management > Organization > Branch Management"
       description="Manage the complete lifecycle of a branch—from strategy, location, legal registration, infrastructure, organization, finance, operations, compliance to performance."
       tabs={<AdminManagementTabBar />}
     >

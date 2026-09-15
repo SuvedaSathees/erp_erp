@@ -12,7 +12,7 @@ export const Route = createFileRoute(
 )({
   head: () => ({
     meta: [
-      { title: "Quality Management Overview · Magnertia ERP" },
+      { title: "Quality Overview · Magnertia ERP" },
       {
         name: "description",
         content:
@@ -64,8 +64,8 @@ export function QualityDashboardOverviewPage() {
 
   return (
     <AppShell
-      title="Quality Management Overview"
-      breadcrumb="Management › Quality Management › Overview"
+      title="Quality Overview"
+      breadcrumb="Management"
       description="Executive quality intelligence, inspection gates, non-conformance containment, and continuous improvement."
       tabs={<QualityManagementTabBar />}
     >

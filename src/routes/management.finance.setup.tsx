@@ -4,7 +4,7 @@ import { Link as LinkIcon, BookOpen } from "lucide-react";
 import { AppShell } from "@/components/erp/AppShell";
 import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
-import { generalLedgerService } from "@/services";
+import * as generalLedgerService from "@/services/generalLedgerService";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 

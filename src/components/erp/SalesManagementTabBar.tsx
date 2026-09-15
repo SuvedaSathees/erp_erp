@@ -19,6 +19,7 @@ export const SALES_TABS = [
   { to: "/management/sales-management/channel-partners", label: "Channel Partners" },
   { to: "/management/sales-management/territory-management", label: "Territory Management" },
   { to: "/management/sales-management/sales-commission", label: "Sales Commission" },
+  { to: "/management/sales-management/reports", label: "Report" },
 ];
 
 export function SalesManagementTabBar() {

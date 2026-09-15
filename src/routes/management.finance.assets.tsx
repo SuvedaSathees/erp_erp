@@ -55,7 +55,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { company, formatCurrency } from "@/lib/mock-data";
-import { fixedAssetService, depreciationEngineService, loadFixedAssetsDashboard } from "@/services";
+import { loadFixedAssetsDashboard } from "@/services/financialManagementService";
+import * as fixedAssetService from "@/services/fixedAssetService";
+import * as depreciationEngineService from "@/services/depreciationEngineService";
 import type {
   FixedAsset,
   FixedAssetCategory,

@@ -54,12 +54,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { company, formatCurrency } from "@/lib/mock-data";
-import {
-  budgetService,
-  departmentService,
-  costCenterService,
-  loadBudgetingDashboard,
-} from "@/services";
+import { loadBudgetingDashboard } from "@/services/financialManagementService";
+import * as budgetService from "@/services/budgetService";
+import * as departmentService from "@/services/departmentService";
+import * as costCenterService from "@/services/costCenterService";
 import type {
   DepartmentBudget,
   CostCenterBudget,

@@ -168,7 +168,7 @@ function ProcurementOverviewPage() {
   return (
     <AppShell
       title="Procurement Overview"
-      breadcrumb="Management > Procurement Management"
+      breadcrumb="Management"
       description="Executive procurement governance, purchase requisition pipeline, budget validation, sourcing matrix, and order conversion tracking."
       tabs={<ProcurementManagementTabBar />}
     >

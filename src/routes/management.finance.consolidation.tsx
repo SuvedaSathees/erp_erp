@@ -70,7 +70,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { company, formatCurrency } from "@/lib/mock-data";
-import { consolidationService, loadConsolidationDashboard } from "@/services";
+import { loadConsolidationDashboard } from "@/services/financialManagementService";
+import * as consolidationService from "@/services/consolidationService";
 import type {
   ConsolidationRecord,
   AccountMappingRecord,

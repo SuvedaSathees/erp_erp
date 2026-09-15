@@ -58,12 +58,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { company, formatCurrency } from "@/lib/mock-data";
-import {
-  reportManagementService,
-  reportSchedulerService,
-  reportSharingService,
-  loadFinancialReportingDashboard,
-} from "@/services";
+import { loadFinancialReportingDashboard } from "@/services/financialManagementService";
+import * as reportManagementService from "@/services/reportManagementService";
+import * as reportSchedulerService from "@/services/reportSchedulerService";
+import * as reportSharingService from "@/services/reportSharingService";
 import type {
   ReportRecord,
   ReportScheduleRecord,

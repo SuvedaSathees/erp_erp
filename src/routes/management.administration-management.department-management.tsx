@@ -179,7 +179,7 @@ function DepartmentManagementPage() {
   return (
     <AppShell
       title="Department Management"
-      breadcrumb="Management > Administration Management > Department Management"
+      breadcrumb="Management > Organization > Department Management"
       description="Manage the complete lifecycle of a department—from strategy, organizational mapping, workforce positions, processes, resources, budget, KPIs, compliance to performance."
       tabs={<AdminManagementTabBar />}
     >

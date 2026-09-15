@@ -16,12 +16,12 @@ const FINANCE_TABS = [
   { to: "/management/finance/cash-bank", label: "Cash & Bank" },
   { to: "/management/finance/consolidation", label: "Consolidation" },
   { to: "/management/finance/cost-centers", label: "Cost Centers" },
-  { to: "/management/finance/reports", label: "Financial Reports" },
   { to: "/management/finance/assets", label: "Fixed Assets" },
   { to: "/management/finance/ledger", label: "General Ledger (GL)" },
   { to: "/management/finance/profitability", label: "Profitability" },
   { to: "/management/finance/setup", label: "Setup & Integrations" },
   { to: "/management/finance/tax", label: "Tax Management" },
+  { to: "/management/finance/reports", label: "Report" },
 ];
 
 export function FinanceTabBar() {

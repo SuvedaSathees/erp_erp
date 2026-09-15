@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FirmwareDevelopmentFormPage } from "@/routes/development.research-innovation.firmware-development.new";
+import { FirmwareDevelopmentFormPage } from "@/components/development/FirmwareDevelopmentView";
 import { ProductDevelopmentTabBar } from "@/components/erp/ProductDevelopmentTabBar";
 
 export const Route = createFileRoute(

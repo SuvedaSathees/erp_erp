@@ -57,14 +57,12 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { arCustomerDirectory, company, formatCurrency } from "@/lib/mock-data";
-import {
-  accountsReceivableService,
-  analyticsEngineService,
-  customerManagementService,
-  loadAccountsReceivableDashboard,
-  receiptCollectionService,
-  reportingEngineService,
-} from "@/services";
+import { loadAccountsReceivableDashboard } from "@/services/financialManagementService";
+import * as accountsReceivableService from "@/services/accountsReceivableService";
+import * as analyticsEngineService from "@/services/analyticsEngineService";
+import * as customerManagementService from "@/services/customerManagementService";
+import * as receiptCollectionService from "@/services/receiptCollectionService";
+import * as reportingEngineService from "@/services/reportingEngineService";
 import type {
   AgingReport,
   CustomerProfile,

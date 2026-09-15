@@ -57,7 +57,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { company, formatCurrency, mockCostCenterCommitments } from "@/lib/mock-data";
-import { costCenterService, budgetService, loadCostCentersDashboard } from "@/services";
+import { loadCostCentersDashboard } from "@/services/financialManagementService";
+import * as costCenterService from "@/services/costCenterService";
+import * as budgetService from "@/services/budgetService";
 import type {
   CostCenterRecord,
   NewCostCenterInput,

@@ -66,6 +66,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 
 type Icon = React.ComponentType<{ className?: string }>;
 
@@ -1453,6 +1454,8 @@ export function AppShell({
   description,
   topbarActions,
   tabs,
+  hideScoreBanner,
+  scoreBannerKey,
 }: {
   children: ReactNode;
   title?: string;
@@ -1460,7 +1463,69 @@ export function AppShell({
   description?: string;
   topbarActions?: ReactNode;
   tabs?: ReactNode;
+  hideScoreBanner?: boolean;
+  scoreBannerKey?: string;
 }) {
+  const routerState = useRouterState();
+  const rawPathname = (routerState?.location?.pathname ?? "").replace(/\/+$/, "");
+
+  // Check if current route belongs to one of the 9 Management modules from the user's list:
+  // 1. Organization (/management/administration-management)
+  // 2. Sales (/management/sales-management)
+  // 3. CRM (/management/crm-management)
+  // 4. HRM (/management/hrm-management)
+  // 5. Finance (/management/finance)
+  // 6. Procurement (/management/procurement-management)
+  // 7. Project (/management/project-management)
+  // 8. Asset (/management/asset-management)
+  // 9. Quality (/management/quality-management)
+  const isManagementModule =
+    rawPathname.startsWith("/management/administration-management/") ||
+    rawPathname.startsWith("/management/sales-management/") ||
+    rawPathname.startsWith("/management/crm-management/") ||
+    rawPathname.startsWith("/management/hrm-management/") ||
+    rawPathname.startsWith("/management/finance/") ||
+    rawPathname.startsWith("/management/procurement-management/") ||
+    rawPathname.startsWith("/management/project-management/") ||
+    rawPathname.startsWith("/management/asset-management/") ||
+    rawPathname.startsWith("/management/quality-management/");
+
+  // Extract path segments
+  const pathSegments = rawPathname.split("/").filter(Boolean);
+
+  // Exclude overview, report, index, or module root pages as requested
+  const isExcluded =
+    rawPathname.endsWith("/overview") ||
+    rawPathname.endsWith("/reports") ||
+    rawPathname.includes("/overview/") ||
+    rawPathname.includes("/reports/") ||
+    rawPathname.endsWith("/index") ||
+    rawPathname === "/management" ||
+    pathSegments.length < 3; // Must be at least /management/<module>/<submodule>
+
+  const showScoreBanner = !hideScoreBanner && isManagementModule && !isExcluded;
+
+  // Extract submodule key intelligently (handles subactions like /new, /edit, or IDs)
+  let detectedSubmoduleKey = scoreBannerKey || "";
+  if (!detectedSubmoduleKey && pathSegments.length >= 3) {
+    const last = pathSegments[pathSegments.length - 1];
+    const secondLast = pathSegments[pathSegments.length - 2];
+    if (
+      (last === "new" ||
+        last === "edit" ||
+        last === "create" ||
+        last === "details" ||
+        last === "view" ||
+        /^\$?[0-9a-fA-F-]+$/.test(last)) &&
+      secondLast &&
+      secondLast !== "management"
+    ) {
+      detectedSubmoduleKey = secondLast;
+    } else {
+      detectedSubmoduleKey = last;
+    }
+  }
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -1620,7 +1685,14 @@ export function AppShell({
               tabs={tabs}
             />
           )}
-          <main className="flex-1 px-4 py-6 lg:px-8 lg:py-7 min-w-0 max-w-full overflow-x-hidden">{children}</main>
+          <main className="flex-1 px-4 py-6 lg:px-8 lg:py-7 min-w-0 max-w-full overflow-x-hidden">
+            {showScoreBanner && (
+              <div className="mb-6 w-full animate-in fade-in duration-300">
+                <ProductScoreBanner submoduleKey={detectedSubmoduleKey} />
+              </div>
+            )}
+            {children}
+          </main>
         </div>
       </div>
     </TooltipProvider>

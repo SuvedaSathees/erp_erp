@@ -45,7 +45,7 @@ export const BUSINESS_DEVELOPMENT_TABS = [
   },
   {
     to: "/development/business-development/go-to-market-development",
-    label: "Go-To-Market (GTM) Development",
+    label: "GTM",
     full: "Go-To-Market (GTM) Development",
   },
   {
@@ -122,6 +122,11 @@ export const BUSINESS_DEVELOPMENT_TABS = [
     to: "/development/business-development/business-transformation-development",
     label: "Business Transformation Development",
     full: "Business Transformation Development",
+  },
+  {
+    to: "/development/business-development/reports",
+    label: "Report",
+    full: "Business Development Report",
   },
 ];
 

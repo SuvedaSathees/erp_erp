@@ -62,6 +62,7 @@ import {
   Legend,
 } from "recharts";
 import { AppShell } from "@/components/erp/AppShell";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { ProductDevelopmentTabBar } from "@/components/erp/ProductDevelopmentTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { ErpButton } from "@/components/erp/Button";
@@ -78,7 +79,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { productStrategyService } from "@/services";
+import { productStrategyService } from "@/services/productStrategyService";
 import { calculateProductStrategyScores } from "@/lib/productStrategyFns.server";
 import type {
   ProductStrategyApprovalDecision,
@@ -430,7 +431,7 @@ export function ProductStrategyFormPage({
           </div>
 
           {/* 4-STAGE WORKFLOW STEPPER */}
-          <div className="p-4 bg-card grid grid-cols-2 md:grid-cols-4 gap-3 border-b border-border/60">
+          <div className="p-4 bg-card grid grid-cols-2 md:grid-cols-4 gap-3">
             {record.stages.map((stg, idx) => {
               const isCurrent = record.currentStage === stg.stage;
               const isCompleted = stg.completed;
@@ -475,36 +476,10 @@ export function ProductStrategyFormPage({
               );
             })}
           </div>
-
-          {/* SUB-TABS NAVIGATION */}
-          <div className="flex items-center gap-2 px-4 py-2 border-b border-border/60 bg-muted/10 overflow-x-auto no-scrollbar">
-            {[
-              { id: "form", label: "Strategy Form", icon: FileText },
-              { id: "portfolio", label: "Portfolio Matrix", icon: PieChart },
-              { id: "roadmaps", label: "Linked Roadmaps", icon: Map },
-              { id: "ai", label: "AI Strategic Intelligence", icon: Sparkles },
-              { id: "audit", label: "Audit Trail", icon: History },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id as StrategyTabId)}
-                  className={cn(
-                    "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0",
-                    activeTab === tab.id
-                      ? "bg-primary text-primary-foreground shadow-2xs"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
         </Card>
+
+        {/* Scores & Health Gauges Banner */}
+        <ProductScoreBanner submoduleKey="product-strategy" />
 
         {/* ========================================================================= */}
         {/* 2. MAIN WORKSPACE GRID: CONTENT + STRATEGY SIDEBAR                        */}
@@ -523,7 +498,7 @@ export function ProductStrategyFormPage({
                         <Target className="h-4 w-4" />
                       </div>
                       <div>
-                        <CardTitle className="text-sm font-bold text-foreground">1. Strategic Vision & Core Value Proposition</CardTitle>
+                        <CardTitle className="text-sm font-bold text-foreground">Strategic Vision & Core Value Proposition</CardTitle>
                         <CardDescription className="text-xs">Formulate core market intent, mission baseline, and strategic objectives.</CardDescription>
                       </div>
                     </div>
@@ -622,7 +597,7 @@ export function ProductStrategyFormPage({
                         <Compass className="h-4 w-4" />
                       </div>
                       <div>
-                        <CardTitle className="text-sm font-bold text-foreground">2. Market Strategy & Customer Personas</CardTitle>
+                        <CardTitle className="text-sm font-bold text-foreground">Market Strategy & Customer Personas</CardTitle>
                         <CardDescription className="text-xs">Addressable market dynamics, user personas, and customer journey orchestration.</CardDescription>
                       </div>
                     </div>
@@ -699,7 +674,7 @@ export function ProductStrategyFormPage({
                         <Layers className="h-4 w-4" />
                       </div>
                       <div>
-                        <CardTitle className="text-sm font-bold text-foreground">3. Product Portfolio Classification</CardTitle>
+                        <CardTitle className="text-sm font-bold text-foreground">Product Portfolio Classification</CardTitle>
                         <CardDescription className="text-xs">Define category hierarchy, lifecycle phase, and organizational portfolio priority.</CardDescription>
                       </div>
                     </div>
@@ -787,7 +762,7 @@ export function ProductStrategyFormPage({
                         <Zap className="h-4 w-4" />
                       </div>
                       <div>
-                        <CardTitle className="text-sm font-bold text-foreground">4. Emerging Technologies & ESG Innovation Strategy</CardTitle>
+                        <CardTitle className="text-sm font-bold text-foreground">Emerging Technologies & ESG Innovation Strategy</CardTitle>
                         <CardDescription className="text-xs">Advanced technology stack, AI integration models, and environmental sustainability alignment.</CardDescription>
                       </div>
                     </div>
@@ -904,7 +879,7 @@ export function ProductStrategyFormPage({
                         <Briefcase className="h-4 w-4" />
                       </div>
                       <div>
-                        <CardTitle className="text-sm font-bold text-foreground">5. Commercial Architecture & Revenue Engine</CardTitle>
+                        <CardTitle className="text-sm font-bold text-foreground">Commercial Architecture & Revenue Engine</CardTitle>
                         <CardDescription className="text-xs">Monetization architecture, strategic partner channels, and Total Addressable Market (TAM).</CardDescription>
                       </div>
                     </div>
@@ -991,7 +966,7 @@ export function ProductStrategyFormPage({
                         <DollarSign className="h-4 w-4" />
                       </div>
                       <div>
-                        <CardTitle className="text-sm font-bold text-foreground">6. Multi-Year Financial Strategy & ROI Horizon</CardTitle>
+                        <CardTitle className="text-sm font-bold text-foreground">Multi-Year Financial Strategy & ROI Horizon</CardTitle>
                         <CardDescription className="text-xs">Capital deployment, cost-to-develop, margin targets, and breakeven milestones.</CardDescription>
                       </div>
                     </div>
@@ -1079,7 +1054,7 @@ export function ProductStrategyFormPage({
                         <ShieldCheck className="h-4 w-4" />
                       </div>
                       <div>
-                        <CardTitle className="text-sm font-bold text-foreground">7. Strategic Risk Assessment & Compliance Matrix</CardTitle>
+                        <CardTitle className="text-sm font-bold text-foreground">Strategic Risk Assessment & Compliance Matrix</CardTitle>
                         <CardDescription className="text-xs">Identify vulnerability vectors, regulatory pre-clearance, and mitigations.</CardDescription>
                       </div>
                     </div>
@@ -1367,68 +1342,6 @@ export function ProductStrategyFormPage({
 
           {/* RIGHT 1 COL: STRATEGY ASSESSMENT & SCORE SIDEBAR */}
           <div className="space-y-6">
-            {/* Overall Score Card */}
-            <Card className="border-border/80 shadow-xs bg-card">
-              <CardHeader className="pb-2 border-b border-border/50">
-                <CardTitle className="text-sm font-bold flex items-center justify-between">
-                  <span>Strategy Readiness Score</span>
-                  <Award className="h-4 w-4 text-primary" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-4 flex flex-col items-center space-y-4">
-                <CircularScoreGauge score={sidebarSummary.overallScore} />
-
-                {/* Score Breakdown Bars */}
-                <div className="w-full space-y-2.5 pt-2 text-xs">
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-muted-foreground font-semibold">Market Readiness</span>
-                      <strong className="font-mono text-foreground">{sidebarSummary.marketReadiness}%</strong>
-                    </div>
-                    <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-indigo-500 rounded-full transition-all duration-500" style={{ width: `${sidebarSummary.marketReadiness}%` }} />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-muted-foreground font-semibold">Innovation & Tech</span>
-                      <strong className="font-mono text-foreground">{sidebarSummary.innovationScore}%</strong>
-                    </div>
-                    <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-amber-500 rounded-full transition-all duration-500" style={{ width: `${sidebarSummary.innovationScore}%` }} />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-muted-foreground font-semibold">Financial Viability</span>
-                      <strong className="font-mono text-foreground">{sidebarSummary.financialScore}%</strong>
-                    </div>
-                    <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: `${sidebarSummary.financialScore}%` }} />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-muted-foreground font-semibold">Strategic Alignment</span>
-                      <strong className="font-mono text-foreground">{sidebarSummary.strategicScore}%</strong>
-                    </div>
-                    <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${sidebarSummary.strategicScore}%` }} />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="w-full pt-3 border-t border-border/60 text-center">
-                  <span className="text-[11px] text-muted-foreground block">Executive Recommendation:</span>
-                  <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 block">
-                    {aiAssessment.aiRecommendation}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
 
             {/* Key Commercial Metrics Strip */}
             <Card className="border-border/80 shadow-xs bg-card">

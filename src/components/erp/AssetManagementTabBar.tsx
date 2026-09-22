@@ -19,6 +19,7 @@ export const ASSET_MANAGEMENT_TABS = [
   { to: "/management/asset-management/asset-lifecycle", label: "Asset Lifecycle" },
   { to: "/management/asset-management/asset-depreciation", label: "Asset Depreciation" },
   { to: "/management/asset-management/asset-tracking", label: "Asset Tracking" },
+  { to: "/management/asset-management/reports", label: "Report" },
 ];
 
 export function AssetManagementTabBar() {

@@ -35,6 +35,7 @@ export const QUALITY_MANAGEMENT_TABS = [
   { to: "/management/quality-management/calibration", label: "Calibration", icon: Scale },
   { to: "/management/quality-management/compliance", label: "Compliance", icon: FileBadge },
   { to: "/management/quality-management/quality-analytics", label: "Quality Analytics", icon: TrendingUp },
+  { to: "/management/quality-management/reports", label: "Report", icon: FileCheck },
 ];
 
 export function QualityManagementTabBar() {

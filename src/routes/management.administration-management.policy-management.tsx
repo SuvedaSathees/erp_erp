@@ -157,7 +157,7 @@ function PolicyManagementPage() {
   return (
     <AppShell
       title="Policy Management"
-      breadcrumb="Management > Administration Management > Policy Management"
+      breadcrumb="Management > Organization > Policy Management"
       description="Manage the complete governance lifecycle of organizational policies—from drafting, framework, review, approval, publication, communication, acknowledgement, to implementation and audit."
       tabs={<AdminManagementTabBar />}
     >

@@ -63,7 +63,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { commercializationService } from "@/services";
+import { commercializationService } from "@/services/commercializationService";
 import type {
   CommercializationApprovalDecision,
   CommercializationFormInput,

@@ -25,6 +25,7 @@ export const HRM_TABS: { to: string; label: string; disabled?: boolean }[] = [
   { to: "/management/hrm-management/employee-welfare", label: "Employee Welfare" },
   { to: "/management/hrm-management/exit-management", label: "Exit Management" },
   { to: "/management/hrm-management/hr-analytics", label: "HR Analytics" },
+  { to: "/management/hrm-management/reports", label: "Report" },
 ];
 
 export function HrmManagementTabBar() {

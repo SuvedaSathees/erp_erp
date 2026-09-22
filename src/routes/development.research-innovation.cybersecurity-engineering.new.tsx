@@ -82,6 +82,7 @@ import {
   CYBERSECURITY_TABS,
   type CybersecurityEngineeringTabId,
 } from "@/components/erp/CybersecurityEngineeringTabBar";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -950,60 +951,9 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
           }}
         />
 
-        {/* ====================================================================
-           3. EXECUTIVE OVERALL CYBERSECURITY SCORE & PILLARS STRIP
-           ==================================================================== */}
+        {/* Scores & Health Gauges Banner */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
-          <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs overflow-hidden">
-            <div className="p-4 sm:p-5 flex flex-col xl:flex-row items-center justify-between gap-6">
-              {/* Overall Score Gauge */}
-              <div className="flex items-center gap-5 shrink-0">
-                <CircularScoreGauge score={record.overallCybersecurityScore} label="Overall Score" />
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-foreground">Cybersecurity Lifecycle Readiness</span>
-                    <Badge className="bg-emerald-600 text-white text-[10px] font-semibold">5 of 5 Pillars Compliant</Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground max-w-md">
-                    Zero Trust architecture verification, continuous STRIDE threat modeling, ASVS Level 2 code assurance, and 24/7 SIEM monitoring.
-                  </p>
-                  <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 pt-0.5">
-                    <Target className="h-3.5 w-3.5" />
-                    <span>Total Score: {record.overallCybersecurityScore}% (91% Avg across 5 Pillars)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 5 Component Metrics with Progress Bars */}
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 w-full xl:w-auto xl:min-w-[620px]">
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">1. Threat Model</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.threatReadinessScore}%</span>
-                  <Progress value={record.threatReadinessScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">2. Architecture</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.architectureSecurityScore}%</span>
-                  <Progress value={record.architectureSecurityScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">3. Secure Dev</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.secureDevelopmentScore}%</span>
-                  <Progress value={record.secureDevelopmentScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">4. Compliance</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.governanceScore}%</span>
-                  <Progress value={record.governanceScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 col-span-2 sm:col-span-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">5. Monitoring</span>
-                  <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 font-mono">{record.monitoringScore}%</span>
-                  <Progress value={record.monitoringScore} className="h-1.5" />
-                </div>
-              </div>
-            </div>
-          </Card>
+          <ProductScoreBanner submoduleKey="cybersecurity-engineering" />
 
           {/* ====================================================================
              4. BALANCED WORKSPACE SECTIONS GRID
@@ -1015,7 +965,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">1. Security Project Overview & Target Scope</CardTitle>
+                    <CardTitle className="text-sm font-bold">Security Project Overview & Target Scope</CardTitle>
                   </div>
                   <Badge className="bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 font-semibold text-xs border border-red-200">
                     Criticality: High
@@ -1067,7 +1017,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Lock className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">3. Secure Architecture & Zero Trust Principles</CardTitle>
+                    <CardTitle className="text-sm font-bold">Secure Architecture & Zero Trust Principles</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-blue-600 text-white font-mono text-xs font-semibold">
@@ -1122,7 +1072,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <AlertOctagon className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">2. Threat Modeling & STRIDE Risk Matrix</CardTitle>
+                    <CardTitle className="text-sm font-bold">Threat Modeling & STRIDE Risk Matrix</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-blue-600 text-white font-mono text-xs font-semibold">
@@ -1189,7 +1139,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Key className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">4. Identity & Access Management (IAM)</CardTitle>
+                    <CardTitle className="text-sm font-bold">Identity & Access Management (IAM)</CardTitle>
                   </div>
                   <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
                     IAM Score: {record.iamConfig.iamReadinessScore}/100
@@ -1233,7 +1183,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <FileCode className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">5. Secure Development & SAST/SCA Scanning</CardTitle>
+                    <CardTitle className="text-sm font-bold">Secure Development & SAST/SCA Scanning</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-purple-600 text-white font-mono text-xs font-semibold">
@@ -1283,7 +1233,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Terminal className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">6. Security Testing & Penetration Validation</CardTitle>
+                    <CardTitle className="text-sm font-bold">Security Testing & Penetration Validation</CardTitle>
                   </div>
                   <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
                     Validation Score: {record.testingConfig.validationScore}/100
@@ -1314,7 +1264,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Activity className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">7. Security Monitoring & Incident Response</CardTitle>
+                    <CardTitle className="text-sm font-bold">Security Monitoring & Incident Response</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-blue-600 text-white font-mono text-xs font-semibold">
@@ -1362,7 +1312,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-purple-600" />
-                    <CardTitle className="text-sm font-bold">8. Compliance Governance & AI Copilot</CardTitle>
+                    <CardTitle className="text-sm font-bold">Compliance Governance & AI Copilot</CardTitle>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
@@ -1412,7 +1362,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
               <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Paperclip className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">10. Security Attachments & Penetration Reports</CardTitle>
+                  <CardTitle className="text-sm font-bold">Security Attachments & Penetration Reports</CardTitle>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-xs font-mono">{record.attachments.length} Files</Badge>
@@ -1486,7 +1436,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
               <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <UserCheck className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">11. Review & Approval Board Timeline</CardTitle>
+                  <CardTitle className="text-sm font-bold">Review & Approval Board Timeline</CardTitle>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold border-amber-200">
@@ -1623,7 +1573,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
               <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <HistoryIcon className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">12. Audit Trail & Verification Logs</CardTitle>
+                  <CardTitle className="text-sm font-bold">Audit Trail & Verification Logs</CardTitle>
                 </div>
                 <Badge variant="outline" className="text-xs font-mono">Immutable Log</Badge>
               </CardHeader>

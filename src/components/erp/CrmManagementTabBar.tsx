@@ -21,6 +21,7 @@ const CRM_TABS = [
   { to: "/management/crm-management/customer-feedback", label: "Customer Feedback" },
   { to: "/management/crm-management/customer-success", label: "Customer Success" },
   { to: "/management/crm-management/loyalty-management", label: "Loyalty Management" },
+  { to: "/management/crm-management/reports", label: "Report" },
 ];
 
 export function CrmManagementTabBar() {

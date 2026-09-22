@@ -280,7 +280,7 @@ function OrganizationStructurePage() {
   return (
     <AppShell
       title="Organization Structure"
-      breadcrumb="Management > Administration Management > Organization Structure"
+      breadcrumb="Management > Organization > Organization Structure"
       tabs={<AdminManagementTabBar />}
     >
       {/* Toast Notification */}

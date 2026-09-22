@@ -1,5 +1,6 @@
 import React from "react";
 import { getScoreBand } from "@/lib/mass-production-readiness/scoring";
+import { cn } from "@/lib/utils";
 
 interface MassProductionKpisProps {
   overallScore: number;
@@ -19,7 +20,7 @@ export const MassProductionKpis: React.FC<MassProductionKpisProps> = ({
   aiReadinessScore,
 }) => {
   const cards = [
-    { label: "Overall Readiness", score: overallScore },
+    { label: "Overall Score", score: overallScore },
     { label: "Manufacturing Score", score: manufacturingScore },
     { label: "Quality Score", score: qualityScore },
     { label: "Supply Chain Score", score: supplyChainScore },
@@ -27,60 +28,63 @@ export const MassProductionKpis: React.FC<MassProductionKpisProps> = ({
     { label: "AI Readiness Score", score: aiReadinessScore },
   ];
 
-  // SVG Ring Renderer
-  const renderDonut = (value: number, strokeColor: string) => {
-    const radius = 22;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference - (value / 100) * circumference;
-
-    return (
-      <div className="relative w-14 h-14 flex items-center justify-center">
-        <svg className="w-14 h-14 transform -rotate-90">
-          <circle
-            cx="28"
-            cy="28"
-            r={radius}
-            stroke="currentColor"
-            strokeWidth="4"
-            className="text-muted/20"
-            fill="transparent"
-          />
-          <circle
-            cx="28"
-            cy="28"
-            r={radius}
-            stroke={strokeColor}
-            strokeWidth="4"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            strokeLinecap="round"
-            fill="transparent"
-          />
-        </svg>
-        <span className="absolute text-[11px] font-bold text-foreground">{value}%</span>
-      </div>
-    );
-  };
+  const circleSize = 64;
+  const radius = 26;
+  const stroke = 5;
+  const circumference = 2 * Math.PI * radius;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 w-full">
       {cards.map((c, idx) => {
         const band = getScoreBand(c.score);
+        const pct = Math.min(100, Math.max(0, c.score));
+        const offset = circumference - (circumference * pct) / 100;
+        const colorClass =
+          c.score >= 90
+            ? "text-emerald-500"
+            : c.score >= 80
+            ? "text-blue-600"
+            : c.score >= 70
+            ? "text-blue-600"
+            : "text-rose-500";
+
         return (
           <div
             key={idx}
-            className="bg-card text-card-foreground p-3 rounded-lg border border-border/70 shadow-sm flex items-center justify-between"
+            className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card p-4 shadow-xs text-center transition-all hover:shadow-md hover:border-primary/30 min-w-0"
           >
-            <div>
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block">
-                {c.label}
-              </span>
-              <span className="text-lg font-black text-foreground">{c.score}/100</span>
-              <span className={`inline-block mt-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${band.colorClass}`}>
-                {band.label}
-              </span>
+            <div className="relative grid place-items-center" style={{ width: circleSize, height: circleSize }}>
+              <svg className="-rotate-90 transform" width={circleSize} height={circleSize} viewBox={`0 0 ${circleSize} ${circleSize}`}>
+                <circle
+                  cx={circleSize / 2}
+                  cy={circleSize / 2}
+                  r={radius}
+                  stroke="currentColor"
+                  strokeWidth={stroke}
+                  className="text-muted/20"
+                  fill="transparent"
+                />
+                <circle
+                  cx={circleSize / 2}
+                  cy={circleSize / 2}
+                  r={radius}
+                  stroke="currentColor"
+                  strokeWidth={stroke}
+                  className={cn("transition-all duration-1000 ease-out", colorClass)}
+                  strokeDasharray={circumference}
+                  strokeDashoffset={offset}
+                  strokeLinecap="round"
+                  fill="transparent"
+                />
+              </svg>
+              <div className="absolute flex flex-col items-center justify-center">
+                <span className="font-display font-bold text-foreground text-sm sm:text-base">{c.score}</span>
+              </div>
             </div>
-            {renderDonut(c.score, band.ringColor)}
+            <span className="font-bold text-foreground truncate max-w-full mt-2 text-xs sm:text-[13px]">
+              {c.label}
+            </span>
+            <span className="text-[11px] text-muted-foreground font-medium mt-0.5">{band.label || "Very Good"}</span>
           </div>
         );
       })}

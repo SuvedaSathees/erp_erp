@@ -5,7 +5,7 @@ import { AppShell } from "@/components/erp/AppShell";
 import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { generalLedgerService } from "@/services";
+import * as generalLedgerService from "@/services/generalLedgerService";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 

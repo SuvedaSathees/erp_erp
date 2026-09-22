@@ -170,3 +170,51 @@ export const INITIAL_COMPLIANCE_RECORD: ComplianceRecord = {
     },
   ],
 };
+
+export async function fetchReconciliations(_query?: any) {
+  return [
+    {
+      id: "REC-001",
+      taxType: "GST liability",
+      period: "Apr 2025",
+      returnsLiability: 4250000.0,
+      booksLiability: 4250000.0,
+      difference: 0.0,
+      status: "Reconciled" as const,
+    },
+    {
+      id: "REC-002",
+      taxType: "TDS Contractors",
+      period: "Q4 FY24-25",
+      returnsLiability: 680000.0,
+      booksLiability: 678000.0,
+      difference: 2000.0,
+      status: "Mismatched" as const,
+    },
+  ];
+}
+
+export async function fetchComplianceOverview(_query?: any) {
+  return {
+    rate: 98,
+    onTrackCount: 14,
+    dueSoonCount: 2,
+    overdueCount: 0,
+  };
+}
+
+export async function performTaxReconciliation(_query?: any) {
+  return {
+    reconciledCount: 2,
+    varianceResolved: 2000,
+  };
+}
+
+export async function fetchRecord(): Promise<ComplianceRecord> {
+  return { ...INITIAL_COMPLIANCE_RECORD };
+}
+
+export async function saveDraft(input: Partial<ComplianceRecord>): Promise<ComplianceRecord> {
+  return { ...INITIAL_COMPLIANCE_RECORD, ...input };
+}
+

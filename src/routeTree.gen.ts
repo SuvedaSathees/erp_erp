@@ -51,6 +51,7 @@ import { Route as ManagementSalesManagementSalesOrdersRouteImport } from './rout
 import { Route as ManagementSalesManagementSalesForecastingRouteImport } from './routes/management.sales-management.sales-forecasting'
 import { Route as ManagementSalesManagementSalesCommissionRouteImport } from './routes/management.sales-management.sales-commission'
 import { Route as ManagementSalesManagementSalesAnalyticsRouteImport } from './routes/management.sales-management.sales-analytics'
+import { Route as ManagementSalesManagementReportsRouteImport } from './routes/management.sales-management.reports'
 import { Route as ManagementSalesManagementPricingRouteImport } from './routes/management.sales-management.pricing'
 import { Route as ManagementSalesManagementOverviewRouteImport } from './routes/management.sales-management.overview'
 import { Route as ManagementSalesManagementDiscountsRouteImport } from './routes/management.sales-management.discounts'
@@ -58,6 +59,7 @@ import { Route as ManagementSalesManagementCustomerOrdersManagementRouteImport }
 import { Route as ManagementSalesManagementContractsRouteImport } from './routes/management.sales-management.contracts'
 import { Route as ManagementSalesManagementChannelPartnersRouteImport } from './routes/management.sales-management.channel-partners'
 import { Route as ManagementQualityManagementRootCauseAnalysisRouteImport } from './routes/management.quality-management.root-cause-analysis'
+import { Route as ManagementQualityManagementReportsRouteImport } from './routes/management.quality-management.reports'
 import { Route as ManagementQualityManagementQualityPlanningRouteImport } from './routes/management.quality-management.quality-planning'
 import { Route as ManagementQualityManagementQualityAnalyticsRouteImport } from './routes/management.quality-management.quality-analytics'
 import { Route as ManagementQualityManagementOverviewRouteImport } from './routes/management.quality-management.overview'
@@ -74,6 +76,7 @@ import { Route as ManagementProjectManagementTimeTrackingRouteImport } from './r
 import { Route as ManagementProjectManagementTaskManagementRouteImport } from './routes/management.project-management.task-management'
 import { Route as ManagementProjectManagementRiskManagementRouteImport } from './routes/management.project-management.risk-management'
 import { Route as ManagementProjectManagementResourceAllocationRouteImport } from './routes/management.project-management.resource-allocation'
+import { Route as ManagementProjectManagementReportsRouteImport } from './routes/management.project-management.reports'
 import { Route as ManagementProjectManagementProjectPlanningRouteImport } from './routes/management.project-management.project-planning'
 import { Route as ManagementProjectManagementProjectBillingRouteImport } from './routes/management.project-management.project-billing'
 import { Route as ManagementProjectManagementProjectAnalyticsRouteImport } from './routes/management.project-management.project-analytics'
@@ -88,6 +91,7 @@ import { Route as ManagementProcurementManagementVendorComparisonRouteImport } f
 import { Route as ManagementProcurementManagementTenderManagementRouteImport } from './routes/management.procurement-management.tender-management'
 import { Route as ManagementProcurementManagementSupplierPortalRouteImport } from './routes/management.procurement-management.supplier-portal'
 import { Route as ManagementProcurementManagementRfqQuotationRouteImport } from './routes/management.procurement-management.rfq-quotation'
+import { Route as ManagementProcurementManagementReportsRouteImport } from './routes/management.procurement-management.reports'
 import { Route as ManagementProcurementManagementPurchaseRequisitionRouteImport } from './routes/management.procurement-management.purchase-requisition'
 import { Route as ManagementProcurementManagementPurchaseOrderRouteImport } from './routes/management.procurement-management.purchase-order'
 import { Route as ManagementProcurementManagementOverviewRouteImport } from './routes/management.procurement-management.overview'
@@ -96,6 +100,7 @@ import { Route as ManagementProcurementManagementGoodsReceiptRouteImport } from 
 import { Route as ManagementProcurementManagementContractManagementRouteImport } from './routes/management.procurement-management.contract-management'
 import { Route as ManagementHrmManagementWorkforcePlanningRouteImport } from './routes/management.hrm-management.workforce-planning'
 import { Route as ManagementHrmManagementTravelExpenseRouteImport } from './routes/management.hrm-management.travel-expense'
+import { Route as ManagementHrmManagementReportsRouteImport } from './routes/management.hrm-management.reports'
 import { Route as ManagementHrmManagementRecruitmentManagementRouteImport } from './routes/management.hrm-management.recruitment-management'
 import { Route as ManagementHrmManagementPerformanceManagementRouteImport } from './routes/management.hrm-management.performance-management'
 import { Route as ManagementHrmManagementPayrollManagementRouteImport } from './routes/management.hrm-management.payroll-management'
@@ -126,6 +131,7 @@ import { Route as ManagementFinanceBudgetingRouteImport } from './routes/managem
 import { Route as ManagementFinanceAuditRouteImport } from './routes/management.finance.audit'
 import { Route as ManagementFinanceAssetsRouteImport } from './routes/management.finance.assets'
 import { Route as ManagementCrmManagementSalesPipelineManagementRouteImport } from './routes/management.crm-management.sales-pipeline-management'
+import { Route as ManagementCrmManagementReportsRouteImport } from './routes/management.crm-management.reports'
 import { Route as ManagementCrmManagementQuotationsManagementRouteImport } from './routes/management.crm-management.quotations-management'
 import { Route as ManagementCrmManagementOverviewRouteImport } from './routes/management.crm-management.overview'
 import { Route as ManagementCrmManagementOpportunityManagementRouteImport } from './routes/management.crm-management.opportunity-management'
@@ -140,6 +146,7 @@ import { Route as ManagementCrmManagementComplaintManagementRouteImport } from '
 import { Route as ManagementCrmManagementAccountsRouteImport } from './routes/management.crm-management.accounts'
 import { Route as ManagementCrmManagementAccountManagementRouteImport } from './routes/management.crm-management.account-management'
 import { Route as ManagementAssetManagementToolManagementRouteImport } from './routes/management.asset-management.tool-management'
+import { Route as ManagementAssetManagementReportsRouteImport } from './routes/management.asset-management.reports'
 import { Route as ManagementAssetManagementPreventiveMaintenanceRouteImport } from './routes/management.asset-management.preventive-maintenance'
 import { Route as ManagementAssetManagementPredictiveMaintenanceRouteImport } from './routes/management.asset-management.predictive-maintenance'
 import { Route as ManagementAssetManagementOverviewRouteImport } from './routes/management.asset-management.overview'
@@ -151,6 +158,7 @@ import { Route as ManagementAssetManagementAssetTrackingRouteImport } from './ro
 import { Route as ManagementAssetManagementAssetLifecycleRouteImport } from './routes/management.asset-management.asset-lifecycle'
 import { Route as ManagementAssetManagementAssetDepreciationRouteImport } from './routes/management.asset-management.asset-depreciation'
 import { Route as ManagementAdministrationManagementUserRoleManagementRouteImport } from './routes/management.administration-management.user-role-management'
+import { Route as ManagementAdministrationManagementReportsRouteImport } from './routes/management.administration-management.reports'
 import { Route as ManagementAdministrationManagementPolicyManagementRouteImport } from './routes/management.administration-management.policy-management'
 import { Route as ManagementAdministrationManagementOverviewRouteImport } from './routes/management.administration-management.overview'
 import { Route as ManagementAdministrationManagementOrganizationStructureRouteImport } from './routes/management.administration-management.organization-structure'
@@ -169,6 +177,7 @@ import { Route as DevelopmentProductDevelopmentUiUxDevelopmentRouteImport } from
 import { Route as DevelopmentProductDevelopmentTestingValidationRouteImport } from './routes/development.product-development.testing-validation'
 import { Route as DevelopmentProductDevelopmentSoftwareDevelopmentRouteImport } from './routes/development.product-development.software-development'
 import { Route as DevelopmentProductDevelopmentSimulationAnalysisRouteImport } from './routes/development.product-development.simulation-analysis'
+import { Route as DevelopmentProductDevelopmentReportsRouteImport } from './routes/development.product-development.reports'
 import { Route as DevelopmentProductDevelopmentProductStrategyRouteImport } from './routes/development.product-development.product-strategy'
 import { Route as DevelopmentProductDevelopmentProductRoadmapRouteImport } from './routes/development.product-development.product-roadmap'
 import { Route as DevelopmentProductDevelopmentProductReleaseManagementRouteImport } from './routes/development.product-development.product-release-management'
@@ -190,11 +199,13 @@ import { Route as DevelopmentProductDevelopmentCloudPlatformDevelopmentRouteImpo
 import { Route as DevelopmentProductDevelopmentCertificationReadinessRouteImport } from './routes/development.product-development.certification-readiness'
 import { Route as DevelopmentProductDevelopmentApiDevelopmentRouteImport } from './routes/development.product-development.api-development'
 import { Route as DevelopmentProductDevelopmentAiModelDevelopmentRouteImport } from './routes/development.product-development.ai-model-development'
+import { Route as DevelopmentManufacturingDevelopmentReportsRouteImport } from './routes/development.manufacturing-development.reports'
 import { Route as DevelopmentManufacturingDevelopmentOverviewRouteImport } from './routes/development.manufacturing-development.overview'
 import { Route as DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRouteImport } from './routes/development.business-development.vendor-ecosystem-development'
 import { Route as DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteImport } from './routes/development.business-development.value-proposition-development'
 import { Route as DevelopmentBusinessDevelopmentSalesChannelDevelopmentRouteImport } from './routes/development.business-development.sales-channel-development'
 import { Route as DevelopmentBusinessDevelopmentRevenueModelDevelopmentRouteImport } from './routes/development.business-development.revenue-model-development'
+import { Route as DevelopmentBusinessDevelopmentReportsRouteImport } from './routes/development.business-development.reports'
 import { Route as DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRouteImport } from './routes/development.business-development.pricing-strategy-development'
 import { Route as DevelopmentBusinessDevelopmentPartnershipDevelopmentRouteImport } from './routes/development.business-development.partnership-development'
 import { Route as DevelopmentBusinessDevelopmentOverviewRouteImport } from './routes/development.business-development.overview'
@@ -606,6 +617,12 @@ const ManagementSalesManagementSalesAnalyticsRoute =
     path: '/management/sales-management/sales-analytics',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementSalesManagementReportsRoute =
+  ManagementSalesManagementReportsRouteImport.update({
+    id: '/management/sales-management/reports',
+    path: '/management/sales-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementSalesManagementPricingRoute =
   ManagementSalesManagementPricingRouteImport.update({
     id: '/management/sales-management/pricing',
@@ -646,6 +663,12 @@ const ManagementQualityManagementRootCauseAnalysisRoute =
   ManagementQualityManagementRootCauseAnalysisRouteImport.update({
     id: '/management/quality-management/root-cause-analysis',
     path: '/management/quality-management/root-cause-analysis',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementReportsRoute =
+  ManagementQualityManagementReportsRouteImport.update({
+    id: '/management/quality-management/reports',
+    path: '/management/quality-management/reports',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementQualityManagementQualityPlanningRoute =
@@ -744,6 +767,12 @@ const ManagementProjectManagementResourceAllocationRoute =
     path: '/management/project-management/resource-allocation',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementProjectManagementReportsRoute =
+  ManagementProjectManagementReportsRouteImport.update({
+    id: '/management/project-management/reports',
+    path: '/management/project-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementProjectManagementProjectPlanningRoute =
   ManagementProjectManagementProjectPlanningRouteImport.update({
     id: '/management/project-management/project-planning',
@@ -828,6 +857,12 @@ const ManagementProcurementManagementRfqQuotationRoute =
     path: '/management/procurement-management/rfq-quotation',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementProcurementManagementReportsRoute =
+  ManagementProcurementManagementReportsRouteImport.update({
+    id: '/management/procurement-management/reports',
+    path: '/management/procurement-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementProcurementManagementPurchaseRequisitionRoute =
   ManagementProcurementManagementPurchaseRequisitionRouteImport.update({
     id: '/management/procurement-management/purchase-requisition',
@@ -874,6 +909,12 @@ const ManagementHrmManagementTravelExpenseRoute =
   ManagementHrmManagementTravelExpenseRouteImport.update({
     id: '/management/hrm-management/travel-expense',
     path: '/management/hrm-management/travel-expense',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementHrmManagementReportsRoute =
+  ManagementHrmManagementReportsRouteImport.update({
+    id: '/management/hrm-management/reports',
+    path: '/management/hrm-management/reports',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementHrmManagementRecruitmentManagementRoute =
@@ -1051,6 +1092,12 @@ const ManagementCrmManagementSalesPipelineManagementRoute =
     path: '/management/crm-management/sales-pipeline-management',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementCrmManagementReportsRoute =
+  ManagementCrmManagementReportsRouteImport.update({
+    id: '/management/crm-management/reports',
+    path: '/management/crm-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementCrmManagementQuotationsManagementRoute =
   ManagementCrmManagementQuotationsManagementRouteImport.update({
     id: '/management/crm-management/quotations-management',
@@ -1135,6 +1182,12 @@ const ManagementAssetManagementToolManagementRoute =
     path: '/management/asset-management/tool-management',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementAssetManagementReportsRoute =
+  ManagementAssetManagementReportsRouteImport.update({
+    id: '/management/asset-management/reports',
+    path: '/management/asset-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementAssetManagementPreventiveMaintenanceRoute =
   ManagementAssetManagementPreventiveMaintenanceRouteImport.update({
     id: '/management/asset-management/preventive-maintenance',
@@ -1199,6 +1252,12 @@ const ManagementAdministrationManagementUserRoleManagementRoute =
   ManagementAdministrationManagementUserRoleManagementRouteImport.update({
     id: '/management/administration-management/user-role-management',
     path: '/management/administration-management/user-role-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementAdministrationManagementReportsRoute =
+  ManagementAdministrationManagementReportsRouteImport.update({
+    id: '/management/administration-management/reports',
+    path: '/management/administration-management/reports',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementAdministrationManagementPolicyManagementRoute =
@@ -1309,6 +1368,12 @@ const DevelopmentProductDevelopmentSimulationAnalysisRoute =
   DevelopmentProductDevelopmentSimulationAnalysisRouteImport.update({
     id: '/simulation-analysis',
     path: '/simulation-analysis',
+    getParentRoute: () => DevelopmentProductDevelopmentRoute,
+  } as any)
+const DevelopmentProductDevelopmentReportsRoute =
+  DevelopmentProductDevelopmentReportsRouteImport.update({
+    id: '/reports',
+    path: '/reports',
     getParentRoute: () => DevelopmentProductDevelopmentRoute,
   } as any)
 const DevelopmentProductDevelopmentProductStrategyRoute =
@@ -1437,6 +1502,12 @@ const DevelopmentProductDevelopmentAiModelDevelopmentRoute =
     path: '/ai-model-development',
     getParentRoute: () => DevelopmentProductDevelopmentRoute,
   } as any)
+const DevelopmentManufacturingDevelopmentReportsRoute =
+  DevelopmentManufacturingDevelopmentReportsRouteImport.update({
+    id: '/reports',
+    path: '/reports',
+    getParentRoute: () => DevelopmentManufacturingDevelopmentRoute,
+  } as any)
 const DevelopmentManufacturingDevelopmentOverviewRoute =
   DevelopmentManufacturingDevelopmentOverviewRouteImport.update({
     id: '/overview',
@@ -1465,6 +1536,12 @@ const DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute =
   DevelopmentBusinessDevelopmentRevenueModelDevelopmentRouteImport.update({
     id: '/revenue-model-development',
     path: '/revenue-model-development',
+    getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
+  } as any)
+const DevelopmentBusinessDevelopmentReportsRoute =
+  DevelopmentBusinessDevelopmentReportsRouteImport.update({
+    id: '/reports',
+    path: '/reports',
     getParentRoute: () => DevelopmentBusinessDevelopmentRoute,
   } as any)
 const DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute =
@@ -2564,11 +2641,13 @@ export interface FileRoutesByFullPath {
   '/development/business-development/overview': typeof DevelopmentBusinessDevelopmentOverviewRoute
   '/development/business-development/partnership-development': typeof DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute
   '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
+  '/development/business-development/reports': typeof DevelopmentBusinessDevelopmentReportsRoute
   '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
   '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
+  '/development/manufacturing-development/reports': typeof DevelopmentManufacturingDevelopmentReportsRoute
   '/development/product-development/ai-model-development': typeof DevelopmentProductDevelopmentAiModelDevelopmentRoute
   '/development/product-development/api-development': typeof DevelopmentProductDevelopmentApiDevelopmentRoute
   '/development/product-development/certification-readiness': typeof DevelopmentProductDevelopmentCertificationReadinessRoute
@@ -2590,6 +2669,7 @@ export interface FileRoutesByFullPath {
   '/development/product-development/product-release-management': typeof DevelopmentProductDevelopmentProductReleaseManagementRoute
   '/development/product-development/product-roadmap': typeof DevelopmentProductDevelopmentProductRoadmapRoute
   '/development/product-development/product-strategy': typeof DevelopmentProductDevelopmentProductStrategyRoute
+  '/development/product-development/reports': typeof DevelopmentProductDevelopmentReportsRoute
   '/development/product-development/simulation-analysis': typeof DevelopmentProductDevelopmentSimulationAnalysisRoute
   '/development/product-development/software-development': typeof DevelopmentProductDevelopmentSoftwareDevelopmentRoute
   '/development/product-development/testing-validation': typeof DevelopmentProductDevelopmentTestingValidationRoute
@@ -2608,6 +2688,7 @@ export interface FileRoutesByFullPath {
   '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
   '/management/administration-management/overview': typeof ManagementAdministrationManagementOverviewRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
+  '/management/administration-management/reports': typeof ManagementAdministrationManagementReportsRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
   '/management/asset-management/asset-depreciation': typeof ManagementAssetManagementAssetDepreciationRoute
   '/management/asset-management/asset-lifecycle': typeof ManagementAssetManagementAssetLifecycleRoute
@@ -2619,6 +2700,7 @@ export interface FileRoutesByFullPath {
   '/management/asset-management/overview': typeof ManagementAssetManagementOverviewRoute
   '/management/asset-management/predictive-maintenance': typeof ManagementAssetManagementPredictiveMaintenanceRoute
   '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
+  '/management/asset-management/reports': typeof ManagementAssetManagementReportsRoute
   '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
   '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
@@ -2633,6 +2715,7 @@ export interface FileRoutesByFullPath {
   '/management/crm-management/opportunity-management': typeof ManagementCrmManagementOpportunityManagementRoute
   '/management/crm-management/overview': typeof ManagementCrmManagementOverviewRoute
   '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
+  '/management/crm-management/reports': typeof ManagementCrmManagementReportsRoute
   '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
@@ -2663,6 +2746,7 @@ export interface FileRoutesByFullPath {
   '/management/hrm-management/payroll-management': typeof ManagementHrmManagementPayrollManagementRoute
   '/management/hrm-management/performance-management': typeof ManagementHrmManagementPerformanceManagementRouteWithChildren
   '/management/hrm-management/recruitment-management': typeof ManagementHrmManagementRecruitmentManagementRoute
+  '/management/hrm-management/reports': typeof ManagementHrmManagementReportsRoute
   '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
   '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
   '/management/procurement-management/contract-management': typeof ManagementProcurementManagementContractManagementRoute
@@ -2671,6 +2755,7 @@ export interface FileRoutesByFullPath {
   '/management/procurement-management/overview': typeof ManagementProcurementManagementOverviewRoute
   '/management/procurement-management/purchase-order': typeof ManagementProcurementManagementPurchaseOrderRoute
   '/management/procurement-management/purchase-requisition': typeof ManagementProcurementManagementPurchaseRequisitionRoute
+  '/management/procurement-management/reports': typeof ManagementProcurementManagementReportsRoute
   '/management/procurement-management/rfq-quotation': typeof ManagementProcurementManagementRfqQuotationRoute
   '/management/procurement-management/supplier-portal': typeof ManagementProcurementManagementSupplierPortalRoute
   '/management/procurement-management/tender-management': typeof ManagementProcurementManagementTenderManagementRoute
@@ -2685,6 +2770,7 @@ export interface FileRoutesByFullPath {
   '/management/project-management/project-analytics': typeof ManagementProjectManagementProjectAnalyticsRoute
   '/management/project-management/project-billing': typeof ManagementProjectManagementProjectBillingRoute
   '/management/project-management/project-planning': typeof ManagementProjectManagementProjectPlanningRoute
+  '/management/project-management/reports': typeof ManagementProjectManagementReportsRoute
   '/management/project-management/resource-allocation': typeof ManagementProjectManagementResourceAllocationRoute
   '/management/project-management/risk-management': typeof ManagementProjectManagementRiskManagementRoute
   '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
@@ -2701,6 +2787,7 @@ export interface FileRoutesByFullPath {
   '/management/quality-management/overview': typeof ManagementQualityManagementOverviewRoute
   '/management/quality-management/quality-analytics': typeof ManagementQualityManagementQualityAnalyticsRoute
   '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
+  '/management/quality-management/reports': typeof ManagementQualityManagementReportsRoute
   '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
   '/management/sales-management/channel-partners': typeof ManagementSalesManagementChannelPartnersRoute
   '/management/sales-management/contracts': typeof ManagementSalesManagementContractsRoute
@@ -2708,6 +2795,7 @@ export interface FileRoutesByFullPath {
   '/management/sales-management/discounts': typeof ManagementSalesManagementDiscountsRoute
   '/management/sales-management/overview': typeof ManagementSalesManagementOverviewRoute
   '/management/sales-management/pricing': typeof ManagementSalesManagementPricingRoute
+  '/management/sales-management/reports': typeof ManagementSalesManagementReportsRoute
   '/management/sales-management/sales-analytics': typeof ManagementSalesManagementSalesAnalyticsRoute
   '/management/sales-management/sales-commission': typeof ManagementSalesManagementSalesCommissionRoute
   '/management/sales-management/sales-forecasting': typeof ManagementSalesManagementSalesForecastingRoute
@@ -2917,11 +3005,13 @@ export interface FileRoutesByTo {
   '/development/business-development/overview': typeof DevelopmentBusinessDevelopmentOverviewRoute
   '/development/business-development/partnership-development': typeof DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute
   '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
+  '/development/business-development/reports': typeof DevelopmentBusinessDevelopmentReportsRoute
   '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
   '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
+  '/development/manufacturing-development/reports': typeof DevelopmentManufacturingDevelopmentReportsRoute
   '/development/product-development/ai-model-development': typeof DevelopmentProductDevelopmentAiModelDevelopmentRoute
   '/development/product-development/api-development': typeof DevelopmentProductDevelopmentApiDevelopmentRoute
   '/development/product-development/certification-readiness': typeof DevelopmentProductDevelopmentCertificationReadinessRoute
@@ -2943,6 +3033,7 @@ export interface FileRoutesByTo {
   '/development/product-development/product-release-management': typeof DevelopmentProductDevelopmentProductReleaseManagementRoute
   '/development/product-development/product-roadmap': typeof DevelopmentProductDevelopmentProductRoadmapRoute
   '/development/product-development/product-strategy': typeof DevelopmentProductDevelopmentProductStrategyRoute
+  '/development/product-development/reports': typeof DevelopmentProductDevelopmentReportsRoute
   '/development/product-development/simulation-analysis': typeof DevelopmentProductDevelopmentSimulationAnalysisRoute
   '/development/product-development/software-development': typeof DevelopmentProductDevelopmentSoftwareDevelopmentRoute
   '/development/product-development/testing-validation': typeof DevelopmentProductDevelopmentTestingValidationRoute
@@ -2959,6 +3050,7 @@ export interface FileRoutesByTo {
   '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
   '/management/administration-management/overview': typeof ManagementAdministrationManagementOverviewRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
+  '/management/administration-management/reports': typeof ManagementAdministrationManagementReportsRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
   '/management/asset-management/asset-depreciation': typeof ManagementAssetManagementAssetDepreciationRoute
   '/management/asset-management/asset-lifecycle': typeof ManagementAssetManagementAssetLifecycleRoute
@@ -2970,6 +3062,7 @@ export interface FileRoutesByTo {
   '/management/asset-management/overview': typeof ManagementAssetManagementOverviewRoute
   '/management/asset-management/predictive-maintenance': typeof ManagementAssetManagementPredictiveMaintenanceRoute
   '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
+  '/management/asset-management/reports': typeof ManagementAssetManagementReportsRoute
   '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
   '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
@@ -2984,6 +3077,7 @@ export interface FileRoutesByTo {
   '/management/crm-management/opportunity-management': typeof ManagementCrmManagementOpportunityManagementRoute
   '/management/crm-management/overview': typeof ManagementCrmManagementOverviewRoute
   '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
+  '/management/crm-management/reports': typeof ManagementCrmManagementReportsRoute
   '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
@@ -3014,6 +3108,7 @@ export interface FileRoutesByTo {
   '/management/hrm-management/payroll-management': typeof ManagementHrmManagementPayrollManagementRoute
   '/management/hrm-management/performance-management': typeof ManagementHrmManagementPerformanceManagementRouteWithChildren
   '/management/hrm-management/recruitment-management': typeof ManagementHrmManagementRecruitmentManagementRoute
+  '/management/hrm-management/reports': typeof ManagementHrmManagementReportsRoute
   '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
   '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
   '/management/procurement-management/contract-management': typeof ManagementProcurementManagementContractManagementRoute
@@ -3022,6 +3117,7 @@ export interface FileRoutesByTo {
   '/management/procurement-management/overview': typeof ManagementProcurementManagementOverviewRoute
   '/management/procurement-management/purchase-order': typeof ManagementProcurementManagementPurchaseOrderRoute
   '/management/procurement-management/purchase-requisition': typeof ManagementProcurementManagementPurchaseRequisitionRoute
+  '/management/procurement-management/reports': typeof ManagementProcurementManagementReportsRoute
   '/management/procurement-management/rfq-quotation': typeof ManagementProcurementManagementRfqQuotationRoute
   '/management/procurement-management/supplier-portal': typeof ManagementProcurementManagementSupplierPortalRoute
   '/management/procurement-management/tender-management': typeof ManagementProcurementManagementTenderManagementRoute
@@ -3036,6 +3132,7 @@ export interface FileRoutesByTo {
   '/management/project-management/project-analytics': typeof ManagementProjectManagementProjectAnalyticsRoute
   '/management/project-management/project-billing': typeof ManagementProjectManagementProjectBillingRoute
   '/management/project-management/project-planning': typeof ManagementProjectManagementProjectPlanningRoute
+  '/management/project-management/reports': typeof ManagementProjectManagementReportsRoute
   '/management/project-management/resource-allocation': typeof ManagementProjectManagementResourceAllocationRoute
   '/management/project-management/risk-management': typeof ManagementProjectManagementRiskManagementRoute
   '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
@@ -3052,6 +3149,7 @@ export interface FileRoutesByTo {
   '/management/quality-management/overview': typeof ManagementQualityManagementOverviewRoute
   '/management/quality-management/quality-analytics': typeof ManagementQualityManagementQualityAnalyticsRoute
   '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
+  '/management/quality-management/reports': typeof ManagementQualityManagementReportsRoute
   '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
   '/management/sales-management/channel-partners': typeof ManagementSalesManagementChannelPartnersRoute
   '/management/sales-management/contracts': typeof ManagementSalesManagementContractsRoute
@@ -3059,6 +3157,7 @@ export interface FileRoutesByTo {
   '/management/sales-management/discounts': typeof ManagementSalesManagementDiscountsRoute
   '/management/sales-management/overview': typeof ManagementSalesManagementOverviewRoute
   '/management/sales-management/pricing': typeof ManagementSalesManagementPricingRoute
+  '/management/sales-management/reports': typeof ManagementSalesManagementReportsRoute
   '/management/sales-management/sales-analytics': typeof ManagementSalesManagementSalesAnalyticsRoute
   '/management/sales-management/sales-commission': typeof ManagementSalesManagementSalesCommissionRoute
   '/management/sales-management/sales-forecasting': typeof ManagementSalesManagementSalesForecastingRoute
@@ -3274,11 +3373,13 @@ export interface FileRoutesById {
   '/development/business-development/overview': typeof DevelopmentBusinessDevelopmentOverviewRoute
   '/development/business-development/partnership-development': typeof DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute
   '/development/business-development/pricing-strategy-development': typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
+  '/development/business-development/reports': typeof DevelopmentBusinessDevelopmentReportsRoute
   '/development/business-development/revenue-model-development': typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
   '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
+  '/development/manufacturing-development/reports': typeof DevelopmentManufacturingDevelopmentReportsRoute
   '/development/product-development/ai-model-development': typeof DevelopmentProductDevelopmentAiModelDevelopmentRoute
   '/development/product-development/api-development': typeof DevelopmentProductDevelopmentApiDevelopmentRoute
   '/development/product-development/certification-readiness': typeof DevelopmentProductDevelopmentCertificationReadinessRoute
@@ -3300,6 +3401,7 @@ export interface FileRoutesById {
   '/development/product-development/product-release-management': typeof DevelopmentProductDevelopmentProductReleaseManagementRoute
   '/development/product-development/product-roadmap': typeof DevelopmentProductDevelopmentProductRoadmapRoute
   '/development/product-development/product-strategy': typeof DevelopmentProductDevelopmentProductStrategyRoute
+  '/development/product-development/reports': typeof DevelopmentProductDevelopmentReportsRoute
   '/development/product-development/simulation-analysis': typeof DevelopmentProductDevelopmentSimulationAnalysisRoute
   '/development/product-development/software-development': typeof DevelopmentProductDevelopmentSoftwareDevelopmentRoute
   '/development/product-development/testing-validation': typeof DevelopmentProductDevelopmentTestingValidationRoute
@@ -3318,6 +3420,7 @@ export interface FileRoutesById {
   '/management/administration-management/organization-structure': typeof ManagementAdministrationManagementOrganizationStructureRoute
   '/management/administration-management/overview': typeof ManagementAdministrationManagementOverviewRoute
   '/management/administration-management/policy-management': typeof ManagementAdministrationManagementPolicyManagementRoute
+  '/management/administration-management/reports': typeof ManagementAdministrationManagementReportsRoute
   '/management/administration-management/user-role-management': typeof ManagementAdministrationManagementUserRoleManagementRoute
   '/management/asset-management/asset-depreciation': typeof ManagementAssetManagementAssetDepreciationRoute
   '/management/asset-management/asset-lifecycle': typeof ManagementAssetManagementAssetLifecycleRoute
@@ -3329,6 +3432,7 @@ export interface FileRoutesById {
   '/management/asset-management/overview': typeof ManagementAssetManagementOverviewRoute
   '/management/asset-management/predictive-maintenance': typeof ManagementAssetManagementPredictiveMaintenanceRoute
   '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
+  '/management/asset-management/reports': typeof ManagementAssetManagementReportsRoute
   '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
   '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
@@ -3343,6 +3447,7 @@ export interface FileRoutesById {
   '/management/crm-management/opportunity-management': typeof ManagementCrmManagementOpportunityManagementRoute
   '/management/crm-management/overview': typeof ManagementCrmManagementOverviewRoute
   '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
+  '/management/crm-management/reports': typeof ManagementCrmManagementReportsRoute
   '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
@@ -3373,6 +3478,7 @@ export interface FileRoutesById {
   '/management/hrm-management/payroll-management': typeof ManagementHrmManagementPayrollManagementRoute
   '/management/hrm-management/performance-management': typeof ManagementHrmManagementPerformanceManagementRouteWithChildren
   '/management/hrm-management/recruitment-management': typeof ManagementHrmManagementRecruitmentManagementRoute
+  '/management/hrm-management/reports': typeof ManagementHrmManagementReportsRoute
   '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
   '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
   '/management/procurement-management/contract-management': typeof ManagementProcurementManagementContractManagementRoute
@@ -3381,6 +3487,7 @@ export interface FileRoutesById {
   '/management/procurement-management/overview': typeof ManagementProcurementManagementOverviewRoute
   '/management/procurement-management/purchase-order': typeof ManagementProcurementManagementPurchaseOrderRoute
   '/management/procurement-management/purchase-requisition': typeof ManagementProcurementManagementPurchaseRequisitionRoute
+  '/management/procurement-management/reports': typeof ManagementProcurementManagementReportsRoute
   '/management/procurement-management/rfq-quotation': typeof ManagementProcurementManagementRfqQuotationRoute
   '/management/procurement-management/supplier-portal': typeof ManagementProcurementManagementSupplierPortalRoute
   '/management/procurement-management/tender-management': typeof ManagementProcurementManagementTenderManagementRoute
@@ -3395,6 +3502,7 @@ export interface FileRoutesById {
   '/management/project-management/project-analytics': typeof ManagementProjectManagementProjectAnalyticsRoute
   '/management/project-management/project-billing': typeof ManagementProjectManagementProjectBillingRoute
   '/management/project-management/project-planning': typeof ManagementProjectManagementProjectPlanningRoute
+  '/management/project-management/reports': typeof ManagementProjectManagementReportsRoute
   '/management/project-management/resource-allocation': typeof ManagementProjectManagementResourceAllocationRoute
   '/management/project-management/risk-management': typeof ManagementProjectManagementRiskManagementRoute
   '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
@@ -3411,6 +3519,7 @@ export interface FileRoutesById {
   '/management/quality-management/overview': typeof ManagementQualityManagementOverviewRoute
   '/management/quality-management/quality-analytics': typeof ManagementQualityManagementQualityAnalyticsRoute
   '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
+  '/management/quality-management/reports': typeof ManagementQualityManagementReportsRoute
   '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
   '/management/sales-management/channel-partners': typeof ManagementSalesManagementChannelPartnersRoute
   '/management/sales-management/contracts': typeof ManagementSalesManagementContractsRoute
@@ -3418,6 +3527,7 @@ export interface FileRoutesById {
   '/management/sales-management/discounts': typeof ManagementSalesManagementDiscountsRoute
   '/management/sales-management/overview': typeof ManagementSalesManagementOverviewRoute
   '/management/sales-management/pricing': typeof ManagementSalesManagementPricingRoute
+  '/management/sales-management/reports': typeof ManagementSalesManagementReportsRoute
   '/management/sales-management/sales-analytics': typeof ManagementSalesManagementSalesAnalyticsRoute
   '/management/sales-management/sales-commission': typeof ManagementSalesManagementSalesCommissionRoute
   '/management/sales-management/sales-forecasting': typeof ManagementSalesManagementSalesForecastingRoute
@@ -3634,11 +3744,13 @@ export interface FileRouteTypes {
     | '/development/business-development/overview'
     | '/development/business-development/partnership-development'
     | '/development/business-development/pricing-strategy-development'
+    | '/development/business-development/reports'
     | '/development/business-development/revenue-model-development'
     | '/development/business-development/sales-channel-development'
     | '/development/business-development/value-proposition-development'
     | '/development/business-development/vendor-ecosystem-development'
     | '/development/manufacturing-development/overview'
+    | '/development/manufacturing-development/reports'
     | '/development/product-development/ai-model-development'
     | '/development/product-development/api-development'
     | '/development/product-development/certification-readiness'
@@ -3660,6 +3772,7 @@ export interface FileRouteTypes {
     | '/development/product-development/product-release-management'
     | '/development/product-development/product-roadmap'
     | '/development/product-development/product-strategy'
+    | '/development/product-development/reports'
     | '/development/product-development/simulation-analysis'
     | '/development/product-development/software-development'
     | '/development/product-development/testing-validation'
@@ -3678,6 +3791,7 @@ export interface FileRouteTypes {
     | '/management/administration-management/organization-structure'
     | '/management/administration-management/overview'
     | '/management/administration-management/policy-management'
+    | '/management/administration-management/reports'
     | '/management/administration-management/user-role-management'
     | '/management/asset-management/asset-depreciation'
     | '/management/asset-management/asset-lifecycle'
@@ -3689,6 +3803,7 @@ export interface FileRouteTypes {
     | '/management/asset-management/overview'
     | '/management/asset-management/predictive-maintenance'
     | '/management/asset-management/preventive-maintenance'
+    | '/management/asset-management/reports'
     | '/management/asset-management/tool-management'
     | '/management/crm-management/account-management'
     | '/management/crm-management/accounts'
@@ -3703,6 +3818,7 @@ export interface FileRouteTypes {
     | '/management/crm-management/opportunity-management'
     | '/management/crm-management/overview'
     | '/management/crm-management/quotations-management'
+    | '/management/crm-management/reports'
     | '/management/crm-management/sales-pipeline-management'
     | '/management/finance/assets'
     | '/management/finance/audit'
@@ -3733,6 +3849,7 @@ export interface FileRouteTypes {
     | '/management/hrm-management/payroll-management'
     | '/management/hrm-management/performance-management'
     | '/management/hrm-management/recruitment-management'
+    | '/management/hrm-management/reports'
     | '/management/hrm-management/travel-expense'
     | '/management/hrm-management/workforce-planning'
     | '/management/procurement-management/contract-management'
@@ -3741,6 +3858,7 @@ export interface FileRouteTypes {
     | '/management/procurement-management/overview'
     | '/management/procurement-management/purchase-order'
     | '/management/procurement-management/purchase-requisition'
+    | '/management/procurement-management/reports'
     | '/management/procurement-management/rfq-quotation'
     | '/management/procurement-management/supplier-portal'
     | '/management/procurement-management/tender-management'
@@ -3755,6 +3873,7 @@ export interface FileRouteTypes {
     | '/management/project-management/project-analytics'
     | '/management/project-management/project-billing'
     | '/management/project-management/project-planning'
+    | '/management/project-management/reports'
     | '/management/project-management/resource-allocation'
     | '/management/project-management/risk-management'
     | '/management/project-management/task-management'
@@ -3771,6 +3890,7 @@ export interface FileRouteTypes {
     | '/management/quality-management/overview'
     | '/management/quality-management/quality-analytics'
     | '/management/quality-management/quality-planning'
+    | '/management/quality-management/reports'
     | '/management/quality-management/root-cause-analysis'
     | '/management/sales-management/channel-partners'
     | '/management/sales-management/contracts'
@@ -3778,6 +3898,7 @@ export interface FileRouteTypes {
     | '/management/sales-management/discounts'
     | '/management/sales-management/overview'
     | '/management/sales-management/pricing'
+    | '/management/sales-management/reports'
     | '/management/sales-management/sales-analytics'
     | '/management/sales-management/sales-commission'
     | '/management/sales-management/sales-forecasting'
@@ -3987,11 +4108,13 @@ export interface FileRouteTypes {
     | '/development/business-development/overview'
     | '/development/business-development/partnership-development'
     | '/development/business-development/pricing-strategy-development'
+    | '/development/business-development/reports'
     | '/development/business-development/revenue-model-development'
     | '/development/business-development/sales-channel-development'
     | '/development/business-development/value-proposition-development'
     | '/development/business-development/vendor-ecosystem-development'
     | '/development/manufacturing-development/overview'
+    | '/development/manufacturing-development/reports'
     | '/development/product-development/ai-model-development'
     | '/development/product-development/api-development'
     | '/development/product-development/certification-readiness'
@@ -4013,6 +4136,7 @@ export interface FileRouteTypes {
     | '/development/product-development/product-release-management'
     | '/development/product-development/product-roadmap'
     | '/development/product-development/product-strategy'
+    | '/development/product-development/reports'
     | '/development/product-development/simulation-analysis'
     | '/development/product-development/software-development'
     | '/development/product-development/testing-validation'
@@ -4029,6 +4153,7 @@ export interface FileRouteTypes {
     | '/management/administration-management/organization-structure'
     | '/management/administration-management/overview'
     | '/management/administration-management/policy-management'
+    | '/management/administration-management/reports'
     | '/management/administration-management/user-role-management'
     | '/management/asset-management/asset-depreciation'
     | '/management/asset-management/asset-lifecycle'
@@ -4040,6 +4165,7 @@ export interface FileRouteTypes {
     | '/management/asset-management/overview'
     | '/management/asset-management/predictive-maintenance'
     | '/management/asset-management/preventive-maintenance'
+    | '/management/asset-management/reports'
     | '/management/asset-management/tool-management'
     | '/management/crm-management/account-management'
     | '/management/crm-management/accounts'
@@ -4054,6 +4180,7 @@ export interface FileRouteTypes {
     | '/management/crm-management/opportunity-management'
     | '/management/crm-management/overview'
     | '/management/crm-management/quotations-management'
+    | '/management/crm-management/reports'
     | '/management/crm-management/sales-pipeline-management'
     | '/management/finance/assets'
     | '/management/finance/audit'
@@ -4084,6 +4211,7 @@ export interface FileRouteTypes {
     | '/management/hrm-management/payroll-management'
     | '/management/hrm-management/performance-management'
     | '/management/hrm-management/recruitment-management'
+    | '/management/hrm-management/reports'
     | '/management/hrm-management/travel-expense'
     | '/management/hrm-management/workforce-planning'
     | '/management/procurement-management/contract-management'
@@ -4092,6 +4220,7 @@ export interface FileRouteTypes {
     | '/management/procurement-management/overview'
     | '/management/procurement-management/purchase-order'
     | '/management/procurement-management/purchase-requisition'
+    | '/management/procurement-management/reports'
     | '/management/procurement-management/rfq-quotation'
     | '/management/procurement-management/supplier-portal'
     | '/management/procurement-management/tender-management'
@@ -4106,6 +4235,7 @@ export interface FileRouteTypes {
     | '/management/project-management/project-analytics'
     | '/management/project-management/project-billing'
     | '/management/project-management/project-planning'
+    | '/management/project-management/reports'
     | '/management/project-management/resource-allocation'
     | '/management/project-management/risk-management'
     | '/management/project-management/task-management'
@@ -4122,6 +4252,7 @@ export interface FileRouteTypes {
     | '/management/quality-management/overview'
     | '/management/quality-management/quality-analytics'
     | '/management/quality-management/quality-planning'
+    | '/management/quality-management/reports'
     | '/management/quality-management/root-cause-analysis'
     | '/management/sales-management/channel-partners'
     | '/management/sales-management/contracts'
@@ -4129,6 +4260,7 @@ export interface FileRouteTypes {
     | '/management/sales-management/discounts'
     | '/management/sales-management/overview'
     | '/management/sales-management/pricing'
+    | '/management/sales-management/reports'
     | '/management/sales-management/sales-analytics'
     | '/management/sales-management/sales-commission'
     | '/management/sales-management/sales-forecasting'
@@ -4343,11 +4475,13 @@ export interface FileRouteTypes {
     | '/development/business-development/overview'
     | '/development/business-development/partnership-development'
     | '/development/business-development/pricing-strategy-development'
+    | '/development/business-development/reports'
     | '/development/business-development/revenue-model-development'
     | '/development/business-development/sales-channel-development'
     | '/development/business-development/value-proposition-development'
     | '/development/business-development/vendor-ecosystem-development'
     | '/development/manufacturing-development/overview'
+    | '/development/manufacturing-development/reports'
     | '/development/product-development/ai-model-development'
     | '/development/product-development/api-development'
     | '/development/product-development/certification-readiness'
@@ -4369,6 +4503,7 @@ export interface FileRouteTypes {
     | '/development/product-development/product-release-management'
     | '/development/product-development/product-roadmap'
     | '/development/product-development/product-strategy'
+    | '/development/product-development/reports'
     | '/development/product-development/simulation-analysis'
     | '/development/product-development/software-development'
     | '/development/product-development/testing-validation'
@@ -4387,6 +4522,7 @@ export interface FileRouteTypes {
     | '/management/administration-management/organization-structure'
     | '/management/administration-management/overview'
     | '/management/administration-management/policy-management'
+    | '/management/administration-management/reports'
     | '/management/administration-management/user-role-management'
     | '/management/asset-management/asset-depreciation'
     | '/management/asset-management/asset-lifecycle'
@@ -4398,6 +4534,7 @@ export interface FileRouteTypes {
     | '/management/asset-management/overview'
     | '/management/asset-management/predictive-maintenance'
     | '/management/asset-management/preventive-maintenance'
+    | '/management/asset-management/reports'
     | '/management/asset-management/tool-management'
     | '/management/crm-management/account-management'
     | '/management/crm-management/accounts'
@@ -4412,6 +4549,7 @@ export interface FileRouteTypes {
     | '/management/crm-management/opportunity-management'
     | '/management/crm-management/overview'
     | '/management/crm-management/quotations-management'
+    | '/management/crm-management/reports'
     | '/management/crm-management/sales-pipeline-management'
     | '/management/finance/assets'
     | '/management/finance/audit'
@@ -4442,6 +4580,7 @@ export interface FileRouteTypes {
     | '/management/hrm-management/payroll-management'
     | '/management/hrm-management/performance-management'
     | '/management/hrm-management/recruitment-management'
+    | '/management/hrm-management/reports'
     | '/management/hrm-management/travel-expense'
     | '/management/hrm-management/workforce-planning'
     | '/management/procurement-management/contract-management'
@@ -4450,6 +4589,7 @@ export interface FileRouteTypes {
     | '/management/procurement-management/overview'
     | '/management/procurement-management/purchase-order'
     | '/management/procurement-management/purchase-requisition'
+    | '/management/procurement-management/reports'
     | '/management/procurement-management/rfq-quotation'
     | '/management/procurement-management/supplier-portal'
     | '/management/procurement-management/tender-management'
@@ -4464,6 +4604,7 @@ export interface FileRouteTypes {
     | '/management/project-management/project-analytics'
     | '/management/project-management/project-billing'
     | '/management/project-management/project-planning'
+    | '/management/project-management/reports'
     | '/management/project-management/resource-allocation'
     | '/management/project-management/risk-management'
     | '/management/project-management/task-management'
@@ -4480,6 +4621,7 @@ export interface FileRouteTypes {
     | '/management/quality-management/overview'
     | '/management/quality-management/quality-analytics'
     | '/management/quality-management/quality-planning'
+    | '/management/quality-management/reports'
     | '/management/quality-management/root-cause-analysis'
     | '/management/sales-management/channel-partners'
     | '/management/sales-management/contracts'
@@ -4487,6 +4629,7 @@ export interface FileRouteTypes {
     | '/management/sales-management/discounts'
     | '/management/sales-management/overview'
     | '/management/sales-management/pricing'
+    | '/management/sales-management/reports'
     | '/management/sales-management/sales-analytics'
     | '/management/sales-management/sales-commission'
     | '/management/sales-management/sales-forecasting'
@@ -4688,6 +4831,7 @@ export interface RootRouteChildren {
   ManagementAdministrationManagementOrganizationStructureRoute: typeof ManagementAdministrationManagementOrganizationStructureRoute
   ManagementAdministrationManagementOverviewRoute: typeof ManagementAdministrationManagementOverviewRoute
   ManagementAdministrationManagementPolicyManagementRoute: typeof ManagementAdministrationManagementPolicyManagementRoute
+  ManagementAdministrationManagementReportsRoute: typeof ManagementAdministrationManagementReportsRoute
   ManagementAdministrationManagementUserRoleManagementRoute: typeof ManagementAdministrationManagementUserRoleManagementRoute
   ManagementAssetManagementAssetDepreciationRoute: typeof ManagementAssetManagementAssetDepreciationRoute
   ManagementAssetManagementAssetLifecycleRoute: typeof ManagementAssetManagementAssetLifecycleRoute
@@ -4699,6 +4843,7 @@ export interface RootRouteChildren {
   ManagementAssetManagementOverviewRoute: typeof ManagementAssetManagementOverviewRoute
   ManagementAssetManagementPredictiveMaintenanceRoute: typeof ManagementAssetManagementPredictiveMaintenanceRoute
   ManagementAssetManagementPreventiveMaintenanceRoute: typeof ManagementAssetManagementPreventiveMaintenanceRoute
+  ManagementAssetManagementReportsRoute: typeof ManagementAssetManagementReportsRoute
   ManagementAssetManagementToolManagementRoute: typeof ManagementAssetManagementToolManagementRoute
   ManagementCrmManagementAccountManagementRoute: typeof ManagementCrmManagementAccountManagementRoute
   ManagementCrmManagementAccountsRoute: typeof ManagementCrmManagementAccountsRoute
@@ -4713,6 +4858,7 @@ export interface RootRouteChildren {
   ManagementCrmManagementOpportunityManagementRoute: typeof ManagementCrmManagementOpportunityManagementRoute
   ManagementCrmManagementOverviewRoute: typeof ManagementCrmManagementOverviewRoute
   ManagementCrmManagementQuotationsManagementRoute: typeof ManagementCrmManagementQuotationsManagementRoute
+  ManagementCrmManagementReportsRoute: typeof ManagementCrmManagementReportsRoute
   ManagementCrmManagementSalesPipelineManagementRoute: typeof ManagementCrmManagementSalesPipelineManagementRoute
   ManagementFinanceAssetsRoute: typeof ManagementFinanceAssetsRoute
   ManagementFinanceAuditRoute: typeof ManagementFinanceAuditRoute
@@ -4743,6 +4889,7 @@ export interface RootRouteChildren {
   ManagementHrmManagementPayrollManagementRoute: typeof ManagementHrmManagementPayrollManagementRoute
   ManagementHrmManagementPerformanceManagementRoute: typeof ManagementHrmManagementPerformanceManagementRouteWithChildren
   ManagementHrmManagementRecruitmentManagementRoute: typeof ManagementHrmManagementRecruitmentManagementRoute
+  ManagementHrmManagementReportsRoute: typeof ManagementHrmManagementReportsRoute
   ManagementHrmManagementTravelExpenseRoute: typeof ManagementHrmManagementTravelExpenseRoute
   ManagementHrmManagementWorkforcePlanningRoute: typeof ManagementHrmManagementWorkforcePlanningRoute
   ManagementProcurementManagementContractManagementRoute: typeof ManagementProcurementManagementContractManagementRoute
@@ -4751,6 +4898,7 @@ export interface RootRouteChildren {
   ManagementProcurementManagementOverviewRoute: typeof ManagementProcurementManagementOverviewRoute
   ManagementProcurementManagementPurchaseOrderRoute: typeof ManagementProcurementManagementPurchaseOrderRoute
   ManagementProcurementManagementPurchaseRequisitionRoute: typeof ManagementProcurementManagementPurchaseRequisitionRoute
+  ManagementProcurementManagementReportsRoute: typeof ManagementProcurementManagementReportsRoute
   ManagementProcurementManagementRfqQuotationRoute: typeof ManagementProcurementManagementRfqQuotationRoute
   ManagementProcurementManagementSupplierPortalRoute: typeof ManagementProcurementManagementSupplierPortalRoute
   ManagementProcurementManagementTenderManagementRoute: typeof ManagementProcurementManagementTenderManagementRoute
@@ -4765,6 +4913,7 @@ export interface RootRouteChildren {
   ManagementProjectManagementProjectAnalyticsRoute: typeof ManagementProjectManagementProjectAnalyticsRoute
   ManagementProjectManagementProjectBillingRoute: typeof ManagementProjectManagementProjectBillingRoute
   ManagementProjectManagementProjectPlanningRoute: typeof ManagementProjectManagementProjectPlanningRoute
+  ManagementProjectManagementReportsRoute: typeof ManagementProjectManagementReportsRoute
   ManagementProjectManagementResourceAllocationRoute: typeof ManagementProjectManagementResourceAllocationRoute
   ManagementProjectManagementRiskManagementRoute: typeof ManagementProjectManagementRiskManagementRoute
   ManagementProjectManagementTaskManagementRoute: typeof ManagementProjectManagementTaskManagementRoute
@@ -4781,6 +4930,7 @@ export interface RootRouteChildren {
   ManagementQualityManagementOverviewRoute: typeof ManagementQualityManagementOverviewRoute
   ManagementQualityManagementQualityAnalyticsRoute: typeof ManagementQualityManagementQualityAnalyticsRoute
   ManagementQualityManagementQualityPlanningRoute: typeof ManagementQualityManagementQualityPlanningRoute
+  ManagementQualityManagementReportsRoute: typeof ManagementQualityManagementReportsRoute
   ManagementQualityManagementRootCauseAnalysisRoute: typeof ManagementQualityManagementRootCauseAnalysisRoute
   ManagementSalesManagementChannelPartnersRoute: typeof ManagementSalesManagementChannelPartnersRoute
   ManagementSalesManagementContractsRoute: typeof ManagementSalesManagementContractsRoute
@@ -4788,6 +4938,7 @@ export interface RootRouteChildren {
   ManagementSalesManagementDiscountsRoute: typeof ManagementSalesManagementDiscountsRoute
   ManagementSalesManagementOverviewRoute: typeof ManagementSalesManagementOverviewRoute
   ManagementSalesManagementPricingRoute: typeof ManagementSalesManagementPricingRoute
+  ManagementSalesManagementReportsRoute: typeof ManagementSalesManagementReportsRoute
   ManagementSalesManagementSalesAnalyticsRoute: typeof ManagementSalesManagementSalesAnalyticsRoute
   ManagementSalesManagementSalesCommissionRoute: typeof ManagementSalesManagementSalesCommissionRoute
   ManagementSalesManagementSalesForecastingRoute: typeof ManagementSalesManagementSalesForecastingRoute
@@ -5108,6 +5259,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementSalesManagementSalesAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/sales-management/reports': {
+      id: '/management/sales-management/reports'
+      path: '/management/sales-management/reports'
+      fullPath: '/management/sales-management/reports'
+      preLoaderRoute: typeof ManagementSalesManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/sales-management/pricing': {
       id: '/management/sales-management/pricing'
       path: '/management/sales-management/pricing'
@@ -5155,6 +5313,13 @@ declare module '@tanstack/react-router' {
       path: '/management/quality-management/root-cause-analysis'
       fullPath: '/management/quality-management/root-cause-analysis'
       preLoaderRoute: typeof ManagementQualityManagementRootCauseAnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/reports': {
+      id: '/management/quality-management/reports'
+      path: '/management/quality-management/reports'
+      fullPath: '/management/quality-management/reports'
+      preLoaderRoute: typeof ManagementQualityManagementReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/quality-management/quality-planning': {
@@ -5269,6 +5434,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementProjectManagementResourceAllocationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/project-management/reports': {
+      id: '/management/project-management/reports'
+      path: '/management/project-management/reports'
+      fullPath: '/management/project-management/reports'
+      preLoaderRoute: typeof ManagementProjectManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/project-management/project-planning': {
       id: '/management/project-management/project-planning'
       path: '/management/project-management/project-planning'
@@ -5367,6 +5539,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementProcurementManagementRfqQuotationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/procurement-management/reports': {
+      id: '/management/procurement-management/reports'
+      path: '/management/procurement-management/reports'
+      fullPath: '/management/procurement-management/reports'
+      preLoaderRoute: typeof ManagementProcurementManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/procurement-management/purchase-requisition': {
       id: '/management/procurement-management/purchase-requisition'
       path: '/management/procurement-management/purchase-requisition'
@@ -5421,6 +5600,13 @@ declare module '@tanstack/react-router' {
       path: '/management/hrm-management/travel-expense'
       fullPath: '/management/hrm-management/travel-expense'
       preLoaderRoute: typeof ManagementHrmManagementTravelExpenseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/hrm-management/reports': {
+      id: '/management/hrm-management/reports'
+      path: '/management/hrm-management/reports'
+      fullPath: '/management/hrm-management/reports'
+      preLoaderRoute: typeof ManagementHrmManagementReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/hrm-management/recruitment-management': {
@@ -5633,6 +5819,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementCrmManagementSalesPipelineManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/crm-management/reports': {
+      id: '/management/crm-management/reports'
+      path: '/management/crm-management/reports'
+      fullPath: '/management/crm-management/reports'
+      preLoaderRoute: typeof ManagementCrmManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/crm-management/quotations-management': {
       id: '/management/crm-management/quotations-management'
       path: '/management/crm-management/quotations-management'
@@ -5731,6 +5924,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementAssetManagementToolManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/asset-management/reports': {
+      id: '/management/asset-management/reports'
+      path: '/management/asset-management/reports'
+      fullPath: '/management/asset-management/reports'
+      preLoaderRoute: typeof ManagementAssetManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/asset-management/preventive-maintenance': {
       id: '/management/asset-management/preventive-maintenance'
       path: '/management/asset-management/preventive-maintenance'
@@ -5806,6 +6006,13 @@ declare module '@tanstack/react-router' {
       path: '/management/administration-management/user-role-management'
       fullPath: '/management/administration-management/user-role-management'
       preLoaderRoute: typeof ManagementAdministrationManagementUserRoleManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/administration-management/reports': {
+      id: '/management/administration-management/reports'
+      path: '/management/administration-management/reports'
+      fullPath: '/management/administration-management/reports'
+      preLoaderRoute: typeof ManagementAdministrationManagementReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/administration-management/policy-management': {
@@ -5932,6 +6139,13 @@ declare module '@tanstack/react-router' {
       path: '/simulation-analysis'
       fullPath: '/development/product-development/simulation-analysis'
       preLoaderRoute: typeof DevelopmentProductDevelopmentSimulationAnalysisRouteImport
+      parentRoute: typeof DevelopmentProductDevelopmentRoute
+    }
+    '/development/product-development/reports': {
+      id: '/development/product-development/reports'
+      path: '/reports'
+      fullPath: '/development/product-development/reports'
+      preLoaderRoute: typeof DevelopmentProductDevelopmentReportsRouteImport
       parentRoute: typeof DevelopmentProductDevelopmentRoute
     }
     '/development/product-development/product-strategy': {
@@ -6081,6 +6295,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevelopmentProductDevelopmentAiModelDevelopmentRouteImport
       parentRoute: typeof DevelopmentProductDevelopmentRoute
     }
+    '/development/manufacturing-development/reports': {
+      id: '/development/manufacturing-development/reports'
+      path: '/reports'
+      fullPath: '/development/manufacturing-development/reports'
+      preLoaderRoute: typeof DevelopmentManufacturingDevelopmentReportsRouteImport
+      parentRoute: typeof DevelopmentManufacturingDevelopmentRoute
+    }
     '/development/manufacturing-development/overview': {
       id: '/development/manufacturing-development/overview'
       path: '/overview'
@@ -6114,6 +6335,13 @@ declare module '@tanstack/react-router' {
       path: '/revenue-model-development'
       fullPath: '/development/business-development/revenue-model-development'
       preLoaderRoute: typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRouteImport
+      parentRoute: typeof DevelopmentBusinessDevelopmentRoute
+    }
+    '/development/business-development/reports': {
+      id: '/development/business-development/reports'
+      path: '/reports'
+      fullPath: '/development/business-development/reports'
+      preLoaderRoute: typeof DevelopmentBusinessDevelopmentReportsRouteImport
       parentRoute: typeof DevelopmentBusinessDevelopmentRoute
     }
     '/development/business-development/pricing-strategy-development': {
@@ -7329,6 +7557,7 @@ interface DevelopmentBusinessDevelopmentRouteChildren {
   DevelopmentBusinessDevelopmentOverviewRoute: typeof DevelopmentBusinessDevelopmentOverviewRoute
   DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute: typeof DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute
   DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute: typeof DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute
+  DevelopmentBusinessDevelopmentReportsRoute: typeof DevelopmentBusinessDevelopmentReportsRoute
   DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute
   DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute: typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
   DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute: typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
@@ -7376,6 +7605,8 @@ const DevelopmentBusinessDevelopmentRouteChildren: DevelopmentBusinessDevelopmen
       DevelopmentBusinessDevelopmentPartnershipDevelopmentRoute,
     DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute:
       DevelopmentBusinessDevelopmentPricingStrategyDevelopmentRoute,
+    DevelopmentBusinessDevelopmentReportsRoute:
+      DevelopmentBusinessDevelopmentReportsRoute,
     DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute:
       DevelopmentBusinessDevelopmentRevenueModelDevelopmentRoute,
     DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute:
@@ -7395,6 +7626,7 @@ const DevelopmentBusinessDevelopmentRouteWithChildren =
 
 interface DevelopmentManufacturingDevelopmentRouteChildren {
   DevelopmentManufacturingDevelopmentOverviewRoute: typeof DevelopmentManufacturingDevelopmentOverviewRoute
+  DevelopmentManufacturingDevelopmentReportsRoute: typeof DevelopmentManufacturingDevelopmentReportsRoute
   DevelopmentManufacturingDevelopmentIndexRoute: typeof DevelopmentManufacturingDevelopmentIndexRoute
   DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRoute: typeof DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRoute
   DevelopmentManufacturingDevelopmentAutomationDevelopmentIndexRoute: typeof DevelopmentManufacturingDevelopmentAutomationDevelopmentIndexRoute
@@ -7425,6 +7657,8 @@ const DevelopmentManufacturingDevelopmentRouteChildren: DevelopmentManufacturing
   {
     DevelopmentManufacturingDevelopmentOverviewRoute:
       DevelopmentManufacturingDevelopmentOverviewRoute,
+    DevelopmentManufacturingDevelopmentReportsRoute:
+      DevelopmentManufacturingDevelopmentReportsRoute,
     DevelopmentManufacturingDevelopmentIndexRoute:
       DevelopmentManufacturingDevelopmentIndexRoute,
     DevelopmentManufacturingDevelopmentAssemblyLineDevelopmentIndexRoute:
@@ -7502,6 +7736,7 @@ interface DevelopmentProductDevelopmentRouteChildren {
   DevelopmentProductDevelopmentProductReleaseManagementRoute: typeof DevelopmentProductDevelopmentProductReleaseManagementRoute
   DevelopmentProductDevelopmentProductRoadmapRoute: typeof DevelopmentProductDevelopmentProductRoadmapRoute
   DevelopmentProductDevelopmentProductStrategyRoute: typeof DevelopmentProductDevelopmentProductStrategyRoute
+  DevelopmentProductDevelopmentReportsRoute: typeof DevelopmentProductDevelopmentReportsRoute
   DevelopmentProductDevelopmentSimulationAnalysisRoute: typeof DevelopmentProductDevelopmentSimulationAnalysisRoute
   DevelopmentProductDevelopmentSoftwareDevelopmentRoute: typeof DevelopmentProductDevelopmentSoftwareDevelopmentRoute
   DevelopmentProductDevelopmentTestingValidationRoute: typeof DevelopmentProductDevelopmentTestingValidationRoute
@@ -7553,6 +7788,8 @@ const DevelopmentProductDevelopmentRouteChildren: DevelopmentProductDevelopmentR
       DevelopmentProductDevelopmentProductRoadmapRoute,
     DevelopmentProductDevelopmentProductStrategyRoute:
       DevelopmentProductDevelopmentProductStrategyRoute,
+    DevelopmentProductDevelopmentReportsRoute:
+      DevelopmentProductDevelopmentReportsRoute,
     DevelopmentProductDevelopmentSimulationAnalysisRoute:
       DevelopmentProductDevelopmentSimulationAnalysisRoute,
     DevelopmentProductDevelopmentSoftwareDevelopmentRoute:
@@ -8073,6 +8310,8 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementAdministrationManagementOverviewRoute,
   ManagementAdministrationManagementPolicyManagementRoute:
     ManagementAdministrationManagementPolicyManagementRoute,
+  ManagementAdministrationManagementReportsRoute:
+    ManagementAdministrationManagementReportsRoute,
   ManagementAdministrationManagementUserRoleManagementRoute:
     ManagementAdministrationManagementUserRoleManagementRoute,
   ManagementAssetManagementAssetDepreciationRoute:
@@ -8095,6 +8334,7 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementAssetManagementPredictiveMaintenanceRoute,
   ManagementAssetManagementPreventiveMaintenanceRoute:
     ManagementAssetManagementPreventiveMaintenanceRoute,
+  ManagementAssetManagementReportsRoute: ManagementAssetManagementReportsRoute,
   ManagementAssetManagementToolManagementRoute:
     ManagementAssetManagementToolManagementRoute,
   ManagementCrmManagementAccountManagementRoute:
@@ -8121,6 +8361,7 @@ const rootRouteChildren: RootRouteChildren = {
   ManagementCrmManagementOverviewRoute: ManagementCrmManagementOverviewRoute,
   ManagementCrmManagementQuotationsManagementRoute:
     ManagementCrmManagementQuotationsManagementRoute,
+  ManagementCrmManagementReportsRoute: ManagementCrmManagementReportsRoute,
   ManagementCrmManagementSalesPipelineManagementRoute:
     ManagementCrmManagementSalesPipelineManagementRoute,
   ManagementFinanceAssetsRoute: ManagementFinanceAssetsRoute,
@@ -8166,6 +8407,7 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementHrmManagementPerformanceManagementRouteWithChildren,
   ManagementHrmManagementRecruitmentManagementRoute:
     ManagementHrmManagementRecruitmentManagementRoute,
+  ManagementHrmManagementReportsRoute: ManagementHrmManagementReportsRoute,
   ManagementHrmManagementTravelExpenseRoute:
     ManagementHrmManagementTravelExpenseRoute,
   ManagementHrmManagementWorkforcePlanningRoute:
@@ -8182,6 +8424,8 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementProcurementManagementPurchaseOrderRoute,
   ManagementProcurementManagementPurchaseRequisitionRoute:
     ManagementProcurementManagementPurchaseRequisitionRoute,
+  ManagementProcurementManagementReportsRoute:
+    ManagementProcurementManagementReportsRoute,
   ManagementProcurementManagementRfqQuotationRoute:
     ManagementProcurementManagementRfqQuotationRoute,
   ManagementProcurementManagementSupplierPortalRoute:
@@ -8210,6 +8454,8 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementProjectManagementProjectBillingRoute,
   ManagementProjectManagementProjectPlanningRoute:
     ManagementProjectManagementProjectPlanningRoute,
+  ManagementProjectManagementReportsRoute:
+    ManagementProjectManagementReportsRoute,
   ManagementProjectManagementResourceAllocationRoute:
     ManagementProjectManagementResourceAllocationRoute,
   ManagementProjectManagementRiskManagementRoute:
@@ -8240,6 +8486,8 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementQualityManagementQualityAnalyticsRoute,
   ManagementQualityManagementQualityPlanningRoute:
     ManagementQualityManagementQualityPlanningRoute,
+  ManagementQualityManagementReportsRoute:
+    ManagementQualityManagementReportsRoute,
   ManagementQualityManagementRootCauseAnalysisRoute:
     ManagementQualityManagementRootCauseAnalysisRoute,
   ManagementSalesManagementChannelPartnersRoute:
@@ -8253,6 +8501,7 @@ const rootRouteChildren: RootRouteChildren = {
   ManagementSalesManagementOverviewRoute:
     ManagementSalesManagementOverviewRoute,
   ManagementSalesManagementPricingRoute: ManagementSalesManagementPricingRoute,
+  ManagementSalesManagementReportsRoute: ManagementSalesManagementReportsRoute,
   ManagementSalesManagementSalesAnalyticsRoute:
     ManagementSalesManagementSalesAnalyticsRoute,
   ManagementSalesManagementSalesCommissionRoute:

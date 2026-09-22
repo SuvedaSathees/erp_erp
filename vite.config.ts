@@ -5,6 +5,41 @@
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import type { Plugin } from "vite";
+
+/**
+ * Increases Vite SSR ModuleRunner invoke timeout from default 60s to 300s.
+ * On cold start on Windows, transforming large route graph modules like routeTree.gen.ts
+ * can exceed 60s. Setting transport.timeout to 300s prevents spurious 500 timeouts.
+ */
+function ssrTransportTimeoutPlugin(timeoutMs = 300000): Plugin {
+  return {
+    name: "ssr-transport-timeout",
+    configureServer(server) {
+      const serverEnv = (server as any).environments?.server;
+      if (serverEnv) {
+        const proto = Object.getPrototypeOf(serverEnv);
+        const desc =
+          Object.getOwnPropertyDescriptor(proto, "runner") ||
+          Object.getOwnPropertyDescriptor(serverEnv, "runner");
+        if (desc?.get) {
+          const origGet = desc.get;
+          Object.defineProperty(serverEnv, "runner", {
+            configurable: true,
+            enumerable: true,
+            get() {
+              const runner = origGet.call(this);
+              if (runner?.transport && (runner.transport.timeout == null || runner.transport.timeout < timeoutMs)) {
+                runner.transport.timeout = timeoutMs;
+              }
+              return runner;
+            },
+          });
+        }
+      }
+    },
+  };
+}
 
 export default defineConfig({
   tanstackStart: {
@@ -13,15 +48,13 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
-    // dnd-kit is only reached through a lazy import (the widget Edit Mode
-    // layer), so Vite would otherwise discover it late and pre-bundle it in a
-    // second pass — producing a second copy of React and an "Invalid hook call"
-    // the moment Edit Mode opens. Listing it here forces it into the initial
-    // optimize pass alongside React.
+    plugins: [ssrTransportTimeoutPlugin()],
     resolve: {
       dedupe: ["react", "react-dom"],
     },
     optimizeDeps: {
+      exclude: ["mongodb"],
+      holdUntilCrawlEnd: false,
       include: [
         "react",
         "react-dom",
@@ -44,4 +77,3 @@ export default defineConfig({
     },
   },
 });
-

@@ -20,6 +20,7 @@ export const PROJECT_MANAGEMENT_TABS = [
   { to: "/management/project-management/issue-management", label: "Issue Management" },
   { to: "/management/project-management/project-billing", label: "Project Billing" },
   { to: "/management/project-management/project-analytics", label: "Project Analytics" },
+  { to: "/management/project-management/reports", label: "Report" },
 ];
 
 export function ProjectManagementTabBar() {

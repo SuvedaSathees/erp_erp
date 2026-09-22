@@ -67,6 +67,7 @@ import type {
   UiUxPainPoint,
 } from "@/services/types";
 import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import {
   UI_UX_TABS,
   type UiUxDevelopmentTabId,
@@ -881,13 +882,16 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
             </div>
           </div>
 
+          {/* Scores & Health Gauges Banner */}
+          <ProductScoreBanner submoduleKey="ui-ux-development" />
+
           {/* ====================================================================
              2. PROJECT SCOPE & STRATEGIC OBJECTIVES + OVERALL DESIGN SCORE
              ==================================================================== */}
           <div id="section-overview" className="space-y-5 scroll-mt-24">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-              {/* Left 8 Cols: Project Details & Goals */}
-              <Card className="lg:col-span-8 border-border/80 shadow-2xs bg-white dark:bg-slate-900">
+              {/* Full Width: Project Details & Goals */}
+              <Card className="lg:col-span-12 border-border/80 shadow-2xs bg-white dark:bg-slate-900">
                 <CardHeader className="p-4 sm:p-5 pb-3 border-b border-border/40 flex flex-row items-center justify-between">
                   <div>
                     <CardTitle className="text-sm font-bold flex items-center gap-2">
@@ -950,68 +954,6 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                           {platform}
                         </Badge>
                       ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Right 4 Cols: Design Score Radial Gauge */}
-              <Card className="lg:col-span-4 border-border/80 shadow-2xs bg-white dark:bg-slate-900 flex flex-col justify-between">
-                <CardHeader className="p-4 pb-2 border-b border-border/40">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
-                    <span>Overall Design Score</span>
-                    <Award className="h-4 w-4 text-primary" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-5 text-center space-y-4">
-                  {/* Radial Progress Gauge */}
-                  <div className="relative mx-auto flex h-28 w-28 items-center justify-center">
-                    <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        className="text-slate-100 dark:text-slate-800"
-                        strokeWidth="8"
-                        stroke="currentColor"
-                        fill="transparent"
-                      />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        className="text-primary transition-all duration-700 ease-out"
-                        strokeWidth="8"
-                        strokeDasharray={251.33}
-                        strokeDashoffset={251.33 - (251.33 * (record.overallDesignScore ?? 88)) / 100}
-                        strokeLinecap="round"
-                        stroke="currentColor"
-                        fill="transparent"
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-3xl font-black text-primary dark:text-blue-400 font-mono tracking-tight">
-                        {record.overallDesignScore ?? 88}%
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 text-left text-xs border-t border-border/60 pt-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">UX Score</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.uxScore ?? 88}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Visual Design</span>
-                      <span className="font-bold text-slate-900 dark:text-white">{record.visualDesignScore ?? 87}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Accessibility (WCAG 2.2)</span>
-                      <span className="font-bold text-emerald-600">{record.accessibilityScore ?? 90}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Developer Readiness</span>
-                      <span className="font-bold text-primary">{record.developmentReadinessScore ?? 90}%</span>
                     </div>
                   </div>
                 </CardContent>

@@ -64,6 +64,7 @@ import type {
   ProductDocAttachment,
 } from "@/services/types";
 import { ResearchInnovationTabBar } from "@/components/erp/ResearchInnovationTabBar";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -442,15 +443,6 @@ export function ProductDocumentationPage({
     );
   }
 
-  // Key Highlights calculation
-  const keyHighlights = [
-    { label: "All engineering documents are complete", done: rec.engineeringScore >= 90 },
-    { label: "Latest test reports uploaded", done: rec.qualityComplianceScore >= 85 },
-    { label: "Compliance matrix is up to date", done: rec.qualityComplianceScore >= 88 },
-    { label: "AI score indicates high documentation quality", done: rec.aiDocumentationScore >= 85 },
-    { label: "Documentation ready for review", done: rec.workflowStatus !== "Draft" },
-  ];
-
   // Helper for workflow status badge style
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -732,6 +724,9 @@ export function ProductDocumentationPage({
             </div>
           </div>
         </Card>
+
+        {/* Scores & Health Gauges Banner */}
+        <ProductScoreBanner submoduleKey="product-documentation" />
 
         {/* 3-Stage Interactive Stage Stepper Bar */}
         <div className="mb-4 rounded-xl border border-blue-200/60 bg-blue-50/40 dark:bg-blue-950/20 p-3 shadow-2xs">
@@ -1459,36 +1454,26 @@ export function ProductDocumentationPage({
                     </div>
                   </CardHeader>
                   <CardContent className="pt-6 pb-6">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 items-center justify-items-center">
-                      <CircularScoreGauge
-                        score={rec.engineeringScore}
-                        label="Engineering Docs"
-                        color="#10B981"
-                      />
-                      <CircularScoreGauge
-                        score={rec.manufacturingScore}
-                        label="Manufacturing Docs"
-                        color="#10B981"
-                      />
-                      <CircularScoreGauge
-                        score={rec.qualityComplianceScore}
-                        label="Compliance Docs"
-                        color="#10B981"
-                      />
-                      <CircularScoreGauge
-                        score={rec.customerScore}
-                        label="Customer Docs"
-                        color="#10B981"
-                      />
-                      {/* Overall Documentation Score — Larger Gauge */}
-                      <div className="col-span-2 sm:col-span-1 flex flex-col items-center">
-                        <CircularScoreGauge
-                          score={rec.overallDocumentationScore}
-                          size={96}
-                          strokeWidth={8}
-                          label="Overall Documentation Score"
-                          color="#059669"
-                        />
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                      <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border text-center space-y-1">
+                        <span className="text-xl font-bold text-foreground font-mono">{rec.engineeringScore}%</span>
+                        <span className="text-[11px] font-medium text-muted-foreground block">Engineering Docs</span>
+                      </div>
+                      <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border text-center space-y-1">
+                        <span className="text-xl font-bold text-foreground font-mono">{rec.manufacturingScore}%</span>
+                        <span className="text-[11px] font-medium text-muted-foreground block">Manufacturing Docs</span>
+                      </div>
+                      <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border text-center space-y-1">
+                        <span className="text-xl font-bold text-foreground font-mono">{rec.qualityComplianceScore}%</span>
+                        <span className="text-[11px] font-medium text-muted-foreground block">Compliance Docs</span>
+                      </div>
+                      <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border text-center space-y-1">
+                        <span className="text-xl font-bold text-foreground font-mono">{rec.customerScore}%</span>
+                        <span className="text-[11px] font-medium text-muted-foreground block">Customer Docs</span>
+                      </div>
+                      <div className="col-span-2 sm:col-span-1 p-3 bg-emerald-50/50 dark:bg-emerald-950/30 rounded-xl border border-emerald-200 dark:border-emerald-800 text-center space-y-1">
+                        <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">{rec.overallDocumentationScore}%</span>
+                        <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 block">Overall Documentation Score</span>
                       </div>
                     </div>
 

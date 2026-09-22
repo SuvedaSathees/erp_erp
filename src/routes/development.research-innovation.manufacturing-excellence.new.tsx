@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Sparkles, Gauge } from "lucide-react";
 
-import { manufacturingExcellenceService } from "@/services";
+import { manufacturingExcellenceService } from "@/services/manufacturingExcellenceService";
 import type { ManufacturingExcellenceRecord } from "@/services/types";
 import { AppShell } from "@/components/erp/AppShell";
 import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";

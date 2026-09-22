@@ -78,6 +78,7 @@ import {
 
 import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { AppShell } from "@/components/erp/AppShell";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { testingValidationService } from "@/services/testingValidationService";
 import type {
   TestingApprovalDecision,
@@ -882,69 +883,9 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
           </div>
         </div>
 
-        {/* ====================================================================
-           3. EXECUTIVE OVERALL QUALITY SCORE & READINESS STRIP
-           ==================================================================== */}
+        {/* Scores & Health Gauges Banner */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
-          <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs overflow-hidden">
-            <div className="p-4 sm:p-5 flex flex-col xl:flex-row items-center justify-between gap-6">
-              {/* Overall Score Gauge */}
-              <div className="flex items-center gap-5 shrink-0">
-                <CircularScoreGauge score={record.overallQualityScore} label="Overall Score" />
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-foreground">Testing & Validation Readiness</span>
-                    <Badge className="bg-emerald-600 text-white text-[10px] font-semibold">
-                      {record.readinessSummary.recommendation}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground max-w-md">
-                    Full lifecycle prototype validation across functional, electrical, thermal, EMC, and safety standards (IEC 61851 / IEC 62196).
-                  </p>
-                  <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 pt-0.5">
-                    <Target className="h-3.5 w-3.5" />
-                    <span>Total Score: {record.overallQualityScore}% (91% Avg across 4 Quality Pillars)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 4 Component Metrics with Progress Bars */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full xl:w-auto xl:min-w-[560px]">
-                <div
-                  onClick={() => document.getElementById("section-functional-testing")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">1. Functional</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.functionalScore}%</span>
-                  <Progress value={record.functionalScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("section-performance-reliability")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">2. Reliability</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.reliabilityScore}%</span>
-                  <Progress value={record.reliabilityScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("section-safety-compliance")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">3. Compliance</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.complianceScore}%</span>
-                  <Progress value={record.complianceScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("section-results-validation")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">4. Validation</span>
-                  <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 font-mono">{record.validationScore}%</span>
-                  <Progress value={record.validationScore} className="h-1.5" />
-                </div>
-              </div>
-            </div>
-          </Card>
+          <ProductScoreBanner submoduleKey="testing-validation" />
 
           {/* ====================================================================
              4. BALANCED WORKSPACE SECTIONS GRID
@@ -955,7 +896,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <CheckSquare className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">1. Test Project Overview & Target Scope</CardTitle>
+                    <CardTitle className="text-sm font-bold">Test Project Overview & Target Scope</CardTitle>
                   </div>
                   <Badge className="bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 font-semibold text-xs border border-red-200">
                     Priority: {record.priority}
@@ -995,7 +936,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <FileText className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">2. Test Planning & Methodology</CardTitle>
+                    <CardTitle className="text-sm font-bold">Test Planning & Methodology</CardTitle>
                   </div>
                   <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
                     Score: {record.planningConfig.planningScore}/100
@@ -1037,7 +978,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Box className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">3. Prototype & Equipment Readiness</CardTitle>
+                    <CardTitle className="text-sm font-bold">Prototype & Equipment Readiness</CardTitle>
                   </div>
                   <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
                     Score: {record.prototypeEquipmentConfig.readinessScore}/100
@@ -1077,7 +1018,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Zap className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">4. Functional Testing Verification</CardTitle>
+                    <CardTitle className="text-sm font-bold">Functional Testing Verification</CardTitle>
                   </div>
                   <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
                     Score: {record.functionalConfig.functionalScore}/100
@@ -1123,7 +1064,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Activity className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">5. Performance & Reliability Assurance</CardTitle>
+                    <CardTitle className="text-sm font-bold">Performance & Reliability Assurance</CardTitle>
                   </div>
                   <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
                     Score: {record.performanceConfig.reliabilityScore || record.reliabilityScore || 92}/100
@@ -1167,7 +1108,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">6. Safety & Compliance Verification</CardTitle>
+                    <CardTitle className="text-sm font-bold">Safety & Compliance Verification</CardTitle>
                   </div>
                   <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
                     Score: {record.safetyComplianceConfig.complianceScore || record.complianceScore || 93}/100
@@ -1215,7 +1156,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <BarChart3 className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">7. Validation Results & Defect Metrics</CardTitle>
+                    <CardTitle className="text-sm font-bold">Validation Results & Defect Metrics</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-purple-600 text-white font-mono text-xs font-semibold">
@@ -1261,7 +1202,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-purple-600" />
-                    <CardTitle className="text-sm font-bold">8. AI Quality Assessment & Advisory</CardTitle>
+                    <CardTitle className="text-sm font-bold">AI Quality Assessment & Advisory</CardTitle>
                   </div>
                   <Badge className="bg-purple-600 text-white font-mono text-xs font-semibold">
                     AI Score: {record.aiAssessment.aiValidationScore || 91}/100
@@ -1305,7 +1246,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <div className="flex items-center gap-2">
                   <BarChart2 className="h-5 w-5 text-blue-600" />
                   <div>
-                    <CardTitle className="text-sm font-bold">9. Recent Test Executions & Compliance Run Matrix</CardTitle>
+                    <CardTitle className="text-sm font-bold">Recent Test Executions & Compliance Run Matrix</CardTitle>
                     <span className="text-[11px] text-muted-foreground">Automated hardware test bench telemetry & pass/fail audit logs</span>
                   </div>
                 </div>
@@ -1456,7 +1397,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
               <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Paperclip className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">10. Testing Attachments & Validation Reports</CardTitle>
+                  <CardTitle className="text-sm font-bold">Testing Attachments & Validation Reports</CardTitle>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-xs font-mono">{record.attachments.length} Files</Badge>
@@ -1528,7 +1469,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
               <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <UserCheck className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">11. Quality Review Board & Approval Timeline</CardTitle>
+                  <CardTitle className="text-sm font-bold">Quality Review Board & Approval Timeline</CardTitle>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold border-amber-200">
@@ -1664,7 +1605,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
             <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
               <div className="flex items-center gap-2">
                 <HistoryIcon className="h-5 w-5 text-blue-600" />
-                <CardTitle className="text-sm font-bold">12. System Audit Trail & Telemetry History</CardTitle>
+                <CardTitle className="text-sm font-bold">System Audit Trail & Telemetry History</CardTitle>
               </div>
               <Badge variant="outline" className="text-xs font-mono">{record.auditTrail.length} Events</Badge>
             </CardHeader>

@@ -60,12 +60,15 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { company, mockUsers } from "@/lib/mock-data";
+import { useGlobalFilters } from "@/hooks/useGlobalFilters";
+import { useFavorites } from "@/hooks/useFavorites";
 import { Logo } from "./Logo";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 
 type Icon = React.ComponentType<{ className?: string }>;
 
@@ -120,9 +123,8 @@ function groupContainsActive(group: GroupItem, pathname: string): boolean {
 }
 
 const TOP_ITEMS: (LeafItem | InertItem)[] = [
-  { kind: "inert", label: "Home", icon: Home },
+  { kind: "leaf", to: "/", label: "Home", icon: Home },
   { kind: "leaf", to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { kind: "inert", label: "Favorites", icon: Star },
 ];
 
 const NAV_GROUPS: GroupItem[] = [
@@ -141,7 +143,7 @@ const NAV_GROUPS: GroupItem[] = [
             kind: "leaf",
             to: "/development/business-development/overview",
             matchPrefix: "/development/business-development",
-            label: "Business Development",
+            label: "Business",
             icon: Briefcase,
             subItems: [
               { to: "/development/business-development/overview", label: "Overview" },
@@ -151,7 +153,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/business-development/customer-validation", label: "Customer Validation" },
               { to: "/development/business-development/market-research", label: "Market Research" },
               { to: "/development/business-development/competitive-analysis", label: "Competitive Analysis" },
-              { to: "/development/business-development/go-to-market-development", label: "Go-To-Market (GTM) Development" },
+              { to: "/development/business-development/go-to-market-development", label: "GTM" },
               { to: "/development/business-development/pricing-strategy-development", label: "Pricing Strategy Development" },
               { to: "/development/business-development/revenue-model-development", label: "Revenue Model Development" },
               { to: "/development/business-development/sales-channel-development", label: "Sales Channel Development" },
@@ -167,13 +169,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/business-development/business-scaling-development", label: "Business Scaling Development" },
               { to: "/development/business-development/corporate-strategy-development", label: "Corporate Strategy Development" },
               { to: "/development/business-development/business-transformation-development", label: "Business Transformation Development" },
+              { to: "/development/business-development/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/development/product-development/overview",
             matchPrefix: "/development/product-development",
-            label: "Product Development",
+            label: "Product",
             icon: Package,
             subItems: [
               { to: "/development/product-development/overview", label: "Overview" },
@@ -201,13 +204,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/product-development/product-documentation", label: "Documentation" },
               { to: "/development/product-development/product-release-management", label: "Release" },
               { to: "/development/product-development/product-lifecycle-management", label: "Lifecycle" },
+              { to: "/development/product-development/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/development/manufacturing-development/overview",
             matchPrefix: "/development/manufacturing-development",
-            label: "Manufacturing Development",
+            label: "Manufacturing",
             icon: Settings,
             subItems: [
               { to: "/development/manufacturing-development/overview", label: "Overview" },
@@ -229,6 +233,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/manufacturing-development/sop-development", label: "SOP" },
               { to: "/development/manufacturing-development/bom-engineering", label: "BOM" },
               { to: "/development/manufacturing-development/routing-development", label: "Routing" },
+              { to: "/development/manufacturing-development/reports", label: "Report" },
             ],
           },
           {
@@ -248,6 +253,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/research-innovation/industrial-design/new", label: "Industrial Design" },
               { to: "/development/research-innovation/product-architecture/new", label: "Product Architecture" },
               { to: "/development/research-innovation/ui-ux-development/new", label: "UI/UX Development" },
+              { to: "/development/research-innovation/reports", label: "Report" },
             ],
           },
         ],
@@ -261,7 +267,7 @@ const NAV_GROUPS: GroupItem[] = [
             kind: "leaf",
             to: "/management/administration-management/overview",
             matchPrefix: "/management/administration-management",
-            label: "Administration Management",
+            label: "Organization",
             icon: Building2,
             subItems: [
               { to: "/management/administration-management/overview", label: "Overview" },
@@ -275,13 +281,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/administration-management/master-data-management", label: "Master Data Management" },
               { to: "/management/administration-management/notifications-management", label: "Notifications Management" },
               { to: "/management/administration-management/audit-management", label: "Audit Management" },
+              { to: "/management/administration-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/sales-management/overview",
             matchPrefix: "/management/sales-management",
-            label: "Sales Management",
+            label: "Sales",
             icon: TrendingUp,
             subItems: [
               { to: "/management/sales-management/overview", label: "Overview" },
@@ -295,13 +302,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/sales-management/channel-partners", label: "Channel Partners" },
               { to: "/management/sales-management/territory-management", label: "Territory Management" },
               { to: "/management/sales-management/sales-commission", label: "Sales Commission" },
+              { to: "/management/sales-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/crm-management/overview",
             matchPrefix: "/management/crm-management",
-            label: "CRM Management",
+            label: "CRM",
             icon: Target,
             subItems: [
               { to: "/management/crm-management/overview", label: "Overview" },
@@ -317,13 +325,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/crm-management/customer-feedback", label: "Customer Feedback" },
               { to: "/management/crm-management/customer-success", label: "Customer Success" },
               { to: "/management/crm-management/loyalty-management", label: "Loyalty Management" },
+              { to: "/management/crm-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/hrm-management/overview",
             matchPrefix: "/management/hrm-management",
-            label: "HRM Management",
+            label: "HRM",
             icon: Users,
             subItems: [
               { to: "/management/hrm-management/overview", label: "Overview" },
@@ -343,6 +352,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/hrm-management/employee-welfare", label: "Employee Welfare" },
               { to: "/management/hrm-management/exit-management", label: "Exit Management" },
               { to: "/management/hrm-management/hr-analytics", label: "HR Analytics" },
+              { to: "/management/hrm-management/reports", label: "Report" },
             ],
           },
           {
@@ -360,19 +370,19 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/finance/cash-bank", label: "Cash & Bank" },
               { to: "/management/finance/consolidation", label: "Consolidation" },
               { to: "/management/finance/cost-centers", label: "Cost Centers" },
-              { to: "/management/finance/reports", label: "Financial Reports" },
               { to: "/management/finance/assets", label: "Fixed Assets" },
               { to: "/management/finance/ledger", label: "General Ledger" },
               { to: "/management/finance/profitability", label: "Profitability" },
               { to: "/management/finance/setup", label: "Setup & Integrations" },
               { to: "/management/finance/tax", label: "Tax Management" },
+              { to: "/management/finance/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/procurement-management/overview",
             matchPrefix: "/management/procurement-management",
-            label: "Procurement Management",
+            label: "Procurement",
             icon: ShoppingCart,
             subItems: [
               { to: "/management/procurement-management/overview", label: "Overview" },
@@ -388,13 +398,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/procurement-management/contract-management", label: "Contract Management" },
               { to: "/management/procurement-management/vendor-evaluation", label: "Vendor Evaluation" },
               { to: "/management/procurement-management/supplier-portal", label: "Supplier Portal" },
+              { to: "/management/procurement-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/project-management/overview",
             matchPrefix: "/management/project-management",
-            label: "Project Management",
+            label: "Project",
             icon: FolderKanban,
             subItems: [
               { to: "/management/project-management/overview", label: "Overview" },
@@ -409,13 +420,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/project-management/issue-management", label: "Issue Management" },
               { to: "/management/project-management/project-billing", label: "Project Billing" },
               { to: "/management/project-management/project-analytics", label: "Project Analytics" },
+              { to: "/management/project-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/asset-management/overview",
             matchPrefix: "/management/asset-management",
-            label: "Asset Management",
+            label: "Asset",
             icon: Package,
             subItems: [
               { to: "/management/asset-management/overview", label: "Overview" },
@@ -429,13 +441,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/asset-management/asset-lifecycle", label: "Asset Lifecycle" },
               { to: "/management/asset-management/asset-depreciation", label: "Asset Depreciation" },
               { to: "/management/asset-management/asset-tracking", label: "Asset Tracking" },
+              { to: "/management/asset-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/quality-management/overview",
             matchPrefix: "/management/quality-management",
-            label: "Quality Management",
+            label: "Quality",
             icon: ShieldCheck,
             subItems: [
               { to: "/management/quality-management/overview", label: "Overview" },
@@ -450,6 +463,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/quality-management/calibration", label: "Calibration" },
               { to: "/management/quality-management/compliance", label: "Compliance" },
               { to: "/management/quality-management/quality-analytics", label: "Quality Analytics" },
+              { to: "/management/quality-management/reports", label: "Report" },
             ],
           },
         ],
@@ -1140,6 +1154,8 @@ function SidebarNav({
     );
   }, [searchQuery, searchTargets]);
 
+  const { favorites } = useFavorites();
+
   if (searchQuery) {
     return (
       <nav
@@ -1234,7 +1250,7 @@ function SidebarNav({
         {TOP_ITEMS.map((item) =>
           item.kind === "leaf" ? (
             <NavLeaf
-              key={item.to}
+              key={item.to + item.label}
               item={item}
               active={pathname === item.to}
               isCollapsed={isCollapsed}
@@ -1245,6 +1261,58 @@ function SidebarNav({
           ),
         )}
       </ul>
+
+      {/* Favorites section */}
+      {favorites.length > 0 && (
+        <>
+          <Separator className="my-3 bg-white/10" />
+          {!isCollapsed && (
+            <div className="px-3 mb-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white/30">
+                Favorites
+              </span>
+            </div>
+          )}
+          <ul className={cn("space-y-0.5", isCollapsed ? "px-2" : "px-3")}>
+            {favorites.map((fav) => (
+              <li key={fav.to}>
+                {isCollapsed ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        to={fav.to}
+                        onClick={onNavigate}
+                        className={cn(
+                          "flex h-10 w-10 items-center justify-center rounded-lg text-white/70 hover:bg-white/[0.06] hover:text-white transition-all",
+                          pathname.startsWith(fav.to) && "bg-primary text-white shadow-[0_4px_12px_-2px_rgba(10,60,117,0.4)]",
+                        )}
+                      >
+                        <Star className="h-4 w-4" />
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">{fav.label}</TooltipContent>
+                  </Tooltip>
+                ) : (
+                  <Link
+                    to={fav.to}
+                    onClick={onNavigate}
+                    className={cn(
+                      "group flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all",
+                      pathname.startsWith(fav.to)
+                        ? "bg-primary text-white shadow-[0_4px_12px_-2px_rgba(10,60,117,0.4)]"
+                        : "text-white/70 hover:bg-white/[0.06] hover:text-white",
+                    )}
+                  >
+                    <Star className="h-4 w-4 shrink-0 fill-current" />
+                    <span className="truncate">{fav.label}</span>
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
       <Separator className="my-3 bg-white/10" />
       <ul className="space-y-1">
         {NAV_GROUPS.map((group) => (
@@ -1331,6 +1399,51 @@ function SidebarFooter({ isCollapsed }: { isCollapsed: boolean }) {
   );
 }
 
+function TopbarFilterDropdown({
+  icon: Icon,
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  options: { label: string; value: string }[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const display = options.find((o) => o.value === value)?.label ?? label;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50 cursor-pointer">
+          <Icon className="h-4 w-4 text-muted-foreground" />
+          {display}
+          <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", open && "rotate-180")} />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-48 p-1.5">
+        {options.map((opt) => (
+          <button
+            key={opt.value}
+            onClick={() => { onChange(opt.value); setOpen(false); }}
+            className={cn(
+              "flex w-full items-center rounded-md px-3 py-2 text-[13px] font-medium transition-colors cursor-pointer",
+              opt.value === value
+                ? "bg-primary text-primary-foreground"
+                : "text-foreground hover:bg-muted",
+            )}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 function Topbar({
   onMenuClick,
   title,
@@ -1346,6 +1459,11 @@ function Topbar({
   actions?: ReactNode;
   tabs?: ReactNode;
 }) {
+  const { fiscalYear, setFiscalYear, companyFilter, setCompanyFilter, fiscalYears, companies } = useGlobalFilters();
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const starred = isFavorite(pathname);
+
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/80 px-4 pt-4 pb-5 backdrop-blur-md lg:px-8 lg:pt-6">
       <div className="flex items-start gap-3">
@@ -1401,17 +1519,36 @@ function Topbar({
         </div>
 
         <div className="hidden shrink-0 items-center gap-2 md:flex">
-          <button className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50 cursor-pointer">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            {company.fiscalYear.replace("FY ", "Fiscal Year ")}
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-          </button>
-          <button className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50 cursor-pointer">
-            <Grid3x3 className="h-4 w-4 text-muted-foreground" />
-            All Companies
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-          </button>
+          <TopbarFilterDropdown
+            icon={Calendar}
+            label="Fiscal Year"
+            options={fiscalYears}
+            value={fiscalYear}
+            onChange={(v) => setFiscalYear(v as typeof fiscalYear)}
+          />
+          <TopbarFilterDropdown
+            icon={Grid3x3}
+            label="Company"
+            options={companies}
+            value={companyFilter}
+            onChange={(v) => setCompanyFilter(v as typeof companyFilter)}
+          />
           {actions}
+          {title && pathname !== "/" && (
+            <button
+              onClick={() => toggleFavorite({ to: pathname, label: title, section: breadcrumb ?? "" })}
+              className={cn(
+                "grid h-9 w-9 place-items-center rounded-lg border border-border shadow-sm cursor-pointer transition-colors",
+                starred
+                  ? "bg-amber-50 border-amber-200 text-amber-500 hover:bg-amber-100"
+                  : "bg-card text-muted-foreground hover:bg-muted/50",
+              )}
+              aria-label={starred ? "Remove from favorites" : "Add to favorites"}
+              title={starred ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Star className={cn("h-4 w-4", starred && "fill-current")} />
+            </button>
+          )}
           <button
             className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-card text-muted-foreground shadow-sm hover:bg-muted/50 cursor-pointer"
             aria-label="Refresh"
@@ -1441,6 +1578,8 @@ export function AppShell({
   description,
   topbarActions,
   tabs,
+  hideScoreBanner,
+  scoreBannerKey,
 }: {
   children: ReactNode;
   title?: string;
@@ -1448,7 +1587,69 @@ export function AppShell({
   description?: string;
   topbarActions?: ReactNode;
   tabs?: ReactNode;
+  hideScoreBanner?: boolean;
+  scoreBannerKey?: string;
 }) {
+  const routerState = useRouterState();
+  const rawPathname = (routerState?.location?.pathname ?? "").replace(/\/+$/, "");
+
+  // Check if current route belongs to one of the 9 Management modules from the user's list:
+  // 1. Organization (/management/administration-management)
+  // 2. Sales (/management/sales-management)
+  // 3. CRM (/management/crm-management)
+  // 4. HRM (/management/hrm-management)
+  // 5. Finance (/management/finance)
+  // 6. Procurement (/management/procurement-management)
+  // 7. Project (/management/project-management)
+  // 8. Asset (/management/asset-management)
+  // 9. Quality (/management/quality-management)
+  const isManagementModule =
+    rawPathname.startsWith("/management/administration-management/") ||
+    rawPathname.startsWith("/management/sales-management/") ||
+    rawPathname.startsWith("/management/crm-management/") ||
+    rawPathname.startsWith("/management/hrm-management/") ||
+    rawPathname.startsWith("/management/finance/") ||
+    rawPathname.startsWith("/management/procurement-management/") ||
+    rawPathname.startsWith("/management/project-management/") ||
+    rawPathname.startsWith("/management/asset-management/") ||
+    rawPathname.startsWith("/management/quality-management/");
+
+  // Extract path segments
+  const pathSegments = rawPathname.split("/").filter(Boolean);
+
+  // Exclude overview, report, index, or module root pages as requested
+  const isExcluded =
+    rawPathname.endsWith("/overview") ||
+    rawPathname.endsWith("/reports") ||
+    rawPathname.includes("/overview/") ||
+    rawPathname.includes("/reports/") ||
+    rawPathname.endsWith("/index") ||
+    rawPathname === "/management" ||
+    pathSegments.length < 3; // Must be at least /management/<module>/<submodule>
+
+  const showScoreBanner = !hideScoreBanner && isManagementModule && !isExcluded;
+
+  // Extract submodule key intelligently (handles subactions like /new, /edit, or IDs)
+  let detectedSubmoduleKey = scoreBannerKey || "";
+  if (!detectedSubmoduleKey && pathSegments.length >= 3) {
+    const last = pathSegments[pathSegments.length - 1];
+    const secondLast = pathSegments[pathSegments.length - 2];
+    if (
+      (last === "new" ||
+        last === "edit" ||
+        last === "create" ||
+        last === "details" ||
+        last === "view" ||
+        /^\$?[0-9a-fA-F-]+$/.test(last)) &&
+      secondLast &&
+      secondLast !== "management"
+    ) {
+      detectedSubmoduleKey = secondLast;
+    } else {
+      detectedSubmoduleKey = last;
+    }
+  }
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -1608,7 +1809,14 @@ export function AppShell({
               tabs={tabs}
             />
           )}
-          <main className="flex-1 px-4 py-6 lg:px-8 lg:py-7 min-w-0 max-w-full overflow-x-hidden">{children}</main>
+          <main className="flex-1 px-4 py-6 lg:px-8 lg:py-7 min-w-0 max-w-full overflow-x-hidden">
+            {showScoreBanner && (
+              <div className="mb-6 w-full animate-in fade-in duration-300">
+                <ProductScoreBanner submoduleKey={detectedSubmoduleKey} />
+              </div>
+            )}
+            {children}
+          </main>
         </div>
       </div>
     </TooltipProvider>

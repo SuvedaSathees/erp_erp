@@ -200,19 +200,19 @@ export function BusinessModelDevelopmentPage() {
   const [formData, setFormData] = useState({
     businessModelId: "BM-2024-00045",
     formCode: "BMD-2024-25",
-    title: "AIoT Platform Business Model",
+    title: "AI-IoT Platform Business Model",
     number: "BMN-INT-24-001",
     version: "1.0",
     workflowStatus: "In Progress",
     businessUnit: "Digital Solutions",
-    productService: "AIoT Platform",
+    productService: "AI-IoT Platform",
     owner: "Rahul Sharma",
     createdDate: "05 May 2024",
     lastModifiedDate: "17 May 2024",
     workflowStage: "Development",
 
     // Section 1: Overview
-    businessVision: "To build an intelligent AIoT platform that connects devices, transforms data into actionable insights, and drives operational excellence across global enterprise clients.",
+    businessVision: "To build an intelligent AI-IoT platform that connects devices, transforms data into actionable insights, and drives operational excellence across global enterprise clients.",
     businessObjective: "Achieve $25M ARR within 5 years with 72%+ gross margin and global OEM partnership distribution.",
     category: "Platform",
     type: "B2B",
@@ -223,8 +223,8 @@ export function BusinessModelDevelopmentPage() {
 
     // Section 2: Value Proposition
     customerProblem: "Lack of real-time visibility, predictive insights, and automated edge control in manufacturing & utilities equipment leading to high downtime.",
-    proposedSolution: "Unified AIoT platform with real-time sensor analytics, automated workflow triggers, and zero-touch edge provisioning.",
-    uvp: "Unified AIoT platform with predictive intelligence, real-time sensor analytics, and seamless SCADA/ERP integration.",
+    proposedSolution: "Unified AI-IoT platform with real-time sensor analytics, automated workflow triggers, and zero-touch edge provisioning.",
+    uvp: "Unified AI-IoT platform with predictive intelligence, real-time sensor analytics, and seamless SCADA/ERP integration.",
     competitiveAdvantage: "AI-driven edge insights, easy multi-cloud integration, scalable architecture, and patent-protected algorithms.",
     customerBenefits: "30% energy cost reduction, 45% unplanned downtime reduction, and 3x faster IoT deployment speed.",
     innovationScore: 88,
@@ -257,7 +257,7 @@ export function BusinessModelDevelopmentPage() {
 
     // Section 6: Business Operations
     keyActivities: "Platform Development, Data Intelligence Engine Maintenance, Customer Success & System Integration",
-    keyResources: "AIoT Software Platform, Cloud Infrastructure, Data Science Team, Customer Support Engineers",
+    keyResources: "AI-IoT Software Platform, Cloud Infrastructure, Data Science Team, Customer Support Engineers",
     keyPartners: "Cloud Providers, OEMs, System Integrators, Technology Partners",
     channels: ["Direct Sales", "Channel Partners", "Marketplace", "OEM Partnerships"],
     relationshipModel: "Subscription + Executive Support",

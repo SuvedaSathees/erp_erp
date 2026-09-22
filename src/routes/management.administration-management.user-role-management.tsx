@@ -167,7 +167,7 @@ function UserRoleManagementPage() {
   return (
     <AppShell
       title="User & Role Management"
-      breadcrumb="Management > Administration Management > User & Role Management"
+      breadcrumb="Management > Organization > User & Role Management"
       description="Manage system users, identity mapping, role-based access control, permissions, data access scopes, approval authority, and security audit logs."
       tabs={<AdminManagementTabBar />}
     >

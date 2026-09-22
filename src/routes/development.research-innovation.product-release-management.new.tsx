@@ -61,6 +61,7 @@ import type {
 } from "@/services/types";
 import { DEFAULT_PRODUCT_RELEASE_RECORD } from "@/lib/productReleaseFns.server";
 import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -936,95 +937,9 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
           </div>
         </div>
 
-        {/* ====================================================================
-           3. EXECUTIVE PRODUCT RELEASE SCORE & READINESS STRIP
-           ==================================================================== */}
+        {/* Scores & Health Gauges Banner */}
         <div className="mx-auto max-w-[1600px] px-4 space-y-6">
-          <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs overflow-hidden">
-            <div className="p-4 sm:p-5 flex flex-col xl:flex-row items-center justify-between gap-6">
-              {/* Overall Score Gauge */}
-              <div className="flex items-center gap-5 shrink-0">
-                <CircularScoreGauge
-                  score={rec.overallReleaseScore}
-                  size={96}
-                  strokeWidth={8}
-                  color="#059669"
-                />
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-foreground">Overall Release Readiness Score</span>
-                    <Badge className="bg-emerald-600 text-white text-[10px]">
-                      Ready for Launch (Executive Review)
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground max-w-md">
-                    All 6 readiness & compliance streams converged. Production stock allocated and sales channel activation authorized.
-                  </p>
-                  <div className="flex items-center gap-2 text-xs pt-1">
-                    <span className="font-semibold text-slate-700 dark:text-slate-300">Target Launch:</span>
-                    <span className="font-bold text-blue-600 dark:text-blue-400">{rec.plannedReleaseDate}</span>
-                    <span className="text-slate-300 dark:text-slate-700">•</span>
-                    <span className="font-semibold text-slate-700 dark:text-slate-300">Inventory:</span>
-                    <span className="font-bold text-emerald-600 dark:text-emerald-400">{rec.inventoryAvailable.toLocaleString()} Units</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Component Pillar Progress Bars */}
-              <div className="w-full xl:w-auto flex-1 max-w-xl grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs border-t xl:border-t-0 xl:border-l border-border/80 pt-4 xl:pt-0 xl:pl-6">
-                <div
-                  onClick={() => document.getElementById("engineering")?.scrollIntoView({ behavior: "smooth" })}
-                  className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <div className="flex justify-between text-[11px]">
-                    <span className="text-muted-foreground font-medium truncate">Engineering</span>
-                    <span className="font-bold text-emerald-600">{rec.engineeringScore}%</span>
-                  </div>
-                  <Progress value={rec.engineeringScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("manufacturing")?.scrollIntoView({ behavior: "smooth" })}
-                  className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <div className="flex justify-between text-[11px]">
-                    <span className="text-muted-foreground font-medium truncate">Manufacturing</span>
-                    <span className="font-bold text-emerald-600">{rec.manufacturingScore}%</span>
-                  </div>
-                  <Progress value={rec.manufacturingScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("commercial")?.scrollIntoView({ behavior: "smooth" })}
-                  className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <div className="flex justify-between text-[11px]">
-                    <span className="text-muted-foreground font-medium truncate">Commercial</span>
-                    <span className="font-bold text-emerald-600">{rec.commercialScore}%</span>
-                  </div>
-                  <Progress value={rec.commercialScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("risk_compliance")?.scrollIntoView({ behavior: "smooth" })}
-                  className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <div className="flex justify-between text-[11px]">
-                    <span className="text-muted-foreground font-medium truncate">Risk</span>
-                    <span className="font-bold text-amber-600">{rec.riskScore}%</span>
-                  </div>
-                  <Progress value={rec.riskScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("deployment")?.scrollIntoView({ behavior: "smooth" })}
-                  className="space-y-1 col-span-2 sm:col-span-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <div className="flex justify-between text-[11px]">
-                    <span className="text-muted-foreground font-medium truncate">Deployment</span>
-                    <span className="font-bold text-emerald-600">{rec.deploymentScore}%</span>
-                  </div>
-                  <Progress value={rec.deploymentScore} className="h-1.5" />
-                </div>
-              </div>
-            </div>
-          </Card>
+          <ProductScoreBanner submoduleKey="product-release-management" />
 
           {/* ====================================================================
              4. BALANCED 2-COLUMN GRID (Cards 1 to 6)
@@ -1039,7 +954,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm font-bold flex items-center gap-2">
                         <Rocket className="h-4 w-4 text-blue-600" />
-                        1. Release Overview
+                        Release Overview
                       </CardTitle>
                       <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold border-emerald-200 text-xs">
                         {rec.workflowStatus}
@@ -1207,7 +1122,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm font-bold flex items-center gap-2">
                         <Cpu className="h-4 w-4 text-blue-600" />
-                        2. Engineering Release Readiness
+                        Engineering Release Readiness
                       </CardTitle>
                       <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                         {rec.engineeringChecklist.length} Deliverables
@@ -1261,7 +1176,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm font-bold flex items-center gap-2">
                         <Factory className="h-4 w-4 text-blue-600" />
-                        3. Manufacturing Readiness
+                        Manufacturing Readiness
                       </CardTitle>
                       <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                         {rec.manufacturingChecklist.length} Deliverables
@@ -1314,7 +1229,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm font-bold flex items-center gap-2">
                         <Megaphone className="h-4 w-4 text-blue-600" />
-                        4. Commercial Readiness
+                        Commercial Readiness
                       </CardTitle>
                       <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                         {rec.commercialChecklist.length} Deliverables
@@ -1367,7 +1282,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm font-bold flex items-center gap-2">
                         <Truck className="h-4 w-4 text-blue-600" />
-                        5. Deployment & Distribution
+                        Deployment & Distribution
                       </CardTitle>
                       <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 text-xs font-mono font-bold">
                         Stock Reserved
@@ -1441,7 +1356,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm font-bold flex items-center gap-2">
                         <ShieldAlert className="h-4 w-4 text-blue-600" />
-                        6. Risk & Compliance Review
+                        Risk & Compliance Review
                       </CardTitle>
                       <Badge variant="outline" className="bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-mono font-bold">
                         1 Critical Risk Monitored
@@ -1518,7 +1433,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-purple-600" />
-                    7. AI Release Assessment
+                    AI Release Assessment
                   </CardTitle>
                   <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold text-xs">
                     <Sparkles className="h-3 w-3 text-purple-600" />
@@ -1599,7 +1514,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <Activity className="h-4 w-4 text-blue-600" />
-                    8. Release Summary & Milestone Timeline
+                    Release Summary & Milestone Timeline
                   </CardTitle>
                   <Badge variant="outline" className="text-xs bg-slate-50 dark:bg-slate-800 font-semibold">
                     Single Source of Truth Gauges
@@ -1615,27 +1530,23 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                       </span>
                       <Badge variant="outline" className="text-[10px] font-mono">5 Streams</Badge>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center justify-items-center pt-2">
-                      <CircularScoreGauge
-                        score={rec.engineeringScore}
-                        label="Engineering"
-                        color="#10B981"
-                      />
-                      <CircularScoreGauge
-                        score={rec.manufacturingScore}
-                        label="Manufacturing"
-                        color="#10B981"
-                      />
-                      <CircularScoreGauge
-                        score={rec.commercialScore}
-                        label="Commercial"
-                        color="#10B981"
-                      />
-                      <CircularScoreGauge
-                        score={rec.riskScore}
-                        label="Risk Score"
-                        color="#F59E0B"
-                      />
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                      <div className="p-2.5 bg-white dark:bg-slate-900 rounded-xl border border-border text-center space-y-1">
+                        <span className="text-lg font-bold text-emerald-600 font-mono">{rec.engineeringScore}%</span>
+                        <span className="text-[10px] font-medium text-muted-foreground block">Engineering</span>
+                      </div>
+                      <div className="p-2.5 bg-white dark:bg-slate-900 rounded-xl border border-border text-center space-y-1">
+                        <span className="text-lg font-bold text-emerald-600 font-mono">{rec.manufacturingScore}%</span>
+                        <span className="text-[10px] font-medium text-muted-foreground block">Manufacturing</span>
+                      </div>
+                      <div className="p-2.5 bg-white dark:bg-slate-900 rounded-xl border border-border text-center space-y-1">
+                        <span className="text-lg font-bold text-emerald-600 font-mono">{rec.commercialScore}%</span>
+                        <span className="text-[10px] font-medium text-muted-foreground block">Commercial</span>
+                      </div>
+                      <div className="p-2.5 bg-white dark:bg-slate-900 rounded-xl border border-border text-center space-y-1">
+                        <span className="text-lg font-bold text-amber-500 font-mono">{rec.riskScore}%</span>
+                        <span className="text-[10px] font-medium text-muted-foreground block">Risk Score</span>
+                      </div>
                     </div>
 
                     <div className="pt-3 border-t border-border/60 flex flex-wrap items-center justify-between gap-3">
@@ -1705,7 +1616,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <Paperclip className="h-4 w-4 text-blue-600" />
-                    9. Attachments
+                    Attachments
                   </CardTitle>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-xs font-mono">{rec.attachments.length} Files</Badge>
@@ -1790,7 +1701,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <ShieldCheck className="h-4 w-4 text-blue-600" />
-                    10. Review & Approval
+                    Review & Approval
                   </CardTitle>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-xs font-semibold border-emerald-200">
@@ -1944,7 +1855,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <HistoryIcon className="h-4 w-4 text-blue-600" />
-                    11. System Information
+                    System Information
                   </CardTitle>
                   <Badge variant="outline" className="text-xs font-mono">
                     Audit Logged

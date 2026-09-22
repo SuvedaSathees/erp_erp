@@ -1,11 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { company } from "@/lib/mock-data";
 import {
-  accountsPayableService,
-  accountsReceivableService,
-  bankAccountService,
-  generalLedgerService,
-  journalEntryService,
   loadAccountsPayableDashboard,
   loadAccountsReceivableDashboard,
   loadAuditTrailDashboard,
@@ -18,7 +13,12 @@ import {
   loadFixedAssetsDashboard,
   loadProfitabilityDashboard,
   loadTaxManagementDashboard,
-} from "@/services";
+} from "@/services/financialManagementService";
+import * as accountsPayableService from "@/services/accountsPayableService";
+import * as accountsReceivableService from "@/services/accountsReceivableService";
+import * as bankAccountService from "@/services/bankAccountService";
+import * as generalLedgerService from "@/services/generalLedgerService";
+import * as journalEntryService from "@/services/journalEntryService";
 import type { BankAccountFilters, DashboardQuery } from "@/services/types";
 
 /* ===========================================================================

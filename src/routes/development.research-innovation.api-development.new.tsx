@@ -48,6 +48,7 @@ import type {
   ApiAuditLogEntry,
 } from "@/services/types";
 import { AppShell } from "@/components/erp/AppShell";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -713,6 +714,9 @@ ${current.reviewers.map((r) => `${r.role}: ${r.person} - ${r.decision} (${r.date
             </div>
           </CardContent>
         </Card>
+
+        {/* Scores & Health Gauges Banner */}
+        <ProductScoreBanner submoduleKey="api-development" />
 
         {/* Section 1: Overview & Scope */}
         <Card className="border-border/80 bg-white dark:bg-slate-900 rounded-xl shadow-xs">

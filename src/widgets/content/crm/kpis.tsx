@@ -26,7 +26,7 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { formatCurrency } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 import type { WidgetCategory, WidgetDefinition, WidgetRole } from "../../types";
 import { crmOverviewOptions, type CrmOverviewData } from "../../data/crmQueries";
 import { makeStatCardWidget, type StatCardShape } from "../shared/StatCardWidget";

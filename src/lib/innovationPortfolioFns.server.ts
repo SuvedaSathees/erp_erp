@@ -191,7 +191,7 @@ const LOOKUPS: PortfolioLookups = {
   ],
 };
 
-const COMPOSITION_COLORS = ["#0a3c75", "#3b82f6", "#22c55e", "#f59e0b", "#7c5cff", "#ec4899"];
+const COMPOSITION_COLORS = ["#0a3c75", "#3b82f6", "#22c55e", "#f59e0b", "#0D7377", "#ec4899"];
 const FUNNEL_STAGES = [
   "Ideas",
   "Opportunities",

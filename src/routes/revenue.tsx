@@ -14,7 +14,8 @@ import {
 import { AppShell, PageHeader } from "@/components/erp/AppShell";
 import { KpiCard } from "@/components/erp/KpiCard";
 import { ErpButton } from "@/components/erp/Button";
-import { revenueTrend, revenueSources, revenueByStation, formatCurrency } from "@/lib/mock-data";
+import { revenueTrend, revenueSources, revenueByStation } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 
 export const Route = createFileRoute("/revenue")({
   head: () => ({ meta: [{ title: "Revenue · Magnertia ERP" }] }),

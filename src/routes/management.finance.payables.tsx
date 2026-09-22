@@ -44,7 +44,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { company, formatCurrency } from "@/lib/mock-data";
+import { company } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 import {
   accountsPayableService,
   analyticsEngineService,

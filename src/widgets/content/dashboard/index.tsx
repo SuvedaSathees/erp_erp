@@ -10,7 +10,7 @@ import {
   Users,
   Sparkles,
 } from "lucide-react";
-import { formatCurrency } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 import type { WidgetDefinition } from "../../types";
 import { dashboardDataOptions } from "../../data/queries";
 import { makeStatCardWidget } from "../shared/StatCardWidget";

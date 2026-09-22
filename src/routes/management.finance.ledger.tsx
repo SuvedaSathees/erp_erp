@@ -65,7 +65,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { formatCurrency } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 import { chartOfAccountsService, generalLedgerService, journalEntryService } from "@/services";
 import type {
   AccountFilters,

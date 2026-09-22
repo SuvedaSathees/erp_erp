@@ -56,7 +56,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { arCustomerDirectory, company, formatCurrency } from "@/lib/mock-data";
+import { arCustomerDirectory, company } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 import {
   accountsReceivableService,
   analyticsEngineService,

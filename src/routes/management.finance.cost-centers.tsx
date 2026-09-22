@@ -56,7 +56,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
-import { company, formatCurrency, mockCostCenterCommitments } from "@/lib/mock-data";
+import { company, mockCostCenterCommitments } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 import { costCenterService, budgetService, loadCostCentersDashboard } from "@/services";
 import type {
   CostCenterRecord,

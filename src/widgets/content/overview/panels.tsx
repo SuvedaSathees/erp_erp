@@ -17,7 +17,8 @@ import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatCurrency, formatSignedCurrency, allTransactions } from "@/lib/mock-data";
+import { allTransactions } from "@/lib/mock-data";
+import { formatCurrency, formatSignedCurrency } from "@/lib/format";
 import { Coins, Percent } from "lucide-react";
 import type { WidgetContentProps } from "../../types";
 import {

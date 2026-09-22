@@ -32,7 +32,7 @@ const THEME_RING: Record<WidgetTheme, string> = {
   default: "",
   blue: "ring-2 ring-[var(--widget-accent-blue)]/60",
   green: "ring-2 ring-[var(--widget-accent-green)]/60",
-  purple: "ring-2 ring-[var(--widget-accent-purple)]/60",
+  teal: "ring-2 ring-[var(--widget-accent-teal)]/60",
 };
 
 export type WidgetShellProps = ComponentPropsWithoutRef<"div"> & {

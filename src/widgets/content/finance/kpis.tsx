@@ -37,7 +37,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import { formatCurrency } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 import type { WidgetCategory, WidgetDefinition, WidgetRole } from "../../types";
 import {
   auditDashboardOptions,

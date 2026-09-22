@@ -6,7 +6,8 @@ import { ErpButton } from "@/components/erp/Button";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, type Column } from "@/components/erp/DataTable";
 import { KpiCard } from "@/components/erp/KpiCard";
-import { expenses, expenseCategories, formatCurrency } from "@/lib/mock-data";
+import { expenses, expenseCategories } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 
 export const Route = createFileRoute("/expenses")({
   head: () => ({ meta: [{ title: "Expenses · Magnertia ERP" }] }),

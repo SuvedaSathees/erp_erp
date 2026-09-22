@@ -57,7 +57,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { company, formatCurrency } from "@/lib/mock-data";
+import { company } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 import {
   reportManagementService,
   reportSchedulerService,

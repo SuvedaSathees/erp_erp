@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPolicies } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { AdminManagementTabBar } from "@/components/erp/AdminManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -96,6 +98,10 @@ const RECENT_POLICY_VERSIONS = [
 ];
 
 function PolicyManagementPage() {
+  const policiesQuery = useQuery({
+    queryKey: ["admin", "policies"],
+    queryFn: () => fetchPolicies(),
+  });
   const [activeTab, setActiveTab] = useState<"summary" | "directory" | "governance" | "audit">("summary");
 
   // Master Form State
@@ -119,14 +125,26 @@ function PolicyManagementPage() {
     objective: "Ensure standardization, cost control and compliance in all employee travel and expense claims.",
   });
 
-  // Dynamic Enterprise Policies
-  const [policiesList, setPoliciesList] = useState([
+  const FALLBACK_POLICIES = [
     { id: "POL-001", num: "FIN-POL-005", title: "Travel & Expense Policy", type: "Operational Policy", dept: "Human Resources", ver: "v1.2", status: "Published", owner: "Meera Nair", date: "15 Apr 2024" },
     { id: "POL-002", num: "SEC-POL-001", title: "Information Security Policy", type: "IT Policy", dept: "Cybersecurity", ver: "v2.0", status: "Published", owner: "Anita Deshmukh", date: "10 Apr 2024" },
     { id: "POL-003", num: "HR-POL-012", title: "Remote Working & Hybrid Policy", type: "HR Policy", dept: "Human Resources", ver: "v1.1", status: "Under Review", owner: "Deepa Nair", date: "08 Apr 2024" },
     { id: "POL-004", num: "GOV-POL-003", title: "Anti-Bribery & Whistleblower Policy", type: "Compliance Policy", dept: "Legal & Compliance", ver: "v3.0", status: "Published", owner: "Pooja Hegde", date: "01 Apr 2024" },
     { id: "POL-005", num: "OPS-POL-007", title: "Procurement Delegation Policy", type: "Financial Policy", dept: "Procurement", ver: "v1.0", status: "Draft", owner: "Tanvi Saxena", date: "28 Mar 2024" },
-  ]);
+  ];
+  const dbPolicies = (policiesQuery.data ?? []).map((p: any) => ({
+    id: p.id,
+    num: p.policyNumber,
+    title: p.title,
+    type: p.type ?? "Corporate Policy",
+    dept: p.department ?? "",
+    ver: p.version ?? "v1.0",
+    status: p.status,
+    owner: p.owner ?? "",
+    date: new Date(p.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+  }));
+  const [fallbackPolicies, setFallbackPolicies] = useState(FALLBACK_POLICIES);
+  const mergedPolicies = dbPolicies.length > 0 ? dbPolicies : fallbackPolicies;
 
   const [reviewSteps, setReviewSteps] = useState([
     { level: 1, type: "HR Operations Review", person: "Deepa Nair", status: "Approved", date: "08 Apr 2024", comments: "Operational alignment verified." },
@@ -646,20 +664,20 @@ function PolicyManagementPage() {
               <div className="grid gap-4 sm:grid-cols-4">
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Total Policies</span>
-                  <div className="text-xl font-bold font-mono text-foreground">{policiesList.length} Policies</div>
+                  <div className="text-xl font-bold font-mono text-foreground">{mergedPolicies.length} Policies</div>
                   <p className="text-[10px] text-emerald-600 font-medium">100% Governance Active</p>
                 </div>
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Published Policies</span>
                   <div className="text-xl font-bold font-mono text-foreground">
-                    {policiesList.filter((p) => p.status === "Published").length} Active
+                    {mergedPolicies.filter((p) => p.status === "Published").length} Active
                   </div>
                   <p className="text-[10px] text-blue-600 font-medium">Enterprise binding</p>
                 </div>
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Under Review</span>
                   <div className="text-xl font-bold font-mono text-foreground">
-                    {policiesList.filter((p) => p.status !== "Published").length} Pending
+                    {mergedPolicies.filter((p) => p.status !== "Published").length} Pending
                   </div>
                   <p className="text-[10px] text-amber-600 font-medium">Committee stage</p>
                 </div>
@@ -672,7 +690,7 @@ function PolicyManagementPage() {
 
               <div className="rounded-xl border border-border bg-card p-4 space-y-3 shadow-xs">
                 <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                  <h4 className="text-xs font-bold text-foreground">Enterprise Policy Register ({policiesList.length} Policies)</h4>
+                  <h4 className="text-xs font-bold text-foreground">Enterprise Policy Register ({mergedPolicies.length} Policies)</h4>
                   <button
                     onClick={() => setShowCreatePolicyModal(true)}
                     className="px-2.5 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer shadow-xs"
@@ -696,7 +714,7 @@ function PolicyManagementPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border/60 text-[11px]">
-                      {policiesList.map((pol) => (
+                      {mergedPolicies.map((pol) => (
                         <tr key={pol.id} className="hover:bg-muted/30 transition-colors">
                           <td className="py-2 px-3 font-mono font-bold text-primary">{pol.num}</td>
                           <td className="py-2 px-3 font-semibold text-foreground">{pol.title}</td>
@@ -718,7 +736,7 @@ function PolicyManagementPage() {
                             <button
                               type="button"
                               onClick={() => {
-                                setPoliciesList((prev) => prev.filter((p) => p.id !== pol.id));
+                                setFallbackPolicies((prev) => prev.filter((p) => p.id !== pol.id));
                                 showNotification(`Policy ${pol.num} removed.`);
                               }}
                               className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
@@ -895,7 +913,7 @@ function PolicyManagementPage() {
                       alert("Please provide policy number and title.");
                       return;
                     }
-                    setPoliciesList((prev) => [
+                    setFallbackPolicies((prev) => [
                       ...prev,
                       {
                         id: `POL-${prev.length + 1}`,

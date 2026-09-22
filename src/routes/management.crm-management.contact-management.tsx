@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -449,7 +451,26 @@ const RECENT_ACTIVITIES = [
 ];
 
 function ContactManagementPage() {
+  const contactsQuery = useQuery({
+    queryKey: ["crm", "contacts"],
+    queryFn: () => crmManagementService.fetchContacts(),
+  });
+  const dbContacts: ContactRecord[] = (contactsQuery.data ?? []).map((c: any) => ({
+    ...INITIAL_CONTACTS[0],
+    id: c.id,
+    contactNumber: c.contactNumber ?? c.id,
+    firstName: c.firstName ?? "",
+    lastName: c.lastName ?? "",
+    preferredName: `${c.firstName ?? ""} ${c.lastName ?? ""}`.trim(),
+    primaryEmail: c.email ?? "",
+    mobile: c.phone ?? "",
+    designation: c.designation ?? "",
+    orgName: c.accountId ?? "",
+    status: "Active",
+    createdDate: new Date(c.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+  }));
   const [contacts, setContacts] = useState<ContactRecord[]>(INITIAL_CONTACTS);
+  const mergedContacts = dbContacts.length > 0 ? dbContacts : contacts;
   const [selectedContactId, setSelectedContactId] = useState<string>("CONT-0002458");
 
   // Dialog States
@@ -459,8 +480,8 @@ function ContactManagementPage() {
 
   // Active Contact Object
   const currentContact = useMemo(() => {
-    return contacts.find((c) => c.id === selectedContactId) || contacts[0];
-  }, [contacts, selectedContactId]);
+    return mergedContacts.find((c) => c.id === selectedContactId) || mergedContacts[0];
+  }, [mergedContacts, selectedContactId]);
 
   // Form State initialized from current Contact
   const [formState, setFormState] = useState<ContactRecord>(currentContact);

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetchDocumentControls } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { AdminManagementTabBar } from "@/components/erp/AdminManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -95,6 +97,10 @@ const RECENT_DOCUMENTS_DATA = [
 ];
 
 function DocumentControlManagementPage() {
+  const docsQuery = useQuery({
+    queryKey: ["admin", "document-controls"],
+    queryFn: () => fetchDocumentControls(),
+  });
   const [activeTab, setActiveTab] = useState<"summary" | "repository" | "lifecycle" | "audit">("summary");
 
   // Master Form State
@@ -117,14 +123,26 @@ function DocumentControlManagementPage() {
     description: "Standard operating procedure detailing step-by-step robotic stator insertion, busbar torque parameters (12.5 Nm), dielectric testing, and potting compound curing guidelines.",
   });
 
-  // Dynamic Document Repository
-  const [documentsList, setDocumentsList] = useState([
+  const FALLBACK_DOCS = [
     { id: "DOC-001", num: "SOP-ENG-001", name: "SOP: High-Voltage Inverter Assembly", type: "SOP", dept: "Plant Production", ver: "v2.4", status: "Published", date: "15 Apr 2024", owner: "Devendra Rao" },
     { id: "DOC-002", num: "WI-MFG-004", name: "WI: Robotic Stator Winding & Soldering", type: "Work Instruction", dept: "Manufacturing", ver: "v3.1", status: "Published", date: "12 Apr 2024", owner: "Anil Kulkarni" },
     { id: "DOC-003", num: "SPEC-ISO-9001", name: "SPEC: ISO 9001:2015 Quality Manual", type: "Specification", dept: "Quality Assurance", ver: "v4.0", status: "Under Review", date: "10 Apr 2024", owner: "Harini Krishnan" },
     { id: "DOC-004", num: "DWG-CHG-180", name: "DWG: Motor Chassis Gen-3 Schematic", type: "Drawing", dept: "R&D Systems", ver: "v1.8", status: "Draft", date: "08 Apr 2024", owner: "Priya Menon" },
     { id: "DOC-005", num: "FORM-QC-012", name: "FORM: In-Line Thermal Stress Test Log", type: "Form", dept: "Quality Control", ver: "v2.0", status: "Published", date: "05 Apr 2024", owner: "Sunil Joshi" },
-  ]);
+  ];
+  const dbDocs = (docsQuery.data ?? []).map((d: any) => ({
+    id: d.id,
+    num: d.documentNumber,
+    name: d.title,
+    type: d.type ?? "SOP",
+    dept: d.department ?? "",
+    ver: d.version ?? "v1.0",
+    status: d.status,
+    date: new Date(d.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+    owner: d.owner ?? "",
+  }));
+  const [fallbackDocs, setFallbackDocs] = useState(FALLBACK_DOCS);
+  const documentsList = dbDocs.length > 0 ? dbDocs : fallbackDocs;
 
   const [reviewSteps, setReviewSteps] = useState([
     { level: 1, type: "Engineering Author", person: "Devendra Rao", status: "Approved", date: "10 Apr 2024", comments: "CAD drawings and tolerances updated to ISO 2768-mK." },
@@ -712,7 +730,7 @@ function DocumentControlManagementPage() {
                             <button
                               type="button"
                               onClick={() => {
-                                setDocumentsList((prev) => prev.filter((d) => d.id !== doc.id));
+                                setFallbackDocs((prev) => prev.filter((d) => d.id !== doc.id));
                                 showNotification(`Document ${doc.num} removed.`);
                               }}
                               className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
@@ -889,7 +907,7 @@ function DocumentControlManagementPage() {
                       alert("Please provide document number and title.");
                       return;
                     }
-                    setDocumentsList((prev) => [
+                    setFallbackDocs((prev) => [
                       ...prev,
                       {
                         id: `DOC-${prev.length + 1}`,

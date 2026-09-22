@@ -1,5 +1,7 @@
 import { useState, useRef, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { projectManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProjectManagementTabBar } from "@/components/erp/ProjectManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -635,6 +637,44 @@ export function TaskManagementFormPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const projectsQuery = useQuery({
+    queryKey: ["projects"],
+    queryFn: () => projectManagementService.fetchProjects(),
+  });
+  const firstProjectId = (projectsQuery.data as any)?.[0]?.id;
+
+  const tasksQuery = useQuery({
+    queryKey: ["project-tasks", firstProjectId],
+    queryFn: () => projectManagementService.fetchProjectTasks(firstProjectId!),
+    enabled: !!firstProjectId,
+  });
+
+  const dbTasks: ProjectTaskItem[] = (tasksQuery.data ?? []).map((t: any) => ({
+    ...INITIAL_TASKS[0],
+    id: t.id,
+    code: t.taskCode,
+    name: t.title,
+    wbsActivity: "-",
+    assignedTo: t.assignee?.fullName ?? t.assigneeName ?? "-",
+    assignedInitials: (t.assignee?.fullName ?? t.assigneeName ?? "?").split(" ").map((w: string) => w[0]).join(""),
+    assignedAvatarColor: "bg-blue-600",
+    priority: t.priority ?? "Medium",
+    plannedStart: t.startDate ? new Date(t.startDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "-",
+    plannedFinish: t.dueDate ? new Date(t.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "-",
+    progressPct: t.progressPct ?? 0,
+    status: t.status ?? "Not Started",
+    type: "Task",
+    estimatedHours: t.estimatedHours ?? 0,
+    actualHours: t.actualHours ?? 0,
+    owner: t.assignee?.fullName ?? t.assigneeName ?? "-",
+    milestone: t.milestone?.name ?? "-",
+    description: t.description ?? "",
+    acceptanceCriteria: [],
+    deliverable: "-",
+  }));
+
+  const mergedTasks = dbTasks.length > 0 ? dbTasks : INITIAL_TASKS;
+
   const [tasks, setTasks] = useState<ProjectTaskItem[]>(INITIAL_TASKS);
   const [selectedTask, setSelectedTask] = useState<ProjectTaskItem>(INITIAL_TASKS[0]);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -696,7 +736,7 @@ export function TaskManagementFormPage() {
 
   // Filtered and Sorted Tasks
   const filteredTasks = useMemo(() => {
-    return tasks
+    return mergedTasks
       .filter((t) => {
         const matchesSearch =
           !searchQuery ||
@@ -719,7 +759,7 @@ export function TaskManagementFormPage() {
         }
         return sortAsc ? a.code.localeCompare(b.code) : b.code.localeCompare(a.code);
       });
-  }, [tasks, searchQuery, filterStatus, filterPriority, filterType, filterAssigned, filterWbs, sortField, sortAsc]);
+  }, [mergedTasks, searchQuery, filterStatus, filterPriority, filterType, filterAssigned, filterWbs, sortField, sortAsc]);
 
   const totalPages = Math.max(1, Math.ceil(filteredTasks.length / pageSize));
   const paginatedTasks = useMemo(() => {

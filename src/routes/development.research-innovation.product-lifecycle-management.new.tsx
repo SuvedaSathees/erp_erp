@@ -61,6 +61,7 @@ import type {
 } from "@/services/types";
 import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
 import { PlmTabBar, type PlmTabId } from "@/components/erp/PlmTabBar";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -906,62 +907,9 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
           />
         </div>
 
-        {/* ====================================================================
-           3. EXECUTIVE PRODUCT HEALTH SCORE & READINESS STRIP
-           ==================================================================== */}
+        {/* Scores & Health Gauges Banner */}
         <div className="mx-auto max-w-[1600px] px-4 space-y-6">
-          <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs overflow-hidden">
-            <div className="p-4 sm:p-5 flex flex-col xl:flex-row items-center justify-between gap-6">
-              {/* Overall Score Gauge */}
-              <div className="flex items-center gap-5 shrink-0">
-                <CircularScoreGauge
-                  score={rec.overallProductHealthScore}
-                  size={96}
-                  strokeWidth={8}
-                  color="#059669"
-                />
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-foreground">Overall Product Health Score</span>
-                    <Badge className="bg-emerald-600 text-white text-[10px]">
-                      {rec.lifecycleStage} (Active)
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground max-w-md">
-                    Full digital thread tracking across product engineering, manufacturing releases, service readiness, and change management.
-                  </p>
-                  <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 pt-0.5">
-                    <Target className="h-3.5 w-3.5" />
-                    <span>Recommendation: {formData.recommendation || rec.recommendation} (All 5 stream lifecycles aggregated)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 4 Component Pillar Progress Bars */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full xl:w-auto xl:min-w-[560px]">
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">1. Engineering</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{rec.engineeringScore}%</span>
-                  <Progress value={rec.engineeringScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">2. Manufacturing</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{rec.manufacturingScore}%</span>
-                  <Progress value={rec.manufacturingScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">3. Service</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{rec.serviceScore}%</span>
-                  <Progress value={rec.serviceScore} className="h-1.5" />
-                </div>
-                <div className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1">
-                  <span className="text-[11px] text-muted-foreground block font-medium">4. Lifecycle Risk</span>
-                  <span className="text-sm font-bold text-amber-600 dark:text-amber-400 font-mono">{rec.riskScore}%</span>
-                  <Progress value={rec.riskScore} className="h-1.5" />
-                </div>
-              </div>
-            </div>
-          </Card>
+          <ProductScoreBanner submoduleKey="product-lifecycle-management" />
 
           {/* ====================================================================
              4. BALANCED 2-COLUMN GRID (Equal Height, Perfectly Aligned)
@@ -974,7 +922,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-bold flex items-center gap-2">
                       <Repeat className="h-4 w-4 text-blue-600" />
-                      1. Product Lifecycle Overview
+                      Product Lifecycle Overview
                     </CardTitle>
                     <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold border-emerald-200 text-xs">
                       {rec.productStatus}
@@ -1114,7 +1062,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-bold flex items-center gap-2">
                       <Box className="h-4 w-4 text-blue-600" />
-                      2. Product Configuration Management
+                      Product Configuration Management
                     </CardTitle>
                     <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                       Baseline v1.2
@@ -1173,7 +1121,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-bold flex items-center gap-2">
                       <Cpu className="h-4 w-4 text-blue-600" />
-                      3. Engineering Lifecycle
+                      Engineering Lifecycle
                     </CardTitle>
                     <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                       6 Deliverables
@@ -1227,7 +1175,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-bold flex items-center gap-2">
                       <Factory className="h-4 w-4 text-blue-600" />
-                      4. Manufacturing Lifecycle
+                      Manufacturing Lifecycle
                     </CardTitle>
                     <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                       6 Deliverables
@@ -1281,7 +1229,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-bold flex items-center gap-2">
                       <LifeBuoy className="h-4 w-4 text-blue-600" />
-                      5. Service & Support Lifecycle
+                      Service & Support Lifecycle
                     </CardTitle>
                     <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                       5 Deliverables
@@ -1335,7 +1283,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-bold flex items-center gap-2">
                       <Wrench className="h-4 w-4 text-blue-600" />
-                      6. Change & Obsolescence Management
+                      Change & Obsolescence Management
                     </CardTitle>
                     <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-xs font-semibold border-amber-200">
                       Obsolescence Risk: {rec.obsolescenceRisk}
@@ -1420,7 +1368,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-purple-600" />
-                    7. AI Lifecycle Assessment
+                    AI Lifecycle Assessment
                   </CardTitle>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold text-xs">
@@ -1475,7 +1423,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <Activity className="h-4 w-4 text-blue-600" />
-                    8. Product Lifecycle Progression & Milestone Timeline
+                    Product Lifecycle Progression & Milestone Timeline
                   </CardTitle>
                   <Badge variant="outline" className="text-xs bg-slate-50 dark:bg-slate-800 font-semibold">
                     Digital Thread Gauges
@@ -1613,7 +1561,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <Paperclip className="h-4 w-4 text-blue-600" />
-                    9. Attachments
+                    Attachments
                   </CardTitle>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-xs font-mono">{rec.attachments.length} Files</Badge>
@@ -1704,7 +1652,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <ShieldCheck className="h-4 w-4 text-blue-600" />
-                    10. Review & Approval
+                    Review & Approval
                   </CardTitle>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-xs font-semibold border-emerald-200">
@@ -1871,7 +1819,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <HistoryIcon className="h-4 w-4 text-blue-600" />
-                    11. System Information
+                    System Information
                   </CardTitle>
                   <Badge variant="outline" className="text-xs font-mono">
                     Digital Thread Logged

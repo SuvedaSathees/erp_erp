@@ -59,6 +59,7 @@ import type {
   IotReviewer,
 } from "@/services/types";
 import { ResearchInnovationTabBar, InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -893,82 +894,9 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
           </Card>
         </div>
 
-        {/* ====================================================================
-           3. EXECUTIVE OVERALL IOT SCORE & READINESS STRIP
-           ==================================================================== */}
+        {/* Scores & Health Gauges Banner */}
         <div className="mx-auto max-w-[1600px] px-4 space-y-6">
-          <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs overflow-hidden">
-            <div className="p-4 sm:p-5 flex flex-col xl:flex-row items-center justify-between gap-6">
-              {/* Overall Score Gauge */}
-              <div className="flex items-center gap-5 shrink-0">
-                <CircularScoreGauge
-                  score={rec.overallIotSolutionScore}
-                  size={96}
-                  strokeWidth={8}
-                  color="#059669"
-                />
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-foreground">Overall IoT Solution Score</span>
-                    <Badge className="bg-emerald-600 text-white text-[10px] font-semibold">
-                      {rec.workflowStageLabel || "IoT Review"}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground max-w-md">
-                    Scalable edge IoT architecture for EV charging network telemetry, OTA updates, and real-time analytics.
-                  </p>
-                  <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 pt-0.5">
-                    <Target className="h-3.5 w-3.5" />
-                    <span>Total Score: {rec.overallIotSolutionScore}% (91% Avg across 5 IoT Architecture Pillars)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 5 Component Metrics with Progress Bars */}
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 w-full xl:w-auto xl:min-w-[620px]">
-                <div
-                  onClick={() => document.getElementById("hardware")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">1. Hardware</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{rec.hardwareScore}%</span>
-                  <Progress value={rec.hardwareScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("connectivity")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">2. Connectivity</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{rec.connectivityScore}%</span>
-                  <Progress value={rec.connectivityScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("security")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">3. Security</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{rec.securityScore}%</span>
-                  <Progress value={rec.securityScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("deployment")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">4. Deployment</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{rec.deploymentScore}%</span>
-                  <Progress value={rec.deploymentScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("device_mgmt")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">5. Operations</span>
-                  <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 font-mono">93%</span>
-                  <Progress value={93} className="h-1.5" />
-                </div>
-              </div>
-            </div>
-          </Card>
+          <ProductScoreBanner submoduleKey="iot-development" />
 
           {/* ====================================================================
              4. BALANCED WORKSPACE DOMAIN SECTIONS GRID
@@ -980,7 +908,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Wifi className="h-5 w-5 text-blue-600" />
-                      <CardTitle className="text-sm font-bold">1. IoT Project Overview</CardTitle>
+                      <CardTitle className="text-sm font-bold">IoT Project Overview</CardTitle>
                     </div>
                     <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold border-emerald-200 text-xs">
                       {rec.developmentStatus}
@@ -1079,7 +1007,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Cpu className="h-5 w-5 text-blue-600" />
-                      <CardTitle className="text-sm font-bold">2. Device & Hardware Configuration</CardTitle>
+                      <CardTitle className="text-sm font-bold">Device & Hardware Configuration</CardTitle>
                     </div>
                     <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                       FW 1.3.5
@@ -1152,7 +1080,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <RadioTower className="h-5 w-5 text-blue-600" />
-                      <CardTitle className="text-sm font-bold">3. Connectivity & Communication</CardTitle>
+                      <CardTitle className="text-sm font-bold">Connectivity & Communication</CardTitle>
                     </div>
                     <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-950 text-xs font-mono font-bold">
                       MQTT Stream
@@ -1221,7 +1149,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Smartphone className="h-5 w-5 text-blue-600" />
-                      <CardTitle className="text-sm font-bold">4. Device Management</CardTitle>
+                      <CardTitle className="text-sm font-bold">Device Management</CardTitle>
                     </div>
                     <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                       6 Controls
@@ -1273,7 +1201,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <BarChart3 className="h-5 w-5 text-blue-600" />
-                      <CardTitle className="text-sm font-bold">5. Data Collection & Analytics</CardTitle>
+                      <CardTitle className="text-sm font-bold">Data Collection & Analytics</CardTitle>
                     </div>
                     <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                       Azure IoT Hub
@@ -1336,7 +1264,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Lock className="h-5 w-5 text-blue-600" />
-                      <CardTitle className="text-sm font-bold">6. Security & Compliance</CardTitle>
+                      <CardTitle className="text-sm font-bold">Security & Compliance</CardTitle>
                     </div>
                     <Badge variant="outline" className="bg-emerald-50 text-emerald-700 text-xs font-mono font-bold">
                       X.509 + TLS 1.3
@@ -1406,7 +1334,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Workflow className="h-5 w-5 text-blue-600" />
-                      <CardTitle className="text-sm font-bold">7. Integration & Automation</CardTitle>
+                      <CardTitle className="text-sm font-bold">Integration & Automation</CardTitle>
                     </div>
                     <Badge variant="outline" className="text-xs font-mono font-bold bg-slate-50 dark:bg-slate-800">
                       6 Integrations
@@ -1458,7 +1386,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <HardDrive className="h-5 w-5 text-blue-600" />
-                      <CardTitle className="text-sm font-bold">8. Deployment & Operations</CardTitle>
+                      <CardTitle className="text-sm font-bold">Deployment & Operations</CardTitle>
                     </div>
                     <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 text-xs font-semibold">
                       {rec.operationalStatus}
@@ -1518,7 +1446,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-purple-600" />
-                    <CardTitle className="text-sm font-bold">9. AI IoT Assessment</CardTitle>
+                    <CardTitle className="text-sm font-bold">AI IoT Assessment</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold text-xs">
@@ -1574,7 +1502,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Paperclip className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">10. Attachments</CardTitle>
+                    <CardTitle className="text-sm font-bold">Attachments</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-xs font-mono">{rec.attachments.length} Files</Badge>
@@ -1663,7 +1591,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <UserCheck className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">11. Review & Approval</CardTitle>
+                    <CardTitle className="text-sm font-bold">Review & Approval</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold border-amber-200">
@@ -1820,7 +1748,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <HistoryIcon className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">12. System Information</CardTitle>
+                  <CardTitle className="text-sm font-bold">System Information</CardTitle>
                 </div>
                 <Badge variant="outline" className="text-xs font-mono">
                   Audit Logged

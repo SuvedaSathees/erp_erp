@@ -40,6 +40,7 @@ export const PROCUREMENT_MANAGEMENT_TABS = [
   { to: "/management/procurement-management/contract-management", label: "Contract Management", icon: FileSpreadsheet },
   { to: "/management/procurement-management/vendor-evaluation", label: "Vendor Evaluation", icon: Award },
   { to: "/management/procurement-management/supplier-portal", label: "Supplier Portal", icon: Globe },
+  { to: "/management/procurement-management/reports", label: "Report", icon: FileText },
 ];
 
 export function ProcurementManagementTabBar() {

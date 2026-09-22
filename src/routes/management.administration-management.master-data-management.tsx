@@ -187,7 +187,7 @@ function MasterDataManagementPage() {
   return (
     <AppShell
       title="Master Data Management"
-      breadcrumb="Management > Administration Management > Master Data Management"
+      breadcrumb="Management > Organization > Master Data Management"
       description="Central administrative form for creating, maintaining, validating, governing, versioning, and controlling reusable master records across Magnertia ERP."
       tabs={<AdminManagementTabBar />}
     >

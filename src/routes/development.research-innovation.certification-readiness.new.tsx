@@ -55,6 +55,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -929,99 +930,9 @@ export function CertificationReadinessNewPage({
 
 
 
-          {/* ====================================================================
-             1. EXECUTIVE CERTIFICATION READINESS & PROBABILITY BANNER (Full Width)
-             ==================================================================== */}
+          {/* Scores & Health Gauges Banner */}
           <div className="mx-auto max-w-[1600px] px-4 space-y-6">
-            <Card className="border-border bg-white dark:bg-slate-900 shadow-xs overflow-hidden">
-              <div className="p-4 sm:p-5 flex flex-col xl:flex-row items-center justify-between gap-6">
-                {/* Overall Score Gauge */}
-                <div className="flex items-center gap-5 shrink-0">
-                  <CircularScoreGauge
-                    score={safeRecord.overallReadinessScore}
-                    size={96}
-                    strokeWidth={8}
-                    color="#2563eb"
-                  />
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-foreground">Overall Certification Readiness Score</span>
-                      <Badge className="bg-blue-600 text-white text-[10px]">
-                        TÜV Rheinland Scheduled
-                      </Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground max-w-md">
-                      Calculated across all accredited compliance benchmarks & statutory safety directives.
-                    </p>
-                    <div className="flex items-center gap-2 text-xs pt-1">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">Success Probability:</span>
-                      <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">
-                        {safeRecord.readinessSummary?.certificationProbabilityPct ?? 92}%
-                      </span>
-                      <span className="text-slate-300 dark:text-slate-700">•</span>
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">Recommendation:</span>
-                      <span className="font-bold text-blue-600 dark:text-blue-400">
-                        {safeRecord.readinessSummary?.recommendation ?? "Ready for Certification Submission"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Component Pillar Progress Bars */}
-                <div className="w-full xl:w-auto flex-1 max-w-xl grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs border-t xl:border-t-0 xl:border-l border-border/80 pt-4 xl:pt-0 xl:pl-6">
-                  <div
-                    onClick={() => document.getElementById("documentation")?.scrollIntoView({ behavior: "smooth" })}
-                    className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-muted-foreground font-medium truncate">Documentation</span>
-                      <span className="font-bold text-blue-600">{safeRecord.documentationScore}%</span>
-                    </div>
-                    <Progress value={safeRecord.documentationScore} className="h-1.5" />
-                  </div>
-                  <div
-                    onClick={() => document.getElementById("testing_readiness")?.scrollIntoView({ behavior: "smooth" })}
-                    className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-muted-foreground font-medium truncate">Testing</span>
-                      <span className="font-bold text-blue-600">{safeRecord.testingScore}%</span>
-                    </div>
-                    <Progress value={safeRecord.testingScore} className="h-1.5" />
-                  </div>
-                  <div
-                    onClick={() => document.getElementById("compliance")?.scrollIntoView({ behavior: "smooth" })}
-                    className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-muted-foreground font-medium truncate">Compliance</span>
-                      <span className="font-bold text-emerald-600">{safeRecord.complianceScore}%</span>
-                    </div>
-                    <Progress value={safeRecord.complianceScore} className="h-1.5" />
-                  </div>
-                  <div
-                    onClick={() => document.getElementById("laboratory")?.scrollIntoView({ behavior: "smooth" })}
-                    className="space-y-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-muted-foreground font-medium truncate">Laboratory</span>
-                      <span className="font-bold text-blue-600">{safeRecord.laboratoryScore}%</span>
-                    </div>
-                    <Progress value={safeRecord.laboratoryScore} className="h-1.5" />
-                  </div>
-                  <div
-                    onClick={() => document.getElementById("ai_assessment")?.scrollIntoView({ behavior: "smooth" })}
-                    className="space-y-1 col-span-2 sm:col-span-1 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-muted-foreground font-medium truncate">AI Score</span>
-                      <span className="font-bold text-purple-600">{safeRecord.aiScore}%</span>
-                    </div>
-                    <Progress value={safeRecord.aiScore} className="h-1.5" />
-                  </div>
-                </div>
-              </div>
-            </Card>
+            <ProductScoreBanner submoduleKey="certification-readiness" />
 
             {/* ====================================================================
                2. BALANCED 2-COLUMN GRID (Cards 1 to 6)
@@ -1036,7 +947,7 @@ export function CertificationReadinessNewPage({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Award className="h-4 w-4 text-blue-600" />
-                        <CardTitle className="text-sm font-bold">1. Certification Project Overview</CardTitle>
+                        <CardTitle className="text-sm font-bold">Certification Project Overview</CardTitle>
                       </div>
                       <Badge className="bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 text-xs font-bold">
                         Priority: High
@@ -1122,7 +1033,7 @@ export function CertificationReadinessNewPage({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <FileCheck className="h-4 w-4 text-blue-600" />
-                        <CardTitle className="text-sm font-bold">2. Applicable Standards & Regulations</CardTitle>
+                        <CardTitle className="text-sm font-bold">Applicable Standards & Regulations</CardTitle>
                       </div>
                       <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold">
                         Score: 86/100
@@ -1206,7 +1117,7 @@ export function CertificationReadinessNewPage({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-blue-600" />
-                        <CardTitle className="text-sm font-bold">3. Documentation Readiness</CardTitle>
+                        <CardTitle className="text-sm font-bold">Documentation Readiness</CardTitle>
                       </div>
                       <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold">
                         Score: 88/100
@@ -1284,7 +1195,7 @@ export function CertificationReadinessNewPage({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                        <CardTitle className="text-sm font-bold">4. Testing & Validation Readiness</CardTitle>
+                        <CardTitle className="text-sm font-bold">Testing & Validation Readiness</CardTitle>
                       </div>
                       <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold">
                         Score: 90/100
@@ -1336,7 +1247,7 @@ export function CertificationReadinessNewPage({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Building className="h-4 w-4 text-indigo-600" />
-                        <CardTitle className="text-sm font-bold">5. Certification Laboratory Management</CardTitle>
+                        <CardTitle className="text-sm font-bold">Certification Laboratory Management</CardTitle>
                       </div>
                       <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-bold">
                         Score: 85/100
@@ -1408,7 +1319,7 @@ export function CertificationReadinessNewPage({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <ShieldCheck className="h-4 w-4 text-emerald-600" />
-                        <CardTitle className="text-sm font-bold">6. Compliance Assessment & CAPA</CardTitle>
+                        <CardTitle className="text-sm font-bold">Compliance Assessment & CAPA</CardTitle>
                       </div>
                       <Badge className="bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-bold">
                         Score: 84/100
@@ -1478,7 +1389,7 @@ export function CertificationReadinessNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-purple-600" />
-                    <CardTitle className="text-sm font-bold">7. AI Compliance Assessment</CardTitle>
+                    <CardTitle className="text-sm font-bold">AI Compliance Assessment</CardTitle>
                   </div>
                   <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold text-xs">
                     <Sparkles className="h-3 w-3 text-purple-600" />
@@ -1556,7 +1467,7 @@ export function CertificationReadinessNewPage({
                   </div>
                   <div>
                     <CardTitle className="text-sm font-bold text-slate-900 dark:text-white">
-                      8. Standards Verification & Regulatory Authority Traceability
+                      Standards Verification & Regulatory Authority Traceability
                     </CardTitle>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
                       Cross-border EV directives, statutory safety mandates & laboratory audit records
@@ -1745,7 +1656,7 @@ export function CertificationReadinessNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Paperclip className="h-4 w-4 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">9. Attachments</CardTitle>
+                    <CardTitle className="text-sm font-bold">Attachments</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-xs font-mono">
@@ -1823,7 +1734,7 @@ export function CertificationReadinessNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <UserCheck className="h-4 w-4 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">10. Review & Approval</CardTitle>
+                    <CardTitle className="text-sm font-bold">Review & Approval</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold">
@@ -1935,7 +1846,7 @@ export function CertificationReadinessNewPage({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">11. System Information</CardTitle>
+                    <CardTitle className="text-sm font-bold">System Information</CardTitle>
                   </div>
                   <Badge variant="outline" className="text-xs font-mono">
                     Audit Trail Active

@@ -61,6 +61,7 @@ import {
   Legend,
 } from "recharts";
 import { AppShell } from "@/components/erp/AppShell";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { ProductRoadmapTabBar, type ProductRoadmapTabId } from "@/components/erp/ProductRoadmapTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { ErpButton } from "@/components/erp/Button";
@@ -78,7 +79,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { productRoadmapService } from "@/services";
+import { productRoadmapService } from "@/services/productRoadmapService";
 import { calculateProductRoadmapScores } from "@/lib/productRoadmapFns.server";
 import type {
   ProductRoadmapApprovalDecision,
@@ -103,35 +104,6 @@ function formatCurrency(val: number): string {
   }).format(val);
 }
 
-function CircularScoreGauge({ score }: { score: number }) {
-  const circumference = 2 * Math.PI * 42;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
-
-  let scoreColor = "text-emerald-500 stroke-emerald-500";
-  if (score < 60) scoreColor = "text-amber-500 stroke-amber-500";
-  if (score < 40) scoreColor = "text-rose-500 stroke-rose-500";
-
-  return (
-    <div className="relative inline-flex items-center justify-center">
-      <svg className="w-28 h-28 transform -rotate-90">
-        <circle cx="56" cy="56" r="42" className="stroke-muted/30 fill-none" strokeWidth="8" />
-        <circle
-          cx="56"
-          cy="56"
-          r="42"
-          className={cn("fill-none transition-all duration-1000 ease-out", scoreColor)}
-          strokeWidth="8"
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
-          strokeLinecap="round"
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-2xl font-bold tracking-tight text-foreground">{score}%</span>
-      </div>
-    </div>
-  );
-}
 
 export function ProductRoadmapFormPage({
   breadcrumb,
@@ -452,6 +424,9 @@ export function ProductRoadmapFormPage({
             </div>
           </div>
         </Card>
+
+        {/* Scores & Health Gauges Banner */}
+        <ProductScoreBanner submoduleKey="product-roadmap" />
 
         {/* ========================================================================= */}
         {/* TAB CONTROLS & MAIN DASHBOARD CONTENT                                      */}
@@ -1022,57 +997,6 @@ export function ProductRoadmapFormPage({
             {/* RIGHT 4 COLUMNS: STICKY SIDEBAR PANEL */}
             <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-6">
 
-              {/* OVERALL ROADMAP SCORE */}
-              <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-5 shadow-sm">
-                <h3 className="text-sm font-bold text-foreground border-b border-border/50 pb-2">Overall Roadmap Score</h3>
-
-                <div className="flex flex-col items-center justify-center py-2">
-                  <CircularScoreGauge score={activeSidebarSummary.overallScore} />
-                  <span className="text-xs font-semibold text-foreground mt-2">Weighted Execution Score</span>
-                </div>
-
-                <div className="space-y-3 pt-2 border-t border-border/40 text-xs">
-                  <div>
-                    <div className="flex justify-between font-medium mb-1">
-                      <span className="text-muted-foreground">Strategic Progress</span>
-                      <span className="text-foreground font-semibold">{activeSidebarSummary.strategicProgress}/100</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-primary rounded-full" style={{ width: `${activeSidebarSummary.strategicProgress}%` }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between font-medium mb-1">
-                      <span className="text-muted-foreground">Product Readiness</span>
-                      <span className="text-foreground font-semibold">{activeSidebarSummary.productReadiness}/100</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${activeSidebarSummary.productReadiness}%` }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between font-medium mb-1">
-                      <span className="text-muted-foreground">Innovation Progress</span>
-                      <span className="text-foreground font-semibold">{activeSidebarSummary.innovationProgress}/100</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-blue-500 rounded-full" style={{ width: `${activeSidebarSummary.innovationProgress}%` }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between font-medium mb-1">
-                      <span className="text-muted-foreground">Budget Health</span>
-                      <span className="text-foreground font-semibold">{activeSidebarSummary.budgetHealth}/100</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-amber-500 rounded-full" style={{ width: `${activeSidebarSummary.budgetHealth}%` }} />
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {/* BUSINESS IMPACT */}
               <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">

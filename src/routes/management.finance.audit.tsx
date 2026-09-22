@@ -71,7 +71,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { company } from "@/lib/mock-data";
-import { auditTrailService, loadAuditTrailDashboard } from "@/services";
+import { loadAuditTrailDashboard } from "@/services/financialManagementService";
+import * as auditTrailService from "@/services/auditTrailService";
 import type {
   AuditLogEntry,
   SensitiveChangeRecord,

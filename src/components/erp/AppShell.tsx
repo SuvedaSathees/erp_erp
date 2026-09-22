@@ -68,6 +68,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 
 type Icon = React.ComponentType<{ className?: string }>;
 
@@ -142,7 +143,7 @@ const NAV_GROUPS: GroupItem[] = [
             kind: "leaf",
             to: "/development/business-development/overview",
             matchPrefix: "/development/business-development",
-            label: "Business Development",
+            label: "Business",
             icon: Briefcase,
             subItems: [
               { to: "/development/business-development/overview", label: "Overview" },
@@ -152,7 +153,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/business-development/customer-validation", label: "Customer Validation" },
               { to: "/development/business-development/market-research", label: "Market Research" },
               { to: "/development/business-development/competitive-analysis", label: "Competitive Analysis" },
-              { to: "/development/business-development/go-to-market-development", label: "Go-To-Market (GTM) Development" },
+              { to: "/development/business-development/go-to-market-development", label: "GTM" },
               { to: "/development/business-development/pricing-strategy-development", label: "Pricing Strategy Development" },
               { to: "/development/business-development/revenue-model-development", label: "Revenue Model Development" },
               { to: "/development/business-development/sales-channel-development", label: "Sales Channel Development" },
@@ -168,13 +169,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/business-development/business-scaling-development", label: "Business Scaling Development" },
               { to: "/development/business-development/corporate-strategy-development", label: "Corporate Strategy Development" },
               { to: "/development/business-development/business-transformation-development", label: "Business Transformation Development" },
+              { to: "/development/business-development/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/development/product-development/overview",
             matchPrefix: "/development/product-development",
-            label: "Product Development",
+            label: "Product",
             icon: Package,
             subItems: [
               { to: "/development/product-development/overview", label: "Overview" },
@@ -202,13 +204,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/product-development/product-documentation", label: "Documentation" },
               { to: "/development/product-development/product-release-management", label: "Release" },
               { to: "/development/product-development/product-lifecycle-management", label: "Lifecycle" },
+              { to: "/development/product-development/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/development/manufacturing-development/overview",
             matchPrefix: "/development/manufacturing-development",
-            label: "Manufacturing Development",
+            label: "Manufacturing",
             icon: Settings,
             subItems: [
               { to: "/development/manufacturing-development/overview", label: "Overview" },
@@ -230,6 +233,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/manufacturing-development/sop-development", label: "SOP" },
               { to: "/development/manufacturing-development/bom-engineering", label: "BOM" },
               { to: "/development/manufacturing-development/routing-development", label: "Routing" },
+              { to: "/development/manufacturing-development/reports", label: "Report" },
             ],
           },
           {
@@ -249,6 +253,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/research-innovation/industrial-design/new", label: "Industrial Design" },
               { to: "/development/research-innovation/product-architecture/new", label: "Product Architecture" },
               { to: "/development/research-innovation/ui-ux-development/new", label: "UI/UX Development" },
+              { to: "/development/research-innovation/reports", label: "Report" },
             ],
           },
         ],
@@ -262,7 +267,7 @@ const NAV_GROUPS: GroupItem[] = [
             kind: "leaf",
             to: "/management/administration-management/overview",
             matchPrefix: "/management/administration-management",
-            label: "Administration Management",
+            label: "Organization",
             icon: Building2,
             subItems: [
               { to: "/management/administration-management/overview", label: "Overview" },
@@ -276,13 +281,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/administration-management/master-data-management", label: "Master Data Management" },
               { to: "/management/administration-management/notifications-management", label: "Notifications Management" },
               { to: "/management/administration-management/audit-management", label: "Audit Management" },
+              { to: "/management/administration-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/sales-management/overview",
             matchPrefix: "/management/sales-management",
-            label: "Sales Management",
+            label: "Sales",
             icon: TrendingUp,
             subItems: [
               { to: "/management/sales-management/overview", label: "Overview" },
@@ -296,13 +302,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/sales-management/channel-partners", label: "Channel Partners" },
               { to: "/management/sales-management/territory-management", label: "Territory Management" },
               { to: "/management/sales-management/sales-commission", label: "Sales Commission" },
+              { to: "/management/sales-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/crm-management/overview",
             matchPrefix: "/management/crm-management",
-            label: "CRM Management",
+            label: "CRM",
             icon: Target,
             subItems: [
               { to: "/management/crm-management/overview", label: "Overview" },
@@ -318,13 +325,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/crm-management/customer-feedback", label: "Customer Feedback" },
               { to: "/management/crm-management/customer-success", label: "Customer Success" },
               { to: "/management/crm-management/loyalty-management", label: "Loyalty Management" },
+              { to: "/management/crm-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/hrm-management/overview",
             matchPrefix: "/management/hrm-management",
-            label: "HRM Management",
+            label: "HRM",
             icon: Users,
             subItems: [
               { to: "/management/hrm-management/overview", label: "Overview" },
@@ -344,6 +352,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/hrm-management/employee-welfare", label: "Employee Welfare" },
               { to: "/management/hrm-management/exit-management", label: "Exit Management" },
               { to: "/management/hrm-management/hr-analytics", label: "HR Analytics" },
+              { to: "/management/hrm-management/reports", label: "Report" },
             ],
           },
           {
@@ -361,19 +370,19 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/finance/cash-bank", label: "Cash & Bank" },
               { to: "/management/finance/consolidation", label: "Consolidation" },
               { to: "/management/finance/cost-centers", label: "Cost Centers" },
-              { to: "/management/finance/reports", label: "Financial Reports" },
               { to: "/management/finance/assets", label: "Fixed Assets" },
               { to: "/management/finance/ledger", label: "General Ledger" },
               { to: "/management/finance/profitability", label: "Profitability" },
               { to: "/management/finance/setup", label: "Setup & Integrations" },
               { to: "/management/finance/tax", label: "Tax Management" },
+              { to: "/management/finance/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/procurement-management/overview",
             matchPrefix: "/management/procurement-management",
-            label: "Procurement Management",
+            label: "Procurement",
             icon: ShoppingCart,
             subItems: [
               { to: "/management/procurement-management/overview", label: "Overview" },
@@ -389,13 +398,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/procurement-management/contract-management", label: "Contract Management" },
               { to: "/management/procurement-management/vendor-evaluation", label: "Vendor Evaluation" },
               { to: "/management/procurement-management/supplier-portal", label: "Supplier Portal" },
+              { to: "/management/procurement-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/project-management/overview",
             matchPrefix: "/management/project-management",
-            label: "Project Management",
+            label: "Project",
             icon: FolderKanban,
             subItems: [
               { to: "/management/project-management/overview", label: "Overview" },
@@ -410,13 +420,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/project-management/issue-management", label: "Issue Management" },
               { to: "/management/project-management/project-billing", label: "Project Billing" },
               { to: "/management/project-management/project-analytics", label: "Project Analytics" },
+              { to: "/management/project-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/asset-management/overview",
             matchPrefix: "/management/asset-management",
-            label: "Asset Management",
+            label: "Asset",
             icon: Package,
             subItems: [
               { to: "/management/asset-management/overview", label: "Overview" },
@@ -430,13 +441,14 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/asset-management/asset-lifecycle", label: "Asset Lifecycle" },
               { to: "/management/asset-management/asset-depreciation", label: "Asset Depreciation" },
               { to: "/management/asset-management/asset-tracking", label: "Asset Tracking" },
+              { to: "/management/asset-management/reports", label: "Report" },
             ],
           },
           {
             kind: "leaf",
             to: "/management/quality-management/overview",
             matchPrefix: "/management/quality-management",
-            label: "Quality Management",
+            label: "Quality",
             icon: ShieldCheck,
             subItems: [
               { to: "/management/quality-management/overview", label: "Overview" },
@@ -451,6 +463,7 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/quality-management/calibration", label: "Calibration" },
               { to: "/management/quality-management/compliance", label: "Compliance" },
               { to: "/management/quality-management/quality-analytics", label: "Quality Analytics" },
+              { to: "/management/quality-management/reports", label: "Report" },
             ],
           },
         ],
@@ -1565,6 +1578,8 @@ export function AppShell({
   description,
   topbarActions,
   tabs,
+  hideScoreBanner,
+  scoreBannerKey,
 }: {
   children: ReactNode;
   title?: string;
@@ -1572,7 +1587,69 @@ export function AppShell({
   description?: string;
   topbarActions?: ReactNode;
   tabs?: ReactNode;
+  hideScoreBanner?: boolean;
+  scoreBannerKey?: string;
 }) {
+  const routerState = useRouterState();
+  const rawPathname = (routerState?.location?.pathname ?? "").replace(/\/+$/, "");
+
+  // Check if current route belongs to one of the 9 Management modules from the user's list:
+  // 1. Organization (/management/administration-management)
+  // 2. Sales (/management/sales-management)
+  // 3. CRM (/management/crm-management)
+  // 4. HRM (/management/hrm-management)
+  // 5. Finance (/management/finance)
+  // 6. Procurement (/management/procurement-management)
+  // 7. Project (/management/project-management)
+  // 8. Asset (/management/asset-management)
+  // 9. Quality (/management/quality-management)
+  const isManagementModule =
+    rawPathname.startsWith("/management/administration-management/") ||
+    rawPathname.startsWith("/management/sales-management/") ||
+    rawPathname.startsWith("/management/crm-management/") ||
+    rawPathname.startsWith("/management/hrm-management/") ||
+    rawPathname.startsWith("/management/finance/") ||
+    rawPathname.startsWith("/management/procurement-management/") ||
+    rawPathname.startsWith("/management/project-management/") ||
+    rawPathname.startsWith("/management/asset-management/") ||
+    rawPathname.startsWith("/management/quality-management/");
+
+  // Extract path segments
+  const pathSegments = rawPathname.split("/").filter(Boolean);
+
+  // Exclude overview, report, index, or module root pages as requested
+  const isExcluded =
+    rawPathname.endsWith("/overview") ||
+    rawPathname.endsWith("/reports") ||
+    rawPathname.includes("/overview/") ||
+    rawPathname.includes("/reports/") ||
+    rawPathname.endsWith("/index") ||
+    rawPathname === "/management" ||
+    pathSegments.length < 3; // Must be at least /management/<module>/<submodule>
+
+  const showScoreBanner = !hideScoreBanner && isManagementModule && !isExcluded;
+
+  // Extract submodule key intelligently (handles subactions like /new, /edit, or IDs)
+  let detectedSubmoduleKey = scoreBannerKey || "";
+  if (!detectedSubmoduleKey && pathSegments.length >= 3) {
+    const last = pathSegments[pathSegments.length - 1];
+    const secondLast = pathSegments[pathSegments.length - 2];
+    if (
+      (last === "new" ||
+        last === "edit" ||
+        last === "create" ||
+        last === "details" ||
+        last === "view" ||
+        /^\$?[0-9a-fA-F-]+$/.test(last)) &&
+      secondLast &&
+      secondLast !== "management"
+    ) {
+      detectedSubmoduleKey = secondLast;
+    } else {
+      detectedSubmoduleKey = last;
+    }
+  }
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -1732,7 +1809,14 @@ export function AppShell({
               tabs={tabs}
             />
           )}
-          <main className="flex-1 px-4 py-6 lg:px-8 lg:py-7 min-w-0 max-w-full overflow-x-hidden">{children}</main>
+          <main className="flex-1 px-4 py-6 lg:px-8 lg:py-7 min-w-0 max-w-full overflow-x-hidden">
+            {showScoreBanner && (
+              <div className="mb-6 w-full animate-in fade-in duration-300">
+                <ProductScoreBanner submoduleKey={detectedSubmoduleKey} />
+              </div>
+            )}
+            {children}
+          </main>
         </div>
       </div>
     </TooltipProvider>

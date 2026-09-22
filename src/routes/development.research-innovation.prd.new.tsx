@@ -43,6 +43,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { AppShell } from "@/components/erp/AppShell";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { PrdTabBar, type PrdTabId } from "@/components/erp/PrdTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { ErpButton } from "@/components/erp/Button";
@@ -59,7 +60,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { prdService } from "@/services";
+import { prdService } from "@/services/prdService";
 import { calculatePrdScores } from "@/lib/prdFns.server";
 import type {
   PrdApprovalDecision,
@@ -231,7 +232,6 @@ export function PrdFormPage({
   const liveCalculated = calculatePrdScores(formInput);
   const activeReadiness = liveCalculated.readinessSummary;
   const activeAiQuality = liveCalculated.aiQuality;
-  const activeHighlights = liveCalculated.keyHighlights;
 
   return (
     <AppShell
@@ -434,6 +434,9 @@ export function PrdFormPage({
           </div>
         </Card>
 
+        {/* Scores & Health Gauges Banner */}
+        <ProductScoreBanner submoduleKey="prd" />
+
         {/* ========================================================================= */}
         {/* TAB CONTROLS & OVERVIEW TAB CONTENT                                       */}
         {/* ========================================================================= */}
@@ -567,49 +570,6 @@ export function PrdFormPage({
                     <div className="flex justify-between py-1">
                       <span className="text-muted-foreground">Next Review Date:</span>
                       <span className="font-mono text-foreground">{formInput.nextReviewDate}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* PANEL 3: PRD Readiness Overview */}
-                <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
-                  <div className="flex items-center gap-2 border-b border-border/50 pb-2">
-                    <Target className="h-4 w-4 text-blue-600" />
-                    <h3 className="text-sm font-bold text-foreground">PRD Readiness Overview</h3>
-                  </div>
-
-                  <div className="flex items-center justify-around">
-                    <CircularScoreGauge score={activeReadiness.overallPrdScore} label="PRD SCORE" />
-                    <div className="space-y-2 text-xs flex-1 pl-4">
-                      <div>
-                        <div className="flex justify-between text-[11px] font-medium mb-0.5">
-                          <span className="text-muted-foreground">Business Readiness</span>
-                          <span className="font-bold text-foreground">{activeReadiness.businessReadiness}%</span>
-                        </div>
-                        <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-primary" style={{ width: `${activeReadiness.businessReadiness}%` }} />
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="flex justify-between text-[11px] font-medium mb-0.5">
-                          <span className="text-muted-foreground">Functional Completeness</span>
-                          <span className="font-bold text-foreground">{activeReadiness.functionalCompleteness}%</span>
-                        </div>
-                        <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-emerald-500" style={{ width: `${activeReadiness.functionalCompleteness}%` }} />
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="flex justify-between text-[11px] font-medium mb-0.5">
-                          <span className="text-muted-foreground">Technical Readiness</span>
-                          <span className="font-bold text-foreground">{activeReadiness.technicalReadiness}%</span>
-                        </div>
-                        <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-blue-500" style={{ width: `${activeReadiness.technicalReadiness}%` }} />
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>

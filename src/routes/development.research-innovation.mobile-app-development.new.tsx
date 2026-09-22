@@ -62,6 +62,7 @@ import {
 } from "lucide-react";
 
 import { AppShell } from "@/components/erp/AppShell";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import {
   MobileDevelopmentTabBar,
   type MobileDevelopmentTabId,
@@ -88,7 +89,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { mobileDevelopmentService } from "@/services";
+import { mobileDevelopmentService } from "@/services/mobileDevelopmentService";
 import type {
   MobileDevelopmentApprovalDecision,
   MobileDevelopmentFormInput,
@@ -485,6 +486,9 @@ export function MobileDevelopmentNewPage({
           </div>
         </div>
 
+        {/* Scores & Health Gauges Banner */}
+        <ProductScoreBanner submoduleKey="mobile-app-development" />
+
         {/* Downstream Banner when Approved */}
         {record.status === "Approved" && (
           <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 flex items-center justify-between text-emerald-900 dark:text-emerald-200 shadow-2xs">
@@ -513,11 +517,9 @@ export function MobileDevelopmentNewPage({
         )}
 
         {/* ===========================================================================
-            4. MAIN CONTENT AREA & STICKY SIDEBAR
+            4. MAIN CONTENT AREA
             =========================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-          {/* MAIN CONTENT PANELS (COL-SPAN 3) */}
-          <div className="lg:col-span-3 space-y-6">
+        <div className="space-y-6">
             {/* -------------------------------------------------------------------
                 PANEL 1: Mobile Project Overview
                 ------------------------------------------------------------------- */}
@@ -1016,40 +1018,34 @@ export function MobileDevelopmentNewPage({
                   </Badge>
                 </CardHeader>
 
-                <CardContent className="pt-4 flex flex-col md:flex-row items-center gap-6 text-xs">
-                  <div className="shrink-0 flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-border">
-                    <CircularScoreGauge score={record.summary.overallMobileScore} />
-                    <span className="text-[11px] font-bold text-muted-foreground mt-2 uppercase tracking-wide">Overall Mobile Score</span>
+                <CardContent className="pt-4 space-y-3 text-xs">
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>Development Progress</span>
+                      <span>{record.summary.developmentProgress}%</span>
+                    </div>
+                    <Progress value={record.summary.developmentProgress} className="h-2" />
                   </div>
-                  <div className="flex-1 w-full space-y-3">
-                    <div>
-                      <div className="flex justify-between font-semibold text-foreground mb-1">
-                        <span>Development Progress</span>
-                        <span>{record.summary.developmentProgress}%</span>
-                      </div>
-                      <Progress value={record.summary.developmentProgress} className="h-2" />
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>UI / UX Readiness</span>
+                      <span>{record.summary.uiReadiness}%</span>
                     </div>
-                    <div>
-                      <div className="flex justify-between font-semibold text-foreground mb-1">
-                        <span>UI / UX Readiness</span>
-                        <span>{record.summary.uiReadiness}%</span>
-                      </div>
-                      <Progress value={record.summary.uiReadiness} className="h-2" />
+                    <Progress value={record.summary.uiReadiness} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>Performance Readiness</span>
+                      <span>{record.summary.performanceReadiness}%</span>
                     </div>
-                    <div>
-                      <div className="flex justify-between font-semibold text-foreground mb-1">
-                        <span>Performance Readiness</span>
-                        <span>{record.summary.performanceReadiness}%</span>
-                      </div>
-                      <Progress value={record.summary.performanceReadiness} className="h-2" />
+                    <Progress value={record.summary.performanceReadiness} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between font-semibold text-foreground mb-1">
+                      <span>App Store Readiness</span>
+                      <span>{record.summary.storeReadiness}%</span>
                     </div>
-                    <div>
-                      <div className="flex justify-between font-semibold text-foreground mb-1">
-                        <span>App Store Readiness</span>
-                        <span>{record.summary.storeReadiness}%</span>
-                      </div>
-                      <Progress value={record.summary.storeReadiness} className="h-2" />
-                    </div>
+                    <Progress value={record.summary.storeReadiness} className="h-2" />
                   </div>
                 </CardContent>
               </Card>
@@ -1273,34 +1269,6 @@ export function MobileDevelopmentNewPage({
                 </div>
               </CardContent>
             </Card>
-          </div>
-
-          {/* ===========================================================================
-              RIGHT SIDEBAR PANEL (STICKY ON SCROLL)
-              =========================================================================== */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="sticky top-6 space-y-6">
-              {/* Key Highlights Card */}
-              <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs">
-                <CardHeader className="pb-2 border-b border-border">
-                  <CardTitle className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                    <Sparkles className="h-3.5 w-3.5 text-cyan-600" />
-                    Key Highlights
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-3">
-                  <ul className="space-y-2 text-xs text-muted-foreground">
-                    {record.keyHighlights.map((highlight, idx) => (
-                      <li key={idx} className="flex items-start gap-1.5">
-                        <Check className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                        <span className="text-foreground">{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
         </div>
 
         {/* ===========================================================================

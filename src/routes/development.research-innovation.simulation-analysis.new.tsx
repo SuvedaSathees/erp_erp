@@ -72,6 +72,7 @@ import type {
   SimulationStatus,
 } from "@/services/types";
 import { InnovationAreaTabs } from "@/components/erp/ResearchInnovationTabBar";
+import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -881,67 +882,9 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
           </div>
         </div>
 
-        {/* ====================================================================
-           3. EXECUTIVE OVERALL SIMULATION SCORE & CAE LIFECYCLE STRIP
-           ==================================================================== */}
+        {/* Scores & Health Gauges Banner */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
-          <Card className="border-border bg-white dark:bg-slate-900 shadow-2xs overflow-hidden">
-            <div className="p-4 sm:p-5 flex flex-col xl:flex-row items-center justify-between gap-6">
-              {/* Overall Score Gauge */}
-              <div className="flex items-center gap-5 shrink-0">
-                <CircularScoreGauge score={record.overallSimulationScore} label="Overall Score" />
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-foreground">CAE Engineering Simulation Lifecycle</span>
-                    <Badge className="bg-blue-600 text-white text-[10px] font-semibold">Stage 2: Engineering Simulation</Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground max-w-md">
-                    Multi-physics coupled structural and thermal FEA/CFD simulation with HPC GPU acceleration and prototype correlation.
-                  </p>
-                  <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 pt-0.5">
-                    <Target className="h-3.5 w-3.5" />
-                    <span>Total Score: {record.overallSimulationScore}% (91% Avg across 4 CAE Stages)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 4 Component Metrics with Progress Bars */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full xl:w-auto xl:min-w-[560px]">
-                <div
-                  onClick={() => document.getElementById("section-model-prep")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">1. Model Prep</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.modelReadinessScore}%</span>
-                  <Progress value={record.modelReadinessScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("section-configuration")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">2. Simulation</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.configurationScore}%</span>
-                  <Progress value={record.configurationScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("section-results")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">3. Validation</span>
-                  <span className="text-sm font-bold text-foreground font-mono">{record.validationScore}%</span>
-                  <Progress value={record.validationScore} className="h-1.5" />
-                </div>
-                <div
-                  onClick={() => document.getElementById("section-optimization")?.scrollIntoView({ behavior: "smooth" })}
-                  className="p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-center space-y-1 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-[11px] text-muted-foreground block font-medium">4. Optimization</span>
-                  <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 font-mono">{record.optimizationScore}%</span>
-                  <Progress value={record.optimizationScore} className="h-1.5" />
-                </div>
-              </div>
-            </div>
-          </Card>
+          <ProductScoreBanner submoduleKey="simulation-analysis" />
 
           {/* ====================================================================
              4. BALANCED WORKSPACE SECTIONS GRID
@@ -952,7 +895,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Activity className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">1. Simulation Overview & Objectives</CardTitle>
+                    <CardTitle className="text-sm font-bold">Simulation Overview & Objectives</CardTitle>
                   </div>
                   <Badge className="bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 font-semibold text-xs border border-red-200">
                     Priority: {record.projectPriority}
@@ -987,7 +930,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Box className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">2. Model Preparation & Mesh Quality</CardTitle>
+                    <CardTitle className="text-sm font-bold">Model Preparation & Mesh Quality</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
@@ -1039,7 +982,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <SlidersHorizontal className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">3. Boundary Conditions & Constraints</CardTitle>
+                    <CardTitle className="text-sm font-bold">Boundary Conditions & Constraints</CardTitle>
                   </div>
                   <Badge className="bg-blue-600 text-white font-mono text-xs font-semibold">
                     Score: {record.boundaryConditionsConfig.boundaryConditionScore}/100
@@ -1081,7 +1024,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Cpu className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">4. Simulation Configuration & Solver</CardTitle>
+                    <CardTitle className="text-sm font-bold">Simulation Configuration & Solver</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
@@ -1127,7 +1070,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Layers className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">5. Engineering Analysis Categories</CardTitle>
+                    <CardTitle className="text-sm font-bold">Engineering Analysis Categories</CardTitle>
                   </div>
                   <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
                     Score: {record.analysisCategoriesConfig.analysisCompletionScore}/100
@@ -1164,7 +1107,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Thermometer className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">6. Results & Prototype Validation</CardTitle>
+                    <CardTitle className="text-sm font-bold">Results & Prototype Validation</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
@@ -1210,7 +1153,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-5 w-5 text-blue-600" />
-                    <CardTitle className="text-sm font-bold">7. Design & Topology Optimization</CardTitle>
+                    <CardTitle className="text-sm font-bold">Design & Topology Optimization</CardTitle>
                   </div>
                   <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
                     Opt Score: {record.optimizationConfig.optimizationScore}/100
@@ -1260,7 +1203,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-purple-600" />
-                    <CardTitle className="text-sm font-bold">8. AI Engineering Assessment & Advisory</CardTitle>
+                    <CardTitle className="text-sm font-bold">AI Engineering Assessment & Advisory</CardTitle>
                   </div>
                   <Badge className="bg-purple-600 text-white font-mono text-xs font-semibold">
                     AI Score: {record.aiEngineeringScore}/100
@@ -1294,7 +1237,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
               <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Paperclip className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">9. Engineering Simulation Attachments</CardTitle>
+                  <CardTitle className="text-sm font-bold">Engineering Simulation Attachments</CardTitle>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-xs font-mono">{record.attachments.length} Files</Badge>
@@ -1366,7 +1309,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
               <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <UserCheck className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-sm font-bold">10. Review & Approval Board Timeline</CardTitle>
+                  <CardTitle className="text-sm font-bold">Review & Approval Board Timeline</CardTitle>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-xs font-semibold border-amber-200">
@@ -1501,7 +1444,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
             <CardHeader className="pb-3 border-b border-border/60 flex flex-row items-center justify-between">
               <div className="flex items-center gap-2">
                 <HistoryIcon className="h-5 w-5 text-blue-600" />
-                <CardTitle className="text-sm font-bold">11. Audit Trail & Verification Logs</CardTitle>
+                <CardTitle className="text-sm font-bold">Audit Trail & Verification Logs</CardTitle>
               </div>
               <Badge variant="outline" className="text-xs font-mono">Immutable Log</Badge>
             </CardHeader>

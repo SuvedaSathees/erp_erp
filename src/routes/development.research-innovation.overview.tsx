@@ -75,4 +75,3 @@ function OverviewSkeleton() {
   );
 }
 
-export default ResearchInnovationOverview;

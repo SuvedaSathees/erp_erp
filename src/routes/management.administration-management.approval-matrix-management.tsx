@@ -156,7 +156,7 @@ function ApprovalMatrixManagementPage() {
   return (
     <AppShell
       title="Approval Matrix Management"
-      breadcrumb="Management > Administration Management > Approval Matrix Management"
+      breadcrumb="Management > Organization > Approval Matrix Management"
       description="Define approval levels, authority limits, conditional routing, escalation paths, delegation rules, and SoD controls."
       tabs={<AdminManagementTabBar />}
     >

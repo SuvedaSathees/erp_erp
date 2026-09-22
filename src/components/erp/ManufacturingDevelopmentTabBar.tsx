@@ -27,6 +27,7 @@ export const MANUFACTURING_DEVELOPMENT_TABS: { to: string; label: string; full: 
   { to: "/development/manufacturing-development/sop-development", label: "SOP", full: "SOP Development" },
   { to: "/development/manufacturing-development/bom-engineering", label: "BOM", full: "BOM Engineering" },
   { to: "/development/manufacturing-development/routing-development", label: "Routing", full: "Routing Development" },
+  { to: "/development/manufacturing-development/reports", label: "Report", full: "Manufacturing Report" },
 ];
 
 export const MANUFACTURING_DEV_MODULE_META: Record<string, { shortLabel: string; description: string; recordLabel: string }> = {

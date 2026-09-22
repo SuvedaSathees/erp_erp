@@ -7,7 +7,7 @@ import { WidgetPage } from "@/widgets/components/WidgetPage";
 export const Route = createFileRoute("/management/project-management/overview")({
   head: () => ({
     meta: [
-      { title: "Project Management Overview · Magnertia ERP" },
+      { title: "Project Overview · Magnertia ERP" },
       {
         name: "description",
         content: "Executive project dashboard, portfolio milestones, and execution intelligence center.",
@@ -18,15 +18,15 @@ export const Route = createFileRoute("/management/project-management/overview")(
 });
 
 /**
- * Project Management Overview is a dynamic widget surface.
+ * Project Overview is a dynamic widget surface.
  * Its KPI cards, charts, risk registers, milestones, and AI planning insights
  * are driven by the ERP widget management system with drag-and-drop customization.
  */
 export function ProjectManagementOverviewPage() {
   return (
     <AppShell
-      title="Project Management Overview"
-      breadcrumb="Management > Project Management > Overview"
+      title="Project Overview"
+      breadcrumb="Management"
       description="Portfolio execution status, critical path tracking, budget utilization, and AI schedule intelligence."
       tabs={<ProjectManagementTabBar />}
     >

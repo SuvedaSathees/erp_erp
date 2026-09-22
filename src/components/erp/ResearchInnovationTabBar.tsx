@@ -45,6 +45,7 @@ export const RESEARCH_INNOVATION_TABS: { to: string; label: string; full: string
   { to: "/development/research-innovation/smart-factory-development/new", label: "Smart Factory", full: "Smart Factory Development" },
   { to: "/development/research-innovation/manufacturing-excellence/new", label: "Excellence", full: "Manufacturing Excellence" },
   { to: "/development/research-innovation/api-development/new", label: "API", full: "API Development" },
+  { to: "/development/research-innovation/reports", label: "Report", full: "Research & Innovation Report" },
 ];
 
 /** Per-module metadata — single source of truth for header descriptions. */

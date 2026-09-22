@@ -5,8 +5,7 @@
       "name": "magnertia-flow-dev",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "port": 8080,
-      "autoPort": false
+      "port": 8080
     }
   ]
 }

@@ -60,6 +60,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { company, mockUsers } from "@/lib/mock-data";
+import { useGlobalFilters } from "@/hooks/useGlobalFilters";
+import { useFavorites } from "@/hooks/useFavorites";
 import { Logo } from "./Logo";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
@@ -120,9 +122,8 @@ function groupContainsActive(group: GroupItem, pathname: string): boolean {
 }
 
 const TOP_ITEMS: (LeafItem | InertItem)[] = [
-  { kind: "inert", label: "Home", icon: Home },
+  { kind: "leaf", to: "/", label: "Home", icon: Home },
   { kind: "leaf", to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { kind: "inert", label: "Favorites", icon: Star },
 ];
 
 const NAV_GROUPS: GroupItem[] = [
@@ -1140,6 +1141,8 @@ function SidebarNav({
     );
   }, [searchQuery, searchTargets]);
 
+  const { favorites } = useFavorites();
+
   if (searchQuery) {
     return (
       <nav
@@ -1234,7 +1237,7 @@ function SidebarNav({
         {TOP_ITEMS.map((item) =>
           item.kind === "leaf" ? (
             <NavLeaf
-              key={item.to}
+              key={item.to + item.label}
               item={item}
               active={pathname === item.to}
               isCollapsed={isCollapsed}
@@ -1245,6 +1248,58 @@ function SidebarNav({
           ),
         )}
       </ul>
+
+      {/* Favorites section */}
+      {favorites.length > 0 && (
+        <>
+          <Separator className="my-3 bg-white/10" />
+          {!isCollapsed && (
+            <div className="px-3 mb-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white/30">
+                Favorites
+              </span>
+            </div>
+          )}
+          <ul className={cn("space-y-0.5", isCollapsed ? "px-2" : "px-3")}>
+            {favorites.map((fav) => (
+              <li key={fav.to}>
+                {isCollapsed ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        to={fav.to}
+                        onClick={onNavigate}
+                        className={cn(
+                          "flex h-10 w-10 items-center justify-center rounded-lg text-white/70 hover:bg-white/[0.06] hover:text-white transition-all",
+                          pathname.startsWith(fav.to) && "bg-primary text-white shadow-[0_4px_12px_-2px_rgba(10,60,117,0.4)]",
+                        )}
+                      >
+                        <Star className="h-4 w-4" />
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">{fav.label}</TooltipContent>
+                  </Tooltip>
+                ) : (
+                  <Link
+                    to={fav.to}
+                    onClick={onNavigate}
+                    className={cn(
+                      "group flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all",
+                      pathname.startsWith(fav.to)
+                        ? "bg-primary text-white shadow-[0_4px_12px_-2px_rgba(10,60,117,0.4)]"
+                        : "text-white/70 hover:bg-white/[0.06] hover:text-white",
+                    )}
+                  >
+                    <Star className="h-4 w-4 shrink-0 fill-current" />
+                    <span className="truncate">{fav.label}</span>
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
       <Separator className="my-3 bg-white/10" />
       <ul className="space-y-1">
         {NAV_GROUPS.map((group) => (
@@ -1331,6 +1386,51 @@ function SidebarFooter({ isCollapsed }: { isCollapsed: boolean }) {
   );
 }
 
+function TopbarFilterDropdown({
+  icon: Icon,
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  options: { label: string; value: string }[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const display = options.find((o) => o.value === value)?.label ?? label;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50 cursor-pointer">
+          <Icon className="h-4 w-4 text-muted-foreground" />
+          {display}
+          <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", open && "rotate-180")} />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-48 p-1.5">
+        {options.map((opt) => (
+          <button
+            key={opt.value}
+            onClick={() => { onChange(opt.value); setOpen(false); }}
+            className={cn(
+              "flex w-full items-center rounded-md px-3 py-2 text-[13px] font-medium transition-colors cursor-pointer",
+              opt.value === value
+                ? "bg-primary text-primary-foreground"
+                : "text-foreground hover:bg-muted",
+            )}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 function Topbar({
   onMenuClick,
   title,
@@ -1346,6 +1446,11 @@ function Topbar({
   actions?: ReactNode;
   tabs?: ReactNode;
 }) {
+  const { fiscalYear, setFiscalYear, companyFilter, setCompanyFilter, fiscalYears, companies } = useGlobalFilters();
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const starred = isFavorite(pathname);
+
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/80 px-4 pt-4 pb-5 backdrop-blur-md lg:px-8 lg:pt-6">
       <div className="flex items-start gap-3">
@@ -1401,17 +1506,36 @@ function Topbar({
         </div>
 
         <div className="hidden shrink-0 items-center gap-2 md:flex">
-          <button className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50 cursor-pointer">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            {company.fiscalYear.replace("FY ", "Fiscal Year ")}
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-          </button>
-          <button className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50 cursor-pointer">
-            <Grid3x3 className="h-4 w-4 text-muted-foreground" />
-            All Companies
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-          </button>
+          <TopbarFilterDropdown
+            icon={Calendar}
+            label="Fiscal Year"
+            options={fiscalYears}
+            value={fiscalYear}
+            onChange={(v) => setFiscalYear(v as typeof fiscalYear)}
+          />
+          <TopbarFilterDropdown
+            icon={Grid3x3}
+            label="Company"
+            options={companies}
+            value={companyFilter}
+            onChange={(v) => setCompanyFilter(v as typeof companyFilter)}
+          />
           {actions}
+          {title && pathname !== "/" && (
+            <button
+              onClick={() => toggleFavorite({ to: pathname, label: title, section: breadcrumb ?? "" })}
+              className={cn(
+                "grid h-9 w-9 place-items-center rounded-lg border border-border shadow-sm cursor-pointer transition-colors",
+                starred
+                  ? "bg-amber-50 border-amber-200 text-amber-500 hover:bg-amber-100"
+                  : "bg-card text-muted-foreground hover:bg-muted/50",
+              )}
+              aria-label={starred ? "Remove from favorites" : "Add to favorites"}
+              title={starred ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Star className={cn("h-4 w-4", starred && "fill-current")} />
+            </button>
+          )}
           <button
             className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-card text-muted-foreground shadow-sm hover:bg-muted/50 cursor-pointer"
             aria-label="Refresh"

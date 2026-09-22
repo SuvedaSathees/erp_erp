@@ -54,7 +54,7 @@ export function StatCard({
             {label}
           </div>
           <div
-            className="mt-0.5 truncate font-display text-[22px] font-bold leading-tight text-foreground tabular"
+            className={`mt-0.5 font-display font-bold leading-tight text-foreground tabular ${value.length > 14 ? "text-[16px]" : value.length > 10 ? "text-[18px]" : "text-[22px]"}`}
             title={value}
           >
             {value}

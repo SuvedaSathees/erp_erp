@@ -1,19 +1,9 @@
 import { apiRequest } from "./apiClient";
 import {
-  accountDistribution as accountDistributionRaw,
-  apAgingSummary,
-  apPaymentSummary,
-  apTopVendors,
-  arAgingSummary,
-  arCollectionSummary,
-  arTopCustomers,
   cashFlowSummary as cashFlowLines,
-  chartOfAccounts,
-  dashKpis,
   expenseDistribution,
   financialInsightsRaw,
   netCashFlow,
-  receivableTrend,
   revenueExpenseTrend,
 } from "@/lib/mock-data";
 import type {
@@ -41,11 +31,20 @@ import type {
   AssetCategoryCount,
 } from "./types";
 
-export function calculateCurrentRatio(query: DashboardQuery): Promise<CurrentRatio> {
-  return apiRequest(
-    `/api/financial/analytics/current-ratio?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => ({ currentRatio: dashKpis.currentRatio, currentRatioPY: dashKpis.currentRatioPY }),
-  );
+export async function calculateCurrentRatio(query: DashboardQuery): Promise<CurrentRatio> {
+  try {
+    const { getDashboardKpisFn } = await import("@/lib/dashboardAnalyticsFns.server");
+    const res = await getDashboardKpisFn();
+    if (res.success && res.data) {
+      return {
+        currentRatio: res.data.currentRatio,
+        currentRatioPY: res.data.currentRatioPY,
+      };
+    }
+  } catch (err) {
+    console.error("Failed to calculate current ratio from DB:", err);
+  }
+  return { currentRatio: 0, currentRatioPY: 0 };
 }
 
 export function generateRevenueExpenseTrend(query: DashboardQuery): Promise<TrendPoint[]> {
@@ -69,7 +68,7 @@ export function generateExpenseDistribution(query: DashboardQuery): Promise<Expe
   );
 }
 
-function findAccountNode(code: string, nodes: AccountNode[] = chartOfAccounts): AccountNode | null {
+function findAccountNode(code: string, nodes: AccountNode[]): AccountNode | null {
   for (const node of nodes) {
     if (node.code === code) return node;
     if (node.children) {
@@ -80,34 +79,55 @@ function findAccountNode(code: string, nodes: AccountNode[] = chartOfAccounts): 
   return null;
 }
 
-// Ramp fractions reproduce the reference mockup's Account Balance Trend
-// chart exactly for account 1120 (each fraction * 1120's YTD debit/credit
-// lands on the mockup's bars); applied to any account's own YTD figures so
-// every account gets a plausible trend without hand-authoring one each.
 const TREND_MONTHS = ["Apr '24", "Jun '24", "Aug '24", "Oct '24", "Dec '24", "Feb '25", "Apr '25"];
 const TREND_FRACTIONS = [0.103, 0.24, 0.398, 0.563, 0.721, 0.879, 1];
 
-export function generateAccountBalanceTrend(
+export async function generateAccountBalanceTrend(
   accountCode: string,
 ): Promise<AccountBalanceTrendPoint[]> {
-  return apiRequest(`/api/financial/analytics/accounts/${accountCode}/balance-trend`, () => {
-    const account = findAccountNode(accountCode);
-    if (!account) return [];
-    return TREND_MONTHS.map((month, i) => {
-      const debit = Math.round(account.debit * TREND_FRACTIONS[i]);
-      const credit = Math.round(account.credit * TREND_FRACTIONS[i]);
-      return { month, debit, credit, netBalance: debit - credit };
-    });
-  });
+  try {
+    const { getAccountsTreeFn } = await import("@/lib/generalLedgerFns.server");
+    const res = await getAccountsTreeFn();
+    if (res.success && res.data) {
+      const account = findAccountNode(accountCode, res.data);
+      if (!account) return [];
+      return TREND_MONTHS.map((month, i) => {
+        const debit = Math.round(account.debit * TREND_FRACTIONS[i]);
+        const credit = Math.round(account.credit * TREND_FRACTIONS[i]);
+        return { month, debit, credit, netBalance: debit - credit };
+      });
+    }
+  } catch (err) {
+    console.error("Failed to generate account balance trend from DB:", err);
+  }
+  return [];
 }
 
-export function generateAccountDistribution(
+export async function generateAccountDistribution(
   query: DashboardQuery,
 ): Promise<AccountDistributionSlice[]> {
-  return apiRequest(
-    `/api/financial/analytics/accounts/distribution?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => accountDistributionRaw,
-  );
+  try {
+    const { getDashboardKpisFn } = await import("@/lib/dashboardAnalyticsFns.server");
+    const res = await getDashboardKpisFn();
+    if (res.success && res.data) {
+      const COLORS: Record<string, string> = {
+        Asset: "#3B82F6",
+        Liability: "#EF4444",
+        Equity: "#22C55E",
+        Revenue: "#F59E0B",
+        Expense: "#EC4899",
+      };
+      return res.data.accountDistribution.map((d) => ({
+        type: d.type,
+        count: d.count,
+        balance: d.balance,
+        color: COLORS[d.type] || "#6B7280",
+      }));
+    }
+  } catch (err) {
+    console.error("Failed to generate account distribution from DB:", err);
+  }
+  return [];
 }
 
 // Page-scoped semantic palette — computed from PostgreSQL live invoices
@@ -246,18 +266,15 @@ export function calculateFinancialInsights(query: DashboardQuery): Promise<Finan
   );
 }
 
-export function generateAssetDistribution(query: DashboardQuery): Promise<AssetCategoryCount[]> {
-  return apiRequest(
-    `/api/financial/analytics/fixed-assets/distribution?fy=${query.fiscalYear}`,
-    () => [
-      { name: "Building", count: 348, percentage: 28, cost: 8020000.0, color: "#22C55E" },
-      { name: "Machinery", count: 298, percentage: 24, cost: 6880000.0, color: "#8B5CF6" },
-      { name: "IT Equipment", count: 224, percentage: 18, cost: 5160000.0, color: "#EC4899" },
-      { name: "Vehicles", count: 149, percentage: 12, cost: 3440000.0, color: "#14B8A6" },
-      { name: "Furniture", count: 100, percentage: 8, cost: 2290000.0, color: "#F97316" },
-      { name: "Others", count: 126, percentage: 10, cost: 2850000.0, color: "#F59E0B" },
-    ],
-  );
+export async function generateAssetDistribution(query: DashboardQuery): Promise<AssetCategoryCount[]> {
+  try {
+    const { getAssetAnalyticsFn } = await import("@/lib/dashboardAnalyticsFns.server");
+    const res = await getAssetAnalyticsFn();
+    if (res.success && res.data) return res.data.categoryDistribution;
+  } catch (err) {
+    console.error("Failed to generate asset distribution from DB:", err);
+  }
+  return [];
 }
 
 export function generateDepreciationTrend(
@@ -278,16 +295,17 @@ export function generateDepreciationTrend(
   );
 }
 
-export function calculateTopAssets(
+export async function calculateTopAssets(
   query: DashboardQuery,
 ): Promise<{ name: string; netBookValue: number }[]> {
-  return apiRequest(`/api/financial/analytics/fixed-assets/top?fy=${query.fiscalYear}`, () => [
-    { name: "Office Building", netBookValue: 6800000.0 },
-    { name: "Plant & Machinery - Line 1", netBookValue: 2975000.0 },
-    { name: "Computer Equipment", netBookValue: 192500.0 },
-    { name: "Office Renovation", netBookValue: 176000.0 },
-    { name: "Generator Set", netBookValue: 162500.0 },
-  ]);
+  try {
+    const { getAssetAnalyticsFn } = await import("@/lib/dashboardAnalyticsFns.server");
+    const res = await getAssetAnalyticsFn();
+    if (res.success && res.data) return res.data.topAssets;
+  } catch (err) {
+    console.error("Failed to calculate top assets from DB:", err);
+  }
+  return [];
 }
 
 export function generateBudgetVsActualTrend(
@@ -305,21 +323,20 @@ export function generateBudgetVsActualTrend(
   ]);
 }
 
-export function generateVarianceAnalysis(
+export async function generateVarianceAnalysis(
   query: DashboardQuery,
 ): Promise<{ name: string; variance: number }[]> {
-  return apiRequest(`/api/financial/analytics/budget/variance?fy=${query.fiscalYear}`, () => [
-    { name: "Sales & Marketing", variance: 1374750.0 },
-    { name: "Operations", variance: 1747570.0 },
-    { name: "IT", variance: 1008120.0 },
-    { name: "Finance", variance: 495700.0 },
-    { name: "HR", variance: 585440.0 },
-    { name: "R&D", variance: 723460.0 },
-    { name: "Administration", variance: 299530.0 },
-  ]);
+  try {
+    const { getBudgetAnalyticsFn } = await import("@/lib/dashboardAnalyticsFns.server");
+    const res = await getBudgetAnalyticsFn();
+    if (res.success && res.data) return res.data.varianceByDept;
+  } catch (err) {
+    console.error("Failed to generate variance analysis from DB:", err);
+  }
+  return [];
 }
 
-export function generateBudgetHealthSummary(query: DashboardQuery): Promise<{
+export async function generateBudgetHealthSummary(query: DashboardQuery): Promise<{
   onTrackCount: number;
   onTrackPct: number;
   atRiskCount: number;
@@ -327,14 +344,21 @@ export function generateBudgetHealthSummary(query: DashboardQuery): Promise<{
   overBudgetCount: number;
   overBudgetPct: number;
 }> {
-  return apiRequest(`/api/financial/analytics/budget/health?fy=${query.fiscalYear}`, () => ({
-    onTrackCount: 28,
-    onTrackPct: 50.0,
-    atRiskCount: 17,
-    atRiskPct: 30.36,
-    overBudgetCount: 11,
-    overBudgetPct: 19.64,
-  }));
+  try {
+    const { getBudgetAnalyticsFn } = await import("@/lib/dashboardAnalyticsFns.server");
+    const res = await getBudgetAnalyticsFn();
+    if (res.success && res.data) return res.data.health;
+  } catch (err) {
+    console.error("Failed to generate budget health from DB:", err);
+  }
+  return {
+    onTrackCount: 0,
+    onTrackPct: 0,
+    atRiskCount: 0,
+    atRiskPct: 0,
+    overBudgetCount: 0,
+    overBudgetPct: 0,
+  };
 }
 
 export function generateFinancialPerformanceTrend(
@@ -470,70 +494,78 @@ export function generateCostCenterTrend(
   ]);
 }
 
-export function generateCostCenterDepartmentSplit(
+export async function generateCostCenterDepartmentSplit(
   query: DashboardQuery,
 ): Promise<{ name: string; value: number; percentage: number; color: string }[]> {
-  return apiRequest(
-    `/api/financial/analytics/cost-centers/dept-split?fy=${query.fiscalYear}`,
-    () => [
-      { name: "Sales", value: 4983320, percentage: 26.55, color: "#EC4899" },
-      { name: "IT", value: 3085600, percentage: 16.45, color: "#14B8A6" },
-      { name: "Finance", value: 2320750, percentage: 12.37, color: "#10B981" },
-      { name: "R&D", value: 2145790, percentage: 11.43, color: "#EF4444" },
-      { name: "Marketing", value: 2010200, percentage: 10.72, color: "#F59E0B" },
-      { name: "Others", value: 4219770, percentage: 22.48, color: "#8B5CF6" },
-    ],
-  );
+  try {
+    const { getCostCentersFn } = await import("@/lib/costCentersFns.server");
+    const res = await getCostCentersFn();
+    if (res.success && res.data && res.data.length > 0) {
+      const DEPT_COLORS = ["#EC4899", "#14B8A6", "#10B981", "#EF4444", "#F59E0B", "#6B7280"];
+      const totalBudget = res.data.reduce((s: number, c: any) => s + (Number(c.budget) || 0), 0) || 1;
+      return res.data.map((c: any, i: number) => ({
+        name: c.department || c.name,
+        value: Number(c.budget) || 0,
+        percentage: Number((((Number(c.budget) || 0) / totalBudget) * 100).toFixed(2)),
+        color: DEPT_COLORS[i % DEPT_COLORS.length],
+      }));
+    }
+  } catch (err) {
+    console.error("Failed to generate cost center department split from DB:", err);
+  }
+  return [];
 }
 
-export function generateCostCenterVariances(
+export async function generateCostCenterVariances(
   query: DashboardQuery,
 ): Promise<{ costCenter: string; variance: number; percentage: number }[]> {
-  return apiRequest(
-    `/api/financial/analytics/cost-centers/variances?fy=${query.fiscalYear}`,
-    () => [
-      { costCenter: "Sales", variance: 1516680.0, percentage: 23.33 },
-      { costCenter: "Finance", variance: 779250.0, percentage: 25.14 },
-      { costCenter: "Marketing", variance: 739800.0, percentage: 26.9 },
-      { costCenter: "IT", variance: 1164400.0, percentage: 27.4 },
-      { costCenter: "HR", variance: 665340.0, percentage: 44.36 },
-      { costCenter: "Administration", variance: 454570.0, percentage: 20.2 },
-      { costCenter: "Production", variance: 343000.0, percentage: 34.3 },
-      { costCenter: "R&D", variance: 854210.0, percentage: 28.47 },
-    ],
-  );
+  try {
+    const { getCostCentersFn } = await import("@/lib/costCentersFns.server");
+    const res = await getCostCentersFn();
+    if (res.success && res.data && res.data.length > 0) {
+      return res.data.map((c: any) => {
+        const budget = Number(c.budget) || 0;
+        const actual = Number(c.actual) || 0;
+        const variance = budget - actual;
+        return {
+          costCenter: c.name,
+          variance,
+          percentage: budget > 0 ? Number(((variance / budget) * 100).toFixed(2)) : 0,
+        };
+      });
+    }
+  } catch (err) {
+    console.error("Failed to generate cost center variances from DB:", err);
+  }
+  return [];
 }
 
-export function generateCostCenterHierarchyModel(
+export async function generateCostCenterHierarchyModel(
   query: DashboardQuery,
 ): Promise<CostCenterHierarchyNode> {
-  return apiRequest(
-    `/api/financial/analytics/cost-centers/hierarchy?fy=${query.fiscalYear}`,
-    () => ({
-      name: "Total Organization",
-      children: [
-        {
-          name: "Administration",
-          children: [{ name: "HR" }, { name: "R&D" }, { name: "Accounts" }, { name: "Legal" }],
-        },
-        {
-          name: "Finance",
-        },
-        {
-          name: "Operations",
-          children: [{ name: "Production" }, { name: "Supply Chain" }],
-        },
-        {
-          name: "Commercial",
-          children: [{ name: "Sales" }, { name: "Marketing" }],
-        },
-        {
-          name: "Technology",
-          children: [{ name: "IT" }, { name: "R&D" }],
-        },
-      ],
-    }),
-  );
+  try {
+    const { getCostCentersFn } = await import("@/lib/costCentersFns.server");
+    const res = await getCostCentersFn();
+    if (res.success && res.data && res.data.length > 0) {
+      const deptMap = new Map<string, string[]>();
+      for (const cc of res.data) {
+        const dept = (cc as any).department || "General";
+        const list = deptMap.get(dept) || [];
+        list.push(cc.name);
+        deptMap.set(dept, list);
+      }
+      return {
+        name: "Total Organization",
+        children: Array.from(deptMap.entries()).map(([dept, centers]) => ({
+          name: dept,
+          children: centers.map((name) => ({ name })),
+        })),
+      };
+    }
+  } catch (err) {
+    console.error("Failed to generate cost center hierarchy from DB:", err);
+  }
+  return { name: "Total Organization", children: [] };
 }
 
 export function generateProfitabilityTrend(

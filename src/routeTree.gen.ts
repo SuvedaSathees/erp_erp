@@ -98,16 +98,22 @@ import { Route as ManagementProcurementManagementOverviewRouteImport } from './r
 import { Route as ManagementProcurementManagementInvoiceVerificationRouteImport } from './routes/management.procurement-management.invoice-verification'
 import { Route as ManagementProcurementManagementGoodsReceiptRouteImport } from './routes/management.procurement-management.goods-receipt'
 import { Route as ManagementProcurementManagementContractManagementRouteImport } from './routes/management.procurement-management.contract-management'
+import { Route as ManagementMarketingManagementSocialMediaRouteImport } from './routes/management.marketing-management.social-media'
 import { Route as ManagementMarketingManagementReportsRouteImport } from './routes/management.marketing-management.reports'
 import { Route as ManagementMarketingManagementPartnerMarketingRouteImport } from './routes/management.marketing-management.partner-marketing'
 import { Route as ManagementMarketingManagementOverviewRouteImport } from './routes/management.marketing-management.overview'
 import { Route as ManagementMarketingManagementMarketingPlansRouteImport } from './routes/management.marketing-management.marketing-plans'
+import { Route as ManagementMarketingManagementMarketingAnalyticsRouteImport } from './routes/management.marketing-management.marketing-analytics'
 import { Route as ManagementMarketingManagementMarketResearchRouteImport } from './routes/management.marketing-management.market-research'
 import { Route as ManagementMarketingManagementLeadsManagementRouteImport } from './routes/management.marketing-management.leads-management'
+import { Route as ManagementMarketingManagementLeadGenerationRouteImport } from './routes/management.marketing-management.lead-generation'
 import { Route as ManagementMarketingManagementEventsRouteImport } from './routes/management.marketing-management.events'
+import { Route as ManagementMarketingManagementEmailMarketingRouteImport } from './routes/management.marketing-management.email-marketing'
 import { Route as ManagementMarketingManagementDigitalMarketingRouteImport } from './routes/management.marketing-management.digital-marketing'
 import { Route as ManagementMarketingManagementContentManagementRouteImport } from './routes/management.marketing-management.content-management'
+import { Route as ManagementMarketingManagementCompetitorAnalysisRouteImport } from './routes/management.marketing-management.competitor-analysis'
 import { Route as ManagementMarketingManagementCampaignsRouteImport } from './routes/management.marketing-management.campaigns'
+import { Route as ManagementMarketingManagementBrandingRouteImport } from './routes/management.marketing-management.branding'
 import { Route as ManagementMarketingManagementBrandManagementRouteImport } from './routes/management.marketing-management.brand-management'
 import { Route as ManagementHrmManagementWorkforcePlanningRouteImport } from './routes/management.hrm-management.workforce-planning'
 import { Route as ManagementHrmManagementTravelExpenseRouteImport } from './routes/management.hrm-management.travel-expense'
@@ -910,6 +916,12 @@ const ManagementProcurementManagementContractManagementRoute =
     path: '/management/procurement-management/contract-management',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementMarketingManagementSocialMediaRoute =
+  ManagementMarketingManagementSocialMediaRouteImport.update({
+    id: '/management/marketing-management/social-media',
+    path: '/management/marketing-management/social-media',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementMarketingManagementReportsRoute =
   ManagementMarketingManagementReportsRouteImport.update({
     id: '/management/marketing-management/reports',
@@ -934,6 +946,12 @@ const ManagementMarketingManagementMarketingPlansRoute =
     path: '/management/marketing-management/marketing-plans',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementMarketingManagementMarketingAnalyticsRoute =
+  ManagementMarketingManagementMarketingAnalyticsRouteImport.update({
+    id: '/management/marketing-management/marketing-analytics',
+    path: '/management/marketing-management/marketing-analytics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementMarketingManagementMarketResearchRoute =
   ManagementMarketingManagementMarketResearchRouteImport.update({
     id: '/management/marketing-management/market-research',
@@ -946,10 +964,22 @@ const ManagementMarketingManagementLeadsManagementRoute =
     path: '/management/marketing-management/leads-management',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementMarketingManagementLeadGenerationRoute =
+  ManagementMarketingManagementLeadGenerationRouteImport.update({
+    id: '/management/marketing-management/lead-generation',
+    path: '/management/marketing-management/lead-generation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementMarketingManagementEventsRoute =
   ManagementMarketingManagementEventsRouteImport.update({
     id: '/management/marketing-management/events',
     path: '/management/marketing-management/events',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementMarketingManagementEmailMarketingRoute =
+  ManagementMarketingManagementEmailMarketingRouteImport.update({
+    id: '/management/marketing-management/email-marketing',
+    path: '/management/marketing-management/email-marketing',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementMarketingManagementDigitalMarketingRoute =
@@ -964,10 +994,22 @@ const ManagementMarketingManagementContentManagementRoute =
     path: '/management/marketing-management/content-management',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementMarketingManagementCompetitorAnalysisRoute =
+  ManagementMarketingManagementCompetitorAnalysisRouteImport.update({
+    id: '/management/marketing-management/competitor-analysis',
+    path: '/management/marketing-management/competitor-analysis',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementMarketingManagementCampaignsRoute =
   ManagementMarketingManagementCampaignsRouteImport.update({
     id: '/management/marketing-management/campaigns',
     path: '/management/marketing-management/campaigns',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementMarketingManagementBrandingRoute =
+  ManagementMarketingManagementBrandingRouteImport.update({
+    id: '/management/marketing-management/branding',
+    path: '/management/marketing-management/branding',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementMarketingManagementBrandManagementRoute =
@@ -2827,16 +2869,22 @@ export interface FileRoutesByFullPath {
   '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
   '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
   '/management/marketing-management/brand-management': typeof ManagementMarketingManagementBrandManagementRoute
+  '/management/marketing-management/branding': typeof ManagementMarketingManagementBrandingRoute
   '/management/marketing-management/campaigns': typeof ManagementMarketingManagementCampaignsRoute
+  '/management/marketing-management/competitor-analysis': typeof ManagementMarketingManagementCompetitorAnalysisRoute
   '/management/marketing-management/content-management': typeof ManagementMarketingManagementContentManagementRoute
   '/management/marketing-management/digital-marketing': typeof ManagementMarketingManagementDigitalMarketingRoute
+  '/management/marketing-management/email-marketing': typeof ManagementMarketingManagementEmailMarketingRoute
   '/management/marketing-management/events': typeof ManagementMarketingManagementEventsRoute
+  '/management/marketing-management/lead-generation': typeof ManagementMarketingManagementLeadGenerationRoute
   '/management/marketing-management/leads-management': typeof ManagementMarketingManagementLeadsManagementRoute
   '/management/marketing-management/market-research': typeof ManagementMarketingManagementMarketResearchRoute
+  '/management/marketing-management/marketing-analytics': typeof ManagementMarketingManagementMarketingAnalyticsRoute
   '/management/marketing-management/marketing-plans': typeof ManagementMarketingManagementMarketingPlansRoute
   '/management/marketing-management/overview': typeof ManagementMarketingManagementOverviewRoute
   '/management/marketing-management/partner-marketing': typeof ManagementMarketingManagementPartnerMarketingRoute
   '/management/marketing-management/reports': typeof ManagementMarketingManagementReportsRoute
+  '/management/marketing-management/social-media': typeof ManagementMarketingManagementSocialMediaRoute
   '/management/procurement-management/contract-management': typeof ManagementProcurementManagementContractManagementRoute
   '/management/procurement-management/goods-receipt': typeof ManagementProcurementManagementGoodsReceiptRoute
   '/management/procurement-management/invoice-verification': typeof ManagementProcurementManagementInvoiceVerificationRoute
@@ -3200,16 +3248,22 @@ export interface FileRoutesByTo {
   '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
   '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
   '/management/marketing-management/brand-management': typeof ManagementMarketingManagementBrandManagementRoute
+  '/management/marketing-management/branding': typeof ManagementMarketingManagementBrandingRoute
   '/management/marketing-management/campaigns': typeof ManagementMarketingManagementCampaignsRoute
+  '/management/marketing-management/competitor-analysis': typeof ManagementMarketingManagementCompetitorAnalysisRoute
   '/management/marketing-management/content-management': typeof ManagementMarketingManagementContentManagementRoute
   '/management/marketing-management/digital-marketing': typeof ManagementMarketingManagementDigitalMarketingRoute
+  '/management/marketing-management/email-marketing': typeof ManagementMarketingManagementEmailMarketingRoute
   '/management/marketing-management/events': typeof ManagementMarketingManagementEventsRoute
+  '/management/marketing-management/lead-generation': typeof ManagementMarketingManagementLeadGenerationRoute
   '/management/marketing-management/leads-management': typeof ManagementMarketingManagementLeadsManagementRoute
   '/management/marketing-management/market-research': typeof ManagementMarketingManagementMarketResearchRoute
+  '/management/marketing-management/marketing-analytics': typeof ManagementMarketingManagementMarketingAnalyticsRoute
   '/management/marketing-management/marketing-plans': typeof ManagementMarketingManagementMarketingPlansRoute
   '/management/marketing-management/overview': typeof ManagementMarketingManagementOverviewRoute
   '/management/marketing-management/partner-marketing': typeof ManagementMarketingManagementPartnerMarketingRoute
   '/management/marketing-management/reports': typeof ManagementMarketingManagementReportsRoute
+  '/management/marketing-management/social-media': typeof ManagementMarketingManagementSocialMediaRoute
   '/management/procurement-management/contract-management': typeof ManagementProcurementManagementContractManagementRoute
   '/management/procurement-management/goods-receipt': typeof ManagementProcurementManagementGoodsReceiptRoute
   '/management/procurement-management/invoice-verification': typeof ManagementProcurementManagementInvoiceVerificationRoute
@@ -3581,16 +3635,22 @@ export interface FileRoutesById {
   '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
   '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
   '/management/marketing-management/brand-management': typeof ManagementMarketingManagementBrandManagementRoute
+  '/management/marketing-management/branding': typeof ManagementMarketingManagementBrandingRoute
   '/management/marketing-management/campaigns': typeof ManagementMarketingManagementCampaignsRoute
+  '/management/marketing-management/competitor-analysis': typeof ManagementMarketingManagementCompetitorAnalysisRoute
   '/management/marketing-management/content-management': typeof ManagementMarketingManagementContentManagementRoute
   '/management/marketing-management/digital-marketing': typeof ManagementMarketingManagementDigitalMarketingRoute
+  '/management/marketing-management/email-marketing': typeof ManagementMarketingManagementEmailMarketingRoute
   '/management/marketing-management/events': typeof ManagementMarketingManagementEventsRoute
+  '/management/marketing-management/lead-generation': typeof ManagementMarketingManagementLeadGenerationRoute
   '/management/marketing-management/leads-management': typeof ManagementMarketingManagementLeadsManagementRoute
   '/management/marketing-management/market-research': typeof ManagementMarketingManagementMarketResearchRoute
+  '/management/marketing-management/marketing-analytics': typeof ManagementMarketingManagementMarketingAnalyticsRoute
   '/management/marketing-management/marketing-plans': typeof ManagementMarketingManagementMarketingPlansRoute
   '/management/marketing-management/overview': typeof ManagementMarketingManagementOverviewRoute
   '/management/marketing-management/partner-marketing': typeof ManagementMarketingManagementPartnerMarketingRoute
   '/management/marketing-management/reports': typeof ManagementMarketingManagementReportsRoute
+  '/management/marketing-management/social-media': typeof ManagementMarketingManagementSocialMediaRoute
   '/management/procurement-management/contract-management': typeof ManagementProcurementManagementContractManagementRoute
   '/management/procurement-management/goods-receipt': typeof ManagementProcurementManagementGoodsReceiptRoute
   '/management/procurement-management/invoice-verification': typeof ManagementProcurementManagementInvoiceVerificationRoute
@@ -3963,16 +4023,22 @@ export interface FileRouteTypes {
     | '/management/hrm-management/travel-expense'
     | '/management/hrm-management/workforce-planning'
     | '/management/marketing-management/brand-management'
+    | '/management/marketing-management/branding'
     | '/management/marketing-management/campaigns'
+    | '/management/marketing-management/competitor-analysis'
     | '/management/marketing-management/content-management'
     | '/management/marketing-management/digital-marketing'
+    | '/management/marketing-management/email-marketing'
     | '/management/marketing-management/events'
+    | '/management/marketing-management/lead-generation'
     | '/management/marketing-management/leads-management'
     | '/management/marketing-management/market-research'
+    | '/management/marketing-management/marketing-analytics'
     | '/management/marketing-management/marketing-plans'
     | '/management/marketing-management/overview'
     | '/management/marketing-management/partner-marketing'
     | '/management/marketing-management/reports'
+    | '/management/marketing-management/social-media'
     | '/management/procurement-management/contract-management'
     | '/management/procurement-management/goods-receipt'
     | '/management/procurement-management/invoice-verification'
@@ -4336,16 +4402,22 @@ export interface FileRouteTypes {
     | '/management/hrm-management/travel-expense'
     | '/management/hrm-management/workforce-planning'
     | '/management/marketing-management/brand-management'
+    | '/management/marketing-management/branding'
     | '/management/marketing-management/campaigns'
+    | '/management/marketing-management/competitor-analysis'
     | '/management/marketing-management/content-management'
     | '/management/marketing-management/digital-marketing'
+    | '/management/marketing-management/email-marketing'
     | '/management/marketing-management/events'
+    | '/management/marketing-management/lead-generation'
     | '/management/marketing-management/leads-management'
     | '/management/marketing-management/market-research'
+    | '/management/marketing-management/marketing-analytics'
     | '/management/marketing-management/marketing-plans'
     | '/management/marketing-management/overview'
     | '/management/marketing-management/partner-marketing'
     | '/management/marketing-management/reports'
+    | '/management/marketing-management/social-media'
     | '/management/procurement-management/contract-management'
     | '/management/procurement-management/goods-receipt'
     | '/management/procurement-management/invoice-verification'
@@ -4716,16 +4788,22 @@ export interface FileRouteTypes {
     | '/management/hrm-management/travel-expense'
     | '/management/hrm-management/workforce-planning'
     | '/management/marketing-management/brand-management'
+    | '/management/marketing-management/branding'
     | '/management/marketing-management/campaigns'
+    | '/management/marketing-management/competitor-analysis'
     | '/management/marketing-management/content-management'
     | '/management/marketing-management/digital-marketing'
+    | '/management/marketing-management/email-marketing'
     | '/management/marketing-management/events'
+    | '/management/marketing-management/lead-generation'
     | '/management/marketing-management/leads-management'
     | '/management/marketing-management/market-research'
+    | '/management/marketing-management/marketing-analytics'
     | '/management/marketing-management/marketing-plans'
     | '/management/marketing-management/overview'
     | '/management/marketing-management/partner-marketing'
     | '/management/marketing-management/reports'
+    | '/management/marketing-management/social-media'
     | '/management/procurement-management/contract-management'
     | '/management/procurement-management/goods-receipt'
     | '/management/procurement-management/invoice-verification'
@@ -5036,16 +5114,22 @@ export interface RootRouteChildren {
   ManagementHrmManagementTravelExpenseRoute: typeof ManagementHrmManagementTravelExpenseRoute
   ManagementHrmManagementWorkforcePlanningRoute: typeof ManagementHrmManagementWorkforcePlanningRoute
   ManagementMarketingManagementBrandManagementRoute: typeof ManagementMarketingManagementBrandManagementRoute
+  ManagementMarketingManagementBrandingRoute: typeof ManagementMarketingManagementBrandingRoute
   ManagementMarketingManagementCampaignsRoute: typeof ManagementMarketingManagementCampaignsRoute
+  ManagementMarketingManagementCompetitorAnalysisRoute: typeof ManagementMarketingManagementCompetitorAnalysisRoute
   ManagementMarketingManagementContentManagementRoute: typeof ManagementMarketingManagementContentManagementRoute
   ManagementMarketingManagementDigitalMarketingRoute: typeof ManagementMarketingManagementDigitalMarketingRoute
+  ManagementMarketingManagementEmailMarketingRoute: typeof ManagementMarketingManagementEmailMarketingRoute
   ManagementMarketingManagementEventsRoute: typeof ManagementMarketingManagementEventsRoute
+  ManagementMarketingManagementLeadGenerationRoute: typeof ManagementMarketingManagementLeadGenerationRoute
   ManagementMarketingManagementLeadsManagementRoute: typeof ManagementMarketingManagementLeadsManagementRoute
   ManagementMarketingManagementMarketResearchRoute: typeof ManagementMarketingManagementMarketResearchRoute
+  ManagementMarketingManagementMarketingAnalyticsRoute: typeof ManagementMarketingManagementMarketingAnalyticsRoute
   ManagementMarketingManagementMarketingPlansRoute: typeof ManagementMarketingManagementMarketingPlansRoute
   ManagementMarketingManagementOverviewRoute: typeof ManagementMarketingManagementOverviewRoute
   ManagementMarketingManagementPartnerMarketingRoute: typeof ManagementMarketingManagementPartnerMarketingRoute
   ManagementMarketingManagementReportsRoute: typeof ManagementMarketingManagementReportsRoute
+  ManagementMarketingManagementSocialMediaRoute: typeof ManagementMarketingManagementSocialMediaRoute
   ManagementProcurementManagementContractManagementRoute: typeof ManagementProcurementManagementContractManagementRoute
   ManagementProcurementManagementGoodsReceiptRoute: typeof ManagementProcurementManagementGoodsReceiptRoute
   ManagementProcurementManagementInvoiceVerificationRoute: typeof ManagementProcurementManagementInvoiceVerificationRoute
@@ -5742,6 +5826,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementProcurementManagementContractManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/marketing-management/social-media': {
+      id: '/management/marketing-management/social-media'
+      path: '/management/marketing-management/social-media'
+      fullPath: '/management/marketing-management/social-media'
+      preLoaderRoute: typeof ManagementMarketingManagementSocialMediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/marketing-management/reports': {
       id: '/management/marketing-management/reports'
       path: '/management/marketing-management/reports'
@@ -5770,6 +5861,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementMarketingManagementMarketingPlansRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/marketing-management/marketing-analytics': {
+      id: '/management/marketing-management/marketing-analytics'
+      path: '/management/marketing-management/marketing-analytics'
+      fullPath: '/management/marketing-management/marketing-analytics'
+      preLoaderRoute: typeof ManagementMarketingManagementMarketingAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/marketing-management/market-research': {
       id: '/management/marketing-management/market-research'
       path: '/management/marketing-management/market-research'
@@ -5784,11 +5882,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementMarketingManagementLeadsManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/marketing-management/lead-generation': {
+      id: '/management/marketing-management/lead-generation'
+      path: '/management/marketing-management/lead-generation'
+      fullPath: '/management/marketing-management/lead-generation'
+      preLoaderRoute: typeof ManagementMarketingManagementLeadGenerationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/marketing-management/events': {
       id: '/management/marketing-management/events'
       path: '/management/marketing-management/events'
       fullPath: '/management/marketing-management/events'
       preLoaderRoute: typeof ManagementMarketingManagementEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/marketing-management/email-marketing': {
+      id: '/management/marketing-management/email-marketing'
+      path: '/management/marketing-management/email-marketing'
+      fullPath: '/management/marketing-management/email-marketing'
+      preLoaderRoute: typeof ManagementMarketingManagementEmailMarketingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/marketing-management/digital-marketing': {
@@ -5805,11 +5917,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementMarketingManagementContentManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/marketing-management/competitor-analysis': {
+      id: '/management/marketing-management/competitor-analysis'
+      path: '/management/marketing-management/competitor-analysis'
+      fullPath: '/management/marketing-management/competitor-analysis'
+      preLoaderRoute: typeof ManagementMarketingManagementCompetitorAnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/marketing-management/campaigns': {
       id: '/management/marketing-management/campaigns'
       path: '/management/marketing-management/campaigns'
       fullPath: '/management/marketing-management/campaigns'
       preLoaderRoute: typeof ManagementMarketingManagementCampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/marketing-management/branding': {
+      id: '/management/marketing-management/branding'
+      path: '/management/marketing-management/branding'
+      fullPath: '/management/marketing-management/branding'
+      preLoaderRoute: typeof ManagementMarketingManagementBrandingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/marketing-management/brand-management': {
@@ -8645,18 +8771,28 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementHrmManagementWorkforcePlanningRoute,
   ManagementMarketingManagementBrandManagementRoute:
     ManagementMarketingManagementBrandManagementRoute,
+  ManagementMarketingManagementBrandingRoute:
+    ManagementMarketingManagementBrandingRoute,
   ManagementMarketingManagementCampaignsRoute:
     ManagementMarketingManagementCampaignsRoute,
+  ManagementMarketingManagementCompetitorAnalysisRoute:
+    ManagementMarketingManagementCompetitorAnalysisRoute,
   ManagementMarketingManagementContentManagementRoute:
     ManagementMarketingManagementContentManagementRoute,
   ManagementMarketingManagementDigitalMarketingRoute:
     ManagementMarketingManagementDigitalMarketingRoute,
+  ManagementMarketingManagementEmailMarketingRoute:
+    ManagementMarketingManagementEmailMarketingRoute,
   ManagementMarketingManagementEventsRoute:
     ManagementMarketingManagementEventsRoute,
+  ManagementMarketingManagementLeadGenerationRoute:
+    ManagementMarketingManagementLeadGenerationRoute,
   ManagementMarketingManagementLeadsManagementRoute:
     ManagementMarketingManagementLeadsManagementRoute,
   ManagementMarketingManagementMarketResearchRoute:
     ManagementMarketingManagementMarketResearchRoute,
+  ManagementMarketingManagementMarketingAnalyticsRoute:
+    ManagementMarketingManagementMarketingAnalyticsRoute,
   ManagementMarketingManagementMarketingPlansRoute:
     ManagementMarketingManagementMarketingPlansRoute,
   ManagementMarketingManagementOverviewRoute:
@@ -8665,6 +8801,8 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementMarketingManagementPartnerMarketingRoute,
   ManagementMarketingManagementReportsRoute:
     ManagementMarketingManagementReportsRoute,
+  ManagementMarketingManagementSocialMediaRoute:
+    ManagementMarketingManagementSocialMediaRoute,
   ManagementProcurementManagementContractManagementRoute:
     ManagementProcurementManagementContractManagementRoute,
   ManagementProcurementManagementGoodsReceiptRoute:

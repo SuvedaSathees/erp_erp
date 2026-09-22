@@ -109,6 +109,30 @@ export interface ModuleMetrics {
 }
 
 export const PRODUCT_SUBMODULE_METRICS: Record<string, ModuleMetrics> = {
+  "brand-management": {
+    overallScore: 92,
+    overallSub: "Excellent",
+    scores: [
+      { label: "Brand Awareness", score: 88, sub: "Very Good" },
+      { label: "Positive Sentiment", score: 78, sub: "Good" },
+      { label: "Brand Compliance", score: 92, sub: "Excellent" },
+      { label: "Share of Voice", score: 84, sub: "Very Good" },
+      { label: "AI Brand Health", score: 95, sub: "Excellent" },
+    ],
+    lifecycleStage: "Governed Master",
+  },
+  branding: {
+    overallScore: 92,
+    overallSub: "Excellent",
+    scores: [
+      { label: "Brand Awareness", score: 88, sub: "Very Good" },
+      { label: "Positive Sentiment", score: 78, sub: "Good" },
+      { label: "Brand Compliance", score: 92, sub: "Excellent" },
+      { label: "Share of Voice", score: 84, sub: "Very Good" },
+      { label: "AI Brand Health", score: 95, sub: "Excellent" },
+    ],
+    lifecycleStage: "Governed Master",
+  },
   "product-strategy": {
     overallScore: 87,
     overallSub: "Very Good",
@@ -647,6 +671,7 @@ export const PRODUCT_SUBMODULE_METRICS: Record<string, ModuleMetrics> = {
   },
 
   // =========================================================================
+  // =========================================================================
   // MARKETING MANAGEMENT
   // =========================================================================
   campaigns: {
@@ -660,6 +685,138 @@ export const PRODUCT_SUBMODULE_METRICS: Record<string, ModuleMetrics> = {
       { label: "AI Campaign Copilot", score: 94, sub: "Excellent" },
     ],
     lifecycleStage: "Live Active",
+  },
+  "digital-marketing": {
+    overallScore: 92,
+    overallSub: "Excellent",
+    scores: [
+      { label: "SEO Visibility Index", score: 94, sub: "Excellent" },
+      { label: "Paid Search CTR", score: 91, sub: "Excellent" },
+      { label: "Ad Spend Return (ROAS)", score: 95, sub: "Excellent" },
+      { label: "Landing Page Conv.", score: 88, sub: "Very Good" },
+      { label: "AI Bid Optimizer", score: 93, sub: "Excellent" },
+    ],
+    lifecycleStage: "Live Active",
+  },
+  "email-marketing": {
+    overallScore: 91,
+    overallSub: "Excellent",
+    scores: [
+      { label: "Inbox Deliverability", score: 96, sub: "Excellent" },
+      { label: "Unique Open Rate", score: 89, sub: "Very Good" },
+      { label: "Click-to-Open (CTOR)", score: 88, sub: "Very Good" },
+      { label: "Unsubscribe Guard", score: 94, sub: "Excellent" },
+      { label: "AI Subject Optimizer", score: 92, sub: "Excellent" },
+    ],
+    lifecycleStage: "Campaign Live",
+  },
+  "social-media": {
+    overallScore: 90,
+    overallSub: "Excellent",
+    scores: [
+      { label: "Engagement Velocity", score: 92, sub: "Excellent" },
+      { label: "Audience Net Growth", score: 89, sub: "Very Good" },
+      { label: "Impression Frequency", score: 88, sub: "Very Good" },
+      { label: "Social Lead Capture", score: 91, sub: "Excellent" },
+      { label: "AI Sentiment Copilot", score: 93, sub: "Excellent" },
+    ],
+    lifecycleStage: "Publishing Live",
+  },
+  events: {
+    overallScore: 89,
+    overallSub: "Very Good",
+    scores: [
+      { label: "Attendee Registration", score: 92, sub: "Excellent" },
+      { label: "Booth Footfall Index", score: 88, sub: "Very Good" },
+      { label: "Delegate Satisfaction", score: 90, sub: "Excellent" },
+      { label: "Post-Event Lead Conv.", score: 86, sub: "Very Good" },
+      { label: "AI Matchmaker Sync", score: 91, sub: "Excellent" },
+    ],
+    lifecycleStage: "Expos Active",
+  },
+  "market-research": {
+    overallScore: 91,
+    overallSub: "Excellent",
+    scores: [
+      { label: "TAM Sampling Depth", score: 93, sub: "Excellent" },
+      { label: "Data Source Rigor", score: 95, sub: "Excellent" },
+      { label: "Customer Pain Points", score: 89, sub: "Very Good" },
+      { label: "Opportunity Pipeline", score: 92, sub: "Excellent" },
+      { label: "AI Trend Discovery", score: 94, sub: "Excellent" },
+    ],
+    lifecycleStage: "Study Published",
+  },
+  "leads-management": {
+    overallScore: 93,
+    overallSub: "Excellent",
+    scores: [
+      { label: "Lead Scoring Accuracy", score: 94, sub: "Excellent" },
+      { label: "SLA Routing Velocity", score: 95, sub: "Excellent" },
+      { label: "MQL-to-SQL Conversion", score: 89, sub: "Very Good" },
+      { label: "Channel Yield Health", score: 92, sub: "Excellent" },
+      { label: "AI Propensity Radar", score: 96, sub: "Excellent" },
+    ],
+    lifecycleStage: "Active Inflow",
+  },
+  "lead-generation": {
+    overallScore: 93,
+    overallSub: "Excellent",
+    scores: [
+      { label: "Lead Scoring Accuracy", score: 94, sub: "Excellent" },
+      { label: "SLA Routing Velocity", score: 95, sub: "Excellent" },
+      { label: "MQL-to-SQL Conversion", score: 89, sub: "Very Good" },
+      { label: "Channel Yield Health", score: 92, sub: "Excellent" },
+      { label: "AI Propensity Radar", score: 96, sub: "Excellent" },
+    ],
+    lifecycleStage: "Active Inflow",
+  },
+  "competitor-analysis": {
+    overallScore: 92,
+    overallSub: "Excellent",
+    scores: [
+      { label: "Competitor Tracking", score: 94, sub: "Excellent" },
+      { label: "Product Benchmarking", score: 93, sub: "Excellent" },
+      { label: "Pricing Intelligence", score: 91, sub: "Excellent" },
+      { label: "Market Share Threat", score: 89, sub: "Very Good" },
+      { label: "AI Competitor Radar", score: 95, sub: "Excellent" },
+    ],
+    lifecycleStage: "Radar Active",
+  },
+  "marketing-analytics": {
+    overallScore: 94,
+    overallSub: "Excellent",
+    scores: [
+      { label: "Attribution Precision", score: 95, sub: "Excellent" },
+      { label: "Funnel Throughput", score: 92, sub: "Excellent" },
+      { label: "CLV / CAC Ratio", score: 96, sub: "Excellent" },
+      { label: "Budget ROAS Index", score: 93, sub: "Excellent" },
+      { label: "AI Predictive Copilot", score: 94, sub: "Excellent" },
+    ],
+    lifecycleStage: "Sync Complete",
+  },
+  "brand-management": {
+    overallScore: 92,
+    overallSub: "Exceptional",
+    scores: [
+      { label: "Brand Awareness", score: 88, sub: "High Lift" },
+      { label: "Positive Sentiment", score: 78, sub: "Strong Net" },
+      { label: "Brand Compliance", score: 92, sub: "Controlled" },
+      { label: "Share of Voice", score: 84, sub: "Top Tier" },
+      { label: "AI Brand Health", score: 95, sub: "Optimized" },
+    ],
+    lifecycleStage: "Brand Active",
+  },
+  branding: {
+    overallScore: 92,
+    overallSub: "Exceptional",
+    scores: [
+      { label: "Brand Awareness", score: 88, sub: "High Lift" },
+      { label: "Positive Sentiment", score: 78, sub: "Strong Net" },
+      { label: "Brand Compliance", score: 92, sub: "Controlled" },
+      { label: "Share of Voice", score: 84, sub: "Top Tier" },
+      { label: "AI Brand Health", score: 95, sub: "Optimized" },
+    ],
+    lifecycleStage: "Brand Active",
   },
 
   // =========================================================================

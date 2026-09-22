@@ -10,14 +10,15 @@ const TAB_ACTIVE = "border-primary text-primary hover:text-primary font-bold";
 export const MARKETING_TABS = [
   { to: "/management/marketing-management/overview", label: "Overview" },
   { to: "/management/marketing-management/campaigns", label: "Campaigns" },
-  { to: "/management/marketing-management/marketing-plans", label: "Marketing Plans" },
-  { to: "/management/marketing-management/content-management", label: "Content Management" },
   { to: "/management/marketing-management/digital-marketing", label: "Digital Marketing" },
+  { to: "/management/marketing-management/email-marketing", label: "Email Marketing" },
+  { to: "/management/marketing-management/social-media", label: "Social Media" },
   { to: "/management/marketing-management/events", label: "Events" },
   { to: "/management/marketing-management/brand-management", label: "Brand Management" },
   { to: "/management/marketing-management/market-research", label: "Market Research" },
-  { to: "/management/marketing-management/leads-management", label: "Leads Management" },
-  { to: "/management/marketing-management/partner-marketing", label: "Partner Marketing" },
+  { to: "/management/marketing-management/leads-management", label: "Lead Generation" },
+  { to: "/management/marketing-management/competitor-analysis", label: "Competitor Analysis" },
+  { to: "/management/marketing-management/marketing-analytics", label: "Marketing Analytics" },
   { to: "/management/marketing-management/reports", label: "Report" },
 ];
 
@@ -163,7 +164,10 @@ export function MarketingManagementTabBar() {
         {MARKETING_TABS.map((tab) => {
           const isActive =
             pathname === tab.to ||
-            (tab.to !== "/management/marketing-management/overview" && pathname.startsWith(tab.to));
+            (tab.to !== "/management/marketing-management/overview" && pathname.startsWith(tab.to)) ||
+            (tab.to === "/management/marketing-management/brand-management" && pathname.startsWith("/management/marketing-management/branding")) ||
+            (tab.to === "/management/marketing-management/lead-generation" && pathname.startsWith("/management/marketing-management/leads-management")) ||
+            (tab.to === "/management/marketing-management/leads-management" && pathname.startsWith("/management/marketing-management/lead-generation"));
 
           return (
             <Link

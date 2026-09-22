@@ -28,7 +28,7 @@ function MarketingOverview() {
   return (
     <AppShell
       title="Marketing Overview"
-      breadcrumb="Management"
+      breadcrumb="Management > Marketing Management > Overview"
       description="Executive marketing intelligence, campaigns funnel, lead acquisition, channel performance, and ROI tracking."
       tabs={<MarketingManagementTabBar />}
     >

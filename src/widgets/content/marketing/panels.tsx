@@ -53,11 +53,11 @@ export const MarketingSubmodulesHubWidget = memo(function MarketingSubmodulesHub
   return (
     <div className="card-soft flex h-full flex-col justify-between p-5">
       <CardHeader
-        title={instance.customTitle ?? "Marketing Management Modules Hub (10 Operations)"}
+        title={instance.customTitle ?? `Marketing Management Modules Hub (${submodules.length} Operations)`}
         right={
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="border-blue-500/20 bg-blue-500/5 text-blue-600">
-              <Layers className="mr-1 h-3 w-3" /> 10 Operations
+              <Layers className="mr-1 h-3 w-3" /> {submodules.length} Operations
             </Badge>
             <Link
               to="/management/marketing-management/campaigns"

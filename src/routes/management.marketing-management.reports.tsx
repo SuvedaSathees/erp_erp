@@ -20,7 +20,7 @@ function MarketingManagementReportPage() {
   return (
     <AppShell
       title="Marketing Executive Report"
-      breadcrumb="Management > Marketing > Report"
+      breadcrumb="Management > Marketing Management > Reports > Marketing Executive Report"
       description="Consolidated marketing executive report, campaign reach trajectory, pipeline attribution, and channel ROAS."
       tabs={<MarketingManagementTabBar />}
     >

@@ -647,6 +647,22 @@ export const PRODUCT_SUBMODULE_METRICS: Record<string, ModuleMetrics> = {
   },
 
   // =========================================================================
+  // MARKETING MANAGEMENT
+  // =========================================================================
+  campaigns: {
+    overallScore: 94,
+    overallSub: "Excellent",
+    scores: [
+      { label: "Reach & Brand Lift", score: 95, sub: "Excellent" },
+      { label: "MQL Conversion Rate", score: 92, sub: "Excellent" },
+      { label: "Budget Governance", score: 96, sub: "Excellent" },
+      { label: "CPL Efficiency", score: 91, sub: "Excellent" },
+      { label: "AI Campaign Copilot", score: 94, sub: "Excellent" },
+    ],
+    lifecycleStage: "Live Active",
+  },
+
+  // =========================================================================
   // 3. CRM MANAGEMENT
   // =========================================================================
   "lead-management": {

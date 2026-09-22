@@ -356,6 +356,37 @@ export const DEFAULT_LAYOUTS: Record<WidgetPageId, WidgetInstance[]> = {
     // AI Commercial Intelligence & Margin Copilot (Full Width)
     { ...base, id: "sales-ai", widgetId: "ai.sales.commercial-intelligence", size: "full" },
   ],
+  "marketing-overview": [
+    // 10 Marketing Executive KPIs
+    { ...base, id: "mkt-kpi-campaigns", widgetId: "kpi.marketing.active-campaigns", size: "sm" },
+    { ...base, id: "mkt-kpi-reach", widgetId: "kpi.marketing.campaign-reach", size: "sm" },
+    { ...base, id: "mkt-kpi-visits", widgetId: "kpi.marketing.website-visits", size: "sm" },
+    { ...base, id: "mkt-kpi-leads", widgetId: "kpi.marketing.leads-generated", size: "sm" },
+    { ...base, id: "mkt-kpi-mql", widgetId: "kpi.marketing.mql", size: "sm" },
+    { ...base, id: "mkt-kpi-sql", widgetId: "kpi.marketing.sql", size: "sm" },
+    { ...base, id: "mkt-kpi-opps", widgetId: "kpi.marketing.pipeline-opportunities", size: "sm" },
+    { ...base, id: "mkt-kpi-revenue", widgetId: "kpi.marketing.campaign-revenue", size: "sm" },
+    { ...base, id: "mkt-kpi-roi", widgetId: "kpi.marketing.roi", size: "sm" },
+    { ...base, id: "mkt-kpi-cpl", widgetId: "kpi.marketing.cost-per-lead", size: "sm" },
+
+    // 10 Operations Submodules Hub (Full Width)
+    { ...base, id: "mkt-hub-modules", widgetId: "grid.marketing.submodules-hub", size: "full" },
+
+    // Channel Performance (spans 2 of 3) + Campaign Funnel (1 of 3)
+    { ...base, id: "mkt-channels", widgetId: "table.marketing.channel-performance", size: "xl" },
+    { ...base, id: "mkt-funnel", widgetId: "chart.marketing.campaign-funnel", size: "md" },
+
+    // Leads by Source / Geography (1 of 3) + Budget vs Actual (1 of 3) + Recent Activities (1 of 3)
+    { ...base, id: "mkt-leads-source", widgetId: "chart.marketing.leads-by-source", size: "md" },
+    { ...base, id: "mkt-budget-control", widgetId: "panel.marketing.budget-vs-actual", size: "md" },
+    { ...base, id: "mkt-recent-activities", widgetId: "table.marketing.recent-activities", size: "md" },
+
+    // Active Campaigns Master Register (Full Width)
+    { ...base, id: "mkt-campaigns-table", widgetId: "table.marketing.active-campaigns", size: "full" },
+
+    // AI Marketing Intelligence (Full Width)
+    { ...base, id: "mkt-ai-copilot", widgetId: "ai.marketing.intelligence", size: "full" },
+  ],
 };
 
 /** Display metadata for each widget surface. */
@@ -385,6 +416,7 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
   "asset-overview": { label: "Asset Management Overview", route: "/management/asset-management/overview" },
   "quality-overview": { label: "Quality Overview", route: "/management/quality-management/overview" },
   "sales-overview": { label: "Sales Overview", route: "/management/sales-management/overview" },
+  "marketing-overview": { label: "Marketing Overview", route: "/management/marketing-management/overview" },
 };
 
 /**
@@ -406,6 +438,7 @@ export const PLACEABLE_PAGES: WidgetPageId[] = [
   "asset-overview",
   "quality-overview",
   "sales-overview",
+  "marketing-overview",
 ];
 
 /** Deep-copy a default layout so callers can never mutate the shared constant. */

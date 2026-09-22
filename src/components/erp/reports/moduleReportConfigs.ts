@@ -329,6 +329,52 @@ export const MODULE_REPORT_CONFIGS: Record<string, ModuleSummaryConfig> = {
     ],
   },
 
+  "marketing-management": {
+    id: "marketing-management",
+    moduleName: "Marketing Management",
+    areaGroup: "Management",
+    overviewRoute: "/management/marketing-management/overview",
+    executiveBrief: "Marketing initiatives deliver high commercial ROI with 500 qualified leads generated, achieving a 4.5x marketing return multiplier. Digital multi-channel campaigns in Tamil Nadu and Karnataka led customer acquisition, while autonomous wireless charging content drove an 18% higher conversion surge.",
+    kpis: [
+      { label: "Campaign Reach", value: "500,000", change: "+12.0%", isPositive: true, subtext: "Target: 500K reached" },
+      { label: "Leads Generated", value: "500", change: "+25.0%", isPositive: true, subtext: "185 MQLs / 82 SQLs" },
+      { label: "Attributed Revenue", value: "₹85.0 L", change: "+35.0%", isPositive: true, subtext: "44 Opportunities" },
+      { label: "Marketing ROI", value: "4.5x", change: "+1.2x", isPositive: true, subtext: "ROAS: 13.7x" },
+    ],
+    trendTitle: "Campaign Lead Generation & Revenue Attribution Velocity",
+    trendMetricLabel: "Attributed Revenue (₹ Lakhs)",
+    trendData: [
+      { period: "May", actual: 35.0, target: 30.0, throughput: 210 },
+      { period: "Jun", actual: 48.0, target: 40.0, throughput: 280 },
+      { period: "Jul", actual: 62.0, target: 55.0, throughput: 360 },
+      { period: "Aug", actual: 74.0, target: 68.0, throughput: 420 },
+      { period: "Sep", actual: 85.0, target: 75.0, throughput: 500 },
+      { period: "Oct (F)", actual: 105.0, target: 90.0, throughput: 610 },
+    ],
+    statusDistribution: [
+      { name: "Active / Live", value: 52, color: "#10b981" },
+      { name: "In Review", value: 24, color: "#3b82f6" },
+      { name: "Approved", value: 16, color: "#f59e0b" },
+      { name: "Completed", value: 8, color: "#8b5cf6" },
+    ],
+    submodules: [
+      { name: "Campaigns", path: "/management/marketing-management/campaigns", recordsCount: 12, completionRate: 94, status: "Completed", keyMetric: "12 Active Campaigns", owner: "Arun Kumar", lastUpdated: "Today" },
+      { name: "Marketing Plans", path: "/management/marketing-management/marketing-plans", recordsCount: 6, completionRate: 90, status: "On Track", keyMetric: "FY27 Program Set", owner: "Marketing Head", lastUpdated: "Yesterday" },
+      { name: "Content Management", path: "/management/marketing-management/content-management", recordsCount: 68, completionRate: 88, status: "On Track", keyMetric: "68 Approved Assets", owner: "Creative Team", lastUpdated: "2 days ago" },
+      { name: "Digital Marketing", path: "/management/marketing-management/digital-marketing", recordsCount: 24, completionRate: 92, status: "Completed", keyMetric: "4.8% Avg CTR", owner: "Digital Lead", lastUpdated: "Today" },
+      { name: "Events & Expos", path: "/management/marketing-management/events", recordsCount: 8, completionRate: 85, status: "On Track", keyMetric: "3 Upcoming Summits", owner: "Events Desk", lastUpdated: "3 days ago" },
+      { name: "Brand Management", path: "/management/marketing-management/brand-management", recordsCount: 15, completionRate: 96, status: "Completed", keyMetric: "98% Compliance", owner: "Brand Director", lastUpdated: "1 week ago" },
+      { name: "Market Research", path: "/management/marketing-management/market-research", recordsCount: 14, completionRate: 86, status: "On Track", keyMetric: "EV Fleet TAM Study", owner: "Research Desk", lastUpdated: "4 days ago" },
+      { name: "Leads Management", path: "/management/marketing-management/leads-management", recordsCount: 500, completionRate: 92, status: "On Track", keyMetric: "500 Total Leads", owner: "Inside Sales", lastUpdated: "Today" },
+      { name: "Partner Marketing", path: "/management/marketing-management/partner-marketing", recordsCount: 32, completionRate: 82, status: "On Track", keyMetric: "32 Active Co-Ops", owner: "Channel Lead", lastUpdated: "Yesterday" },
+    ],
+    actionItems: [
+      { id: "ACT-MKT-01", title: "Scale Google Ads budget by 20% for Fleet Charging keywords", priority: "High", dueDate: "In 2 days", owner: "Digital Lead", status: "In Progress" },
+      { id: "ACT-MKT-02", title: "Finalize booth design and speaker slot for National EV Expo", priority: "Medium", dueDate: "Next Week", owner: "Events Desk", status: "Open" },
+      { id: "ACT-MKT-03", title: "Publish 'Autonomous Wireless EV Charging for Fleets' whitepaper", priority: "High", dueDate: "Friday", owner: "Creative Team", status: "In Progress" },
+    ],
+  },
+
   "crm-management": {
     id: "crm-management",
     moduleName: "CRM Management",

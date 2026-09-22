@@ -57,6 +57,7 @@ import {
   Users,
   FolderKanban,
   TrendingUp,
+  Megaphone,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { company, mockUsers } from "@/lib/mock-data";
@@ -302,6 +303,26 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/sales-management/territory-management", label: "Territory Management" },
               { to: "/management/sales-management/sales-commission", label: "Sales Commission" },
               { to: "/management/sales-management/reports", label: "Report" },
+            ],
+          },
+          {
+            kind: "leaf",
+            to: "/management/marketing-management/overview",
+            matchPrefix: "/management/marketing-management",
+            label: "Marketing",
+            icon: Megaphone,
+            subItems: [
+              { to: "/management/marketing-management/overview", label: "Overview" },
+              { to: "/management/marketing-management/campaigns", label: "Campaigns" },
+              { to: "/management/marketing-management/marketing-plans", label: "Marketing Plans" },
+              { to: "/management/marketing-management/content-management", label: "Content Management" },
+              { to: "/management/marketing-management/digital-marketing", label: "Digital Marketing" },
+              { to: "/management/marketing-management/events", label: "Events" },
+              { to: "/management/marketing-management/brand-management", label: "Brand Management" },
+              { to: "/management/marketing-management/market-research", label: "Market Research" },
+              { to: "/management/marketing-management/leads-management", label: "Leads Management" },
+              { to: "/management/marketing-management/partner-marketing", label: "Partner Marketing" },
+              { to: "/management/marketing-management/reports", label: "Report" },
             ],
           },
           {

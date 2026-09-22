@@ -90,7 +90,9 @@ export type WidgetPageId =
   // Quality Management Overview
   | "quality-overview"
   // Sales Management Overview
-  | "sales-overview";
+  | "sales-overview"
+  // Marketing Management Overview
+  | "marketing-overview";
 
 /** Grid spans per breakpoint tier, expressed in that tier's column count. */
 export type WidgetSpan = {

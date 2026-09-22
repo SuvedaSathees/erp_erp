@@ -502,6 +502,741 @@ async function main() {
     console.log(`  ✅ ${costCenters.length} cost centers seeded`);
   }
 
+  // =============================================
+  // Phase 2: Management Modules Seed Data
+  // =============================================
+
+  // --- Departments ---
+  const departmentsData = [
+    { code: "DEPT-ENG", name: "Engineering", headOfDept: "Arun Kumar", location: "Coimbatore" },
+    { code: "DEPT-FIN", name: "Finance & Accounting", headOfDept: "Priya Nair", location: "Coimbatore" },
+    { code: "DEPT-HR", name: "Human Resources", headOfDept: "Kavitha Sundaram", location: "Coimbatore" },
+    { code: "DEPT-SALES", name: "Sales & Marketing", headOfDept: "Vikram Reddy", location: "Chennai" },
+    { code: "DEPT-MFG", name: "Manufacturing", headOfDept: "Rajesh Iyer", location: "Hosur" },
+    { code: "DEPT-QA", name: "Quality Assurance", headOfDept: "Deepa Menon", location: "Hosur" },
+    { code: "DEPT-PROC", name: "Procurement", headOfDept: "Suresh Babu", location: "Coimbatore" },
+    { code: "DEPT-RND", name: "Research & Development", headOfDept: "Dr. Lakshmi Prasad", location: "Coimbatore" },
+    { code: "DEPT-IT", name: "Information Technology", headOfDept: "Karthik Rajan", location: "Coimbatore" },
+    { code: "DEPT-ADMIN", name: "Administration", headOfDept: "Meena Kumari", location: "Coimbatore" },
+    { code: "DEPT-LOG", name: "Logistics & Supply Chain", headOfDept: "Mohan Das", location: "Hosur" },
+    { code: "DEPT-LEGAL", name: "Legal & Compliance", headOfDept: "Advocate Shanthi", location: "Coimbatore" },
+  ];
+  const deptMap: Record<string, string> = {};
+  for (const d of departmentsData) {
+    const dept = await prisma.department.upsert({
+      where: { code: d.code },
+      update: { headOfDept: d.headOfDept },
+      create: d,
+    });
+    deptMap[d.code] = dept.id;
+  }
+  console.log(`  ✅ ${departmentsData.length} departments seeded`);
+
+  // --- Designations ---
+  const designationsData = [
+    { code: "DES-CEO", title: "Chief Executive Officer", grade: "E1", level: 1, band: "Executive" },
+    { code: "DES-CTO", title: "Chief Technology Officer", grade: "E1", level: 1, band: "Executive" },
+    { code: "DES-CFO", title: "Chief Financial Officer", grade: "E1", level: 1, band: "Executive" },
+    { code: "DES-VP", title: "Vice President", grade: "E2", level: 2, band: "Executive" },
+    { code: "DES-DIR", title: "Director", grade: "M1", level: 3, band: "Management" },
+    { code: "DES-SM", title: "Senior Manager", grade: "M2", level: 4, band: "Management" },
+    { code: "DES-MGR", title: "Manager", grade: "M3", level: 5, band: "Management" },
+    { code: "DES-TL", title: "Team Lead", grade: "G3", level: 6, band: "Senior" },
+    { code: "DES-SR-ENG", title: "Senior Engineer", grade: "G4", level: 7, band: "Senior" },
+    { code: "DES-ENG", title: "Engineer", grade: "G5", level: 8, band: "Regular" },
+    { code: "DES-JR-ENG", title: "Junior Engineer", grade: "G6", level: 9, band: "Regular" },
+    { code: "DES-EXEC", title: "Executive", grade: "G5", level: 8, band: "Regular" },
+    { code: "DES-ANALYST", title: "Analyst", grade: "G5", level: 8, band: "Regular" },
+    { code: "DES-ASST", title: "Assistant", grade: "G7", level: 10, band: "Entry" },
+    { code: "DES-INTERN", title: "Intern", grade: "G8", level: 11, band: "Entry" },
+  ];
+  const desigMap: Record<string, string> = {};
+  for (const d of designationsData) {
+    const desig = await prisma.designation.upsert({
+      where: { code: d.code },
+      update: {},
+      create: d,
+    });
+    desigMap[d.code] = desig.id;
+  }
+  console.log(`  ✅ ${designationsData.length} designations seeded`);
+
+  // --- Employees ---
+  const employeesData = [
+    { code: "EMP-001", first: "Sankaranarayanan", last: "R", email: "sankar.r@magnertia.com", dept: "DEPT-ENG", desig: "DES-SR-ENG", loc: "Coimbatore", bu: "Product Development", grade: "G4", ctc: 1250000, join: "2023-08-01" },
+    { code: "EMP-002", first: "Priya", last: "Nair", email: "priya.nair@magnertia.com", dept: "DEPT-FIN", desig: "DES-SM", loc: "Coimbatore", bu: "Finance", grade: "M2", ctc: 2800000, join: "2021-03-15" },
+    { code: "EMP-003", first: "Vikram", last: "Reddy", email: "vikram.reddy@magnertia.com", dept: "DEPT-SALES", desig: "DES-MGR", loc: "Chennai", bu: "Sales", grade: "M3", ctc: 2200000, join: "2022-01-10" },
+    { code: "EMP-004", first: "Kavitha", last: "Sundaram", email: "kavitha.s@magnertia.com", dept: "DEPT-HR", desig: "DES-SM", loc: "Coimbatore", bu: "HR", grade: "M2", ctc: 2400000, join: "2020-06-01" },
+    { code: "EMP-005", first: "Rajesh", last: "Iyer", email: "rajesh.iyer@magnertia.com", dept: "DEPT-MFG", desig: "DES-MGR", loc: "Hosur", bu: "Manufacturing", grade: "M3", ctc: 2600000, join: "2021-09-20" },
+    { code: "EMP-006", first: "Deepa", last: "Menon", email: "deepa.menon@magnertia.com", dept: "DEPT-QA", desig: "DES-TL", loc: "Hosur", bu: "Quality", grade: "G3", ctc: 1800000, join: "2022-04-15" },
+    { code: "EMP-007", first: "Suresh", last: "Babu", email: "suresh.babu@magnertia.com", dept: "DEPT-PROC", desig: "DES-MGR", loc: "Coimbatore", bu: "Procurement", grade: "M3", ctc: 2000000, join: "2021-11-01" },
+    { code: "EMP-008", first: "Lakshmi", last: "Prasad", email: "lakshmi.p@magnertia.com", dept: "DEPT-RND", desig: "DES-DIR", loc: "Coimbatore", bu: "R&D", grade: "M1", ctc: 4200000, join: "2019-02-10" },
+    { code: "EMP-009", first: "Karthik", last: "Rajan", email: "karthik.r@magnertia.com", dept: "DEPT-IT", desig: "DES-TL", loc: "Coimbatore", bu: "IT", grade: "G3", ctc: 1900000, join: "2022-07-01" },
+    { code: "EMP-010", first: "Arun", last: "Kumar", email: "arun.kumar@magnertia.com", dept: "DEPT-ENG", desig: "DES-SM", loc: "Coimbatore", bu: "Product Development", grade: "M2", ctc: 3200000, join: "2020-01-15" },
+    { code: "EMP-011", first: "Nithya", last: "Krishnan", email: "nithya.k@magnertia.com", dept: "DEPT-FIN", desig: "DES-ANALYST", loc: "Coimbatore", bu: "Finance", grade: "G5", ctc: 1100000, join: "2023-05-20" },
+    { code: "EMP-012", first: "Anand", last: "Selvam", email: "anand.s@magnertia.com", dept: "DEPT-MFG", desig: "DES-ENG", loc: "Hosur", bu: "Manufacturing", grade: "G5", ctc: 1000000, join: "2023-09-01" },
+    { code: "EMP-013", first: "Divya", last: "Raghavan", email: "divya.r@magnertia.com", dept: "DEPT-SALES", desig: "DES-EXEC", loc: "Chennai", bu: "Sales", grade: "G5", ctc: 900000, join: "2024-01-10" },
+    { code: "EMP-014", first: "Manoj", last: "Venkatesh", email: "manoj.v@magnertia.com", dept: "DEPT-ENG", desig: "DES-ENG", loc: "Coimbatore", bu: "Product Development", grade: "G5", ctc: 1050000, join: "2023-06-15" },
+    { code: "EMP-015", first: "Swetha", last: "Narayanan", email: "swetha.n@magnertia.com", dept: "DEPT-HR", desig: "DES-EXEC", loc: "Coimbatore", bu: "HR", grade: "G5", ctc: 850000, join: "2024-02-01" },
+    { code: "EMP-016", first: "Gopal", last: "Krishnamurthy", email: "gopal.k@magnertia.com", dept: "DEPT-LOG", desig: "DES-TL", loc: "Hosur", bu: "Logistics", grade: "G3", ctc: 1600000, join: "2022-08-15" },
+    { code: "EMP-017", first: "Revathi", last: "Srinivasan", email: "revathi.s@magnertia.com", dept: "DEPT-QA", desig: "DES-ENG", loc: "Hosur", bu: "Quality", grade: "G5", ctc: 950000, join: "2023-11-01" },
+    { code: "EMP-018", first: "Venkat", last: "Subramanian", email: "venkat.s@magnertia.com", dept: "DEPT-ADMIN", desig: "DES-MGR", loc: "Coimbatore", bu: "Admin", grade: "M3", ctc: 1800000, join: "2021-04-01" },
+    { code: "EMP-019", first: "Meera", last: "Balachandran", email: "meera.b@magnertia.com", dept: "DEPT-RND", desig: "DES-SR-ENG", loc: "Coimbatore", bu: "R&D", grade: "G4", ctc: 1400000, join: "2022-10-15" },
+    { code: "EMP-020", first: "Ashwin", last: "Patel", email: "ashwin.p@magnertia.com", dept: "DEPT-PROC", desig: "DES-EXEC", loc: "Coimbatore", bu: "Procurement", grade: "G5", ctc: 800000, join: "2024-03-01" },
+  ];
+  const empMap: Record<string, string> = {};
+  for (const e of employeesData) {
+    const emp = await prisma.employee.upsert({
+      where: { employeeCode: e.code },
+      update: {},
+      create: {
+        employeeCode: e.code,
+        employeeNumber: `MAG/EMP/${e.join.substring(0,4)}/${e.code.split("-")[1]}`,
+        firstName: e.first,
+        lastName: e.last,
+        fullName: `${e.first} ${e.last}`,
+        email: e.email,
+        departmentId: deptMap[e.dept],
+        designationId: desigMap[e.desig],
+        location: e.loc,
+        businessUnit: e.bu,
+        grade: e.grade,
+        annualCTC: e.ctc,
+        joiningDate: new Date(e.join),
+        status: "Active",
+        employmentType: "FullTime",
+      },
+    });
+    empMap[e.code] = emp.id;
+  }
+  console.log(`  ✅ ${employeesData.length} employees seeded`);
+
+  // Set reporting managers
+  const reportingMap: Record<string, string> = {
+    "EMP-001": "EMP-010", "EMP-014": "EMP-010", // Sankar, Manoj -> Arun
+    "EMP-011": "EMP-002", // Nithya -> Priya
+    "EMP-013": "EMP-003", // Divya -> Vikram
+    "EMP-015": "EMP-004", // Swetha -> Kavitha
+    "EMP-012": "EMP-005", // Anand -> Rajesh
+    "EMP-017": "EMP-006", // Revathi -> Deepa
+    "EMP-020": "EMP-007", // Ashwin -> Suresh
+    "EMP-019": "EMP-008", // Meera -> Lakshmi
+  };
+  for (const [emp, mgr] of Object.entries(reportingMap)) {
+    if (empMap[emp] && empMap[mgr]) {
+      await prisma.employee.update({ where: { id: empMap[emp] }, data: { reportingManagerId: empMap[mgr] } });
+    }
+  }
+  console.log("  ✅ Reporting hierarchy set");
+
+  // --- Leave Requests ---
+  const leaveData = [
+    { code: "LV-001", emp: "EMP-001", type: "CasualLeave" as const, start: "2026-09-25", end: "2026-09-26", days: 2, reason: "Personal work", status: "Pending" as const },
+    { code: "LV-002", emp: "EMP-003", type: "SickLeave" as const, start: "2026-09-15", end: "2026-09-16", days: 2, reason: "Fever and cold", status: "Approved" as const },
+    { code: "LV-003", emp: "EMP-006", type: "EarnedLeave" as const, start: "2026-10-01", end: "2026-10-05", days: 5, reason: "Family vacation", status: "Pending" as const },
+    { code: "LV-004", emp: "EMP-012", type: "CasualLeave" as const, start: "2026-09-18", end: "2026-09-18", days: 1, reason: "Doctor appointment", status: "Approved" as const },
+    { code: "LV-005", emp: "EMP-015", type: "SickLeave" as const, start: "2026-09-10", end: "2026-09-11", days: 2, reason: "Food poisoning", status: "Approved" as const },
+    { code: "LV-006", emp: "EMP-019", type: "CasualLeave" as const, start: "2026-09-28", end: "2026-09-29", days: 2, reason: "Family function", status: "Pending" as const },
+  ];
+  for (const l of leaveData) {
+    await prisma.leaveRequest.upsert({
+      where: { leaveCode: l.code },
+      update: {},
+      create: {
+        leaveCode: l.code,
+        employeeId: empMap[l.emp],
+        leaveType: l.type,
+        startDate: new Date(l.start),
+        endDate: new Date(l.end),
+        days: l.days,
+        reason: l.reason,
+        status: l.status,
+        approvedBy: l.status === "Approved" ? "Kavitha Sundaram" : undefined,
+        approvedDate: l.status === "Approved" ? new Date() : undefined,
+      },
+    });
+  }
+  console.log(`  ✅ ${leaveData.length} leave requests seeded`);
+
+  // --- Payroll Records ---
+  const payrollMonths = [
+    { period: "Aug 2026", month: 8, year: 2026 },
+    { period: "Jul 2026", month: 7, year: 2026 },
+  ];
+  let payrollCount = 0;
+  for (const pm of payrollMonths) {
+    for (const e of employeesData.slice(0, 10)) {
+      const basic = Math.round(e.ctc / 12 * 0.5);
+      const hra = Math.round(basic * 0.4);
+      const conv = 1600;
+      const special = Math.round(e.ctc / 12) - basic - hra - conv;
+      const gross = basic + hra + conv + special;
+      const pf = Math.round(basic * 0.12);
+      const esi = gross <= 21000 ? Math.round(gross * 0.0075) : 0;
+      const tds = Math.round(gross * 0.1);
+      const pt = 200;
+      const totalDed = pf + esi + tds + pt;
+      const net = gross - totalDed;
+      await prisma.payrollRecord.upsert({
+        where: { payrollCode: `PR-${e.code}-${pm.month}-${pm.year}` },
+        update: {},
+        create: {
+          payrollCode: `PR-${e.code}-${pm.month}-${pm.year}`,
+          employeeId: empMap[e.code],
+          period: pm.period,
+          month: pm.month,
+          year: pm.year,
+          basicSalary: basic,
+          hra,
+          conveyance: conv,
+          specialAllowance: special > 0 ? special : 0,
+          grossEarnings: gross,
+          pfDeduction: pf,
+          esiDeduction: esi,
+          tds,
+          professionalTax: pt,
+          totalDeductions: totalDed,
+          netPay: net,
+          status: "Paid",
+          paidDate: new Date(`${pm.year}-${String(pm.month).padStart(2, "0")}-28`),
+          workingDays: 22,
+          presentDays: 21,
+          lossOfPayDays: 0,
+        },
+      });
+      payrollCount++;
+    }
+  }
+  console.log(`  ✅ ${payrollCount} payroll records seeded`);
+
+  // --- CRM Leads ---
+  const leadsData = [
+    { num: "L-2024-000578", name: "Acme Automation Pvt. Ltd.", type: "Business", status: "Contacted" as const, rating: "Warm" as const, priority: "High" as const, owner: "Vikram Reddy", source: "Website", contact: "Ankit Verma", email: "ankit@acmeauto.com", org: "Acme Automation", industry: "Industrial Automation", city: "Mumbai", state: "Maharashtra", score: 72 },
+    { num: "L-2024-000579", name: "GreenDrive Technologies", type: "Business", status: "Qualified" as const, rating: "Hot" as const, priority: "Critical" as const, owner: "Vikram Reddy", source: "Referral", contact: "Pradeep Sharma", email: "pradeep@greendrive.in", org: "GreenDrive Technologies", industry: "Electric Vehicles", city: "Pune", state: "Maharashtra", score: 88 },
+    { num: "L-2024-000580", name: "SolarEdge Power Systems", type: "Business", status: "New" as const, rating: "Cold" as const, priority: "Medium" as const, owner: "Divya Raghavan", source: "Trade Show", contact: "Meera Patel", email: "meera@solaredge.co.in", org: "SolarEdge Power", industry: "Renewable Energy", city: "Ahmedabad", state: "Gujarat", score: 35 },
+    { num: "L-2024-000581", name: "TechnoForge Industries", type: "Business", status: "Proposal" as const, rating: "Hot" as const, priority: "High" as const, owner: "Vikram Reddy", source: "LinkedIn", contact: "Arjun Mehta", email: "arjun@technoforge.com", org: "TechnoForge Industries", industry: "Manufacturing", city: "Chennai", state: "Tamil Nadu", score: 82 },
+    { num: "L-2024-000582", name: "EcoMotion Mobility", type: "Business", status: "Negotiation" as const, rating: "Hot" as const, priority: "Critical" as const, owner: "Vikram Reddy", source: "Website", contact: "Shalini Kumar", email: "shalini@ecomotion.in", org: "EcoMotion Mobility", industry: "Electric Vehicles", city: "Bangalore", state: "Karnataka", score: 91 },
+    { num: "L-2024-000583", name: "Infinity Electricals", type: "Business", status: "Nurturing" as const, rating: "Warm" as const, priority: "Medium" as const, owner: "Divya Raghavan", source: "Cold Call", contact: "Ramesh Gupta", email: "ramesh@infinityelec.com", org: "Infinity Electricals", industry: "Electrical Components", city: "Delhi", state: "Delhi", score: 55 },
+    { num: "L-2024-000584", name: "Bharath Heavy Engineering", type: "Institutional", status: "Contacted" as const, rating: "Warm" as const, priority: "High" as const, owner: "Vikram Reddy", source: "Government Portal", contact: "Dr. Sunil Rao", email: "sunil.rao@bhe.gov.in", org: "Bharath Heavy Engineering", industry: "Defense & Aerospace", city: "Hyderabad", state: "Telangana", score: 68 },
+    { num: "L-2024-000585", name: "Metro Logistics Corp", type: "Business", status: "Lost" as const, rating: "Cold" as const, priority: "Low" as const, owner: "Divya Raghavan", source: "Website", contact: "Pavan Rao", email: "pavan@metrologistics.in", org: "Metro Logistics", industry: "Logistics", city: "Kochi", state: "Kerala", score: 20 },
+  ];
+  for (const l of leadsData) {
+    await prisma.crmLead.upsert({
+      where: { leadNumber: l.num },
+      update: {},
+      create: {
+        leadNumber: l.num,
+        leadName: l.name,
+        leadType: l.type,
+        status: l.status,
+        rating: l.rating,
+        priority: l.priority,
+        ownerName: l.owner,
+        ownerEmail: `${l.owner.toLowerCase().replace(" ", ".")}@magnertia.com`,
+        leadSource: l.source,
+        contactPerson: l.contact,
+        email: l.email,
+        orgName: l.org,
+        industry: l.industry,
+        city: l.city,
+        state: l.state,
+        country: "India",
+        totalScore: l.score,
+        scoreGrade: l.score >= 80 ? "A" : l.score >= 60 ? "B" : l.score >= 40 ? "C" : "D",
+      },
+    });
+  }
+  console.log(`  ✅ ${leadsData.length} CRM leads seeded`);
+
+  // --- CRM Accounts ---
+  const accountsDataCrm = [
+    { code: "ACC-001", name: "Tata Motors Ltd", type: "Customer", industry: "Automotive", city: "Mumbai", state: "Maharashtra", revenue: 350000000 },
+    { code: "ACC-002", name: "Mahindra Electric", type: "Customer", industry: "Electric Vehicles", city: "Bangalore", state: "Karnataka", revenue: 120000000 },
+    { code: "ACC-003", name: "Ather Energy", type: "Partner", industry: "Electric Vehicles", city: "Bangalore", state: "Karnataka", revenue: 80000000 },
+    { code: "ACC-004", name: "Ashok Leyland", type: "Customer", industry: "Commercial Vehicles", city: "Chennai", state: "Tamil Nadu", revenue: 280000000 },
+    { code: "ACC-005", name: "ISRO", type: "Government", industry: "Space & Defense", city: "Bangalore", state: "Karnataka", revenue: 0 },
+    { code: "ACC-006", name: "L&T Technology Services", type: "Partner", industry: "Engineering Services", city: "Mumbai", state: "Maharashtra", revenue: 180000000 },
+  ];
+  const accMap: Record<string, string> = {};
+  for (const a of accountsDataCrm) {
+    const acc = await prisma.crmAccount.upsert({
+      where: { accountCode: a.code },
+      update: {},
+      create: {
+        accountCode: a.code,
+        name: a.name,
+        type: a.type,
+        industry: a.industry,
+        billingCity: a.city,
+        billingState: a.state,
+        billingCountry: "India",
+        annualRevenue: a.revenue,
+        ownerName: "Vikram Reddy",
+        status: "Active",
+      },
+    });
+    accMap[a.code] = acc.id;
+  }
+  console.log(`  ✅ ${accountsDataCrm.length} CRM accounts seeded`);
+
+  // --- CRM Contacts ---
+  const contactsData = [
+    { code: "CON-001", first: "Rajendra", last: "Singh", email: "rajendra.singh@tatamotors.com", phone: "+91 98765 11111", desig: "VP Engineering", acc: "ACC-001", primary: true },
+    { code: "CON-002", first: "Aisha", last: "Kapoor", email: "aisha.kapoor@tatamotors.com", phone: "+91 98765 22222", desig: "Procurement Head", acc: "ACC-001", primary: false },
+    { code: "CON-003", first: "Naveen", last: "Kumar", email: "naveen@mahindraelectric.com", phone: "+91 98765 33333", desig: "CTO", acc: "ACC-002", primary: true },
+    { code: "CON-004", first: "Priya", last: "Sharma", email: "priya@atherenergy.com", phone: "+91 98765 44444", desig: "Head of Partnerships", acc: "ACC-003", primary: true },
+    { code: "CON-005", first: "Venkatesh", last: "Iyer", email: "venkatesh@ashokleyland.com", phone: "+91 98765 55555", desig: "General Manager", acc: "ACC-004", primary: true },
+    { code: "CON-006", first: "Dr. Srinivas", last: "Rao", email: "srinivas.rao@isro.gov.in", phone: "+91 98765 66666", desig: "Project Director", acc: "ACC-005", primary: true },
+  ];
+  for (const c of contactsData) {
+    await prisma.crmContact.upsert({
+      where: { contactCode: c.code },
+      update: {},
+      create: {
+        contactCode: c.code,
+        firstName: c.first,
+        lastName: c.last,
+        fullName: `${c.first} ${c.last}`,
+        email: c.email,
+        phone: c.phone,
+        designation: c.desig,
+        isPrimary: c.primary,
+        accountId: accMap[c.acc],
+        status: "Active",
+      },
+    });
+  }
+  console.log(`  ✅ ${contactsData.length} CRM contacts seeded`);
+
+  // --- CRM Opportunities ---
+  const oppsData = [
+    { num: "OPP-001", name: "Tata EV Charging Infrastructure", stage: "Negotiation" as const, amount: 4500000, prob: 75, owner: "Vikram Reddy", acc: "ACC-001", close: "2026-11-30" },
+    { num: "OPP-002", name: "Mahindra BMS Integration", stage: "Proposal" as const, amount: 2800000, prob: 60, owner: "Vikram Reddy", acc: "ACC-002", close: "2026-12-15" },
+    { num: "OPP-003", name: "Ather Co-Development Partnership", stage: "Discovery" as const, amount: 1200000, prob: 30, owner: "Divya Raghavan", acc: "ACC-003", close: "2027-03-30" },
+    { num: "OPP-004", name: "Ashok Leyland Motor Controllers", stage: "ClosedWon" as const, amount: 6200000, prob: 100, owner: "Vikram Reddy", acc: "ACC-004", close: "2026-08-15" },
+    { num: "OPP-005", name: "L&T Automation Platform", stage: "Qualification" as const, amount: 3500000, prob: 40, owner: "Vikram Reddy", acc: "ACC-006", close: "2027-02-28" },
+  ];
+  for (const o of oppsData) {
+    await prisma.crmOpportunity.upsert({
+      where: { opportunityNumber: o.num },
+      update: {},
+      create: {
+        opportunityNumber: o.num,
+        name: o.name,
+        stage: o.stage,
+        amount: o.amount,
+        probability: o.prob,
+        ownerName: o.owner,
+        accountId: accMap[o.acc],
+        expectedCloseDate: new Date(o.close),
+      },
+    });
+  }
+  console.log(`  ✅ ${oppsData.length} CRM opportunities seeded`);
+
+  // --- Support Tickets ---
+  const ticketsData = [
+    { num: "TKT-001", subject: "Motor controller overheating in field", priority: "Critical" as const, status: "InProgress" as const, acc: "ACC-004", contact: "Venkatesh Iyer", assigned: "Deepa Menon", cat: "Technical" },
+    { num: "TKT-002", subject: "Delivery delay for Q3 batch order", priority: "High" as const, status: "Open" as const, acc: "ACC-001", contact: "Rajendra Singh", assigned: "Gopal Krishnamurthy", cat: "Logistics" },
+    { num: "TKT-003", subject: "Firmware update documentation request", priority: "Medium" as const, status: "Resolved" as const, acc: "ACC-002", contact: "Naveen Kumar", assigned: "Karthik Rajan", cat: "Documentation" },
+    { num: "TKT-004", subject: "Invoice discrepancy for PO-2024-089", priority: "Medium" as const, status: "Open" as const, acc: "ACC-006", contact: "Dr. Srinivas Rao", assigned: "Nithya Krishnan", cat: "Billing" },
+  ];
+  for (const t of ticketsData) {
+    await prisma.supportTicket.upsert({
+      where: { ticketNumber: t.num },
+      update: {},
+      create: {
+        ticketNumber: t.num,
+        subject: t.subject,
+        priority: t.priority,
+        status: t.status,
+        accountId: accMap[t.acc],
+        contactName: t.contact,
+        assignedTo: t.assigned,
+        category: t.cat,
+        channel: "Email",
+      },
+    });
+  }
+  console.log(`  ✅ ${ticketsData.length} support tickets seeded`);
+
+  // --- Suppliers ---
+  const suppliersData = [
+    { code: "SUP-001", name: "Tata Steel Ltd", cat: "Raw Materials", city: "Jamshedpur", state: "Jharkhand", terms: "Net 45", rating: 5, lead: 14 },
+    { code: "SUP-002", name: "Bharat Electronics Ltd", cat: "Electronics", city: "Bangalore", state: "Karnataka", terms: "Net 30", rating: 4, lead: 10 },
+    { code: "SUP-003", name: "Exide Industries", cat: "Battery Components", city: "Kolkata", state: "West Bengal", terms: "Net 30", rating: 4, lead: 7 },
+    { code: "SUP-004", name: "Minda Industries", cat: "Auto Components", city: "Gurugram", state: "Haryana", terms: "Net 45", rating: 3, lead: 12 },
+    { code: "SUP-005", name: "Sundaram Fasteners", cat: "Fasteners & Hardware", city: "Chennai", state: "Tamil Nadu", terms: "Net 30", rating: 5, lead: 5 },
+    { code: "SUP-006", name: "Amara Raja Energy", cat: "Battery Cells", city: "Tirupati", state: "Andhra Pradesh", terms: "Net 60", rating: 4, lead: 21 },
+  ];
+  const supMap: Record<string, string> = {};
+  for (const s of suppliersData) {
+    const sup = await prisma.supplier.upsert({
+      where: { supplierCode: s.code },
+      update: {},
+      create: {
+        supplierCode: s.code,
+        name: s.name,
+        category: s.cat,
+        city: s.city,
+        state: s.state,
+        country: "India",
+        paymentTerms: s.terms,
+        rating: s.rating,
+        leadTime: s.lead,
+        status: "Active",
+      },
+    });
+    supMap[s.code] = sup.id;
+  }
+  console.log(`  ✅ ${suppliersData.length} suppliers seeded`);
+
+  // --- Purchase Orders ---
+  const posData = [
+    { num: "PO-2026-001", sup: "SUP-001", date: "2026-08-10", expected: "2026-09-10", status: "Received" as const, by: "Suresh Babu", items: [{ code: "RM-STEEL-001", name: "Cold Rolled Steel Sheet", qty: 500, price: 85000, uom: "MT" }] },
+    { num: "PO-2026-002", sup: "SUP-002", date: "2026-08-20", expected: "2026-09-15", status: "Ordered" as const, by: "Suresh Babu", items: [{ code: "EC-PCB-001", name: "Motor Controller PCB", qty: 200, price: 4500, uom: "Nos" }, { code: "EC-IC-001", name: "Power MOSFET Module", qty: 400, price: 1200, uom: "Nos" }] },
+    { num: "PO-2026-003", sup: "SUP-003", date: "2026-09-01", expected: "2026-09-20", status: "Approved" as const, by: "Suresh Babu", items: [{ code: "BAT-CELL-001", name: "Li-Ion Battery Cell 21700", qty: 10000, price: 280, uom: "Nos" }] },
+    { num: "PO-2026-004", sup: "SUP-005", date: "2026-09-10", expected: "2026-09-25", status: "Draft" as const, by: "Ashwin Patel", items: [{ code: "HW-BOLT-001", name: "M8 Hex Bolts Grade 10.9", qty: 5000, price: 12, uom: "Nos" }, { code: "HW-NUT-001", name: "M8 Flange Nuts", qty: 5000, price: 8, uom: "Nos" }] },
+    { num: "PO-2026-005", sup: "SUP-006", date: "2026-09-15", expected: "2026-10-15", status: "Submitted" as const, by: "Suresh Babu", items: [{ code: "BAT-PACK-001", name: "Battery Module Assembly", qty: 50, price: 125000, uom: "Nos" }] },
+  ];
+  for (const po of posData) {
+    const lines = po.items.map((item, i) => ({
+      lineNumber: i + 1,
+      itemCode: item.code,
+      itemName: item.name,
+      quantity: item.qty,
+      unitPrice: item.price,
+      taxRate: 18,
+      lineTotal: item.qty * item.price,
+      uom: item.uom,
+    }));
+    const subtotal = lines.reduce((s, l) => s + l.lineTotal, 0);
+    const taxAmount = Math.round(subtotal * 0.18);
+    await prisma.purchaseOrder.upsert({
+      where: { poNumber: po.num },
+      update: {},
+      create: {
+        poNumber: po.num,
+        supplierName: suppliersData.find((s) => s.code === po.sup)!.name,
+        supplierId: supMap[po.sup],
+        orderDate: new Date(po.date),
+        expectedDate: new Date(po.expected),
+        status: po.status,
+        requestedBy: po.by,
+        approvedBy: ["Approved", "Ordered", "Received"].includes(po.status) ? "Rajesh Iyer" : undefined,
+        approvedDate: ["Approved", "Ordered", "Received"].includes(po.status) ? new Date(po.date) : undefined,
+        paymentTerms: suppliersData.find((s) => s.code === po.sup)!.terms,
+        subtotal,
+        taxAmount,
+        totalAmount: subtotal + taxAmount,
+        lines: { create: lines },
+      },
+    });
+  }
+  console.log(`  ✅ ${posData.length} purchase orders seeded`);
+
+  // --- Sales Orders ---
+  const salesData = [
+    { num: "SO-2026-001", cust: "Tata Motors Ltd", code: "ACC-001", date: "2026-07-15", delivery: "2026-09-15", status: "Delivered" as const, person: "Vikram Reddy", territory: "West", items: [{ code: "PRD-MC-001", name: "EV Motor Controller 48V", qty: 100, price: 45000 }] },
+    { num: "SO-2026-002", cust: "Mahindra Electric", code: "ACC-002", date: "2026-08-01", delivery: "2026-10-01", status: "Processing" as const, person: "Vikram Reddy", territory: "South", items: [{ code: "PRD-BMS-001", name: "Battery Management System", qty: 50, price: 32000 }, { code: "PRD-CHG-001", name: "On-Board Charger 7kW", qty: 50, price: 28000 }] },
+    { num: "SO-2026-003", cust: "Ashok Leyland", code: "ACC-004", date: "2026-08-20", delivery: "2026-11-20", status: "Confirmed" as const, person: "Vikram Reddy", territory: "South", items: [{ code: "PRD-MC-002", name: "EV Motor Controller 96V", qty: 200, price: 62000 }] },
+    { num: "SO-2026-004", cust: "Ather Energy", code: "ACC-003", date: "2026-09-01", delivery: "2026-12-01", status: "Draft" as const, person: "Divya Raghavan", territory: "South", items: [{ code: "PRD-IOT-001", name: "Vehicle Telemetry Module", qty: 500, price: 8500 }] },
+    { num: "SO-2026-005", cust: "L&T Technology Services", code: "ACC-006", date: "2026-09-10", delivery: "2026-11-30", status: "Confirmed" as const, person: "Vikram Reddy", territory: "West", items: [{ code: "PRD-AUT-001", name: "Industrial Automation Controller", qty: 30, price: 185000 }] },
+  ];
+  for (const so of salesData) {
+    const lines = so.items.map((item, i) => ({
+      lineNumber: i + 1,
+      productCode: item.code,
+      productName: item.name,
+      quantity: item.qty,
+      unitPrice: item.price,
+      taxRate: 18,
+      lineTotal: item.qty * item.price,
+      uom: "Nos" as const,
+    }));
+    const subtotal = lines.reduce((s, l) => s + l.lineTotal, 0);
+    const taxAmount = Math.round(subtotal * 0.18);
+    await prisma.salesOrder.upsert({
+      where: { orderNumber: so.num },
+      update: {},
+      create: {
+        orderNumber: so.num,
+        customerName: so.cust,
+        customerCode: so.code,
+        orderDate: new Date(so.date),
+        deliveryDate: new Date(so.delivery),
+        status: so.status,
+        salesPerson: so.person,
+        territory: so.territory,
+        paymentTerms: "Net 30",
+        subtotal,
+        taxAmount,
+        totalAmount: subtotal + taxAmount,
+        lines: { create: lines },
+      },
+    });
+  }
+  console.log(`  ✅ ${salesData.length} sales orders seeded`);
+
+  // --- Projects ---
+  const projectsData = [
+    { code: "PRJ-001", name: "EV Motor Controller V2", desc: "Next-gen motor controller with SiC MOSFET", status: "Active" as const, priority: "Critical" as const, cat: "Product Development", mgr: "Arun Kumar", dept: "Engineering", start: "2026-04-01", end: "2026-12-31", budget: 5000000, completion: 45 },
+    { code: "PRJ-002", name: "Factory Hosur Phase 2 Expansion", desc: "Expand manufacturing capacity to 500K units/year", status: "Active" as const, priority: "High" as const, cat: "Infrastructure", mgr: "Rajesh Iyer", dept: "Manufacturing", start: "2026-06-01", end: "2027-06-30", budget: 25000000, completion: 20 },
+    { code: "PRJ-003", name: "ERP System Implementation", desc: "Magnertia ERP suite rollout across all departments", status: "Active" as const, priority: "High" as const, cat: "IT", mgr: "Karthik Rajan", dept: "Information Technology", start: "2026-01-15", end: "2026-09-30", budget: 3500000, completion: 72 },
+    { code: "PRJ-004", name: "ISO 9001:2015 Recertification", desc: "Quality management system audit and recertification", status: "Planning" as const, priority: "Medium" as const, cat: "Compliance", mgr: "Deepa Menon", dept: "Quality Assurance", start: "2026-10-01", end: "2027-01-31", budget: 800000, completion: 0 },
+    { code: "PRJ-005", name: "Battery Pack R&D", desc: "In-house battery pack design and testing", status: "Active" as const, priority: "Critical" as const, cat: "R&D", mgr: "Lakshmi Prasad", dept: "Research & Development", start: "2026-03-01", end: "2027-03-31", budget: 12000000, completion: 35 },
+    { code: "PRJ-006", name: "Dealer Network Expansion — South India", desc: "Establish 15 new dealership points across South India", status: "Completed" as const, priority: "Medium" as const, cat: "Business Development", mgr: "Vikram Reddy", dept: "Sales & Marketing", start: "2025-06-01", end: "2026-06-30", budget: 8000000, completion: 100 },
+  ];
+  const prjMap: Record<string, string> = {};
+  for (const p of projectsData) {
+    const prj = await prisma.project.upsert({
+      where: { projectCode: p.code },
+      update: {},
+      create: {
+        projectCode: p.code,
+        name: p.name,
+        description: p.desc,
+        status: p.status,
+        priority: p.priority,
+        category: p.cat,
+        projectManager: p.mgr,
+        department: p.dept,
+        startDate: new Date(p.start),
+        endDate: new Date(p.end),
+        budget: p.budget,
+        completion: p.completion,
+      },
+    });
+    prjMap[p.code] = prj.id;
+  }
+  console.log(`  ✅ ${projectsData.length} projects seeded`);
+
+  // --- Project Tasks & Milestones for PRJ-001 ---
+  const ms1 = await prisma.milestone.upsert({ where: { milestoneCode: "MS-001-01" }, update: {}, create: { milestoneCode: "MS-001-01", name: "Design Freeze", projectId: prjMap["PRJ-001"], dueDate: new Date("2026-06-30"), status: "Completed", completedDate: new Date("2026-06-25"), owner: "Arun Kumar" } });
+  const ms2 = await prisma.milestone.upsert({ where: { milestoneCode: "MS-001-02" }, update: {}, create: { milestoneCode: "MS-001-02", name: "Prototype Build", projectId: prjMap["PRJ-001"], dueDate: new Date("2026-09-30"), status: "InProgress", owner: "Sankaranarayanan R" } });
+  await prisma.milestone.upsert({ where: { milestoneCode: "MS-001-03" }, update: {}, create: { milestoneCode: "MS-001-03", name: "Validation & Testing", projectId: prjMap["PRJ-001"], dueDate: new Date("2026-11-30"), status: "Upcoming", owner: "Deepa Menon" } });
+
+  const tasksData = [
+    { code: "TSK-001", title: "SiC MOSFET gate driver schematic", status: "Done" as const, priority: "Critical" as const, assignee: "EMP-001", ms: ms1.id, start: "2026-04-01", due: "2026-05-15", est: 120, actual: 115 },
+    { code: "TSK-002", title: "PCB layout for V2 controller", status: "Done" as const, priority: "High" as const, assignee: "EMP-014", ms: ms1.id, start: "2026-05-01", due: "2026-06-15", est: 160, actual: 145 },
+    { code: "TSK-003", title: "Thermal simulation analysis", status: "InProgress" as const, priority: "High" as const, assignee: "EMP-001", ms: ms2.id, start: "2026-07-01", due: "2026-08-15", est: 80, actual: 55 },
+    { code: "TSK-004", title: "Prototype assembly and bring-up", status: "InProgress" as const, priority: "Critical" as const, assignee: "EMP-014", ms: ms2.id, start: "2026-08-01", due: "2026-09-15", est: 200, actual: 90 },
+    { code: "TSK-005", title: "EMC pre-compliance testing", status: "Todo" as const, priority: "Medium" as const, assignee: "EMP-017", ms: ms2.id, start: "2026-09-01", due: "2026-09-30", est: 60, actual: 0 },
+    { code: "TSK-006", title: "Firmware integration testing", status: "Todo" as const, priority: "High" as const, assignee: "EMP-009", ms: ms2.id, start: "2026-09-15", due: "2026-10-15", est: 100, actual: 0 },
+  ];
+  for (const t of tasksData) {
+    await prisma.projectTask.upsert({
+      where: { taskCode: t.code },
+      update: {},
+      create: {
+        taskCode: t.code,
+        title: t.title,
+        status: t.status,
+        priority: t.priority,
+        projectId: prjMap["PRJ-001"],
+        assigneeId: empMap[t.assignee],
+        assigneeName: employeesData.find((e) => e.code === t.assignee)!.first + " " + employeesData.find((e) => e.code === t.assignee)!.last,
+        milestoneId: t.ms,
+        startDate: new Date(t.start),
+        dueDate: new Date(t.due),
+        estimatedHours: t.est,
+        actualHours: t.actual > 0 ? t.actual : undefined,
+        completedDate: t.status === "Done" ? new Date(t.due) : undefined,
+      },
+    });
+  }
+  console.log(`  ✅ ${tasksData.length} project tasks + 3 milestones seeded`);
+
+  // --- Policies ---
+  const policiesData = [
+    { code: "POL-001", title: "Information Security Policy", cat: "IT Security", dept: "IT", owner: "Karthik Rajan", eff: "2025-01-01", rev: "2026-12-31" },
+    { code: "POL-002", title: "Employee Code of Conduct", cat: "HR", dept: "Human Resources", owner: "Kavitha Sundaram", eff: "2024-06-01", rev: "2026-06-01" },
+    { code: "POL-003", title: "Quality Management Policy", cat: "Quality", dept: "Quality Assurance", owner: "Deepa Menon", eff: "2025-03-15", rev: "2027-03-15" },
+    { code: "POL-004", title: "Environmental, Health & Safety Policy", cat: "EHS", dept: "Manufacturing", owner: "Rajesh Iyer", eff: "2025-01-01", rev: "2026-12-31" },
+    { code: "POL-005", title: "Anti-Bribery & Corruption Policy", cat: "Compliance", dept: "Legal & Compliance", owner: "Advocate Shanthi", eff: "2024-01-01", rev: "2026-01-01" },
+    { code: "POL-006", title: "Data Protection & Privacy Policy", cat: "IT Security", dept: "IT", owner: "Karthik Rajan", eff: "2025-06-01", rev: "2027-06-01" },
+  ];
+  for (const p of policiesData) {
+    await prisma.policy.upsert({
+      where: { policyCode: p.code },
+      update: {},
+      create: {
+        policyCode: p.code,
+        title: p.title,
+        category: p.cat,
+        department: p.dept,
+        owner: p.owner,
+        effectiveDate: new Date(p.eff),
+        reviewDate: new Date(p.rev),
+        status: "Active",
+        version: "1.0",
+      },
+    });
+  }
+  console.log(`  ✅ ${policiesData.length} policies seeded`);
+
+  // --- Document Controls ---
+  const docsData = [
+    { code: "DOC-001", title: "ISO 9001 Quality Manual", type: "Manual", cat: "Quality", dept: "Quality Assurance", owner: "Deepa Menon", status: "Published" as const },
+    { code: "DOC-002", title: "Employee Onboarding Checklist", type: "Checklist", cat: "HR", dept: "Human Resources", owner: "Kavitha Sundaram", status: "Published" as const },
+    { code: "DOC-003", title: "Vendor Evaluation Procedure", type: "Procedure", cat: "Procurement", dept: "Procurement", owner: "Suresh Babu", status: "Published" as const },
+    { code: "DOC-004", title: "IT Disaster Recovery Plan", type: "Plan", cat: "IT", dept: "IT", owner: "Karthik Rajan", status: "InReview" as const },
+    { code: "DOC-005", title: "Manufacturing Process Control Plan", type: "Plan", cat: "Manufacturing", dept: "Manufacturing", owner: "Rajesh Iyer", status: "Published" as const },
+    { code: "DOC-006", title: "Financial Reporting Guidelines", type: "Guideline", cat: "Finance", dept: "Finance & Accounting", owner: "Priya Nair", status: "Draft" as const },
+  ];
+  for (const d of docsData) {
+    await prisma.documentControl.upsert({
+      where: { documentCode: d.code },
+      update: {},
+      create: {
+        documentCode: d.code,
+        title: d.title,
+        type: d.type,
+        category: d.cat,
+        department: d.dept,
+        owner: d.owner,
+        status: d.status,
+        version: "1.0",
+        accessLevel: "Internal",
+        effectiveDate: new Date("2025-01-01"),
+      },
+    });
+  }
+  console.log(`  ✅ ${docsData.length} document controls seeded`);
+
+  // --- Approval Matrices ---
+  const approvalData = [
+    { code: "APM-001", module: "Purchase Order", txn: "Create", min: 0, max: 100000, role: "Manager", name: "Suresh Babu", level: 1 },
+    { code: "APM-002", module: "Purchase Order", txn: "Create", min: 100000, max: 500000, role: "Senior Manager", name: "Rajesh Iyer", level: 2 },
+    { code: "APM-003", module: "Purchase Order", txn: "Create", min: 500000, max: null, role: "Director", name: "Lakshmi Prasad", level: 3 },
+    { code: "APM-004", module: "Journal Entry", txn: "Post", min: 0, max: 1000000, role: "Finance Manager", name: "Priya Nair", level: 1 },
+    { code: "APM-005", module: "Journal Entry", txn: "Post", min: 1000000, max: null, role: "CFO", name: "CFO", level: 2 },
+    { code: "APM-006", module: "Leave Request", txn: "Approve", min: null, max: null, role: "Reporting Manager", name: null, level: 1 },
+    { code: "APM-007", module: "Sales Order", txn: "Create", min: 0, max: 500000, role: "Sales Manager", name: "Vikram Reddy", level: 1 },
+    { code: "APM-008", module: "Sales Order", txn: "Create", min: 500000, max: null, role: "Director", name: "VP Sales", level: 2 },
+  ];
+  for (const a of approvalData) {
+    await prisma.approvalMatrix.upsert({
+      where: { matrixCode: a.code },
+      update: {},
+      create: {
+        matrixCode: a.code,
+        module: a.module,
+        transactionType: a.txn,
+        minAmount: a.min,
+        maxAmount: a.max,
+        approverRole: a.role,
+        approverName: a.name,
+        level: a.level,
+        isActive: true,
+      },
+    });
+  }
+  console.log(`  ✅ ${approvalData.length} approval matrix rules seeded`);
+
+  // --- CAPA Records ---
+  const capaData = [
+    { num: "CAPA-001", title: "Motor winding insulation failure in field returns", type: "Corrective" as const, status: "ActionInProgress" as const, priority: "Critical" as const, source: "Customer Complaint", dept: "Quality Assurance", assigned: "Deepa Menon", initiated: "Rajesh Iyer", problem: "3 field returns in Q2 showed insulation breakdown at 85°C ambient", rootCause: "Varnish curing temperature below spec in Station 4", target: "2026-10-15" },
+    { num: "CAPA-002", title: "Incoming battery cell capacity variance > 5%", type: "Preventive" as const, status: "RootCauseIdentified" as const, priority: "High" as const, source: "Incoming Inspection", dept: "Quality Assurance", assigned: "Revathi Srinivasan", initiated: "Deepa Menon", problem: "Batch B-2026-089 showed 6.2% capacity variance vs spec 3%", rootCause: "Supplier process drift in electrode coating thickness", target: "2026-10-30" },
+    { num: "CAPA-003", title: "Prevent PCB solder bridge defects in SMT line", type: "Preventive" as const, status: "Open" as const, priority: "Medium" as const, source: "Internal Audit", dept: "Manufacturing", assigned: "Anand Selvam", initiated: "Rajesh Iyer", problem: "Increasing trend of solder bridge defects (1.8% to 2.5% over 3 months)", rootCause: null, target: "2026-11-15" },
+  ];
+  for (const c of capaData) {
+    await prisma.capaRecord.upsert({
+      where: { capaNumber: c.num },
+      update: {},
+      create: {
+        capaNumber: c.num,
+        title: c.title,
+        type: c.type,
+        status: c.status,
+        priority: c.priority,
+        source: c.source,
+        department: c.dept,
+        assignedTo: c.assigned,
+        initiatedBy: c.initiated,
+        problemStatement: c.problem,
+        rootCause: c.rootCause,
+        targetDate: new Date(c.target),
+      },
+    });
+  }
+  console.log(`  ✅ ${capaData.length} CAPA records seeded`);
+
+  // --- NCR Records ---
+  const ncrData = [
+    { num: "NCR-001", title: "Battery pack housing dimensional non-conformance", desc: "Housing width 2mm over tolerance on 15 units from Batch H-2026-045", severity: "Major", cat: "Dimensional", dept: "Manufacturing", detected: "Deepa Menon", product: "PRD-BPHSG-001", productName: "Battery Pack Housing", batch: "H-2026-045", defect: "Dimensional", assigned: "Rajesh Iyer", target: "2026-10-01" },
+    { num: "NCR-002", title: "Supplier label mismatch on resistor batch", desc: "1K resistors labeled as 4.7K in incoming shipment from BEL", severity: "Critical", cat: "Labeling", dept: "Procurement", detected: "Revathi Srinivasan", product: "EC-RES-001", productName: "SMD Resistor 1K", batch: "R-2026-112", defect: "Labeling", assigned: "Suresh Babu", target: "2026-09-25" },
+  ];
+  for (const n of ncrData) {
+    await prisma.ncrRecord.upsert({
+      where: { ncrNumber: n.num },
+      update: {},
+      create: {
+        ncrNumber: n.num,
+        title: n.title,
+        description: n.desc,
+        severity: n.severity,
+        category: n.cat,
+        department: n.dept,
+        detectedBy: n.detected,
+        productCode: n.product,
+        productName: n.productName,
+        batchNumber: n.batch,
+        defectType: n.defect,
+        assignedTo: n.assigned,
+        targetDate: new Date(n.target),
+        status: "Open",
+      },
+    });
+  }
+  console.log(`  ✅ ${ncrData.length} NCR records seeded`);
+
+  // --- Inspection Records ---
+  const inspData = [
+    { code: "INS-001", type: "Incoming" as const, result: "Pass" as const, date: "2026-09-01", inspector: "Revathi Srinivasan", product: "RM-STEEL-001", productName: "Cold Rolled Steel Sheet", batch: "S-2026-078", sample: 10, defects: 0, supplier: "Tata Steel Ltd", po: "PO-2026-001" },
+    { code: "INS-002", type: "Incoming" as const, result: "Fail" as const, date: "2026-09-05", inspector: "Revathi Srinivasan", product: "EC-RES-001", productName: "SMD Resistor 1K", batch: "R-2026-112", sample: 50, defects: 50, supplier: "Bharat Electronics Ltd", po: "PO-2026-002" },
+    { code: "INS-003", type: "InProcess" as const, result: "Pass" as const, date: "2026-09-10", inspector: "Deepa Menon", product: "PRD-MC-001", productName: "EV Motor Controller 48V", batch: "MC-2026-034", sample: 5, defects: 0, supplier: null, po: null },
+    { code: "INS-004", type: "Final" as const, result: "ConditionalPass" as const, date: "2026-09-12", inspector: "Deepa Menon", product: "PRD-BMS-001", productName: "Battery Management System", batch: "BMS-2026-012", sample: 3, defects: 1, supplier: null, po: null },
+    { code: "INS-005", type: "Incoming" as const, result: "Pass" as const, date: "2026-09-15", inspector: "Revathi Srinivasan", product: "BAT-CELL-001", productName: "Li-Ion Battery Cell 21700", batch: "BC-2026-089", sample: 100, defects: 2, supplier: "Exide Industries", po: "PO-2026-003" },
+  ];
+  for (const i of inspData) {
+    await prisma.inspectionRecord.upsert({
+      where: { inspectionCode: i.code },
+      update: {},
+      create: {
+        inspectionCode: i.code,
+        type: i.type,
+        result: i.result,
+        inspectionDate: new Date(i.date),
+        inspector: i.inspector,
+        department: "Quality Assurance",
+        productCode: i.product,
+        productName: i.productName,
+        batchNumber: i.batch,
+        sampleSize: i.sample,
+        defectsFound: i.defects,
+        supplierName: i.supplier,
+        poNumber: i.po,
+        ncrRequired: i.result === "Fail",
+      },
+    });
+  }
+  console.log(`  ✅ ${inspData.length} inspection records seeded`);
+
+  // --- Audit Logs (sample) ---
+  const auditSamples = [
+    { action: "CREATE", module: "Purchase Order", entity: "PurchaseOrder", entityId: "PO-2026-001", description: "Created purchase order for Tata Steel Ltd", performedBy: "Suresh Babu" },
+    { action: "APPROVE", module: "Purchase Order", entity: "PurchaseOrder", entityId: "PO-2026-001", description: "Approved purchase order PO-2026-001", performedBy: "Rajesh Iyer" },
+    { action: "CREATE", module: "Sales Order", entity: "SalesOrder", entityId: "SO-2026-001", description: "Created sales order for Tata Motors Ltd", performedBy: "Vikram Reddy" },
+    { action: "UPDATE", module: "Employee", entity: "Employee", entityId: "EMP-001", description: "Updated employee designation", performedBy: "Kavitha Sundaram" },
+    { action: "CREATE", module: "CAPA", entity: "CapaRecord", entityId: "CAPA-001", description: "Initiated CAPA for motor insulation failure", performedBy: "Rajesh Iyer" },
+    { action: "APPROVE", module: "Leave Request", entity: "LeaveRequest", entityId: "LV-002", description: "Approved sick leave for Vikram Reddy", performedBy: "Kavitha Sundaram" },
+  ];
+  for (const a of auditSamples) {
+    await prisma.auditLog.create({ data: a });
+  }
+  console.log(`  ✅ ${auditSamples.length} audit log entries seeded`);
+
   console.log("\n🎉 Seed complete!");
 }
 

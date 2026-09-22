@@ -2,6 +2,15 @@ import * as companyService from "./companyService";
 import * as branchService from "./branchService";
 import * as userService from "./userService";
 import type { AdminHomeDashboardData } from "./types";
+import { apiRequest } from "./apiClient";
+import {
+  getAuditLogsFn,
+  getPoliciesFn,
+  getDocumentControlsFn,
+  getApprovalMatricesFn,
+  getAdminKpisFn,
+  createAuditLogFn,
+} from "@/lib/managementFns.server";
 
 export async function loadAdministrationHomeData(): Promise<AdminHomeDashboardData> {
   try {
@@ -46,4 +55,28 @@ export async function loadAdministrationHomeData(): Promise<AdminHomeDashboardDa
       userStatusSummary: { activeCount: 142, inactiveCount: 8 },
     };
   }
+}
+
+export async function fetchAuditLogs() {
+  return apiRequest("/api/admin/audit-logs", () => getAuditLogsFn());
+}
+
+export async function fetchPolicies() {
+  return apiRequest("/api/admin/policies", () => getPoliciesFn());
+}
+
+export async function fetchDocumentControls() {
+  return apiRequest("/api/admin/document-controls", () => getDocumentControlsFn());
+}
+
+export async function fetchApprovalMatrices() {
+  return apiRequest("/api/admin/approval-matrices", () => getApprovalMatricesFn());
+}
+
+export async function fetchAdminKpis() {
+  return apiRequest("/api/admin/kpis", () => getAdminKpisFn());
+}
+
+export async function createAuditLog(data: Parameters<typeof createAuditLogFn>[0]) {
+  return createAuditLogFn(data);
 }

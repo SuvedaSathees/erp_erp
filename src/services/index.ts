@@ -109,6 +109,22 @@ export * as sopExportService from "./sopExportService";
 export * as smartFactoryDevelopmentService from "./smartFactoryDevelopmentService";
 export * as manufacturingExcellenceService from "./manufacturingExcellenceService";
 
+// Phase 2 Management Module Services (DB-backed)
+export * as hrmManagementService from "./hrmManagementService";
+export * as crmManagementService from "./crmManagementService";
+export * as salesManagementService from "./salesManagementService";
+export * as procurementManagementService from "./procurementManagementService";
+export * as projectManagementService from "./projectManagementService";
+export * as qualityManagementService from "./qualityManagementService";
+export {
+  fetchAuditLogs,
+  fetchPolicies,
+  fetchDocumentControls,
+  fetchApprovalMatrices,
+  fetchAdminKpis,
+  createAuditLog,
+} from "./administrationService";
+
 
 
 

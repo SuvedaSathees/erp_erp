@@ -1846,3 +1846,1054 @@ model FinanceIntegrationSetting {
   status    String
   updatedAt DateTime @updatedAt
 }
+
+// ==========================================
+// HRM — Human Resource Management Models
+// ==========================================
+
+enum EmployeeStatus {
+  Active
+  OnLeave
+  Suspended
+  Resigned
+  NoticePeriod
+  Separated
+  Retired
+}
+
+enum EmploymentType {
+  FullTime
+  PartTime
+  Contract
+  Intern
+  Consultant
+}
+
+enum Gender {
+  Male
+  Female
+  Other
+}
+
+model Department {
+  id            String       @id @default(cuid())
+  code          String       @unique
+  name          String       @unique
+  parentId      String?
+  parent        Department?  @relation("DepartmentHierarchy", fields: [parentId], references: [id])
+  children      Department[] @relation("DepartmentHierarchy")
+  headOfDept    String?
+  costCenterCode String?
+  location      String?
+  status        String       @default("Active")
+  employeeCount Int          @default(0)
+
+  employees     Employee[]
+
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Designation {
+  id          String     @id @default(cuid())
+  code        String     @unique
+  title       String     @unique
+  grade       String?
+  level       Int        @default(1)
+  band        String?
+  department  String?
+
+  employees   Employee[]
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Employee {
+  id                String          @id @default(cuid())
+  employeeCode      String          @unique
+  employeeNumber    String?
+  firstName         String
+  lastName          String
+  fullName          String
+  email             String          @unique
+  phone             String?
+  dateOfBirth       DateTime?
+  gender            Gender?
+  photo             String?
+
+  departmentId      String?
+  department        Department?     @relation(fields: [departmentId], references: [id])
+  designationId     String?
+  designation       Designation?    @relation(fields: [designationId], references: [id])
+
+  status            EmployeeStatus  @default(Active)
+  employmentType    EmploymentType  @default(FullTime)
+  joiningDate       DateTime
+  confirmationDate  DateTime?
+  resignationDate   DateTime?
+  lastWorkingDay    DateTime?
+
+  reportingManagerId String?
+  reportingManager   Employee?      @relation("EmployeeHierarchy", fields: [reportingManagerId], references: [id])
+  directReports      Employee[]     @relation("EmployeeHierarchy")
+
+  location          String?
+  branch            String?
+  businessUnit      String?
+  costCenterCode    String?
+  grade             String?
+
+  annualCTC         Decimal?        @db.Decimal(18, 2)
+  basicSalary       Decimal?        @db.Decimal(18, 2)
+  bankAccountNo     String?
+  bankName          String?
+  panNumber         String?
+  aadharNumber      String?
+  pfNumber          String?
+  esiNumber         String?
+
+  leaveRequests     LeaveRequest[]
+  attendanceRecords Attendance[]
+  payrollRecords    PayrollRecord[]
+  timeEntries       TimeEntry[]
+  assignedTasks     ProjectTask[]   @relation("TaskAssignee")
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+enum LeaveType {
+  CasualLeave
+  SickLeave
+  EarnedLeave
+  MaternityLeave
+  PaternityLeave
+  CompensatoryOff
+  LossOfPay
+  Bereavement
+}
+
+enum LeaveStatus {
+  Pending
+  Approved
+  Rejected
+  Cancelled
+}
+
+model LeaveRequest {
+  id            String       @id @default(cuid())
+  leaveCode     String       @unique
+  employeeId    String
+  employee      Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  leaveType     LeaveType    @default(CasualLeave)
+  startDate     DateTime
+  endDate       DateTime
+  days          Float        @default(1)
+  reason        String?
+  status        LeaveStatus  @default(Pending)
+  approvedBy    String?
+  approvedDate  DateTime?
+  remarks       String?
+
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+enum AttendanceStatus {
+  Present
+  Absent
+  HalfDay
+  OnLeave
+  Holiday
+  WeekOff
+  WFH
+}
+
+model Attendance {
+  id            String           @id @default(cuid())
+  employeeId    String
+  employee      Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date          DateTime
+  checkIn       DateTime?
+  checkOut      DateTime?
+  hoursWorked   Float?
+  status        AttendanceStatus @default(Present)
+  shift         String?          @default("General")
+  overtime      Float?           @default(0)
+  remarks       String?
+
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@unique([employeeId, date])
+}
+
+enum PayrollStatus {
+  Draft
+  Processing
+  Approved
+  Paid
+  OnHold
+}
+
+model PayrollRecord {
+  id                String        @id @default(cuid())
+  payrollCode       String        @unique
+  employeeId        String
+  employee          Employee      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  period            String
+  month             Int
+  year              Int
+
+  basicSalary       Decimal       @default(0) @db.Decimal(18, 2)
+  hra               Decimal       @default(0) @db.Decimal(18, 2)
+  conveyance        Decimal       @default(0) @db.Decimal(18, 2)
+  specialAllowance  Decimal       @default(0) @db.Decimal(18, 2)
+  otherAllowances   Decimal       @default(0) @db.Decimal(18, 2)
+  grossEarnings     Decimal       @default(0) @db.Decimal(18, 2)
+
+  pfDeduction       Decimal       @default(0) @db.Decimal(18, 2)
+  esiDeduction      Decimal       @default(0) @db.Decimal(18, 2)
+  tds               Decimal       @default(0) @db.Decimal(18, 2)
+  professionalTax   Decimal       @default(0) @db.Decimal(18, 2)
+  otherDeductions   Decimal       @default(0) @db.Decimal(18, 2)
+  totalDeductions   Decimal       @default(0) @db.Decimal(18, 2)
+
+  netPay            Decimal       @default(0) @db.Decimal(18, 2)
+  status            PayrollStatus @default(Draft)
+  paidDate          DateTime?
+  paymentMethod     String?       @default("Bank Transfer")
+
+  workingDays       Int           @default(0)
+  presentDays       Int           @default(0)
+  lossOfPayDays     Int           @default(0)
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+// ==========================================
+// CRM — Customer Relationship Management
+// ==========================================
+
+enum LeadStatusEnum {
+  New
+  Contacted
+  Qualified
+  Nurturing
+  Proposal
+  Negotiation
+  Converted
+  Lost
+  Disqualified
+}
+
+enum LeadRating {
+  Hot
+  Warm
+  Cold
+}
+
+enum LeadPriority {
+  Critical
+  High
+  Medium
+  Low
+}
+
+model CrmLead {
+  id                    String          @id @default(cuid())
+  leadNumber            String          @unique
+  leadName              String
+  leadType              String          @default("Business")
+  status                LeadStatusEnum  @default(New)
+  rating                LeadRating      @default(Warm)
+  priority              LeadPriority    @default(Medium)
+
+  ownerName             String
+  ownerEmail            String?
+  businessUnit          String?
+  branch                String?
+  department            String?
+
+  leadSource            String?
+  sourceCampaign        String?
+  sourceChannel         String?
+
+  contactPerson         String?
+  contactDesignation    String?
+  email                 String?
+  phone                 String?
+  website               String?
+
+  orgName               String?
+  industry              String?
+  companySize           String?
+  annualRevenue         String?
+  gstin                 String?
+
+  city                  String?
+  state                 String?
+  country               String?         @default("India")
+  postalCode            String?
+
+  requirementType       String?
+  productService        String?
+  budget                String?
+  expectedPurchaseDate  DateTime?
+
+  qualificationScore    Int             @default(0)
+  totalScore            Int             @default(0)
+  scoreGrade            String?
+  probability           String?
+
+  nextAction            String?
+  nextActionDate        DateTime?
+
+  description           String?
+  expectedConversionDate DateTime?
+
+  opportunities         CrmOpportunity[]
+
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+}
+
+enum OpportunityStage {
+  Discovery
+  Qualification
+  Proposal
+  Negotiation
+  ClosedWon
+  ClosedLost
+}
+
+model CrmOpportunity {
+  id                String            @id @default(cuid())
+  opportunityNumber String            @unique
+  name              String
+  stage             OpportunityStage  @default(Discovery)
+  amount            Decimal           @default(0) @db.Decimal(18, 2)
+  probability       Int               @default(0)
+  expectedCloseDate DateTime?
+  ownerName         String
+  ownerEmail        String?
+
+  leadId            String?
+  lead              CrmLead?          @relation(fields: [leadId], references: [id])
+  accountId         String?
+  account           CrmAccount?       @relation(fields: [accountId], references: [id])
+
+  productService    String?
+  competitor        String?
+  nextStep          String?
+  description       String?
+
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+model CrmAccount {
+  id              String           @id @default(cuid())
+  accountCode     String           @unique
+  name            String
+  type            String           @default("Customer")
+  industry        String?
+  website         String?
+  phone           String?
+  email           String?
+  annualRevenue   Decimal?         @db.Decimal(18, 2)
+  employeeCount   Int?
+  status          String           @default("Active")
+
+  billingAddress  String?
+  billingCity     String?
+  billingState    String?
+  billingCountry  String?          @default("India")
+
+  ownerName       String?
+  parentAccountId String?
+  parentAccount   CrmAccount?      @relation("AccountHierarchy", fields: [parentAccountId], references: [id])
+  childAccounts   CrmAccount[]     @relation("AccountHierarchy")
+
+  contacts        CrmContact[]
+  opportunities   CrmOpportunity[]
+  supportTickets  SupportTicket[]
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model CrmContact {
+  id              String      @id @default(cuid())
+  contactCode     String      @unique
+  firstName       String
+  lastName        String
+  fullName        String
+  email           String?
+  phone           String?
+  mobile          String?
+  designation     String?
+  department      String?
+  isPrimary       Boolean     @default(false)
+  status          String      @default("Active")
+
+  accountId       String?
+  account         CrmAccount? @relation(fields: [accountId], references: [id])
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+enum TicketStatus {
+  Open
+  InProgress
+  Resolved
+  Closed
+  Escalated
+}
+
+enum TicketPriority {
+  Critical
+  High
+  Medium
+  Low
+}
+
+model SupportTicket {
+  id            String         @id @default(cuid())
+  ticketNumber  String         @unique
+  subject       String
+  description   String?
+  status        TicketStatus   @default(Open)
+  priority      TicketPriority @default(Medium)
+  category      String?
+  channel       String?        @default("Email")
+
+  accountId     String?
+  account       CrmAccount?    @relation(fields: [accountId], references: [id])
+  contactName   String?
+  contactEmail  String?
+
+  assignedTo    String?
+  slaDeadline   DateTime?
+  resolvedAt    DateTime?
+  resolution    String?
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+// ==========================================
+// Sales Management Models
+// ==========================================
+
+enum SalesOrderStatus {
+  Draft
+  Confirmed
+  Processing
+  Shipped
+  Delivered
+  Cancelled
+  Returned
+}
+
+model SalesOrder {
+  id              String           @id @default(cuid())
+  orderNumber     String           @unique
+  orderDate       DateTime
+  customerName    String
+  customerCode    String?
+  status          SalesOrderStatus @default(Draft)
+
+  subtotal        Decimal          @default(0) @db.Decimal(18, 2)
+  taxAmount       Decimal          @default(0) @db.Decimal(18, 2)
+  discount        Decimal          @default(0) @db.Decimal(18, 2)
+  totalAmount     Decimal          @default(0) @db.Decimal(18, 2)
+
+  paymentTerms    String?          @default("Net 30")
+  deliveryDate    DateTime?
+  shippingAddress String?
+
+  salesPerson     String?
+  territory       String?
+  channel         String?
+
+  notes           String?
+
+  lines           SalesOrderLine[]
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model SalesOrderLine {
+  id            String     @id @default(cuid())
+  orderId       String
+  order         SalesOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  lineNumber    Int
+  productCode   String
+  productName   String
+  quantity      Int        @default(1)
+  unitPrice     Decimal    @default(0) @db.Decimal(18, 2)
+  discount      Decimal    @default(0) @db.Decimal(18, 2)
+  taxRate       Float      @default(0)
+  lineTotal     Decimal    @default(0) @db.Decimal(18, 2)
+  uom           String     @default("Nos")
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Quotation {
+  id              String   @id @default(cuid())
+  quotationNumber String   @unique
+  quotationDate   DateTime
+  validUntil      DateTime?
+  customerName    String
+  customerCode    String?
+  status          String   @default("Draft")
+
+  subtotal        Decimal  @default(0) @db.Decimal(18, 2)
+  taxAmount       Decimal  @default(0) @db.Decimal(18, 2)
+  discount        Decimal  @default(0) @db.Decimal(18, 2)
+  totalAmount     Decimal  @default(0) @db.Decimal(18, 2)
+
+  salesPerson     String?
+  terms           String?
+  notes           String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model PriceList {
+  id            String          @id @default(cuid())
+  priceListCode String          @unique
+  name          String
+  currency      String          @default("INR")
+  status        String          @default("Active")
+  effectiveFrom DateTime
+  effectiveTo   DateTime?
+
+  items         PriceListItem[]
+
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model PriceListItem {
+  id            String    @id @default(cuid())
+  priceListId   String
+  priceList     PriceList @relation(fields: [priceListId], references: [id], onDelete: Cascade)
+  productCode   String
+  productName   String
+  basePrice     Decimal   @default(0) @db.Decimal(18, 2)
+  sellingPrice  Decimal   @default(0) @db.Decimal(18, 2)
+  minQty        Int       @default(1)
+  uom           String    @default("Nos")
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// ==========================================
+// Procurement Management Models
+// ==========================================
+
+enum PurchaseOrderStatus {
+  Draft
+  Submitted
+  Approved
+  Ordered
+  PartiallyReceived
+  Received
+  Cancelled
+}
+
+model Supplier {
+  id              String          @id @default(cuid())
+  supplierCode    String          @unique
+  name            String
+  category        String?
+  email           String?
+  phone           String?
+  address         String?
+  city            String?
+  state           String?
+  country         String?         @default("India")
+  gstin           String?
+  pan             String?
+  paymentTerms    String          @default("Net 30")
+  status          String          @default("Active")
+  rating          Int?            @default(0)
+  leadTime        Int?            @default(7)
+
+  purchaseOrders  PurchaseOrder[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model PurchaseOrder {
+  id              String              @id @default(cuid())
+  poNumber        String              @unique
+  orderDate       DateTime
+  expectedDate    DateTime?
+  status          PurchaseOrderStatus @default(Draft)
+
+  supplierId      String?
+  supplier        Supplier?           @relation(fields: [supplierId], references: [id])
+  supplierName    String
+
+  subtotal        Decimal             @default(0) @db.Decimal(18, 2)
+  taxAmount       Decimal             @default(0) @db.Decimal(18, 2)
+  discount        Decimal             @default(0) @db.Decimal(18, 2)
+  totalAmount     Decimal             @default(0) @db.Decimal(18, 2)
+
+  paymentTerms    String?             @default("Net 30")
+  deliveryAddress String?
+  requestedBy     String?
+  approvedBy      String?
+  approvedDate    DateTime?
+
+  notes           String?
+
+  lines           PurchaseOrderLine[]
+  goodsReceipts   GoodsReceipt[]
+
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+}
+
+model PurchaseOrderLine {
+  id            String        @id @default(cuid())
+  poId          String
+  po            PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+  lineNumber    Int
+  itemCode      String
+  itemName      String
+  quantity      Int           @default(1)
+  receivedQty   Int           @default(0)
+  unitPrice     Decimal       @default(0) @db.Decimal(18, 2)
+  taxRate       Float         @default(0)
+  lineTotal     Decimal       @default(0) @db.Decimal(18, 2)
+  uom           String        @default("Nos")
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum GoodsReceiptStatus {
+  Pending
+  Inspecting
+  Accepted
+  Rejected
+  PartiallyAccepted
+}
+
+model GoodsReceipt {
+  id              String             @id @default(cuid())
+  grnNumber       String             @unique
+  receiptDate     DateTime
+  poId            String?
+  po              PurchaseOrder?     @relation(fields: [poId], references: [id])
+  supplierName    String
+  status          GoodsReceiptStatus @default(Pending)
+  receivedBy      String?
+  inspectedBy     String?
+  warehouseLocation String?
+  remarks         String?
+
+  lines           GoodsReceiptLine[]
+
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model GoodsReceiptLine {
+  id              String       @id @default(cuid())
+  grnId           String
+  grn             GoodsReceipt @relation(fields: [grnId], references: [id], onDelete: Cascade)
+  itemCode        String
+  itemName        String
+  orderedQty      Int          @default(0)
+  receivedQty     Int          @default(0)
+  acceptedQty     Int          @default(0)
+  rejectedQty     Int          @default(0)
+  uom             String       @default("Nos")
+  remarks         String?
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+// ==========================================
+// Project Management Models
+// ==========================================
+
+enum ProjectStatus {
+  Planning
+  Active
+  OnHold
+  Completed
+  Cancelled
+}
+
+enum ProjectPriority {
+  Critical
+  High
+  Medium
+  Low
+}
+
+model Project {
+  id              String          @id @default(cuid())
+  projectCode     String          @unique
+  name            String
+  description     String?
+  status          ProjectStatus   @default(Planning)
+  priority        ProjectPriority @default(Medium)
+  category        String?
+
+  startDate       DateTime?
+  endDate         DateTime?
+  actualEndDate   DateTime?
+
+  projectManager  String
+  department      String?
+  clientName      String?
+
+  budget          Decimal?        @db.Decimal(18, 2)
+  actualCost      Decimal?        @db.Decimal(18, 2)
+  completion      Float           @default(0)
+
+  tasks           ProjectTask[]
+  milestones      Milestone[]
+  timeEntries     TimeEntry[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+enum TaskStatus {
+  Todo
+  InProgress
+  InReview
+  Done
+  Blocked
+  Cancelled
+}
+
+enum TaskPriorityEnum {
+  Critical
+  High
+  Medium
+  Low
+}
+
+model ProjectTask {
+  id            String           @id @default(cuid())
+  taskCode      String           @unique
+  title         String
+  description   String?
+  status        TaskStatus       @default(Todo)
+  priority      TaskPriorityEnum @default(Medium)
+
+  projectId     String
+  project       Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  assigneeId    String?
+  assignee      Employee?        @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  assigneeName  String?
+
+  milestoneId   String?
+  milestone     Milestone?       @relation(fields: [milestoneId], references: [id])
+
+  startDate     DateTime?
+  dueDate       DateTime?
+  completedDate DateTime?
+  estimatedHours Float?
+  actualHours    Float?
+
+  parentTaskId  String?
+  parentTask    ProjectTask?     @relation("TaskHierarchy", fields: [parentTaskId], references: [id])
+  subtasks      ProjectTask[]    @relation("TaskHierarchy")
+
+  tags          String?
+
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+enum MilestoneStatus {
+  Upcoming
+  InProgress
+  Completed
+  Overdue
+  Cancelled
+}
+
+model Milestone {
+  id            String          @id @default(cuid())
+  milestoneCode String          @unique
+  name          String
+  description   String?
+  status        MilestoneStatus @default(Upcoming)
+
+  projectId     String
+  project       Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  dueDate       DateTime?
+  completedDate DateTime?
+  deliverables  String?
+  owner         String?
+
+  tasks         ProjectTask[]
+
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model TimeEntry {
+  id            String    @id @default(cuid())
+  entryCode     String    @unique
+  date          DateTime
+  hours         Float
+  description   String?
+
+  projectId     String
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  employeeId    String?
+  employee      Employee? @relation(fields: [employeeId], references: [id])
+  employeeName  String?
+
+  taskCode      String?
+  billable      Boolean   @default(true)
+  status        String    @default("Submitted")
+  approvedBy    String?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// ==========================================
+// Administration & Governance Models
+// ==========================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String
+  module      String
+  entity      String?
+  entityId    String?
+  description String?
+  performedBy String
+  ipAddress   String?
+  userAgent   String?
+  oldValue    String?
+  newValue    String?
+  timestamp   DateTime @default(now())
+
+  createdAt   DateTime @default(now())
+}
+
+model Policy {
+  id            String   @id @default(cuid())
+  policyCode    String   @unique
+  title         String
+  category      String
+  version       String   @default("1.0")
+  status        String   @default("Active")
+  effectiveDate DateTime
+  reviewDate    DateTime?
+  owner         String
+  department    String?
+  description   String?
+  documentUrl   String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum DocumentStatus {
+  Draft
+  InReview
+  Approved
+  Published
+  Archived
+  Obsolete
+}
+
+model DocumentControl {
+  id             String         @id @default(cuid())
+  documentCode   String         @unique
+  title          String
+  type           String
+  category       String?
+  version        String         @default("1.0")
+  status         DocumentStatus @default(Draft)
+  owner          String
+  department     String?
+  effectiveDate  DateTime?
+  expiryDate     DateTime?
+  reviewDate     DateTime?
+  description    String?
+  filePath       String?
+  accessLevel    String         @default("Internal")
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model ApprovalMatrix {
+  id              String   @id @default(cuid())
+  matrixCode      String   @unique
+  module          String
+  transactionType String
+  minAmount       Decimal? @db.Decimal(18, 2)
+  maxAmount       Decimal? @db.Decimal(18, 2)
+  approverRole    String
+  approverName    String?
+  level           Int      @default(1)
+  isActive        Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ==========================================
+// Quality Management Models
+// ==========================================
+
+enum CapaType {
+  Corrective
+  Preventive
+  Both
+}
+
+enum CapaStatus {
+  Open
+  InvestigationPending
+  RootCauseIdentified
+  ActionPlanned
+  ActionInProgress
+  VerificationPending
+  Closed
+  Rejected
+}
+
+enum CapaPriority {
+  Critical
+  High
+  Medium
+  Low
+}
+
+model CapaRecord {
+  id              String       @id @default(cuid())
+  capaNumber      String       @unique
+  title           String
+  type            CapaType     @default(Corrective)
+  status          CapaStatus   @default(Open)
+  priority        CapaPriority @default(Medium)
+  source          String?
+  department      String?
+  assignedTo      String?
+  initiatedBy     String?
+  initiatedDate   DateTime     @default(now())
+
+  problemStatement String?
+  rootCause        String?
+  rootCauseMethod  String?
+  actionPlan       String?
+  targetDate       DateTime?
+  completionDate   DateTime?
+  verification     String?
+  effectiveness    String?
+
+  relatedNcrId     String?
+  relatedNcr       NcrRecord?   @relation(fields: [relatedNcrId], references: [id])
+
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+enum NcrStatus {
+  Open
+  UnderReview
+  Dispositioned
+  Closed
+  Rejected
+}
+
+model NcrRecord {
+  id              String    @id @default(cuid())
+  ncrNumber       String    @unique
+  title           String
+  description     String?
+  status          NcrStatus @default(Open)
+  severity        String    @default("Major")
+  category        String?
+  department      String?
+  detectedBy      String?
+  detectedDate    DateTime  @default(now())
+
+  productCode     String?
+  productName     String?
+  batchNumber     String?
+  quantity         Int?
+  defectType      String?
+  disposition     String?
+
+  assignedTo      String?
+  targetDate      DateTime?
+  closedDate      DateTime?
+
+  capas           CapaRecord[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+enum InspectionType {
+  Incoming
+  InProcess
+  Final
+}
+
+enum InspectionResult {
+  Pass
+  Fail
+  ConditionalPass
+  Pending
+}
+
+model InspectionRecord {
+  id              String           @id @default(cuid())
+  inspectionCode  String           @unique
+  type            InspectionType   @default(Incoming)
+  result          InspectionResult @default(Pending)
+  inspectionDate  DateTime
+  inspector       String
+  department      String?
+
+  productCode     String?
+  productName     String?
+  batchNumber     String?
+  sampleSize      Int?
+  defectsFound    Int              @default(0)
+  acceptanceLevel String?
+
+  supplierName    String?
+  poNumber        String?
+  grnNumber       String?
+
+  remarks         String?
+  ncrRequired     Boolean          @default(false)
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}

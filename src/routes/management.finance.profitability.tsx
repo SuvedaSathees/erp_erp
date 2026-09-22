@@ -48,6 +48,7 @@ import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
 import { DataTable } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -83,6 +84,31 @@ export const Route = createFileRoute("/management/finance/profitability")({
 });
 
 const QUERY: DashboardQuery = { fiscalYear: company.fiscalYear, companyId: "all" };
+
+function ProfitabilitySkeleton() {
+  return (
+    <div className="space-y-5">
+      {/* 5 KPI StatCards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-28 rounded-xl" />
+        ))}
+      </div>
+      {/* Main layout */}
+      <div className="grid gap-5 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_360px]">
+        <div className="space-y-5">
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-[420px] w-full rounded-xl" />
+        </div>
+        <div className="space-y-5">
+          <Skeleton className="h-64 w-full rounded-xl" />
+          <Skeleton className="h-64 w-full rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const DIMENSIONS = [
   { label: "Product", value: "Product" },
@@ -208,20 +234,7 @@ function ProfitabilityAnalysisPage() {
       }
     >
       {isLoading || !data ? (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />
-            ))}
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="h-[500px] animate-pulse rounded-xl bg-muted" />
-            <div className="space-y-6">
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-            </div>
-          </div>
-        </div>
+        <ProfitabilitySkeleton />
       ) : (
         <div className="space-y-5">
           {/* KPI Stat Cards Grid */}
@@ -450,13 +463,35 @@ function ProfitabilityAnalysisPage() {
                       },
                     ]}
                     mobileCard={(r) => (
-                      <div className="space-y-1" onClick={() => handleRowClick(r)}>
-                        <div className="flex justify-between font-semibold">
-                          <span>{r.name}</span>
-                          <span>{formatCurrency(r.netProfit)}</span>
+                      <div className="space-y-2 cursor-pointer" onClick={() => handleRowClick(r)}>
+                        <div className="flex justify-between items-start gap-2">
+                          <div>
+                            <span className="font-semibold text-foreground block text-sm">{r.name}</span>
+                            <span className="font-mono text-xs text-muted-foreground">{r.code}</span>
+                          </div>
+                          <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary tabular">
+                            {r.netMargin.toFixed(1)}% Net
+                          </span>
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          Revenue: {formatCurrency(r.revenue)} • Margin: {r.netMargin}%
+                        <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-border/50">
+                          <div>
+                            <span className="text-muted-foreground block">Revenue</span>
+                            <span className="font-semibold tabular text-foreground">
+                              {formatCurrency(r.revenue)}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground block">Gross Profit</span>
+                            <span className="font-semibold tabular text-foreground">
+                              {formatCurrency(r.grossProfit)} ({r.grossMargin.toFixed(1)}%)
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                          <span className="text-muted-foreground">Net Profit</span>
+                          <span className="font-bold tabular text-primary">
+                            {formatCurrency(r.netProfit)}
+                          </span>
                         </div>
                       </div>
                     )}
@@ -770,8 +805,22 @@ function ProfitabilityAnalysisPage() {
                   },
                 ]}
                 mobileCard={(r) => (
-                  <div>
-                    {r.ref} - {formatCurrency(r.amount)}
+                  <div className="space-y-2 py-1">
+                    <div className="flex justify-between items-start gap-2">
+                      <div>
+                        <span className="font-semibold text-foreground block text-xs">{r.description}</span>
+                        <span className="font-mono text-[11px] text-muted-foreground">{r.ref} • <span className="tabular">{r.date}</span></span>
+                      </div>
+                      <span className="text-xs font-medium text-muted-foreground">{r.type}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                      <span className="text-muted-foreground">Amount</span>
+                      <span
+                        className={`font-bold tabular ${r.amount < 0 ? "text-destructive" : "text-green-600"}`}
+                      >
+                        {formatCurrency(r.amount)}
+                      </span>
+                    </div>
                   </div>
                 )}
               />
@@ -846,7 +895,28 @@ function ProfitabilityAnalysisPage() {
                     ),
                   },
                 ]}
-                mobileCard={(r) => <div>{r.dimension}</div>}
+                mobileCard={(r) => (
+                  <div className="space-y-2 py-1">
+                    <div className="flex justify-between items-center text-xs font-semibold text-foreground">
+                      <span>{r.dimension}</span>
+                      <span
+                        className={`font-bold tabular ${r.changePercentage > 0 ? "text-green-600" : "text-destructive"}`}
+                      >
+                        {r.changePercentage > 0 ? `+${r.changePercentage}%` : `${r.changePercentage}%`}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-border/50">
+                      <div>
+                        <span className="text-muted-foreground block">Current YTD</span>
+                        <span className="font-semibold tabular text-foreground">{formatCurrency(r.currentYTD)}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground block">Prior YTD</span>
+                        <span className="font-semibold tabular text-muted-foreground">{formatCurrency(r.priorYTD)}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               />
             </div>
           )}

@@ -54,7 +54,9 @@ import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
+import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -196,20 +198,7 @@ function AuditTrailPage() {
       tabs={<FinanceTabBar />}
     >
       {isLoading || !data ? (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />
-            ))}
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="h-[500px] animate-pulse rounded-xl bg-muted" />
-            <div className="space-y-6">
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-            </div>
-          </div>
-        </div>
+        <AuditSkeleton />
       ) : (
         <div className="space-y-5">
           {/* KPI Stat Cards Grid */}
@@ -458,13 +447,17 @@ function AuditTrailPage() {
                       },
                     ]}
                     mobileCard={(r) => (
-                      <div className="space-y-1" onClick={() => handleRowClick(r)}>
-                        <div className="flex justify-between font-semibold">
-                          <span>{r.description}</span>
-                          <span>{r.status}</span>
+                      <div className="space-y-2.5" onClick={() => handleRowClick(r)}>
+                        <div className="flex justify-between items-start gap-2">
+                          <div>
+                            <span className="font-semibold text-foreground">{r.description}</span>
+                            <div className="text-xs text-muted-foreground mt-0.5">{r.module} • {r.user}</div>
+                          </div>
+                          <StatusBadge status={r.status === "Success" ? "Active" : "Rejected"} />
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          {r.timestamp} • {r.user}
+                        <div className="flex justify-between items-center text-xs border-y border-border/60 py-1.5">
+                          <span className="font-mono text-muted-foreground">{r.referenceId}</span>
+                          <span className="text-muted-foreground tabular">{r.timestamp}</span>
                         </div>
                       </div>
                     )}
@@ -521,7 +514,20 @@ function AuditTrailPage() {
                           cell: (r) => <span className="font-mono">{r.ipAddress}</span>,
                         },
                       ]}
-                      mobileCard={(r) => <div>{r.eventName}</div>}
+                      mobileCard={(r) => (
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-start gap-2">
+                            <span className="font-bold text-destructive">{r.eventName}</span>
+                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                              r.severity === "Critical" ? "bg-red-100 text-red-800" : "bg-orange-100 text-orange-800"
+                            }`}>
+                              {r.severity}
+                            </span>
+                          </div>
+                          <div className="text-xs text-muted-foreground">User: {r.user} • IP: <span className="font-mono">{r.ipAddress}</span></div>
+                          <div className="text-xs text-muted-foreground tabular">{r.timestamp}</div>
+                        </div>
+                      )}
                     />
                   ) : (
                     <div className="py-12 space-y-3 max-w-md mx-auto">
@@ -570,7 +576,18 @@ function AuditTrailPage() {
                           cell: (r) => <span className="font-semibold">{r.user}</span>,
                         },
                       ]}
-                      mobileCard={(r) => <div>{r.parameter}</div>}
+                      mobileCard={(r) => (
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-start gap-2">
+                            <span className="font-bold text-foreground">{r.parameter}</span>
+                            <StatusBadge status="Approved" />
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            <span>Before: <span className="line-through">{r.beforeValue}</span></span> → <span className="font-semibold text-primary">{r.afterValue}</span>
+                          </div>
+                          <div className="text-xs text-muted-foreground">By: {r.user} • <span className="tabular">{r.timestamp}</span></div>
+                        </div>
+                      )}
                     />
                   ) : (
                     <div className="py-12 space-y-3 max-w-md mx-auto">
@@ -934,5 +951,36 @@ function AuditTrailPage() {
         </DialogContent>
       </Dialog>
     </AppShell>
+  );
+}
+
+function AuditSkeleton() {
+  return (
+    <div className="space-y-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-[104px] rounded-xl" />
+        ))}
+      </div>
+      <div className="flex gap-6 border-b border-border pb-3">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-4 w-24" />
+        ))}
+      </div>
+      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="card-soft p-4 space-y-4">
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-9 min-w-[200px] flex-1 rounded-md" />
+            <Skeleton className="h-9 w-28 rounded-md" />
+            <Skeleton className="h-9 w-28 rounded-md" />
+          </div>
+          <Skeleton className="h-[420px] w-full rounded-lg" />
+        </div>
+        <div className="space-y-6">
+          <Skeleton className="h-[260px] rounded-xl" />
+          <Skeleton className="h-[220px] rounded-xl" />
+        </div>
+      </div>
+    </div>
   );
 }

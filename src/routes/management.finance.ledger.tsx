@@ -48,6 +48,7 @@ import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { TreeTable, type TreeColumn } from "@/components/erp/TreeTable";
 import { DataTable, EmptyState } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ErpButton } from "@/components/erp/Button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -817,7 +818,21 @@ function GeneralLedgerPage() {
             </div>
 
             {accountsQuery.isLoading ? (
-              <div className="h-[240px] animate-pulse bg-muted/40" />
+              <div className="p-4 space-y-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="flex items-center justify-between border-b border-border/40 pb-2.5">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="h-4 w-16" />
+                      <Skeleton className="h-4 w-48" />
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-4 w-20" />
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : pagedAccounts.length === 0 ? (
               <EmptyState
                 title="No accounts found"
@@ -2124,12 +2139,28 @@ function JournalEntryTable({
         { key: "status", header: "Status", cell: (r) => <StatusBadge status={r.status} /> },
       ]}
       mobileCard={(r) => (
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="font-semibold">{r.journalNumber}</div>
-            <div className="text-xs text-muted-foreground">{r.postingDate.slice(0, 10)}</div>
+        <div className="space-y-2.5">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <span className="font-bold text-primary">{r.journalNumber}</span>
+              <div className="text-xs text-muted-foreground mt-0.5">{r.journalType}</div>
+            </div>
+            <StatusBadge status={r.status} />
           </div>
-          <StatusBadge status={r.status} />
+          <div className="flex items-center justify-between text-xs text-muted-foreground border-y border-border/50 py-1.5">
+            <span>Posting Date</span>
+            <span className="font-medium text-foreground tabular">{r.postingDate.slice(0, 10)}</span>
+          </div>
+          <div className="flex items-center justify-between text-xs pt-0.5">
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Total Debit</span>
+              <span className="font-bold text-foreground tabular">{formatCurrency(r.totalDebit)}</span>
+            </div>
+            <div className="text-right">
+              <span className="text-muted-foreground block text-[11px]">Total Credit</span>
+              <span className="font-bold text-foreground tabular">{formatCurrency(r.totalCredit)}</span>
+            </div>
+          </div>
         </div>
       )}
     />
@@ -2180,12 +2211,28 @@ function ApprovalQueueTable({
         },
         { key: "status", header: "Status", cell: (r) => <StatusBadge status={r.status} /> },
       ]}
-      mobileCard={(r) => (
-        <div className="flex items-center justify-between">
-          <div className="font-semibold">{r.journalNumber}</div>
-          <StatusBadge status={r.status} />
-        </div>
-      )}
+      mobileCard={(r) => {
+        const next = r.approvalSteps.find((s) => s.status === "Pending");
+        return (
+          <div className="space-y-2.5">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <span className="font-bold text-primary">{r.journalNumber}</span>
+                <div className="text-xs text-muted-foreground mt-0.5">{r.journalType}</div>
+              </div>
+              <StatusBadge status={r.status} />
+            </div>
+            <div className="flex items-center justify-between text-xs text-muted-foreground border-y border-border/50 py-1.5">
+              <span>Next Approver</span>
+              <span className="font-semibold text-foreground">{next ? next.level : "Fully Approved"}</span>
+            </div>
+            <div className="flex items-center justify-between text-xs pt-0.5">
+              <span className="text-muted-foreground">Total Debit</span>
+              <span className="font-bold text-foreground tabular">{formatCurrency(r.totalDebit)}</span>
+            </div>
+          </div>
+        );
+      }}
     />
   );
 }

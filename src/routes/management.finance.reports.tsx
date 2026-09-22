@@ -42,7 +42,9 @@ import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
+import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -108,6 +110,31 @@ const COMPANIES = [
   { label: "All Companies", value: "all" },
   { label: "Magnertia Corp", value: "corp" },
 ];
+
+function ReportsSkeleton() {
+  return (
+    <div className="space-y-5">
+      {/* 5 KPI StatCards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-28 rounded-xl" />
+        ))}
+      </div>
+      {/* Main layout */}
+      <div className="grid gap-5 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_360px]">
+        <div className="space-y-5">
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-[420px] w-full rounded-xl" />
+        </div>
+        <div className="space-y-5">
+          <Skeleton className="h-64 w-full rounded-xl" />
+          <Skeleton className="h-64 w-full rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ReportsPage() {
   const queryClient = useQueryClient();
@@ -330,20 +357,7 @@ function ReportsPage() {
       }
     >
       {isLoading || !data ? (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />
-            ))}
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="h-[500px] animate-pulse rounded-xl bg-muted" />
-            <div className="space-y-6">
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-            </div>
-          </div>
-        </div>
+        <ReportsSkeleton />
       ) : (
         <div className="space-y-5">
           {/* Ad-hoc Report Builder — shared with R&I via reports/ReportBuilder. */}
@@ -741,9 +755,37 @@ function ReportsPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-1">
-                              <span className="font-semibold">{r.name}</span>
-                              <div className="text-xs text-muted-foreground">{r.description}</div>
+                            <div className="space-y-2">
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <button
+                                    onClick={() => setPreviewReport(r)}
+                                    className="font-semibold text-primary hover:underline text-left text-sm"
+                                  >
+                                    {r.name}
+                                  </button>
+                                  <span className="text-xs text-muted-foreground block">{r.description}</span>
+                                </div>
+                                <span
+                                  className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                    r.category === "Financial Statements"
+                                      ? "bg-indigo-100 text-indigo-800"
+                                      : r.category === "Cash Flow Reports"
+                                        ? "bg-green-100 text-green-800"
+                                        : r.category === "Budget Reports"
+                                          ? "bg-amber-100 text-amber-800"
+                                          : r.category === "Tax Reports"
+                                            ? "bg-rose-100 text-rose-800"
+                                            : "bg-purple-100 text-purple-800"
+                                  }`}
+                                >
+                                  {r.category}
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground">{r.type}</span>
+                                <span className="text-muted-foreground tabular">{r.lastModified}</span>
+                              </div>
                             </div>
                           )}
                         />
@@ -790,7 +832,23 @@ function ReportsPage() {
                             ),
                           },
                         ]}
-                        mobileCard={(r) => <div className="font-semibold">{r.name}</div>}
+                        mobileCard={(r) => (
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-start gap-2">
+                              <button
+                                onClick={() => setPreviewReport(r)}
+                                className="font-semibold text-primary hover:underline text-left text-sm"
+                              >
+                                {r.name}
+                              </button>
+                              <span className="text-xs text-muted-foreground">{r.category}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                              <span className="text-muted-foreground">{r.type}</span>
+                              <span className="text-muted-foreground tabular">{r.lastModified}</span>
+                            </div>
+                          </div>
+                        )}
                       />
                     </div>
                   </div>
@@ -831,7 +889,18 @@ function ReportsPage() {
                             ),
                           },
                         ]}
-                        mobileCard={(r) => <div className="font-semibold">{r.reportName}</div>}
+                        mobileCard={(r) => (
+                          <div className="space-y-1.5 py-1">
+                            <div className="flex justify-between items-start gap-2">
+                              <span className="font-semibold text-foreground text-sm">{r.reportName}</span>
+                              <span className="text-xs text-muted-foreground tabular">{r.timestamp}</span>
+                            </div>
+                            <div className="flex justify-between text-xs text-muted-foreground">
+                              <span>{r.activity}</span>
+                              <span className="font-medium text-foreground">{r.performedBy}</span>
+                            </div>
+                          </div>
+                        )}
                       />
                     </div>
                   </div>
@@ -890,8 +959,23 @@ function ReportsPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div>
-                              {r.reportName} shared with {r.sharedWith}
+                            <div className="space-y-2 py-1">
+                              <div className="flex justify-between items-start gap-2">
+                                <span className="font-semibold text-foreground text-sm">{r.reportName}</span>
+                                <span
+                                  className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                    r.accessLevel === "View"
+                                      ? "bg-gray-100 text-gray-800"
+                                      : "bg-blue-100 text-blue-800"
+                                  }`}
+                                >
+                                  Can {r.accessLevel}
+                                </span>
+                              </div>
+                              <div className="flex justify-between text-xs pt-1 border-t border-border/50">
+                                <span className="text-primary font-medium">{r.sharedWith}</span>
+                                <span className="text-muted-foreground tabular">{r.dateShared}</span>
+                              </div>
                             </div>
                           )}
                         />
@@ -967,8 +1051,18 @@ function ReportsPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div>
-                              {r.reportName} - {r.frequency}
+                            <div className="space-y-2 py-1">
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground text-sm">{r.reportName}</span>
+                                  <span className="text-xs text-muted-foreground block">{r.frequency} • <span className="font-mono">{r.format}</span></span>
+                                </div>
+                                <StatusBadge status={r.status} />
+                              </div>
+                              <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground">{r.recipients}</span>
+                                <span className="text-muted-foreground tabular">Next: {r.nextRun}</span>
+                              </div>
                             </div>
                           )}
                         />

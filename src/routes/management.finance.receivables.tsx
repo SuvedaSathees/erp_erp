@@ -41,7 +41,8 @@ import { FilterButton, FilterSelect } from "@/components/erp/FilterButton";
 import { PaginationFooter } from "@/components/erp/PaginationFooter";
 import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
-import { EmptyState } from "@/components/erp/DataTable";
+import { DataTable, type Column, EmptyState } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
@@ -229,7 +230,89 @@ function AccountsReceivablePage() {
     setFilters((f) => ({ ...f, ...patch, page: patch.page ?? 1 }));
   }
 
+  const isLoading = kpisQuery.isLoading || listQuery.isLoading;
   const kpis = kpisQuery.data;
+
+  const columns: Column<ReceivableInvoice>[] = [
+    {
+      key: "invoiceNo",
+      header: "Invoice No.",
+      cell: (row) => (
+        <span className="font-medium text-primary hover:underline">{row.invoiceNo}</span>
+      ),
+    },
+    {
+      key: "customer",
+      header: "Customer",
+      cell: (row) => <span className="text-foreground">{row.customer}</span>,
+    },
+    {
+      key: "invoiceDate",
+      header: "Invoice Date",
+      cell: (row) => <span className="tabular text-muted-foreground">{row.invoiceDate}</span>,
+    },
+    {
+      key: "dueDate",
+      header: "Due Date",
+      cell: (row) => <span className="tabular text-muted-foreground">{row.dueDate}</span>,
+    },
+    {
+      key: "amount",
+      header: "Amount",
+      align: "right",
+      cell: (row) => (
+        <span className="tabular text-foreground">{formatCurrency(row.amount)}</span>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      cell: (row) => <StatusBadge status={row.status} />,
+    },
+    {
+      key: "dueAmount",
+      header: "Due Amount",
+      align: "right",
+      cell: (row) => (
+        <span
+          className={`tabular font-semibold ${row.dueAmount > 0 ? "text-[#EF4444]" : "text-foreground"}`}
+        >
+          {formatCurrency(row.dueAmount)}
+        </span>
+      ),
+    },
+    {
+      key: "actions",
+      header: "",
+      align: "right",
+      cell: (row) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="rounded-md p-1 text-muted-foreground hover:bg-muted"
+              aria-label={`Actions for ${row.invoiceNo}`}
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setSelectedInvoiceNo(row.invoiceNo)}>
+              View Details
+            </DropdownMenuItem>
+            {row.dueAmount > 0 && (
+              <DropdownMenuItem onClick={() => setPaymentInvoiceNo(row.invoiceNo)}>
+                Receive Payment
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem onClick={() => reminderMutation.mutate(row.invoiceNo)}>
+              Send Reminder
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
 
   return (
     <AppShell
@@ -245,178 +328,191 @@ function AccountsReceivablePage() {
         </ErpButton>
       }
     >
-      {/* KPI row */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        <StatCard
-          label="Total Receivables"
-          value={kpis ? formatCurrency(kpis.totalReceivables) : "—"}
-          neutralText="All Outstanding"
-          iconBg="bg-primary/10"
-          iconColor="text-primary"
-          icon={<Wallet className="h-5 w-5" />}
-        />
-        <StatCard
-          label="Overdue Amount"
-          value={kpis ? formatCurrency(kpis.overdueAmount) : "—"}
-          neutralText={kpis ? `${kpis.overduePctOfTotal.toFixed(2)}% of Total` : undefined}
-          captionTone="negative"
-          iconBg="bg-[#3B82F6]/10"
-          iconColor="text-[#3B82F6]"
-          icon={<Clock className="h-5 w-5" />}
-        />
-        <StatCard
-          label="Due Within 30 Days"
-          value={kpis ? formatCurrency(kpis.dueWithin30Days) : "—"}
-          neutralText={kpis ? `${kpis.dueWithin30PctOfTotal.toFixed(2)}% of Total` : undefined}
-          iconBg="bg-[#F59E0B]/10"
-          iconColor="text-[#F59E0B]"
-          icon={<CalendarCheck className="h-5 w-5" />}
-        />
-        <StatCard
-          label="Collected This Month"
-          value={kpis ? formatCurrency(kpis.collectedThisMonth) : "—"}
-          neutralText="This Month"
-          iconBg="bg-[#22C55E]/10"
-          iconColor="text-[#22C55E]"
-          icon={<CheckCircle2 className="h-5 w-5" />}
-        />
-        <StatCard
-          label="Open Invoices"
-          value={kpis ? kpis.openInvoices.toLocaleString() : "—"}
-          neutralText="All Outstanding"
-          iconBg="bg-primary/10"
-          iconColor="text-primary"
-          icon={<FileText className="h-5 w-5" />}
-        />
-      </div>
-
-      {/* Customizable widget band (empty by default) */}
-      <WidgetBand pageId="finance-receivables" />
-
-      {/* Toolbar */}
-      <div className="mt-5 flex items-center justify-end gap-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50">
-              <Download className="h-4 w-4 text-muted-foreground" />
-              Export
-              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => exportMutation.mutate("csv")}>
-              Export as CSV
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => exportMutation.mutate("xlsx")}>
-              Export as Excel
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => exportMutation.mutate("pdf")}>
-              Export as PDF
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <button
-          onClick={() => toast.info("More actions are coming in a future release.")}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50"
-        >
-          More Actions
-          <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-        </button>
-      </div>
-
-      {/* Tabs */}
-      <div className="mt-3">
-        <Tabs
-          value={filters.status}
-          onValueChange={(v) => updateFilters({ status: v as ReceivableInvoiceFilters["status"] })}
-        >
-          <TabsList className="h-auto justify-start gap-6 rounded-none border-b border-border bg-transparent p-0">
-            {TABS.map((t) => (
-              <TabsTrigger
-                key={t.value}
-                value={t.value}
-                className="rounded-none border-b-2 border-transparent bg-transparent px-0.5 pb-3 text-[13px] font-semibold text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none"
-              >
-                {t.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-      </div>
-
-      {/* Table + sidebar */}
-      <div className="mt-3 grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
-        <div className="card-soft overflow-hidden">
-          <div className="flex flex-wrap items-center gap-2 p-4">
-            <div className="relative min-w-[220px] flex-1">
-              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                value={filters.search}
-                onChange={(e) => updateFilters({ search: e.target.value })}
-                placeholder="Search by customer, invoice no., amount…"
-                className="w-full rounded-md border border-border bg-card py-2 pl-8 pr-3 text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
-              />
-            </div>
-            <FilterSelect
-              value={filters.status}
-              onChange={(v) => updateFilters({ status: v as ReceivableInvoiceFilters["status"] })}
-              options={STATUS_OPTIONS}
+      {isLoading || !kpis ? (
+        <ReceivablesSkeleton />
+      ) : (
+        <>
+          {/* KPI row */}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            <StatCard
+              label="Total Receivables"
+              value={formatCurrency(kpis.totalReceivables)}
+              neutralText="All Outstanding"
+              iconBg="bg-primary/10"
+              iconColor="text-primary"
+              icon={<Wallet className="h-5 w-5" />}
             />
-            <FilterButton label="Apr 1, 2024 – Mar 31, 2025" />
-            <FilterButton label="Due Date: All" />
-            <FilterButton label="Customer: All" />
-            <button className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-2 text-[12px] font-medium text-foreground hover:bg-muted/50">
-              <Filter className="h-3.5 w-3.5 text-muted-foreground" />
-              Filters
-              <ChevronDown className="h-3 w-3 text-muted-foreground" />
+            <StatCard
+              label="Overdue Amount"
+              value={formatCurrency(kpis.overdueAmount)}
+              neutralText={`${kpis.overduePctOfTotal.toFixed(2)}% of Total`}
+              captionTone="negative"
+              iconBg="bg-[#3B82F6]/10"
+              iconColor="text-[#3B82F6]"
+              icon={<Clock className="h-5 w-5" />}
+            />
+            <StatCard
+              label="Due Within 30 Days"
+              value={formatCurrency(kpis.dueWithin30Days)}
+              neutralText={`${kpis.dueWithin30PctOfTotal.toFixed(2)}% of Total`}
+              iconBg="bg-[#F59E0B]/10"
+              iconColor="text-[#F59E0B]"
+              icon={<CalendarCheck className="h-5 w-5" />}
+            />
+            <StatCard
+              label="Collected This Month"
+              value={formatCurrency(kpis.collectedThisMonth)}
+              neutralText="This Month"
+              iconBg="bg-[#22C55E]/10"
+              iconColor="text-[#22C55E]"
+              icon={<CheckCircle2 className="h-5 w-5" />}
+            />
+            <StatCard
+              label="Open Invoices"
+              value={kpis.openInvoices.toLocaleString()}
+              neutralText="All Outstanding"
+              iconBg="bg-primary/10"
+              iconColor="text-primary"
+              icon={<FileText className="h-5 w-5" />}
+            />
+          </div>
+
+          {/* Customizable widget band (empty by default) */}
+          <WidgetBand pageId="finance-receivables" />
+
+          {/* Toolbar */}
+          <div className="mt-5 flex items-center justify-end gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50">
+                  <Download className="h-4 w-4 text-muted-foreground" />
+                  Export
+                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => exportMutation.mutate("csv")}>
+                  Export as CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => exportMutation.mutate("xlsx")}>
+                  Export as Excel
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => exportMutation.mutate("pdf")}>
+                  Export as PDF
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <button
+              onClick={() => toast.info("More actions are coming in a future release.")}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50"
+            >
+              More Actions
+              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
             </button>
           </div>
 
-          {listQuery.data && listQuery.data.rows.length === 0 ? (
-            <EmptyState
-              title="No invoices found"
-              description="Try adjusting your search or filters."
-            />
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-[12.5px]">
-                <thead>
-                  <tr className="border-b border-border bg-secondary/40 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                    <th className="px-3 py-3 text-left">Invoice No.</th>
-                    <th className="px-3 py-3 text-left">Customer</th>
-                    <th className="px-3 py-3 text-left">Invoice Date</th>
-                    <th className="px-3 py-3 text-left">Due Date</th>
-                    <th className="px-3 py-3 text-right">Amount</th>
-                    <th className="px-3 py-3 text-left">Status</th>
-                    <th className="px-3 py-3 text-right">Due Amount</th>
-                    <th className="w-9 px-3 py-3" />
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {(listQuery.data?.rows ?? []).map((row) => (
-                    <InvoiceRow
-                      key={row.invoiceNo}
-                      row={row}
-                      selected={row.invoiceNo === selectedInvoiceNo}
-                      onSelect={() => setSelectedInvoiceNo(row.invoiceNo)}
-                      onReceivePayment={() => setPaymentInvoiceNo(row.invoiceNo)}
-                      onSendReminder={() => reminderMutation.mutate(row.invoiceNo)}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          {/* Tabs */}
+          <div className="mt-3">
+            <Tabs
+              value={filters.status}
+              onValueChange={(v) => updateFilters({ status: v as ReceivableInvoiceFilters["status"] })}
+            >
+              <TabsList className="h-auto justify-start gap-6 rounded-none border-b border-border bg-transparent p-0">
+                {TABS.map((t) => (
+                  <TabsTrigger
+                    key={t.value}
+                    value={t.value}
+                    className="rounded-none border-b-2 border-transparent bg-transparent px-0.5 pb-3 text-[13px] font-semibold text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none"
+                  >
+                    {t.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </div>
 
-          <PaginationFooter
-            page={filters.page}
-            pageSize={filters.pageSize}
-            total={listQuery.data?.total ?? 0}
-            entityLabel="invoices"
-            onPageChange={(page) => updateFilters({ page })}
-            onPageSizeChange={(pageSize) => updateFilters({ pageSize, page: 1 })}
-          />
-        </div>
+          {/* Table + sidebar */}
+          <div className="mt-3 grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
+            <div className="card-soft overflow-hidden">
+              <div className="flex flex-wrap items-center gap-2 p-4">
+                <div className="relative min-w-[220px] flex-1">
+                  <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    value={filters.search}
+                    onChange={(e) => updateFilters({ search: e.target.value })}
+                    placeholder="Search by customer, invoice no., amount…"
+                    className="w-full rounded-md border border-border bg-card py-2 pl-8 pr-3 text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+                  />
+                </div>
+                <FilterSelect
+                  value={filters.status}
+                  onChange={(v) => updateFilters({ status: v as ReceivableInvoiceFilters["status"] })}
+                  options={STATUS_OPTIONS}
+                />
+                <FilterButton label="Apr 1, 2024 – Mar 31, 2025" />
+                <FilterButton label="Due Date: All" />
+                <FilterButton label="Customer: All" />
+                <button className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-2 text-[12px] font-medium text-foreground hover:bg-muted/50">
+                  <Filter className="h-3.5 w-3.5 text-muted-foreground" />
+                  Filters
+                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                </button>
+              </div>
+
+              <DataTable<ReceivableInvoice>
+                columns={columns}
+                data={listQuery.data?.rows ?? []}
+                onRowClick={(row) => setSelectedInvoiceNo(row.invoiceNo)}
+                empty={
+                  <EmptyState
+                    title="No invoices found"
+                    description="Try adjusting your search or filters."
+                  />
+                }
+                mobileCard={(row) => (
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="font-bold text-primary">{row.invoiceNo}</span>
+                        <div className="text-xs font-semibold text-foreground mt-0.5">{row.customer}</div>
+                      </div>
+                      <StatusBadge status={row.status} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs border-y border-border/60 py-2">
+                      <div>
+                        <span className="text-muted-foreground block text-[11px]">Invoice Date</span>
+                        <span className="font-medium text-foreground tabular">{row.invoiceDate}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground block text-[11px]">Due Date</span>
+                        <span className="font-medium text-foreground tabular">{row.dueDate}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between pt-0.5">
+                      <div>
+                        <span className="text-[11px] text-muted-foreground block">Total Amount</span>
+                        <span className="text-sm font-bold text-foreground tabular">{formatCurrency(row.amount)}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[11px] text-muted-foreground block">Due Amount</span>
+                        <span className={`text-sm font-bold tabular ${row.dueAmount > 0 ? "text-[#EF4444]" : "text-foreground"}`}>
+                          {formatCurrency(row.dueAmount)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              />
+
+              <PaginationFooter
+                page={filters.page}
+                pageSize={filters.pageSize}
+                total={listQuery.data?.total ?? 0}
+                entityLabel="invoices"
+                onPageChange={(page) => updateFilters({ page })}
+                onPageSizeChange={(pageSize) => updateFilters({ pageSize, page: 1 })}
+              />
+            </div>
 
         {/* Right sidebar */}
         <div className="space-y-4">
@@ -493,7 +589,47 @@ function AccountsReceivablePage() {
         onSubmit={(input) => creditMemoMutation.mutate(input)}
         submitting={creditMemoMutation.isPending}
       />
+        </>
+      )}
     </AppShell>
+  );
+}
+
+function ReceivablesSkeleton() {
+  return (
+    <div className="space-y-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-[104px] rounded-xl" />
+        ))}
+      </div>
+      <div className="flex justify-end gap-2">
+        <Skeleton className="h-9 w-28 rounded-lg" />
+        <Skeleton className="h-9 w-32 rounded-lg" />
+      </div>
+      <div className="flex gap-6 border-b border-border pb-3">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-4 w-20" />
+        ))}
+      </div>
+      <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
+        <div className="card-soft p-4 space-y-4">
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-9 min-w-[220px] flex-1 rounded-md" />
+            <Skeleton className="h-9 w-32 rounded-md" />
+            <Skeleton className="h-9 w-36 rounded-md" />
+          </div>
+          <Skeleton className="h-[380px] w-full rounded-lg" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-[260px] rounded-xl" />
+          <Skeleton className="h-[240px] rounded-xl" />
+          <Skeleton className="h-[200px] rounded-xl" />
+          <Skeleton className="h-[160px] rounded-xl" />
+        </div>
+      </div>
+      <Skeleton className="h-14 w-full rounded-xl" />
+    </div>
   );
 }
 

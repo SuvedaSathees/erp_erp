@@ -37,7 +37,9 @@ import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
+import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, EmptyState } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -105,6 +107,31 @@ const PERIOD_OPTIONS = [
   { label: "Q1 FY24 (Apr-Jun)", value: "q1" },
   { label: "Q2 FY24 (Jul-Sep)", value: "q2" },
 ];
+
+function BudgetingSkeleton() {
+  return (
+    <div className="space-y-5">
+      {/* 5 KPI StatCards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-28 rounded-xl" />
+        ))}
+      </div>
+      {/* Main layout matching content */}
+      <div className="grid gap-5 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_360px]">
+        <div className="space-y-5">
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-[420px] w-full rounded-xl" />
+        </div>
+        <div className="space-y-5">
+          <Skeleton className="h-64 w-full rounded-xl" />
+          <Skeleton className="h-64 w-full rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function BudgetingPage() {
   const queryClient = useQueryClient();
@@ -265,20 +292,7 @@ function BudgetingPage() {
       }
     >
       {isLoading || !data ? (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />
-            ))}
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="h-[500px] animate-pulse rounded-xl bg-muted" />
-            <div className="space-y-6">
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-            </div>
-          </div>
-        </div>
+        <BudgetingSkeleton />
       ) : (
         <div className="space-y-5">
           {/* KPI Header Grid */}
@@ -558,18 +572,34 @@ function BudgetingPage() {
                           ]}
                           mobileCard={(r) => (
                             <div className="space-y-2">
-                              <div className="flex justify-between font-semibold">
-                                <span>{r.department}</span>
-                                <span>{formatCurrency(r.budget)}</span>
+                              <div className="flex items-center justify-between">
+                                <span className="font-semibold text-foreground">{r.department}</span>
+                                <span className="text-xs font-bold tabular text-primary">
+                                  {r.utilization}% used
+                                </span>
                               </div>
-                              <div className="flex justify-between text-xs text-muted-foreground">
-                                <span>Actual: {formatCurrency(r.actual)}</span>
+                              <div className="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                  <span className="text-muted-foreground block">Budget</span>
+                                  <span className="font-medium tabular text-foreground">
+                                    {formatCurrency(r.budget)}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground block">Actual</span>
+                                  <span className="font-medium tabular text-foreground">
+                                    {formatCurrency(r.actual)}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground">Variance</span>
                                 <span
-                                  className={
+                                  className={`font-semibold tabular ${
                                     r.variance >= 0 ? "text-green-600" : "text-destructive"
-                                  }
+                                  }`}
                                 >
-                                  Var: {formatCurrency(r.variance)} ({r.variancePct}%)
+                                  {formatCurrency(r.variance)} ({r.variancePct.toFixed(1)}%)
                                 </span>
                               </div>
                               <Progress value={r.utilization} className="h-1.5" />
@@ -642,12 +672,39 @@ function BudgetingPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-1">
-                              <div className="flex justify-between font-semibold">
-                                <span>
-                                  {r.costCenter} ({r.code})
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <span className="font-semibold text-foreground block">{r.costCenter}</span>
+                                  <span className="font-mono text-[10px] text-muted-foreground">{r.code}</span>
+                                </div>
+                                <span className="text-xs font-bold tabular text-primary">
+                                  {r.utilization}%
                                 </span>
-                                <span>{formatCurrency(r.budget)}</span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                  <span className="text-muted-foreground block">Budget</span>
+                                  <span className="font-medium tabular text-foreground">
+                                    {formatCurrency(r.budget)}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground block">Actual</span>
+                                  <span className="font-medium tabular text-foreground">
+                                    {formatCurrency(r.actual)}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground">Variance</span>
+                                <span
+                                  className={`font-semibold tabular ${
+                                    r.variance >= 0 ? "text-green-600" : "text-destructive"
+                                  }`}
+                                >
+                                  {formatCurrency(r.variance)}
+                                </span>
                               </div>
                               <Progress value={r.utilization} className="h-1.5" />
                             </div>
@@ -761,13 +818,28 @@ function BudgetingPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-1">
-                              <div className="flex justify-between font-semibold">
-                                <span>{r.name}</span>
-                                <span>{formatCurrency(r.totalBudget)}</span>
+                            <div className="space-y-2">
+                              <div className="flex items-start justify-between gap-2">
+                                <div>
+                                  <button
+                                    onClick={() => setSelectedVersion(r)}
+                                    className="font-semibold text-primary hover:underline text-left text-sm"
+                                  >
+                                    {r.name}
+                                  </button>
+                                  <span className="text-xs text-muted-foreground block">{r.type}</span>
+                                </div>
+                                <StatusBadge status={r.status} />
                               </div>
-                              <div className="text-xs text-muted-foreground">
-                                {r.type} • {r.status}
+                              <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground">Total Budget</span>
+                                <span className="font-bold tabular text-foreground">
+                                  {formatCurrency(r.totalBudget)}
+                                </span>
+                              </div>
+                              <div className="flex justify-between text-[11px] text-muted-foreground">
+                                <span>By: {r.createdBy}</span>
+                                <span className="tabular">{r.lastUpdated}</span>
                               </div>
                             </div>
                           )}
@@ -841,10 +913,36 @@ function BudgetingPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-1">
-                              <div className="flex justify-between font-semibold">
-                                <span>{r.department}</span>
-                                <span>{formatCurrency(r.budget)}</span>
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <span className="font-semibold text-foreground">{r.department}</span>
+                                <span className="text-xs font-bold tabular text-primary">
+                                  {r.utilization}%
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                  <span className="text-muted-foreground block">Budget</span>
+                                  <span className="font-medium tabular text-foreground">
+                                    {formatCurrency(r.budget)}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground block">Actual</span>
+                                  <span className="font-medium tabular text-foreground">
+                                    {formatCurrency(r.actual)}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground">Variance</span>
+                                <span
+                                  className={`font-semibold tabular ${
+                                    r.variance >= 0 ? "text-green-600" : "text-destructive"
+                                  }`}
+                                >
+                                  {formatCurrency(r.variance)}
+                                </span>
                               </div>
                               <Progress value={r.utilization} className="h-1.5" />
                             </div>
@@ -928,11 +1026,41 @@ function BudgetingPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-1">
-                              <div className="flex justify-between font-semibold">
-                                <span>{r.costCenter}</span>
-                                <span>{formatCurrency(r.budget)}</span>
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <span className="font-semibold text-foreground block">{r.costCenter}</span>
+                                  <span className="font-mono text-[10px] text-muted-foreground">{r.code}</span>
+                                </div>
+                                <span className="text-xs font-bold tabular text-primary">
+                                  {r.utilization}%
+                                </span>
                               </div>
+                              <div className="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                  <span className="text-muted-foreground block">Budget</span>
+                                  <span className="font-medium tabular text-foreground">
+                                    {formatCurrency(r.budget)}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground block">Actual</span>
+                                  <span className="font-medium tabular text-foreground">
+                                    {formatCurrency(r.actual)}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground">Variance</span>
+                                <span
+                                  className={`font-semibold tabular ${
+                                    r.variance >= 0 ? "text-green-600" : "text-destructive"
+                                  }`}
+                                >
+                                  {formatCurrency(r.variance)}
+                                </span>
+                              </div>
+                              <Progress value={r.utilization} className="h-1.5" />
                             </div>
                           )}
                         />
@@ -1029,11 +1157,39 @@ function BudgetingPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-1">
-                              <div className="flex justify-between font-semibold">
-                                <span>{r.project}</span>
-                                <span>{formatCurrency(r.budget)}</span>
+                            <div className="space-y-2">
+                              <div className="flex items-start justify-between gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground block">{r.project}</span>
+                                  <span className="text-xs text-muted-foreground">{r.manager}</span>
+                                </div>
+                                <StatusBadge status={r.status} />
                               </div>
+                              <div className="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                  <span className="text-muted-foreground block">Budget</span>
+                                  <span className="font-medium tabular text-foreground">
+                                    {formatCurrency(r.budget)}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground block">Actual</span>
+                                  <span className="font-medium tabular text-foreground">
+                                    {formatCurrency(r.actual)}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground">Variance</span>
+                                <span
+                                  className={`font-semibold tabular ${
+                                    r.variance >= 0 ? "text-green-600" : "text-destructive"
+                                  }`}
+                                >
+                                  {formatCurrency(r.variance)}
+                                </span>
+                              </div>
+                              <Progress value={r.utilization} className="h-1.5" />
                             </div>
                           )}
                         />
@@ -1128,10 +1284,28 @@ function BudgetingPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-1">
-                              <span className="font-semibold">{r.name}</span>
-                              <div className="text-xs text-muted-foreground">
-                                {r.type} • {formatCurrency(r.totalBudget)}
+                            <div className="space-y-2">
+                              <div className="flex items-start justify-between gap-2">
+                                <div>
+                                  <button
+                                    onClick={() => setSelectedVersion(r)}
+                                    className="font-semibold text-primary hover:underline text-left text-sm"
+                                  >
+                                    {r.name}
+                                  </button>
+                                  <span className="text-xs text-muted-foreground block">{r.type}</span>
+                                </div>
+                                <StatusBadge status={r.status} />
+                              </div>
+                              <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground">Total Allocation</span>
+                                <span className="font-bold tabular text-foreground">
+                                  {formatCurrency(r.totalBudget)}
+                                </span>
+                              </div>
+                              <div className="flex justify-between text-[11px] text-muted-foreground">
+                                <span>By: {r.createdBy}</span>
+                                <span className="tabular">{r.lastUpdated}</span>
                               </div>
                             </div>
                           )}

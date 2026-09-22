@@ -39,6 +39,7 @@ import { FilterSelect } from "@/components/erp/FilterButton";
 import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, EmptyState } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -389,20 +390,7 @@ function FixedAssetsPage() {
       }
     >
       {isLoading || !data ? (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />
-            ))}
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="h-[500px] animate-pulse rounded-xl bg-muted" />
-            <div className="space-y-6">
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-            </div>
-          </div>
-        </div>
+        <AssetsSkeleton />
       ) : (
         <div className="space-y-5">
           {/* KPI Header Grid */}
@@ -746,37 +734,38 @@ function FixedAssetsPage() {
                           },
                         ]}
                         mobileCard={(r) => (
-                          <div className="space-y-2">
-                            <div className="flex justify-between items-start">
-                              <button
-                                onClick={() => setSelectedAsset(r)}
-                                className="font-semibold text-foreground hover:text-primary"
-                              >
-                                {r.name} ({r.assetCode})
-                              </button>
-                              <span className="font-bold">{formatCurrency(r.netBookValue)}</span>
-                            </div>
-                            <div className="flex justify-between text-xs text-muted-foreground">
-                              <span>
-                                {r.category} • {r.location}
-                              </span>
-                              <span>Cost: {formatCurrency(r.cost)}</span>
-                            </div>
-                            <div className="flex justify-between items-center pt-1 border-t border-border">
-                              <span
-                                className={`text-xs ${r.status === "Active" ? "text-green-600" : "text-yellow-600"}`}
-                              >
-                                {r.status}
-                              </span>
-                              <div className="flex gap-2">
-                                <ErpButton
-                                  variant="outline"
-                                  size="xs"
+                          <div className="space-y-2.5">
+                            <div className="flex justify-between items-start gap-2">
+                              <div>
+                                <button
                                   onClick={() => setSelectedAsset(r)}
+                                  className="font-semibold text-foreground hover:text-primary text-left"
                                 >
-                                  Details
-                                </ErpButton>
+                                  {r.name}
+                                </button>
+                                <div className="font-mono text-xs text-primary mt-0.5">{r.assetCode}</div>
                               </div>
+                              <StatusBadge status={r.status} />
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-xs border-y border-border/60 py-2">
+                              <div>
+                                <span className="text-muted-foreground block text-[11px]">Purchase Cost</span>
+                                <span className="font-semibold text-foreground tabular">{formatCurrency(r.cost)}</span>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-muted-foreground block text-[11px]">Net Book Value</span>
+                                <span className="font-bold text-primary tabular">{formatCurrency(r.netBookValue)}</span>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center text-xs text-muted-foreground pt-0.5">
+                              <span>{r.category} • {r.location}</span>
+                              <ErpButton
+                                variant="outline"
+                                size="xs"
+                                onClick={() => setSelectedAsset(r)}
+                              >
+                                Details
+                              </ErpButton>
                             </div>
                           </div>
                         )}
@@ -935,20 +924,26 @@ function FixedAssetsPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="font-semibold text-foreground">
-                                  {r.period} Run
-                                </span>
-                                <span className="font-bold text-destructive">
-                                  {formatCurrency(r.totalDepreciation)}
-                                </span>
+                            <div className="space-y-2.5">
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground">{r.period} Run</span>
+                                  <div className="text-xs text-muted-foreground mt-0.5">{r.method}</div>
+                                </div>
+                                <StatusBadge status={r.status} />
                               </div>
-                              <div className="flex justify-between text-xs text-muted-foreground">
-                                <span>
-                                  {r.date} • {r.assetsCount} Assets
-                                </span>
-                                <span>{r.status}</span>
+                              <div className="flex justify-between items-center text-xs border-y border-border/60 py-2">
+                                <div>
+                                  <span className="text-muted-foreground block text-[11px]">Run Date</span>
+                                  <span className="font-medium text-foreground tabular">{r.date}</span>
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-muted-foreground block text-[11px]">Total Depreciation</span>
+                                  <span className="font-bold text-destructive tabular">{formatCurrency(r.totalDepreciation)}</span>
+                                </div>
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                <span>Assets Affected: <strong className="text-foreground tabular">{r.assetsCount}</strong></span>
                               </div>
                             </div>
                           )}
@@ -1020,12 +1015,15 @@ function FixedAssetsPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-2">
-                              <div className="font-semibold text-foreground">{r.name}</div>
+                            <div className="space-y-2.5">
+                              <div className="flex justify-between items-start gap-2">
+                                <div className="font-semibold text-foreground">{r.name}</div>
+                                <StatusBadge status="Active" />
+                              </div>
                               <div className="text-xs text-muted-foreground">{r.description}</div>
-                              <div className="flex justify-between text-xs font-medium border-t border-border pt-1">
-                                <span>Method: {r.depMethod}</span>
-                                <span>Life: {r.usefulLife} Yrs</span>
+                              <div className="flex justify-between text-xs font-medium border-t border-border/60 pt-2">
+                                <span>Method: <strong className="text-foreground">{r.depMethod}</strong></span>
+                                <span>Life: <strong className="text-foreground tabular">{r.usefulLife} Yrs</strong></span>
                               </div>
                             </div>
                           )}
@@ -1119,20 +1117,28 @@ function FixedAssetsPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="font-semibold text-foreground">{r.name}</span>
-                                <span
-                                  className={`font-bold ${r.gainLoss >= 0 ? "text-green-600" : "text-destructive"}`}
-                                >
-                                  {formatCurrency(r.gainLoss)}
-                                </span>
+                            <div className="space-y-2.5">
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground">{r.name}</span>
+                                  <div className="font-mono text-xs text-muted-foreground mt-0.5">{r.assetCode}</div>
+                                </div>
+                                <StatusBadge status={r.status} />
                               </div>
-                              <div className="flex justify-between text-xs text-muted-foreground">
-                                <span>
-                                  {r.disposalDate} • Proceeds: {formatCurrency(r.proceeds)}
-                                </span>
-                                <span>{r.status}</span>
+                              <div className="grid grid-cols-2 gap-2 text-xs border-y border-border/60 py-2">
+                                <div>
+                                  <span className="text-muted-foreground block text-[11px]">Sale Proceeds</span>
+                                  <span className="font-semibold text-foreground tabular">{formatCurrency(r.proceeds)}</span>
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-muted-foreground block text-[11px]">Gain / Loss</span>
+                                  <span className={`font-bold tabular ${r.gainLoss >= 0 ? "text-green-600" : "text-destructive"}`}>
+                                    {r.gainLoss >= 0 ? "+" : ""}{formatCurrency(r.gainLoss)}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                Disposal Date: <span className="tabular text-foreground">{r.disposalDate}</span>
                               </div>
                             </div>
                           )}
@@ -1216,19 +1222,28 @@ function FixedAssetsPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="font-semibold text-foreground">{r.name}</span>
-                                <span
-                                  className={`font-bold ${r.adjustment >= 0 ? "text-green-600" : "text-destructive"}`}
-                                >
-                                  {formatCurrency(r.adjustment)}
-                                </span>
+                            <div className="space-y-2.5">
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground">{r.name}</span>
+                                  <div className="font-mono text-xs text-muted-foreground mt-0.5">{r.assetCode}</div>
+                                </div>
+                                <StatusBadge status="Approved" />
                               </div>
-                              <div className="flex justify-between text-xs text-muted-foreground">
-                                <span>
-                                  {r.date} • {r.reason}
-                                </span>
+                              <div className="grid grid-cols-2 gap-2 text-xs border-y border-border/60 py-2">
+                                <div>
+                                  <span className="text-muted-foreground block text-[11px]">New Market Value</span>
+                                  <span className="font-semibold text-primary tabular">{formatCurrency(r.newNBV)}</span>
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-muted-foreground block text-[11px]">Adjustment</span>
+                                  <span className={`font-bold tabular ${r.adjustment >= 0 ? "text-green-600" : "text-destructive"}`}>
+                                    {r.adjustment >= 0 ? "+" : ""}{formatCurrency(r.adjustment)}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                Reason: {r.reason} • <span className="tabular">{r.date}</span>
                               </div>
                             </div>
                           )}
@@ -1299,15 +1314,20 @@ function FixedAssetsPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div className="space-y-2">
-                              <div className="font-semibold text-foreground">
-                                {r.name} ({r.assetCode})
+                            <div className="space-y-2.5">
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground">{r.name}</span>
+                                  <div className="font-mono text-xs text-muted-foreground mt-0.5">{r.assetCode}</div>
+                                </div>
+                                <StatusBadge status={r.status} />
                               </div>
-                              <div className="flex justify-between text-xs text-muted-foreground">
-                                <span>
-                                  {r.sourceLocation} → {r.destinationLocation}
-                                </span>
-                                <span>{r.date}</span>
+                              <div className="text-xs border-y border-border/60 py-2 space-y-1">
+                                <div className="text-muted-foreground">From: <span className="text-foreground">{r.sourceLocation}</span></div>
+                                <div className="text-primary font-semibold">To: {r.destinationLocation}</div>
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                Transfer Date: <span className="tabular text-foreground">{r.date}</span>
                               </div>
                             </div>
                           )}
@@ -2134,5 +2154,36 @@ function FixedAssetsPage() {
         </DialogContent>
       </Dialog>
     </AppShell>
+  );
+}
+
+function AssetsSkeleton() {
+  return (
+    <div className="space-y-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-[104px] rounded-xl" />
+        ))}
+      </div>
+      <div className="flex gap-6 border-b border-border pb-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-4 w-24" />
+        ))}
+      </div>
+      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="card-soft p-4 space-y-4">
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-9 min-w-[220px] flex-1 rounded-md" />
+            <Skeleton className="h-9 w-32 rounded-md" />
+            <Skeleton className="h-9 w-36 rounded-md" />
+          </div>
+          <Skeleton className="h-[420px] w-full rounded-lg" />
+        </div>
+        <div className="space-y-6">
+          <Skeleton className="h-[260px] rounded-xl" />
+          <Skeleton className="h-[220px] rounded-xl" />
+        </div>
+      </div>
+    </div>
   );
 }

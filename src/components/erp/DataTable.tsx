@@ -59,7 +59,7 @@ export function DataTable<T extends Record<string, unknown>>({
                       key={c.key}
                       className={`px-4 py-3.5 align-middle text-foreground ${
                         c.align === "right"
-                          ? "text-right tabular-nums"
+                          ? "text-right tabular"
                           : c.align === "center"
                             ? "text-center"
                             : "text-left"

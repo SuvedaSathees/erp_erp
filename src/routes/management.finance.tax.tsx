@@ -39,6 +39,7 @@ import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
 import { DataTable } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -86,6 +87,31 @@ export const Route = createFileRoute("/management/finance/tax")({
 });
 
 const QUERY: DashboardQuery = { fiscalYear: company.fiscalYear, companyId: "all" };
+
+function TaxSkeleton() {
+  return (
+    <div className="space-y-5">
+      {/* 5 KPI StatCards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-28 rounded-xl" />
+        ))}
+      </div>
+      {/* Main layout */}
+      <div className="grid gap-5 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_360px]">
+        <div className="space-y-5">
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-[420px] w-full rounded-xl" />
+        </div>
+        <div className="space-y-5">
+          <Skeleton className="h-64 w-full rounded-xl" />
+          <Skeleton className="h-64 w-full rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const TAX_TYPES = [
   "GST",
@@ -277,20 +303,7 @@ function TaxManagementPage() {
       }
     >
       {isLoading || !data ? (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />
-            ))}
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="h-[500px] animate-pulse rounded-xl bg-muted" />
-            <div className="space-y-6">
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-            </div>
-          </div>
-        </div>
+        <TaxSkeleton />
       ) : (
         <div className="space-y-5">
           {/* KPI Header Grid */}
@@ -535,13 +548,41 @@ function TaxManagementPage() {
                           },
                         ]}
                         mobileCard={(r) => (
-                          <div className="space-y-1">
-                            <div className="flex justify-between font-semibold">
-                              <span>{r.taxType}</span>
-                              <span>{formatCurrency(r.taxLiability)}</span>
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-start gap-2">
+                              <div>
+                                <span className="font-semibold text-foreground block text-sm">{r.taxType}</span>
+                                <span className="text-xs text-muted-foreground">{r.jurisdiction} • {r.period}</span>
+                              </div>
+                              <span
+                                className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                  r.status === "Paid"
+                                    ? "bg-green-100 text-green-800"
+                                    : r.status === "Partially Paid"
+                                      ? "bg-blue-100 text-blue-800"
+                                      : r.status === "Due Soon"
+                                        ? "bg-amber-100 text-amber-800"
+                                        : "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {r.status}
+                              </span>
                             </div>
-                            <div className="text-xs text-muted-foreground">
-                              Due: {r.dueDate} • {r.status}
+                            <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-border/50">
+                              <div>
+                                <span className="text-muted-foreground block">Tax Liability</span>
+                                <span className="font-semibold tabular text-foreground">{formatCurrency(r.taxLiability)}</span>
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground block">Payable</span>
+                                <span className={`font-semibold tabular ${r.payable > 0 ? "text-destructive" : "text-green-600"}`}>
+                                  {formatCurrency(r.payable)}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                              <span className="text-muted-foreground">Due Date</span>
+                              <span className="font-semibold tabular text-foreground">{r.dueDate}</span>
                             </div>
                           </div>
                         )}
@@ -698,8 +739,20 @@ function TaxManagementPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div>
-                              {r.taxType} - {formatCurrency(r.returnAmount)}
+                            <div className="space-y-2 py-1">
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground block text-sm">{r.taxType}</span>
+                                  <span className="text-xs text-muted-foreground">Period: {r.period}</span>
+                                </div>
+                                <span className="font-bold tabular text-foreground text-sm">
+                                  {formatCurrency(r.returnAmount)}
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                                <span className="font-mono text-muted-foreground text-[11px]">{r.acknowledgementNo}</span>
+                                <span className="text-muted-foreground tabular">{r.filingDate}</span>
+                              </div>
                             </div>
                           )}
                         />
@@ -768,8 +821,20 @@ function TaxManagementPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div>
-                              {r.taxType} - {formatCurrency(r.amount)}
+                            <div className="space-y-2 py-1">
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground block text-sm">{r.taxType}</span>
+                                  <span className="text-xs text-muted-foreground">Period: {r.period}</span>
+                                </div>
+                                <span className="font-bold tabular text-green-600 text-sm">
+                                  {formatCurrency(r.amount)}
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                                <span className="font-mono text-muted-foreground text-[11px]">{r.transactionRef}</span>
+                                <span className="text-muted-foreground tabular">{r.paymentDate}</span>
+                              </div>
                             </div>
                           )}
                         />
@@ -883,7 +948,28 @@ function TaxManagementPage() {
                               cell: (r) => <span className="text-muted-foreground">{r.email}</span>,
                             },
                           ]}
-                          mobileCard={(r) => <div>{r.name}</div>}
+                          mobileCard={(r) => (
+                            <div className="space-y-2 py-1">
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground block text-sm">{r.name}</span>
+                                  <span className="text-xs text-muted-foreground">{r.jurisdiction} • {r.taxType}</span>
+                                </div>
+                                <a
+                                  href={r.portalUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-primary hover:underline text-xs flex items-center gap-1 font-semibold"
+                                >
+                                  Portal ↗
+                                </a>
+                              </div>
+                              <div className="flex justify-between text-xs pt-1 border-t border-border/50">
+                                <span className="font-medium text-foreground">{r.contactPerson}</span>
+                                <span className="text-muted-foreground">{r.email}</span>
+                              </div>
+                            </div>
+                          )}
                         />
                       )}
                     </div>
@@ -978,8 +1064,38 @@ function TaxManagementPage() {
                             },
                           ]}
                           mobileCard={(r) => (
-                            <div>
-                              {r.taxType} - {r.status}
+                            <div className="space-y-2 py-1">
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground block text-sm">{r.taxType}</span>
+                                  <span className="text-xs text-muted-foreground">Period: {r.period}</span>
+                                </div>
+                                <span
+                                  className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                    r.status === "Reconciled"
+                                      ? "bg-green-100 text-green-800"
+                                      : "bg-red-100 text-red-800"
+                                  }`}
+                                >
+                                  {r.status}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-border/50">
+                                <div>
+                                  <span className="text-muted-foreground block">Returns</span>
+                                  <span className="font-semibold tabular text-foreground">{formatCurrency(r.returnsLiability)}</span>
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground block">Books</span>
+                                  <span className="font-semibold tabular text-foreground">{formatCurrency(r.booksLiability)}</span>
+                                </div>
+                              </div>
+                              <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground">Variance</span>
+                                <span className={`font-bold tabular ${r.difference === 0 ? "text-green-600" : "text-destructive"}`}>
+                                  {formatCurrency(r.difference)}
+                                </span>
+                              </div>
                             </div>
                           )}
                         />

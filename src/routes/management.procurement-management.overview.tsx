@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { procurementManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProcurementManagementTabBar } from "@/components/erp/ProcurementManagementTabBar";
 import { CardHeader } from "@/components/erp/CardHeader";
@@ -118,6 +120,12 @@ const recentRequisitions = [
 ];
 
 function ProcurementOverviewPage() {
+  const kpiQuery = useQuery({
+    queryKey: ["procurement", "kpis"],
+    queryFn: () => procurementManagementService.fetchProcurementKpis(),
+  });
+  const kpis = kpiQuery.data as any;
+
   const [selectedTimeframe, setSelectedTimeframe] = useState("FY 2026-27");
   const [searchFilter, setSearchFilter] = useState("");
   const [selectedDeptFilter, setSelectedDeptFilter] = useState("All");
@@ -232,7 +240,7 @@ function ProcurementOverviewPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <StatCard
             label="Total Spend (FY 2026-27)"
-            value="₹ 14.85 Cr"
+            value={kpis ? `₹ ${(kpis.totalSpend / 10000000).toFixed(2)} Cr` : "₹ 14.85 Cr"}
             delta={{ label: "+11.4% vs FY25", direction: "up", tone: "positive" }}
             iconBg="bg-primary/10"
             iconColor="text-primary"
@@ -240,9 +248,9 @@ function ProcurementOverviewPage() {
           />
 
           <StatCard
-            label="Committed PO Value"
-            value="₹ 9.45 Cr"
-            delta={{ label: "Active Contract Value", direction: "up", tone: "positive" }}
+            label="Active Purchase Orders"
+            value={kpis ? String(kpis.activePurchaseOrders) : "152"}
+            delta={{ label: `${kpis ? kpis.totalPurchaseOrders : 190} Total POs`, direction: "up", tone: "positive" }}
             iconBg="bg-emerald-500/10"
             iconColor="text-emerald-500"
             icon={<FileBadge className="h-5 w-5" />}

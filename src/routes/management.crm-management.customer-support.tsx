@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -242,7 +244,46 @@ const LINKED_DOCUMENTS = [
 ];
 
 function CustomerSupportPage() {
+  const ticketsQuery = useQuery({
+    queryKey: ["crm", "support-tickets"],
+    queryFn: () => crmManagementService.fetchSupportTickets(),
+  });
+
+  const dbTicket: SupportTicketRecord | null = (() => {
+    const list = ticketsQuery.data ?? [];
+    if (list.length === 0) return null;
+    const t: any = list[0];
+    return {
+      ...INITIAL_TICKET,
+      id: t.id,
+      ticketNumber: t.ticketNumber ?? INITIAL_TICKET.ticketNumber,
+      ticketSubject: t.subject ?? INITIAL_TICKET.ticketSubject,
+      priority: t.priority ?? INITIAL_TICKET.priority,
+      status: t.status ?? INITIAL_TICKET.status,
+      issueCategory: t.category ?? INITIAL_TICKET.issueCategory,
+      contactPerson: t.contactName ?? INITIAL_TICKET.contactPerson,
+      email: t.contactEmail ?? INITIAL_TICKET.email,
+      supportOwner: t.assignedTo
+        ? { name: t.assignedTo, avatar: t.assignedTo.split(" ").map((w: string) => w[0]).join(""), email: "" }
+        : INITIAL_TICKET.supportOwner,
+      customerName: t.account?.name ?? INITIAL_TICKET.customerName,
+      accountName: t.account?.name ?? INITIAL_TICKET.accountName,
+      description: t.description ?? INITIAL_TICKET.description,
+      createdDate: t.createdAt
+        ? new Date(t.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
+        : INITIAL_TICKET.createdDate,
+    };
+  })();
+
   const [ticket, setTicket] = useState<SupportTicketRecord>(INITIAL_TICKET);
+  const [dbApplied, setDbApplied] = useState(false);
+
+  useEffect(() => {
+    if (dbTicket && !dbApplied) {
+      setTicket(dbTicket);
+      setDbApplied(true);
+    }
+  }, [dbTicket, dbApplied]);
 
   // Modals
   const [isNewTicketOpen, setIsNewTicketOpen] = useState(false);

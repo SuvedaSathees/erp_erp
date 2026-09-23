@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -384,7 +386,28 @@ const RECENT_ACTIVITIES = [
 ];
 
 function OpportunityManagementPage() {
+  const oppsQuery = useQuery({
+    queryKey: ["crm", "opportunities"],
+    queryFn: () => crmManagementService.fetchOpportunities(),
+  });
+  const dbOpps: OpportunityRecord[] = (oppsQuery.data ?? []).map((o: any) => ({
+    ...INITIAL_OPPORTUNITIES[0],
+    id: o.id,
+    opportunityNumber: o.opportunityNumber,
+    opportunityName: o.name,
+    stage: o.stage ?? "Discovery",
+    owner: { name: o.ownerName ?? "", avatar: (o.ownerName ?? "").split(" ").map((w: string) => w[0]).join(""), email: "" },
+    accountName: o.account?.name ?? "",
+    sourceLead: o.lead?.leadName ?? "",
+    grossValue: Number(o.amount ?? 0),
+    netOpportunityValue: Number(o.amount ?? 0),
+    probability: Number(o.probability ?? 0),
+    expectedCloseDate: o.expectedCloseDate ? new Date(o.expectedCloseDate).toLocaleDateString("en-IN") : "",
+    productService: o.productService ?? "",
+    createdDate: new Date(o.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+  }));
   const [opportunities, setOpportunities] = useState<OpportunityRecord[]>(INITIAL_OPPORTUNITIES);
+  const mergedOpps = dbOpps.length > 0 ? dbOpps : opportunities;
   const [selectedOppId, setSelectedOppId] = useState<string>("OPP-001");
 
   // Dialog States
@@ -395,8 +418,8 @@ function OpportunityManagementPage() {
 
   // Active Record Object
   const currentOpp = useMemo(() => {
-    return opportunities.find((o) => o.id === selectedOppId) || opportunities[0];
-  }, [opportunities, selectedOppId]);
+    return mergedOpps.find((o) => o.id === selectedOppId) || mergedOpps[0];
+  }, [mergedOpps, selectedOppId]);
 
   const [formState, setFormState] = useState<OpportunityRecord>(currentOpp);
   const [toastMessage, setToastMessage] = useState<string | null>(null);

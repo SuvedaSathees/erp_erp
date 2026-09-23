@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { hrmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -201,7 +203,39 @@ const ASSIGNED_ASSETS = [
 ];
 
 export default function EmployeeManagementPage() {
+  const employeesQuery = useQuery({
+    queryKey: ["hrm", "employees"],
+    queryFn: () => hrmManagementService.fetchEmployees(),
+  });
+
   const [profile, setProfile] = useState<EmployeeProfile>(INITIAL_PROFILE);
+  const [dbApplied, setDbApplied] = useState(false);
+
+  useEffect(() => {
+    const list = employeesQuery.data as any[] | undefined;
+    if (list && list.length > 0 && !dbApplied) {
+      const e = list[0];
+      setProfile((prev) => ({
+        ...prev,
+        employeeId: e.id,
+        employeeNumber: e.employeeCode ?? prev.employeeNumber,
+        name: e.fullName ?? prev.name,
+        designation: e.designation ?? prev.designation,
+        department: e.department ?? prev.department,
+        status: e.status ?? prev.status,
+        officialEmail: e.email ?? prev.officialEmail,
+        location: e.location ?? prev.location,
+        joiningDate: e.joiningDate
+          ? new Date(e.joiningDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+          : prev.joiningDate,
+        annualCTC: e.annualCTC
+          ? `₹ ${Number(e.annualCTC).toLocaleString("en-IN")}`
+          : prev.annualCTC,
+      }));
+      setDbApplied(true);
+    }
+  }, [employeesQuery.data, dbApplied]);
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isNewEmployeeModalOpen, setIsNewEmployeeModalOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);

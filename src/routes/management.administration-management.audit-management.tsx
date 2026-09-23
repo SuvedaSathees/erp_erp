@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAuditLogs } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { AdminManagementTabBar } from "@/components/erp/AdminManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -46,6 +48,23 @@ const AUDIT_TIMELINE_DATA = [
 ];
 
 function AuditManagementPage() {
+  const auditQuery = useQuery({
+    queryKey: ["admin", "audit-logs"],
+    queryFn: () => fetchAuditLogs(),
+  });
+  const dbTimeline = (auditQuery.data ?? []).map((a: any) => ({
+    id: a.id,
+    time: new Date(a.timestamp).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+    type: a.module ?? "System",
+    action: a.action,
+    by: a.performedBy,
+    module: a.module ?? "",
+    record: a.entityId ?? a.entity ?? "",
+    status: "Success",
+    desc: a.description ?? "",
+    badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+  }));
+
   const [activeTab, setActiveTab] = useState<"overview" | "changes" | "security" | "timeline">("overview");
 
   // Master Form State
@@ -74,7 +93,7 @@ function AuditManagementPage() {
 
   const [filterModule, setFilterModule] = useState("ALL");
   const [showExportModal, setShowExportModal] = useState(false);
-  const [timelineLogs] = useState(AUDIT_TIMELINE_DATA);
+  const timelineLogs = dbTimeline.length > 0 ? dbTimeline : AUDIT_TIMELINE_DATA;
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 

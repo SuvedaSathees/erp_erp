@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetchApprovalMatrices } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { AdminManagementTabBar } from "@/components/erp/AdminManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -94,6 +96,22 @@ const RECENT_APPROVAL_REQUESTS = [
 ];
 
 function ApprovalMatrixManagementPage() {
+  const matrixQuery = useQuery({
+    queryKey: ["admin", "approval-matrices"],
+    queryFn: () => fetchApprovalMatrices(),
+  });
+
+  const dbLevels = (matrixQuery.data ?? []).map((m: any, i: number) => ({
+    id: m.id ?? `LVL-${i + 1}`,
+    level: m.level ?? i + 1,
+    name: m.approverRole ?? `Level ${m.level}`,
+    type: "Role",
+    approver: m.approverRole ?? "",
+    limit: m.amountLimit ? `Up to ₹ ${Number(m.amountLimit).toLocaleString("en-IN")}` : "-",
+    mandatory: m.isActive ?? true,
+    time: m.level ?? 1,
+  }));
+
   const [activeTab, setActiveTab] = useState<"overview" | "levels" | "routing" | "requests">("overview");
 
   // Master Form State
@@ -116,12 +134,13 @@ function ApprovalMatrixManagementPage() {
   });
 
   // Dynamic Approval Levels State
-  const [levelsList, setLevelsList] = useState([
+  const [fallbackLevels, setFallbackLevels] = useState([
     { id: "LVL-1", level: 1, name: "Department Approval", type: "Role", approver: "Purchase Manager", limit: "Up to ₹ 1,00,000", mandatory: true, time: 1 },
     { id: "LVL-2", level: 2, name: "Finance Approval", type: "Role", approver: "Finance Manager", limit: "₹ 1,00,001 - ₹ 10,00,000", mandatory: true, time: 2 },
     { id: "LVL-3", level: 3, name: "BU Head Approval", type: "Role", approver: "Head - Procurement", limit: "₹ 10,00,001 - ₹ 50,00,000", mandatory: true, time: 3 },
     { id: "LVL-4", level: 4, name: "CFO Approval", type: "User", approver: "Chief Financial Officer", limit: "Above ₹ 50,00,000", mandatory: true, time: 4 },
   ]);
+  const levelsList = dbLevels.length > 0 ? dbLevels : fallbackLevels;
 
   // Dynamic Live Requests
   const [requestsList, setRequestsList] = useState([
@@ -649,7 +668,7 @@ function ApprovalMatrixManagementPage() {
                           <button
                             type="button"
                             onClick={() => {
-                              setLevelsList((prev) => prev.filter((item) => item.id !== lvl.id));
+                              setFallbackLevels((prev) => prev.filter((item) => item.id !== lvl.id));
                               showNotification(`Approval Level ${lvl.level} removed.`);
                             }}
                             className="text-rose-500 hover:text-rose-700 text-[11px] font-medium cursor-pointer"
@@ -853,7 +872,7 @@ function ApprovalMatrixManagementPage() {
                       alert("Please provide level name.");
                       return;
                     }
-                    setLevelsList((prev) => [
+                    setFallbackLevels((prev) => [
                       ...prev,
                       {
                         id: `LVL-${prev.length + 1}`,

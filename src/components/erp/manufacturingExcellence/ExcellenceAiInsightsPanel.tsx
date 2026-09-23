@@ -31,7 +31,7 @@ export const ExcellenceAiInsightsPanel: React.FC<ExcellenceAiInsightsPanelProps>
     },
     {
       icon: Sparkles,
-      color: "text-purple-600 bg-purple-50 dark:bg-purple-950 dark:text-purple-400",
+      color: "text-primary bg-blue-50 dark:bg-blue-950 dark:text-blue-400",
       title: "Cost Optimization",
       description: "Material usage optimization can save ₹ 18.75 Lakhs.",
     },

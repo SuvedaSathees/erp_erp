@@ -46,7 +46,7 @@ export function RcaLinkedRecordsCard({ record }: RcaLinkedRecordsCardProps) {
               className="p-3 hover:bg-muted/30 transition-colors flex items-center justify-between group"
             >
               <div className="flex items-center gap-2.5">
-                <RefreshCw className="w-4 h-4 text-purple-600" />
+                <RefreshCw className="w-4 h-4 text-primary" />
                 <div>
                   <span className="font-semibold text-foreground group-hover:text-primary">
                     {record.linkedCapaId}

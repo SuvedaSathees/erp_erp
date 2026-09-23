@@ -90,7 +90,7 @@ export const IqcMetricCards: React.FC<IqcMetricCardsProps> = ({ stats }) => {
 
       {/* 5. Quarantine */}
       <div className="bg-card border border-border rounded-xl p-3.5 shadow-xs flex items-center gap-3 min-w-0">
-        <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-purple-600 text-white shadow-xs">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-primary text-white shadow-xs">
           <FlaskConical className="w-5 h-5" />
         </div>
         <div className="min-w-0 flex-1">
@@ -100,7 +100,7 @@ export const IqcMetricCards: React.FC<IqcMetricCardsProps> = ({ stats }) => {
           <div className="text-lg font-bold text-foreground leading-tight truncate">
             {stats.quarantineCount}
           </div>
-          <span className="text-[11px] text-purple-600 font-semibold truncate block">
+          <span className="text-[11px] text-primary font-semibold truncate block">
             {((stats.quarantineCount / stats.totalInspections) * 100).toFixed(1)}%
           </span>
         </div>

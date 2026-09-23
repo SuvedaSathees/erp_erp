@@ -396,7 +396,7 @@ export function ContractManagementPage() {
                     <strong>₹ 75,00,000</strong>
                   </div>
                   <div className="flex items-center justify-between gap-3 col-span-2 pt-0.5 border-t border-border">
-                    <span className="text-purple-600 font-medium flex items-center gap-1">● Remaining</span>
+                    <span className="text-primary font-medium flex items-center gap-1">● Remaining</span>
                     <strong className="text-primary">₹ 1,06,00,000</strong>
                   </div>
                 </div>

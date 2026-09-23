@@ -363,7 +363,7 @@ const RECENT_ACTIVITIES = [
     type: "Call",
     subject: "Requirement Discussion",
     outcome: "Interested",
-    outcomeColor: "bg-purple-50 text-purple-700 border-purple-200",
+    outcomeColor: "bg-blue-50 text-primary border-blue-200",
     nextAction: "Schedule Product Demo",
     nextActionDate: "18 May 2024",
     assignedTo: "Rahul Sharma",
@@ -1278,7 +1278,7 @@ function OpportunityManagementPage() {
                         onClick={() => showNotification("Meeting invite generated for " + formState.accountName)}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Calendar className="h-4 w-4 text-purple-600" />
+                        <Calendar className="h-4 w-4 text-primary" />
                         <span>Schedule</span>
                       </button>
                       <button
@@ -1306,7 +1306,7 @@ function OpportunityManagementPage() {
                         onClick={() => showNotification("Document attachment window ready.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Paperclip className="h-4 w-4 text-indigo-600" />
+                        <Paperclip className="h-4 w-4 text-primary" />
                         <span>Upload</span>
                       </button>
                     </div>

@@ -31,7 +31,7 @@ export const IpqcAiInsightsCard: React.FC<IpqcAiInsightsCardProps> = ({
       case 3:
         return <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />;
       default:
-        return <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0" />;
+        return <Sparkles className="w-4 h-4 text-primary dark:text-blue-400 shrink-0" />;
     }
   };
 
@@ -39,7 +39,7 @@ export const IpqcAiInsightsCard: React.FC<IpqcAiInsightsCardProps> = ({
     <div className="bg-card border border-border/80 rounded-xl p-4 sm:p-5 shadow-xs space-y-3 min-w-0">
       <div className="flex items-center justify-between pb-2 border-b border-border/40 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="w-5 h-5 rounded-md bg-purple-600 text-white flex items-center justify-center font-bold text-[10px] shadow-xs shrink-0">
+          <div className="w-5 h-5 rounded-md bg-primary text-white flex items-center justify-center font-bold text-[10px] shadow-xs shrink-0">
             <Sparkles className="w-3 h-3" />
           </div>
           <h3 className="text-sm sm:text-base font-semibold text-foreground truncate">
@@ -75,7 +75,7 @@ export const IpqcAiInsightsCard: React.FC<IpqcAiInsightsCardProps> = ({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center">
                 <BrainCircuit className="w-4 h-4" />
               </div>
               <div>
@@ -123,7 +123,7 @@ export const IpqcAiInsightsCard: React.FC<IpqcAiInsightsCardProps> = ({
                 setIsModalOpen(false);
                 toast.success("Exported AI telemetry parameters to station log");
               }}
-              className="text-xs bg-purple-600 hover:bg-purple-700 text-white font-semibold"
+              className="text-xs bg-primary hover:bg-primary text-white font-semibold"
             >
               Export AI Telemetry
             </Button>

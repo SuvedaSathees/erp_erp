@@ -341,7 +341,7 @@ ${record.wbsList.map((w) => `${w.code} ${w.name} (${w.weightage}% weightage) - $
                       }}
                       className="cursor-pointer"
                     >
-                      <FileCode className="mr-2 h-4 w-4 text-purple-600" /> Copy Plan JSON
+                      <FileCode className="mr-2 h-4 w-4 text-primary" /> Copy Plan JSON
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleExportXml} className="cursor-pointer">
                       <Download className="mr-2 h-4 w-4 text-emerald-600" /> Export MS Project (.XML)
@@ -602,11 +602,11 @@ ${record.wbsList.map((w) => `${w.code} ${w.name} (${w.weightage}% weightage) - $
                 <span className="text-xl font-bold font-mono text-slate-900 dark:text-white mt-0.5 block">
                   42 Days
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold block mt-1">
+                <span className="text-[10px] text-primary dark:text-blue-400 font-semibold block mt-1">
                   Zero Float (0.0% Var)
                 </span>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <Target className="h-5 w-5" />
               </div>
             </div>
@@ -814,11 +814,11 @@ ${record.wbsList.map((w) => `${w.code} ${w.name} (${w.weightage}% weightage) - $
                     { code: "1", task: "Project Management", barColor: "bg-blue-500", left: "0%", width: "95%" },
                     { code: "2", task: "Requirements & Analysis", barColor: "bg-emerald-500", left: "2%", width: "18%" },
                     { code: "2.2", task: "Design & Engineering", barColor: "bg-teal-600", left: "15%", width: "25%" },
-                    { code: "3", task: "Procurement", barColor: "bg-purple-600", left: "20%", width: "30%" },
+                    { code: "3", task: "Procurement", barColor: "bg-primary", left: "20%", width: "30%" },
                     { code: "4", task: "Manufacturing", barColor: "bg-rose-500", left: "45%", width: "35%" },
                     { code: "4.3", task: "Assembly & Testing", barColor: "bg-amber-500", left: "55%", width: "28%" },
                     { code: "5", task: "Installation", barColor: "bg-cyan-600", left: "70%", width: "20%" },
-                    { code: "6", task: "Commissioning", barColor: "bg-indigo-600", left: "85%", width: "12%" },
+                    { code: "6", task: "Commissioning", barColor: "bg-primary", left: "85%", width: "12%" },
                     { code: "7", task: "Project Closure", isMilestone: true, left: "97%" },
                   ].map((row) => (
                     <div key={row.task} className="flex items-center gap-2 h-6">

@@ -40,6 +40,7 @@ import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -373,8 +374,15 @@ function FixedAssetsPage() {
     runDepreciationMutation.mutate(depInput);
   };
 
+  const isError = dashboardQuery.isError || assetsQuery.isError;
   const isLoading = dashboardQuery.isLoading || assetsQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    dashboardQuery.error || assetsQuery.error,
+    "Failed to load asset dashboard records.",
+  );
 
   return (
     <AppShell
@@ -389,7 +397,16 @@ function FixedAssetsPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Fixed Assets"
+          error={dashboardQuery.error || assetsQuery.error}
+          onRetry={() => {
+            dashboardQuery.refetch();
+            assetsQuery.refetch();
+          }}
+        />
+      ) : isLoading || !data ? (
         <AssetsSkeleton />
       ) : (
         <div className="space-y-5">
@@ -397,7 +414,7 @@ function FixedAssetsPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <StatCard
               label="Total Assets"
-              value={data.kpis.totalAssets.toLocaleString("en-US")}
+              value={data.kpis.totalAssets.toLocaleString("en-IN")}
               neutralText="All Assets"
               icon={<Boxes className="h-5 w-5" />}
               iconBg="bg-primary/10"
@@ -432,8 +449,8 @@ function FixedAssetsPage() {
               value={data.kpis.assetsAddedThisYear.toString()}
               neutralText="This Fiscal Year"
               icon={<Plus className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -769,6 +786,12 @@ function FixedAssetsPage() {
                             </div>
                           </div>
                         )}
+                        empty={
+                          <EmptyState
+                            title="No assets found"
+                            description="No fixed asset records matched your current filters or search criteria."
+                          />
+                        }
                       />
                     </div>
 
@@ -1373,8 +1396,8 @@ function FixedAssetsPage() {
                     </ResponsiveContainer>
                     <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
                       <div>
-                        <div className="font-display text-[15px] font-bold text-foreground">
-                          {data.kpis.totalAssets.toLocaleString("en-US")}
+                        <div className="font-display text-[15px] font-bold text-foreground tabular">
+                          {data.kpis.totalAssets.toLocaleString("en-IN")}
                         </div>
                         <div className="text-[9px] text-muted-foreground uppercase tracking-wider">
                           Total Assets

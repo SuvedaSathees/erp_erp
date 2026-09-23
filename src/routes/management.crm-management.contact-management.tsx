@@ -428,7 +428,7 @@ const RECENT_ACTIVITIES = [
     type: "Call",
     subject: "Initial Discussion",
     outcome: "Interested",
-    outcomeColor: "bg-purple-50 text-purple-700 border-purple-200",
+    outcomeColor: "bg-blue-50 text-primary border-blue-200",
     nextAction: "Schedule Demo",
     nextActionDate: "18 Apr 2024",
     assignedTo: "Rahul Sharma",
@@ -1114,7 +1114,7 @@ function ContactManagementPage() {
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-slate-600 font-medium">Linked Account</span>
-                          <span className="font-semibold text-purple-700">{formState.linkedAccount}</span>
+                          <span className="font-semibold text-primary">{formState.linkedAccount}</span>
                         </div>
                       </div>
                     </div>
@@ -1305,7 +1305,7 @@ function ContactManagementPage() {
                         onClick={() => showNotification("Opening Meeting Scheduler...")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Calendar className="h-4 w-4 text-purple-600" />
+                        <Calendar className="h-4 w-4 text-primary" />
                         <span>Schedule</span>
                       </button>
                     </div>

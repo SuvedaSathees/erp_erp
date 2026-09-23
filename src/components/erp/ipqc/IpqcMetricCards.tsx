@@ -51,8 +51,8 @@ export const IpqcMetricCards: React.FC<IpqcMetricCardsProps> = ({ record }) => {
       label: "Rework",
       value: record.reworkCount,
       subtext: `${((record.reworkCount / (record.passedCount + record.failedCount + record.onHoldCount + record.reworkCount)) * 100).toFixed(1)}%`,
-      subtextColor: "text-purple-600 dark:text-purple-400 font-semibold",
-      iconBg: "bg-purple-600 text-white",
+      subtextColor: "text-primary dark:text-blue-400 font-semibold",
+      iconBg: "bg-primary text-white",
       icon: RotateCw,
     },
     {

@@ -18,7 +18,7 @@ export const PilotProductionAiCard: React.FC<PilotProductionAiCardProps> = ({
       <div>
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
           <div className="flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+            <Sparkles className="w-3.5 h-3.5 text-primary dark:text-blue-400" />
             <h2 className="font-bold text-foreground text-xs">
               7. AI Production Assessment
             </h2>
@@ -48,7 +48,7 @@ export const PilotProductionAiCard: React.FC<PilotProductionAiCardProps> = ({
 
           <div className="flex justify-between items-center pt-1 border-t border-border/40">
             <span className="text-muted-foreground font-medium">AI Production Health Score</span>
-            <span className="font-extrabold text-purple-600 dark:text-purple-400">
+            <span className="font-extrabold text-primary dark:text-blue-400">
               {aiAssessment.healthScore} / 100
             </span>
           </div>
@@ -57,7 +57,7 @@ export const PilotProductionAiCard: React.FC<PilotProductionAiCardProps> = ({
 
       <button
         onClick={onViewAnalysis}
-        className="mt-3 w-full py-1 text-[11px] font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 flex items-center justify-center gap-1 transition-colors border border-purple-200 dark:border-purple-800 rounded bg-purple-50/40 dark:bg-purple-950/30"
+        className="mt-3 w-full py-1 text-[11px] font-bold text-primary dark:text-blue-400 hover:text-primary flex items-center justify-center gap-1 transition-colors border border-blue-200 dark:border-blue-800 rounded bg-blue-50/40 dark:bg-blue-950/30"
       >
         View AI Analysis <ArrowRight className="w-3.5 h-3.5" />
       </button>

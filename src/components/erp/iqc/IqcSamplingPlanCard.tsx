@@ -34,7 +34,7 @@ export const IqcSamplingPlanCard: React.FC<IqcSamplingPlanCardProps> = ({
       <div className="bg-card border border-border rounded-xl p-4 sm:p-5 shadow-xs space-y-4 w-full max-w-full min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-purple-600/10 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-xs">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 dark:bg-blue-900/30 text-primary dark:text-blue-400 flex items-center justify-center font-bold text-xs">
               <SlidersHorizontal className="w-4 h-4" />
             </div>
             <div>

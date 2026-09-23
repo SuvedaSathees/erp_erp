@@ -61,7 +61,7 @@ const costBreakdownData = [
   { name: "Direct Assembly Labor", value: 10000, share: "9.5%", color: "#22C55E" },
   { name: "Manufacturing Overhead", value: 8000, share: "7.6%", color: "#0284C7" },
   { name: "Packaging & Logistics", value: 5000, share: "4.8%", color: "#F59E0B" },
-  { name: "Warranty & Reserves", value: 4000, share: "3.8%", color: "#6366F1" },
+  { name: "Warranty & Reserves", value: 4000, share: "3.8%", color: "#3B82F6" },
   { name: "Quality Certification", value: 3000, share: "2.9%", color: "#EC4899" },
 ];
 

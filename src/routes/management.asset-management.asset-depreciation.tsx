@@ -401,13 +401,13 @@ export function AssetDepreciationFormPage() {
           <div className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground font-medium">Fully Depreciated</span>
-              <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <CheckCircle className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-1">
-              <span className="text-2xl font-bold font-mono text-purple-600">32</span>
-              <span className="block text-[10px] text-purple-700 dark:text-purple-400 font-medium">
+              <span className="text-2xl font-bold font-mono text-primary">32</span>
+              <span className="block text-[10px] text-primary dark:text-blue-400 font-medium">
                 7.5% of Total
               </span>
             </div>
@@ -483,7 +483,7 @@ export function AssetDepreciationFormPage() {
                   {/* Suspended: 0.9% */}
                   <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="234" />
                   {/* Pending Setup: 4.2% */}
-                  <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="236" />
+                  <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="236" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                   <span className="text-base font-bold font-mono text-slate-900 dark:text-white">428</span>
@@ -512,7 +512,7 @@ export function AssetDepreciationFormPage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                    <div className="h-2 w-2 rounded-full bg-purple-500" /> Pending Setup
+                    <div className="h-2 w-2 rounded-full bg-blue-500" /> Pending Setup
                   </span>
                   <span className="font-mono text-muted-foreground font-semibold text-[10px]">18 (4.2%)</span>
                 </div>
@@ -549,8 +549,8 @@ export function AssetDepreciationFormPage() {
                 </div>
                 {/* Maintenance Cost: 2.10 */}
                 <div className="flex-1 flex flex-col items-center gap-1">
-                  <span className="text-[10px] font-bold font-mono text-purple-600">2.10</span>
-                  <div className="w-full bg-purple-500 rounded-t-sm" style={{ height: "20px" }} />
+                  <span className="text-[10px] font-bold font-mono text-primary">2.10</span>
+                  <div className="w-full bg-blue-500 rounded-t-sm" style={{ height: "20px" }} />
                   <span className="text-[9px] text-muted-foreground font-medium mt-1 truncate">Maint. Cost</span>
                 </div>
               </div>
@@ -826,7 +826,7 @@ export function AssetDepreciationFormPage() {
                               item.status === "Depreciating"
                                 ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                 : item.status === "Fully Depreciated"
-                                ? "bg-purple-50 text-purple-700 border-purple-200"
+                                ? "bg-blue-50 text-primary border-blue-200"
                                 : item.status === "Pending Setup"
                                 ? "bg-amber-50 text-amber-700 border-amber-200"
                                 : "bg-blue-50 text-blue-700 border-blue-200"
@@ -1073,7 +1073,7 @@ export function AssetDepreciationFormPage() {
                   <circle cx="50" cy="50" r="38" stroke="#2563eb" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                   <circle cx="50" cy="50" r="38" stroke="#38bdf8" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="185.3" />
                   <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="206.8" />
-                  <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="227.1" />
+                  <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="227.1" />
                   <circle cx="50" cy="50" r="38" stroke="#f43f5e" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="234.9" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -1096,7 +1096,7 @@ export function AssetDepreciationFormPage() {
                   <span className="font-mono font-bold">₹ 2.00 L (8.5%)</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-1.5"><div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> IT Equipment</span>
+                  <span className="flex items-center gap-1.5"><div className="h-1.5 w-1.5 rounded-full bg-blue-500" /> IT Equipment</span>
                   <span className="font-mono font-bold">₹ 1.80 L (7.7%)</span>
                 </div>
                 <div className="flex justify-between items-center">

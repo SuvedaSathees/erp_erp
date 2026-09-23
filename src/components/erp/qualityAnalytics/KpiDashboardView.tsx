@@ -45,7 +45,7 @@ export function KpiDashboardView({ copq }: KpiDashboardViewProps) {
                 Target: &lt; 3,000 DPMO
               </span>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-950/50 flex items-center justify-center text-purple-600 shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-950/50 flex items-center justify-center text-primary shrink-0">
               <Activity className="w-4 h-4" />
             </div>
           </CardContent>

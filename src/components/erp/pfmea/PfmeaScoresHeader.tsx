@@ -23,7 +23,7 @@ export const PfmeaScoresHeader: React.FC<PfmeaScoresHeaderProps> = ({ record }) 
       label: "AI Health Score",
       score: record.aiHealthScore,
       status: "Good",
-      color: "#8b5cf6", // Purple
+      color: "#0A3C75", // Navy
     },
   ];
 

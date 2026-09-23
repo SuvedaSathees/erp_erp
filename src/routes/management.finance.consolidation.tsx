@@ -53,8 +53,9 @@ import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
-import { DataTable } from "@/components/erp/DataTable";
+import { DataTable, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -256,8 +257,15 @@ function ConsolidationPage() {
     setReportOpen(true);
   };
 
+  const isError = dashboardQuery.isError;
   const isLoading = dashboardQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    dashboardQuery.error,
+    "Failed to load consolidation dashboard.",
+  );
 
   // Overview rows
   const allRows = data?.summaryData || [];
@@ -278,7 +286,13 @@ function ConsolidationPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Consolidation Data"
+          error={dashboardQuery.error}
+          onRetry={() => dashboardQuery.refetch()}
+        />
+      ) : isLoading || !data ? (
         <ConsolidationSkeleton />
       ) : (
         <div className="space-y-5">
@@ -321,8 +335,8 @@ function ConsolidationPage() {
               value={data.kpis.status}
               neutralText="All Periods Closed"
               icon={<CheckCircle className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -729,6 +743,12 @@ function ConsolidationPage() {
                           </div>
                         </div>
                       )}
+                      empty={
+                        <EmptyState
+                          title="No subsidiary entities found"
+                          description="No consolidated subsidiaries currently exist for this holding entity."
+                        />
+                      }
                     />
                   </div>
                 </div>
@@ -815,6 +835,12 @@ function ConsolidationPage() {
                           </div>
                         </div>
                       )}
+                      empty={
+                        <EmptyState
+                          title="No intercompany transactions found"
+                          description="No cross-entity transactions recorded for this fiscal period."
+                        />
+                      }
                     />
                   </div>
                 </div>
@@ -959,7 +985,7 @@ function ConsolidationPage() {
                     </li>
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground flex items-center gap-1.5">
-                        <span className="h-2 w-2 rounded-full bg-purple-500" />
+                        <span className="h-2 w-2 rounded-full bg-blue-500" />
                         Consolidation
                       </span>
                       <span className="font-semibold text-foreground">

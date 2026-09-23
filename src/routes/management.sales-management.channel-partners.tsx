@@ -73,7 +73,7 @@ const partnerNetworkDonut = [
   { name: "Onboarding Stage", value: 6, share: "13%", color: "#22C55E" },
   { name: "Under Review", value: 5, share: "10%", color: "#0284C7" },
   { name: "Compliance Hold", value: 4, share: "8%", color: "#F59E0B" },
-  { name: "Prospective", value: 5, share: "11%", color: "#6366F1" },
+  { name: "Prospective", value: 5, share: "11%", color: "#3B82F6" },
 ];
 
 const initialPartnerProducts = [

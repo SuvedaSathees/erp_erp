@@ -660,7 +660,7 @@ function DocumentControlManagementPage() {
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Compliance Rating</span>
                   <div className="text-xl font-bold font-mono text-foreground">98.4%</div>
-                  <p className="text-[10px] text-purple-600 font-medium">ISO 9001 / 27001</p>
+                  <p className="text-[10px] text-primary font-medium">ISO 9001 / 27001</p>
                 </div>
               </div>
 
@@ -921,7 +921,7 @@ function DocumentControlManagementPage() {
             MAICW: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
             <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
             <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-            <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
+            <span className="text-blue-600 font-bold">C</span> (Calculated) |{" "}
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div>

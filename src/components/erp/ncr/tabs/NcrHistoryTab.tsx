@@ -219,7 +219,7 @@ export function NcrHistoryTab({ record, onChange }: NcrHistoryTabProps) {
                 <span className="font-bold font-mono">18%</span>
               </div>
               <div className="w-full bg-muted rounded-full h-1.5">
-                <div className="bg-purple-600 h-1.5 rounded-full" style={{ width: "18%" }} />
+                <div className="bg-primary h-1.5 rounded-full" style={{ width: "18%" }} />
               </div>
             </div>
           </div>

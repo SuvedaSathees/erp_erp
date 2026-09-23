@@ -1306,7 +1306,7 @@ Deliverables: ${selectedWbs.deliverables.map((d) => d.name).join(", ")}`;
                 <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
                   <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="38" stroke="#3b82f6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="70" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="70" />
                     <circle cx="50" cy="50" r="38" stroke="#06b6d4" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="140" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -1333,7 +1333,7 @@ Deliverables: ${selectedWbs.deliverables.map((d) => d.name).join(", ")}`;
                     onClick={() => { setFilterType("Work Package"); toast.info("Filtered by Work Package"); }}
                     className="flex justify-between items-center cursor-pointer hover:bg-muted/30 p-0.5 rounded"
                   >
-                    <span className="flex items-center gap-1.5"><div className="h-2 w-2 rounded-full bg-purple-600" /> Work Package</span>
+                    <span className="flex items-center gap-1.5"><div className="h-2 w-2 rounded-full bg-primary" /> Work Package</span>
                     <span className="font-mono text-muted-foreground">18 (42.9%)</span>
                   </div>
                   <div
@@ -1358,7 +1358,7 @@ Deliverables: ${selectedWbs.deliverables.map((d) => d.name).join(", ")}`;
                 <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
                   <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
-                    <circle cx="50" cy="50" r="38" stroke="#6366f1" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="90" />
+                    <circle cx="50" cy="50" r="38" stroke="#3B82F6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="90" />
                     <circle cx="50" cy="50" r="38" stroke="#f43f5e" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="180" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -1376,7 +1376,7 @@ Deliverables: ${selectedWbs.deliverables.map((d) => d.name).join(", ")}`;
                     <span className="font-mono text-muted-foreground">₹0.40 Cr (24%)</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1.5"><div className="h-2 w-2 rounded-full bg-purple-600" /> Work Package</span>
+                    <span className="flex items-center gap-1.5"><div className="h-2 w-2 rounded-full bg-primary" /> Work Package</span>
                     <span className="font-mono text-muted-foreground">₹0.72 Cr (43%)</span>
                   </div>
                   <div className="flex justify-between items-center">

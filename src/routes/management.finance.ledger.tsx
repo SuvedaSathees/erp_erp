@@ -49,6 +49,7 @@ import { StatusBadge } from "@/components/erp/StatusBadge";
 import { TreeTable, type TreeColumn } from "@/components/erp/TreeTable";
 import { DataTable, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import { ErpButton } from "@/components/erp/Button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -649,15 +650,17 @@ function GeneralLedgerPage() {
     return records;
   }, [journalsQuery.data, flatAccounts]);
 
-  const dbError =
-    accountsQuery.error?.message ||
-    allAccountsQuery.error?.message ||
-    journalsQuery.error?.message ||
-    trialBalanceQuery.error?.message ||
-    activityQuery.error?.message ||
-    summaryQuery.error?.message;
+  const primaryError =
+    accountsQuery.error ||
+    allAccountsQuery.error ||
+    journalsQuery.error ||
+    trialBalanceQuery.error;
 
-  if (dbError) {
+  const isError = Boolean(primaryError);
+
+  useQueryErrorToast(isError, primaryError, "Failed to load general ledger records.");
+
+  if (isError && !accountsQuery.data && !journalsQuery.data) {
     return (
       <AppShell
         title="Finance"
@@ -665,38 +668,16 @@ function GeneralLedgerPage() {
         description="View and analyze all enterprise balances, entries, and workflow controls in your general ledger."
         tabs={<FinanceTabBar />}
       >
-        <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-8 text-center max-w-2xl mx-auto mt-12 shadow-sm">
-          <BrainCircuit className="h-12 w-12 text-destructive mx-auto mb-4 animate-pulse" />
-          <h3 className="text-[16px] font-bold text-foreground mb-2">
-            Database Connection Required
-          </h3>
-          <p className="text-sm text-muted-foreground mb-5 leading-relaxed">{dbError}</p>
-          <div className="rounded-lg bg-card border border-border p-4 text-[13px] text-left space-y-2">
-            <p className="font-semibold text-foreground">How to configure MongoDB Atlas:</p>
-            <ol className="list-decimal list-inside space-y-1.5 text-muted-foreground">
-              <li>
-                Open your project local{" "}
-                <code className="bg-muted px-1 py-0.5 rounded text-foreground font-mono">.env</code>{" "}
-                file.
-              </li>
-              <li>
-                Replace the{" "}
-                <code className="bg-muted px-1 py-0.5 rounded text-foreground font-mono">
-                  &lt;db_password&gt;
-                </code>{" "}
-                placeholder in the{" "}
-                <code className="bg-muted px-1 py-0.5 rounded text-foreground font-mono">
-                  MONGODB_URI
-                </code>{" "}
-                variable with your database password.
-              </li>
-              <li>
-                Save the file and refresh the page. The system will automatically seed default
-                ledger data and run calculations.
-              </li>
-            </ol>
-          </div>
-        </div>
+        <QueryErrorState
+          title="Failed to Load General Ledger"
+          error={primaryError}
+          onRetry={() => {
+            accountsQuery.refetch();
+            allAccountsQuery.refetch();
+            journalsQuery.refetch();
+            trialBalanceQuery.refetch();
+          }}
+        />
       </AppShell>
     );
   }
@@ -1556,7 +1537,7 @@ function GeneralLedgerPage() {
                       Base currency equivalents will be calculated: ₹
                       {(
                         journalTotalDebit * (newJournalInput.currencyInfo?.exchangeRate || 1)
-                      ).toLocaleString()}
+                      ).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                   )}
                 </div>

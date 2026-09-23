@@ -461,7 +461,7 @@ export default function SalesAnalyticsComponent() {
           <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm hover:border-[#0A3C75]/40 transition">
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
               <span>Forecast Accuracy</span>
-              <Target className="w-4 h-4 text-indigo-600" />
+              <Target className="w-4 h-4 text-primary" />
             </div>
             <div className="text-xl font-bold text-slate-900 tabular-nums">{periodData.forecastAcc}</div>
             <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">

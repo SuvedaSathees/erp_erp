@@ -33,7 +33,7 @@ export const ProcessValidationSummaryCard: React.FC<ProcessValidationSummaryCard
 
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground font-medium">AI Health Score</span>
-            <span className="font-mono font-bold text-purple-600 dark:text-purple-400">{record.aiAssessment.healthScore} / 100</span>
+            <span className="font-mono font-bold text-primary dark:text-blue-400">{record.aiAssessment.healthScore} / 100</span>
           </div>
 
           <div className="pt-2 border-t border-border mt-2 flex justify-between items-center font-bold">

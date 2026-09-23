@@ -120,7 +120,7 @@ export function NcrLinkedRecordsCard({
         {/* Related CAPA */}
         <div className="flex items-center justify-between pt-1 border-t border-border/40">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded flex items-center justify-center bg-purple-50 dark:bg-purple-950/50 text-purple-600">
+            <div className="w-5 h-5 rounded flex items-center justify-center bg-blue-50 dark:bg-blue-950/50 text-primary">
               <Sparkles className="h-3.5 w-3.5" />
             </div>
             <span className="text-muted-foreground font-medium">Related CAPA</span>

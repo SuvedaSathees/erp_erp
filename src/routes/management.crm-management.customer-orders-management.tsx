@@ -1109,7 +1109,7 @@ export function CustomerOrdersManagementPage() {
                       onClick={() => alert("Creating Delivery Note...")}
                       className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                     >
-                      <Truck className="h-4 w-4 text-purple-600" />
+                      <Truck className="h-4 w-4 text-primary" />
                       <span>Create DN</span>
                     </button>
                     <button
@@ -1123,7 +1123,7 @@ export function CustomerOrdersManagementPage() {
                       onClick={() => alert("Opening Document Uploader...")}
                       className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                     >
-                      <Paperclip className="h-4 w-4 text-indigo-600" />
+                      <Paperclip className="h-4 w-4 text-primary" />
                       <span>Upload Doc</span>
                     </button>
                     <button

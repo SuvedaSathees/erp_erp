@@ -13,7 +13,7 @@ const DEFECT_SLICES: DefectSlice[] = [
   { label: "Dimensional", percentage: 20, color: "#06b6d4", count: 0 },
   { label: "Functional", percentage: 15, color: "#f97316", count: 0 },
   { label: "Material", percentage: 10, color: "#ef4444", count: 1 },
-  { label: "Others", percentage: 10, color: "#8b5cf6", count: 0 },
+  { label: "Others", percentage: 10, color: "#0A3C75", count: 0 },
 ];
 
 export function NcrDefectCategoryDonutCard() {

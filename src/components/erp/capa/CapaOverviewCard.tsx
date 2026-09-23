@@ -35,7 +35,7 @@ export function CapaOverviewCard({
             className={
               record.status === "Closed"
                 ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 text-[10px]"
-                : "bg-purple-50 text-purple-700 dark:bg-purple-950/50 dark:text-purple-400 border border-purple-200 dark:border-purple-800 text-[10px]"
+                : "bg-blue-50 text-primary dark:bg-blue-950/50 dark:text-blue-400 border border-blue-200 dark:border-blue-800 text-[10px]"
             }
           >
             {record.status}
@@ -45,16 +45,16 @@ export function CapaOverviewCard({
 
       <CardContent className="pt-4 space-y-4 text-xs min-w-0">
         {/* Progress Bar & Counter */}
-        <div className="p-3 rounded-xl bg-purple-50/40 dark:bg-purple-950/20 border border-purple-200/60 dark:border-purple-800/40 min-w-0">
+        <div className="p-3 rounded-xl bg-blue-50/40 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-800/40 min-w-0">
           <div className="flex items-center justify-between text-xs">
             <span className="font-semibold text-foreground">Action Implementation</span>
-            <span className="font-mono font-bold text-purple-600 dark:text-purple-400">
+            <span className="font-mono font-bold text-primary dark:text-blue-400">
               {progressPercent}%
             </span>
           </div>
-          <div className="w-full bg-purple-200/50 dark:bg-purple-900/40 h-2 rounded-full mt-2 overflow-hidden">
+          <div className="w-full bg-blue-200/50 dark:bg-blue-900/40 h-2 rounded-full mt-2 overflow-hidden">
             <div
-              className="bg-purple-600 h-full rounded-full transition-all duration-500"
+              className="bg-primary h-full rounded-full transition-all duration-500"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -79,9 +79,9 @@ export function CapaOverviewCard({
             </span>
           </div>
 
-          <div className="p-2 rounded-lg bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200/60 dark:border-purple-800/40 min-w-0">
-            <span className="text-[10px] text-purple-700 dark:text-purple-400 font-medium block">Mitigation</span>
-            <span className="text-base font-bold text-purple-700 dark:text-purple-300 font-mono">
+          <div className="p-2 rounded-lg bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-800/40 min-w-0">
+            <span className="text-[10px] text-primary dark:text-blue-400 font-medium block">Mitigation</span>
+            <span className="text-base font-bold text-primary dark:text-blue-300 font-mono">
               -{record.rpnReductionPercent}%
             </span>
           </div>

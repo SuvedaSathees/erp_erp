@@ -945,9 +945,9 @@ function LoyaltyManagementPage() {
 
                       <button
                         onClick={() => setIsRedeemModalOpen(true)}
-                        className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-purple-300"
+                        className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-blue-300"
                       >
-                        <Gift className="h-4 w-4 text-purple-600" />
+                        <Gift className="h-4 w-4 text-primary" />
                         <span className="font-semibold text-slate-800">Redeem Reward</span>
                       </button>
 
@@ -1103,7 +1103,7 @@ function LoyaltyManagementPage() {
             <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
               <div className="flex items-center justify-between border-b pb-3">
                 <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <Gift className="h-4 w-4 text-purple-600" />
+                  <Gift className="h-4 w-4 text-primary" />
                   <span>Redeem Loyalty Reward</span>
                 </h3>
                 <button onClick={() => setIsRedeemModalOpen(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">
@@ -1111,9 +1111,9 @@ function LoyaltyManagementPage() {
                 </button>
               </div>
               <div className="space-y-3 text-xs">
-                <div className="p-3 bg-purple-50 rounded-lg border border-purple-200 flex justify-between items-center">
-                  <span className="text-purple-700 font-medium">Available Balance:</span>
-                  <span className="font-bold text-purple-900 font-mono text-sm">{loyalty.pointsBalance.toLocaleString()} pts</span>
+                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200 flex justify-between items-center">
+                  <span className="text-primary font-medium">Available Balance:</span>
+                  <span className="font-bold text-blue-900 font-mono text-sm">{loyalty.pointsBalance.toLocaleString()} pts</span>
                 </div>
                 <div>
                   <label className="block font-semibold text-slate-700 mb-1">Select Reward Voucher</label>
@@ -1182,7 +1182,7 @@ function LoyaltyManagementPage() {
                     setIsRedeemModalOpen(false);
                     showNotification(`Redemption successful! Generated voucher code ${newRedeemRow.ref}`);
                   }}
-                  className="px-4 py-1.5 text-xs bg-purple-600 text-white font-bold rounded shadow-xs hover:bg-purple-700 cursor-pointer"
+                  className="px-4 py-1.5 text-xs bg-primary text-white font-bold rounded shadow-xs hover:bg-primary cursor-pointer"
                 >
                   Confirm Redemption
                 </button>

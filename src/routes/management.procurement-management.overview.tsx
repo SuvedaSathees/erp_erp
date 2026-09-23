@@ -86,8 +86,8 @@ const pipelineStages = [
   { stage: "Draft", count: 18, label: "Draft", desc: "Awaiting submission", color: "bg-slate-500", text: "text-slate-600 dark:text-slate-400", path: "/management/procurement-management/purchase-requisition" },
   { stage: "Submitted", count: 24, label: "In Queue", desc: "Routing for validation", color: "bg-blue-500", text: "text-blue-600 dark:text-blue-400", path: "/management/procurement-management/purchase-requisition" },
   { stage: "Budget Check", count: 11, label: "Validating", desc: "Cost center cap check", color: "bg-amber-500", text: "text-amber-600 dark:text-amber-400", path: "/management/procurement-management/purchase-requisition" },
-  { stage: "Approval", count: 16, label: "Under Review", desc: "HOD & Finance sign-off", color: "bg-indigo-500", text: "text-indigo-600 dark:text-indigo-400", path: "/management/procurement-management/purchase-requisition" },
-  { stage: "Sourcing / RFQ", count: 21, label: "Sourcing", desc: "RFQ / Quotation issued", color: "bg-purple-500", text: "text-purple-600 dark:text-purple-400", path: "/management/procurement-management/rfq-quotation" },
+  { stage: "Approval", count: 16, label: "Under Review", desc: "HOD & Finance sign-off", color: "bg-blue-500", text: "text-primary dark:text-blue-400", path: "/management/procurement-management/purchase-requisition" },
+  { stage: "Sourcing / RFQ", count: 21, label: "Sourcing", desc: "RFQ / Quotation issued", color: "bg-blue-500", text: "text-primary dark:text-blue-400", path: "/management/procurement-management/rfq-quotation" },
   { stage: "Approved", count: 42, label: "Ready", desc: "PO Release pending", color: "bg-teal-500", text: "text-teal-600 dark:text-teal-400", path: "/management/procurement-management/purchase-requisition" },
   { stage: "PO Created", count: 58, label: "Ordered", desc: "Vendor fulfillment in progress", color: "bg-emerald-500", text: "text-emerald-600 dark:text-emerald-400", path: "/management/procurement-management/purchase-order" },
 ];
@@ -95,8 +95,8 @@ const pipelineStages = [
 /* 12 Submodules Hub definition */
 const procurementSubmodules = [
   { title: "Purchase Requisition", count: "84 PRs", value: "₹ 3.84 Cr", path: "/management/procurement-management/purchase-requisition", icon: FileText, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-500/10", tag: "24 Pending" },
-  { title: "RFQ / Quotation", count: "32 RFQs", value: "₹ 2.15 Cr", path: "/management/procurement-management/rfq-quotation", icon: FileCheck, color: "text-indigo-600 dark:text-indigo-400", bg: "bg-indigo-500/10", tag: "14 Bidding" },
-  { title: "Tender Management", count: "8 Tenders", value: "₹ 5.60 Cr", path: "/management/procurement-management/tender-management", icon: Building2, color: "text-purple-600 dark:text-purple-400", bg: "bg-purple-500/10", tag: "3 Open" },
+  { title: "RFQ / Quotation", count: "32 RFQs", value: "₹ 2.15 Cr", path: "/management/procurement-management/rfq-quotation", icon: FileCheck, color: "text-primary dark:text-blue-400", bg: "bg-blue-500/10", tag: "14 Bidding" },
+  { title: "Tender Management", count: "8 Tenders", value: "₹ 5.60 Cr", path: "/management/procurement-management/tender-management", icon: Building2, color: "text-primary dark:text-blue-400", bg: "bg-primary/10", tag: "3 Open" },
   { title: "Vendor Quotation", count: "96 Bids", value: "₹ 4.12 Cr", path: "/management/procurement-management/vendor-quotation", icon: ShoppingCart, color: "text-cyan-600 dark:text-cyan-400", bg: "bg-cyan-500/10", tag: "18 Under Eval" },
   { title: "Vendor Comparison", count: "14 Matrix", value: "₹ 1.88 Cr", path: "/management/procurement-management/vendor-comparison", icon: Scale, color: "text-teal-600 dark:text-teal-400", bg: "bg-teal-500/10", tag: "L1 Analyzed" },
   { title: "Purchase Order", count: "152 POs", value: "₹ 9.45 Cr", path: "/management/procurement-management/purchase-order", icon: FileBadge, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-500/10", tag: "28 Dispatched" },
@@ -105,7 +105,7 @@ const procurementSubmodules = [
   { title: "Vendor Payment", count: "98 Vouchers", value: "₹ 4.95 Cr", path: "/management/procurement-management/vendor-payment", icon: CreditCard, color: "text-green-600 dark:text-green-400", bg: "bg-green-500/10", tag: "₹ 1.85 Cr Due" },
   { title: "Contract Management", count: "48 Contracts", value: "₹ 12.2 Cr", path: "/management/procurement-management/contract-management", icon: FileSpreadsheet, color: "text-sky-600 dark:text-sky-400", bg: "bg-sky-500/10", tag: "6 Expiring Soon" },
   { title: "Vendor Evaluation", count: "340 Rated", value: "94.2% SLA", path: "/management/procurement-management/vendor-evaluation", icon: Award, color: "text-orange-600 dark:text-orange-400", bg: "bg-orange-500/10", tag: "Grade A: 82%" },
-  { title: "Supplier Portal", count: "215 Logins", value: "Live Sync", path: "/management/procurement-management/supplier-portal", icon: Globe, color: "text-violet-600 dark:text-violet-400", bg: "bg-violet-500/10", tag: "12 Self-Service" },
+  { title: "Supplier Portal", count: "215 Logins", value: "Live Sync", path: "/management/procurement-management/supplier-portal", icon: Globe, color: "text-primary dark:text-blue-400", bg: "bg-primary/10", tag: "12 Self-Service" },
 ];
 
 /* Recent Requisitions Ledger Data */
@@ -261,8 +261,8 @@ function ProcurementOverviewPage() {
             label="Supplier Delivery OTIF"
             value="94.2%"
             neutralText="Target SLA: 90.0%"
-            iconBg="bg-violet-500/10"
-            iconColor="text-violet-500"
+            iconBg="bg-primary/10"
+            iconColor="text-blue-600"
             icon={<Users className="h-5 w-5" />}
           />
 
@@ -501,13 +501,13 @@ function ProcurementOverviewPage() {
                             "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold border shadow-2xs",
                             pr.status === "Approved" && "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25",
                             pr.status === "PO Created" && "bg-teal-500/10 text-teal-700 dark:text-teal-300 border-teal-500/25",
-                            pr.status === "In Approval" && "bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border-indigo-500/25",
+                            pr.status === "In Approval" && "bg-blue-500/10 text-primary dark:text-blue-300 border-blue-500/25",
                             pr.status === "Budget Check" && "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/25",
                             pr.status === "Draft" && "bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/25"
                           )}
                         >
                           {pr.status === "In Approval" && (
-                            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                            <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse"></span>
                           )}
                           {pr.status === "Approved" && "✓ "}
                           {pr.status === "PO Created" && "📦 "}

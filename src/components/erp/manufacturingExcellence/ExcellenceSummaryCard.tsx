@@ -35,9 +35,9 @@ export const ExcellenceSummaryCard: React.FC<ExcellenceSummaryCardProps> = ({
     const colors = {
       M: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 border-red-200",
       A: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-200",
-      I: "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200",
+      I: "bg-blue-100 text-primary dark:bg-blue-950 dark:text-blue-300 border-blue-200",
       C: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-200",
-      W: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 border-indigo-200",
+      W: "bg-blue-100 text-primary dark:bg-blue-950 dark:text-blue-300 border-blue-200",
     };
     return (
       <span
@@ -51,7 +51,7 @@ export const ExcellenceSummaryCard: React.FC<ExcellenceSummaryCardProps> = ({
 
   const scores = [
     { label: "Operational Score", value: record.operationalExcellenceScore, color: "bg-blue-500", type: "C" as const },
-    { label: "Digital Score", value: record.digitalExcellenceScore, color: "bg-purple-500", type: "A" as const },
+    { label: "Digital Score", value: record.digitalExcellenceScore, color: "bg-blue-500", type: "A" as const },
     { label: "Quality Score", value: record.qualityExcellenceScore, color: "bg-cyan-500", type: "C" as const },
     { label: "Sustainability Score", value: record.sustainabilityScore, color: "bg-emerald-500", type: "C" as const },
     { label: "AI Score", value: record.aiExcellenceScore, color: "bg-amber-500", type: "A" as const },

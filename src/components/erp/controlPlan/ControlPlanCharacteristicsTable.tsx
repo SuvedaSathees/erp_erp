@@ -59,7 +59,7 @@ export const ControlPlanCharacteristicsTable: React.FC<ControlPlanCharacteristic
                 <td className="py-2.5 px-3 text-foreground font-medium">{c.productCharacteristic}</td>
                 <td className="py-2.5 px-3 text-muted-foreground text-[11px]">{c.processCharacteristic}</td>
                 <td className="py-2.5 px-3">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border border-purple-300">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-100 dark:bg-blue-950 text-primary dark:text-blue-300 border border-blue-300">
                     {c.specialCharacteristics}
                   </span>
                 </td>
@@ -76,7 +76,7 @@ export const ControlPlanCharacteristicsTable: React.FC<ControlPlanCharacteristic
 
       <div className="p-3 bg-muted/30 border-t border-border flex justify-between items-center text-[10px]">
         <span className="text-muted-foreground font-semibold">
-          Legend: <span className="text-purple-600 font-mono font-bold">SC-xx</span> Special Characteristics
+          Legend: <span className="text-primary font-mono font-bold">SC-xx</span> Special Characteristics
         </span>
 
         <button

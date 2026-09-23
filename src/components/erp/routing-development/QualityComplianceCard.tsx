@@ -14,7 +14,7 @@ export const QualityComplianceCard: React.FC<QualityComplianceCardProps> = ({
       <div>
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-purple-500" />
+            <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
             <h3 className="font-bold text-foreground text-xs">Quality & Compliance</h3>
           </div>
         </div>

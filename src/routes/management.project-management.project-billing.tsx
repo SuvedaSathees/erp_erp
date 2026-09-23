@@ -913,22 +913,22 @@ ${billings
                 toast.info("Filtered for billings with received payments.");
               }}
               className={cn(
-                "bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-purple-500/60 hover:shadow-xs",
-                activeKpiFilter === "received" && "ring-2 ring-purple-500",
+                "bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-primary/60 hover:shadow-xs",
+                activeKpiFilter === "received" && "ring-2 ring-primary",
               )}
             >
               <div>
                 <span className="text-[11px] text-muted-foreground font-medium block">
                   Amount Received
                 </span>
-                <span className="text-xl font-bold font-mono text-purple-600 mt-0.5 block">
+                <span className="text-xl font-bold font-mono text-primary mt-0.5 block">
                   ₹ 118.00 L
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold block mt-1">
+                <span className="text-[10px] text-primary dark:text-blue-400 font-semibold block mt-1">
                   82.80% of Billed
                 </span>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <Wallet className="h-5 w-5" />
               </div>
             </div>
@@ -1125,7 +1125,7 @@ ${billings
                     <circle cx="50" cy="50" r="38" stroke="#3b82f6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#f97316" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="40" />
                     <circle cx="50" cy="50" r="38" stroke="#06b6d4" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="65" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="156" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="156" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="192" />
                     <circle cx="50" cy="50" r="38" stroke="#ef4444" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="220" />
                   </svg>
@@ -1140,7 +1140,7 @@ ${billings
                     { name: "Draft", count: "8 (17.0%)", color: "bg-blue-500", status: "Draft" },
                     { name: "Pending", count: "5 (10.6%)", color: "bg-orange-500", status: "Pending Approval" },
                     { name: "Invoiced", count: "18 (38.3%)", color: "bg-cyan-500", status: "Invoiced" },
-                    { name: "Partially Paid", count: "7 (14.9%)", color: "bg-purple-500", status: "Partially Paid" },
+                    { name: "Partially Paid", count: "7 (14.9%)", color: "bg-blue-500", status: "Partially Paid" },
                     { name: "Paid", count: "21 (44.7%)", color: "bg-emerald-500", status: "Paid" },
                     { name: "Overdue", count: "4 (8.5%)", color: "bg-rose-500", status: "Overdue" },
                   ].map((s) => (
@@ -1430,7 +1430,7 @@ ${billings
             <CardHeader className="p-4 pb-2 border-b border-border/40">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5 flex-wrap">
-                  <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-300 font-mono font-bold text-xs px-2 py-0.5">
+                  <Badge variant="outline" className="bg-blue-50 text-primary border-blue-300 font-mono font-bold text-xs px-2 py-0.5">
                     {selectedBilling.id}
                   </Badge>
                   <span className="font-mono text-xs font-semibold text-muted-foreground">

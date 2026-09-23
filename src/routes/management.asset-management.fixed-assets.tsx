@@ -512,7 +512,7 @@ export function FixedAssetsFormPage() {
           <div className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground font-medium">Gross Asset Value</span>
-              <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <Package className="h-4 w-4" />
               </div>
             </div>
@@ -608,7 +608,7 @@ export function FixedAssetsFormPage() {
                     <circle cx="50" cy="50" r="38" stroke="#2563eb" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="138.7" />
                     <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="205.5" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="232.5" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="232.5" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <span className="text-xs font-bold font-mono text-slate-900 dark:text-white">428</span>
@@ -621,7 +621,7 @@ export function FixedAssetsFormPage() {
                     { name: "Plant & Mach.", val: "₹ 7.80 Cr", color: "bg-blue-600" },
                     { name: "Buildings", val: "₹ 5.20 Cr", color: "bg-emerald-500" },
                     { name: "Vehicles", val: "₹ 2.10 Cr", color: "bg-amber-500" },
-                    { name: "IT Systems", val: "₹ 1.40 Cr", color: "bg-purple-500" },
+                    { name: "IT Systems", val: "₹ 1.40 Cr", color: "bg-blue-500" },
                     { name: "Furniture", val: "₹ 0.80 Cr", color: "bg-cyan-500" },
                     { name: "Other Capital", val: "₹ 1.30 Cr", color: "bg-slate-500" },
                   ].map((item) => (
@@ -1016,7 +1016,7 @@ export function FixedAssetsFormPage() {
                   {/* Vehicles: 8.2% */}
                   <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="198.3" />
                   {/* IT Equipment: 5.7% */}
-                  <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="217.9" />
+                  <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="217.9" />
                   {/* Others: 3.0% */}
                   <circle cx="50" cy="50" r="38" stroke="#64748b" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="231.5" />
                 </svg>
@@ -1031,7 +1031,7 @@ export function FixedAssetsFormPage() {
                   { name: "Plant & Machinery", val: "58.5% (₹ 0.83 Cr)", color: "bg-blue-600" },
                   { name: "Buildings", val: "24.6% (₹ 0.35 Cr)", color: "bg-emerald-500" },
                   { name: "Vehicles", val: "8.2% (₹ 0.12 Cr)", color: "bg-amber-500" },
-                  { name: "IT Equipment", val: "5.7% (₹ 0.08 Cr)", color: "bg-purple-500" },
+                  { name: "IT Equipment", val: "5.7% (₹ 0.08 Cr)", color: "bg-blue-500" },
                   { name: "Others", val: "3.0% (₹ 0.04 Cr)", color: "bg-slate-500" },
                 ].map((item) => (
                   <div key={item.name} className="flex justify-between items-center">

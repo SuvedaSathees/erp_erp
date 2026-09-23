@@ -668,7 +668,7 @@ function UserRoleManagementPage() {
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Active Sessions</span>
                   <div className="text-xl font-bold font-mono text-foreground">14 Sessions</div>
-                  <p className="text-[10px] text-purple-600 font-medium">Zero anomalous logins</p>
+                  <p className="text-[10px] text-primary font-medium">Zero anomalous logins</p>
                 </div>
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">License Utilization</span>
@@ -1132,7 +1132,7 @@ function UserRoleManagementPage() {
             MAICW: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
             <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
             <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-            <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
+            <span className="text-blue-600 font-bold">C</span> (Calculated) |{" "}
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div>

@@ -38,8 +38,9 @@ import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
-import { DataTable } from "@/components/erp/DataTable";
+import { DataTable, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -275,8 +276,15 @@ function TaxManagementPage() {
     importMutation.mutate({ name: "return_draft.xml" });
   };
 
-  const isLoading = dashboardQuery.isLoading;
+  const isError = dashboardQuery.isError || obligationsQuery.isError;
+  const isLoading = dashboardQuery.isLoading || obligationsQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    dashboardQuery.error || obligationsQuery.error,
+    "Failed to load tax management records.",
+  );
 
   // Filter obligations
   const allObligations = obligationsQuery.data || [];
@@ -302,7 +310,16 @@ function TaxManagementPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Tax Management"
+          error={dashboardQuery.error || obligationsQuery.error}
+          onRetry={() => {
+            dashboardQuery.refetch();
+            obligationsQuery.refetch();
+          }}
+        />
+      ) : isLoading || !data ? (
         <TaxSkeleton />
       ) : (
         <div className="space-y-5">
@@ -345,8 +362,8 @@ function TaxManagementPage() {
               value={`${data.kpis.complianceStatus}%`}
               neutralText="On Track"
               icon={<CheckCircle className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -586,6 +603,12 @@ function TaxManagementPage() {
                             </div>
                           </div>
                         )}
+                        empty={
+                          <EmptyState
+                            title="No tax obligations found"
+                            description="No tax obligation records matched your search or filter criteria."
+                          />
+                        }
                       />
                     </div>
 

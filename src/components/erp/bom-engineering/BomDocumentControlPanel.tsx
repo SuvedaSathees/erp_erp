@@ -105,7 +105,7 @@ export const BomDocumentControlPanel: React.FC<BomDocumentControlPanelProps> = (
             onClick={onCompareBom}
             className="w-full text-left px-2 py-1 rounded hover:bg-accent hover:text-accent-foreground text-foreground flex items-center gap-1.5 font-medium transition-colors"
           >
-            <ShieldCheck className="w-3 h-3 text-purple-500 shrink-0" /> Compare BOM
+            <ShieldCheck className="w-3 h-3 text-blue-600 shrink-0" /> Compare BOM
           </button>
           <button
             onClick={onExportExcel}

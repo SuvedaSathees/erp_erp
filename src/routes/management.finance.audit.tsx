@@ -55,8 +55,9 @@ import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
-import { DataTable } from "@/components/erp/DataTable";
+import { DataTable, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -160,8 +161,11 @@ function AuditTrailPage() {
     setExportOpen(false);
   };
 
+  const isError = dashboardQuery.isError;
   const isLoading = dashboardQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(isError, dashboardQuery.error, "Failed to load audit trail dashboard.");
 
   // Filter logs list
   const logsList = data?.logs || [];
@@ -198,7 +202,13 @@ function AuditTrailPage() {
       description="Track and review all system changes and user activities for compliance and accountability."
       tabs={<FinanceTabBar />}
     >
-      {isLoading || !data ? (
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Audit Trail"
+          error={dashboardQuery.error}
+          onRetry={() => dashboardQuery.refetch()}
+        />
+      ) : isLoading || !data ? (
         <AuditSkeleton />
       ) : (
         <div className="space-y-5">
@@ -206,7 +216,7 @@ function AuditTrailPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <StatCard
               label="Total Activities (YTD)"
-              value={data.kpis.totalActivitiesYTD.toLocaleString()}
+              value={data.kpis.totalActivitiesYTD.toLocaleString("en-IN")}
               neutralText="All logged operations"
               icon={<Layers className="h-5 w-5" />}
               iconBg="bg-primary/10"
@@ -214,7 +224,7 @@ function AuditTrailPage() {
             />
             <StatCard
               label="Unique Users"
-              value={data.kpis.uniqueUsersCount.toString()}
+              value={data.kpis.uniqueUsersCount.toLocaleString("en-IN")}
               neutralText="Active system actors"
               icon={<User className="h-5 w-5" />}
               iconBg="bg-blue-500/10"
@@ -222,7 +232,7 @@ function AuditTrailPage() {
             />
             <StatCard
               label="Successful Activities"
-              value={data.kpis.successfulActivitiesCount.toLocaleString()}
+              value={data.kpis.successfulActivitiesCount.toLocaleString("en-IN")}
               neutralText="100% of recorded activities"
               icon={<CheckCircle className="h-5 w-5" />}
               iconBg="bg-green-500/10"
@@ -230,7 +240,7 @@ function AuditTrailPage() {
             />
             <StatCard
               label="Failed Activities"
-              value={data.kpis.failedActivitiesCount.toString()}
+              value={data.kpis.failedActivitiesCount.toLocaleString("en-IN")}
               neutralText="0 errors recorded"
               icon={<AlertTriangle className="h-5 w-5" />}
               iconBg="bg-amber-500/10"
@@ -238,11 +248,11 @@ function AuditTrailPage() {
             />
             <StatCard
               label="Sensitive Changes"
-              value={data.kpis.sensitiveChangesCount.toLocaleString()}
+              value={data.kpis.sensitiveChangesCount.toLocaleString("en-IN")}
               neutralText="Keyword-based detection"
               icon={<Shield className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -391,7 +401,7 @@ function AuditTrailPage() {
                                 : r.activityType === "Create"
                                   ? "bg-green-50 text-green-700 border-green-200"
                                   : r.activityType === "Approve"
-                                    ? "bg-purple-50 text-purple-700 border-purple-200"
+                                    ? "bg-blue-50 text-primary border-blue-200"
                                     : "bg-blue-50 text-blue-700 border-blue-200"
                             }`}
                           >
@@ -463,6 +473,12 @@ function AuditTrailPage() {
                       </div>
                     )}
                     onRowClick={handleRowClick}
+                    empty={
+                      <EmptyState
+                        title="No audit logs found"
+                        description="No audit activity entries matched your current search and filter settings."
+                      />
+                    }
                   />
                 </div>
               ) : activeTab === "security" ? (
@@ -629,7 +645,7 @@ function AuditTrailPage() {
                     {
                       label: "Sensitive Changes",
                       count: data.kpis.sensitiveChangesCount,
-                      icon: <Shield className="h-4 w-4 text-purple-500" />,
+                      icon: <Shield className="h-4 w-4 text-blue-600" />,
                     },
                     {
                       label: "System Events",
@@ -649,7 +665,7 @@ function AuditTrailPage() {
                         {filter.label}
                       </span>
                       <span className="text-muted-foreground text-[10px] block tabular">
-                        {filter.count.toLocaleString()} Activities
+                        {filter.count.toLocaleString("en-IN")} Activities
                       </span>
                     </div>
                   ))}
@@ -723,8 +739,8 @@ function AuditTrailPage() {
                     </ResponsiveContainer>
                     <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
                       <div>
-                        <div className="font-display text-[14px] font-bold text-foreground">
-                          {data.kpis.totalActivitiesYTD.toLocaleString()}
+                        <div className="font-display text-[14px] font-bold text-foreground tabular">
+                          {data.kpis.totalActivitiesYTD.toLocaleString("en-IN")}
                         </div>
                         <div className="text-[8px] text-muted-foreground uppercase tracking-wider">
                           Total Activities
@@ -743,8 +759,8 @@ function AuditTrailPage() {
                           />
                           {entry.name}
                         </span>
-                        <span className="font-semibold text-foreground">
-                          {entry.percentage}% ({entry.value.toLocaleString()})
+                        <span className="font-semibold text-foreground tabular">
+                          {entry.percentage}% ({entry.value.toLocaleString("en-IN")})
                         </span>
                       </li>
                     ))}

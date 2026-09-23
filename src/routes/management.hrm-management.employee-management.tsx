@@ -1058,7 +1058,7 @@ export default function EmployeeManagementPage() {
                     <div className="font-bold text-slate-900">Next Review Date</div>
                     <div className="text-slate-500">01 Oct 2024</div>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-purple-50 text-purple-700">
+                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-blue-50 text-primary">
                     in 5 Mos
                   </span>
                 </div>

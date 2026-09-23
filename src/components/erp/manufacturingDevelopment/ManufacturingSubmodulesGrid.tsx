@@ -84,7 +84,7 @@ export const MANUFACTURING_SUBMODULES: ManufacturingSubmodule[] = [
     route: "/development/manufacturing-development/control-plan",
     newRoute: "/development/manufacturing-development/control-plan/new",
     icon: ClipboardList,
-    color: "#6366f1", // Indigo
+    color: "#3B82F6", // Blue
     score: 88,
     scoreLabel: "Compliance",
     activeCount: 12,
@@ -114,7 +114,7 @@ export const MANUFACTURING_SUBMODULES: ManufacturingSubmodule[] = [
     route: "/development/manufacturing-development/process-validation",
     newRoute: "/development/manufacturing-development/process-validation/new",
     icon: Factory,
-    color: "#8b5cf6", // Purple
+    color: "#0A3C75", // Navy
     score: 82,
     scoreLabel: "PPAP L3 Ready",
     activeCount: 6,
@@ -219,7 +219,7 @@ export const MANUFACTURING_SUBMODULES: ManufacturingSubmodule[] = [
     route: "/development/manufacturing-development/smart-factory-development",
     newRoute: "/development/manufacturing-development/smart-factory-development/new",
     icon: Sparkles,
-    color: "#a855f7", // Purple light
+    color: "#0A3C75", // Navy light
     score: 89,
     scoreLabel: "Integration",
     activeCount: 7,

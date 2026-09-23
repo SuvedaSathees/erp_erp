@@ -80,16 +80,16 @@ export function MaterialFlowSection({
             </CardDescription>
           </div>
 
-          <div className="flex items-center gap-2 bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 rounded-xl px-3 py-1.5 shrink-0">
+          <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-xl px-3 py-1.5 shrink-0">
             <div>
-              <span className="text-[10px] font-semibold uppercase text-purple-600 dark:text-purple-400 block tracking-wider">
+              <span className="text-[10px] font-semibold uppercase text-primary dark:text-blue-400 block tracking-wider">
                 Logistics Score
               </span>
               <div className="flex items-baseline gap-1">
-                <span className="text-lg font-extrabold text-purple-700 dark:text-purple-300 font-mono">
+                <span className="text-lg font-extrabold text-primary dark:text-blue-300 font-mono">
                   {logisticsScore}
                 </span>
-                <span className="text-[10px] text-purple-500 font-semibold">/100</span>
+                <span className="text-[10px] text-blue-600 font-semibold">/100</span>
               </div>
             </div>
           </div>
@@ -110,7 +110,7 @@ export function MaterialFlowSection({
                     <span className="font-semibold text-foreground truncate">{doc.label}</span>
                   </div>
                   <div className="flex items-center gap-1.5 mt-0.5 pl-3.5">
-                    <FileText className="h-3.5 w-3.5 text-purple-600 shrink-0" />
+                    <FileText className="h-3.5 w-3.5 text-primary shrink-0" />
                     <span
                       onClick={() => setPreviewDoc(doc)}
                       className="font-mono text-[11px] text-primary truncate cursor-pointer hover:underline font-medium"
@@ -137,7 +137,7 @@ export function MaterialFlowSection({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-7 px-2 text-[11px] hover:text-purple-600 cursor-pointer border-border"
+                    className="h-7 px-2 text-[11px] hover:text-primary cursor-pointer border-border"
                     onClick={() => handleDownload(doc)}
                   >
                     <Download className="h-3.5 w-3.5" />
@@ -160,7 +160,7 @@ export function MaterialFlowSection({
                     onClick={() => toggleEq(eq)}
                     className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors cursor-pointer border ${
                       isSelected
-                        ? "bg-purple-600 text-white border-purple-600 shadow-xs"
+                        ? "bg-primary text-white border-primary shadow-xs"
                         : "bg-background text-muted-foreground border-border hover:bg-muted"
                     }`}
                   >
@@ -178,7 +178,7 @@ export function MaterialFlowSection({
         <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-base font-bold">
-              <FileText className="h-5 w-5 text-purple-600" />
+              <FileText className="h-5 w-5 text-primary" />
               {previewDoc?.filename}
             </DialogTitle>
             <DialogDescription className="text-xs">

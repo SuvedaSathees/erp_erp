@@ -11,7 +11,7 @@ export const ControlPlanReadinessRings: React.FC<ControlPlanReadinessRingsProps>
   const rings = [
     { label: "Characteristics", score: record.characteristicReadinessScore, color: "#10b981" },
     { label: "Inspection", score: record.inspectionReadinessScore, color: "#3b82f6" },
-    { label: "Process Control", score: record.processControlScore, color: "#8b5cf6" },
+    { label: "Process Control", score: record.processControlScore, color: "#0A3C75" },
     { label: "Validation", score: record.validationScore, color: "#14b8a6" },
     { label: "Overall Readiness", score: record.overallControlPlanReadinessScore, color: "#059669" },
   ];

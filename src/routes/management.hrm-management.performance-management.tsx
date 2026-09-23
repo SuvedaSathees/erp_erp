@@ -319,14 +319,14 @@ export function PerformanceManagementPage() {
             </div>
 
             {/* 4. Competency Score */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-purple-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="p-2 rounded-lg bg-purple-100 text-purple-600">
+            <div className="p-2.5 rounded-xl border border-slate-200 bg-blue-50/30 flex items-center gap-2.5 shadow-2xs">
+              <div className="p-2 rounded-lg bg-blue-100 text-primary">
                 <Award className="h-4 w-4" />
               </div>
               <div>
                 <div className="text-[10px] text-muted-foreground font-semibold">Competency Score</div>
-                <div className="text-sm font-extrabold text-purple-700 font-mono">4.1 / 5</div>
-                <div className="text-[9px] text-purple-700 font-semibold">Good</div>
+                <div className="text-sm font-extrabold text-primary font-mono">4.1 / 5</div>
+                <div className="text-[9px] text-primary font-semibold">Good</div>
               </div>
             </div>
 
@@ -343,14 +343,14 @@ export function PerformanceManagementPage() {
             </div>
 
             {/* 6. Potential Rating */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-indigo-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="p-2 rounded-lg bg-indigo-100 text-indigo-600">
+            <div className="p-2.5 rounded-xl border border-slate-200 bg-blue-50/30 flex items-center gap-2.5 shadow-2xs">
+              <div className="p-2 rounded-lg bg-blue-100 text-primary">
                 <Rocket className="h-4 w-4" />
               </div>
               <div>
                 <div className="text-[10px] text-muted-foreground font-semibold">Potential Rating</div>
-                <div className="text-sm font-extrabold text-indigo-700">High</div>
-                <div className="text-[9px] text-indigo-700 font-semibold">Leadership Path</div>
+                <div className="text-sm font-extrabold text-primary">High</div>
+                <div className="text-[9px] text-primary font-semibold">Leadership Path</div>
               </div>
             </div>
           </div>
@@ -602,7 +602,7 @@ export function PerformanceManagementPage() {
               <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <Users className="h-4 w-4 text-purple-600" />
+                    <Users className="h-4 w-4 text-primary" />
                     360° Multi-Rater Score Breakdown
                   </h4>
                   <span className="font-mono text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
@@ -631,7 +631,7 @@ export function PerformanceManagementPage() {
                 <button
                   type="button"
                   onClick={() => setIsFeedbackModalOpen(true)}
-                  className="w-full py-2 rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 font-semibold text-xs transition cursor-pointer"
+                  className="w-full py-2 rounded-lg bg-blue-50 text-primary hover:bg-blue-100 border border-blue-200 font-semibold text-xs transition cursor-pointer"
                 >
                   + Request More 360° Peer Feedback
                 </button>
@@ -745,10 +745,10 @@ export function PerformanceManagementPage() {
                   <div className="p-3 rounded-lg border border-slate-100 bg-slate-50/60 space-y-1.5">
                     <div className="flex justify-between font-semibold">
                       <span>Core Values & Adherence (10% Weightage)</span>
-                      <span className="font-mono font-bold text-purple-700">88% (4.4 / 5)</span>
+                      <span className="font-mono font-bold text-primary">88% (4.4 / 5)</span>
                     </div>
                     <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                      <div className="h-full bg-purple-600 rounded-full" style={{ width: "88%" }} />
+                      <div className="h-full bg-primary rounded-full" style={{ width: "88%" }} />
                     </div>
                   </div>
                 </div>
@@ -915,7 +915,7 @@ export function PerformanceManagementPage() {
           <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Users className="h-4 w-4 text-purple-600" />
+                <Users className="h-4 w-4 text-primary" />
                 Request 360° Peer Feedback
               </h3>
               <button
@@ -955,7 +955,7 @@ export function PerformanceManagementPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 font-semibold cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary font-semibold cursor-pointer"
                 >
                   Send Requests
                 </button>

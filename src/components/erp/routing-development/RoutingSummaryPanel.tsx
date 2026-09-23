@@ -42,7 +42,7 @@ export const RoutingSummaryPanel: React.FC<RoutingSummaryPanelProps> = ({
 
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground">Quality Score</span>
-          <span className="font-mono font-bold text-purple-600 dark:text-purple-400">
+          <span className="font-mono font-bold text-primary dark:text-blue-400">
             {record.qualityScore} / 100
           </span>
         </div>

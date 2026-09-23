@@ -739,7 +739,7 @@ ${wbsBudgets
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setIsEvaOpen(true)} className="cursor-pointer">
-                      <Calculator className="mr-2 h-4 w-4 text-purple-600" /> Earned Value Analysis (EVA)
+                      <Calculator className="mr-2 h-4 w-4 text-primary" /> Earned Value Analysis (EVA)
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -1082,8 +1082,8 @@ ${wbsBudgets
                 toast.info("Filtered for WBS elements where forecast cost reaches or exceeds budget.");
               }}
               className={cn(
-                "bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-purple-500/60 hover:shadow-xs",
-                activeKpiFilter === "forecast" && "ring-2 ring-purple-500",
+                "bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-primary/60 hover:shadow-xs",
+                activeKpiFilter === "forecast" && "ring-2 ring-primary",
               )}
             >
               <div>
@@ -1093,11 +1093,11 @@ ${wbsBudgets
                 <span className="text-xl font-bold font-mono text-slate-900 dark:text-white mt-0.5 block">
                   ₹ 181.20 L
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold block mt-1">
+                <span className="text-[10px] text-primary dark:text-blue-400 font-semibold block mt-1">
                   103.54% of Budget
                 </span>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <TrendingUp className="h-5 w-5" />
               </div>
             </div>
@@ -1226,12 +1226,12 @@ ${wbsBudgets
                       y="27"
                       width="28"
                       height="113"
-                      fill="#8b5cf6"
+                      fill="#0A3C75"
                       rx="2"
                       onClick={() => setIsChangeRequestOpen(true)}
                       className="cursor-pointer hover:opacity-80 transition-opacity"
                     />
-                    <text x="210" y="21" fontSize="7.5" fill="#8b5cf6" fontWeight="bold">181.20L</text>
+                    <text x="210" y="21" fontSize="7.5" fill="#0A3C75" fontWeight="bold">181.20L</text>
                     <text x="218" y="148" fontSize="7.5" fill="#64748b">Forecast</text>
                   </svg>
                 </div>
@@ -1280,8 +1280,8 @@ ${wbsBudgets
                     onClick={() => setIsChangeRequestOpen(true)}
                     className="flex justify-between items-center p-1 rounded hover:bg-muted/40 cursor-pointer transition-colors"
                   >
-                    <span className="flex items-center gap-1.5"><div className="h-2 w-2 rounded-full bg-purple-500" /> Forecast Cost (₹ 181.20 L)</span>
-                    <span className="font-mono font-bold text-purple-600">103.54%</span>
+                    <span className="flex items-center gap-1.5"><div className="h-2 w-2 rounded-full bg-blue-500" /> Forecast Cost (₹ 181.20 L)</span>
+                    <span className="font-mono font-bold text-primary">103.54%</span>
                   </div>
                 </div>
               </CardContent>
@@ -1357,7 +1357,7 @@ ${wbsBudgets
                 <div className="flex items-center justify-center gap-4 text-[10px] font-semibold">
                   <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-amber-500" /> Actual</span>
                   <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-emerald-500" /> Committed</span>
-                  <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-purple-500" /> Forecast</span>
+                  <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-blue-500" /> Forecast</span>
                 </div>
 
                 <div className="h-36 w-full">
@@ -1372,18 +1372,18 @@ ${wbsBudgets
                     <text x="5" y="84" fontSize="7" fill="#94a3b8">80</text>
                     <text x="10" y="114" fontSize="7" fill="#94a3b8">0</text>
 
-                    {/* Forecast line (Purple) */}
-                    <polyline fill="none" stroke="#8b5cf6" strokeWidth="1.5" points="35,58 75,54 115,49 155,42 195,35 245,30" />
+                    {/* Forecast line (Navy) */}
+                    <polyline fill="none" stroke="#0A3C75" strokeWidth="1.5" points="35,58 75,54 115,49 155,42 195,35 245,30" />
                     {/* Committed line (Green) */}
                     <polyline fill="none" stroke="#10b981" strokeWidth="1.5" points="35,80 75,72 115,64 155,56 195,54 245,48" />
                     {/* Actual line (Orange) */}
                     <polyline fill="none" stroke="#f59e0b" strokeWidth="1.5" points="35,96 75,91 115,86 155,80 195,75 245,71" />
 
-                    <circle cx="245" cy="30" r="2.5" fill="#8b5cf6" />
+                    <circle cx="245" cy="30" r="2.5" fill="#0A3C75" />
                     <circle cx="245" cy="48" r="2.5" fill="#10b981" />
                     <circle cx="245" cy="71" r="2.5" fill="#f59e0b" />
 
-                    <text x="248" y="28" fontSize="7" fill="#8b5cf6" fontWeight="bold">181</text>
+                    <text x="248" y="28" fontSize="7" fill="#0A3C75" fontWeight="bold">181</text>
                     <text x="248" y="47" fontSize="7" fill="#10b981" fontWeight="bold">128</text>
                     <text x="248" y="70" fontSize="7" fill="#f59e0b" fontWeight="bold">82</text>
 
@@ -1816,7 +1816,7 @@ ${wbsBudgets
                   AI Budget Insights & Recommendations
                 </CardTitle>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-[9px] bg-purple-50 text-purple-700 border-purple-200 font-mono">
+                  <Badge variant="outline" className="text-[9px] bg-blue-50 text-primary border-blue-200 font-mono">
                     4 Suggestions
                   </Badge>
                   <button
@@ -2426,7 +2426,7 @@ ${wbsBudgets
           <DialogContent className="max-w-lg">
             <DialogHeader>
               <DialogTitle className="text-sm font-bold flex items-center gap-2">
-                <Calculator className="h-4 w-4 text-purple-600" />
+                <Calculator className="h-4 w-4 text-primary" />
                 Earned Value Analysis (EVA)
               </DialogTitle>
               <DialogDescription className="text-xs">

@@ -32,7 +32,7 @@ export const BomOverviewGrid: React.FC<BomOverviewGridProps> = ({
     { label: "Purchased Part", count: 52, percentage: 60, color: "#3b82f6" },
     { label: "Sub-Assembly", count: 12, percentage: 14, color: "#10b981" },
     { label: "Raw Material", count: 10, percentage: 12, color: "#f59e0b" },
-    { label: "Electronic Component", count: 8, percentage: 9, color: "#8b5cf6" },
+    { label: "Electronic Component", count: 8, percentage: 9, color: "#0A3C75" },
     { label: "Others", count: 4, percentage: 5, color: "#64748b" },
   ];
 
@@ -148,7 +148,7 @@ export const BomOverviewGrid: React.FC<BomOverviewGridProps> = ({
       <div className="bg-card border border-border rounded-xl shadow-xs p-4 flex flex-col justify-between hover:border-border/80 transition-all">
         <div>
           <div className="flex items-center gap-2 pb-2.5 border-b border-border mb-3">
-            <Activity className="w-4 h-4 text-purple-500" />
+            <Activity className="w-4 h-4 text-blue-600" />
             <h3 className="text-xs font-bold text-foreground">Sourcing & Operational Profile</h3>
           </div>
 
@@ -193,7 +193,7 @@ export const BomOverviewGrid: React.FC<BomOverviewGridProps> = ({
               {activeModal === "material" && <PieChart className="h-5 w-5 text-blue-600" />}
               {activeModal === "cost" && <DollarSign className="h-5 w-5 text-emerald-600" />}
               {activeModal === "quality" && <ShieldCheck className="h-5 w-5 text-emerald-600" />}
-              {activeModal === "manufacturing" && <Activity className="h-5 w-5 text-purple-600" />}
+              {activeModal === "manufacturing" && <Activity className="h-5 w-5 text-primary" />}
               {activeModal === "material" && "Material & Component Distribution"}
               {activeModal === "cost" && "BOM Cost Breakdown & Pareto Analysis"}
               {activeModal === "quality" && "Standards & Regulatory Compliance"}

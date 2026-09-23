@@ -40,7 +40,7 @@ export function FqcDetailsForm({ record, onChange }: FqcDetailsFormProps) {
             <Factory className="w-3 h-3" />
             {record.inspectionStage}
           </span>
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border border-purple-200">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-primary dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200">
             <ShieldCheck className="w-3 h-3" />
             {record.samplingPlan}
           </span>

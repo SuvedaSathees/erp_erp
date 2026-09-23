@@ -1125,22 +1125,22 @@ ${risks
                 toast.info("Filtered for Open & Monitoring risks");
               }}
               className={cn(
-                "bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-purple-500/60 hover:shadow-xs",
-                activeKpiFilter === "open" && "ring-2 ring-purple-500",
+                "bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-primary/60 hover:shadow-xs",
+                activeKpiFilter === "open" && "ring-2 ring-primary",
               )}
             >
               <div>
                 <span className="text-[11px] text-muted-foreground font-medium block">
                   Open Risks
                 </span>
-                <span className="text-xl font-bold font-mono text-purple-600 mt-0.5 block">
+                <span className="text-xl font-bold font-mono text-primary mt-0.5 block">
                   31
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold block mt-1">
+                <span className="text-[10px] text-primary dark:text-blue-400 font-semibold block mt-1">
                   48.4% of Total
                 </span>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <TrendingUp className="h-5 w-5" />
               </div>
             </div>
@@ -1313,7 +1313,7 @@ ${risks
                     <circle cx="50" cy="50" r="38" stroke="#3b82f6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="142" />
                     <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="183" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="213" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="213" />
                     <circle cx="50" cy="50" r="38" stroke="#06b6d4" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="228" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -1327,7 +1327,7 @@ ${risks
                     { name: "Mitigate", count: "38 (59.4%)", color: "bg-blue-500", strat: "Mitigate" },
                     { name: "Transfer", count: "11 (17.2%)", color: "bg-emerald-500", strat: "Transfer" },
                     { name: "Accept", count: "8 (12.5%)", color: "bg-amber-500", strat: "Accept" },
-                    { name: "Avoid", count: "4 (6.3%)", color: "bg-purple-500", strat: "Avoid" },
+                    { name: "Avoid", count: "4 (6.3%)", color: "bg-blue-500", strat: "Avoid" },
                     { name: "Escalate", count: "3 (4.7%)", color: "bg-cyan-500", strat: "Escalate" },
                   ].map((s) => (
                     <div
@@ -1472,7 +1472,7 @@ ${risks
                                 : item.status === "Monitoring"
                                 ? "bg-amber-50 text-amber-700 border-amber-300"
                                 : item.status === "Escalated"
-                                ? "bg-purple-50 text-purple-700 border-purple-300"
+                                ? "bg-blue-50 text-primary border-blue-300"
                                 : "bg-emerald-50 text-emerald-700 border-emerald-300",
                             )}
                           >
@@ -1603,7 +1603,7 @@ ${risks
                         : selectedRisk.status === "Monitoring"
                         ? "bg-amber-50 text-amber-700 border-amber-300"
                         : selectedRisk.status === "Escalated"
-                        ? "bg-purple-50 text-purple-700 border-purple-300"
+                        ? "bg-blue-50 text-primary border-blue-300"
                         : "bg-emerald-50 text-emerald-700 border-emerald-300",
                     )}
                   >
@@ -2160,7 +2160,7 @@ ${risks
         <Dialog open={isEscalationLogOpen} onOpenChange={setIsEscalationLogOpen}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle className="text-sm font-bold flex items-center gap-2 text-purple-600">
+              <DialogTitle className="text-sm font-bold flex items-center gap-2 text-primary">
                 <History className="h-4 w-4" />
                 Risk Escalation & Steering Log
               </DialogTitle>
@@ -2172,7 +2172,7 @@ ${risks
               <div className="pt-2">
                 <span className="font-mono font-bold text-primary block">R-010: High voltage grid interconnect delay</span>
                 <span className="text-muted-foreground text-[11px] block">Escalated to State Electricity Board • 02-Sep-2026</span>
-                <Badge className="bg-purple-600 text-white text-[8px] mt-1">Escalated to Board</Badge>
+                <Badge className="bg-primary text-white text-[8px] mt-1">Escalated to Board</Badge>
               </div>
               <div className="pt-2">
                 <span className="font-mono font-bold text-primary block">R-001: Critical controller supplier delay</span>

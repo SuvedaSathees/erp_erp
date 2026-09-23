@@ -11,7 +11,7 @@ interface CategorySegment {
 const CATEGORIES: CategorySegment[] = [
   { name: "ISO Standards", percentage: 40, color: "#2563eb", count: 19 },
   { name: "Regulatory & Statutory", percentage: 25, color: "#059669", count: 12 },
-  { name: "Legal Register", percentage: 15, color: "#9333ea", count: 7 },
+  { name: "Legal Register", percentage: 15, color: "#0A3C75", count: 7 },
   { name: "Internal Policies", percentage: 12, color: "#d97706", count: 6 },
   { name: "Customer Reqs", percentage: 8, color: "#e11d48", count: 4 },
 ];

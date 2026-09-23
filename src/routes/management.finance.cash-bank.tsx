@@ -50,6 +50,7 @@ import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, type Column, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -330,8 +331,15 @@ function CashBankPage() {
     return `${sign}${symbol}${v.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
+  const isError = dashboardQuery.isError || accountsQuery.isError;
   const isLoading = dashboardQuery.isLoading || accountsQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    dashboardQuery.error || accountsQuery.error,
+    "Failed to load cash and bank dashboard.",
+  );
 
   return (
     <AppShell
@@ -346,7 +354,16 @@ function CashBankPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Cash & Bank Data"
+          error={dashboardQuery.error || accountsQuery.error}
+          onRetry={() => {
+            dashboardQuery.refetch();
+            accountsQuery.refetch();
+          }}
+        />
+      ) : isLoading || !data ? (
         <CashBankSkeleton />
       ) : (
         <div className="space-y-5">
@@ -410,8 +427,8 @@ function CashBankPage() {
                 tone: "positive",
               }}
               icon={<Clock className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -572,7 +589,7 @@ function CashBankPage() {
                                   r.type === "Operating"
                                     ? "bg-blue-50 border-blue-200 text-blue-700"
                                     : r.type === "Payroll"
-                                      ? "bg-purple-50 border-purple-200 text-purple-700"
+                                      ? "bg-blue-50 border-blue-200 text-primary"
                                       : r.type === "Collections"
                                         ? "bg-green-50 border-green-200 text-green-700"
                                         : r.type === "Petty Cash"
@@ -696,6 +713,12 @@ function CashBankPage() {
                             </div>
                           </div>
                         )}
+                        empty={
+                          <EmptyState
+                            title="No bank accounts found"
+                            description="No accounts matched your search and filter criteria."
+                          />
+                        }
                       />
                     </div>
 

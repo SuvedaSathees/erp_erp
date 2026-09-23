@@ -130,7 +130,7 @@ const READINESS_BREAKDOWN_PIE = [
   { name: "Performance", value: 90, color: "#10B981" },
   { name: "Competencies", value: 72, color: "#2563EB" },
   { name: "Skills", value: 75, color: "#06B6D4" },
-  { name: "Experience", value: 80, color: "#8B5CF6" },
+  { name: "Experience", value: 80, color: "#0A3C75" },
   { name: "Leadership", value: 65, color: "#F59E0B" },
   { name: "Certifications", value: 70, color: "#EC4899" },
 ];
@@ -139,7 +139,7 @@ const SUCCESSOR_PIPELINE_PIE = [
   { name: "Ready Now", value: 1, percentage: "17%", color: "#10B981" },
   { name: "Ready in 1 Year", value: 2, percentage: "33%", color: "#2563EB" },
   { name: "Ready in 2-3 Years", value: 2, percentage: "33%", color: "#F59E0B" },
-  { name: "Developing", value: 1, percentage: "17%", color: "#8B5CF6" },
+  { name: "Developing", value: 1, percentage: "17%", color: "#0A3C75" },
 ];
 
 const COMPETENCY_GAPS = [
@@ -340,8 +340,8 @@ export function CareerDevelopmentPage() {
             </div>
 
             {/* 5. Next Review Date */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-purple-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="p-2 rounded-lg bg-purple-100 text-purple-600">
+            <div className="p-2.5 rounded-xl border border-slate-200 bg-blue-50/30 flex items-center gap-2.5 shadow-2xs">
+              <div className="p-2 rounded-lg bg-blue-100 text-primary">
                 <Calendar className="h-4 w-4" />
               </div>
               <div>
@@ -817,9 +817,9 @@ export function CareerDevelopmentPage() {
                   <button
                     type="button"
                     onClick={() => setActiveTab("gap")}
-                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-purple-600 hover:bg-purple-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
+                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-primary hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
-                    <Compass className="h-3 w-3 text-purple-600" />
+                    <Compass className="h-3 w-3 text-primary" />
                     Gap Analysis
                   </button>
 
@@ -844,9 +844,9 @@ export function CareerDevelopmentPage() {
                   <button
                     type="button"
                     onClick={() => setIsMilestoneModalOpen(true)}
-                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-indigo-600 hover:bg-indigo-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
+                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-primary hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
-                    <Milestone className="h-3 w-3 text-indigo-600" />
+                    <Milestone className="h-3 w-3 text-primary" />
                     Add Milestone
                   </button>
 
@@ -1070,7 +1070,7 @@ export function CareerDevelopmentPage() {
           <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Milestone className="h-4 w-4 text-indigo-600" />
+                <Milestone className="h-4 w-4 text-primary" />
                 Add Career Milestone
               </h3>
               <button
@@ -1120,7 +1120,7 @@ export function CareerDevelopmentPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 font-semibold cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary font-semibold cursor-pointer"
                 >
                   Save Milestone
                 </button>

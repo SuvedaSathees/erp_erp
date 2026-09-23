@@ -75,7 +75,7 @@ export function AuditFindingsCard({
                         ? "bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border border-rose-200 dark:border-rose-800 text-[10px] py-0 px-1.5"
                         : f.classification === "Minor NC"
                         ? "bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200 dark:border-amber-800 text-[10px] py-0 px-1.5"
-                        : "bg-purple-50 text-purple-700 dark:bg-purple-950/50 dark:text-purple-400 border border-purple-200 dark:border-purple-800 text-[10px] py-0 px-1.5"
+                        : "bg-blue-50 text-primary dark:bg-blue-950/50 dark:text-blue-400 border border-blue-200 dark:border-blue-800 text-[10px] py-0 px-1.5"
                     }
                   >
                     {f.classification}

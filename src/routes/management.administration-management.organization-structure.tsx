@@ -106,9 +106,9 @@ function OrganizationStructurePage() {
     { name: "R&D & Engineering", lead: "Vikram Singh (CTO)", count: 298, depts: 5, budget: "₹ 42.5 Cr", theme: "border-blue-500/30 bg-blue-500/5" },
     { name: "Human Resources", lead: "Meera Nair (CHRO)", count: 154, depts: 3, budget: "₹ 8.2 Cr", theme: "border-rose-500/30 bg-rose-500/5" },
     { name: "Sales & Marketing", lead: "Arjun Mehta (CSO)", count: 412, depts: 4, budget: "₹ 24.0 Cr", theme: "border-orange-500/30 bg-orange-500/5" },
-    { name: "Manufacturing", lead: "Ramesh Sharma (VP Mfg)", count: 864, depts: 3, budget: "₹ 62.0 Cr", theme: "border-indigo-500/30 bg-indigo-500/5" },
+    { name: "Manufacturing", lead: "Ramesh Sharma (VP Mfg)", count: 864, depts: 3, budget: "₹ 62.0 Cr", theme: "border-blue-500/30 bg-blue-500/5" },
     { name: "Supply Chain", lead: "Kavita Rao (VP SCM)", count: 404, depts: 3, budget: "₹ 31.5 Cr", theme: "border-teal-500/30 bg-teal-500/5" },
-    { name: "Legal & Governance", lead: "Pooja Hegde (GC)", count: 582, depts: 2, budget: "₹ 6.8 Cr", theme: "border-purple-500/30 bg-purple-500/5" },
+    { name: "Legal & Governance", lead: "Pooja Hegde (GC)", count: 582, depts: 2, budget: "₹ 6.8 Cr", theme: "border-primary/30 bg-primary/5" },
   ]);
 
   // Corporate Governance & Steering Committees State
@@ -522,7 +522,7 @@ function OrganizationStructurePage() {
               <div>
                 <label className="text-[11px] font-medium text-muted-foreground block flex items-center justify-between">
                   <span>Business Units</span>
-                  <span className="text-[9px] font-bold text-purple-600 bg-purple-500/10 px-1 rounded">Calc</span>
+                  <span className="text-[9px] font-bold text-primary bg-primary/10 px-1 rounded">Calc</span>
                 </label>
                 <div className="mt-1 text-sm font-semibold font-mono text-primary px-1 py-1">
                   {businessUnits.length} Units
@@ -532,7 +532,7 @@ function OrganizationStructurePage() {
               <div>
                 <label className="text-[11px] font-medium text-muted-foreground block flex items-center justify-between">
                   <span>Functions</span>
-                  <span className="text-[9px] font-bold text-purple-600 bg-purple-500/10 px-1 rounded">Calc</span>
+                  <span className="text-[9px] font-bold text-primary bg-primary/10 px-1 rounded">Calc</span>
                 </label>
                 <div className="mt-1 text-sm font-semibold font-mono text-primary px-1 py-1">
                   {functionsList.length} Functions
@@ -542,7 +542,7 @@ function OrganizationStructurePage() {
               <div>
                 <label className="text-[11px] font-medium text-muted-foreground block flex items-center justify-between">
                   <span>Departments</span>
-                  <span className="text-[9px] font-bold text-purple-600 bg-purple-500/10 px-1 rounded">Calc</span>
+                  <span className="text-[9px] font-bold text-primary bg-primary/10 px-1 rounded">Calc</span>
                 </label>
                 <div className="mt-1 text-sm font-semibold font-mono text-primary px-1 py-1">
                   {departmentsList.length} Depts
@@ -552,7 +552,7 @@ function OrganizationStructurePage() {
               <div>
                 <label className="text-[11px] font-medium text-muted-foreground block flex items-center justify-between">
                   <span>Total Headcount</span>
-                  <span className="text-[9px] font-bold text-purple-600 bg-purple-500/10 px-1 rounded">Calc</span>
+                  <span className="text-[9px] font-bold text-primary bg-primary/10 px-1 rounded">Calc</span>
                 </label>
                 <div className="mt-1 text-sm font-semibold font-mono text-emerald-600 px-1 py-1">
                   {calculatedTotalEmployees} Staff
@@ -672,8 +672,8 @@ function OrganizationStructurePage() {
                 style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: "top center" }}
               >
                 {/* Level 0: Board of Directors Pill */}
-                <div className="rounded-lg border border-purple-400/40 bg-purple-500/10 px-4 py-1.5 text-center text-xs font-semibold text-purple-700 dark:text-purple-300 shadow-2xs flex items-center gap-1.5">
-                  <Users className="h-3.5 w-3.5 text-purple-600" />
+                <div className="rounded-lg border border-blue-400/40 bg-primary/10 px-4 py-1.5 text-center text-xs font-semibold text-primary dark:text-blue-300 shadow-2xs flex items-center gap-1.5">
+                  <Users className="h-3.5 w-3.5 text-primary" />
                   <span>Board of Directors</span>
                 </div>
 
@@ -1073,7 +1073,7 @@ function OrganizationStructurePage() {
               <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                 <span className="text-xs text-muted-foreground">Profit Pools</span>
                 <div className="text-xl font-bold font-mono text-foreground">{businessUnits.length} Active Pools</div>
-                <p className="text-[10px] text-purple-600 font-medium">Linked to GL Accounts</p>
+                <p className="text-[10px] text-primary font-medium">Linked to GL Accounts</p>
               </div>
               <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                 <span className="text-xs text-muted-foreground">Operating Model</span>
@@ -1164,7 +1164,7 @@ function OrganizationStructurePage() {
                 <div className="text-xl font-bold font-mono text-foreground">
                   {Math.round(departmentsList.reduce((acc, d) => acc + Number(d.count), 0) / (departmentsList.length || 1))} Members
                 </div>
-                <p className="text-[10px] text-purple-600 font-medium">Quorum Compliant</p>
+                <p className="text-[10px] text-primary font-medium">Quorum Compliant</p>
               </div>
               <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                 <span className="text-xs text-muted-foreground">Governance Budgets</span>
@@ -1345,7 +1345,7 @@ function OrganizationStructurePage() {
             MAICW: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
             <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
             <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-            <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
+            <span className="text-blue-600 font-bold">C</span> (Calculated) |{" "}
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div className="flex items-center gap-4">

@@ -669,7 +669,7 @@ function NotificationsManagementPage() {
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Templates Configured</span>
                   <div className="text-xl font-bold font-mono text-foreground">{templatesList.length} Templates</div>
-                  <p className="text-[10px] text-purple-600 font-medium">Multi-lingual enabled</p>
+                  <p className="text-[10px] text-primary font-medium">Multi-lingual enabled</p>
                 </div>
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Avg Dispatch Latency</span>
@@ -959,7 +959,7 @@ function NotificationsManagementPage() {
             MAICW: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
             <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
             <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-            <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
+            <span className="text-blue-600 font-bold">C</span> (Calculated) |{" "}
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div>

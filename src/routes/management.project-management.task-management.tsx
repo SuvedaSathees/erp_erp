@@ -174,7 +174,7 @@ export const INITIAL_TASKS: ProjectTaskItem[] = [
     wbsActivity: "2.2 / ACT-023",
     assignedTo: "Arun Kumar",
     assignedInitials: "AK",
-    assignedAvatarColor: "bg-indigo-600",
+    assignedAvatarColor: "bg-primary",
     priority: "High",
     plannedStart: "13 Sep 2026",
     plannedFinish: "15 Sep 2026",
@@ -324,7 +324,7 @@ export const INITIAL_TASKS: ProjectTaskItem[] = [
     wbsActivity: "4.0 / ACT-041",
     assignedTo: "PR-01",
     assignedInitials: "PR",
-    assignedAvatarColor: "bg-purple-700",
+    assignedAvatarColor: "bg-primary",
     priority: "High",
     plannedStart: "22 Sep 2026",
     plannedFinish: "25 Sep 2026",
@@ -1399,8 +1399,8 @@ ${tasks
               className={cn(
                 "bg-white dark:bg-slate-900 border rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all",
                 filterStatus === "Not Started"
-                  ? "ring-2 ring-purple-500 border-purple-500 bg-purple-50/50 dark:bg-purple-950/20"
-                  : "border-border/80 hover:border-purple-400 hover:shadow-xs",
+                  ? "ring-2 ring-primary border-primary bg-blue-50/50 dark:bg-blue-950/20"
+                  : "border-border/80 hover:border-blue-400 hover:shadow-xs",
               )}
             >
               <div>
@@ -1410,13 +1410,13 @@ ${tasks
                 <span className="text-xl font-bold font-mono text-slate-900 dark:text-white mt-0.5 block">
                   {tasks.filter((t) => t.status === "Not Started").length}
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold block mt-1">
+                <span className="text-[10px] text-primary dark:text-blue-400 font-semibold block mt-1">
                   {tasks.length > 0
                     ? `${((tasks.filter((t) => t.status === "Not Started").length / tasks.length) * 100).toFixed(1)}% of Total`
                     : "0%"}
                 </span>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <Clock className="h-5 w-5" />
               </div>
             </div>

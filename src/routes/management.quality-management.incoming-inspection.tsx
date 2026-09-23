@@ -336,7 +336,7 @@ export function IncomingInspectionPage() {
 
             {/* Section 2 */}
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-wider text-purple-600 dark:text-purple-400">
+              <div className="flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-wider text-primary dark:text-blue-400">
                 <span>Phase 2: Quarantine & Sampling Plan (ANSI/ASQ Z1.4)</span>
               </div>
               <IqcSamplingPlanCard

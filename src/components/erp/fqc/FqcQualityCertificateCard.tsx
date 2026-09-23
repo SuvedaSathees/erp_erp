@@ -146,7 +146,7 @@ Digital Seal: Cryptographically Verified
     <div className="bg-card rounded-xl border border-border/80 p-4 sm:p-5 shadow-xs space-y-3.5 min-w-0">
       <div className="flex items-center justify-between pb-2 border-b border-border/40 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="w-6 h-6 rounded-md bg-purple-600 text-white flex items-center justify-center shrink-0">
+          <div className="w-6 h-6 rounded-md bg-primary text-white flex items-center justify-center shrink-0">
             <Award className="h-3.5 w-3.5" />
           </div>
           <h2 className="text-sm sm:text-base font-semibold text-foreground truncate">
@@ -194,14 +194,14 @@ Digital Seal: Cryptographically Verified
       </div>
 
       {/* Digital Seal & Stamp Badge */}
-      <div className="p-2.5 rounded-lg bg-purple-50/40 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900/50 flex items-center justify-between text-xs min-w-0">
+      <div className="p-2.5 rounded-lg bg-blue-50/40 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/50 flex items-center justify-between text-xs min-w-0">
         <div className="flex items-center gap-2 min-w-0">
-          <ShieldCheck className="h-4 w-4 text-purple-600 shrink-0" />
-          <span className="font-semibold text-purple-900 dark:text-purple-200 truncate">
+          <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
+          <span className="font-semibold text-blue-900 dark:text-blue-200 truncate">
             Digital Quality Seal
           </span>
         </div>
-        <span className="text-[10px] font-mono text-purple-700 dark:text-purple-300 shrink-0">
+        <span className="text-[10px] font-mono text-primary dark:text-blue-300 shrink-0">
           Cryptographically Verified
         </span>
       </div>
@@ -214,7 +214,7 @@ Digital Seal: Cryptographically Verified
           if (onIssueCertificate) onIssueCertificate();
           else toast.success(`Certificate ${cert.certificateNo} validated for dispatch`);
         }}
-        className="w-full h-8 text-xs font-semibold border-purple-200 dark:border-purple-900 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/40"
+        className="w-full h-8 text-xs font-semibold border-blue-200 dark:border-blue-900 text-primary dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40"
       >
         <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
         Verify & Sign Certificate

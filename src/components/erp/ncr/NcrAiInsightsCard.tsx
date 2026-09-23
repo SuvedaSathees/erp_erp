@@ -18,7 +18,7 @@ export function NcrAiInsightsCard({ insights }: NcrAiInsightsCardProps) {
     <div className="bg-card rounded-xl border border-border/80 p-4 sm:p-5 shadow-xs">
       <div className="flex items-center justify-between pb-2 mb-3 border-b border-border/40">
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded-md bg-purple-600 text-white flex items-center justify-center font-bold text-[10px] shadow-xs">
+          <div className="w-5 h-5 rounded-md bg-primary text-white flex items-center justify-center font-bold text-[10px] shadow-xs">
             <Sparkles className="h-3 w-3" />
           </div>
           <h2 className="text-sm sm:text-base font-semibold text-foreground">
@@ -68,7 +68,7 @@ export function NcrAiInsightsCard({ insights }: NcrAiInsightsCardProps) {
                 </div>
               )}
               {index > 3 && (
-                <div className="mt-0.5 text-purple-600 shrink-0">
+                <div className="mt-0.5 text-primary shrink-0">
                   <Sparkles className="h-4 w-4" />
                 </div>
               )}

@@ -1158,22 +1158,22 @@ ${issues
                 toast.info("Filtered for Overdue corrective actions");
               }}
               className={cn(
-                "bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-purple-500/60 hover:shadow-xs",
-                activeKpiFilter === "overdue" && "ring-2 ring-purple-500",
+                "bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-primary/60 hover:shadow-xs",
+                activeKpiFilter === "overdue" && "ring-2 ring-primary",
               )}
             >
               <div>
                 <span className="text-[11px] text-muted-foreground font-medium block">
                   Overdue Actions
                 </span>
-                <span className="text-xl font-bold font-mono text-purple-600 mt-0.5 block">
+                <span className="text-xl font-bold font-mono text-primary mt-0.5 block">
                   6
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold block mt-1">
+                <span className="text-[10px] text-primary dark:text-blue-400 font-semibold block mt-1">
                   12.8% of Total
                 </span>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <Hourglass className="h-5 w-5" />
               </div>
             </div>
@@ -1199,7 +1199,7 @@ ${issues
                     <circle cx="50" cy="50" r="38" stroke="#3b82f6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#f97316" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="117" />
                     <circle cx="50" cy="50" r="38" stroke="#14b8a6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="173" />
-                    <circle cx="50" cy="50" r="38" stroke="#a855f7" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="213" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="213" />
                     <circle cx="50" cy="50" r="38" stroke="#64748b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="238" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -1213,7 +1213,7 @@ ${issues
                     { name: "Open", count: "23 (48.9%)", color: "bg-blue-500", status: "Open" },
                     { name: "Investigating", count: "11 (23.4%)", color: "bg-orange-500", status: "Investigating" },
                     { name: "Corrective Action", count: "8 (17.0%)", color: "bg-teal-500", status: "Action" },
-                    { name: "Resolved", count: "5 (10.6%)", color: "bg-purple-500", status: "Resolved" },
+                    { name: "Resolved", count: "5 (10.6%)", color: "bg-blue-500", status: "Resolved" },
                     { name: "Closed", count: "31 (56.0%)", color: "bg-slate-500", status: "Closed" },
                   ].map((s) => (
                     <div
@@ -1288,7 +1288,7 @@ ${issues
                   { cat: "Procurement", val: "12 (25.5%)", pct: 85, color: "bg-blue-600" },
                   { cat: "Technical", val: "9 (19.1%)", pct: 65, color: "bg-orange-500" },
                   { cat: "Quality", val: "7 (14.9%)", pct: 50, color: "bg-teal-500" },
-                  { cat: "Resource", val: "6 (12.8%)", pct: 42, color: "bg-purple-500" },
+                  { cat: "Resource", val: "6 (12.8%)", pct: 42, color: "bg-blue-500" },
                   { cat: "Schedule", val: "5 (10.6%)", pct: 35, color: "bg-cyan-500" },
                   { cat: "Others", val: "8 (17.0%)", pct: 58, color: "bg-slate-500" },
                 ].map((row) => (
@@ -1439,7 +1439,7 @@ ${issues
                                 : item.status === "Action"
                                 ? "bg-amber-50 text-amber-700 border-amber-300"
                                 : item.status === "Resolved"
-                                ? "bg-purple-50 text-purple-700 border-purple-300"
+                                ? "bg-blue-50 text-primary border-blue-300"
                                 : "bg-emerald-50 text-emerald-700 border-emerald-300",
                             )}
                           >
@@ -1721,7 +1721,7 @@ ${issues
                 <div className="flex items-center justify-center gap-4 text-[10px] font-semibold">
                   <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-blue-600" /> Opened</span>
                   <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-emerald-500" /> Resolved</span>
-                  <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-purple-600" /> Closed</span>
+                  <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-primary" /> Closed</span>
                 </div>
 
                 <div className="h-36 w-full">
@@ -1740,12 +1740,12 @@ ${issues
                     <polyline fill="none" stroke="#2563eb" strokeWidth="1.5" points="35,65 75,58 115,48 155,62 195,68 245,55" />
                     {/* Resolved Line (Green) */}
                     <polyline fill="none" stroke="#10b981" strokeWidth="1.5" points="35,80 75,76 115,70 155,66 195,60 245,58" />
-                    {/* Closed Line (Purple) */}
-                    <polyline fill="none" stroke="#9333ea" strokeWidth="1.5" points="35,95 75,90 115,86 155,80 195,74 245,70" />
+                    {/* Closed Line (Navy) */}
+                    <polyline fill="none" stroke="#0A3C75" strokeWidth="1.5" points="35,95 75,90 115,86 155,80 195,74 245,70" />
 
                     <circle cx="245" cy="55" r="2.5" fill="#2563eb" />
                     <circle cx="245" cy="58" r="2.5" fill="#10b981" />
-                    <circle cx="245" cy="70" r="2.5" fill="#9333ea" />
+                    <circle cx="245" cy="70" r="2.5" fill="#0A3C75" />
 
                     <text x="28" y="125" fontSize="7.5" fill="#64748b">Wk 31</text>
                     <text x="68" y="125" fontSize="7.5" fill="#64748b">Wk 32</text>
@@ -1772,7 +1772,7 @@ ${issues
                     <circle cx="50" cy="50" r="38" stroke="#f97316" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="91" />
                     <circle cx="50" cy="50" r="38" stroke="#eab308" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="152" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="188" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="218" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="218" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <span className="text-sm font-bold font-mono text-slate-900 dark:text-white">{issues.length}</span>
@@ -1786,7 +1786,7 @@ ${issues
                     { range: "4 - 7 Days", count: "12 (25.5%)", color: "bg-orange-500" },
                     { range: "8 - 14 Days", count: "7 (14.9%)", color: "bg-yellow-500" },
                     { range: "15 - 30 Days", count: "6 (12.8%)", color: "bg-emerald-500" },
-                    { range: "> 30 Days", count: "4 (8.5%)", color: "bg-purple-500" },
+                    { range: "> 30 Days", count: "4 (8.5%)", color: "bg-blue-500" },
                   ].map((a) => (
                     <div
                       key={a.range}

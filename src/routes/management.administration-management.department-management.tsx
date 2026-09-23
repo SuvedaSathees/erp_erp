@@ -89,7 +89,7 @@ const RECENT_ACTIVITIES = [
   { id: "ACT-002", title: "New Position 'Financial Analyst' created", by: "Raghavan Sundaram", date: "13 May 2024", icon: UserCheck, color: "text-blue-500" },
   { id: "ACT-003", title: "Monthly Financial Closing completed", by: "Priya Malhotra", date: "10 May 2024", icon: CheckCircle2, color: "text-emerald-500" },
   { id: "ACT-004", title: "Internal Audit - Q4 completed", by: "Audit Team", date: "08 May 2024", icon: ShieldCheck, color: "text-amber-500" },
-  { id: "ACT-005", title: "Tax Compliance return filed", by: "Rohit Verma", date: "05 May 2024", icon: FileCheck, color: "text-purple-500" },
+  { id: "ACT-005", title: "Tax Compliance return filed", by: "Rohit Verma", date: "05 May 2024", icon: FileCheck, color: "text-blue-600" },
 ];
 
 function DepartmentManagementPage() {
@@ -621,7 +621,7 @@ function DepartmentManagementPage() {
                   <div className="text-xl font-bold font-mono text-foreground">
                     {Math.round(departmentsList.reduce((acc, d) => acc + Number(d.count), 0) / (departmentsList.length || 1))} Members
                   </div>
-                  <p className="text-[10px] text-purple-600 font-medium">Balanced Distribution</p>
+                  <p className="text-[10px] text-primary font-medium">Balanced Distribution</p>
                 </div>
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Cost Ledgers</span>
@@ -827,7 +827,7 @@ function DepartmentManagementPage() {
                 <div className="p-3.5 rounded-lg border border-border bg-muted/15 space-y-1">
                   <span className="text-muted-foreground block text-[11px]">CAPEX Hardware & Infrastructure</span>
                   <div className="text-lg font-bold font-mono text-foreground">₹ 1,00,00,000</div>
-                  <span className="text-[10px] text-purple-600">Servers, secured workstations & laptops</span>
+                  <span className="text-[10px] text-primary">Servers, secured workstations & laptops</span>
                 </div>
               </div>
             </div>
@@ -1149,7 +1149,7 @@ function DepartmentManagementPage() {
             MAICW: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
             <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
             <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-            <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
+            <span className="text-blue-600 font-bold">C</span> (Calculated) |{" "}
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div>

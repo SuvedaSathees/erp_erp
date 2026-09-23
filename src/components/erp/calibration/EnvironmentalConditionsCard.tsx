@@ -57,9 +57,9 @@ export function EnvironmentalConditionsCard({
           </div>
 
           {/* Atmospheric Pressure */}
-          <div className="p-4 rounded-xl bg-gradient-to-br from-indigo-500/10 to-violet-500/5 border border-indigo-200 dark:border-indigo-900 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/60 flex items-center justify-center shrink-0">
-              <Gauge className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+          <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-200 dark:border-blue-900 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/60 flex items-center justify-center shrink-0">
+              <Gauge className="w-5 h-5 text-primary dark:text-blue-400" />
             </div>
             <div>
               <span className="text-[11px] font-medium text-muted-foreground block">

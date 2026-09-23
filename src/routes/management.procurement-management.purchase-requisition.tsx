@@ -1216,7 +1216,7 @@ export function PurchaseRequisitionPage() {
                 <button
                   type="button"
                   onClick={() => setShowApproveDialog(true)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-indigo-700 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-primary transition-all cursor-pointer"
                 >
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   Perform Approval Action

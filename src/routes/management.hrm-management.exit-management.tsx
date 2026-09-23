@@ -746,7 +746,7 @@ export function ExitManagementPage() {
                   <button
                     type="button"
                     onClick={() => setIsInterviewModalOpen(true)}
-                    className="p-1 rounded-md border border-slate-100 hover:border-purple-600 hover:bg-purple-50 text-slate-700 font-semibold text-center cursor-pointer"
+                    className="p-1 rounded-md border border-slate-100 hover:border-primary hover:bg-blue-50 text-slate-700 font-semibold text-center cursor-pointer"
                   >
                     Schedule Interview
                   </button>
@@ -958,7 +958,7 @@ export function ExitManagementPage() {
           <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 text-purple-600" />
+                <MessageSquare className="h-4 w-4 text-primary" />
                 Exit Interview Record
               </h3>
               <button
@@ -1008,7 +1008,7 @@ export function ExitManagementPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 font-semibold cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary font-semibold cursor-pointer"
                 >
                   Save Interview
                 </button>

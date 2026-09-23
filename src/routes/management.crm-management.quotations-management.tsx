@@ -920,9 +920,9 @@ function QuotationsManagementPage() {
                             <div className="text-[10px] text-emerald-700 font-medium">Quotation Value</div>
                             <div className="text-xs font-extrabold text-emerald-900">₹ 2.48 Cr</div>
                           </div>
-                          <div className="p-2.5 bg-purple-50/60 rounded-lg border border-purple-200">
-                            <div className="text-[10px] text-purple-700 font-medium">Conversion Rate</div>
-                            <div className="text-base font-extrabold text-purple-900">62%</div>
+                          <div className="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200">
+                            <div className="text-[10px] text-primary font-medium">Conversion Rate</div>
+                            <div className="text-base font-extrabold text-blue-900">62%</div>
                           </div>
                           <div className="p-2.5 bg-amber-50/60 rounded-lg border border-amber-200">
                             <div className="text-[10px] text-amber-700 font-medium">Accepted Value</div>
@@ -1077,7 +1077,7 @@ function QuotationsManagementPage() {
                         }}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <RefreshCw className="h-4 w-4 text-purple-600" />
+                        <RefreshCw className="h-4 w-4 text-primary" />
                         <span>Create Revision</span>
                       </button>
                       <button
@@ -1094,7 +1094,7 @@ function QuotationsManagementPage() {
                         }}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Share2 className="h-4 w-4 text-indigo-600" />
+                        <Share2 className="h-4 w-4 text-primary" />
                         <span>Share Link</span>
                       </button>
                     </div>
@@ -1190,7 +1190,7 @@ function QuotationsManagementPage() {
             <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
               <div className="flex items-center justify-between border-b pb-3">
                 <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <RefreshCw className="h-4 w-4 text-purple-600" />
+                  <RefreshCw className="h-4 w-4 text-primary" />
                   <span>Create Quotation Revision (V2)</span>
                 </h3>
                 <button onClick={() => setIsRevisionOpen(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold">
@@ -1215,7 +1215,7 @@ function QuotationsManagementPage() {
                     setIsRevisionOpen(false);
                     showNotification("Quotation Revision V2 created!");
                   }}
-                  className="px-4 py-1.5 text-xs bg-purple-600 text-white font-bold rounded shadow-xs"
+                  className="px-4 py-1.5 text-xs bg-primary text-white font-bold rounded shadow-xs"
                 >
                   Create Revision V2
                 </button>

@@ -817,7 +817,7 @@ ${milestones
                       }}
                       className="cursor-pointer"
                     >
-                      <Copy className="mr-2 h-4 w-4 text-purple-600" /> Copy JSON Data
+                      <Copy className="mr-2 h-4 w-4 text-primary" /> Copy JSON Data
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -1258,7 +1258,7 @@ ${milestones
                   For delayed milestones
                 </span>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <Clock className="h-5 w-5" />
               </div>
             </div>

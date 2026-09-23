@@ -47,7 +47,7 @@ export const ControlPlanOverviewCard: React.FC<ControlPlanOverviewCardProps> = (
 
           <div>
             <span className="text-muted-foreground block text-[10px]">Control Plan Type</span>
-            <span className="inline-block px-2 py-0.5 rounded font-bold text-[10px] bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-800">
+            <span className="inline-block px-2 py-0.5 rounded font-bold text-[10px] bg-blue-100 dark:bg-blue-950 text-primary dark:text-blue-300 border border-blue-300 dark:border-blue-800">
               {record.controlPlanType}
             </span>
           </div>

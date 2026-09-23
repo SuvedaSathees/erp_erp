@@ -222,7 +222,7 @@ export const MODULE_REPORT_CONFIGS: Record<string, ModuleSummaryConfig> = {
       { name: "Patented / Completed", value: 34, color: "#10b981" },
       { name: "In Simulation", value: 42, color: "#3b82f6" },
       { name: "Prototype Lab", value: 16, color: "#f59e0b" },
-      { name: "Feasibility", value: 8, color: "#8b5cf6" },
+      { name: "Feasibility", value: 8, color: "#0A3C75" },
     ],
     submodules: [
       { name: "Simulation & Analysis", path: "/development/research-innovation/simulation-analysis/new", recordsCount: 48, completionRate: 94, status: "Completed", keyMetric: "48 Finite Elements", owner: "CAE Team", lastUpdated: "Today" },

@@ -177,7 +177,7 @@ export function CapaActionPlanCard({
                             : act.actionType === "Corrective Action"
                             ? "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
                             : act.actionType === "Preventive Action"
-                            ? "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
+                            ? "bg-blue-50 text-primary dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
                             : "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
                         }`}
                       >

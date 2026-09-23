@@ -341,7 +341,7 @@ export function FinalInspectionPage() {
                 />
                 <div className="p-4 rounded-xl bg-card border border-border/80 space-y-2 text-xs">
                   <h3 className="font-semibold text-foreground text-sm flex items-center gap-1.5">
-                    <Award className="w-4 h-4 text-purple-600" />
+                    <Award className="w-4 h-4 text-primary" />
                     Dispatch Authorization Checklist
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-muted-foreground pt-1">

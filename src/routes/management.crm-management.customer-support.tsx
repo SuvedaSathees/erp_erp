@@ -968,9 +968,9 @@ function CustomerSupportPage() {
                         <div className="text-[10px] text-amber-700 font-semibold">In Progress</div>
                         <div className="text-lg font-extrabold text-amber-900">22</div>
                       </div>
-                      <div className="p-2.5 bg-purple-50/60 rounded-lg border border-purple-200">
-                        <div className="text-[10px] text-purple-700 font-semibold">Awaiting Response</div>
-                        <div className="text-lg font-extrabold text-purple-900">11</div>
+                      <div className="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200">
+                        <div className="text-[10px] text-primary font-semibold">Awaiting Response</div>
+                        <div className="text-lg font-extrabold text-blue-900">11</div>
                       </div>
                       <div className="p-2.5 bg-rose-50/60 rounded-lg border border-rose-200">
                         <div className="text-[10px] text-rose-700 font-semibold">Overdue</div>
@@ -1047,14 +1047,14 @@ function CustomerSupportPage() {
                         onClick={() => showNotification("Activity logged into support thread.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Calendar className="h-4 w-4 text-purple-600" />
+                        <Calendar className="h-4 w-4 text-primary" />
                         <span>Add Activity</span>
                       </button>
                       <button
                         onClick={() => showNotification("Document upload window active.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Paperclip className="h-4 w-4 text-indigo-600" />
+                        <Paperclip className="h-4 w-4 text-primary" />
                         <span>Upload Doc</span>
                       </button>
                       <button

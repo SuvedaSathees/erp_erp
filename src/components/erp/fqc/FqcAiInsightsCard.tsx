@@ -21,7 +21,7 @@ export function FqcAiInsightsCard({ insights }: FqcAiInsightsCardProps) {
     <div className="bg-card rounded-xl border border-border/80 p-4 sm:p-5 shadow-xs space-y-3 min-w-0">
       <div className="flex items-center justify-between pb-2 border-b border-border/40 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="w-5 h-5 rounded-md bg-purple-600 text-white flex items-center justify-center font-bold text-[10px] shadow-xs shrink-0">
+          <div className="w-5 h-5 rounded-md bg-primary text-white flex items-center justify-center font-bold text-[10px] shadow-xs shrink-0">
             <Sparkles className="h-3 w-3" />
           </div>
           <h2 className="text-sm sm:text-base font-semibold text-foreground truncate">
@@ -61,7 +61,7 @@ export function FqcAiInsightsCard({ insights }: FqcAiInsightsCardProps) {
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center">
                 <BrainCircuit className="w-4 h-4" />
               </div>
               <div>
@@ -117,7 +117,7 @@ export function FqcAiInsightsCard({ insights }: FqcAiInsightsCardProps) {
                 setIsModalOpen(false);
                 toast.success("AI quality parameters exported to station log");
               }}
-              className="text-xs bg-purple-600 hover:bg-purple-700 text-white font-semibold"
+              className="text-xs bg-primary hover:bg-primary text-white font-semibold"
             >
               Export AI Diagnostics
             </Button>

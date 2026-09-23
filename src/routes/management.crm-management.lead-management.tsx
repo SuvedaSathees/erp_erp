@@ -422,7 +422,7 @@ const RECENT_ACTIVITIES = [
     type: "Note",
     subject: "Discussed Requirement Details",
     outcome: "Requirement Understood",
-    outcomeColor: "bg-purple-100 text-purple-700 border-purple-300",
+    outcomeColor: "bg-blue-100 text-primary border-blue-300",
     nextAction: "Prepare Demo Plan",
     nextActionDate: "20 Apr 2024",
     assignedTo: "Rahul Sharma",
@@ -507,7 +507,7 @@ function LeadManagementPage() {
     { name: "Website", value: 45, color: "#2563eb" },
     { name: "Exhibition", value: 25, color: "#16a34a" },
     { name: "Referral", value: 15, color: "#d97706" },
-    { name: "Social Media", value: 10, color: "#9333ea" },
+    { name: "Social Media", value: 10, color: "#0A3C75" },
     { name: "Direct Enquiry", value: 5, color: "#0891b2" },
   ];
 

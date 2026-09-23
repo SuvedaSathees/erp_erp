@@ -801,9 +801,9 @@ export default function LeaveManagementPage() {
                   <button
                     type="button"
                     onClick={() => setActiveTab("calendar")}
-                    className="w-full flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-indigo-600 hover:bg-indigo-50/40 text-slate-700 transition cursor-pointer text-[11px]"
+                    className="w-full flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-primary hover:bg-blue-50/40 text-slate-700 transition cursor-pointer text-[11px]"
                   >
-                    <div className="p-1 rounded-md bg-indigo-50 text-indigo-600"><CalendarDays className="h-3.5 w-3.5" /></div>
+                    <div className="p-1 rounded-md bg-blue-50 text-primary"><CalendarDays className="h-3.5 w-3.5" /></div>
                     <div className="text-left">
                       <div className="font-bold text-slate-900">Leave Calendar</div>
                       <div className="text-[9px] text-muted-foreground">View Team Calendar</div>
@@ -813,9 +813,9 @@ export default function LeaveManagementPage() {
                   <button
                     type="button"
                     onClick={() => setActiveTab("policies")}
-                    className="w-full flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-purple-600 hover:bg-purple-50/40 text-slate-700 transition cursor-pointer text-[11px]"
+                    className="w-full flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-primary hover:bg-blue-50/40 text-slate-700 transition cursor-pointer text-[11px]"
                   >
-                    <div className="p-1 rounded-md bg-purple-50 text-purple-600"><FileText className="h-3.5 w-3.5" /></div>
+                    <div className="p-1 rounded-md bg-blue-50 text-primary"><FileText className="h-3.5 w-3.5" /></div>
                     <div className="text-left">
                       <div className="font-bold text-slate-900">Leave Policy</div>
                       <div className="text-[9px] text-muted-foreground">View Leave Policies</div>
@@ -1036,7 +1036,7 @@ export default function LeaveManagementPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
                 <div className="text-muted-foreground text-[11px] font-semibold">Earned Comp Off Balance</div>
-                <div className="text-lg font-bold font-mono text-purple-700">2.0 Days Available</div>
+                <div className="text-lg font-bold font-mono text-primary">2.0 Days Available</div>
                 <div className="text-[11px] text-slate-500">Credited for Weekend Shift Deployment</div>
               </div>
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">

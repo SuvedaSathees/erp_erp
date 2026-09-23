@@ -131,7 +131,7 @@ const TRAVEL_COST_PIE = [
   { name: "Hotel", value: 5000, percentage: "27.0%", color: "#10B981" },
   { name: "Local Transport", value: 2300, percentage: "12.4%", color: "#F59E0B" },
   { name: "Meals", value: 1500, percentage: "8.1%", color: "#EC4899" },
-  { name: "Other", value: 500, percentage: "2.8%", color: "#8B5CF6" },
+  { name: "Other", value: 500, percentage: "2.8%", color: "#0A3C75" },
 ];
 
 const ITINERARY_LIST = [
@@ -628,18 +628,18 @@ export function TravelManagementPage() {
 
                   <div className="flex items-center justify-between p-2 rounded-lg border border-slate-100 bg-slate-50">
                     <div className="flex items-center gap-2">
-                      <Users className="h-3.5 w-3.5 text-purple-600" />
+                      <Users className="h-3.5 w-3.5 text-primary" />
                       <div>
                         <div className="font-bold text-slate-900">Project Review & Demo</div>
                         <div className="text-[9px] text-muted-foreground font-mono">26 May 2024, 10:00 AM</div>
                       </div>
                     </div>
-                    <span className="px-1.5 py-0.2 rounded-md font-bold bg-purple-50 text-purple-700 text-[9px]">Tomorrow</span>
+                    <span className="px-1.5 py-0.2 rounded-md font-bold bg-blue-50 text-primary text-[9px]">Tomorrow</span>
                   </div>
 
                   <div className="flex items-center justify-between p-2 rounded-lg border border-slate-100 bg-slate-50">
                     <div className="flex items-center gap-2">
-                      <Plane className="h-3.5 w-3.5 text-indigo-600" />
+                      <Plane className="h-3.5 w-3.5 text-primary" />
                       <div>
                         <div className="font-bold text-slate-900">Return Flight 6E-4528</div>
                         <div className="text-[9px] text-muted-foreground font-mono">27 May 2024, 06:40 PM</div>
@@ -797,9 +797,9 @@ export function TravelManagementPage() {
                   <button
                     type="button"
                     onClick={() => setActiveTab("bookings")}
-                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-purple-600 hover:bg-purple-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
+                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-primary hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
-                    <Hotel className="h-3 w-3 text-purple-600" />
+                    <Hotel className="h-3 w-3 text-primary" />
                     Bookings
                   </button>
 
@@ -833,9 +833,9 @@ export function TravelManagementPage() {
                   <button
                     type="button"
                     onClick={() => toast.info("Travel analytics preview")}
-                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-indigo-600 hover:bg-indigo-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
+                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-primary hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
-                    <FileSpreadsheet className="h-3 w-3 text-indigo-600" />
+                    <FileSpreadsheet className="h-3 w-3 text-primary" />
                     Reports
                   </button>
 

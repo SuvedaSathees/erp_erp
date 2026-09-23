@@ -11,7 +11,7 @@ export const ApqpHealthDoughnut: React.FC<ApqpHealthDoughnutProps> = ({ record }
     { label: "Validation Score", score: record.validationScore, color: "#3b82f6" }, // Blue
     { label: "Supplier Quality Score", score: record.supplierQualityScore, color: "#f97316" }, // Orange
     { label: "Risk Score", score: record.riskScore, color: "#ef4444" }, // Red
-    { label: "APQP Health Score", score: record.apqpHealthScore, color: "#8b5cf6" }, // Purple
+    { label: "APQP Health Score", score: record.apqpHealthScore, color: "#0A3C75" }, // Navy
   ];
 
   return (

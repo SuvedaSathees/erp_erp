@@ -43,8 +43,9 @@ import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
-import { DataTable } from "@/components/erp/DataTable";
+import { DataTable, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -315,8 +316,15 @@ function ReportsPage() {
     toast.info("Filters reset.");
   };
 
-  const isLoading = dashboardQuery.isLoading;
+  const isError = dashboardQuery.isError || reportsQuery.isError;
+  const isLoading = dashboardQuery.isLoading || reportsQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    dashboardQuery.error || reportsQuery.error,
+    "Failed to load financial reporting dashboard.",
+  );
 
   // Filtered reports calculation
   const allReportsList = reportsQuery.data || [];
@@ -356,7 +364,16 @@ function ReportsPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Financial Reports"
+          error={dashboardQuery.error || reportsQuery.error}
+          onRetry={() => {
+            dashboardQuery.refetch();
+            reportsQuery.refetch();
+          }}
+        />
+      ) : isLoading || !data ? (
         <ReportsSkeleton />
       ) : (
         <div className="space-y-5">
@@ -402,8 +419,8 @@ function ReportsPage() {
               value={formatCurrency(data.kpis.totalLiabilities)}
               neutralText={`${data.kpis.totalLiabilitiesDelta}% vs Prior Year`}
               icon={<FileText className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -672,14 +689,14 @@ function ReportsPage() {
                                 <span
                                   className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
                                     r.category === "Financial Statements"
-                                      ? "bg-indigo-100 text-indigo-800"
+                                      ? "bg-blue-100 text-primary"
                                       : r.category === "Cash Flow Reports"
                                         ? "bg-green-100 text-green-800"
                                         : r.category === "Budget Reports"
                                           ? "bg-amber-100 text-amber-800"
                                           : r.category === "Tax Reports"
                                             ? "bg-rose-100 text-rose-800"
-                                            : "bg-purple-100 text-purple-800"
+                                            : "bg-blue-100 text-primary"
                                   }`}
                                 >
                                   {r.category}
@@ -769,14 +786,14 @@ function ReportsPage() {
                                 <span
                                   className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
                                     r.category === "Financial Statements"
-                                      ? "bg-indigo-100 text-indigo-800"
+                                      ? "bg-blue-100 text-primary"
                                       : r.category === "Cash Flow Reports"
                                         ? "bg-green-100 text-green-800"
                                         : r.category === "Budget Reports"
                                           ? "bg-amber-100 text-amber-800"
                                           : r.category === "Tax Reports"
                                             ? "bg-rose-100 text-rose-800"
-                                            : "bg-purple-100 text-purple-800"
+                                            : "bg-blue-100 text-primary"
                                   }`}
                                 >
                                   {r.category}
@@ -788,6 +805,12 @@ function ReportsPage() {
                               </div>
                             </div>
                           )}
+                          empty={
+                            <EmptyState
+                              title="No reports found"
+                              description="No financial report templates matched your search or category selection."
+                            />
+                          }
                         />
                       </div>
                     </div>

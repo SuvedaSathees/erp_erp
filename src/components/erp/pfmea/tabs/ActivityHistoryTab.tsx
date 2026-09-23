@@ -45,7 +45,7 @@ export const ActivityHistoryTab: React.FC<ActivityHistoryTabProps> = ({ record }
       <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden">
         <div className="p-3 border-b border-border bg-muted/20 flex justify-between items-center">
           <h3 className="font-bold text-foreground flex items-center gap-2">
-            <History className="w-4 h-4 text-purple-500" /> Lifecycle Audit Log & Stage Execution History
+            <History className="w-4 h-4 text-blue-600" /> Lifecycle Audit Log & Stage Execution History
           </h3>
           <span className="text-[10px] text-muted-foreground font-mono">
             {record.auditTrail.length} Logged Events

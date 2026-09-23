@@ -53,7 +53,7 @@ export const DesignInputsTab: React.FC<DesignInputsTabProps> = ({ record }) => {
 
         <div className="bg-card p-4 rounded-lg border border-border space-y-2">
           <div className="flex items-center gap-2 font-bold text-foreground pb-2 border-b border-border">
-            <Layers className="w-4 h-4 text-purple-500" /> Engineering BOM
+            <Layers className="w-4 h-4 text-blue-600" /> Engineering BOM
           </div>
           <span className="font-mono font-bold text-primary block text-sm">{record.bomRef}</span>
           <p className="text-muted-foreground text-[11px]">Multi-level Engineering BOM with 86 component part numbers.</p>

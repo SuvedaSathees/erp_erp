@@ -78,7 +78,7 @@ export const ExcellenceKpiSnapshotCard: React.FC<ExcellenceKpiSnapshotCardProps>
           <div className="flex flex-col rounded-lg border border-border/60 bg-muted/20 p-2 text-center">
             <span className="text-[10px] font-bold text-muted-foreground">Energy (MWh/Unit)</span>
             <span className="my-0.5 text-xs font-black text-foreground">{record.energyConsumption}</span>
-            <div className="flex justify-center">{renderSparkline([1.4, 1.35, 1.3, 1.28, 1.24], "#8b5cf6")}</div>
+            <div className="flex justify-center">{renderSparkline([1.4, 1.35, 1.3, 1.28, 1.24], "#0A3C75")}</div>
           </div>
 
           <div className="flex flex-col rounded-lg border border-border/60 bg-muted/20 p-2 text-center">

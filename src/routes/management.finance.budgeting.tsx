@@ -40,6 +40,7 @@ import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -270,8 +271,11 @@ function BudgetingPage() {
     createVersionMutation.mutate(newVersionInput);
   };
 
+  const isError = dashboardQuery.isError;
   const isLoading = dashboardQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(isError, dashboardQuery.error, "Failed to load budgeting dashboard.");
 
   // Filter department list by search
   const filteredDepts = (deptsQuery.data || []).filter((d) =>
@@ -291,7 +295,13 @@ function BudgetingPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Budgeting Data"
+          error={dashboardQuery.error}
+          onRetry={() => dashboardQuery.refetch()}
+        />
+      ) : isLoading || !data ? (
         <BudgetingSkeleton />
       ) : (
         <div className="space-y-5">
@@ -334,8 +344,8 @@ function BudgetingPage() {
               value={data.kpis.activeBudgetsCount.toString()}
               neutralText="Active Budgets"
               icon={<FileCheck className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -605,6 +615,12 @@ function BudgetingPage() {
                               <Progress value={r.utilization} className="h-1.5" />
                             </div>
                           )}
+                          empty={
+                            <EmptyState
+                              title="No departmental budgets found"
+                              description="No department budget allocations matched your search criteria."
+                            />
+                          }
                         />
                       </div>
                     ) : (

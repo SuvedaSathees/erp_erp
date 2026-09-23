@@ -47,8 +47,9 @@ import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
-import { DataTable } from "@/components/erp/DataTable";
+import { DataTable, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -208,8 +209,15 @@ function ProfitabilityAnalysisPage() {
     setAllocationRules((prev) => prev.map((r) => (r.id === id ? { ...r, allocationKey: key } : r)));
   };
 
+  const isError = dashboardQuery.isError || dimensionQuery.isError;
   const isLoading = dashboardQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    dashboardQuery.error || dimensionQuery.error,
+    "Failed to load profitability dashboard.",
+  );
 
   // Filter dimension list
   const dimensionList = dimensionQuery.data || [];
@@ -233,7 +241,16 @@ function ProfitabilityAnalysisPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Profitability Data"
+          error={dashboardQuery.error || dimensionQuery.error}
+          onRetry={() => {
+            dashboardQuery.refetch();
+            dimensionQuery.refetch();
+          }}
+        />
+      ) : isLoading || !data ? (
         <ProfitabilitySkeleton />
       ) : (
         <div className="space-y-5">
@@ -276,8 +293,8 @@ function ProfitabilityAnalysisPage() {
               value={`${data.kpis.netMarginYTD.toFixed(2)}%`}
               neutralText={`${data.kpis.netMarginYTDDelta.toFixed(2)} pp vs PYTD`}
               icon={<Layers className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -496,6 +513,12 @@ function ProfitabilityAnalysisPage() {
                       </div>
                     )}
                     onRowClick={handleRowClick}
+                    empty={
+                      <EmptyState
+                        title="No profitability records found"
+                        description="No performance records match your search criteria."
+                      />
+                    }
                   />
                 )}
               </div>

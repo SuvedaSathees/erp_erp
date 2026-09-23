@@ -149,7 +149,7 @@ const CATEGORY_DISTRIBUTION_PIE = [
   { name: "Health & Medical", value: 45, color: "#2563EB" },
   { name: "Financial Assistance", value: 25, color: "#10B981" },
   { name: "Insurance", value: 15, color: "#06B6D4" },
-  { name: "Education", value: 10, color: "#8B5CF6" },
+  { name: "Education", value: 10, color: "#0A3C75" },
   { name: "Other", value: 5, color: "#F59E0B" },
 ];
 

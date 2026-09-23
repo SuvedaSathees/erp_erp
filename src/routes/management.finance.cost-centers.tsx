@@ -40,8 +40,9 @@ import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
-import { DataTable } from "@/components/erp/DataTable";
+import { DataTable, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -271,8 +272,15 @@ function CostCentersPage() {
     uploadMutation.mutate({ name: "fy2025_cost_centers_budget.csv" });
   };
 
+  const isError = dashboardQuery.isError;
   const isLoading = dashboardQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    dashboardQuery.error,
+    "Failed to load cost centers dashboard.",
+  );
 
   // Filter cost centers
   const allCCs = data?.costCenters || [];
@@ -299,10 +307,15 @@ function CostCentersPage() {
                 : "bg-background border-border text-muted-foreground text-[11px] ml-8"
           }`}
         >
-          <FolderTree className="h-3.5 w-3.5 shrink-0" />
-          <span>{node.name}</span>
+          <FolderTree className="h-4 w-4 shrink-0" />
+          <span className="truncate flex-1">{node.name}</span>
+          <span className="tabular font-mono text-[11px] text-muted-foreground">{node.code}</span>
         </div>
-        {node.children && node.children.map((child) => renderHierarchyNode(child, depth + 1))}
+        {node.children && node.children.length > 0 && (
+          <div className="space-y-2 border-l border-border/80 pl-2 ml-3">
+            {node.children.map((child) => renderHierarchyNode(child, depth + 1))}
+          </div>
+        )}
       </div>
     );
   };
@@ -311,7 +324,7 @@ function CostCentersPage() {
     <AppShell
       title="Finance"
       breadcrumb="Management"
-      description="Manage, monitor, and analyze cost center performance across the organization."
+      description="Manage organizational cost structures, track department expenses and allocations."
       tabs={<FinanceTabBar />}
       topbarActions={
         <ErpButton onClick={() => setCcOpen(true)} size="md">
@@ -320,7 +333,13 @@ function CostCentersPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Cost Centers"
+          error={dashboardQuery.error}
+          onRetry={() => dashboardQuery.refetch()}
+        />
+      ) : isLoading || !data ? (
         <CostCentersSkeleton />
       ) : (
         <div className="space-y-5">
@@ -363,8 +382,8 @@ function CostCentersPage() {
               value={`${data.kpis.budgetUtilization}%`}
               neutralText="This Fiscal Year"
               icon={<Layers className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -611,6 +630,12 @@ function CostCentersPage() {
                             <Progress value={r.utilization} className="h-1.5" />
                           </div>
                         )}
+                        empty={
+                          <EmptyState
+                            title="No cost centers found"
+                            description="No cost centers matched your search and filter criteria."
+                          />
+                        }
                       />
                     </div>
 

@@ -160,7 +160,7 @@ const FUNNEL_STAGES = [
   { stage: "Qualification (3)", val: "₹ 45,00,000", width: "w-full", bg: "bg-blue-600" },
   { stage: "Proposal (2)", val: "₹ 30,00,000", width: "w-4/5", bg: "bg-emerald-500" },
   { stage: "Negotiation (2)", val: "₹ 20,00,000", width: "w-3/5", bg: "bg-amber-500" },
-  { stage: "Closed Won (1)", val: "₹ 15,00,000", width: "w-2/5", bg: "bg-purple-600" },
+  { stage: "Closed Won (1)", val: "₹ 15,00,000", width: "w-2/5", bg: "bg-primary" },
 ];
 
 function AccountManagementPage() {
@@ -897,7 +897,7 @@ function AccountManagementPage() {
                           </div>
                         </div>
                         <div className="p-2 bg-white rounded border border-slate-200 flex items-center gap-2">
-                          <FileText className="h-4 w-4 text-purple-600 shrink-0" />
+                          <FileText className="h-4 w-4 text-primary shrink-0" />
                           <div className="truncate">
                             <div className="font-bold text-slate-800 truncate">AMC Contract</div>
                             <div className="text-[9px] text-slate-400">Uploaded 01 Jan 2024</div>

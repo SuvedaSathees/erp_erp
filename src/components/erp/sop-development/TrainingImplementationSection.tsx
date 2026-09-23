@@ -18,7 +18,7 @@ export function TrainingImplementationSection({
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <div>
           <CardTitle className="text-base font-bold flex items-center gap-2">
-            <GraduationCap className="h-4 w-4 text-purple-600" />
+            <GraduationCap className="h-4 w-4 text-primary" />
             Training & Organization-Wide Implementation
           </CardTitle>
           <CardDescription className="text-xs">
@@ -26,16 +26,16 @@ export function TrainingImplementationSection({
           </CardDescription>
         </div>
 
-        <div className="flex items-center gap-3 bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 rounded-xl px-4 py-2">
+        <div className="flex items-center gap-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-xl px-4 py-2">
           <div>
-            <span className="text-[10px] font-semibold uppercase text-purple-600 dark:text-purple-400 block tracking-wider">
+            <span className="text-[10px] font-semibold uppercase text-primary dark:text-blue-400 block tracking-wider">
               Training Score
             </span>
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-extrabold text-purple-700 dark:text-purple-300 font-mono">
+              <span className="text-2xl font-extrabold text-primary dark:text-blue-300 font-mono">
                 {trainingScore}
               </span>
-              <span className="text-xs text-purple-500 font-semibold">/100</span>
+              <span className="text-xs text-blue-600 font-semibold">/100</span>
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@ export function TrainingImplementationSection({
 
           <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-1">
             <span className="font-bold text-foreground block">Competency Requirement</span>
-            <span className="text-xs font-bold text-purple-600">
+            <span className="text-xs font-bold text-primary">
               {watch("competencyRequirement") || "Level 2 Certified Operator"}
             </span>
             <span className="text-[10px] text-muted-foreground block">Practical Assessment Passed</span>

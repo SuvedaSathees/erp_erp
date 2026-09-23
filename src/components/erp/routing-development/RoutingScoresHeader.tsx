@@ -29,7 +29,7 @@ export const RoutingScoresHeader: React.FC<RoutingScoresHeaderProps> = ({ record
       label: "Quality Score",
       score: record.qualityScore,
       status: record.qualityScore >= 90 ? "Excellent" : "Good",
-      color: "#9333ea",
+      color: "#0A3C75",
     },
     {
       label: "Cost Score",

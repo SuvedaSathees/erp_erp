@@ -405,13 +405,13 @@ export function AssetTrackingDashboardPage() {
           <div className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground font-medium">Transferred (This Month)</span>
-              <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <ArrowLeftRight className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-1">
-              <span className="text-2xl font-bold font-mono text-purple-600">24</span>
-              <span className="block text-[10px] text-purple-700 dark:text-purple-400 font-medium">
+              <span className="text-2xl font-bold font-mono text-primary">24</span>
+              <span className="block text-[10px] text-primary dark:text-blue-400 font-medium">
                 5.61% of Total
               </span>
             </div>
@@ -471,7 +471,7 @@ export function AssetTrackingDashboardPage() {
                   {/* Warehouse: 7.24% */}
                   <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="201.9" />
                   {/* Project Sites: 5.14% */}
-                  <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="219.2" />
+                  <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="219.2" />
                   {/* In Transit: 1.87% */}
                   <circle cx="50" cy="50" r="38" stroke="#ef4444" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="231.5" />
                   {/* Unknown: 1.17% */}
@@ -504,7 +504,7 @@ export function AssetTrackingDashboardPage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                    <div className="h-2 w-2 rounded-full bg-purple-500" /> Project Sites
+                    <div className="h-2 w-2 rounded-full bg-blue-500" /> Project Sites
                   </span>
                   <span className="font-mono text-muted-foreground font-semibold text-[10px]">22 (5.14%)</span>
                 </div>
@@ -604,7 +604,7 @@ export function AssetTrackingDashboardPage() {
                   {/* In Transit: 1.87% */}
                   <circle cx="50" cy="50" r="38" stroke="#ef4444" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="205" />
                   {/* Idle: 8.88% */}
-                  <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="210" />
+                  <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="210" />
                   {/* Other: 3.27% */}
                   <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="11" fill="transparent" strokeDasharray="238.76" strokeDashoffset="231" />
                 </svg>
@@ -635,7 +635,7 @@ export function AssetTrackingDashboardPage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                    <div className="h-2 w-2 rounded-full bg-purple-500" /> Idle
+                    <div className="h-2 w-2 rounded-full bg-blue-500" /> Idle
                   </span>
                   <span className="font-mono text-muted-foreground font-semibold text-[10px]">38 (8.88%)</span>
                 </div>
@@ -851,7 +851,7 @@ export function AssetTrackingDashboardPage() {
                                 ? "bg-sky-50 text-sky-700 border-sky-200"
                                 : asset.status === "Under Maintenance"
                                 ? "bg-amber-50 text-amber-700 border-amber-200"
-                                : "bg-purple-50 text-purple-700 border-purple-200"
+                                : "bg-blue-50 text-primary border-blue-200"
                             )}
                           >
                             {asset.status}
@@ -1111,7 +1111,7 @@ export function AssetTrackingDashboardPage() {
                     <span className="text-muted-foreground">Plant 01 • Bay 02 &rarr; Bay 03</span>
                   </div>
                   <div className="text-right">
-                    <Badge variant="outline" className="text-[9px] bg-purple-50 text-purple-700">Relocated</Badge>
+                    <Badge variant="outline" className="text-[9px] bg-blue-50 text-primary">Relocated</Badge>
                     <span className="block text-[8.5px] text-muted-foreground font-mono mt-0.5">31 Aug 05:12 PM</span>
                   </div>
                 </div>
@@ -1180,7 +1180,7 @@ export function AssetTrackingDashboardPage() {
 
                   {/* Node 4: Project Sites */}
                   <g transform="translate(140, 105)">
-                    <circle cx="0" cy="0" r="12" fill="#8b5cf6" />
+                    <circle cx="0" cy="0" r="12" fill="#0A3C75" />
                     <text x="0" y="-1" fontSize="5" fontWeight="bold" textAnchor="middle" fill="#ffffff">Projects</text>
                     <text x="0" y="5" fontSize="4.5" textAnchor="middle" fill="#ffffff">22 Assets</text>
                   </g>
@@ -1236,7 +1236,7 @@ export function AssetTrackingDashboardPage() {
                   <span className="font-mono font-semibold">62 (14.5%)</span>
                 </div>
                 <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-purple-500 h-1.5 rounded-full" style={{ width: "14.5%" }} />
+                  <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: "14.5%" }} />
                 </div>
               </div>
 

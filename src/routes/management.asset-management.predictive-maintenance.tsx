@@ -452,13 +452,13 @@ export function PredictiveMaintenanceFormPage() {
           <div className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground font-medium">Critical Risk Assets</span>
-              <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <AlertOctagon className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-1">
-              <span className="text-2xl font-bold font-mono text-purple-600">3</span>
-              <span className="block text-[10px] text-purple-700 dark:text-purple-400 font-medium">
+              <span className="text-2xl font-bold font-mono text-primary">3</span>
+              <span className="block text-[10px] text-primary dark:text-blue-400 font-medium">
                 0.8% of Monitored
               </span>
             </div>
@@ -1129,7 +1129,7 @@ export function PredictiveMaintenanceFormPage() {
                   <polyline
                     points="20,70 60,65 100,58 140,50 180,42 220,32"
                     fill="none"
-                    stroke="#8b5cf6"
+                    stroke="#0A3C75"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                   />
@@ -1142,8 +1142,8 @@ export function PredictiveMaintenanceFormPage() {
                     { x: 220, y: 32, val: "66%" },
                   ].map((pt, i) => (
                     <g key={i}>
-                      <circle cx={pt.x} cy={pt.y} r="2.5" fill="#ffffff" stroke="#8b5cf6" strokeWidth="2" />
-                      <text x={pt.x} y={pt.y - 6} fontSize="7.5" fontWeight="bold" textAnchor="middle" fill="#7c3aed">
+                      <circle cx={pt.x} cy={pt.y} r="2.5" fill="#ffffff" stroke="#0A3C75" strokeWidth="2" />
+                      <text x={pt.x} y={pt.y - 6} fontSize="7.5" fontWeight="bold" textAnchor="middle" fill="#0A3C75">
                         {pt.val}
                       </text>
                     </g>
@@ -1181,7 +1181,7 @@ export function PredictiveMaintenanceFormPage() {
                   <circle cx="50" cy="50" r="38" stroke="#2563eb" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                   <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="134.1" />
                   <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="201.2" />
-                  <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="223.7" />
+                  <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="223.7" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                   <span className="text-xs font-bold font-mono text-slate-900 dark:text-white">64</span>
@@ -1203,7 +1203,7 @@ export function PredictiveMaintenanceFormPage() {
                   <span className="font-mono font-semibold">10 (15.6%)</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-1.5"><div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> Hydraulic Model v1.9</span>
+                  <span className="flex items-center gap-1.5"><div className="h-1.5 w-1.5 rounded-full bg-blue-500" /> Hydraulic Model v1.9</span>
                   <span className="font-mono font-semibold">6 (9.4%)</span>
                 </div>
               </div>

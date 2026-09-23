@@ -1563,7 +1563,7 @@ export default function WorkforcePlanningPage() {
 
               <div className="flex items-center justify-between pt-1.5">
                 <span className="text-slate-600 flex items-center gap-1.5">
-                  <Scale className="h-3.5 w-3.5 text-indigo-500" />
+                  <Scale className="h-3.5 w-3.5 text-blue-600" />
                   Budgeted Cost
                 </span>
                 <span className="font-bold text-slate-900 font-mono">₹ 20,00,00,000</span>
@@ -1587,7 +1587,7 @@ export default function WorkforcePlanningPage() {
 
               <div className="flex items-center justify-between pt-1.5">
                 <span className="text-slate-600 flex items-center gap-1.5">
-                  <BrainCircuit className="h-3.5 w-3.5 text-purple-500" />
+                  <BrainCircuit className="h-3.5 w-3.5 text-blue-600" />
                   Productivity Index
                 </span>
                 <span className="font-bold text-slate-900 font-mono">1.24</span>
@@ -1686,7 +1686,7 @@ export default function WorkforcePlanningPage() {
                       <td className="py-3 px-3 font-mono font-semibold text-blue-600">{item.id}</td>
                       <td className="py-3 px-3 font-medium text-slate-800">{item.department}</td>
                       <td className="py-3 px-3">
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-primary border border-blue-200">
                           {item.demandDriver}
                         </span>
                       </td>

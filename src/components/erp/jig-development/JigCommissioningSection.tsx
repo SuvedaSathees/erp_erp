@@ -150,7 +150,7 @@ export function JigCommissioningSection({
 
               <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-900 rounded border border-border">
                 <div className="flex items-center gap-2 min-w-0">
-                  <FileText className="h-4 w-4 text-purple-600 shrink-0" />
+                  <FileText className="h-4 w-4 text-primary shrink-0" />
                   <div className="truncate">
                     <span className="font-semibold block truncate">Calibration Schedule</span>
                     <span className="text-[10px] text-muted-foreground font-mono">calibration_schedule.pdf</span>
@@ -159,7 +159,7 @@ export function JigCommissioningSection({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 px-2 text-[11px] gap-1 hover:text-purple-600 cursor-pointer"
+                  className="h-7 px-2 text-[11px] gap-1 hover:text-primary cursor-pointer"
                   onClick={() => handleDownloadDoc("Calibration Schedule", "calibration_schedule.pdf")}
                 >
                   <Download className="h-3.5 w-3.5" />

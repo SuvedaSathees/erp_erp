@@ -767,7 +767,7 @@ ${allocations
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setIsHeatmapOpen(true)} className="cursor-pointer">
-                      <Layers className="mr-2 h-4 w-4 text-purple-600" /> Resource Heatmap
+                      <Layers className="mr-2 h-4 w-4 text-primary" /> Resource Heatmap
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -1116,7 +1116,7 @@ ${allocations
             {/* 5. Avg Utilization */}
             <div
               onClick={() => toast.info("Resource pool utilization: 78.6% (Target: 85%). Health: In Normal Buffer.")}
-              className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-purple-500/60 hover:shadow-xs"
+              className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-primary/60 hover:shadow-xs"
             >
               <div>
                 <span className="text-[11px] text-muted-foreground font-medium block">
@@ -1125,11 +1125,11 @@ ${allocations
                 <span className="text-xl font-bold font-mono text-slate-900 dark:text-white mt-0.5 block">
                   78.6%
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold block mt-1">
+                <span className="text-[10px] text-primary dark:text-blue-400 font-semibold block mt-1">
                   Target: 85%
                 </span>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <BarChart2 className="h-5 w-5" />
               </div>
             </div>
@@ -1178,7 +1178,7 @@ ${allocations
                   { dept: "Engineering", pct: 85, color: "bg-teal-500" },
                   { dept: "Production", pct: 82, color: "bg-emerald-500" },
                   { dept: "Procurement", pct: 61, color: "bg-amber-500" },
-                  { dept: "Quality", pct: 72, color: "bg-purple-500" },
+                  { dept: "Quality", pct: 72, color: "bg-blue-500" },
                   { dept: "Installation", pct: 94, color: "bg-rose-500" },
                   { dept: "Project Mgmt", pct: 65, color: "bg-blue-500" },
                 ].map((item) => (
@@ -1346,7 +1346,7 @@ ${allocations
                     <circle cx="50" cy="50" r="38" stroke="#3b82f6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="91" />
                     <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="125" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="148" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="148" />
                     <circle cx="50" cy="50" r="38" stroke="#1e3a8a" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="163" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -1360,7 +1360,7 @@ ${allocations
                     { type: "Human", count: "78 (61.9%)", color: "bg-blue-500" },
                     { type: "Equipment", count: "18 (14.3%)", color: "bg-emerald-500" },
                     { type: "Team", count: "12 (9.5%)", color: "bg-amber-500" },
-                    { type: "Facility", count: "8 (6.3%)", color: "bg-purple-500" },
+                    { type: "Facility", count: "8 (6.3%)", color: "bg-blue-500" },
                     { type: "Contractor", count: "10 (7.9%)", color: "bg-blue-900" },
                   ].map((row) => (
                     <div
@@ -1825,7 +1825,7 @@ ${allocations
                   <Sparkles className="h-3.5 w-3.5 text-primary" />
                   AI Recommendations
                 </CardTitle>
-                <Badge variant="outline" className="text-[9px] bg-purple-50 text-purple-700 border-purple-200 font-mono">
+                <Badge variant="outline" className="text-[9px] bg-blue-50 text-primary border-blue-200 font-mono">
                   3 Actions
                 </Badge>
               </CardHeader>

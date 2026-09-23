@@ -1120,7 +1120,7 @@ export default function RecruitmentManagementPage() {
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="font-bold text-slate-900">Sanjana Nair</div>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-primary border border-blue-200">
                     Round 1: System Design & Architecture
                   </span>
                 </div>

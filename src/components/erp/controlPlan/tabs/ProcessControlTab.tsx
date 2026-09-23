@@ -18,9 +18,9 @@ export const ProcessControlTab: React.FC<ProcessControlTabProps> = ({ record }) 
             Validates shop floor digital work instructions, standard operating procedures (SOPs), automated error proofing (Poka-Yoke), and preventive maintenance schedules.
           </p>
         </div>
-        <div className="flex items-center gap-2 bg-purple-50 dark:bg-purple-950 px-3 py-1.5 rounded-lg border border-purple-200 dark:border-purple-800">
+        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800">
           <span className="text-xs text-muted-foreground font-semibold">Process Control Score:</span>
-          <span className="text-sm font-extrabold text-purple-600 dark:text-purple-400">
+          <span className="text-sm font-extrabold text-primary dark:text-blue-400">
             {record.processControlScore} / 100
           </span>
         </div>

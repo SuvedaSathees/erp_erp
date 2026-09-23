@@ -294,13 +294,13 @@ export function SupplierPortalPage() {
           </div>
 
           {/* Card 4: Pending Deliveries */}
-          <div className="rounded-xl border border-purple-200/60 dark:border-purple-900/40 bg-purple-50/40 dark:bg-purple-950/20 p-3.5 shadow-xs flex flex-col justify-between space-y-2">
-            <div className="flex items-center gap-1.5 text-purple-600 dark:text-purple-400">
+          <div className="rounded-xl border border-blue-200/60 dark:border-blue-900/40 bg-blue-50/40 dark:bg-blue-950/20 p-3.5 shadow-xs flex flex-col justify-between space-y-2">
+            <div className="flex items-center gap-1.5 text-primary dark:text-blue-400">
               <Truck className="h-4 w-4" />
               <span className="text-xs font-bold text-foreground">Pending Deliveries</span>
             </div>
             <div className="text-2xl font-black text-foreground font-mono">{supplier.pendingDeliveries}</div>
-            <button type="button" onClick={() => setActiveTab("purchaseOrders")} className="text-[10px] font-semibold text-purple-600 hover:underline text-left cursor-pointer">
+            <button type="button" onClick={() => setActiveTab("purchaseOrders")} className="text-[10px] font-semibold text-primary hover:underline text-left cursor-pointer">
               View Deliveries →
             </button>
           </div>
@@ -473,7 +473,7 @@ export function SupplierPortalPage() {
                   </div>
                   <div className="p-2.5 rounded-lg border border-border/80 bg-muted/20 text-center space-y-1">
                     <span className="text-[10px] text-muted-foreground font-medium">Service & SLA</span>
-                    <div className="text-base font-black text-purple-600 font-mono">90%</div>
+                    <div className="text-base font-black text-primary font-mono">90%</div>
                     <div className="text-[9px] text-muted-foreground">3.8h Response</div>
                   </div>
                   <div className="p-2.5 rounded-lg border border-border/80 bg-muted/20 text-center space-y-1 col-span-2 sm:col-span-1">

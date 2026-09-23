@@ -43,6 +43,7 @@ import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, type Column, EmptyState } from "@/components/erp/DataTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
@@ -230,8 +231,15 @@ function AccountsReceivablePage() {
     setFilters((f) => ({ ...f, ...patch, page: patch.page ?? 1 }));
   }
 
+  const isError = kpisQuery.isError || listQuery.isError;
   const isLoading = kpisQuery.isLoading || listQuery.isLoading;
   const kpis = kpisQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    kpisQuery.error || listQuery.error,
+    "Failed to load accounts receivable records.",
+  );
 
   const columns: Column<ReceivableInvoice>[] = [
     {
@@ -328,7 +336,16 @@ function AccountsReceivablePage() {
         </ErpButton>
       }
     >
-      {isLoading || !kpis ? (
+      {isError && !kpis ? (
+        <QueryErrorState
+          title="Failed to Load Receivables"
+          error={kpisQuery.error || listQuery.error}
+          onRetry={() => {
+            kpisQuery.refetch();
+            listQuery.refetch();
+          }}
+        />
+      ) : isLoading || !kpis ? (
         <ReceivablesSkeleton />
       ) : (
         <>
@@ -369,7 +386,7 @@ function AccountsReceivablePage() {
             />
             <StatCard
               label="Open Invoices"
-              value={kpis.openInvoices.toLocaleString()}
+              value={kpis.openInvoices.toLocaleString("en-IN")}
               neutralText="All Outstanding"
               iconBg="bg-primary/10"
               iconColor="text-primary"

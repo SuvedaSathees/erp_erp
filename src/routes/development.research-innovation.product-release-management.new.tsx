@@ -601,7 +601,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                               : rec.workflowStatus === "Approved with Conditions"
                               ? "bg-amber-500 text-white hover:bg-amber-600"
                               : rec.workflowStatus === "In Review" || rec.workflowStatus === "Executive Review"
-                              ? "bg-purple-600 text-white hover:bg-purple-700"
+                              ? "bg-primary text-white hover:bg-primary"
                               : rec.workflowStatus === "Revision Required"
                               ? "bg-orange-500 text-white hover:bg-orange-600"
                               : rec.workflowStatus === "Rejected"
@@ -618,7 +618,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                           <Clock className="mr-2 h-3.5 w-3.5 text-blue-500" /> In Progress
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleStatusChange("Executive Review")} className="cursor-pointer">
-                          <Eye className="mr-2 h-3.5 w-3.5 text-purple-500" /> Executive Review
+                          <Eye className="mr-2 h-3.5 w-3.5 text-blue-600" /> Executive Review
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleStatusChange("Approved")} className="cursor-pointer">
                           <CheckCircle2 className="mr-2 h-3.5 w-3.5 text-emerald-500" /> Approved
@@ -756,7 +756,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                       Publish Release Notes
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setShowAiAnalyzerModal(true)} className="gap-2 cursor-pointer">
-                      <Sparkles className="h-4 w-4 text-purple-600" />
+                      <Sparkles className="h-4 w-4 text-primary" />
                       Run AI Release Analysis
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
@@ -1432,11 +1432,11 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
               <CardHeader className="pb-3 border-b border-border/60">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-purple-600" />
+                    <Sparkles className="h-4 w-4 text-primary" />
                     AI Release Assessment
                   </CardTitle>
-                  <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold text-xs">
-                    <Sparkles className="h-3 w-3 text-purple-600" />
+                  <Badge className="bg-blue-100 text-primary dark:bg-blue-950/60 dark:text-blue-300 gap-1 border-blue-200 font-semibold text-xs">
+                    <Sparkles className="h-3 w-3 text-primary" />
                     AI Digital Thread Engine
                   </Badge>
                 </div>
@@ -1484,18 +1484,18 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                       <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 ml-2" />
                     </div>
 
-                    <div className="flex items-center justify-between rounded-lg border border-purple-200/80 dark:border-purple-900/40 p-2.5 bg-purple-50/40 dark:bg-purple-950/20">
-                      <span className="font-semibold text-purple-900 dark:text-purple-300 w-1/3">
+                    <div className="flex items-center justify-between rounded-lg border border-blue-200/80 dark:border-blue-900/40 p-2.5 bg-blue-50/40 dark:bg-blue-950/20">
+                      <span className="font-semibold text-blue-900 dark:text-blue-300 w-1/3">
                         AI Improvement Suggestions
                       </span>
-                      <span className="text-purple-800 dark:text-purple-200 font-medium flex-1">
+                      <span className="text-primary dark:text-blue-200 font-medium flex-1">
                         {rec.aiImprovementSuggestions}
                       </span>
-                      <Sparkles className="h-4 w-4 text-purple-600 shrink-0 ml-2" />
+                      <Sparkles className="h-4 w-4 text-primary shrink-0 ml-2" />
                     </div>
                   </div>
 
-                  <div className="md:col-span-3 flex flex-col items-center justify-center rounded-xl bg-gradient-to-b from-purple-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 border border-purple-200/60 dark:border-slate-700 p-4 text-center">
+                  <div className="md:col-span-3 flex flex-col items-center justify-center rounded-xl bg-gradient-to-b from-blue-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 border border-blue-200/60 dark:border-slate-700 p-4 text-center">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold shadow-sm mb-2">
                       AI
                     </div>
@@ -2206,15 +2206,15 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-purple-600" />
+              <Sparkles className="h-5 w-5 text-primary" />
               AI Release Intelligence Agent
             </DialogTitle>
             <DialogDescription>Autonomous multi-stream release convergence analysis</DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-2 text-xs">
-            <div className="p-3 bg-purple-50 dark:bg-purple-950/40 rounded-lg border border-purple-200 dark:border-purple-800 space-y-1">
-              <p className="font-bold text-purple-900 dark:text-purple-200">Launch Readiness Assessment</p>
-              <p className="text-purple-800 dark:text-purple-300 leading-relaxed">
+            <div className="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-lg border border-blue-200 dark:border-blue-800 space-y-1">
+              <p className="font-bold text-blue-900 dark:text-blue-200">Launch Readiness Assessment</p>
+              <p className="text-primary dark:text-blue-300 leading-relaxed">
                 AI verified all 18 readiness deliverables. Inventory buffer of 2,450 units is optimal for initial 30 days. Release Score: <strong>{rec.aiReleaseScore}/100</strong>.
               </p>
             </div>

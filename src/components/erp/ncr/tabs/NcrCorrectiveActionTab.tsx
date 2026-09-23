@@ -175,11 +175,11 @@ export function NcrCorrectiveActionTab({
       </div>
 
       {/* Section 10: Preventive Action / CAPA Escalation Card */}
-      <div className="bg-gradient-to-r from-purple-500/10 via-card to-blue-500/10 rounded-xl border border-purple-200 dark:border-purple-900/50 p-5 shadow-xs">
+      <div className="bg-gradient-to-r from-blue-500/10 via-card to-blue-500/10 rounded-xl border border-blue-200 dark:border-blue-900/50 p-5 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-md bg-purple-600 text-white flex items-center justify-center">
+              <div className="w-7 h-7 rounded-md bg-primary text-white flex items-center justify-center">
                 <Sparkles className="h-4 w-4" />
               </div>
               <h3 className="text-sm font-bold text-foreground">
@@ -194,7 +194,7 @@ export function NcrCorrectiveActionTab({
           <Button
             size="sm"
             onClick={onCreateCapa}
-            className="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs shadow-xs shrink-0"
+            className="bg-primary hover:bg-primary text-white font-semibold text-xs shadow-xs shrink-0"
           >
             <Sparkles className="h-3.5 w-3.5 mr-1.5" />
             {record.capaStatus === "Not Created" ? "Generate CAPA Record" : `View CAPA (${record.relatedCapaId || "CAPA-2026-0024"})`}

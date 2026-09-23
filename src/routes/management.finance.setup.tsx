@@ -5,6 +5,7 @@ import { AppShell } from "@/components/erp/AppShell";
 import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import * as generalLedgerService from "@/services/generalLedgerService";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -42,6 +43,12 @@ function SetupPage() {
         ).data
       : undefined;
 
+  useQueryErrorToast(
+    integrationQuery.isError,
+    integrationQuery.error,
+    "Failed to load integration settings.",
+  );
+
   return (
     <AppShell
       title="Setup & Integrations"
@@ -49,7 +56,13 @@ function SetupPage() {
       description="Configure and manage real-time ledger updates from sub-modules and external ERP gateways."
       tabs={<FinanceTabBar />}
     >
-      {integrationQuery.isLoading ? (
+      {integrationQuery.isError && !integrations ? (
+        <QueryErrorState
+          title="Failed to Load Setup & Integrations"
+          error={integrationQuery.error}
+          onRetry={() => integrationQuery.refetch()}
+        />
+      ) : integrationQuery.isLoading ? (
         <SetupSkeleton />
       ) : (
         <div className="grid gap-6 md:grid-cols-2">

@@ -406,7 +406,7 @@ function CustomerFeedbackPage() {
                 <div className="p-3.5 bg-muted/15 rounded-lg border border-border space-y-1">
                   <span className="text-muted-foreground block text-[11px]">Value for Investment (ROI)</span>
                   <div className="text-lg font-bold font-mono text-foreground">4.8 / 5.0 ★</div>
-                  <span className="text-[10px] text-purple-600">High perceived value</span>
+                  <span className="text-[10px] text-primary">High perceived value</span>
                 </div>
               </div>
             </div>
@@ -493,7 +493,7 @@ function CustomerFeedbackPage() {
             MAICW: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
             <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
             <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-            <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
+            <span className="text-blue-600 font-bold">C</span> (Calculated) |{" "}
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div>

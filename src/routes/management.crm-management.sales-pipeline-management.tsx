@@ -141,8 +141,8 @@ const INITIAL_PIPELINES: PipelineRecord[] = [
 const STAGE_CARDS_DATA = [
   { num: 1, name: "Lead Qualified", value: "₹ 12,50,000", prob: "10%", count: "2 Opportunities", color: "border-slate-300 text-slate-700 bg-slate-100" },
   { num: 2, name: "Opportunity Created", value: "₹ 25,20,000", prob: "20%", count: "3 Opportunities", color: "border-blue-300 text-blue-700 bg-blue-50" },
-  { num: 3, name: "Discovery", value: "₹ 32,40,000", prob: "30%", count: "4 Opportunities", color: "border-indigo-300 text-indigo-700 bg-indigo-50" },
-  { num: 4, name: "Requirement Confirmed", value: "₹ 45,80,000", prob: "40%", count: "4 Opportunities", color: "border-purple-300 text-purple-700 bg-purple-50" },
+  { num: 3, name: "Discovery", value: "₹ 32,40,000", prob: "30%", count: "4 Opportunities", color: "border-blue-300 text-primary bg-blue-50" },
+  { num: 4, name: "Requirement Confirmed", value: "₹ 45,80,000", prob: "40%", count: "4 Opportunities", color: "border-blue-300 text-primary bg-blue-50" },
   { num: 5, name: "Solution / Demo", value: "₹ 51,75,000", prob: "60%", count: "3 Opportunities", color: "border-amber-300 text-amber-700 bg-amber-50" },
   { num: 6, name: "Proposal / Quotation", value: "₹ 38,60,000", prob: "75%", count: "3 Opportunities", color: "border-orange-300 text-orange-700 bg-orange-50" },
   { num: 7, name: "Commercial Negotiation", value: "₹ 25,20,000", prob: "85%", count: "2 Opportunities", color: "border-emerald-300 text-emerald-700 bg-emerald-50" },
@@ -156,7 +156,7 @@ const FORECAST_DONUT_DATA = [
   { name: "Pipeline", value: 11020000, pct: "44.3%", color: "#2563eb" },
   { name: "Best Case", value: 6540000, pct: "26.3%", color: "#10b981" },
   { name: "Commit", value: 4980000, pct: "20.1%", color: "#f59e0b" },
-  { name: "Omitted", value: 1230000, pct: "5.0%", color: "#8b5cf6" },
+  { name: "Omitted", value: 1230000, pct: "5.0%", color: "#0A3C75" },
   { name: "Closed Won", value: 4820000, pct: "19.4%", color: "#059669" },
   { name: "Closed Lost", value: 2340000, pct: "9.4%", color: "#e11d48" },
 ];
@@ -165,7 +165,7 @@ const TOP_OPPORTUNITIES = [
   { num: "OPP-2024-00078", name: "PLC Automation Project", account: "Tata Steel Ltd.", stage: "Proposal / Quote", value: "₹ 18,60,000", prob: "75%", weighted: "₹ 13,95,000", stageColor: "bg-orange-100 text-orange-800" },
   { num: "OPP-2024-00064", name: "SCADA System Upgrade", account: "Adani Power Ltd.", stage: "Solution / Demo", value: "₹ 15,40,000", prob: "60%", weighted: "₹ 9,24,000", stageColor: "bg-amber-100 text-amber-800" },
   { num: "OPP-2024-00052", name: "Robotics Integration", account: "Mahindra & Mahindra", stage: "Negotiation", value: "₹ 11,20,000", prob: "85%", weighted: "₹ 9,52,000", stageColor: "bg-emerald-100 text-emerald-800" },
-  { num: "OPP-2024-00031", name: "Control Panel Supply", account: "Larsen & Toubro", stage: "Requirement Confirmed", value: "₹ 9,80,000", prob: "40%", weighted: "₹ 3,92,000", stageColor: "bg-purple-100 text-purple-800" },
+  { num: "OPP-2024-00031", name: "Control Panel Supply", account: "Larsen & Toubro", stage: "Requirement Confirmed", value: "₹ 9,80,000", prob: "40%", weighted: "₹ 3,92,000", stageColor: "bg-blue-100 text-primary" },
   { num: "OPP-2024-00019", name: "IoT Gateway Project", account: "Reliance Industries", stage: "Discovery", value: "₹ 7,50,000", prob: "30%", weighted: "₹ 2,28,000", stageColor: "bg-blue-100 text-blue-800" },
 ];
 
@@ -601,9 +601,9 @@ function SalesPipelineManagementPage() {
                         <div className="text-[11px] font-medium text-emerald-700">Weighted Pipeline</div>
                         <div className="text-base font-extrabold text-emerald-900 mt-0.5">₹ 1,49,80,000</div>
                       </div>
-                      <div className="p-3 bg-purple-50/60 rounded-lg border border-purple-200">
-                        <div className="text-[11px] font-medium text-purple-700">Open Opportunities</div>
-                        <div className="text-base font-extrabold text-purple-900 mt-0.5">23 Deals</div>
+                      <div className="p-3 bg-blue-50/60 rounded-lg border border-blue-200">
+                        <div className="text-[11px] font-medium text-primary">Open Opportunities</div>
+                        <div className="text-base font-extrabold text-blue-900 mt-0.5">23 Deals</div>
                       </div>
 
                       <div className="p-3 bg-teal-50/60 rounded-lg border border-teal-200">
@@ -623,9 +623,9 @@ function SalesPipelineManagementPage() {
                         <div className="text-[11px] font-medium text-amber-700">Avg. Sales Cycle (Days)</div>
                         <div className="text-base font-extrabold text-amber-900 mt-0.5">52 Days</div>
                       </div>
-                      <div className="p-3 bg-indigo-50/60 rounded-lg border border-indigo-200">
-                        <div className="text-[11px] font-medium text-indigo-700">Avg. Deal Size</div>
-                        <div className="text-base font-extrabold text-indigo-900 mt-0.5">₹ 17,75,000</div>
+                      <div className="p-3 bg-blue-50/60 rounded-lg border border-blue-200">
+                        <div className="text-[11px] font-medium text-primary">Avg. Deal Size</div>
+                        <div className="text-base font-extrabold text-blue-900 mt-0.5">₹ 17,75,000</div>
                       </div>
                       <div className="p-3 bg-blue-50/60 rounded-lg border border-blue-200">
                         <div className="text-[11px] font-medium text-blue-700">Forecast Accuracy</div>
@@ -870,7 +870,7 @@ function SalesPipelineManagementPage() {
             <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
               <div className="flex items-center justify-between border-b pb-3">
                 <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <Upload className="h-4 w-4 text-purple-600" />
+                  <Upload className="h-4 w-4 text-primary" />
                   <span>Import Pipeline Data (CSV / Excel)</span>
                 </h3>
                 <button onClick={() => setIsImportOpen(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold">
@@ -891,7 +891,7 @@ function SalesPipelineManagementPage() {
                     setIsImportOpen(false);
                     showNotification("Pipeline opportunities imported successfully!");
                   }}
-                  className="px-4 py-1.5 text-xs bg-purple-600 text-white font-bold rounded shadow-xs"
+                  className="px-4 py-1.5 text-xs bg-primary text-white font-bold rounded shadow-xs"
                 >
                   Start Import
                 </button>

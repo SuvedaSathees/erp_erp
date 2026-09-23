@@ -109,7 +109,7 @@ export const INITIAL_TIME_ENTRIES: TimeEntryItem[] = [
     date: "01 Sep 2026",
     resource: "Meena Elango",
     initials: "ME",
-    avatarColor: "bg-purple-600",
+    avatarColor: "bg-primary",
     wbsActivityTask: "2.1 / ACT-015 / T-012",
     workType: "Review",
     hours: 6.0,
@@ -122,7 +122,7 @@ export const INITIAL_TIME_ENTRIES: TimeEntryItem[] = [
     date: "02 Sep 2026",
     resource: "Praveen Raj",
     initials: "PR",
-    avatarColor: "bg-indigo-600",
+    avatarColor: "bg-primary",
     wbsActivityTask: "3.0 / ACT-031 / T-025",
     workType: "Procurement",
     hours: 7.0,
@@ -200,7 +200,7 @@ export const INITIAL_TIME_ENTRIES: TimeEntryItem[] = [
     date: "03 Sep 2026",
     resource: "Meena Elango",
     initials: "ME",
-    avatarColor: "bg-purple-600",
+    avatarColor: "bg-primary",
     wbsActivityTask: "2.4 / ACT-018 / T-014",
     workType: "Documentation",
     hours: 4.5,
@@ -213,7 +213,7 @@ export const INITIAL_TIME_ENTRIES: TimeEntryItem[] = [
     date: "04 Sep 2026",
     resource: "Praveen Raj",
     initials: "PR",
-    avatarColor: "bg-indigo-600",
+    avatarColor: "bg-primary",
     wbsActivityTask: "3.0 / ACT-032 / T-026",
     workType: "Procurement",
     hours: 8.0,
@@ -317,7 +317,7 @@ export const INITIAL_TIME_ENTRIES: TimeEntryItem[] = [
     date: "07 Sep 2026",
     resource: "Meena Elango",
     initials: "ME",
-    avatarColor: "bg-purple-600",
+    avatarColor: "bg-primary",
     wbsActivityTask: "2.4 / ACT-019 / T-016",
     workType: "Documentation",
     hours: 6.5,
@@ -330,7 +330,7 @@ export const INITIAL_TIME_ENTRIES: TimeEntryItem[] = [
     date: "07 Sep 2026",
     resource: "Praveen Raj",
     initials: "PR",
-    avatarColor: "bg-indigo-600",
+    avatarColor: "bg-primary",
     wbsActivityTask: "3.0 / ACT-033 / T-027",
     workType: "Procurement",
     hours: 6.0,
@@ -1107,7 +1107,7 @@ ${entries
                 document.getElementById("weekly-time-summary-card")?.scrollIntoView({ behavior: "smooth" });
                 toast.info("Jumped to Weekly Utilization Summary");
               }}
-              className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-purple-500/60 hover:shadow-xs"
+              className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all hover:border-primary/60 hover:shadow-xs"
             >
               <div>
                 <span className="text-[11px] text-muted-foreground font-medium block">
@@ -1116,11 +1116,11 @@ ${entries
                 <span className="text-xl font-bold font-mono text-slate-900 dark:text-white mt-0.5 block">
                   91.8%
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold block mt-1">
+                <span className="text-[10px] text-primary dark:text-blue-400 font-semibold block mt-1">
                   Target: 85%
                 </span>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <TrendingUp className="h-5 w-5" />
               </div>
             </div>
@@ -1729,7 +1729,7 @@ ${entries
                     <circle cx="50" cy="50" r="38" stroke="#3b82f6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="98" />
                     <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="144" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="174" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="174" />
                     <circle cx="50" cy="50" r="38" stroke="#06b6d4" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="200" />
                     <circle cx="50" cy="50" r="38" stroke="#64748b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="218" />
                   </svg>
@@ -1743,7 +1743,7 @@ ${entries
                     { type: "Design", color: "bg-blue-500", hours: "512.5 h (41.1%)" },
                     { type: "Development", color: "bg-emerald-500", hours: "238.0 h (19.1%)" },
                     { type: "Review", color: "bg-amber-500", hours: "156.0 h (12.5%)" },
-                    { type: "Testing", color: "bg-purple-500", hours: "134.0 h (10.7%)" },
+                    { type: "Testing", color: "bg-blue-500", hours: "134.0 h (10.7%)" },
                     { type: "Documentation", color: "bg-cyan-500", hours: "98.0 h (7.8%)" },
                     { type: "Other", color: "bg-slate-500", hours: "110.0 h (8.8%)" },
                   ].map((row) => (

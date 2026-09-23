@@ -361,7 +361,7 @@ function AuditManagementPage() {
               <div>
                 <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
                   <span>Timestamp</span>
-                  <span className="text-[10px] font-bold text-purple-500 bg-purple-500/10 px-1 rounded">C</span>
+                  <span className="text-[10px] font-bold text-blue-600 bg-primary/10 px-1 rounded">C</span>
                 </label>
                 <input
                   type="text"
@@ -374,7 +374,7 @@ function AuditManagementPage() {
               <div>
                 <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
                   <span>Source</span>
-                  <span className="text-[10px] font-bold text-purple-500 bg-purple-500/10 px-1 rounded">C</span>
+                  <span className="text-[10px] font-bold text-blue-600 bg-primary/10 px-1 rounded">C</span>
                 </label>
                 <select
                   value={auditMaster.source}
@@ -388,7 +388,7 @@ function AuditManagementPage() {
               <div>
                 <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
                   <span>IP Address</span>
-                  <span className="text-[10px] font-bold text-purple-500 bg-purple-500/10 px-1 rounded">C</span>
+                  <span className="text-[10px] font-bold text-blue-600 bg-primary/10 px-1 rounded">C</span>
                 </label>
                 <input
                   type="text"
@@ -414,7 +414,7 @@ function AuditManagementPage() {
               <div>
                 <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
                   <span>Session ID</span>
-                  <span className="text-[10px] font-bold text-purple-500 bg-purple-500/10 px-1 rounded">C</span>
+                  <span className="text-[10px] font-bold text-blue-600 bg-primary/10 px-1 rounded">C</span>
                 </label>
                 <input
                   type="text"
@@ -830,7 +830,7 @@ function AuditManagementPage() {
             MAICW: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
             <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
             <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-            <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
+            <span className="text-blue-600 font-bold">C</span> (Calculated) |{" "}
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div>

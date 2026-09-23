@@ -27,16 +27,16 @@ export function BottleneckAnalysisSection({
           </CardDescription>
         </div>
 
-        <div className="flex items-center gap-3 bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 rounded-xl px-4 py-2">
+        <div className="flex items-center gap-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-xl px-4 py-2">
           <div>
-            <span className="text-[10px] font-semibold uppercase text-purple-600 dark:text-purple-400 block tracking-wider">
+            <span className="text-[10px] font-semibold uppercase text-primary dark:text-blue-400 block tracking-wider">
               Resolution Score
             </span>
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-extrabold text-purple-700 dark:text-purple-300 font-mono">
+              <span className="text-2xl font-extrabold text-primary dark:text-blue-300 font-mono">
                 {bottleneckScore}
               </span>
-              <span className="text-xs text-purple-500 font-semibold">/100</span>
+              <span className="text-xs text-blue-600 font-semibold">/100</span>
             </div>
           </div>
         </div>

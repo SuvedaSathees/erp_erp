@@ -436,13 +436,13 @@ export function PreventiveMaintenanceFormPage() {
           <div className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground font-medium">In Progress</span>
-              <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <PlayCircle className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-1">
-              <span className="text-2xl font-bold font-mono text-purple-600">24</span>
-              <span className="block text-[10px] text-purple-700 dark:text-purple-400 font-medium">
+              <span className="text-2xl font-bold font-mono text-primary">24</span>
+              <span className="block text-[10px] text-primary dark:text-blue-400 font-medium">
                 3.52% of Total
               </span>
             </div>
@@ -572,7 +572,7 @@ export function PreventiveMaintenanceFormPage() {
                     <circle cx="50" cy="50" r="38" stroke="#2563eb" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="91.7" />
                     <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="153.3" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="173.6" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="173.6" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <span className="text-sm font-bold font-mono text-slate-900 dark:text-white">682</span>
@@ -594,8 +594,8 @@ export function PreventiveMaintenanceFormPage() {
                     <span className="font-mono font-semibold text-amber-600">58</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> Statutory Audit</span>
-                    <span className="font-mono font-semibold text-purple-600">28</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-blue-500" /> Statutory Audit</span>
+                    <span className="font-mono font-semibold text-primary">28</span>
                   </div>
                 </div>
               </div>
@@ -1025,7 +1025,7 @@ export function PreventiveMaintenanceFormPage() {
                 { name: "Production Assets", pct: 94, color: "bg-teal-500" },
                 { name: "Utilities", pct: 91, color: "bg-amber-500" },
                 { name: "Facilities", pct: 93, color: "bg-blue-600" },
-                { name: "Overall", pct: 94, color: "bg-purple-600" },
+                { name: "Overall", pct: 94, color: "bg-primary" },
               ].map((item) => (
                 <div key={item.name} className="space-y-0.5">
                   <div className="flex justify-between items-center text-[10px]">
@@ -1089,7 +1089,7 @@ export function PreventiveMaintenanceFormPage() {
                   <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                   <circle cx="50" cy="50" r="38" stroke="#2563eb" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="140.8" />
                   <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="205.8" />
-                  <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="225.6" />
+                  <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="225.6" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                   <span className="text-xs font-bold font-mono text-slate-900 dark:text-white">₹ 38.50 L</span>
@@ -1111,7 +1111,7 @@ export function PreventiveMaintenanceFormPage() {
                   <span className="font-mono font-semibold">₹ 5.30 L (13.8%)</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-1.5"><div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> Others</span>
+                  <span className="flex items-center gap-1.5"><div className="h-1.5 w-1.5 rounded-full bg-blue-500" /> Others</span>
                   <span className="font-mono font-semibold">₹ 3.20 L (8.3%)</span>
                 </div>
               </div>
@@ -1147,7 +1147,7 @@ export function PreventiveMaintenanceFormPage() {
                 <span>Spare part stock for Bearing 6205 is low.</span>
               </div>
               <div className="flex items-start gap-1">
-                <span className="text-purple-500">ℹ️</span>
+                <span className="text-blue-600">ℹ️</span>
                 <span>PM compliance can be improved by 6%.</span>
               </div>
               <div className="flex items-start gap-1">

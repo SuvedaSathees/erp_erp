@@ -59,7 +59,7 @@ export const ControlPlanProcessControlCard: React.FC<ControlPlanProcessControlCa
 
           <div className="flex justify-between items-center pt-2 border-t border-border/40">
             <span className="text-muted-foreground font-medium">Process Control Score</span>
-            <span className="font-extrabold text-purple-600 dark:text-purple-400">
+            <span className="font-extrabold text-primary dark:text-blue-400">
               {record.processControlScore} / 100
             </span>
           </div>

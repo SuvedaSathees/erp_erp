@@ -1,5 +1,5 @@
+import { DEFAULT_CAPACITY_PLANNING_RECORD } from "@/lib/capacityPlanningMock";
 import {
-  DEFAULT_CAPACITY_PLANNING_RECORD,
   getCapacityPlanningFn,
   reviewCapacityFn,
   saveCapacityDraftFn,

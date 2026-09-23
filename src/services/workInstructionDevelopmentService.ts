@@ -1,5 +1,5 @@
+import { DEFAULT_WORK_INSTRUCTION_RECORD } from "@/lib/workInstructionMock";
 import {
-  DEFAULT_WORK_INSTRUCTION_RECORD,
   getWorkInstructionFn,
   reviewWorkInstructionFn,
   saveWorkInstructionDraftFn,

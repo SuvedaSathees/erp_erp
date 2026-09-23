@@ -907,6 +907,94 @@ model SopAiAssessment {
 }
 
 // ==========================================
+// Unified Development Record (all dev modules)
+// ==========================================
+
+model DevelopmentRecord {
+  id                String   @id @default(cuid())
+  moduleType        String
+  recordCode        String   @unique
+  formCode          String
+  projectName       String
+  version           String   @default("1.0")
+  workflowStatus    String   @default("Draft")
+  stage             Int      @default(1)
+  priority          String   @default("Medium")
+
+  ownerName         String
+  ownerEmail        String?
+  businessUnit      String?
+  department        String?
+
+  formData          Json     @default("{}")
+  sectionScores     Json     @default("{}")
+  aiAssessment      Json     @default("{}")
+
+  overallScore      Int      @default(0)
+  recommendation    String?
+
+  approvalDecision  String?
+  approvalDate      DateTime?
+  reviewComments    String?
+
+  nextReviewDate    DateTime?
+  effectiveDate     DateTime?
+
+  attachments       DevelopmentAttachment[]
+  approvals         DevelopmentApproval[]
+  activities        DevelopmentActivityLog[]
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([moduleType, workflowStatus])
+  @@index([moduleType])
+}
+
+model DevelopmentAttachment {
+  id           String            @id @default(cuid())
+  recordId     String
+  record       DevelopmentRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  fileName     String
+  fileType     String
+  documentType String            @default("General")
+  version      String            @default("v1.0")
+  uploadedBy   String
+  uploadedDate DateTime          @default(now())
+  fileSize     String
+  status       String            @default("Active")
+  downloadUrl  String?
+  createdAt    DateTime          @default(now())
+}
+
+model DevelopmentApproval {
+  id        String            @id @default(cuid())
+  recordId  String
+  record    DevelopmentRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  role      String
+  person    String
+  decision  String            @default("Pending")
+  date      DateTime?
+  comments  String?
+  status    String            @default("Pending")
+  sortOrder Int               @default(0)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model DevelopmentActivityLog {
+  id          String            @id @default(cuid())
+  recordId    String
+  record      DevelopmentRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  user        String
+  action      String
+  description String
+  prevStatus  String?
+  newStatus   String?
+  timestamp   DateTime          @default(now())
+}
+
+// ==========================================
 // Fixed Assets & Depreciation Engine Models
 // ==========================================
 

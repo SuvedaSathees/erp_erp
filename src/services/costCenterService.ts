@@ -3,8 +3,6 @@ import {
   getCostCenterBudgetsFn,
   createCostCenterFn,
 } from "@/lib/costCentersFns.server";
-import { apiRequest } from "./apiClient";
-import { mockCostCenterCommitments } from "@/lib/mock-data";
 import type {
   CostCenterRecord,
   CostCenterBudget,
@@ -55,9 +53,13 @@ export type CostCenterCommitment = {
   status: string;
 };
 
-export function fetchCommitments(): Promise<CostCenterCommitment[]> {
-  return apiRequest(
-    "/api/finance/cost-centers/commitments",
-    () => mockCostCenterCommitments,
-  );
+export async function fetchCommitments(): Promise<CostCenterCommitment[]> {
+  try {
+    const { getCostCenterCommitmentsFn } = await import("@/lib/costCentersFns.server");
+    const res = await getCostCenterCommitmentsFn();
+    if (res.success && res.data && res.data.length > 0) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch commitments from DB:", err);
+  }
+  return [];
 }

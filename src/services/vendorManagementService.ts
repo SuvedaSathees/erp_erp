@@ -1,5 +1,4 @@
 import { getVendorProfileFn } from "@/lib/accountsPayableFns.server";
-import { apVendorDirectory, vendors as vendorsFallback } from "@/lib/mock-data";
 import type { VendorProfile } from "./types";
 
 export async function fetchVendorInformation(vendorName: string): Promise<VendorProfile | null> {
@@ -9,19 +8,7 @@ export async function fetchVendorInformation(vendorName: string): Promise<Vendor
   } catch (err) {
     console.error("Failed to fetch vendor info from server:", err);
   }
-
-  const record = apVendorDirectory[vendorName];
-  if (!record) return null;
-  return {
-    id: record.id,
-    name: vendorName,
-    category: record.category,
-    email: record.email,
-    phone: record.phone,
-    paymentTerms: record.paymentTerms,
-    outstandingBalance: 0,
-    status: record.status,
-  };
+  return null;
 }
 
 export async function fetchVendorList() {
@@ -32,5 +19,5 @@ export async function fetchVendorList() {
   } catch (err) {
     console.error("Failed to fetch vendor list from DB:", err);
   }
-  return vendorsFallback;
+  return [];
 }

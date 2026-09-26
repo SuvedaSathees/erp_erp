@@ -1,15 +1,13 @@
 import { apiRequest } from "./apiClient";
-import {
-  cashFlowSummary as cashFlowLinesFallback,
-  expenseDistribution as expenseDistributionFallback,
-  expenses as expensesFallback,
-  expenseCategories as expenseCategoriesFallback,
-  financialInsightsRaw,
-  netCashFlow as netCashFlowFallback,
-  revenueExpenseTrend as revenueExpenseTrendFallback,
-  revenueTrend as revenueTrendFallback,
-  revenueSources as revenueSourcesFallback,
-} from "@/lib/mock-data";
+
+const financialInsightsRaw = {
+  grossMargin: { value: 42.5, deltaPct: 3.8, direction: "up" as const, tone: "positive" as const },
+  operatingMargin: { value: 18.9, deltaPct: 2.1, direction: "up" as const, tone: "positive" as const },
+  expenseRatio: { value: 57.5, deltaPct: 1.7, direction: "down" as const, tone: "negative" as const },
+  dso: { value: 45, deltaDays: 3, direction: "down" as const, tone: "positive" as const },
+  dpo: { value: 32, deltaDays: 2, direction: "up" as const, tone: "positive" as const },
+  cashConversionCycle: { value: 58, deltaDays: 5, direction: "down" as const, tone: "positive" as const },
+};
 import type {
   AccountBalanceTrendPoint,
   AccountDistributionSlice,
@@ -59,7 +57,7 @@ export async function generateRevenueExpenseTrend(query: DashboardQuery): Promis
   } catch (err) {
     console.error("Failed to fetch revenue/expense trend from DB:", err);
   }
-  return revenueExpenseTrendFallback;
+  return [];
 }
 
 export async function generateCashFlowSummary(query: DashboardQuery): Promise<CashFlowSummary> {
@@ -70,7 +68,7 @@ export async function generateCashFlowSummary(query: DashboardQuery): Promise<Ca
   } catch (err) {
     console.error("Failed to fetch cash flow summary from DB:", err);
   }
-  return { lines: cashFlowLinesFallback, netCashFlow: netCashFlowFallback };
+  return { lines: [], netCashFlow: 0 };
 }
 
 export async function generateExpenseDistribution(query: DashboardQuery): Promise<ExpenseSlice[]> {
@@ -81,7 +79,7 @@ export async function generateExpenseDistribution(query: DashboardQuery): Promis
   } catch (err) {
     console.error("Failed to fetch expense distribution from DB:", err);
   }
-  return expenseDistributionFallback;
+  return [];
 }
 
 function findAccountNode(code: string, nodes: AccountNode[]): AccountNode | null {
@@ -742,7 +740,7 @@ export async function fetchExpenseLineItems() {
   } catch (err) {
     console.error("Failed to fetch expense line items from DB:", err);
   }
-  return { rows: expensesFallback, categories: expenseCategoriesFallback };
+  return { rows: [], categories: [] };
 }
 
 // Revenue data for standalone /revenue route
@@ -756,5 +754,5 @@ export async function fetchRevenueData() {
   } catch (err) {
     console.error("Failed to fetch revenue data from DB:", err);
   }
-  return { trend: revenueTrendFallback, sources: revenueSourcesFallback };
+  return { trend: [], sources: [] };
 }

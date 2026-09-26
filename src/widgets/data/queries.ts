@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { company } from "@/lib/mock-data";
+import { company } from "@/lib/companyConfig";
 import {
   loadAccountsPayableDashboard,
   loadAccountsReceivableDashboard,

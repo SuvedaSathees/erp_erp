@@ -17,7 +17,7 @@ import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { allTransactions } from "@/lib/mock-data";
+import * as transactionService from "@/services/transactionService";
 import { formatCurrency, formatSignedCurrency } from "@/lib/format";
 import { Coins, Percent } from "lucide-react";
 import type { WidgetContentProps } from "../../types";
@@ -298,14 +298,22 @@ const OPS_TABS: { id: InsightsTab; label: string }[] = [
 export const OperationsLedgerWidget = memo(function OperationsLedgerWidget() {
   const [activeTab, setActiveTab] = useState<InsightsTab>("journals");
   const { data: journalsData, isLoading } = useQuery(journalsOptions());
+  const { data: txnData } = useQuery({
+    queryKey: ["widget", "recent-transactions"] as const,
+    queryFn: () => transactionService.searchTransactions(
+      { fiscalYear: "FY 2024-25", companyId: "all" },
+      { type: "All Types", status: "All Statuses", search: "", sortDir: "desc", page: 1, pageSize: 15 },
+    ),
+  });
 
   if (isLoading) return <Skeleton className="h-[320px] rounded-xl" />;
 
   const journals = Array.isArray(journalsData) ? journalsData : [];
+  const allTxn = txnData?.rows ?? [];
   const recentJournals = journals.slice(0, 5);
-  const recentTransactions = allTransactions.slice(0, 5);
-  const recentPayments = allTransactions.filter((t) => t.type === "Payment").slice(0, 5);
-  const recentReceipts = allTransactions.filter((t) => t.type === "Receipt").slice(0, 5);
+  const recentTransactions = allTxn.slice(0, 5);
+  const recentPayments = allTxn.filter((t) => t.type === "Payment").slice(0, 5);
+  const recentReceipts = allTxn.filter((t) => t.type === "Receipt").slice(0, 5);
   const pendingApprovals = journals.filter((j) => j.status === "Draft").slice(0, 5);
 
   return (
@@ -382,8 +390,8 @@ export const OperationsLedgerWidget = memo(function OperationsLedgerWidget() {
                 <tr key={t.ref} className="border-b border-border/30 hover:bg-muted/10">
                   <td className="py-2.5 font-semibold text-primary">{t.ref}</td>
                   <td className="py-2.5 text-muted-foreground">{t.date}</td>
-                  <td className="py-2.5 font-medium text-foreground">{t.counterparty || "—"}</td>
-                  <td className="py-2.5 text-muted-foreground">{t.account}</td>
+                  <td className="py-2.5 font-medium text-foreground">{(t as any).counterparty || t.description?.slice(0, 25) || "—"}</td>
+                  <td className="py-2.5 text-muted-foreground">{(t as any).account || t.type}</td>
                   <td className="py-2.5 text-right font-bold tabular text-foreground">
                     {formatCurrency(t.amount)}
                   </td>
@@ -413,8 +421,8 @@ export const OperationsLedgerWidget = memo(function OperationsLedgerWidget() {
                 <tr key={p.ref} className="border-b border-border/30 hover:bg-muted/10">
                   <td className="py-2.5 font-semibold text-primary">{p.ref}</td>
                   <td className="py-2.5 text-muted-foreground">{p.date}</td>
-                  <td className="py-2.5 font-medium text-foreground">{p.counterparty || "—"}</td>
-                  <td className="py-2.5 text-muted-foreground">{p.account}</td>
+                  <td className="py-2.5 font-medium text-foreground">{(p as any).counterparty || p.description?.slice(0, 25) || "—"}</td>
+                  <td className="py-2.5 text-muted-foreground">{(p as any).account || p.type}</td>
                   <td className="py-2.5 text-right font-semibold tabular text-destructive">
                     {formatCurrency(Math.abs(p.amount))}
                   </td>
@@ -444,8 +452,8 @@ export const OperationsLedgerWidget = memo(function OperationsLedgerWidget() {
                 <tr key={r.ref} className="border-b border-border/30 hover:bg-muted/10">
                   <td className="py-2.5 font-semibold text-primary">{r.ref}</td>
                   <td className="py-2.5 text-muted-foreground">{r.date}</td>
-                  <td className="py-2.5 font-medium text-foreground">{r.counterparty || "—"}</td>
-                  <td className="py-2.5 text-muted-foreground">{r.account}</td>
+                  <td className="py-2.5 font-medium text-foreground">{(r as any).counterparty || r.description?.slice(0, 25) || "—"}</td>
+                  <td className="py-2.5 text-muted-foreground">{(r as any).account || r.type}</td>
                   <td className="py-2.5 text-right font-semibold tabular text-success">
                     {formatCurrency(r.amount)}
                   </td>

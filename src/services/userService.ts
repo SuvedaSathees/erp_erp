@@ -1,52 +1,68 @@
-import { apiRequest } from "./apiClient";
-import {
-  mockUsers,
-  mockLoginHistory,
-  mockUserActivityTrend,
-  mockUsersByDepartment,
-  mockUserStatusSummary,
-} from "@/lib/mock-data";
 import type { UserRecord, NewUserInput, LoginHistoryEntry } from "./types";
 
-export function fetchUsers(): Promise<UserRecord[]> {
-  return apiRequest(`/api/administration/users`, () => mockUsers);
+export async function fetchUsers(): Promise<UserRecord[]> {
+  try {
+    const { getAdminUsersFn } = await import("@/lib/adminFns.server");
+    const res = await getAdminUsersFn();
+    if (res.success && res.data && res.data.length > 0) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch users from DB:", err);
+  }
+  return [];
 }
 
-export function createUser(input: NewUserInput): Promise<UserRecord> {
-  return apiRequest(`/api/administration/users`, () => {
-    const newUser: UserRecord = {
-      id: `USR-00${mockUsers.length + 1}`,
-      name: input.name,
-      email: input.email,
-      companyName: mockUsers[0]?.companyName ?? "Magnertia EV Infrastructure Pvt Ltd",
-      branchName: mockUsers[0]?.branchName ?? "Bengaluru HQ",
-      department: input.department,
-      role: input.role,
-      status: "Active",
-      lastLogin: "Never",
-    };
-    mockUsers.push(newUser);
-    return newUser;
-  });
+export async function createUser(input: NewUserInput): Promise<UserRecord> {
+  const { createAdminUserFn } = await import("@/lib/adminFns.server");
+  const res = await createAdminUserFn({ data: input });
+  if (res.success && res.data) return res.data;
+  throw new Error(res.error || "Failed to create user");
 }
 
-export function fetchLoginHistory(): Promise<LoginHistoryEntry[]> {
-  return apiRequest(`/api/administration/users/login-history`, () => mockLoginHistory);
+export async function fetchLoginHistory(): Promise<LoginHistoryEntry[]> {
+  try {
+    const { getLoginHistoryFn } = await import("@/lib/adminFns.server");
+    const res = await getLoginHistoryFn();
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch login history from DB:", err);
+  }
+  return [];
 }
 
-export function fetchUserActivityTrend(): Promise<{ date: string; logins: number }[]> {
-  return apiRequest(`/api/administration/users/activity-trend`, () => mockUserActivityTrend);
+export async function fetchUserActivityTrend(): Promise<{ date: string; logins: number }[]> {
+  try {
+    const { getUserAnalyticsFn } = await import("@/lib/adminFns.server");
+    const res = await getUserAnalyticsFn();
+    if (res.success && res.data) return res.data.activityTrend;
+  } catch (err) {
+    console.error("Failed to fetch user activity trend from DB:", err);
+  }
+  return [];
 }
 
-export function fetchUsersByDepartment(): Promise<
+export async function fetchUsersByDepartment(): Promise<
   { name: string; value: number; color: string }[]
 > {
-  return apiRequest(`/api/administration/users/by-department`, () => mockUsersByDepartment);
+  try {
+    const { getUserAnalyticsFn } = await import("@/lib/adminFns.server");
+    const res = await getUserAnalyticsFn();
+    if (res.success && res.data) return res.data.byDepartment;
+  } catch (err) {
+    console.error("Failed to fetch users by department from DB:", err);
+  }
+  return [];
 }
 
-export function fetchUserStatusSummary(): Promise<{
+export async function fetchUserStatusSummary(): Promise<{
   activeCount: number;
   inactiveCount: number;
 }> {
-  return apiRequest(`/api/administration/users/status-summary`, () => mockUserStatusSummary);
+  try {
+    const { getUserAnalyticsFn } = await import("@/lib/adminFns.server");
+    const res = await getUserAnalyticsFn();
+    if (res.success && res.data) return res.data.statusSummary;
+  } catch (err) {
+    console.error("Failed to fetch user status summary from DB:", err);
+  }
+  return { activeCount: 0, inactiveCount: 0 };
 }

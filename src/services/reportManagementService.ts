@@ -1,21 +1,21 @@
 import { apiRequest } from "./apiClient";
-import { mockReports } from "@/lib/mock-data";
+import { reports } from "@/lib/reportData";
 import type { ReportRecord, NewReportInput, DashboardQuery } from "./types";
 
 export function fetchReports(query: DashboardQuery): Promise<ReportRecord[]> {
-  return apiRequest(`/api/financial/reports?fy=${query.fiscalYear}`, () => mockReports);
+  return apiRequest(`/api/financial/reports?fy=${query.fiscalYear}`, () => reports);
 }
 
 export function retrieveReportDetails(reportId: string): Promise<ReportRecord> {
   return apiRequest(
     `/api/financial/reports/${reportId}`,
-    () => mockReports.find((r) => r.id === reportId) || mockReports[0],
+    () => reports.find((r) => r.id === reportId) || reports[0],
   );
 }
 
 export function saveReportTemplate(input: NewReportInput): Promise<ReportRecord> {
   return apiRequest(`/api/financial/reports`, () => {
-    const nextId = `REP-0${mockReports.length + 1}`;
+    const nextId = `REP-0${reports.length + 1}`;
     const newRep: ReportRecord = {
       id: nextId,
       name: input.name,
@@ -33,7 +33,7 @@ export function saveReportTemplate(input: NewReportInput): Promise<ReportRecord>
       lastModifiedBy: "Amit Mehra",
       isFavorite: false,
     };
-    mockReports.unshift(newRep);
+    reports.unshift(newRep);
     return newRep;
   });
 }
@@ -43,7 +43,7 @@ export function manageReport(
   updates: Partial<ReportRecord>,
 ): Promise<ReportRecord> {
   return apiRequest(`/api/financial/reports/${reportId}/manage`, () => {
-    const rep = mockReports.find((r) => r.id === reportId);
+    const rep = reports.find((r) => r.id === reportId);
     if (rep) {
       Object.assign(rep, updates);
       return rep;
@@ -65,4 +65,3 @@ export async function fetchLiveReportPayload(
   }
   return { success: true, reportType: "Mock", data: null };
 }
-

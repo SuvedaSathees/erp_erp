@@ -1,6 +1,4 @@
 import { getDepartmentBudgetsFn } from "@/lib/budgetingFns.server";
-import { apiRequest } from "./apiClient";
-import { mockDepartmentsMaster } from "@/lib/mock-data";
 import type {
   DepartmentBudget,
   DepartmentRecord,
@@ -14,27 +12,20 @@ export async function fetchDepartmentBudgets(query: DashboardQuery): Promise<Dep
   return res.data || [];
 }
 
-// Master-data list (Administration module) — distinct from the budget-context
-// fetch above; same service boundary, different responsibility.
-export function fetchDepartments(): Promise<DepartmentRecord[]> {
-  return apiRequest(`/api/administration/departments`, () => mockDepartmentsMaster);
+export async function fetchDepartments(): Promise<DepartmentRecord[]> {
+  try {
+    const { getDepartmentMasterListFn } = await import("@/lib/adminFns.server");
+    const res = await getDepartmentMasterListFn();
+    if (res.success && res.data && res.data.length > 0) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch departments from DB:", err);
+  }
+  return [];
 }
 
-export function createDepartment(input: NewDepartmentInput): Promise<DepartmentRecord> {
-  return apiRequest(`/api/administration/departments`, () => {
-    const branch = mockDepartmentsMaster.find((d) => d.branchId === input.branchId);
-    const newDept: DepartmentRecord = {
-      id: `DP-00${mockDepartmentsMaster.length + 1}`,
-      code: input.code,
-      name: input.name,
-      companyId: branch?.companyId ?? "CO-001",
-      branchId: input.branchId,
-      branchName: branch?.branchName ?? "Bengaluru HQ",
-      head: input.head,
-      employeeCount: 0,
-      status: "Active",
-    };
-    mockDepartmentsMaster.push(newDept);
-    return newDept;
-  });
+export async function createDepartment(input: NewDepartmentInput): Promise<DepartmentRecord> {
+  const { createDepartmentMasterFn } = await import("@/lib/adminFns.server");
+  const res = await createDepartmentMasterFn({ data: input });
+  if (res.success && res.data) return res.data;
+  throw new Error(res.error || "Failed to create department");
 }

@@ -8,7 +8,6 @@ import {
   getReceivableInvoiceInfoFn,
   notifyReceivableCustomerFn,
 } from "@/lib/accountsReceivableFns.server";
-import { agingReceivable, arKpisRaw } from "@/lib/mock-data";
 import type {
   AgingReport,
   CreateCreditMemoInput,
@@ -27,7 +26,7 @@ export async function fetchOutstandingReceivables(query: DashboardQuery): Promis
   } catch (err) {
     console.error("Failed to fetch receivable aging report from server:", err);
   }
-  return agingReceivable;
+  return { total: 0, buckets: [] };
 }
 
 export async function retrieveInvoiceInformation(ref: string): Promise<InvoiceDetail | null> {
@@ -40,8 +39,6 @@ export async function retrieveInvoiceInformation(ref: string): Promise<InvoiceDe
   return null;
 }
 
-// -- Accounts Receivable dashboard KPIs --
-
 export async function calculateTotalReceivables(query: DashboardQuery): Promise<number> {
   try {
     const res = await getReceivableKpisFn({ data: query });
@@ -49,7 +46,7 @@ export async function calculateTotalReceivables(query: DashboardQuery): Promise<
   } catch (err) {
     console.error("Failed to calculate total receivables from server:", err);
   }
-  return arKpisRaw.totalReceivables;
+  return 0;
 }
 
 export async function calculateOverdueAmount(
@@ -63,7 +60,7 @@ export async function calculateOverdueAmount(
   } catch (err) {
     console.error("Failed to calculate overdue amount from server:", err);
   }
-  return { amount: arKpisRaw.overdueAmount, pctOfTotal: arKpisRaw.overduePctOfTotal };
+  return { amount: 0, pctOfTotal: 0 };
 }
 
 export async function calculateDueWithin30Days(
@@ -77,7 +74,7 @@ export async function calculateDueWithin30Days(
   } catch (err) {
     console.error("Failed to calculate due within 30 days from server:", err);
   }
-  return { amount: arKpisRaw.dueWithin30Days, pctOfTotal: arKpisRaw.dueWithin30PctOfTotal };
+  return { amount: 0, pctOfTotal: 0 };
 }
 
 export async function countOpenInvoices(query: DashboardQuery): Promise<number> {
@@ -87,10 +84,8 @@ export async function countOpenInvoices(query: DashboardQuery): Promise<number> 
   } catch (err) {
     console.error("Failed to count open invoices from server:", err);
   }
-  return arKpisRaw.openInvoices;
+  return 0;
 }
-
-// -- Invoice list & detail --
 
 export async function retrieveInvoiceList(
   query: DashboardQuery,
@@ -145,14 +140,11 @@ export async function createCreditMemo(
 
 export async function fetchCustomerNames(): Promise<string[]> {
   try {
-    const { getCustomerNamesFn } = await import(
-      "@/lib/accountsReceivableFns.server"
-    );
+    const { getCustomerNamesFn } = await import("@/lib/accountsReceivableFns.server");
     const res = await getCustomerNamesFn();
     if (res.success && res.data && res.data.length > 0) return res.data;
   } catch (err) {
     console.error("Failed to fetch customer names from DB:", err);
   }
-  const { arCustomerDirectory } = await import("@/lib/mock-data");
-  return Object.keys(arCustomerDirectory);
+  return [];
 }

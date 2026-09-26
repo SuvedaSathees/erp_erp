@@ -1,22 +1,19 @@
-import { apiRequest } from "./apiClient";
-import { mockRoles } from "@/lib/mock-data";
 import type { RoleRecord, NewRoleInput } from "./types";
 
-export function fetchRoles(): Promise<RoleRecord[]> {
-  return apiRequest(`/api/administration/roles`, () => mockRoles);
+export async function fetchRoles(): Promise<RoleRecord[]> {
+  try {
+    const { getRolesFn } = await import("@/lib/adminFns.server");
+    const res = await getRolesFn();
+    if (res.success && res.data && res.data.length > 0) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch roles from DB:", err);
+  }
+  return [];
 }
 
-export function createRole(input: NewRoleInput): Promise<RoleRecord> {
-  return apiRequest(`/api/administration/roles`, () => {
-    const newRole: RoleRecord = {
-      id: `ROLE-00${mockRoles.length + 1}`,
-      name: input.name,
-      description: input.description,
-      permissionsCount: 0,
-      usersAssignedCount: 0,
-      status: "Active",
-    };
-    mockRoles.push(newRole);
-    return newRole;
-  });
+export async function createRole(input: NewRoleInput): Promise<RoleRecord> {
+  const { createRoleFn } = await import("@/lib/adminFns.server");
+  const res = await createRoleFn({ data: input });
+  if (res.success && res.data) return res.data;
+  throw new Error(res.error || "Failed to create role");
 }

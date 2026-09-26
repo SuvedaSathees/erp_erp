@@ -1,8 +1,6 @@
 import { getPayableKpisFn, recordPayablePaymentFn } from "@/lib/accountsPayableFns.server";
-import { apKpisRaw } from "@/lib/mock-data";
 import type { DashboardQuery, PayableInvoice, RecordPaymentInput } from "./types";
 
-// Matches the diagram's "Retrieve Paid Amount" step.
 export async function retrievePaidAmount(query: DashboardQuery): Promise<number> {
   try {
     const res = await getPayableKpisFn({ data: query });
@@ -10,7 +8,7 @@ export async function retrievePaidAmount(query: DashboardQuery): Promise<number>
   } catch (err) {
     console.error("Failed to retrieve paid amount from server:", err);
   }
-  return apKpisRaw.paidThisMonth;
+  return 0;
 }
 
 export async function processPayment(input: RecordPaymentInput): Promise<PayableInvoice> {

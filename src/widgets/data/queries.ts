@@ -131,10 +131,7 @@ const ALL_BANK_ACCOUNTS: BankAccountFilters = {
 };
 
 /**
- * Bank accounts. Routed through the service rather than importing mock-data
- * directly, which is what the Finance Overview page used to do — that shortcut
- * violated the "routes/components never import mock-data" rule, so extracting
- * the widget was a chance to fix it.
+ * Bank accounts routed through the service layer.
  */
 export function bankAccountsOptions() {
   return queryOptions({

@@ -95,8 +95,6 @@ export type DashboardData = {
 export type TransactionType = "Invoice" | "Payment" | "Journal Entry" | "Bill" | "Receipt";
 export type TransactionStatus = "Posted" | "Approved" | "Pending";
 
-// The canonical transaction record shape — mock-data.ts supplies rows shaped
-// like this ("Database"); services never widen or reshape it.
 export type TransactionRecord = {
   ref: string;
   date: string;
@@ -192,9 +190,6 @@ export type TransactionUpdate = Partial<
 export type AccountType = "Asset" | "Liability" | "Equity" | "Revenue" | "Expense";
 export type AccountStatus = "Active" | "Inactive";
 
-// Canonical Chart of Accounts node shape — mock-data.ts supplies the tree
-// ("Database"); services never reshape it. Net balance (debit - credit) is
-// derived at render time, never stored, so it can never drift from its inputs.
 export type AccountNode = {
   code: string;
   name: string;
@@ -425,8 +420,6 @@ export type NewAccountInput = {
 
 export type InvoiceStatus = "Paid" | "Due Soon" | "Overdue" | "Canceled";
 
-// Canonical payable invoice shape — mock-data.ts supplies rows shaped like
-// this ("Database"); services never reshape it.
 export type PayableInvoice = {
   invoiceNo: string;
   vendor: string;
@@ -510,8 +503,6 @@ export type RecordPaymentInput = {
 export type ReceivableInvoiceStatus =
   "Paid" | "Partially Paid" | "Due Soon" | "Overdue" | "Canceled" | "Credit Memo";
 
-// Canonical receivable invoice shape — mock-data.ts supplies rows shaped
-// like this ("Database"); services never reshape it.
 export type ReceivableInvoice = {
   invoiceNo: string;
   customer: string;

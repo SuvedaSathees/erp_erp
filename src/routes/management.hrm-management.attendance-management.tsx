@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { hrmManagementService } from "@/services";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
@@ -92,7 +95,6 @@ import {
   Cell,
   Tooltip as RechartsTooltip,
 } from "recharts";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/management/hrm-management/attendance-management")({
   head: () => ({
@@ -149,6 +151,12 @@ const ATTENDANCE_DONUT = [
 ];
 
 export default function AttendanceManagementPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: ["hrm", "attendance"],
+    queryFn: () => hrmManagementService.fetchAttendance(),
+  });
+
   const [activeTab, setActiveTab] = useState<string>("daily");
   const [punches, setPunches] = useState<PunchRecord[]>(INITIAL_PUNCHES);
   const [exceptions, setExceptions] = useState<AttendanceException[]>(INITIAL_EXCEPTIONS);

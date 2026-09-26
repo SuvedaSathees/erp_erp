@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { fetchAuditLogs } from "@/services";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { fetchAuditLogs , createAuditLog } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { AdminManagementTabBar } from "@/components/erp/AdminManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,18 @@ function AuditManagementPage() {
     queryKey: ["admin", "audit-logs"],
     queryFn: () => fetchAuditLogs(),
   });
+
+  const queryClient = useQueryClient();
+
+  const createAuditLogMutation = useMutation({
+    mutationFn: (input: any) => createAuditLog(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin"] });
+      toast.success("Audit log entry created");
+    },
+    onError: () => toast.error("Failed to create audit log entry"),
+  });
+
   const dbTimeline = (auditQuery.data ?? []).map((a: any) => ({
     id: a.id,
     time: new Date(a.timestamp).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" }),

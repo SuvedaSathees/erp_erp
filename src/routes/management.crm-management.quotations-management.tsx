@@ -1,4 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { salesManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
@@ -247,6 +250,12 @@ const RECENT_ACTIVITIES = [
 ];
 
 function QuotationsManagementPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["sales", "quotations"]],
+    queryFn: () => salesManagementService.fetchQuotations(),
+  });
+
   const [quotation, setQuotation] = useState<QuotationRecord>(INITIAL_QUOTATION);
   const [items, setItems] = useState<QuotationItem[]>(INITIAL_ITEMS);
   const [activeTab, setActiveTab] = useState<string>("items");

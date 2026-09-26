@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { salesManagementService } from "@/services";
 import { toast } from "sonner";
 import {
   Tag,
@@ -120,6 +122,12 @@ const channelPricingMatrix = [
 ];
 
 export default function PricingComponent() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["sales", "priceLists"]],
+    queryFn: () => salesManagementService.fetchPriceLists(),
+  });
+
   const [selectedScenario, setSelectedScenario] = useState("base");
   const [stepperStages, setStepperStages] = useState(initialStepperStages);
   const [status, setStatus] = useState("In Commercial Review");

@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { crmManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
@@ -164,6 +167,12 @@ const FUNNEL_STAGES = [
 ];
 
 function AccountManagementPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["crm", "accounts"]],
+    queryFn: () => crmManagementService.fetchAccounts(),
+  });
+
   const [account, setAccount] = useState<AccountRecord>(INITIAL_ACCOUNT);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 

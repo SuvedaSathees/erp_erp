@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { qualityManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
@@ -23,7 +26,6 @@ import {
   ShieldCheck,
   CheckCircle2,
 } from "lucide-react";
-import { toast } from "sonner";
 
 export const Route = createFileRoute(
   "/management/quality-management/incoming-inspection",
@@ -42,6 +44,12 @@ export const Route = createFileRoute(
 });
 
 export function IncomingInspectionPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: ["quality", "inspections"],
+    queryFn: () => qualityManagementService.fetchInspectionRecords(),
+  });
+
   const [record, setRecord] = useState<IqcRecord>(INITIAL_IQC_RECORD);
   const [activeStep, setActiveStep] = useState<number>(3);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");

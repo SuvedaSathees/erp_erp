@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { hrmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
@@ -207,6 +207,36 @@ export default function EmployeeManagementPage() {
     queryKey: ["hrm", "employees"],
     queryFn: () => hrmManagementService.fetchEmployees(),
   });
+
+  const queryClient = useQueryClient();
+
+  const createEmployeeMutation = useMutation({
+    mutationFn: (input: any) => hrmManagementService.createEmployee(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["hrm"] });
+      toast.success("Employee created successfully");
+    },
+    onError: () => toast.error("Failed to create employee"),
+  });
+
+  const updateEmployeeMutation = useMutation({
+    mutationFn: (input: any) => hrmManagementService.updateEmployee(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["hrm"] });
+      toast.success("Employee updated successfully");
+    },
+    onError: () => toast.error("Failed to update employee"),
+  });
+
+  const deleteEmployeeMutation = useMutation({
+    mutationFn: (input: any) => hrmManagementService.deleteEmployee(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["hrm"] });
+      toast.success("Employee deleted successfully");
+    },
+    onError: () => toast.error("Failed to delete employee"),
+  });
+
 
   const [profile, setProfile] = useState<EmployeeProfile>(INITIAL_PROFILE);
   const [dbApplied, setDbApplied] = useState(false);

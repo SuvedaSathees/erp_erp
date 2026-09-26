@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
@@ -437,6 +438,36 @@ function LeadManagementPage() {
     queryKey: ["crm", "leads"],
     queryFn: () => crmManagementService.fetchLeads(),
   });
+
+  const queryClient = useQueryClient();
+
+  const createLeadMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.createLead(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Lead created successfully");
+    },
+    onError: () => toast.error("Failed to create lead"),
+  });
+
+  const updateLeadMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.updateLead(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Lead updated successfully");
+    },
+    onError: () => toast.error("Failed to update lead"),
+  });
+
+  const deleteLeadMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.deleteLead(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Lead deleted successfully");
+    },
+    onError: () => toast.error("Failed to delete lead"),
+  });
+
   const dbLeads: LeadRecord[] = (leadsQuery.data ?? []).map((l: any) => ({
     ...INITIAL_LEADS[0],
     id: l.id,

@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { hrmManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { AdminManagementTabBar } from "@/components/erp/AdminManagementTabBar";
@@ -93,6 +96,12 @@ const RECENT_ACTIVITIES = [
 ];
 
 function DepartmentManagementPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["hrm", "departments"]],
+    queryFn: () => hrmManagementService.fetchDepartments(),
+  });
+
   const [activeTab, setActiveTab] = useState<
     "organization" | "people" | "positions" | "budget" | "kpis" | "compliance"
   >("organization");

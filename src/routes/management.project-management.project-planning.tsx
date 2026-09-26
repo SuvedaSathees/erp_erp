@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { projectManagementService } from "@/services";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProjectManagementTabBar } from "@/components/erp/ProjectManagementTabBar";
@@ -81,6 +83,12 @@ export const Route = createFileRoute("/management/project-management/project-pla
 });
 
 export function ProjectPlanningPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["projects"]],
+    queryFn: () => projectManagementService.fetchProjects(),
+  });
+
   const navigate = useNavigate();
   const [record, setRecord] = useState<ProjectPlanningRecord>(INITIAL_PLANNING_RECORD);
   const [isFavorite, setIsFavorite] = useState(false);

@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
@@ -455,6 +456,18 @@ function ContactManagementPage() {
     queryKey: ["crm", "contacts"],
     queryFn: () => crmManagementService.fetchContacts(),
   });
+
+  const queryClient = useQueryClient();
+
+  const createContactMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.createContact(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Contact created successfully");
+    },
+    onError: () => toast.error("Failed to create contact"),
+  });
+
   const dbContacts: ContactRecord[] = (contactsQuery.data ?? []).map((c: any) => ({
     ...INITIAL_CONTACTS[0],
     id: c.id,

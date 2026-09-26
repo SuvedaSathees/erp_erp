@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { procurementManagementService } from "@/services";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProcurementManagementTabBar } from "@/components/erp/ProcurementManagementTabBar";
@@ -297,6 +299,12 @@ const INITIAL_APPROVALS: GRApprovalStep[] = [
 ];
 
 export function GoodsReceiptPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["procurement", "goodsReceipts"]],
+    queryFn: () => procurementManagementService.fetchGoodsReceipts(),
+  });
+
   // Navigation & Active Tab
   const [activeTab, setActiveTab] = useState<string>("lineItems");
 

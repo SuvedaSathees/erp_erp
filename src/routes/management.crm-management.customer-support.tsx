@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
@@ -248,6 +249,27 @@ function CustomerSupportPage() {
     queryKey: ["crm", "support-tickets"],
     queryFn: () => crmManagementService.fetchSupportTickets(),
   });
+
+  const queryClient = useQueryClient();
+
+  const createTicketMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.createTicket(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Support ticket created successfully");
+    },
+    onError: () => toast.error("Failed to create ticket"),
+  });
+
+  const updateTicketMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.updateTicket(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Ticket updated successfully");
+    },
+    onError: () => toast.error("Failed to update ticket"),
+  });
+
 
   const dbTicket: SupportTicketRecord | null = (() => {
     const list = ticketsQuery.data ?? [];

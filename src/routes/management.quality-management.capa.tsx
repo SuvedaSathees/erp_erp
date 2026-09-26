@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { qualityManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
@@ -36,6 +38,12 @@ export const Route = createFileRoute("/management/quality-management/capa")({
 });
 
 export function CapaPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["quality", "capa"]],
+    queryFn: () => qualityManagementService.fetchCapaRecords(),
+  });
+
   const [record, setRecord] = useState<CapaRecord>(INITIAL_CAPA_RECORD);
   const [activeStep, setActiveStep] = useState<number>(5);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");

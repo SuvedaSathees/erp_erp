@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
@@ -390,6 +391,18 @@ function OpportunityManagementPage() {
     queryKey: ["crm", "opportunities"],
     queryFn: () => crmManagementService.fetchOpportunities(),
   });
+
+  const queryClient = useQueryClient();
+
+  const createOpportunityMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.createOpportunity(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Opportunity created successfully");
+    },
+    onError: () => toast.error("Failed to create opportunity"),
+  });
+
   const dbOpps: OpportunityRecord[] = (oppsQuery.data ?? []).map((o: any) => ({
     ...INITIAL_OPPORTUNITIES[0],
     id: o.id,

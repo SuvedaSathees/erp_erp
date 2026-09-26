@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { salesManagementService } from "@/services";
 import {
@@ -120,6 +120,27 @@ export default function SalesOrdersComponent() {
     queryKey: ["sales", "orders"],
     queryFn: () => salesManagementService.fetchSalesOrders(),
   });
+
+  const queryClient = useQueryClient();
+
+  const createOrderMutation = useMutation({
+    mutationFn: (input: any) => salesManagementService.createSalesOrder(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sales"] });
+      toast.success("Sales order created successfully");
+    },
+    onError: () => toast.error("Failed to create sales order"),
+  });
+
+  const updateOrderStatusMutation = useMutation({
+    mutationFn: (input: any) => salesManagementService.updateSalesOrderStatus(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sales"] });
+      toast.success("Order status updated successfully");
+    },
+    onError: () => toast.error("Failed to update order status"),
+  });
+
 
   const [items, setItems] = useState(initialLineItems);
   const [stepperSteps, setStepperSteps] = useState(initialStepperSteps);

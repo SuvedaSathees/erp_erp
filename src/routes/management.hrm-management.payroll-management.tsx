@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { hrmManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
@@ -160,6 +162,12 @@ const DEPARTMENT_HEADCOUNT_PIE = [
 ];
 
 export default function PayrollManagementPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["hrm", "payroll"]],
+    queryFn: () => hrmManagementService.fetchPayrollRecords(),
+  });
+
   const [activeTab, setActiveTab] = useState<string>("earnings");
   const [isProcessModalOpen, setIsProcessModalOpen] = useState(false);
   const [isAdvanceModalOpen, setIsAdvanceModalOpen] = useState(false);

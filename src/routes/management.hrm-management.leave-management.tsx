@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { hrmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
@@ -151,6 +151,27 @@ export default function LeaveManagementPage() {
     queryKey: ["hrm", "leave-requests"],
     queryFn: () => hrmManagementService.fetchLeaveRequests(),
   });
+
+  const queryClient = useQueryClient();
+
+  const createLeaveMutation = useMutation({
+    mutationFn: (input: any) => hrmManagementService.createLeaveRequest(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["hrm"] });
+      toast.success("Leave request submitted successfully");
+    },
+    onError: () => toast.error("Failed to submit leave request"),
+  });
+
+  const updateLeaveMutation = useMutation({
+    mutationFn: (input: any) => hrmManagementService.updateLeaveRequest(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["hrm"] });
+      toast.success("Leave request updated successfully");
+    },
+    onError: () => toast.error("Failed to update leave request"),
+  });
+
   const requests: LeaveRequestItem[] = (leaveQuery.data ?? []).map((r: any) => ({
     id: r.id,
     leaveNumber: r.leaveCode,

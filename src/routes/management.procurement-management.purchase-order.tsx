@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { procurementManagementService } from "@/services";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProcurementManagementTabBar } from "@/components/erp/ProcurementManagementTabBar";
@@ -283,6 +285,12 @@ const INITIAL_PO_DOCUMENTS = [
 ];
 
 export function PurchaseOrderPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["procurement", "purchaseOrders"]],
+    queryFn: () => procurementManagementService.fetchPurchaseOrders(),
+  });
+
   // Navigation & Tabs
   const [activeTab, setActiveTab] = useState<string>("lineItems");
 

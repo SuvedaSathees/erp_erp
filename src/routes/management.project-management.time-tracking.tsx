@@ -1,4 +1,6 @@
 import { useState, useRef, useMemo, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { projectManagementService } from "@/services";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProjectManagementTabBar } from "@/components/erp/ProjectManagementTabBar";
@@ -419,6 +421,12 @@ export const Route = createFileRoute("/management/project-management/time-tracki
 });
 
 export function TimeTrackingFormPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["projects", "timeEntries"]],
+    queryFn: () => projectManagementService.fetchTimeEntries(),
+  });
+
   const navigate = useNavigate();
   const [entries, setEntries] = useState<TimeEntryItem[]>(INITIAL_TIME_ENTRIES);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);

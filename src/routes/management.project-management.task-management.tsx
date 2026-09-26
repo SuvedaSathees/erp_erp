@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { projectManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
@@ -641,6 +641,27 @@ export function TaskManagementFormPage() {
     queryKey: ["projects"],
     queryFn: () => projectManagementService.fetchProjects(),
   });
+
+  const queryClient = useQueryClient();
+
+  const createTaskMutation = useMutation({
+    mutationFn: (input: any) => projectManagementService.createProjectTask(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Task created successfully");
+    },
+    onError: () => toast.error("Failed to create task"),
+  });
+
+  const updateTaskMutation = useMutation({
+    mutationFn: (input: any) => projectManagementService.updateProjectTask(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Task updated successfully");
+    },
+    onError: () => toast.error("Failed to update task"),
+  });
+
   const firstProjectId = (projectsQuery.data as any)?.[0]?.id;
 
   const tasksQuery = useQuery({

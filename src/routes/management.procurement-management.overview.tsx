@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { procurementManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
@@ -124,6 +124,36 @@ function ProcurementOverviewPage() {
     queryKey: ["procurement", "kpis"],
     queryFn: () => procurementManagementService.fetchProcurementKpis(),
   });
+
+  const queryClient = useQueryClient();
+
+  const createPOMutation = useMutation({
+    mutationFn: (input: any) => procurementManagementService.createPurchaseOrder(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["procurement"] });
+      toast.success("Purchase order created successfully");
+    },
+    onError: () => toast.error("Failed to create purchase order"),
+  });
+
+  const updatePOStatusMutation = useMutation({
+    mutationFn: (input: any) => procurementManagementService.updatePurchaseOrderStatus(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["procurement"] });
+      toast.success("PO status updated successfully");
+    },
+    onError: () => toast.error("Failed to update PO status"),
+  });
+
+  const createSupplierMutation = useMutation({
+    mutationFn: (input: any) => procurementManagementService.createSupplier(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["procurement"] });
+      toast.success("Supplier created successfully");
+    },
+    onError: () => toast.error("Failed to create supplier"),
+  });
+
   const kpis = kpiQuery.data as any;
 
   const [selectedTimeframe, setSelectedTimeframe] = useState("FY 2026-27");

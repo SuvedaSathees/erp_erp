@@ -142,3 +142,17 @@ export async function createCreditMemo(
   if (res.success && res.data) return res.data;
   throw new Error(res.error || "Failed to create credit memo");
 }
+
+export async function fetchCustomerNames(): Promise<string[]> {
+  try {
+    const { getCustomerNamesFn } = await import(
+      "@/lib/accountsReceivableFns.server"
+    );
+    const res = await getCustomerNamesFn();
+    if (res.success && res.data && res.data.length > 0) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch customer names from DB:", err);
+  }
+  const { arCustomerDirectory } = await import("@/lib/mock-data");
+  return Object.keys(arCustomerDirectory);
+}

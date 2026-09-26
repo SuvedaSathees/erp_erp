@@ -662,3 +662,19 @@ export const getCollectionSummaryFn = createServerFn({ method: "POST" })
       return { success: false, error: (err as Error).message };
     }
   });
+
+// Customer Names List (for dropdown selectors)
+export const getCustomerNamesFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    try {
+      const prisma = await getPrisma();
+      const customers = await prisma.customer.findMany({
+        select: { name: true },
+        orderBy: { name: "asc" },
+      });
+      return { success: true, data: customers.map((c) => c.name) };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  },
+);

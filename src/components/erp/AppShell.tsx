@@ -59,7 +59,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { company, mockUsers } from "@/lib/mock-data";
+import { company } from "@/lib/companyConfig";
 import { useGlobalFilters } from "@/hooks/useGlobalFilters";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Logo } from "./Logo";
@@ -1330,7 +1330,7 @@ function SidebarNav({
 }
 
 function SidebarFooter({ isCollapsed }: { isCollapsed: boolean }) {
-  const currentUser = mockUsers[0] ?? {
+  const currentUser = {
     name: "Amit Mehra",
     role: "Finance Manager",
     email: "amit.mehra@magnertia.com",

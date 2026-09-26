@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Building2, Plus, Star } from "lucide-react";
 import { AppShell, PageHeader } from "@/components/erp/AppShell";
 import { ErpButton } from "@/components/erp/Button";
 import { KpiCard } from "@/components/erp/KpiCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, type Column } from "@/components/erp/DataTable";
-import { vendors } from "@/lib/mock-data";
+import { vendorManagementService } from "@/services";
 import { formatCurrency } from "@/lib/format";
 
 export const Route = createFileRoute("/vendors")({
@@ -13,9 +14,21 @@ export const Route = createFileRoute("/vendors")({
   component: VendorsPage,
 });
 
-type Row = (typeof vendors)[number];
+type Row = {
+  id: string;
+  name: string;
+  category: string;
+  status: string;
+  outstanding: number;
+  rating: number;
+};
 
 function VendorsPage() {
+  const { data: vendors = [] } = useQuery({
+    queryKey: ["vendors", "list"],
+    queryFn: () => vendorManagementService.fetchVendorList(),
+  });
+
   const totalOutstanding = vendors.reduce((s, v) => s + v.outstanding, 0);
   const active = vendors.filter((v) => v.status === "Active").length;
 

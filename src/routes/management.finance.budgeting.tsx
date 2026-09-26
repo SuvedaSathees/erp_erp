@@ -56,7 +56,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
-import { company } from "@/lib/mock-data";
+import { company } from "@/lib/companyConfig";
 import { formatCurrency } from "@/lib/format";
 import {
   budgetService,

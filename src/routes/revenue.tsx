@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { TrendingUp, CircleDollarSign, Users, Briefcase, Download, Plus } from "lucide-react";
 import {
   LineChart,
@@ -14,7 +15,7 @@ import {
 import { AppShell, PageHeader } from "@/components/erp/AppShell";
 import { KpiCard } from "@/components/erp/KpiCard";
 import { ErpButton } from "@/components/erp/Button";
-import { revenueTrend, revenueSources, revenueByStation } from "@/lib/mock-data";
+import { analyticsEngineService } from "@/services";
 import { formatCurrency } from "@/lib/format";
 
 export const Route = createFileRoute("/revenue")({
@@ -22,8 +23,27 @@ export const Route = createFileRoute("/revenue")({
   component: RevenuePage,
 });
 
+const revenueByStation = [
+  { station: "Bengaluru – Whitefield Hub", revenue: 4_820_000, sessions: 8420 },
+  { station: "Mumbai – BKC Tower", revenue: 4_310_000, sessions: 7180 },
+  { station: "Delhi – Aerocity Plaza", revenue: 3_950_000, sessions: 6720 },
+  { station: "Hyderabad – HITEC City", revenue: 3_580_000, sessions: 6240 },
+  { station: "Pune – Hinjewadi Park", revenue: 3_120_000, sessions: 5410 },
+  { station: "Chennai – OMR Tech Park", revenue: 2_880_000, sessions: 4980 },
+  { station: "Gurugram – Cyber Hub", revenue: 2_640_000, sessions: 4520 },
+  { station: "Ahmedabad – SG Road", revenue: 2_210_000, sessions: 3840 },
+];
+
 function RevenuePage() {
+  const { data } = useQuery({
+    queryKey: ["revenue", "data"],
+    queryFn: () => analyticsEngineService.fetchRevenueData(),
+  });
+
+  const revenueTrend = data?.trend ?? [];
+  const revenueSources = data?.sources ?? [];
   const total = revenueSources.reduce((s, r) => s + r.value, 0);
+
   return (
     <AppShell>
       <PageHeader
@@ -45,28 +65,28 @@ function RevenuePage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
-          label="Charging Revenue"
-          value={formatCurrency(revenueSources[0].value, true)}
+          label="Top Revenue Stream"
+          value={formatCurrency(revenueSources[0]?.value ?? 0, true)}
           delta={{ value: "11.2%", positive: true }}
           icon={CircleDollarSign}
-          hint="67% of total"
+          hint={revenueSources[0]?.name ?? "—"}
         />
         <KpiCard
-          label="Subscription"
-          value={formatCurrency(revenueSources[1].value, true)}
+          label="Second Stream"
+          value={formatCurrency(revenueSources[1]?.value ?? 0, true)}
           delta={{ value: "9.4%", positive: true }}
           icon={Users}
           tone="success"
         />
         <KpiCard
-          label="Partner Revenue"
-          value={formatCurrency(revenueSources[2].value, true)}
+          label="Third Stream"
+          value={formatCurrency(revenueSources[2]?.value ?? 0, true)}
           delta={{ value: "4.1%", positive: true }}
           icon={Briefcase}
         />
         <KpiCard
-          label="Commission"
-          value={formatCurrency(revenueSources[3].value, true)}
+          label="Other Revenue"
+          value={formatCurrency(revenueSources[3]?.value ?? 0, true)}
           delta={{ value: "2.3%", positive: false }}
           icon={TrendingUp}
           tone="warning"

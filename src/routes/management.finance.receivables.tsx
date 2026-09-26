@@ -58,7 +58,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { arCustomerDirectory, company } from "@/lib/mock-data";
+import { company } from "@/lib/companyConfig";
 import { formatCurrency } from "@/lib/format";
 import {
   accountsReceivableService,
@@ -110,10 +110,12 @@ const DEFAULT_FILTERS: ReceivableInvoiceFilters = {
   page: 1,
   pageSize: 10,
 };
-const CUSTOMER_NAMES = Object.keys(arCustomerDirectory);
-
 function AccountsReceivablePage() {
   const queryClient = useQueryClient();
+  const { data: CUSTOMER_NAMES = [] } = useQuery({
+    queryKey: ["receivables", "customer-names"],
+    queryFn: () => accountsReceivableService.fetchCustomerNames(),
+  });
   const [filters, setFilters] = useState<ReceivableInvoiceFilters>(DEFAULT_FILTERS);
   const [selectedInvoiceNo, setSelectedInvoiceNo] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
@@ -597,6 +599,7 @@ function AccountsReceivablePage() {
         onOpenChange={setStatementOpen}
         onSubmit={(customer) => statementMutation.mutate(customer)}
         submitting={statementMutation.isPending}
+        customerNames={CUSTOMER_NAMES}
       />
 
       {/* Create credit memo */}
@@ -605,6 +608,7 @@ function AccountsReceivablePage() {
         onOpenChange={setCreditMemoOpen}
         onSubmit={(input) => creditMemoMutation.mutate(input)}
         submitting={creditMemoMutation.isPending}
+        customerNames={CUSTOMER_NAMES}
       />
         </>
       )}
@@ -1317,11 +1321,13 @@ function StatementDialog({
   onOpenChange,
   onSubmit,
   submitting,
+  customerNames: CUSTOMER_NAMES = [],
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (customer: string) => void;
   submitting: boolean;
+  customerNames?: string[];
 }) {
   const [customer, setCustomer] = useState("");
 
@@ -1364,11 +1370,13 @@ function CreditMemoDialog({
   onOpenChange,
   onSubmit,
   submitting,
+  customerNames: CUSTOMER_NAMES = [],
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (input: { customer: string; amount: number; reason: string }) => void;
   submitting: boolean;
+  customerNames?: string[];
 }) {
   const [customer, setCustomer] = useState("");
   const [amount, setAmount] = useState("");

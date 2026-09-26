@@ -3,6 +3,8 @@ import {
   getCostCenterBudgetsFn,
   createCostCenterFn,
 } from "@/lib/costCentersFns.server";
+import { apiRequest } from "./apiClient";
+import { mockCostCenterCommitments } from "@/lib/mock-data";
 import type {
   CostCenterRecord,
   CostCenterBudget,
@@ -43,4 +45,19 @@ export async function createSubCostCenter(input: NewSubCostCenterInput): Promise
   });
   if (res && "success" in res && !res.success) throw new Error(res.error);
   return res.data;
+}
+
+export type CostCenterCommitment = {
+  id: string;
+  costCenter: string;
+  description: string;
+  commitmentAmount: number;
+  status: string;
+};
+
+export function fetchCommitments(): Promise<CostCenterCommitment[]> {
+  return apiRequest(
+    "/api/finance/cost-centers/commitments",
+    () => mockCostCenterCommitments,
+  );
 }

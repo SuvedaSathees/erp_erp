@@ -58,7 +58,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
-import { company, mockCostCenterCommitments } from "@/lib/mock-data";
+import { company } from "@/lib/companyConfig";
 import { formatCurrency } from "@/lib/format";
 import { costCenterService, budgetService, loadCostCentersDashboard } from "@/services";
 import type {
@@ -124,6 +124,10 @@ const DEPARTMENTS = [
 
 function CostCentersPage() {
   const queryClient = useQueryClient();
+  const { data: commitments = [] } = useQuery({
+    queryKey: ["cost-centers", "commitments"],
+    queryFn: () => costCenterService.fetchCommitments(),
+  });
   const [activeTab, setActiveTab] = useState<
     "overview" | "hierarchy" | "budgets" | "actuals" | "commitments" | "reports"
   >("overview");
@@ -839,8 +843,8 @@ function CostCentersPage() {
                   <div className="space-y-4">
                     <h3 className="font-semibold text-lg">Purchase Order & Contract Commitments</h3>
                     <div className="card-soft overflow-hidden">
-                      <DataTable<(typeof mockCostCenterCommitments)[0]>
-                        data={mockCostCenterCommitments}
+                      <DataTable<(typeof commitments)[0]>
+                        data={commitments}
                         columns={[
                           {
                             key: "id",

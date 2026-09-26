@@ -56,7 +56,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
-import { company } from "@/lib/mock-data";
+import { company } from "@/lib/companyConfig";
 import { formatCurrency } from "@/lib/format";
 import { fixedAssetService, depreciationEngineService, loadFixedAssetsDashboard } from "@/services";
 import type {

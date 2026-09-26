@@ -403,3 +403,94 @@ export const getBudgetAnalyticsFn = createServerFn({ method: "GET" }).handler(
     }
   },
 );
+
+// Expense Line Items — derive from journal lines on Expense accounts
+export const getExpenseLineItemsFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    try {
+      const prisma = await getPrisma();
+      const lines = await prisma.journalLine.findMany({
+        where: { account: { type: "Expense" } },
+        include: { account: true, journal: true },
+        orderBy: { journal: { postingDate: "desc" } },
+        take: 100,
+      });
+
+      const rows = lines.map((l, i) => ({
+        id: `EXP-${String(i + 1).padStart(4, "0")}`,
+        date: l.journal?.postingDate
+          ? l.journal.postingDate.toISOString().split("T")[0]
+          : "",
+        description: l.description || l.account?.name || "Expense",
+        category: l.account?.group || "Operating Expenses",
+        amount: Math.round(Number(l.debit) - Number(l.credit)),
+        status: l.journal?.status === "Posted" ? "Approved" : "Pending",
+        paidVia: "Bank Transfer",
+      }));
+
+      const categoryMap = new Map<string, number>();
+      for (const r of rows) {
+        categoryMap.set(r.category, (categoryMap.get(r.category) || 0) + Math.abs(r.amount));
+      }
+      const COLORS = ["#0A3C75", "#22C55E", "#F59E0B", "#14B8A6", "#3B82F6"];
+      const categories = Array.from(categoryMap.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(([category, amount], i) => ({
+          category,
+          amount,
+          color: COLORS[i % COLORS.length],
+        }));
+
+      return { success: true, data: { rows, categories } };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  },
+);
+
+// Revenue Summary Data — derive from journal lines on Revenue accounts
+export const getRevenueDataFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    try {
+      const prisma = await getPrisma();
+      const lines = await prisma.journalLine.findMany({
+        where: { account: { type: "Revenue" } },
+        include: { account: true, journal: true },
+        orderBy: { journal: { postingDate: "desc" } },
+      });
+
+      const monthMap = new Map<string, { revenue: number; expenses: number }>();
+      for (const l of lines) {
+        const d = l.journal?.postingDate;
+        if (!d) continue;
+        const key = d.toLocaleString("en-US", { month: "short" });
+        const cur = monthMap.get(key) || { revenue: 0, expenses: 0 };
+        cur.revenue += Number(l.credit) - Number(l.debit);
+        monthMap.set(key, cur);
+      }
+      const trend = Array.from(monthMap.entries()).map(([month, v]) => ({
+        month,
+        revenue: Math.round(v.revenue),
+        expenses: 0,
+      }));
+
+      const sourceMap = new Map<string, number>();
+      for (const l of lines) {
+        const name = l.account?.group || l.account?.name || "Other";
+        sourceMap.set(name, (sourceMap.get(name) || 0) + Number(l.credit) - Number(l.debit));
+      }
+      const COLORS = ["#0A3C75", "#22C55E", "#F59E0B", "#14B8A6", "#3B82F6"];
+      const sources = Array.from(sourceMap.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, value], i) => ({
+          name,
+          value: Math.round(value),
+          color: COLORS[i % COLORS.length],
+        }));
+
+      return { success: true, data: { trend, sources } };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  },
+);

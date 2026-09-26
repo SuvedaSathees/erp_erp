@@ -60,7 +60,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { company } from "@/lib/mock-data";
+import { company } from "@/lib/companyConfig";
 import { formatCurrency } from "@/lib/format";
 import {
   reportManagementService,

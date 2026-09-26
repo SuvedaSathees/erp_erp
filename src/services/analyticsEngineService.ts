@@ -2,9 +2,13 @@ import { apiRequest } from "./apiClient";
 import {
   cashFlowSummary as cashFlowLinesFallback,
   expenseDistribution as expenseDistributionFallback,
+  expenses as expensesFallback,
+  expenseCategories as expenseCategoriesFallback,
   financialInsightsRaw,
   netCashFlow as netCashFlowFallback,
   revenueExpenseTrend as revenueExpenseTrendFallback,
+  revenueTrend as revenueTrendFallback,
+  revenueSources as revenueSourcesFallback,
 } from "@/lib/mock-data";
 import type {
   AccountBalanceTrendPoint,
@@ -725,4 +729,32 @@ export function generateActivitiesByModule(
     { name: "Tax Management", value: 824, percentage: 6.62, color: "#8B5CF6" },
     { name: "Others", value: 2015, percentage: 16.2, color: "#6B7280" },
   ]);
+}
+
+// Expense line items for standalone /expenses route
+export async function fetchExpenseLineItems() {
+  try {
+    const { getExpenseLineItemsFn } = await import(
+      "@/lib/dashboardAnalyticsFns.server"
+    );
+    const res = await getExpenseLineItemsFn();
+    if (res.success && res.data && res.data.rows.length > 0) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch expense line items from DB:", err);
+  }
+  return { rows: expensesFallback, categories: expenseCategoriesFallback };
+}
+
+// Revenue data for standalone /revenue route
+export async function fetchRevenueData() {
+  try {
+    const { getRevenueDataFn } = await import(
+      "@/lib/dashboardAnalyticsFns.server"
+    );
+    const res = await getRevenueDataFn();
+    if (res.success && res.data && res.data.sources.length > 0) return res.data;
+  } catch (err) {
+    console.error("Failed to fetch revenue data from DB:", err);
+  }
+  return { trend: revenueTrendFallback, sources: revenueSourcesFallback };
 }

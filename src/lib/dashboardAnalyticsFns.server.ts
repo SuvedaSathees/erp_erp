@@ -172,16 +172,188 @@ export const getAssetAnalyticsFn = createServerFn({ method: "GET" }).handler(
   },
 );
 
+// ── Revenue/Expense Trend by Month ─────────────────────────────
+export const getRevenueExpenseTrendFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    try {
+      const prisma = await getPrisma();
+      const journals = await prisma.journal.findMany({
+        where: { status: { in: ["Posted", "Approved"] } },
+        include: { lines: { include: { account: true } } },
+      });
+
+      const monthMap = new Map<string, { revenue: number; expenses: number }>();
+
+      for (const j of journals) {
+        const d = j.postingDate ?? j.createdAt;
+        const key = `${d.toLocaleString("en-US", { month: "short" })} '${String(d.getFullYear()).slice(2)}`;
+        const cur = monthMap.get(key) || { revenue: 0, expenses: 0 };
+
+        for (const line of j.lines || []) {
+          const type = line.account?.type;
+          if (type === "Revenue") cur.revenue += Number(line.credit) - Number(line.debit);
+          else if (type === "Expense") cur.expenses += Number(line.debit) - Number(line.credit);
+        }
+        monthMap.set(key, cur);
+      }
+
+      const trend = Array.from(monthMap.entries())
+        .map(([month, { revenue, expenses }]) => ({
+          month,
+          revenue: Math.round(revenue),
+          expenses: Math.round(expenses),
+          netProfit: Math.round(revenue - expenses),
+        }));
+
+      return { success: true, data: trend };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  },
+);
+
+// ── Cash Flow Summary ──────────────────────────────────────────
+export const getCashFlowSummaryFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    try {
+      const prisma = await getPrisma();
+      const transactions = await prisma.bankTransaction.findMany({
+        where: { status: { in: ["Completed", "Cleared", "Reconciled"] } },
+      });
+
+      let operating = 0;
+      let investing = 0;
+      let financing = 0;
+
+      for (const t of transactions) {
+        const cat = (t.category || "").toLowerCase();
+        const amount = Number(t.amount) || 0;
+        const sign = t.type === "Deposit" || t.type === "Credit" ? 1 : -1;
+        const net = amount * sign;
+
+        if (cat.includes("invest") || cat.includes("asset") || cat.includes("capital")) {
+          investing += net;
+        } else if (cat.includes("financ") || cat.includes("loan") || cat.includes("dividend") || cat.includes("equity")) {
+          financing += net;
+        } else {
+          operating += net;
+        }
+      }
+
+      const lines = [
+        { label: "Cash from Operating Activities", value: Math.round(operating) },
+        { label: "Cash from Investing Activities", value: Math.round(investing) },
+        { label: "Cash from Financing Activities", value: Math.round(financing) },
+      ];
+
+      return {
+        success: true,
+        data: { lines, netCashFlow: Math.round(operating + investing + financing) },
+      };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  },
+);
+
+// ── Expense Distribution ───────────────────────────────────────
+export const getExpenseDistributionFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    try {
+      const prisma = await getPrisma();
+      const journals = await prisma.journal.findMany({
+        where: { status: { in: ["Posted", "Approved"] } },
+        include: { lines: { include: { account: true } } },
+      });
+
+      const groupMap = new Map<string, number>();
+      let total = 0;
+
+      for (const j of journals) {
+        for (const line of j.lines || []) {
+          if (line.account?.type !== "Expense") continue;
+          const group = line.account.group || "Other Expenses";
+          const amt = (Number(line.debit) || 0) - (Number(line.credit) || 0);
+          if (amt <= 0) continue;
+          groupMap.set(group, (groupMap.get(group) || 0) + amt);
+          total += amt;
+        }
+      }
+
+      const GROUP_COLORS: Record<string, string> = {
+        "Cost of Goods Sold": "#0A3C75",
+        "Operating Expenses": "#22C55E",
+        "Employee Expenses": "#F59E0B",
+        "Marketing & Sales": "#14B8A6",
+        "Administrative Expenses": "#3B82F6",
+      };
+      const DEFAULT_COLOR = "#6B7280";
+
+      const slices = Array.from(groupMap.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, value]) => ({
+          name,
+          value: total > 0 ? Math.round((value / total) * 100) : 0,
+          color: GROUP_COLORS[name] || DEFAULT_COLOR,
+        }));
+
+      return { success: true, data: slices };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  },
+);
+
+// ── Cash Position Trend by Month ───────────────────────────────
+export const getCashPositionTrendFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    try {
+      const prisma = await getPrisma();
+      const transactions = await prisma.bankTransaction.findMany({
+        where: { status: { in: ["Completed", "Cleared", "Reconciled"] } },
+        orderBy: { date: "asc" },
+      });
+
+      const monthMap = new Map<string, { inflow: number; outflow: number }>();
+
+      for (const t of transactions) {
+        const d = t.date ?? t.createdAt;
+        const key = `${d.toLocaleString("en-US", { month: "short" })} '${String(d.getFullYear()).slice(2)}`;
+        const cur = monthMap.get(key) || { inflow: 0, outflow: 0 };
+        const amount = Number(t.amount) || 0;
+
+        if (t.type === "Deposit" || t.type === "Credit") {
+          cur.inflow += amount;
+        } else {
+          cur.outflow += amount;
+        }
+        monthMap.set(key, cur);
+      }
+
+      const trend = Array.from(monthMap.entries()).map(([month, { inflow, outflow }]) => ({
+        month,
+        inflow: Math.round(inflow),
+        outflow: Math.round(outflow),
+        netFlow: Math.round(inflow - outflow),
+      }));
+
+      return { success: true, data: trend };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  },
+);
+
 export const getBudgetAnalyticsFn = createServerFn({ method: "GET" }).handler(
   async () => {
     try {
       const prisma = await getPrisma();
-      const budgets = await prisma.subBudget.findMany({
-        include: { version: true },
+      const budgets = await prisma.departmentBudgetRecord.findMany({
+        include: { budget: true },
       });
 
       const activeBudgets = budgets.filter(
-        (b) => b.version?.status === "Active",
+        (b) => b.budget?.status === "Active",
       );
 
       let onTrack = 0;
@@ -189,8 +361,8 @@ export const getBudgetAnalyticsFn = createServerFn({ method: "GET" }).handler(
       let overBudget = 0;
 
       for (const b of activeBudgets) {
-        const allocated = Number(b.allocatedBudget) || 0;
-        const actual = Number(b.actual) || 0;
+        const allocated = Number(b.budgetAmount) || 0;
+        const actual = Number(b.actualAmount) || 0;
         if (allocated === 0) {
           onTrack++;
           continue;
@@ -204,8 +376,8 @@ export const getBudgetAnalyticsFn = createServerFn({ method: "GET" }).handler(
       const total = onTrack + atRisk + overBudget || 1;
 
       const varianceByDept = activeBudgets.map((b) => ({
-        name: b.name,
-        variance: (Number(b.allocatedBudget) || 0) - (Number(b.actual) || 0),
+        name: b.department,
+        variance: (Number(b.budgetAmount) || 0) - (Number(b.actualAmount) || 0),
       }));
 
       return {

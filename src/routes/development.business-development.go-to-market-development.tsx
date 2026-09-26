@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { goToMarketService } from "@/services/goToMarketService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -176,6 +179,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 export function GtmDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["go-to-market"],
+    queryFn: goToMarketService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -190,112 +199,23 @@ export function GtmDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to GTM Development reference UI image
-  const [formData, setFormData] = useState({
-    gtmId: "GTM-2024-00045",
-    formCode: "GTMF-2024-25",
-    gtmProject: "EV Fast Charger Market Launch",
-    gtmNumber: "GTM-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    productService: "EV Fast Charger",
-    productVersion: "v2.1",
-    businessUnit: "EV Solutions",
-    gtmManager: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "GTM Planning",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: GTM Overview
-    businessObjective: "Increase market share in EV Infrastructure.",
-    launchObjective: "Launch v2.1 across India in Q3 FY 2024.",
-    productCategory: "Charging Infrastructure",
-    targetIndustry: ["Automotive", "Energy", "Real Estate"],
-    geographicMarket: ["India", "UAE", "Singapore", "Australia"],
-    launchType: "National Launch",
-    lifecycleStage: "GTM Planning",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Target Market & Customer
-    customerSegments: ["Fleet Operators", "Commercial", "Residential"],
-    icp: "Large Fleet Operators",
-    buyerPersona: "Fleet Operations Head",
-    customerPainPoints: "High downtime, complex setup, limited uptime",
-    customerBuyingJourney: "Awareness -> Evaluation -> Purchase -> Retention",
-    customerAcquisitionStrategy: "Direct Sales, Channel Partners, Digital",
-    marketReadinessScore: 85,
-
-    // Section 3: Positioning & Messaging
-    valuePropRef: "VP-2024-0005",
-    usp: "Fast, reliable, smart & future-ready charging",
-    brandPositioning: "Leading provider of intelligent EV charging",
-    keyMessaging: "Powering the future of mobility",
-    elevatorPitch: "Smart charging solutions for a sustainable future",
-    competitiveDifferentiation: "AI-powered, 98% uptime, remote monitoring",
-    messagingScore: 87,
-
-    // Section 4: Sales Strategy
-    salesModel: "Direct + Channel",
-    salesChannels: ["Direct Sales", "Distributors", "OEM", "Online"],
-    channelPartners: "15 Partners Selected",
-    salesTargets: 250000000, // ₹ 25.00 Cr
-    leadGenStrategy: "Digital, Events, Referrals, Partners",
-    salesEnablementAsset: "sales_playbook.pdf",
-    salesReadinessScore: 84,
-
-    // Section 5: Marketing Strategy
-    marketingChannels: ["Website", "SEO", "Social Media", "Email", "Events", "PR & Media", "Webinars"],
-    campaignStrategy: "Integrated 360° campaign",
-    digitalMarketingPlan: "SEO, ADS, Social, Email, Automation",
-    prStrategy: "Media outreach, Press releases",
-    contentMarketingPlan: "Blogs, Case studies, Videos, Whitepapers",
-    marketingBudget: 12500000, // ₹ 1.25 Cr
-    marketingReadinessScore: 87,
-
-    // Section 6: Commercial Planning
-    pricingStrategy: "Value-Based Pricing",
-    revenueForecast: 250000000, // ₹ 25.00 Cr
-    grossMargin: 42, // 42%
-    breakevenTimeline: 14, // 14 Months
-    revenueModel: "Subscription + Service",
-    financialRiskAssessment: "Low - Market demand is high",
-    commercialScore: 83,
-
-    // Section 7: Launch Readiness Checkboxes
-    productReadiness: true,
-    manufacturingReadiness: true,
-    inventoryReadiness: true,
-    salesTeamReady: true,
-    marketingAssetsReady: true,
-    customerSupportReady: true,
-    launchReadinessScore: 90,
-
-    // Section 8: AI GTM Intelligence
-    aiMarketOpportunity: "High demand in fleet & commercial",
-    aiDemandForecast: "Strong demand with 32% CAGR",
-    aiPricingRecommendation: "Premium pricing with value bundles",
-    aiCampaignOptimization: "Focus on digital + partner events",
-    aiRevenuePrediction: "Projected revenue of ₹26.80 Cr in Year 1",
-    aiGtmRecommendations: "Expand partner network, focus on uptime",
-    aiGtmScore: 91,
-
-    // Section 9: GTM Summary & Recommendation
-    recommendation: "Proceed to Product Launch",
-
-    // Section 11: Review & Approval Matrix
-    approvals: [
-      { role: "BD Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "GTM strategy and sales enablement validated." },
-      { role: "Marketing Manager", user: "Vikram Singh", status: "Approved", date: "09 May 2024", comments: "Integrated 360 campaign strategy approved." },
-      { role: "Sales Manager", user: "Sneha Iyer", status: "Approved", date: "10 May 2024", comments: "15 Channel partners selected & onboarded." },
-      { role: "Product Manager", user: "Ankit Verma", status: "Approved", date: "11 May 2024", comments: "v2.1 EV charger product launch ready." },
-      { role: "Finance Manager", user: "Neha Reddy", status: "Approved", date: "12 May 2024", comments: "Financial forecast & 42% margin validated." },
-      { role: "Operations Manager", user: "Vikram Patel", status: "Pending", date: "In Review", comments: "Supply chain inventory build under process." },
-      { role: "COO", user: "Rakesh Patel", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "High overall GTM readiness (88/100, 90 Launch Readiness, 87 Marketing, ₹25 Cr Forecast). Approved for Product Launch.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => goToMarketService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["go-to-market"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -443,6 +363,16 @@ export function GtmDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Go-To-Market (GTM) Development" breadcrumb={[{ label: "Business Development" }, { label: "Go-To-Market (GTM) Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

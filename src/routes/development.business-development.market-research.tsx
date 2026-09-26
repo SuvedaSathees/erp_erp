@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { marketResearchService } from "@/services/marketResearchService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -172,6 +175,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function MarketResearchPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["market-research"],
+    queryFn: marketResearchService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -186,101 +195,23 @@ function MarketResearchPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Market Research reference image
-  const [formData, setFormData] = useState({
-    mrId: "MR-2024-00045",
-    formCode: "MRF-2024-25",
-    researchProject: "EV Charging Market Research",
-    researchNumber: "MRN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "EV Solutions",
-    productService: "Smart EV Charging Solution",
-    researchOwner: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Market Assessment",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Research Overview
-    businessObjective: "Identify market opportunity for smart EV charging solutions.",
-    researchObjective: "Analyze market size, customer needs, competition and commercial viability.",
-    industry: "Electric Vehicles",
-    marketCategory: "B2B",
-    geographicScope: ["India", "USA", "Europe"],
-    researchMethodology: "Primary Research + Secondary Research",
-    lifecycleStage: "Market Assessment",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Market Analysis
-    tam: 485000000000, // ₹ 48,500 Cr
-    sam: 128000000000, // ₹ 12,800 Cr
-    som: 23500000000,  // ₹ 2,350 Cr
-    marketGrowthRate: 28.5, // 28.5%
-    marketSize: 485000000000, // ₹ 48,500 Cr
-    industryMaturity: "Growth",
-    marketAttractivenessScore: 87,
-
-    // Section 3: Customer Research
-    targetCustomerSegments: ["Fleet Operators", "Commercial", "Residential"],
-    customerPersonas: "3 Personas",
-    customerNeeds: "Reliable, fast, smart, cost-effective charging solutions.",
-    customerPainPoints: "High installation cost, downtime, maintenance, interoperability.",
-    buyingBehaviour: "Value driven, long term contracts, ROI focused.",
-    customerExpectations: "High uptime, easy integration, remote monitoring.",
-    customerResearchScore: 84,
-
-    // Section 4: Competitor Analysis
-    competitorCount: "4 Selected",
-    marketShare: 18, // 18%
-    productComparisonFile: "product_comparison.pdf",
-    pricingComparisonFile: "pricing_comparison.pdf",
-    swotAnalysisFile: "swot_analysis.pdf",
-    competitiveAdvantages: "Wide network, advanced software, strong partnerships.",
-    competitiveIntelligenceScore: 82,
-
-    // Section 5: Industry & Technology Analysis
-    emergingTechnologies: "V2G, AI Analytics, IoT, Fast Charging",
-    industryTrends: "EV adoption, govt incentives, sustainability focus.",
-    regulatoryEnvironment: "FAME-II, ISO, BIS, Safety standards.",
-    governmentPolicies: "EV incentives, tax benefits, subsidies.",
-    standardsCertifications: ["ISO 15118", "OCPP", "BIS"],
-    technologyReadinessScore: 79,
-    innovationScore: 81,
-
-    // Section 6: Commercial Analysis
-    pricingBenchmark: "₹ 1.20 L - ₹ 3.50 L",
-    revenueOpportunity: 24800000000, // ₹ 2,480 Cr
-    expectedMarketShare: 8.5, // 8.5%
-    entryBarriers: "High initial investment, regulatory approvals, network scalability.",
-    distributionChannels: ["Direct Sales", "Distributors", "E-commerce"],
-    commercialViabilityScore: 83,
-
-    // Section 7: AI Market Intelligence
-    aiTrendAnalysis: "Strong growth in smart charging and energy management.",
-    aiDemandForecast: "Market to grow at 29% CAGR over next 5 years.",
-    aiCompetitorInsights: "Competitors investing in fast charging and network expansion.",
-    aiOpportunityMapping: "High opportunity in commercial fleets and urban areas.",
-    aiRiskAssessment: "Supply chain, regulation and technology obsolescence.",
-    aiRecommendations: "Focus on partnerships, software platform and after sales service.",
-    aiIntelligenceScore: 91,
-
-    // Section 8: Summary & Recommendation
-    recommendation: "Proceed to Business Model Development",
-
-    // Section 10: Review & Approval Matrix
-    approvals: [
-      { role: "MR Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "Comprehensive market analysis completed." },
-      { role: "BD Manager", user: "Neha Reddy", status: "Approved", date: "09 May 2024", comments: "B2B fleet segment opportunity validated." },
-      { role: "Marketing Manager", user: "Vikram Singh", status: "Approved", date: "10 May 2024", comments: "Positioning and competitive benchmarking clear." },
-      { role: "Sales Manager", user: "Sneha Iyer", status: "Approved", date: "11 May 2024", comments: "Pricing benchmark aligned with commercial strategy." },
-      { role: "Product Manager", user: "Ankit Verma", status: "Approved", date: "12 May 2024", comments: "Product feature roadmap aligned with customer needs." },
-      { role: "Strategy Head", user: "Anil Mehta", status: "Pending", date: "In Review", comments: "Strategic TAM expansion under review." },
-      { role: "COO", user: "Rakesh Patel", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Strong market research fundamentals (87 Attractiveness, ₹48,500 Cr TAM, 28.5% Growth Rate). Approved for Business Model Development.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => marketResearchService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["market-research"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -426,6 +357,16 @@ function MarketResearchPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Market Research" breadcrumb={[{ label: "Business Development" }, { label: "Market Research" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

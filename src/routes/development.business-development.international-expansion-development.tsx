@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { internationalExpansionService } from "@/services/internationalExpansionService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -180,6 +183,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function InternationalExpansionDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["international-expansion"],
+    queryFn: internationalExpansionService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -194,125 +203,23 @@ function InternationalExpansionDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to International Expansion Development reference UI image
-  const [formData, setFormData] = useState({
-    expansionId: "EXP-2024-00042",
-    formCode: "EXPF-2024-25",
-    expansionProject: "Global Market Entry - Europe",
-    expansionNumber: "EXP-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "Global Business",
-    countryRegion: "Germany",
-    countryFlag: "🇩🇪",
-    expansionManager: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Business Setup",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Expansion Overview
-    businessObjective: "Establish strong presence in European market and achieve sustainable growth.",
-    expansionObjective: "Launch operations in Germany and build distribution network in DACH region.",
-    targetCountry: "Germany",
-    region: "Europe",
-    marketEntryStrategy: "Wholly Owned Subsidiary",
-    expansionPhase: "Business Setup",
-    strategicPriority: "High",
-    estimatedLaunchDate: "2024-10-01",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Market Assessment
-    marketSize: 120000000000, // € 120,000,000,000
-    tam: 12000000000, // € 12,000,000,000
-    sam: 2500000000, // € 2,500,000,000
-    som: 350000000, // € 350,000,000
-    customerSegments: ["Industrial", "Automotive", "Retail", "Healthcare"],
-    marketGrowthRate: 6.8, // 6.8%
-    competitionLevel: "Medium",
-    marketAttractivenessScore: 82,
-
-    // Section 3: Country Assessment
-    easeOfDoingBusiness: 82, // 82/100
-    politicalStability: 76, // 76/100
-    economicStability: 78, // 78/100
-    currencyRisk: "Low",
-    taxEnvironment: "Favorable",
-    laborAvailability: "High",
-    infrastructureReadiness: 80, // 80/100
-    countryReadinessScore: 81,
-
-    // Section 4: Regulatory & Compliance
-    companyRegistration: true,
-    businessLicense: true,
-    importLicense: true,
-    exportLicense: true,
-    productCertification: true,
-    localTaxRegistration: true,
-    customsCompliance: true,
-    regulatoryReadinessScore: 88,
-
-    // Section 5: Business Model & Commercial Strategy
-    revenueModel: "Product Sales",
-    pricingStrategy: "Value Based Pricing",
-    salesChannel: "Direct Sales",
-    distributionStrategy: "Hybrid Distribution",
-    partnershipStrategy: "Strategic Partnership",
-    localizationStrategy: "Local language support, regional marketing, and compliance with EU standards.",
-    commercialReadinessScore: 84,
-
-    // Section 6: Operations & Supply Chain
-    manufacturingSource: "Existing Facility",
-    warehouseStrategy: "Regional Warehouse",
-    logisticsNetwork: "3PL Partner",
-    inventoryStrategy: "Regional Inventory",
-    localServicePartner: "TechServe GmbH",
-    erpLocalization: true,
-    supplyChainReadinessScore: 80,
-
-    // Section 7: Financial Planning
-    initialInvestment: 5000000, // € 5,000,000
-    operatingBudget: 2000000, // € 2,000,000
-    revenueProjection: 12000000, // € 12,000,000
-    breakEvenPeriod: 24, // 24 Months
-    roi: 22.5, // 22.5%
-    fundingSource: "Internal Capital",
-    financialReadinessScore: 85,
-
-    // Section 8: Risk Assessment
-    politicalRisk: "Low",
-    economicRisk: "Medium",
-    currencyRiskVal: "Low",
-    supplyChainRisk: "Medium",
-    legalRisk: "Low",
-    cybersecurityRisk: "Medium",
-    riskMitigationPlan: "Diversify suppliers, hedge currency risk, and ensure legal compliance.",
-    overallRiskScore: 72,
-
-    // Section 9: AI Global Expansion Intelligence
-    aiCountryRanking: "#2 out of 25 countries",
-    aiMarketOpportunity: "High opportunity with strong demand in automotive and industrial solutions.",
-    aiEntryStrategyRecommendation: "Wholly owned subsidiary for long-term growth and brand control.",
-    aiPricingRecommendation: "Premium pricing with value-added services.",
-    aiDemandForecast: "12-15% CAGR over next 5 years.",
-    aiRiskPrediction: "Moderate risk; focus on compliance and local partnerships.",
-    aiExpansionScore: 86,
-
-    // Section 10: Expansion Summary & Recommendation
-    recommendation: "Proceed to Market Entry",
-
-    // Section 12: Review & Approval Matrix
-    approvals: [
-      { role: "Expansion Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "€12M 3-yr forecast & German subsidiary setup plan validated." },
-      { role: "Intl Business Head", user: "Anita Verma", status: "Approved", date: "09 May 2024", comments: "Wholly owned subsidiary model and DACH expansion approved." },
-      { role: "Finance Head", user: "Vikram Mehta", status: "Approved", date: "10 May 2024", comments: "€5M initial investment and 22.5% ROI forecast verified." },
-      { role: "Legal Head", user: "Neha Kapoor", status: "Approved", date: "11 May 2024", comments: "EU GDPR, CE certification, and German tax structure cleared." },
-      { role: "Supply Chain Head", user: "Arjun Patel", status: "Pending", date: "In Review", comments: "TechServe GmbH 3PL agreement under final review." },
-      { role: "COO", user: "Amit Mehta", status: "Pending", date: "In Review", comments: "Operating budget allocation review." },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-      { role: "Board of Directors", user: "Board", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Strong European expansion feasibility & 83/100 Overall Score (88 Regulatory, 85 Financial, €12M Projected Revenue). Approved.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => internationalExpansionService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["international-expansion"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -463,6 +370,16 @@ function InternationalExpansionDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="International Expansion Development" breadcrumb={[{ label: "Business Development" }, { label: "International Expansion Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

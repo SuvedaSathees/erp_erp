@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { revenueModelService } from "@/services/revenueModelService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -177,6 +180,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 export function RevenueModelDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["revenue-model"],
+    queryFn: revenueModelService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -191,104 +200,23 @@ export function RevenueModelDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Revenue Model Development reference UI image
-  const [formData, setFormData] = useState({
-    revenueModelId: "RM-2024-00027",
-    formCode: "RMF-2024-25",
-    revenueModelName: "EV Charging Revenue Model",
-    revenueModelNumber: "RMN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "EV Solutions",
-    productService: "EV Fast Charger",
-    revenueManager: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Revenue Planning",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Revenue Model Overview
-    businessObjective: "Build scalable and profitable EV charging business across India.",
-    revenueObjective: "Achieve ₹ 130 Cr revenue in 3 years with 35% CAGR.",
-    businessModelRef: "BM-2024-001",
-    pricingStrategyRef: "PS-2024-010",
-    targetMarket: ["India", "South Asia", "Middle East"],
-    revenueModelType: "Subscription + Transaction",
-    lifecycleStage: "Commercial Validation",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Revenue Streams
-    primaryRevenueStream: "Subscription",
-    secondaryRevenueStreams: ["Transaction Fee", "Service", "AMC"],
-    oneTimeRevenue: 1850000, // ₹ 18,50,000
-    recurringRevenue: 5240000, // ₹ 52,40,000
-    transactionRevenue: 2230000, // ₹ 22,30,000
-    serviceRevenue: 870000, // ₹ 8,70,000
-    licensingRevenue: 410000, // ₹ 4,10,000
-    revenueDiversificationScore: 84,
-
-    // Section 3: Customer Monetization
-    customerSegment: "Commercial Fleet Operators",
-    clv: 125000, // ₹ 1,25,000
-    cac: 8500, // ₹ 8,500
-    cacLtvRatio: "1 : 14.7", // Calculated
-    arpu: 2450, // ₹ 2,450
-    retentionRate: 92, // 92%
-    churnRate: 6.8, // 6.8%
-    monetizationScore: 87,
-
-    // Section 4: Financial Planning
-    annualRevenueForecast: 1260000000, // ₹ 126.00 Cr
-    mrr: 10200000, // ₹ 1.02 Cr
-    arr: 122400000, // ₹ 12.24 Cr
-    grossMargin: 41.5, // 41.5%
-    ebitdaMargin: 32.2, // 32.2%
-    breakevenTimeline: 16, // 16 Months
-    roi: 28.6, // 28.6%
-    financialHealthScore: 88,
-
-    // Section 5: Channel Revenue Planning
-    directSalesRevenue: 4860000, // ₹ 48,60,000
-    dealerRevenue: 1620000, // ₹ 16,20,000
-    franchiseRevenue: 1270000, // ₹ 12,70,000
-    marketplaceRevenue: 780000, // ₹ 7,80,000
-    subscriptionRevenue: 3450000, // ₹ 34,50,000
-    digitalPlatformRevenue: 750000, // ₹ 7,50,000
-    channelPerformanceScore: 82,
-
-    // Section 6: Risk & Sustainability Assessment
-    revenueRisks: "High competition and price pressure",
-    customerDependencyRisk: "Medium - Top 10 customers 38%",
-    marketRisks: "Policy changes, charging infra growth",
-    regulatoryRisks: "Electricity pricing regulations",
-    sustainabilityPlan: "Expand infra, diversify segments, long-term contracts",
-    riskScore: 76,
-
-    // Section 7: AI Revenue Intelligence
-    aiRevenueForecast: "AI predicts ₹ 132 Cr revenue in 3 years with 36% CAGR",
-    aiCustomerProfitability: "Fleet segment most profitable with CLV ₹ 1,42,000",
-    aiPricingOptimization: "Dynamic pricing can improve revenue by 8-12%",
-    aiRevenueOpportunity: "Expand in Tier 2/3 cities & highway corridors",
-    aiChurnPrediction: "Churn likely to reduce to 5.5% with loyalty program",
-    aiGrowthRecommendations: "Add energy storage & carbon credit revenue streams",
-    aiRevenueScore: 91,
-
-    // Section 8: Revenue Model Summary & Recommendation
-    recommendation: "Proceed to Business Scaling",
-
-    // Section 10: Review & Approval Matrix
-    approvals: [
-      { role: "Revenue Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "Comprehensive multi-stream revenue model validated." },
-      { role: "Finance Manager", user: "Neha Reddy", status: "Approved", date: "09 May 2024", comments: "1:14.7 CAC:LTV ratio and 41.5% margin approved." },
-      { role: "Sales Manager", user: "Vikram Singh", status: "Approved", date: "10 May 2024", comments: "Direct and channel revenue planning aligned." },
-      { role: "Marketing Manager", user: "Sneha Iyer", status: "Approved", date: "11 May 2024", comments: "6.8% churn target and retention campaign approved." },
-      { role: "BD Manager", user: "Ankit Patel", status: "Approved", date: "12 May 2024", comments: "Franchise and marketplace revenue streams confirmed." },
-      { role: "Strategy Head", user: "Vikram Malhotra", status: "Pending", date: "In Review", comments: "3-year scaling projection under executive review." },
-      { role: "COO", user: "Rajat Verma", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Strong financial sustainability (86/100 Overall Score, ₹1.02 Cr MRR, 1:14.7 CAC:LTV, ₹126 Cr Annual Forecast). Approved for Business Scaling.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => revenueModelService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["revenue-model"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -432,6 +360,16 @@ export function RevenueModelDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Revenue Model Development" breadcrumb={[{ label: "Business Development" }, { label: "Revenue Model Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

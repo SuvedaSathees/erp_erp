@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { customerValidationService } from "@/services/customerValidationService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -172,6 +175,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function CustomerValidationPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["customer-validation"],
+    queryFn: customerValidationService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -186,104 +195,23 @@ function CustomerValidationPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Customer Validation reference
-  const [formData, setFormData] = useState({
-    cvId: "CV-2024-00037",
-    formCode: "CVF-2024-25",
-    validationProject: "Smart EV Charging Solution Validation",
-    validationNumber: "CVN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    productService: "Smart EV Charging Solution",
-    customerSegment: "Fleet Operators",
-    validationLead: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Pilot Validation",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Validation Overview
-    businessObjective: "Validate solution effectiveness for fleet operators.",
-    validationObjective: "Confirm product-market fit and purchase intent.",
-    productVersion: "MVP v2.1",
-    valuePropRef: "VP-2024-00021",
-    customerDiscoveryRef: "CD-2024-00048",
-    validationMethod: "Pilot Deployment",
-    lifecycleStage: "Pilot Validation",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Customer Validation Planning
-    targetCustomerGroup: "Fleet Operators",
-    sampleSize: 25,
-    validationStartDate: "2024-05-01",
-    validationEndDate: "2024-05-31",
-    successCriteria: "80%+ users satisfied and willing to continue.",
-    acceptanceCriteria: "At least 20 customers show purchase intent.",
-    validationHypothesis: "Our solution reduces charging downtime by 30%+.",
-    validationReadinessScore: 88,
-
-    // Section 3: Customer Feedback Collection
-    customerInterviews: 28,
-    surveysCompleted: 156,
-    prototypeDemos: 22,
-    pilotCustomers: 12,
-    customerSatisfaction: 4.5,
-    npsScore: 52,
-    customerFeedback: "Very positive feedback on uptime, reliability and cost savings.",
-    feedbackQualityScore: 86,
-
-    // Section 4: Product-Market Fit Validation
-    customerProblemSolved: true,
-    solutionAcceptance: 85,
-    willingnessToPay: 18500,
-    purchaseIntent: "Likely to Buy",
-    pmfScore: 88,
-    retentionProbability: 78,
-    pmfReadinessScore: 86,
-
-    // Section 5: Commercial Validation
-    pricingValidation: true,
-    revenuePotential: 24800000, // ₹ 2.48 Cr
-    expectedAdoptionRate: 68,
-    salesReadinessScore: 84,
-    competitiveComparison: "Strong vs existing solutions",
-    commercialRisks: "High competition in metro cities",
-    commercialScore: 84,
-
-    // Section 6: Pilot Validation
-    pilotProgram: true,
-    pilotStartDate: "2024-04-01",
-    pilotEndDate: "2024-04-30",
-    pilotResults: "Successfully validated with 12 fleet operators. High reliability achieved.",
-    customerSuccessStories: "Reduced downtime by 32% and cost savings by 26%.",
-    lessonsLearned: "Improve mobile app UI and billing automation.",
-    pilotSuccessScore: 86,
-
-    // Section 7: AI Assessment
-    aiCustomerInsights: "High demand for smart scheduling and remote monitoring.",
-    aiAdoptionPrediction: "Strong adoption expected in next 6-9 months.",
-    aiPmfAnalysis: "Very high PMF probability (87%).",
-    aiRevenueForecast: "Projected revenue ₹2.48 Cr for Year 1.",
-    aiChurnPrediction: "Low churn probability (12%).",
-    aiImprovementRecs: "Enhance mobile UI and add predictive maintenance.",
-    aiValidationScore: 91,
-
-    // Section 8: Validation Summary & Recommendation
-    recommendation: "Proceed to Go-to-Market",
-
-    // Section 10: Review & Approval Matrix
-    approvals: [
-      { role: "Product Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "High PMF and strong pilot feedback." },
-      { role: "Business Dev Manager", user: "Neha Reddy", status: "Approved", date: "09 May 2024", comments: "Fleet operator channel validation complete." },
-      { role: "Marketing Manager", user: "Vikram Singh", status: "Approved", date: "10 May 2024", comments: "GTM campaign collateral approved." },
-      { role: "Sales Manager", user: "Sneha Iyer", status: "Approved", date: "11 May 2024", comments: "Confirmed enterprise customer pipeline." },
-      { role: "Customer Success Mgr", user: "Ankita Verma", status: "Approved", date: "12 May 2024", comments: "Support readiness and SLAs established." },
-      { role: "Innovation Manager", user: "Amit Patel", status: "Pending", date: "In Review", comments: "Patent filing review under process." },
-      { role: "COO", user: "Rakesh Patel", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Excellent customer validation metrics (88/100 PMF, 4.5/5 CSAT, ₹2.48 Cr Revenue Potential). Approved for GTM transition.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => customerValidationService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["customer-validation"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -433,6 +361,16 @@ function CustomerValidationPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Customer Validation" breadcrumb={[{ label: "Business Development" }, { label: "Customer Validation" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

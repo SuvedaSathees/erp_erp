@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { distributorService } from "@/services/distributorService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -178,6 +181,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function DistributorDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["distributor"],
+    queryFn: distributorService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -192,117 +201,23 @@ function DistributorDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Distributor Development reference UI image
-  const [formData, setFormData] = useState({
-    distributorId: "DD-2024-00058",
-    formCode: "DDF-2024-25",
-    distributorProject: "North India Distribution Expansion",
-    distributorNumber: "DSR-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "EV Solutions",
-    productService: "EV Two Wheelers",
-    distributorDevelopmentManager: "Rahul Sharma",
-    createdDate: "05 May 2024 09:40 AM",
-    lastModifiedDate: "17 May 2024 03:50 PM",
-    workflowStage: "Distributor Onboarding",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Distributor Overview
-    businessObjective: "Expand distribution reach and increase product availability across North India.",
-    distributionObjective: "Build efficient distribution network with strong inventory and service support.",
-    distributorType: "Regional Distributor",
-    productCategory: "Electric Two Wheelers",
-    geographicCoverage: ["Delhi", "Uttar Pradesh", "Punjab", "Haryana", "Rajasthan"],
-    salesChannelRef: "EV Two Wheeler Channel",
-    lifecycleStage: "Distributor Onboarding",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Distributor Profile
-    distributorName: "GreenRide Distributors Pvt. Ltd.",
-    businessType: "Private Limited",
-    companyRegistration: "U74999DL2016PTC302415",
-    yearsInBusiness: 9,
-    annualTurnover: 450000000, // ₹ 45,00,00,000
-    warehouses: 4,
-    distributionFleet: 28,
-    existingBrands: ["Hero", "TVS", "Bajaj"],
-    coverageStates: ["Delhi", "Uttar Pradesh", "Punjab", "Haryana", "Rajasthan"],
-    distributorCapabilityScore: 82,
-
-    // Section 3: Qualification & Due Diligence
-    financialCapability: "Strong",
-    logisticsCapability: "Advanced",
-    salesCapability: "Advanced",
-    technicalCapability: "Intermediate",
-    dueDiligenceStatus: true,
-    backgroundVerification: true,
-    creditAssessment: true,
-    qualificationScore: 84,
-
-    // Section 4: Commercial Planning
-    pricingStrategyRef: "EV Pricing Strategy 2024",
-    revenueModelRef: "Distribution Revenue Model",
-    distributorMargin: 16.5, // 16.50%
-    creditLimit: 50000000, // ₹ 5,00,00,000
-    paymentTerms: "Net 30",
-    annualPurchaseCommitment: 100000000, // ₹ 10,00,00,000
-    salesTarget: 120000000, // ₹ 12,00,00,000 (₹ 12 Cr)
-    commercialScore: 86,
-
-    // Section 5: Supply Chain & Operations
-    warehouseReady: true,
-    distributionFleetReady: true,
-    erpIntegrationCompleted: true,
-    reverseLogisticsAvailable: true,
-    inventoryAllocation: 10000000, // ₹ 1,00,00,000
-    safetyStockLevel: 15, // 15 Days
-    operationalReadinessScore: 83,
-
-    // Section 6: Training & Enablement
-    salesTrainingCompleted: true,
-    productTrainingCompleted: true,
-    logisticsTrainingCompleted: true,
-    erpTrainingCompleted: true,
-    distributorHandbookIssued: true,
-    certificationLevel: "Gold Distributor",
-    trainingScore: 87,
-
-    // Section 7: Performance Management
-    monthlySalesTarget: 10000000, // ₹ 1,00,00,000
-    orderFulfillmentRate: 96, // 96%
-    inventoryTurnoverRatio: 7.2,
-    onTimeDelivery: 95, // 95%
-    customerSatisfactionScore: 4.5, // 4.5/5
-    distributionCoverage: 78, // 78%
-    revenueAchievement: 92, // 92%
-    performanceScore: 86,
-
-    // Section 8: AI Distributor Intelligence
-    aiTerritoryRecommendation: "Expand coverage in Uttarakhand and Bihar",
-    aiInventoryOptimization: "Increase fast-moving SKUs by 18%",
-    aiDemandForecast: "26% growth in EV two-wheelers in next 12 months",
-    aiLogisticsOptimization: "Optimize routes to reduce delivery time by 12%",
-    aiRevenuePrediction: "Expected revenue of ₹ 15 Cr in next FY",
-    aiDistributorRecommendation: "Highly suitable for premium product line",
-    aiDistributorScore: 88,
-
-    // Section 9: Distributor Summary & Recommendation
-    recommendation: "Approve Distributor",
-
-    // Section 11: Review & Approval Matrix
-    approvals: [
-      { role: "Distributor Dev Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "4 warehouses, 28 fleet vehicles & 82% capability score validated." },
-      { role: "Sales Manager", user: "Vikram Mehta", status: "Approved", date: "09 May 2024", comments: "₹12 Cr annual sales target & 16.5% distributor margin approved." },
-      { role: "Supply Chain Manager", user: "Anita Verma", status: "Approved", date: "10 May 2024", comments: "15-day safety stock level and 95% on-time delivery verified." },
-      { role: "Finance Manager", user: "Amit Joshi", status: "Approved", date: "11 May 2024", comments: "₹5 Cr credit limit and Net 30 payment terms approved." },
-      { role: "Operations Manager", user: "Neha Mehta", status: "Approved", date: "12 May 2024", comments: "Warehouse logistics readiness and ERP integration complete." },
-      { role: "Legal Manager", user: "Rohan Kapoor", status: "Approved", date: "13 May 2024", comments: "Distributor agreement and credit terms legally verified." },
-      { role: "COO", user: "Arun Verma", status: "Pending", date: "In Review", comments: "Territory exclusivity review." },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "High distribution capacity & 86/100 Overall Score (86 Commercial, 83 Operational, ₹15 Cr Forecast). Approved for Onboarding.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => distributorService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["distributor"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -449,6 +364,16 @@ function DistributorDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Distributor Development" breadcrumb={[{ label: "Business Development" }, { label: "Distributor Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

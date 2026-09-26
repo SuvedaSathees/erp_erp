@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { exportDevelopmentService } from "@/services/exportDevelopmentService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -184,6 +187,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function ExportDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["export-development"],
+    queryFn: exportDevelopmentService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -198,131 +207,23 @@ function ExportDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Export Development reference UI image
-  const [formData, setFormData] = useState({
-    exportId: "EXP-2024-00078",
-    formCode: "EXPF-2024-25",
-    exportProject: "Industrial Valves Export - Europe",
-    exportNumber: "EXP-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "Global Business",
-    productCategory: "Industrial Valves",
-    exportManager: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Customer Acquisition",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Export Opportunity Overview
-    businessObjective: "Expand industrial valve business in European markets and achieve sustainable export growth.",
-    exportObjective: "Establish long-term export business with distributors in target country.",
-    targetCountry: "Germany",
-    countryFlag: "🇩🇪",
-    targetCustomerSegments: ["OEMs", "Distributors", "Industrial End Users"],
-    exportBusinessModel: "Direct Export",
-    exportStrategy: "Market Penetration",
-    strategicPriority: "High",
-    lifecycleStage: "Customer Acquisition",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Export Market Analysis
-    marketResearchRef: "MR-2024-00045",
-    marketSize: 12500000000, // € 12,500,000,000
-    exportDemand: 82, // 82/100
-    competitionLevel: "Medium",
-    importRegulations: "CE Certification, REACH compliance and local technical standards mandatory.",
-    tradeAgreement: "India - EU FTA",
-    marketReadinessScore: 78,
-
-    // Section 3: Customer & Channel Development
-    customerType: "Distributor",
-    buyerDatabase: "EuroValves GmbH",
-    distributorDealer: "EuroValves GmbH",
-    channelPartner: "Industrial Solutions EU",
-    rfqReceived: true,
-    exportOrderProbability: 68, // 68%
-    customerReadinessScore: 75,
-
-    // Section 4: Product & Compliance
-    productCertifications: ["CE Marking", "ISO 9001", "PED Certified"],
-    hsCode: "8481.80.90",
-    countryCompliance: true,
-    exportInspectionRequired: true,
-    certificateOfOrigin: true,
-    productLocalization: true,
-    complianceReadinessScore: 75,
-
-    // Section 5: Pricing & Commercial Planning
-    pricingStrategy: "Value Based Pricing",
-    incoterms: "FOB",
-    exportCurrency: "EUR - Euro",
-    paymentTerms: "Letter of Credit (LC)",
-    exportPrice: 125000, // € 125,000.00
-    grossMargin: 28.5, // 28.50%
-    commercialReadinessScore: 82,
-
-    // Section 6: Logistics & Documentation
-    shippingMode: "Sea Freight (FCL)",
-    freightForwarder: "Oceanic Logistics Ltd.",
-    cha: "Global Customs Services",
-    portOfLoading: "Nhava Sheva (INNSA)",
-    portOfDestination: "Hamburg (DEHAM)",
-    packingListReady: true,
-    commercialInvoiceReady: true,
-    shippingBillReady: true,
-    logisticsReadinessScore: 78,
-
-    // Section 7: Trade Finance & Payments
-    adBank: "HDFC Bank (IN)",
-    iecNumber: "0512345678",
-    letterOfCredit: true,
-    advancePayment: true,
-    ecgcInsurance: true,
-    marineInsurance: true,
-    paymentTracking: "LC Opened",
-    financialReadinessScore: 85,
-
-    // Section 8: Shipment & Delivery
-    shipmentDate: "2024-05-25",
-    containerNumber: "MSCU1234567",
-    billOfLadingAWB: "HBLU1234567890",
-    customsClearance: true,
-    shipmentTracking: "SHPT-2024-000789",
-    deliveryStatus: "In Transit",
-    deliveryPerformanceScore: 83,
-
-    // Section 9: AI Export Intelligence
-    aiExportOpportunity: "High demand for industrial valves in EU.",
-    aiCountryRecommendation: "Germany is the best fit for expansion.",
-    aiPricingOptimization: "Recommended price between €120K - €130K.",
-    aiLogisticsOptimization: "Sea Freight (FCL) gives best cost efficiency.",
-    aiRiskPrediction: "Low regulatory risk, Medium FX risk.",
-    aiExportRecommendation: "Proceed with LC payment and FOB terms.",
-    aiExportScore: 88,
-
-    // Section 10: Export Summary & Recommendation
-    marketScore: 82,
-    customerScore: 75,
-    complianceScore: 80,
-    commercialScore: 82,
-    logisticsScore: 78,
-    financialScore: 85,
-    deliveryScore: 83,
-    recommendation: "Proceed to Export",
-
-    // Section 12: Review & Approval Matrix
-    approvals: [
-      { role: "Export Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "Direct export structure & EuroValves GmbH contract ready." },
-      { role: "Intl Sales Head", user: "Michael Chang", status: "Approved", date: "09 May 2024", comments: "€125K FOB price and 28.5% gross margin approved." },
-      { role: "Finance Manager", user: "Anita Verma", status: "Approved", date: "10 May 2024", comments: "HDFC LC opened & ECGC insurance cover verified." },
-      { role: "Logistics Manager", user: "Vikram Singh", status: "Approved", date: "11 May 2024", comments: "Sea Freight FCL via Nhava Sheva booked." },
-      { role: "Compliance Manager", user: "Neha Kapoor", status: "Approved", date: "12 May 2024", comments: "PED and CE compliance certificates attached." },
-      { role: "Legal Manager", user: "Arjun Desai", status: "Pending", date: "In Review", comments: "Trade agreement terms review." },
-      { role: "COO", user: "Amit Mehta", status: "Pending", date: "In Review", comments: "Manufacturing schedule check." },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Excellent export feasibility & 83/100 Overall Score (88 AI Score, 85 Financial, €125K FOB Contract). Approved.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => exportDevelopmentService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["export-development"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -475,6 +376,16 @@ function ExportDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Export Development" breadcrumb={[{ label: "Business Development" }, { label: "Export Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

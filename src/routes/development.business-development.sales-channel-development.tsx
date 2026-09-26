@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { salesChannelService } from "@/services/salesChannelService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -176,6 +179,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function SalesChannelDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["sales-channel"],
+    queryFn: salesChannelService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -190,102 +199,23 @@ function SalesChannelDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Sales Channel Development reference UI image
-  const [formData, setFormData] = useState({
-    salesChannelId: "SC-2024-00045",
-    formCode: "SCF-2024-25",
-    salesChannelName: "North India Dealer Network",
-    salesChannelNumber: "SCN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "EV Solutions",
-    productService: "EV Fast Charger",
-    channelManager: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Partner Onboarding",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Sales Channel Overview
-    businessObjective: "Expand market reach through strong dealer network.",
-    salesObjective: "₹ 50 Cr revenue in FY 2024-25.",
-    targetMarket: ["Commercial", "Industrial"],
-    geographicCoverage: ["North India", "Delhi NCR", "Punjab", "Uttar Pradesh", "Rajasthan"],
-    channelType: "Dealer Network",
-    salesStrategyRef: "SS-2024-018",
-    lifecycleStage: "Partner Onboarding",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Channel Configuration
-    salesModel: "B2B",
-    distributionModel: "Selective",
-    channelPartnerType: "Authorized Dealer",
-    targetPartners: 25,
-    coverageArea: ["North India"],
-    salesTerritory: ["12 Territories"],
-    channelCapacityScore: 82,
-
-    // Section 3: Partner Development
-    partnerQualificationCriteria: "Financial stability, technical capability, market experience",
-    partnerOnboardingProcess: "KYC, Agreement, Training, Certification",
-    certificationRequirement: "Authorized Partner",
-    trainingProgram: "Dealer Training Program 2024",
-    incentiveProgram: "Volume based + Performance bonus",
-    slaAgreementFile: "dealer_sla_2024.pdf",
-    partnerReadinessScore: 85,
-
-    // Section 4: Commercial Planning
-    pricingStrategyRef: "PS-2024-022",
-    marginStructure: 18.0, // 18.0%
-    commissionStructure: 5.0, // 5.0%
-    salesTarget: 500000000, // ₹ 50,00,00,000 (₹ 50 Cr)
-    revenueForecast: 525000000, // ₹ 52,50,00,000 (₹ 52.5 Cr)
-    paymentTerms: "Net 30",
-    commercialScore: 88,
-
-    // Section 5: Operations & Logistics
-    inventorySupport: true,
-    deliveryModel: "Dealer Delivery",
-    afterSalesSupport: true,
-    warrantySupport: true,
-    reverseLogistics: true,
-    serviceCoverage: ["Installation", "Maintenance", "Support", "Spares", "AMC"],
-    operationsReadinessScore: 80,
-
-    // Section 6: Performance Management
-    leadConversionRate: 24.5, // 24.5%
-    salesGrowth: 32.8, // 32.8%
-    partnerPerformance: 81, // 81/100
-    customerSatisfaction: 4.3, // 4.3/5
-    marketCoverage: 68.5, // 68.5%
-    channelProfitability: 87500000, // ₹ 8,75,00,000
-    performanceScore: 79,
-
-    // Section 7: AI Sales Intelligence
-    aiChannelOptimization: "Optimize coverage in tier 2 cities",
-    aiTerritoryPlanning: "Rebalance 3 territories for growth",
-    aiRevenuePrediction: "Expected revenue ₹ 52.5 Cr (+18%)",
-    aiPartnerRecommendation: "Recommended 5 new partners",
-    aiSalesOpportunity: "High opportunities in Punjab & UP",
-    aiRiskAssessment: "Low risk | Stable channel network",
-    aiSalesIntelligenceScore: 91,
-
-    // Section 8: Sales Channel Summary & Recommendation
-    recommendation: "Approve Sales Channel",
-
-    // Section 10: Review & Approval Matrix
-    approvals: [
-      { role: "Channel Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "18 authorized dealers onboarded & validated." },
-      { role: "Sales Manager", user: "Vikram Singh", status: "Approved", date: "09 May 2024", comments: "₹50 Cr sales target and 18% margin structure approved." },
-      { role: "Marketing Manager", user: "Sneha Iyer", status: "Approved", date: "10 May 2024", comments: "Marketing assets and promotional collateral distributed." },
-      { role: "Finance Manager", user: "Neha Reddy", status: "Approved", date: "11 May 2024", comments: "Net 30 payment terms and credit lines approved." },
-      { role: "Operations Manager", user: "Arjun Patel", status: "Pending", date: "In Review", comments: "Dealer delivery logistics SLA under review." },
-      { role: "BD Head", user: "Vineet Malhotra", status: "Pending", date: "In Review", comments: "Territory coverage expansion plan review." },
-      { role: "COO", user: "Rajat Verma", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "High channel capacity and partner readiness (86/100 Overall Score, ₹52.5 Cr Forecast, 68.5% Coverage). Approved for Launch.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => salesChannelService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["sales-channel"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -431,6 +361,16 @@ function SalesChannelDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Sales Channel Development" breadcrumb={[{ label: "Business Development" }, { label: "Sales Channel Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { businessTransformationService } from "@/services/businessTransformationService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -189,6 +192,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function BusinessTransformationDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["business-transformation"],
+    queryFn: businessTransformationService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -203,121 +212,23 @@ function BusinessTransformationDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Business Transformation Development reference UI image
-  const [formData, setFormData] = useState({
-    transformationId: "TRF-2024-00045",
-    formCode: "TRF-2024-25",
-    transformationProgram: "Operational Excellence 2024",
-    programNumber: "TRF-OPX-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "Global Operations",
-    transformationSponsor: "Anita Verma",
-    transformationManager: "Vikram Mehta",
-    strategicReference: "Corporate Strategy 2025",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Transformation Planning",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Transformation Overview
-    transformationVision: "Build an agile, customer-centric and digitally intelligent organization.",
-    businessObjective: "Improve operational efficiency, customer experience and drive sustainable growth.",
-    transformationType: "Operational Transformation",
-    strategicTheme: "Operational Excellence",
-    businessDrivers: ["Cost Optimization", "Customer Expectations", "Digital Disruption"],
-    expectedBusinessOutcome: "20% cost reduction, 30% productivity improvement and higher customer satisfaction.",
-    strategicPriority: "High",
-    transformationTimeline: "01 Jun 2024 - 31 Dec 2026",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Current State Assessment (AS-IS)
-    currentBusinessModel: "Traditional Model",
-    currentProcessMaturity: "Repeatable",
-    digitalMaturity: "Digitized",
-    organizationalCapability: 58,
-    technologyReadiness: 62,
-    customerExperienceScore: 60,
-    operationalEfficiency: 55,
-    currentStateScore: 59,
-
-    // Section 3: Future State Design (TO-BE)
-    futureOperatingModel: "Agile, data-driven operating model with automation and AI enablement.",
-    targetBusinessModel: "Digital Business Model",
-    targetDigitalMaturity: "Intelligent",
-    targetCustomerExperience: "Seamless, personalized and omni-channel customer experience.",
-    targetKpiFramework: "Transformation KPI Framework",
-    transformationRoadmap: "Phase 1: Foundation (Q3 2024), Phase 2: Core Modernization (2025), Phase 3: Scale & Autonomous (2026).",
-    futureStateReadiness: 78,
-
-    // Section 4: Transformation Initiatives List
-    initiatives: [
-      { name: "Process Automation", category: "Operations", owner: "Rahul Sharma", startDate: "01 Jun 2024", endDate: "30 Sep 2024", status: "In Progress", impactScore: 82 },
-      { name: "ERP Modernization", category: "Technology", owner: "Anita Verma", startDate: "01 Jun 2024", endDate: "31 Dec 2024", status: "In Progress", impactScore: 88 },
-      { name: "Customer Experience Revamp", category: "Customer Experience", owner: "Arjun Desai", startDate: "01 Jul 2024", endDate: "31 Dec 2024", status: "Planned", impactScore: 75 },
-      { name: "Data & Analytics Platform", category: "Technology", owner: "Vikram Mehta", startDate: "01 Aug 2024", endDate: "31 Jan 2025", status: "Planned", impactScore: 81 },
-    ],
-
-    // Section 5: Organization & Change Management
-    organizationStructureChange: true,
-    leadershipAlignmentScore: 70,
-    employeeReadinessScore: 65,
-    trainingProgram: "Transformation Training 2024",
-    communicationPlan: "Multi-channel communication plan with regular updates.",
-    changeAdoptionPlan: "Change champions network and adoption tracking.",
-    changeReadinessScore: 68,
-
-    // Section 6: Process & Technology Transformation
-    businessProcessReengineering: true,
-    erpModernization: true,
-    aiEnablement: true,
-    automationLevel: 65, // 65%
-    cloudMigration: true,
-    dataStrategy: "Enterprise data platform with real-time analytics and data governance.",
-    technologyTransformationScore: 72,
-
-    // Section 7: Financial & Value Realization
-    transformationBudget: 5000000000, // ₹ 500,00,00,000 (₹ 500 Cr)
-    expectedCostSavings: 1000000000, // ₹ 100,00,00,000 (₹ 100 Cr)
-    revenueGrowthTarget: 1500000000, // ₹ 150,00,00,000 (₹ 150 Cr)
-    productivityImprovement: 25, // 25%
-    roi: 28.5, // 28.50%
-    paybackPeriod: 24, // 24 Months
-    valueRealizationScore: 77,
-
-    // Section 8: Risk & Governance
-    transformationRisks: "Adoption resistance, legacy system integration, business continuity during migration.",
-    enterpriseRiskRating: "Medium",
-    governanceCommittee: "Transformation Steering Committee",
-    complianceStatus: true,
-    executiveSteeringCommittee: true,
-    riskMitigationPlan: "Active risk monitoring, mitigation actions and periodic reviews.",
-    governanceScore: 73,
-
-    // Section 9: AI Business Transformation Intelligence
-    aiTransformationAssessment: "Strong potential for operational excellence with automation and AI.",
-    aiProcessOptimization: "Identified 15 high impact process optimization opportunities.",
-    aiCostReductionOpportunities: "Potential cost reduction of ₹ 100 Cr over 24 months.",
-    aiResourceOptimization: "Optimal resource allocation can improve productivity by 30%.",
-    aiRiskPrediction: "Medium risk due to change adoption and legacy systems.",
-    aiSuccessProbability: 78,
-    aiTransformationScore: 76,
-
-    // Section 10: Business Transformation Summary & Recommendation
-    recommendation: "Proceed to Execution",
-
-    // Section 12: Review & Approval Matrix
-    approvals: [
-      { role: "Executive Sponsor", user: "Anita Verma", status: "Approved", date: "08 May 2024", comments: "Operational transformation charter and €500M budget approved." },
-      { role: "Chief Transformation Officer", user: "Vikram Mehta", status: "Approved", date: "09 May 2024", comments: "Workforce readiness and change champion network confirmed." },
-      { role: "COO", user: "Arjun Desai", status: "Approved", date: "10 May 2024", comments: "Plant automation and supply chain re-engineering validated." },
-      { role: "CFO", user: "Manish Gupta", status: "Approved", date: "11 May 2024", comments: "₹100 Cr cost reduction model and 28.5% ROI verified." },
-      { role: "CIO / CTO", user: "Amit Verma", status: "Approved", date: "12 May 2024", comments: "Hybrid cloud ERP modernization roadmap approved." },
-      { role: "CHRO", user: "Sneha Nair", status: "Approved", date: "13 May 2024", comments: "Change management and employee training curriculum approved." },
-      { role: "CEO", user: "Rahul Sharma", status: "Pending", date: "In Review", comments: "Final executive committee review." },
-      { role: "Board of Directors", user: "Board", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Comments will be added during review...",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => businessTransformationService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["business-transformation"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -470,6 +381,16 @@ function BusinessTransformationDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Business Transformation Development" breadcrumb={[{ label: "Business Development" }, { label: "Business Transformation Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

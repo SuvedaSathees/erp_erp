@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { pricingStrategyService } from "@/services/pricingStrategyService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -176,6 +179,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 export function PricingStrategyDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["pricing-strategy"],
+    queryFn: pricingStrategyService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -190,106 +199,23 @@ export function PricingStrategyDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Pricing Strategy Development reference UI image
-  const [formData, setFormData] = useState({
-    pricingId: "PS-2024-00038",
-    formCode: "PSF-2024-25",
-    pricingProject: "EV Fast Charger Pricing Strategy",
-    pricingNumber: "PSN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    productService: "EV Fast Charger",
-    productVersion: "v2.1",
-    businessUnit: "EV Solutions",
-    pricingManager: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Pricing Validation",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Pricing Overview
-    businessObjective: "Maximize profitability for EV charging solutions.",
-    pricingObjective: "Achieve 25% Gross Margin with market competitiveness.",
-    productCategory: "EV Charging Infrastructure",
-    marketSegment: ["Commercial", "Industrial", "Residential"],
-    geographicMarket: ["India", "USA", "Europe", "Australia"],
-    pricingStrategyType: "Value-Based Pricing",
-    lifecycleStage: "Commercial Validation",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Cost Analysis
-    materialCost: 18500, // ₹ 18,500.00
-    manufacturingCost: 7200, // ₹ 7,200.00
-    logisticsCost: 2300, // ₹ 2,300.00
-    marketingCost: 3000, // ₹ 3,000.00
-    salesCost: 2800, // ₹ 2,800.00
-    overheadCost: 3100, // ₹ 3,100.00
-    totalCost: 36900, // ₹ 36,900.00 (Calculated)
-    targetMargin: 25, // 25%
-    breakevenPrice: 49200, // ₹ 49,200.00 (Calculated)
-    costCompetitivenessScore: 84,
-
-    // Section 3: Market & Competitor Pricing
-    marketAveragePrice: 56500, // ₹ 56,500.00
-    lowestCompetitorPrice: 45000, // ₹ 45,000.00
-    highestCompetitorPrice: 72000, // ₹ 72,000.00
-    competitorPricingMatrixFile: "competitor_matrix.pdf",
-    customerWillingnessToPay: 60000, // ₹ 60,000.00
-    priceElasticity: "Moderately Elastic",
-    competitivePricingScore: 82,
-
-    // Section 4: Pricing Model
-    revenueModel: "Product Sales",
-    pricingMethod: "Tiered Pricing",
-    sellingPrice: 59900, // ₹ 59,900.00
-    discountPolicy: "Volume & Early Payment",
-    promotionalPricing: "Launch Offer 5%",
-    channelPricing: "Differentiated by Channel",
-    franchiseDealerPricing: "12% Margin",
-    pricingReadinessScore: 85,
-
-    // Section 5: Financial Impact
-    revenueForecast: 268000000, // ₹ 26,80,00,000 (₹ 26.8 Cr)
-    grossMargin: 25.4, // 25.4%
-    netMargin: 18.7, // 18.7%
-    roi: 31.2, // 31.2%
-    contributionMargin: 150800000, // ₹ 15,08,00,000
-    paybackPeriod: 18, // 18 Months
-    financialScore: 87,
-
-    // Section 6: Risk Assessment
-    pricingRisks: "Market price sensitivity",
-    competitiveRisks: "Aggressive competitor pricing",
-    regulatoryRisks: "Import duty & compliance changes",
-    customerAcceptanceRisk: "Medium - Price sensitivity",
-    mitigationPlan: "Value communication, bundled offers, cost optimization",
-    riskScore: 76,
-
-    // Section 7: AI Pricing Intelligence
-    aiPriceOptimization: "Recommended price ₹ 59,900",
-    aiDemandForecast: "Strong demand, 24% CAGR",
-    aiElasticityAnalysis: "Price elasticity -0.92",
-    aiRevenuePrediction: "₹ 28,40,00,000 in Year 1",
-    aiDiscountRecommendation: "Optimal discount 3-5%",
-    aiCompetitiveInsights: "Price positioned above average with high value perception",
-    aiPricingScore: 91,
-
-    // Section 8: Summary & Recommendation
-    recommendation: "Approve Pricing Strategy",
-
-    // Section 10: Review & Approval Matrix
-    approvals: [
-      { role: "Pricing Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "Detailed cost analysis & value pricing validated." },
-      { role: "Finance Manager", user: "Neha Reddy", status: "Approved", date: "09 May 2024", comments: "25.4% gross margin and 18-month payback approved." },
-      { role: "Sales Manager", user: "Vikram Singh", status: "Approved", date: "10 May 2024", comments: "Tiered pricing aligns with sales channel targets." },
-      { role: "Marketing Manager", user: "Sneha Iyer", status: "Approved", date: "11 May 2024", comments: "5% launch promotional pricing approved." },
-      { role: "Product Manager", user: "Ankit Verma", status: "Pending", date: "In Review", comments: "BOM cost optimization under review." },
-      { role: "BD Manager", user: "Arjun Patel", status: "Pending", date: "In Review", comments: "Channel partner margin breakdown review." },
-      { role: "COO", user: "Rakesh Patel", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Excellent financial modeling (86/100 Readiness, ₹59,900 Selling Price, 25.4% Margin, ₹26.8 Cr Forecast). Approved for GTM.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => pricingStrategyService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["pricing-strategy"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -433,6 +359,16 @@ export function PricingStrategyDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Pricing Strategy Development" breadcrumb={[{ label: "Business Development" }, { label: "Pricing Strategy Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { partnershipService } from "@/services/partnershipService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -176,6 +179,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function PartnershipDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["partnership"],
+    queryFn: partnershipService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -190,114 +199,23 @@ function PartnershipDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Partnership Development reference UI image
-  const [formData, setFormData] = useState({
-    partnershipId: "PD-2024-00056",
-    formCode: "PDF-2024-25",
-    partnershipProject: "AI Technology Collaboration",
-    partnershipNumber: "PDN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "EV Solutions",
-    partnerOrganization: "TechNova Systems Pvt. Ltd.",
-    partnershipManager: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Due Diligence",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Partnership Overview
-    businessObjective: "Expand technology capabilities and enter new markets",
-    partnershipObjective: "Co-develop AI-based solutions and joint market expansion",
-    partnershipType: "Technology Partnership",
-    industry: "Technology",
-    geographicCoverage: ["India", "USA", "Europe"],
-    strategicPriority: "High",
-    lifecycleStage: "Due Diligence",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Partner Profile
-    organizationName: "TechNova Systems Pvt. Ltd.",
-    organizationType: "Private Limited",
-    businessDomain: ["AI & ML Solutions", "Cloud Services", "IoT Platforms"],
-    yearsInBusiness: 12,
-    annualRevenue: 2500000000, // ₹ 250,00,00,000 (₹ 250 Cr)
-    employeeStrength: 850,
-    globalPresence: ["India", "USA", "Germany", "Singapore"],
-    partnerCapabilityScore: 88,
-
-    // Section 3: Partnership Evaluation
-    strategicFit: "Excellent",
-    technologyCapability: "Excellent",
-    commercialCapability: "Very Good",
-    operationalCapability: "Very Good",
-    innovationCapability: "Excellent",
-    esgCompliance: "Good",
-    dueDiligenceStatus: true,
-    evaluationScore: 86,
-
-    // Section 4: Commercial & Legal Planning
-    partnershipModel: "Revenue Sharing",
-    revenueSharingModel: "Revenue Percentage",
-    commercialTerms: "15% revenue share for 5 years with mutual exclusivity in target markets",
-    investmentCommitment: 500000000, // ₹ 50,00,00,000 (₹ 50 Cr)
-    ndaSigned: true,
-    mouAgreementFile: "MoU_TechNova.pdf",
-    legalReviewStatus: true,
-    commercialScore: 84,
-
-    // Section 5: Operational Integration
-    integrationPlan: "API-based integration, joint development environment and data sharing framework.",
-    resourceAllocation: "5 members from each organization",
-    jointProjectPlan: "PRJ-2024-015 (AI Platform Co-Dev)",
-    slaDefined: true,
-    kpiAgreement: true,
-    governanceCommittee: ["Rahul Sharma", "Anita Verma", "John Miller"],
-    operationalReadinessScore: 82,
-
-    // Section 6: Risk & Compliance
-    strategicRisks: "Market changes, partner dependency",
-    commercialRisks: "Revenue fluctuations, cost overruns",
-    operationalRisks: "Resource unavailability, delays",
-    legalRisks: "IPR disputes, contract violations",
-    riskMitigationPlan: "Defined in risk register with quarterly review",
-    complianceStatus: true,
-    riskScore: 76,
-
-    // Section 7: Performance Management
-    revenueContribution: 250000000, // ₹ 25,00,00,000 (₹ 25 Cr)
-    businessGrowth: 18.5, // 18.5%
-    projectSuccessRate: 92, // 92%
-    slaAchievement: 95, // 95%
-    partnerSatisfaction: 4.6, // 4.6/5
-    strategicValueScore: 87, // 87/100
-    performanceScore: 85,
-
-    // Section 8: AI Partnership Intelligence
-    aiPartnerSuitability: "High suitability with 88% match",
-    aiSynergyAnalysis: "Strong synergy in AI and Cloud",
-    aiRiskPrediction: "Medium risk due to market volatility",
-    aiRevenueOpportunity: "Opportunity of ₹ 120 Cr in 3 years",
-    aiCollaborationRecommendation: "Proceed with phased collaboration",
-    aiExpansionStrategy: "Expand to EU market in phase 2",
-    aiPartnershipScore: 89,
-
-    // Section 9: Partnership Summary & Recommendation
-    recommendation: "Approve Partnership",
-
-    // Section 11: Review & Approval Matrix
-    approvals: [
-      { role: "Partnership Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "12-year proven technology track record & 88% capability score." },
-      { role: "BD Manager", user: "Ankit Verma", status: "Approved", date: "09 May 2024", comments: "Target market expansion strategy validated." },
-      { role: "Finance Manager", user: "Vikas Mehta", status: "Approved", date: "10 May 2024", comments: "₹50 Cr investment commitment & 15% revenue share approved." },
-      { role: "Legal Manager", user: "Neha Singh", status: "Approved", date: "11 May 2024", comments: "MoU draft & IPR protection clauses verified." },
-      { role: "Operations Manager", user: "Arjun Patel", status: "Pending", date: "In Review", comments: "Joint engineering resource allocation under review." },
-      { role: "Strategy Head", user: "Vineet Malhotra", status: "Pending", date: "In Review", comments: "Phase 2 EU market expansion plan review." },
-      { role: "COO", user: "Rajat Verma", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Excellent strategic alignment (85/100 Overall Score, ₹120 Cr Revenue Potential, 92% AI Match). Approved for MoU Signing.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => partnershipService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["partnership"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -444,6 +362,16 @@ function PartnershipDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Partnership Development" breadcrumb={[{ label: "Business Development" }, { label: "Partnership Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

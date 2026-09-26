@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { vendorEcosystemService } from "@/services/vendorEcosystemService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -179,6 +182,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function VendorEcosystemDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["vendor-ecosystem"],
+    queryFn: vendorEcosystemService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -193,120 +202,23 @@ function VendorEcosystemDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Vendor Ecosystem Development reference UI image
-  const [formData, setFormData] = useState({
-    vendorEcosystemId: "VE-2024-00058",
-    formCode: "VEF-2024-25",
-    vendorDevelopmentProject: "Strategic Vendor Ecosystem",
-    vendorDevelopmentNumber: "VEDN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "EV Solutions",
-    vendorCategory: "Raw Material Supplier",
-    vendorDevelopmentManager: "Rahul Sharma",
-    createdDate: "05 May 2024 10:15 AM",
-    lastModifiedDate: "17 May 2024 04:20 PM",
-    workflowStage: "Vendor Evaluation",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Vendor Ecosystem Overview
-    businessObjective: "Build a resilient and efficient vendor ecosystem that ensures quality, cost competitiveness, and supply continuity.",
-    procurementObjective: "Develop strategic supplier base to achieve cost optimization and operational excellence.",
-    commodityCategory: ["Metals", "Plastics", "Electronics", "Packaging"],
-    geographicCoverage: ["India", "East Asia", "Europe", "North America"],
-    strategicImportance: "High",
-    lifecycleStage: "Vendor Evaluation",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Vendor Profile
-    vendorName: "GreenMetal Industries Pvt. Ltd.",
-    organizationType: "Private Limited",
-    companyRegistration: "U29299MH2010PTC210987",
-    employeeStrength: 1250,
-    manufacturingLocations: ["Pune, India", "Chennai, India", "Vietnam"],
-    certifications: ["ISO 9001", "ISO 14001", "IATF 16949"],
-    annualTurnover: 2500000000, // ₹ 250,00,00,000
-    vendorCapabilityScore: 86,
-
-    // Section 3: Qualification & Assessment
-    financialStability: "Strong",
-    qualityCapability: "Very Good",
-    productionCapacity: "Advanced",
-    technologyCapability: "Advanced",
-    deliveryCapability: "Very Good",
-    esgCompliance: "Good",
-    supplierAuditStatus: true,
-    dueDiligenceCompleted: true,
-    qualificationScore: 84,
-
-    // Section 4: Commercial & Contract Management
-    contractType: "Annual Rate Contract (ARC)",
-    paymentTerms: "Net 30",
-    pricingAgreement: "ARC-2024-GM-001",
-    annualProcurementValue: 500000000, // ₹ 50,00,00,000 (₹ 50 Cr)
-    creditPeriod: 30, // 30 Days
-    contractValidity: "01 Jun 2024 - 31 May 2026",
-    ndaSigned: true,
-    commercialScore: 82,
-
-    // Section 5: Supply Chain Integration
-    erpIntegration: true,
-    ediEnabled: true,
-    inventoryVisibility: true,
-    logisticsIntegration: true,
-    vendorManagedInventory: true,
-    forecastSharing: true,
-    integrationReadinessScore: 88,
-
-    // Section 6: Quality & Compliance
-    isoCertifications: ["ISO 9001", "ISO 14001", "ISO 45001"],
-    ppapApproved: true,
-    apqpCompliance: true,
-    pfmeaAvailable: true,
-    controlPlanAvailable: true,
-    capaProcess: true,
-    supplierQualityScore: 87,
-
-    // Section 7: Performance Management
-    onTimeDelivery: 96, // 96%
-    supplierPpm: 120, // 120 PPM
-    leadTime: 15, // 15 Days
-    overallPerformanceScore: 86,
-
-    // Section 8: Risk Management
-    supplyRisk: "Medium",
-    financialRisk: "Low",
-    geopoliticalRisk: "Low",
-    singleSourceRisk: true,
-    businessContinuityPlan: true,
-    riskMitigationPlan: "Dual sourcing strategy, safety stock maintenance, and regular audit.",
-    riskScore: 72,
-
-    // Section 9: AI Vendor Intelligence
-    aiVendorRanking: "Top 15% in the category",
-    aiCostOptimization: "Potential savings of ₹ 4.2 Cr annually",
-    aiDemandForecast: "Strong demand stability for next 24 months",
-    aiSupplierRiskPrediction: "Low risk with 92% confidence",
-    aiAlternativeSupplierRecommendation: "2 alternative vendors identified",
-    aiProcurementOptimization: "Recommend long-term ARC contract",
-    aiVendorScore: 89,
-
-    // Section 10: Vendor Ecosystem Summary & Recommendation
-    recommendation: "Approve Vendor",
-
-    // Section 12: Review & Approval Matrix
-    approvals: [
-      { role: "Vendor Dev Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "1,250 employees, 3 manufacturing plants & 86% capability score validated." },
-      { role: "Procurement Manager", user: "Vikram Mehta", status: "Approved", date: "09 May 2024", comments: "₹50 Cr annual spend and ARC agreement terms approved." },
-      { role: "Supply Chain Manager", user: "Anita Verma", status: "Approved", date: "10 May 2024", comments: "ERP, EDI, and VMI supply chain integrations verified." },
-      { role: "Quality Manager", user: "Neha Singh", status: "Approved", date: "11 May 2024", comments: "ISO 9001/14001 and PPAP approval complete (120 PPM)." },
-      { role: "Finance Manager", user: "Neha Jain", status: "Approved", date: "12 May 2024", comments: "Net 30 payment terms and financial solvency verified." },
-      { role: "Legal Manager", user: "Rajat Kapoor", status: "Pending", date: "In Review", comments: "Master Supply Agreement IPR and indemnification review." },
-      { role: "COO", user: "Anant Agarwal", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Strong supplier capability & 85/100 Overall Score (88 Integration, 87 Quality, ₹4.2 Cr AI Savings). Approved for Onboarding.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => vendorEcosystemService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["vendor-ecosystem"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -455,6 +367,16 @@ function VendorEcosystemDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Vendor Ecosystem Development" breadcrumb={[{ label: "Business Development" }, { label: "Vendor Ecosystem Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

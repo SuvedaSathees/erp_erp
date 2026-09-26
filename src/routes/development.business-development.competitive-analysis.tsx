@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { competitiveAnalysisService } from "@/services/competitiveAnalysisService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -176,6 +179,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function CompetitiveAnalysisPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["competitive-analysis"],
+    queryFn: competitiveAnalysisService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -190,105 +199,23 @@ function CompetitiveAnalysisPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Competitive Analysis reference UI image
-  const [formData, setFormData] = useState({
-    caId: "CA-2024-00052",
-    formCode: "CAF-2024-25",
-    analysisProject: "EV Charging Competitive Analysis",
-    analysisNumber: "CAN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "EV Solutions",
-    productService: "Smart EV Charging Solution",
-    competitor: "ChargePoint Inc.",
-    analysisOwner: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Market Assessment",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Competitive Overview
-    businessObjective: "Evaluate competitive landscape and identify strategic advantages.",
-    industry: "Electric Vehicle Charging Infrastructure",
-    marketCategory: "B2B",
-    geographicMarket: ["India", "USA", "Europe", "APAC"],
-    analysisType: "Competitor Benchmarking",
-    competitiveScope: "Direct & Indirect Competitors",
-    lifecycleStage: "Market Assessment",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Competitor Profile
-    competitorName: "ChargePoint Inc.",
-    headquarters: "Campbell, California, USA",
-    marketPresence: ["USA", "Canada", "Europe", "Australia"],
-    productPortfolio: "AC Chargers, DC Fast Chargers, Software Platform, Fleet Solutions",
-    businessModel: "SaaS + Hardware",
-    revenueEstimate: 82500000000, // ₹ 8,250 Cr
-    employeeStrength: 2100,
-    marketShare: 18, // 18%
-    competitorScore: 85,
-
-    // Section 3: Product & Technology Comparison
-    productFeatures: "Comprehensive EV charging network with smart features.",
-    technologyStack: "Cloud Platform, IoT, AI, Mobile App, OCPP 2.0",
-    qualityComparison: "High",
-    innovationLevel: "Advanced",
-    certifications: ["ISO 27001", "UL", "CE", "Energy Star"],
-    patentPortfolio: "120+ Patents",
-    technologyLeadershipScore: 88,
-
-    // Section 4: Commercial Comparison
-    pricingStrategy: "Premium",
-    productPricing: "₹ 12.50 L - ₹ 45.00 L",
-    distributionChannels: ["Direct Sales", "Partners", "Online"],
-    salesStrategy: "Enterprise & Fleet Focused",
-    marketingStrategy: "Digital Marketing, Events, Partnerships",
-    customerSupportModel: "24/7 Support + Remote Monitoring",
-    commercialCompetitivenessScore: 83,
-
-    // Section 5: SWOT Analysis
-    strengths: "Strong brand, wide network, advanced technology.",
-    weaknesses: "Higher pricing, complex integration.",
-    opportunities: "Rising EV adoption, fleet electrification.",
-    threats: "New entrants, price competition.",
-    competitiveRisks: "Market saturation in developed regions.",
-    strategicPosition: "Challenger",
-    swotScore: 82,
-
-    // Section 6: Strategic Benchmarking
-    marketPositionRanking: "2 / 5",
-    innovationRanking: "2 / 5",
-    customerSatisfactionRanking: "3 / 5",
-    digitalMaturity: "Advanced",
-    esgPerformance: "Good",
-    benchmarkReportFile: "benchmark_chargepoint.pdf",
-    benchmarkScore: 84,
-
-    // Section 7: AI Competitive Intelligence
-    aiCompetitorAnalysis: "Strong product portfolio and global presence with expanding partnerships.",
-    aiPricingIntelligence: "Pricing premium ~15% above market average in North America.",
-    aiMarketTrendAnalysis: "Fast growth in DC fast charging segment and smart charging solutions.",
-    aiOpportunityMapping: "High opportunity in emerging markets and fleet solutions.",
-    aiThreatPrediction: "Price pressure expected due to new entrants and subsidies.",
-    aiStrategicRecommendations: "Focus on cost optimization and expand APAC market presence.",
-    aiIntelligenceScore: 91,
-
-    // Section 8: Summary & Recommendation
-    recommendation: "Maintain Competitive Advantage",
-
-    // Section 10: Review & Approval Matrix
-    approvals: [
-      { role: "Strategy Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "Detailed benchmarking and SWOT completed." },
-      { role: "BD Manager", user: "Neha Reddy", status: "Approved", date: "09 May 2024", comments: "B2B fleet distribution channel validated." },
-      { role: "Marketing Manager", user: "Vikram Singh", status: "Approved", date: "10 May 2024", comments: "Brand positioning and differentiation confirmed." },
-      { role: "Sales Manager", user: "Sneha Iyer", status: "Approved", date: "11 May 2024", comments: "Pricing strategy benchmarked against ChargePoint." },
-      { role: "Product Manager", user: "Ankit Verma", status: "Approved", date: "12 May 2024", comments: "Technology stack comparison verified." },
-      { role: "Innovation Manager", user: "Amit Patel", status: "Pending", date: "In Review", comments: "Patent portfolio gap analysis underway." },
-      { role: "COO", user: "Rakesh Patel", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Strong competitive score (86/100, 88 Tech, 85 Competitor, ₹8,250 Cr Competitor Revenue). Approved for Strategic Planning.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => competitiveAnalysisService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["competitive-analysis"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -435,6 +362,16 @@ function CompetitiveAnalysisPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Competitive Analysis" breadcrumb={[{ label: "Business Development" }, { label: "Competitive Analysis" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

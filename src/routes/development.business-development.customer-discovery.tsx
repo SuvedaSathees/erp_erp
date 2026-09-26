@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { customerDiscoveryService } from "@/services/customerDiscoveryService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -113,6 +116,12 @@ function ScoreGauge({ label, score, max = 100, sub }: { label: string; score: nu
 }
 
 function CustomerDiscoveryPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["customer-discovery"],
+    queryFn: customerDiscoveryService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isAiWorkbenchOpen, setIsAiWorkbenchOpen] = useState(false);
@@ -120,103 +129,23 @@ function CustomerDiscoveryPage() {
   const [viewingFile, setViewingFile] = useState<string | null>(null);
 
   // Form State according to MAICW specifications
-  const [formData, setFormData] = useState({
-    cdId: "CD-2024-00056",
-    formCode: "CDR-2024-25",
-    projectTitle: "Smart EV Charging Station Discovery",
-    discoveryNumber: "CDN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    productService: "Smart EV Charging Solution",
-    customerSegment: "Fleet Operators",
-    discoveryLead: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Discovery Overview
-    businessObjective: "Understand Fleet operators needs for EV charging infrastructure.",
-    discoveryGoal: "Identify key pain points, buying process and market opportunity.",
-    industry: "Logistics & Transportation",
-    targetMarket: "Commercial Fleet Operators",
-    customerPersona: "Fleet Operations Manager",
-    discoveryMethod: "Customer Interviews & Surveys",
-    lifecycleStage: "Discovery",
-    priority: "High",
-    projectStatus: "Development",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Customer Segmentation
-    industryType: "Logistics & Transportation",
-    companySize: "Mid-Market",
-    geoMarket: ["India", "USA", "Europe"],
-    customerRole: "Operations Manager",
-    buyingAuthority: "Head of Operations",
-    revenueRange: "₹ 50 Cr - ₹ 250 Cr",
-    segmentReadinessScore: 82,
-
-    // Section 3: Customer Problem Discovery
-    jobsToBeDone: "Ensure uninterrupted EV fleet operations with minimal downtime.",
-    painPoints: "High charging downtime, lack of remote monitoring, site reliability issues.",
-    existingSolutions: "Manual monitoring, basic chargers, third-party networks.",
-    frustrations: "Unreliable infrastructure, slow support, complex billing.",
-    desiredOutcomes: "Seamless charging, remote visibility, cost optimization.",
-    problemFrequency: "Daily",
-    problemSeverity: "High",
-    problemValidationScore: 87,
-
-    // Section 4: Customer Research Activities
-    interviewsConducted: 28,
-    surveysCompleted: 166,
-    focusGroups: 4,
-    observationSessions: 12,
-    customerVisits: 8,
-    researchNotes: "Extensive customer interviews across 14 transport hubs confirmed downtime as top blocker.",
-    supportingEvidenceFile: "Research_Notes.zip",
-    researchReadinessScore: 84,
-
-    // Section 5: Buying Behaviour Analysis
-    buyingTrigger: "Expansion of EV fleet & cost savings",
-    buyingProcess: "Eval -> Compare -> Pilot -> Purchase",
-    decisionMakers: ["Operations Head", "Finance Head", "CTO"],
-    influencers: ["Fleet Manager", "IT Manager", "Procurement"],
-    purchaseFrequency: "Quarterly",
-    budgetRange: "₹ 10 L - ₹ 50 L per site",
-    buyingBehaviourScore: 83,
-
-    // Section 6: Opportunity Assessment
-    marketOpportunity: "High demand for smart and reliable EV charging for commercial fleets.",
-    tam: 480000000000, // ₹ 48,000 Cr
-    sam: 125000000000, // ₹ 12,500 Cr
-    som: 18500000000,  // ₹ 1,850 Cr
-    competitiveLandscape: "Moderate - Growing Players",
-    opportunitySize: "Large",
-    opportunityScore: 85,
-
-    // Section 7: AI Customer Insights
-    aiPersonaAnalysis: "Fleet operators prioritize uptime, energy cost arbitrage, and remote visibility.",
-    aiBehaviourPrediction: "High adoption likely in next 24 months as regulatory compliance expands.",
-    aiDemandForecast: "Demand expected to grow at 28% CAGR over 5 years across Tier-1 transport hubs.",
-    aiOpportunityAnalysis: "Strong initial wedge opportunity in mid-market logistics fleet segment.",
-    aiProductRecommendations: "AI-enabled predictive maintenance, dynamic load balancing, automated invoicing.",
-    aiRiskAnalysis: "Grid stability and rapid field service response SLA.",
-    aiDiscoveryScore: 91,
-
-    // Section 8: Discovery Summary
-    recommendation: "Proceed to Value Proposition",
-    approvalDecision: "Approved",
-    approvalDate: "2024-05-17",
-    reviewComments: "Comprehensive customer discovery with 28 interviews, 166 surveys, and ₹ 48,000 Cr TAM.",
-
-    approvals: [
-      { role: "Product Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024" },
-      { role: "Business Dev Mgr", user: "Rahul Sharma", status: "Approved", date: "09 May 2024" },
-      { role: "Marketing Manager", user: "Neha Reddy", status: "Approved", date: "10 May 2024" },
-      { role: "Sales Manager", user: "Vikram Singh", status: "Approved", date: "11 May 2024" },
-      { role: "Customer Success Mgr", user: "Priya Nair", status: "Pending", date: "In Review" },
-      { role: "Strategy Head", user: "Anil Mehta", status: "Pending", date: "Awaiting" },
-      { role: "COO", user: "Rakesh Patel", status: "Pending", date: "Awaiting" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate" },
-    ],
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => customerDiscoveryService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["customer-discovery"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   const [attachments, setAttachments] = useState([
     { id: "1", name: "Interview_Notes.pdf", size: "2.4 MB", date: "12 May 2024", uploader: "Rahul Sharma" },
@@ -265,6 +194,16 @@ function CustomerDiscoveryPage() {
       return { ...prev, geoMarket: next };
     });
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Customer Discovery" breadcrumb={[{ label: "Business Development" }, { label: "Customer Discovery" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

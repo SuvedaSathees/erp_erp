@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { valuePropositionService } from "@/services/valuePropositionService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -148,6 +151,12 @@ function ScoreGauge({
 }
 
 export function ValuePropositionDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["value-proposition"],
+    queryFn: valuePropositionService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -158,91 +167,23 @@ export function ValuePropositionDevelopmentPage() {
   const [newFileName, setNewFileName] = useState("");
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  const [formData, setFormData] = useState({
-    vpId: "BM-2024-00045",
-    formCode: "BMD-2024-25",
-    vpTitle: "AI-IoT Platform Business Model",
-    vpNumber: "BMN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "Digital Solutions",
-    businessModel: "AI-IoT Platform Business Model",
-    productService: "AI-IoT Platform",
-    customerSegment: "Fleet Operators",
-    businessOwner: "Rahul Sharma",
-    productManager: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Development",
+  const [formData, setFormData] = useState<any>(null);
 
-    businessObjective: "Deliver a reliable, intelligent EV charging solution that maximizes uptime and optimizes energy cost for fleet operators.",
-    productVision: "To be the most trusted and intelligent EV charging platform for the future.",
-    marketOpportunity: "Rapid adoption of EVs, high demand for scalable and smart charging infrastructure.",
-    customerPersona: "Fleet Operations Manager",
-    industry: "Electric Vehicles",
-    lifecycleStage: "Growth",
-    priority: "High",
-    projectStatus: "Development",
-    jobsToBeDone: "Operate charging stations reliably with minimal downtime.",
-    painPoints: "Unplanned downtime, high energy costs, lack of remote visibility.",
-    customerNeeds: "Reliable, smart, scalable, cost-effective charging with remote monitoring.",
-    existingAlternatives: "Manual monitoring, basic chargers, legacy systems.",
-    customerFrustrations: "Downtime, billing issues, lack of real-time insights.",
-    customerPriority: "Critical",
-    problemSeverityScore: 92,
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    proposedSolution: "Smart EV charging platform with AI analytics, remote control & predictive maintenance.",
-    vpStatement: "We help fleet operators maximize charger uptime and reduce energy costs with our intelligent EV charging platform.",
-    keyBenefits: "Higher uptime, lower energy cost, remote control, predictive maintenance.",
-    differentiation: "AI-powered optimization, real-time monitoring, open integration.",
-    customerGains: "Operational efficiency, cost savings, better user experience.",
-    innovationElements: "AI algorithms, IoT connectivity, cloud analytics, mobile app.",
-    valueStrengthScore: 89,
-    customerValueScore: 85,
-
-    competitors: ["ChargePoint", "EVBox", "ABB", "Siemens"],
-    competitiveAdvantages: "AI-driven optimization, predictive maintenance, open ecosystem.",
-    usp: "Most intelligent, scalable and reliable EV charging platform.",
-    matrixFile: "VP_Comparison_Matrix.pdf",
-    switchingBarriers: "High integration cost, trained users, operational process.",
-    competitiveRisk: "Rapid tech changes, new entrants, pricing pressure.",
-    competitiveScore: 84,
-
-    customerInterviews: 28,
-    surveysCompleted: 156,
-    prototypeTested: true,
-    customerFeedback: "Very positive feedback on uptime and remote monitoring.",
-    pmfScore: 86,
-    npsScore: 52,
-    validationScore: 85,
-
-    pricingStrategy: "Value-Based Pricing",
-    expectedCustomerValue: 240000,
-    estimatedRevenueImpact: 250000000,
-    commercialReadinessScore: 85,
-
-    aiCustomerInsights: "High demand for uptime and cost saving.",
-    aiMarketOpportunity: "Market will grow at 28% CAGR over 5 years.",
-    aiPricingRecommendation: "Value-based pricing with tiered plans.",
-    aiAdoptionPrediction: "High adoption expected in next 24 months.",
-    aiValueScore: 91,
-
-    recommendation: "Approve Value Proposition",
-    userReviewComments: "Strong customer validation with 86/100 PMF score and ₹25 Cr estimated revenue impact.",
-    userDecision: "Approved",
-    userApprovalDate: "2024-05-17",
-
-    approvals: [
-      { role: "Product Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024" },
-      { role: "Marketing Manager", user: "Neha Reddy", status: "Approved", date: "09 May 2024" },
-      { role: "Sales Manager", user: "Vikram Singh", status: "Approved", date: "10 May 2024" },
-      { role: "Customer Success Mgr", user: "Priya Nair", status: "Approved", date: "11 May 2024" },
-      { role: "Business Dev Manager", user: "Anil Kumar", status: "Pending", date: "In Review" },
-      { role: "Strategy Head", user: "Anil Mehta", status: "Pending", date: "Awaiting" },
-      { role: "COO", user: "Rakesh Patel", status: "Pending", date: "Awaiting" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate" },
-    ],
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => valuePropositionService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["value-proposition"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   const [attachments, setAttachments] = useState([
     { id: "1", name: "VP_Canvas.pdf", size: "2.1 MB", date: "17 May 2024", uploader: "Rahul Sharma" },
@@ -318,6 +259,16 @@ export function ValuePropositionDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Value Proposition Development" breadcrumb={[{ label: "Business Development" }, { label: "Value Proposition Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

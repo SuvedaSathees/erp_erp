@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { businessModelService } from "@/services/businessModelService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -182,6 +185,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 export function BusinessModelDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["business-model"],
+    queryFn: businessModelService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -197,118 +206,23 @@ export function BusinessModelDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State
-  const [formData, setFormData] = useState({
-    businessModelId: "BM-2024-00045",
-    formCode: "BMD-2024-25",
-    title: "AI-IoT Platform Business Model",
-    number: "BMN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "Digital Solutions",
-    productService: "AI-IoT Platform",
-    owner: "Rahul Sharma",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Development",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Overview
-    businessVision: "To build an intelligent AI-IoT platform that connects devices, transforms data into actionable insights, and drives operational excellence across global enterprise clients.",
-    businessObjective: "Achieve $25M ARR within 5 years with 72%+ gross margin and global OEM partnership distribution.",
-    category: "Platform",
-    type: "B2B",
-    industry: "Industrial IoT & Smart Automation",
-    lifecycleStage: "Growth",
-    priority: "High",
-    projectStatus: "Development",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Value Proposition
-    customerProblem: "Lack of real-time visibility, predictive insights, and automated edge control in manufacturing & utilities equipment leading to high downtime.",
-    proposedSolution: "Unified AI-IoT platform with real-time sensor analytics, automated workflow triggers, and zero-touch edge provisioning.",
-    uvp: "Unified AI-IoT platform with predictive intelligence, real-time sensor analytics, and seamless SCADA/ERP integration.",
-    competitiveAdvantage: "AI-driven edge insights, easy multi-cloud integration, scalable architecture, and patent-protected algorithms.",
-    customerBenefits: "30% energy cost reduction, 45% unplanned downtime reduction, and 3x faster IoT deployment speed.",
-    innovationScore: 88,
-    uvpStrengthScore: 89,
-
-    // Section 3: Customer & Market Analysis
-    customerSegments: ["Manufacturing", "Energy", "Logistics", "Smart Buildings", "Utilities"],
-    icp: "Mid to large enterprises seeking operational intelligence and predictive maintenance.",
-    targetMarket: "Global Industrial IoT & Analytics Market",
-    tam: 120000000000,
-    sam: 35000000000,
-    som: 2800000000,
-    marketReadinessScore: 85,
-
-    // Section 4: Revenue Model
-    revenueStreams: ["Subscription", "Platform Fee", "Data Insights", "Custom Solutions"],
-    pricingStrategy: "Value Based",
-    pricingModel: "Subscription + Usage Tiered",
-    grossMargin: 72.5,
-    clv: 28500,
-    cac: 1250,
-    revenueScore: 85,
-
-    // Section 5: Cost Structure
-    fixedCosts: 2450000,
-    variableCosts: 850000,
-    opex: 1150000,
-    capex: 3200000,
-    profitabilityScore: 84,
-
-    // Section 6: Business Operations
-    keyActivities: "Platform Development, Data Intelligence Engine Maintenance, Customer Success & System Integration",
-    keyResources: "AI-IoT Software Platform, Cloud Infrastructure, Data Science Team, Customer Support Engineers",
-    keyPartners: "Cloud Providers, OEMs, System Integrators, Technology Partners",
-    channels: ["Direct Sales", "Channel Partners", "Marketplace", "OEM Partnerships"],
-    relationshipModel: "Subscription + Executive Support",
-    operationalReadiness: 86,
-
-    // Section 7: Growth & Scalability
-    expansionStrategy: "Geographic expansion into APAC & Europe, industry vertical expansion, and developer API partner ecosystem.",
-    geoExpansion: ["Asia Pacific", "North America", "Europe", "Middle East"],
-    franchiseModel: false,
-    platformModel: true,
-    digitalTransformation: true,
-    scalabilityIndex: 88,
-    growthReadinessScore: 87,
-
-    // Section 8: Risk & Compliance
-    risks: "Market Competition, Cyber Security, Technology Obsolescence",
-    riskMitigation: "Diversification, Strong Security, Continuous Innovation, IP Expansion",
-    compliance: ["GDPR", "ISO 27001", "SOC 2 Type II", "IEEE IoT Standards"],
-    esg: "Energy Efficiency, Data Privacy, Sustainable Operations",
-    ip: ["Patents", "Trademarks", "Copyrights", "Trade Secrets"],
-    riskScore: 78,
-
-    // Section 9: AI Assessment
-    aiPerformanceInsights: "High potential for predictive analytics and automation in asset-intensive industries.",
-    aiRevenuePrediction: "Strong recurring revenue growth potential with scalable subscription tiers.",
-    aiMarketOpportunity: "Large untapped market with high adoption potential in Smart Manufacturing.",
-    aiPricingRecommendation: "Value-based subscription pricing with tiered usage tiers recommended.",
-    aiRiskPrediction: "Medium risk due to competitive market landscape and technology adoption speed.",
-    aiGrowthSuggestions: "Expand partner ecosystem, accelerate OEM hardware bundle partnerships, and launch APAC sales hubs.",
-    aiHealthScore: 91,
-
-    // Section 10: Summary & Recommendation
-    marketScore: 86,
-    scalabilityScore: 88,
-    recommendation: "Approve Business Model",
-
-    // Section 12: Approvals Governance Matrix
-    approvals: [
-      { role: "BD Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "Valid UVP and clear market TAM." },
-      { role: "Marketing Manager", user: "Neha Reddy", status: "Approved", date: "09 May 2024", comments: "Strong customer segment positioning." },
-      { role: "Sales Manager", user: "Vikram Singh", status: "Approved", date: "10 May 2024", comments: "High channel partner interest confirmed." },
-      { role: "Finance Manager", user: "Sanjay Patel", status: "Approved", date: "12 May 2024", comments: "Unit economics meet enterprise threshold." },
-      { role: "Strategy Head", user: "Anil Mehta", status: "Pending", date: "In Review", comments: "Awaiting final TAM breakdown." },
-      { role: "COO", user: "Priya Nair", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Rakesh Patel", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "Board Approval", user: "Executive Board", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Comprehensive business model with robust unit economics and strong market TAM.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => businessModelService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["business-model"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments state
   const [attachments, setAttachments] = useState([
@@ -468,6 +382,16 @@ export function BusinessModelDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Business Model Development" breadcrumb={[{ label: "Business Development" }, { label: "Business Model Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

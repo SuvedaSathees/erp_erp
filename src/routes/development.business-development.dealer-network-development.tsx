@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { dealerNetworkService } from "@/services/dealerNetworkService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -178,6 +181,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function DealerNetworkDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["dealer-network"],
+    queryFn: dealerNetworkService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -192,114 +201,23 @@ function DealerNetworkDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Dealer Network Development reference UI image
-  const [formData, setFormData] = useState({
-    dealerNetworkId: "DN-2024-00045",
-    formCode: "DNDF-2024-25",
-    dealerProject: "North India Dealer Expansion",
-    dealerNumber: "DLR-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "EV Solutions",
-    productService: "EV Two Wheelers",
-    dealerDevelopmentManager: "Rahul Sharma",
-    createdDate: "05 May 2024 09:30 AM",
-    lastModifiedDate: "17 May 2024 03:45 PM",
-    workflowStage: "Dealer Onboarding",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Dealer Network Overview
-    businessObjective: "Expand market reach and increase EV sales across North India.",
-    dealerNetworkObjective: "Build a strong dealer network with superior service and sales coverage.",
-    dealerType: "Exclusive Dealer",
-    productCategory: "Electric Two Wheelers",
-    geographicCoverage: ["Delhi", "Uttar Pradesh", "Punjab", "Haryana"],
-    salesChannelRef: "EV Two Wheeler Channel",
-    lifecycleStage: "Dealer Onboarding",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Dealer Profile
-    dealerName: "GreenRide Motors Pvt. Ltd.",
-    businessType: "Private Limited",
-    companyRegistration: "U74140DL2018PTC334455",
-    yearsInBusiness: 8,
-    annualTurnover: 250000000, // ₹ 25,00,00,000
-    existingBrandsHandled: ["Hero", "TVS", "Bajaj"],
-    numberOfBranches: 12,
-    dealerCapabilityScore: 82,
-
-    // Section 3: Dealer Qualification
-    financialCapability: "Strong",
-    technicalCapability: "Advanced",
-    salesCapability: "Advanced",
-    serviceCapability: "Advanced",
-    infrastructureReadiness: "Strong",
-    dueDiligenceStatus: true,
-    backgroundVerification: true,
-    qualificationScore: 85,
-
-    // Section 4: Commercial Planning
-    pricingStrategyRef: "EV Pricing Strategy 2024",
-    dealerMargin: 18.0, // 18.00%
-    salesIncentivePlan: "Volume based incentive with quarterly performance bonus.",
-    creditLimit: 15000000, // ₹ 1,50,00,000
-    paymentTerms: "Net 30",
-    annualSalesTarget: 100000000, // ₹ 10,00,00,000 (₹ 10 Cr)
-    commercialScore: 88,
-
-    // Section 5: Infrastructure & Operations
-    showroomReady: true,
-    warehouseReady: true,
-    serviceCenterReady: true,
-    demoEquipmentInstalled: true,
-    inventoryAllocation: 5000000, // ₹ 50,00,000
-    erpIntegrationCompleted: true,
-    operationalReadinessScore: 80,
-
-    // Section 6: Training & Certification
-    salesTrainingCompleted: true,
-    technicalTrainingCompleted: true,
-    serviceCertification: "Authorized Service Center",
-    productKnowledgeAssessment: 86, // 86/100
-    dealerHandbookIssued: true,
-    trainingCompletionDate: "2024-05-15",
-    trainingScore: 84,
-
-    // Section 7: Performance Management
-    monthlySalesTarget: 8500000, // ₹ 85,00,000
-    leadConversionRate: 22.5, // 22.5%
-    customerSatisfactionScore: 4.3, // 4.3/5
-    warrantyClaimRate: 1.8, // 1.8%
-    serviceSlaAchievement: 96, // 96%
-    dealerPerformanceRating: 81, // 81/100
-    performanceScore: 81,
-
-    // Section 8: AI Dealer Intelligence
-    aiDealerSuitability: "High suitability with 88% match",
-    aiTerritoryRecommendation: "Expand coverage in Uttar Pradesh",
-    aiRevenueForecast: "₹ 12,50,00,000 potential in 2 years",
-    aiInventoryRecommendation: "Increase inventory for top 5 models",
-    aiPerformancePrediction: "High growth dealer with 85% confidence",
-    aiExpansionRecommendation: "Open 2 more branches in 2025",
-    aiDealerIntelligenceScore: 89,
-
-    // Section 9: Dealer Network Summary & Recommendation
-    recommendation: "Approve Dealer",
-    overallRemark: "Dealer is ready for onboarding and commercial launch.",
-
-    // Section 11: Review & Approval Matrix
-    approvals: [
-      { role: "Dealer Dev Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "8 years EV experience & 82% capability score validated." },
-      { role: "Sales Manager", user: "Vikram Singh", status: "Approved", date: "09 May 2024", comments: "₹10 Cr sales target and 18% margin structure approved." },
-      { role: "Finance Manager", user: "Anita Verma", status: "Approved", date: "10 May 2024", comments: "₹1.5 Cr credit limit and Net 30 terms approved." },
-      { role: "Operations Manager", user: "Manish Gupta", status: "Approved", date: "11 May 2024", comments: "Showroom and service center infrastructure verified." },
-      { role: "Service Manager", user: "Neha Kapoor", status: "Approved", date: "12 May 2024", comments: "Service team technical training and SLA verified." },
-      { role: "Legal Manager", user: "Arjun Mehta", status: "Pending", date: "In Review", comments: "Exclusive dealership agreement draft under legal review." },
-      { role: "COO", user: "Amit Verma", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Strong dealer capability & 85/100 Overall Score (88 Commercial, 80 Operational, ₹12.5 Cr Forecast). Approved for Onboarding.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => dealerNetworkService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["dealer-network"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -446,6 +364,16 @@ function DealerNetworkDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Dealer Network Development" breadcrumb={[{ label: "Business Development" }, { label: "Dealer Network Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

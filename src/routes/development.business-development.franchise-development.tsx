@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { franchiseService } from "@/services/franchiseService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -178,6 +181,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function FranchiseDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["franchise"],
+    queryFn: franchiseService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -192,117 +201,23 @@ function FranchiseDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Franchise Development reference UI image
-  const [formData, setFormData] = useState({
-    franchiseId: "FRD-2024-00056",
-    formCode: "FRD-2024-25",
-    franchiseProject: "Global Cafe Expansion",
-    franchiseNumber: "FC-EXP-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "Food & Beverages",
-    franchiseModel: "Cafe Standard Model",
-    franchiseDevManager: "Rahul Sharma",
-    createdDate: "05 May 2024 10:20 AM",
-    lastModifiedDate: "17 May 2024 04:20 PM",
-    workflowStage: "Franchise Development",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Franchise Overview
-    businessObjective: "Expand our cafe brand through franchise network across India and SAARC region.",
-    expansionObjective: "Open 150 franchise outlets in next 3 years.",
-    franchiseType: "Single Unit Franchise",
-    targetIndustry: ["Cafe", "QSR", "Beverages"],
-    geographicCoverage: ["India", "SAARC"],
-    businessModelRef: "BM-2024-01 - Cafe Model",
-    lifecycleStage: "Growth",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Franchise Model Planning
-    franchiseFormat: "Cafe - Standard",
-    royaltyPercentage: 6.0, // 6.00%
-    franchiseInvestment: 2500000, // ₹ 25,00,000
-    marketingContribution: 2.0, // 2.00%
-    franchiseFee: 200000, // ₹ 2,00,000
-    franchiseAgreementTerm: 5, // 5 Years
-    modelReadinessScore: 88,
-
-    // Section 3: Franchise Partner Development
-    partnerEligibilityCriteria: "Minimum 2 years business experience and sound financial background.",
-    dueDiligenceStatus: true,
-    targetFranchisees: 3000,
-    backgroundVerification: true,
-    qualificationProcess: "Application -> Screening -> Interview -> Due Diligence",
-    franchiseTrainingProgram: "FT-001 - Cafe Training",
-    partnerReadinessScore: 82,
-
-    // Section 4: Commercial Planning
-    revenueModelRef: "RM-2024-01",
-    revenueForecast: 250000000, // ₹ 25,00,00,000 (₹ 25 Cr)
-    pricingStrategyRef: "PS-2024-02",
-    roiForFranchisee: 28.5, // 28.50%
-    revenueSharingModel: "Royalty + Marketing Fee",
-    breakevenPeriodMonths: 18, // 18 Months
-    commercialScore: 85,
-
-    // Section 5: Operations & Infrastructure
-    siteSelectionCompleted: true,
-    supplyChainConnected: true,
-    infrastructureReady: true,
-    operationsManualAvailable: true,
-    equipmentInstalled: true,
-    inventoryReady: true,
-    operationalReadinessScore: 78,
-
-    // Section 6: Legal & Compliance
-    franchiseAgreementFile: "cafe_fran_agreement.pdf",
-    insuranceCoverage: true,
-    ndaSigned: true,
-    riskAssessment: "Low operational risk. Standard franchise risks identified and mitigated.",
-    trademarkLicense: true,
-    regulatoryCompliance: true,
-    complianceScore: 90,
-
-    // Section 7: Performance Management
-    monthlyRevenueTarget: 1500000, // ₹ 15,00,000
-    slaCompliance: 90, // 90/100
-    monthlySalesTarget: 3000,
-    operationalEfficiencyScore: 88, // 88/100
-    customerSatisfactionScore: 85, // 85/100
-    performanceScore: 87,
-
-    // Section 8: Finance & Investment
-    totalInvestment: 1500000, // ₹ 15,00,000
-    paybackPeriod: 18, // 18 Months
-    irr: 32.4, // 32.40%
-    fundingSource: "Self Funding",
-    npv: 1240000, // ₹ 12,40,000
-    financeScore: 83,
-
-    // Section 9: AI Franchise Intelligence
-    marketOpportunityScore: "High potential in tier 2 cities",
-    riskPrediction: "Low risk based on market data",
-    franchiseSuccessProbability: "Strong unit economics and demand",
-    siteRecommendation: "25 cities recommended",
-    revenuePotentialScore: "Very high 3-year revenue potential",
-    aiIntelligenceScore: 86,
-
-    // Section 10: Franchise Summary & Recommendation
-    recommendation: "Proceed to Approval",
-
-    // Section 12: Review & Approval Matrix
-    approvals: [
-      { role: "Executive Sponsor", user: "Anita Verma", status: "Approved", date: "08 May 2024", comments: "150 cafe outlet expansion model approved." },
-      { role: "COO", user: "Vikram Mehta", status: "Approved", date: "09 May 2024", comments: "Operational readiness & supply chain SLA approved." },
-      { role: "CFO", user: "Manish Gupta", status: "Approved", date: "10 May 2024", comments: "28.5% franchisee ROI & 18-month payback validated." },
-      { role: "Legal Head", user: "Neha Kapoor", status: "Approved", date: "11 May 2024", comments: "Franchise agreement and NDA compliance verified." },
-      { role: "Operations Head", user: "Arjun Desai", status: "Pending", date: "In Review", comments: "Site layout & equipment procurement under review." },
-      { role: "Marketing Head", user: "Sneha Nair", status: "Pending", date: "In Review", comments: "National branding launch campaign under review." },
-      { role: "Board Member", user: "Rajat Verma", status: "Pending", date: "Awaiting", comments: "" },
-      { role: "CEO", user: "Sanjay Patel", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Excellent unit economics and 85/100 Overall Score (88 Model, 90 Compliance, ₹25 Cr Forecast). Approved for Expansion.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => franchiseService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["franchise"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -451,6 +366,16 @@ function FranchiseDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Franchise Development" breadcrumb={[{ label: "Business Development" }, { label: "Franchise Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

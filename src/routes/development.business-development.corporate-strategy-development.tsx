@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { corporateStrategyService } from "@/services/corporateStrategyService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -184,6 +187,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function CorporateStrategyDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["corporate-strategy"],
+    queryFn: corporateStrategyService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -198,119 +207,23 @@ function CorporateStrategyDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Corporate Strategy Development reference UI image
-  const [formData, setFormData] = useState({
-    strategyId: "CS-2024-00078",
-    formCode: "CSDF-2024-25",
-    strategyProject: "Corporate Strategy 2025-2030",
-    strategyNumber: "CSN-25-0001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "Global Operations",
-    strategyOwner: "Rahul Sharma",
-    strategicPlanningCycle: "5 Year (2025-2030)",
-    createdDate: "05 May 2024",
-    lastModifiedDate: "17 May 2024",
-    workflowStage: "Executive Review",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Corporate Vision & Strategic Direction
-    corporateVision: "To be the most trusted global technology partner, creating sustainable value for customers, people, and society.",
-    corporateMission: "Deliver innovative solutions that empower businesses and enrich lives.",
-    coreValues: ["Integrity", "Excellence", "Innovation", "Customer Focus"],
-    strategicThemes: ["Sustainable Growth", "Digital Transformation", "Innovation Leadership", "Operational Excellence"],
-    planningHorizon: "5 Years",
-    businessLifecycleStage: "Growth",
-    strategicPriority: "High",
-    corporatePurpose: "Build a better future through technology and innovation.",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Strategic Assessment
-    swotAnalysis: "Strengths, Weaknesses, Opportunities, Threats analysis of the organization.",
-    pestleAnalysis: "Political, Economic, Social, Technological, Legal, Environmental analysis.",
-    portersFiveForces: "Bargaining power, Threat of entry, Substitutes, Buyer power, Rivalry assessment.",
-    competitivePosition: "Strong",
-    industryGrowthRate: 9.5, // 9.50%
-    marketLeadershipGoal: "Industry Leader",
-    strategicAssessmentScore: 78,
-
-    // Section 3: Strategic Objectives
-    revenueTarget: 50000000000, // ₹ 5,000,00,00,000 (₹ 5,000 Cr)
-    profitabilityTarget: 22.0, // 22.00%
-    marketShareTarget: 28.0, // 28.00%
-    customerGrowthTarget: 150000, // 150,000 Customers
-    innovationTarget: 25, // 25 Patents / Key Products
-    esgTarget: "Carbon Neutral by 2030 and Top ESG rating in industry.",
-    strategicObjectiveScore: 82,
-
-    // Section 4: Strategic Initiatives List
-    initiatives: [
-      { name: "Product Innovation Program", category: "Growth Initiative", sponsor: "Rahul Sharma", status: "In Progress", budget: "₹ 450 Cr", impact: "High" },
-      { name: "Market Expansion Program", category: "Market Expansion", sponsor: "Anita Verma", status: "In Progress", budget: "₹ 380 Cr", impact: "High" },
-      { name: "Digital Transformation", category: "Digital Transformation", sponsor: "Arjun Desai", status: "Planned", budget: "₹ 220 Cr", impact: "Very High" },
-      { name: "Operational Excellence", category: "Cost Optimization", sponsor: "Vikram Singh", status: "Planned", budget: "₹ 150 Cr", impact: "Medium" },
-      { name: "Strategic Partnership Program", category: "Strategic Partnership", sponsor: "Neha Kapoor", status: "Planned", budget: "₹ 250 Cr", impact: "High" },
-    ],
-
-    // Section 5: Business Portfolio Management
-    businessUnits: ["Consumer Products", "Industrial Solutions", "Digital Services"],
-    productPortfolio: "Product Portfolio 2025",
-    investmentPriority: "High",
-    portfolioRisk: "Medium",
-    portfolioRoi: 18.5, // 18.50%
-    resourceAllocation: 12500000000, // ₹ 1,250,00,00,000 (₹ 1,250 Cr)
-    portfolioHealthScore: 80,
-
-    // Section 6: Financial Strategy
-    revenueProjection: 52000000000, // ₹ 5,200,00,00,000 (₹ 5,200 Cr)
-    ebitdaTarget: 22.0, // 22.00%
-    capitalAllocation: 15000000000, // ₹ 1,500,00,00,000 (₹ 1,500 Cr)
-    investmentRequirement: 18000000000, // ₹ 1,800,00,00,000 (₹ 1,800 Cr)
-    fundingStrategy: "Mixed (Equity + Debt)",
-    shareholderValueTarget: 25.0, // 25.00%
-    financialStrategyScore: 83,
-
-    // Section 7: Organization & Capability Development
-    leadershipStrategy: "Build future-ready leadership pipeline and strengthen executive bench.",
-    workforcePlan: "Hire 2500+ super talent and build capability in emerging technologies.",
-    digitalTransformationStrategy: "Accelerate cloud adoption, automation and data-driven decision making.",
-    innovationRoadmap: "Invest in R&D, AI, and new business incubation.",
-    organizationalReadiness: 81,
-    capabilityMaturity: "Defined",
-    capabilityScore: 82,
-
-    // Section 8: Risk & Governance
-    strategicRisks: "Economic slowdown, competition, regulatory changes, technology disruption.",
-    enterpriseRiskRating: "Medium",
-    governanceFramework: "Corporate Governance 2025",
-    complianceStatus: true,
-    boardOversight: true,
-    riskMitigationPlan: "Diversify markets, strengthen compliance, invest in innovation and build resilient operations.",
-    governanceScore: 85,
-
-    // Section 9: AI Strategy Intelligence
-    aiStrategicInsights: "Strong growth expected in digital services and emerging markets.",
-    aiMarketForecast: "Global market to grow 8-9% CAGR in next 5 years.",
-    aiCompetitiveIntelligence: "Competitors investing heavily in AI and automation.",
-    aiInvestmentRecommendation: "Increase investment in innovation and digital capabilities.",
-    aiResourceOptimization: "Reallocating resources can improve ROI by 16%.",
-    aiStrategicRiskPrediction: "Market volatility and supply chain risks identified.",
-    aiStrategyScore: 88,
-
-    // Section 10: Corporate Strategy Summary & Recommendation
-    recommendation: "Approve Strategy",
-
-    // Section 12: Review & Approval Matrix
-    approvals: [
-      { role: "CSO", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "5-Yr 2025-2030 corporate strategy aligned with board objectives." },
-      { role: "CFO", user: "Vikram Mehta", status: "Approved", date: "09 May 2024", comments: "₹5,000 Cr revenue projection & 22% EBITDA target validated." },
-      { role: "COO", user: "Arjun Desai", status: "Approved", date: "10 May 2024", comments: "Operational readiness & portfolio resource allocation approved." },
-      { role: "CHRO", user: "Neha Kapoor", status: "Approved", date: "11 May 2024", comments: "Talent roadmap & leadership pipeline plan approved." },
-      { role: "CTO", user: "Amit Verma", status: "Pending", date: "In Review", comments: "Digital transformation architecture review." },
-      { role: "CEO", user: "Anita Mehta", status: "Pending", date: "In Review", comments: "Executive review in progress." },
-      { role: "Board of Directors", user: "Board", status: "Pending", date: "Final Gate", comments: "" },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Strategy is aligned with long term vision and value creation goals.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => corporateStrategyService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["corporate-strategy"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -460,6 +373,16 @@ function CorporateStrategyDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Corporate Strategy Development" breadcrumb={[{ label: "Business Development" }, { label: "Corporate Strategy Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

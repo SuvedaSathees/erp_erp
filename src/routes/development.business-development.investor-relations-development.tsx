@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { investorRelationsService } from "@/services/investorRelationsService";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { BusinessDevelopmentTabBar } from "@/components/erp/BusinessDevelopmentTabBar";
@@ -179,6 +182,12 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function InvestorRelationsDevelopmentPage() {
+  const queryClient = useQueryClient();
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["investor-relations"],
+    queryFn: investorRelationsService.fetchRecord,
+  });
+
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error" | "info"; title: string; text: string } | null>(null);
 
@@ -193,111 +202,23 @@ function InvestorRelationsDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Investor Relations Development reference UI image
-  const [formData, setFormData] = useState({
-    investorRelationsId: "IR-2024-00056",
-    formCode: "IRF-2024-25",
-    irProjectName: "Series B Fundraise",
-    irNumber: "IRN-INT-24-001",
-    version: "1.0",
-    workflowStatus: "In Progress",
-    businessUnit: "EV Solutions",
-    fundraisingRound: "Series B",
-    investorRelationsManager: "Rahul Sharma",
-    createdDate: "05 May 2024 09:45 AM",
-    lastModifiedDate: "17 May 2024 04:20 PM",
-    workflowStage: "Investor Engagement",
+  const [formData, setFormData] = useState<any>(null);
 
-    // Section 1: Investor Relations Overview
-    businessObjective: "Raise growth capital to scale manufacturing and expand international footprint.",
-    fundraisingObjective: "Raise ₹ 150 Cr to support product expansion and market penetration.",
-    investorCategory: "Venture Capital",
-    fundingStage: "Series B",
-    capitalRequirement: 1500000000, // ₹ 150,00,00,000 (₹ 150 Cr)
-    strategicPriority: "High",
-    lifecycleStage: "Investor Engagement",
-    priority: "High",
+  React.useEffect(() => {
+    if (loadedRecord && !formData) {
+      setFormData(loadedRecord);
+    }
+  }, [loadedRecord, formData]);
 
-    // Section 2: Investor Profile
-    investorName: "Alpha Growth Ventures",
-    investorType: "Venture Capital",
-    organization: "Alpha Growth Ventures LLP",
-    country: "United States",
-    industryFocus: ["Automotive", "EV Tech", "Clean Energy"],
-    investmentStage: "Series B",
-    ticketSize: 250000000, // ₹ 25,00,00,000 (₹ 25 Cr)
-    portfolioCompanies: 18,
-    investorFitScore: 87,
-
-    // Section 3: Fundraising Opportunity Assessment
-    investmentThesis: "Strong EV market opportunity with scalable technology and experienced leadership.",
-    strategicAlignment: "Very Good",
-    marketOpportunity: "High growth potential in EV 2W & 3W segment across emerging markets.",
-    financialReadiness: "Good",
-    dueDiligenceReadiness: true,
-    dataRoomAvailable: true,
-    assessmentScore: 84,
-
-    // Section 4: Investor Engagement
-    initialContactDate: "2024-04-15",
-    followUpSchedule: "2024-05-25",
-    meetingStatus: "Scheduled",
-    pitchDeckShared: true,
-    ndaSigned: true,
-    dataRoomAccess: true,
-    engagementScore: 81,
-
-    // Section 5: Financial & Compliance
-    financialModel: "EV Financial Model - Series B",
-    valuationReport: "Series B Valuation Report",
-    capTable: "Cap Table - Series B",
-    legalDueDiligence: true,
-    secretarialCompliance: true,
-    regulatoryCompliance: true,
-    financialReadinessScore: 83,
-
-    // Section 6: Investment Negotiation
-    proposedInvestment: 1200000000, // ₹ 120,00,00,000 (₹ 120 Cr)
-    equityOffered: 18.5, // 18.50 %
-    valuation: 6500000000, // ₹ 650,00,00,000 (₹ 650 Cr)
-    termSheetStatus: "Under Review",
-    negotiationStage: "Valuation Discussion",
-    expectedClosingDate: "2024-06-30",
-    negotiationScore: 78,
-
-    // Section 7: Investor Communication
-    quarterlyUpdateSent: true,
-    financialReportShared: true,
-    boardPresentation: true,
-    kpiDashboardShared: true,
-    investorQueriesClosed: true,
-    communicationFrequency: "Quarterly",
-    communicationScore: 85,
-
-    // Section 8: AI Investor Intelligence
-    aiInvestorMatch: "High match with EV & Clean Tech focus",
-    aiFundingProbability: "76% probability of successful funding",
-    aiValuationBenchmark: "₹ 620 Cr - ₹ 680 Cr valuation range",
-    aiNegotiationInsights: "Investor open to performance-based terms",
-    aiRiskAssessment: "Low to Medium risk",
-    aiFundraisingRecommendation: "Proceed with valuation negotiation",
-    aiInvestorScore: 88,
-
-    // Section 9: Investor Relations Summary & Recommendation
-    recommendation: "Proceed with Investor Meeting",
-
-    // Section 11: Review & Approval Matrix
-    approvals: [
-      { role: "IR Manager", user: "Rahul Sharma", status: "Approved", date: "08 May 2024", comments: "₹150 Cr target, Series B pitch deck & 87% investor fit score validated." },
-      { role: "CFO", user: "Anita Verma", status: "Approved", date: "09 May 2024", comments: "₹650 Cr valuation model and unit economics validated." },
-      { role: "Company Secretary", user: "Vikram Singh", status: "Approved", date: "10 May 2024", comments: "Cap table, SHA, and secretarial filings verified." },
-      { role: "Legal Head", user: "Neha Kapoor", status: "Approved", date: "11 May 2024", comments: "Term sheet and NDA regulatory compliance cleared." },
-      { role: "CEO", user: "Amit Mehta", status: "Approved", date: "12 May 2024", comments: "Strategic alignment and 18.5% equity dilution approved." },
-      { role: "Board of Directors", user: "Board", status: "Pending", date: "Final Gate", comments: "Formal board resolution scheduled for next meeting." },
-    ],
-    userDecision: "Approved",
-    userReviewComments: "Strong investor synergy & 84/100 Overall Score (87 Fit, 83 Financial Readiness, ₹650 Cr Valuation). Approved for Term Sheet Negotiation.",
-    userApprovalDate: "2024-05-17",
+  const saveDraftMutation = useMutation({
+    mutationFn: (input: any) => investorRelationsService.saveDraft(input, loadedRecord?.id),
+    onSuccess: (updated: any) => {
+      queryClient.setQueryData(["investor-relations"], updated);
+      toast.success("Draft saved successfully.");
+    },
+    onError: () => toast.error("Failed to save draft."),
   });
+
 
   // Attachments State
   const [attachments, setAttachments] = useState([
@@ -447,6 +368,16 @@ function InvestorRelationsDevelopmentPage() {
     setAttachments((prev) => prev.filter((item) => item.id !== id));
     showToast("info", "Attachment Removed", `File "${name}" removed.`);
   };
+
+  if (isRecordLoading || !formData) {
+    return (
+      <AppShell title="Investor Relations Development" breadcrumb={[{ label: "Business Development" }, { label: "Investor Relations Development" }]}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

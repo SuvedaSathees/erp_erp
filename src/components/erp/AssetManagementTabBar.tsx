@@ -89,28 +89,42 @@ export function AssetManagementTabBar() {
   };
 
   // Drag-to-scroll handlers
+  const isMouseDownRef = useRef(false);
+  const hasDraggedRef = useRef(false);
   const onMouseDown = (e: React.MouseEvent) => {
     const container = scrollContainerRef.current;
     if (!container) return;
-    isDraggingRef.current = true;
-    setIsDragging(true);
+    isMouseDownRef.current = true;
+    hasDraggedRef.current = false;
     startXRef.current = e.pageX - container.offsetLeft;
     scrollLeftRef.current = container.scrollLeft;
   };
 
   const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDraggingRef.current) return;
-    e.preventDefault();
+    if (!isMouseDownRef.current) return;
     const container = scrollContainerRef.current;
     if (!container) return;
     const x = e.pageX - container.offsetLeft;
-    const walk = (x - startXRef.current) * 1.5;
-    container.scrollLeft = scrollLeftRef.current - walk;
+    const delta = Math.abs(x - startXRef.current);
+    if (delta > 5) {
+      hasDraggedRef.current = true;
+      if (!isDragging) setIsDragging(true);
+      e.preventDefault();
+      const walk = (x - startXRef.current) * 1.5;
+      container.scrollLeft = scrollLeftRef.current - walk;
+    }
   };
 
   const stopDragging = () => {
-    isDraggingRef.current = false;
-    setIsDragging(false);
+    isMouseDownRef.current = false;
+    if (hasDraggedRef.current) {
+      setTimeout(() => {
+        hasDraggedRef.current = false;
+        setIsDragging(false);
+      }, 50);
+    } else {
+      setIsDragging(false);
+    }
   };
 
   return (
@@ -149,9 +163,11 @@ export function AssetManagementTabBar() {
             <Link
               key={tab.to}
               to={tab.to}
+              preload="intent"
+              preloadDelay={0}
               data-active={isActive ? "true" : "false"}
               onClick={(e) => {
-                if (isDragging) e.preventDefault();
+                if (hasDraggedRef.current) e.preventDefault();
               }}
               className={cn(
                 TAB_BASE,

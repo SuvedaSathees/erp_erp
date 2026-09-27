@@ -30,7 +30,10 @@ import { Route as ManufacturingDevelopmentPilotProductionIndexRouteImport } from
 import { Route as ManufacturingDevelopmentMassProductionReadinessIndexRouteImport } from './routes/manufacturing-development.mass-production-readiness.index'
 import { Route as ManufacturingDevelopmentLeanManufacturingIndexRouteImport } from './routes/manufacturing-development.lean-manufacturing.index'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentIndexRouteImport } from './routes/manufacturing-development.automation-development.index'
+import { Route as ManagementSustainabilityManagementIndexRouteImport } from './routes/management.sustainability-management.index'
 import { Route as ManagementQualityManagementIndexRouteImport } from './routes/management.quality-management.index'
+import { Route as ManagementKnowledgeManagementIndexRouteImport } from './routes/management.knowledge-management.index'
+import { Route as ManagementCommunicationManagementIndexRouteImport } from './routes/management.communication-management.index'
 import { Route as DevelopmentResearchInnovationIndexRouteImport } from './routes/development.research-innovation.index'
 import { Route as DevelopmentProductDevelopmentIndexRouteImport } from './routes/development.product-development.index'
 import { Route as DevelopmentManufacturingDevelopmentIndexRouteImport } from './routes/development.manufacturing-development.index'
@@ -45,6 +48,31 @@ import { Route as ManufacturingDevelopmentLeanManufacturingNewRouteImport } from
 import { Route as ManufacturingDevelopmentLeanManufacturingIdRouteImport } from './routes/manufacturing-development.lean-manufacturing.$id'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentNewRouteImport } from './routes/manufacturing-development.automation-development.new'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentIdRouteImport } from './routes/manufacturing-development.automation-development.$id'
+import { Route as ManagementSustainabilityManagementWaterManagementRouteImport } from './routes/management.sustainability-management.water-management'
+import { Route as ManagementSustainabilityManagementWasteManagementRouteImport } from './routes/management.sustainability-management.waste-management'
+import { Route as ManagementSustainabilityManagementSustainabilityReportingRouteImport } from './routes/management.sustainability-management.sustainability-reporting'
+import { Route as ManagementSustainabilityManagementReportsRouteImport } from './routes/management.sustainability-management.reports'
+import { Route as ManagementSustainabilityManagementRecyclingManagementRouteImport } from './routes/management.sustainability-management.recycling-management'
+import { Route as ManagementSustainabilityManagementOverviewRouteImport } from './routes/management.sustainability-management.overview'
+import { Route as ManagementSustainabilityManagementEsgRouteImport } from './routes/management.sustainability-management.esg'
+import { Route as ManagementSustainabilityManagementEnvironmentalComplianceRouteImport } from './routes/management.sustainability-management.environmental-compliance'
+import { Route as ManagementSustainabilityManagementEnergyMonitoringRouteImport } from './routes/management.sustainability-management.energy-monitoring'
+import { Route as ManagementSustainabilityManagementCarbonFootprintRouteImport } from './routes/management.sustainability-management.carbon-footprint'
+import { Route as ManagementSupplyChainManagementWarehouseRouteImport } from './routes/management.supply-chain-management.warehouse'
+import { Route as ManagementSupplyChainManagementTransportationRouteImport } from './routes/management.supply-chain-management.transportation'
+import { Route as ManagementSupplyChainManagementSupplyPlanningRouteImport } from './routes/management.supply-chain-management.supply-planning'
+import { Route as ManagementSupplyChainManagementSupplyAnalyticsRouteImport } from './routes/management.supply-chain-management.supply-analytics'
+import { Route as ManagementSupplyChainManagementReverseLogisticsRouteImport } from './routes/management.supply-chain-management.reverse-logistics'
+import { Route as ManagementSupplyChainManagementReportsRouteImport } from './routes/management.supply-chain-management.reports'
+import { Route as ManagementSupplyChainManagementPackagingManagementRouteImport } from './routes/management.supply-chain-management.packaging-management'
+import { Route as ManagementSupplyChainManagementOverviewRouteImport } from './routes/management.supply-chain-management.overview'
+import { Route as ManagementSupplyChainManagementMaterialPlanningRouteImport } from './routes/management.supply-chain-management.material-planning'
+import { Route as ManagementSupplyChainManagementLogisticsRouteImport } from './routes/management.supply-chain-management.logistics'
+import { Route as ManagementSupplyChainManagementInventoryRouteImport } from './routes/management.supply-chain-management.inventory'
+import { Route as ManagementSupplyChainManagementFleetManagementRouteImport } from './routes/management.supply-chain-management.fleet-management'
+import { Route as ManagementSupplyChainManagementDistributionRouteImport } from './routes/management.supply-chain-management.distribution'
+import { Route as ManagementSupplyChainManagementDispatchManagementRouteImport } from './routes/management.supply-chain-management.dispatch-management'
+import { Route as ManagementSupplyChainManagementDemandPlanningRouteImport } from './routes/management.supply-chain-management.demand-planning'
 import { Route as ManagementSalesManagementTerritoryManagementRouteImport } from './routes/management.sales-management.territory-management'
 import { Route as ManagementSalesManagementSalesPlanningRouteImport } from './routes/management.sales-management.sales-planning'
 import { Route as ManagementSalesManagementSalesOrdersRouteImport } from './routes/management.sales-management.sales-orders'
@@ -58,6 +86,27 @@ import { Route as ManagementSalesManagementDiscountsRouteImport } from './routes
 import { Route as ManagementSalesManagementCustomerOrdersManagementRouteImport } from './routes/management.sales-management.customer-orders-management'
 import { Route as ManagementSalesManagementContractsRouteImport } from './routes/management.sales-management.contracts'
 import { Route as ManagementSalesManagementChannelPartnersRouteImport } from './routes/management.sales-management.channel-partners'
+import { Route as ManagementRiskManagementVendorRiskRouteImport } from './routes/management.risk-management.vendor-risk'
+import { Route as ManagementRiskManagementReportsRouteImport } from './routes/management.risk-management.reports'
+import { Route as ManagementRiskManagementRegulatoryComplianceRouteImport } from './routes/management.risk-management.regulatory-compliance'
+import { Route as ManagementRiskManagementProjectRiskRouteImport } from './routes/management.risk-management.project-risk'
+import { Route as ManagementRiskManagementOverviewRouteImport } from './routes/management.risk-management.overview'
+import { Route as ManagementRiskManagementOperationalRiskRouteImport } from './routes/management.risk-management.operational-risk'
+import { Route as ManagementRiskManagementLicensesRouteImport } from './routes/management.risk-management.licenses'
+import { Route as ManagementRiskManagementLegalRegisterRouteImport } from './routes/management.risk-management.legal-register'
+import { Route as ManagementRiskManagementIsoComplianceRouteImport } from './routes/management.risk-management.iso-compliance'
+import { Route as ManagementRiskManagementInternalComplianceRouteImport } from './routes/management.risk-management.internal-compliance'
+import { Route as ManagementRiskManagementIncidentManagementRouteImport } from './routes/management.risk-management.incident-management'
+import { Route as ManagementRiskManagementFinancialRiskRouteImport } from './routes/management.risk-management.financial-risk'
+import { Route as ManagementRiskManagementEnterpriseRiskRouteImport } from './routes/management.risk-management.enterprise-risk'
+import { Route as ManagementRiskManagementDisasterRecoveryRouteImport } from './routes/management.risk-management.disaster-recovery'
+import { Route as ManagementRiskManagementComplianceRiskRouteImport } from './routes/management.risk-management.compliance-risk'
+import { Route as ManagementRiskManagementComplianceReportsRouteImport } from './routes/management.risk-management.compliance-reports'
+import { Route as ManagementRiskManagementComplianceReportingRouteImport } from './routes/management.risk-management.compliance-reporting'
+import { Route as ManagementRiskManagementComplianceOverviewRouteImport } from './routes/management.risk-management.compliance-overview'
+import { Route as ManagementRiskManagementCertificationsRouteImport } from './routes/management.risk-management.certifications'
+import { Route as ManagementRiskManagementBusinessContinuityRouteImport } from './routes/management.risk-management.business-continuity'
+import { Route as ManagementRiskManagementAuditComplianceRouteImport } from './routes/management.risk-management.audit-compliance'
 import { Route as ManagementQualityManagementRootCauseAnalysisRouteImport } from './routes/management.quality-management.root-cause-analysis'
 import { Route as ManagementQualityManagementReportsRouteImport } from './routes/management.quality-management.reports'
 import { Route as ManagementQualityManagementQualityPlanningRouteImport } from './routes/management.quality-management.quality-planning'
@@ -67,10 +116,12 @@ import { Route as ManagementQualityManagementNcrManagementRouteImport } from './
 import { Route as ManagementQualityManagementIncomingInspectionRouteImport } from './routes/management.quality-management.incoming-inspection'
 import { Route as ManagementQualityManagementInProcessInspectionRouteImport } from './routes/management.quality-management.in-process-inspection'
 import { Route as ManagementQualityManagementFinalInspectionRouteImport } from './routes/management.quality-management.final-inspection'
+import { Route as ManagementQualityManagementComplianceReportingRouteImport } from './routes/management.quality-management.compliance-reporting'
 import { Route as ManagementQualityManagementComplianceRouteImport } from './routes/management.quality-management.compliance'
 import { Route as ManagementQualityManagementCapaRouteImport } from './routes/management.quality-management.capa'
 import { Route as ManagementQualityManagementCalibrationRouteImport } from './routes/management.quality-management.calibration'
 import { Route as ManagementQualityManagementAuditManagementRouteImport } from './routes/management.quality-management.audit-management'
+import { Route as ManagementQualityManagementAuditComplianceRouteImport } from './routes/management.quality-management.audit-compliance'
 import { Route as ManagementProjectManagementWbsRouteImport } from './routes/management.project-management.wbs'
 import { Route as ManagementProjectManagementTimeTrackingRouteImport } from './routes/management.project-management.time-tracking'
 import { Route as ManagementProjectManagementTaskManagementRouteImport } from './routes/management.project-management.task-management'
@@ -115,6 +166,16 @@ import { Route as ManagementMarketingManagementCompetitorAnalysisRouteImport } f
 import { Route as ManagementMarketingManagementCampaignsRouteImport } from './routes/management.marketing-management.campaigns'
 import { Route as ManagementMarketingManagementBrandingRouteImport } from './routes/management.marketing-management.branding'
 import { Route as ManagementMarketingManagementBrandManagementRouteImport } from './routes/management.marketing-management.brand-management'
+import { Route as ManagementKnowledgeManagementWikiRouteImport } from './routes/management.knowledge-management.wiki'
+import { Route as ManagementKnowledgeManagementTrainingMaterialsRouteImport } from './routes/management.knowledge-management.training-materials'
+import { Route as ManagementKnowledgeManagementTemplatesRouteImport } from './routes/management.knowledge-management.templates'
+import { Route as ManagementKnowledgeManagementTechnicalLibraryRouteImport } from './routes/management.knowledge-management.technical-library'
+import { Route as ManagementKnowledgeManagementSopLibraryRouteImport } from './routes/management.knowledge-management.sop-library'
+import { Route as ManagementKnowledgeManagementReportsRouteImport } from './routes/management.knowledge-management.reports'
+import { Route as ManagementKnowledgeManagementOverviewRouteImport } from './routes/management.knowledge-management.overview'
+import { Route as ManagementKnowledgeManagementLessonsLearnedRouteImport } from './routes/management.knowledge-management.lessons-learned'
+import { Route as ManagementKnowledgeManagementDocumentRepositoryRouteImport } from './routes/management.knowledge-management.document-repository'
+import { Route as ManagementKnowledgeManagementBestPracticesRouteImport } from './routes/management.knowledge-management.best-practices'
 import { Route as ManagementHrmManagementWorkforcePlanningRouteImport } from './routes/management.hrm-management.workforce-planning'
 import { Route as ManagementHrmManagementTravelExpenseRouteImport } from './routes/management.hrm-management.travel-expense'
 import { Route as ManagementHrmManagementReportsRouteImport } from './routes/management.hrm-management.reports'
@@ -162,6 +223,15 @@ import { Route as ManagementCrmManagementContactManagementRouteImport } from './
 import { Route as ManagementCrmManagementComplaintManagementRouteImport } from './routes/management.crm-management.complaint-management'
 import { Route as ManagementCrmManagementAccountsRouteImport } from './routes/management.crm-management.accounts'
 import { Route as ManagementCrmManagementAccountManagementRouteImport } from './routes/management.crm-management.account-management'
+import { Route as ManagementCommunicationManagementVideoMeetingsRouteImport } from './routes/management.communication-management.video-meetings'
+import { Route as ManagementCommunicationManagementReportsRouteImport } from './routes/management.communication-management.reports'
+import { Route as ManagementCommunicationManagementOverviewRouteImport } from './routes/management.communication-management.overview'
+import { Route as ManagementCommunicationManagementNotificationsRouteImport } from './routes/management.communication-management.notifications'
+import { Route as ManagementCommunicationManagementInternalSocialNetworkRouteImport } from './routes/management.communication-management.internal-social-network'
+import { Route as ManagementCommunicationManagementEmailRouteImport } from './routes/management.communication-management.email'
+import { Route as ManagementCommunicationManagementCollaborationWorkspaceRouteImport } from './routes/management.communication-management.collaboration-workspace'
+import { Route as ManagementCommunicationManagementChatRouteImport } from './routes/management.communication-management.chat'
+import { Route as ManagementCommunicationManagementAnnouncementsRouteImport } from './routes/management.communication-management.announcements'
 import { Route as ManagementAssetManagementToolManagementRouteImport } from './routes/management.asset-management.tool-management'
 import { Route as ManagementAssetManagementReportsRouteImport } from './routes/management.asset-management.reports'
 import { Route as ManagementAssetManagementPreventiveMaintenanceRouteImport } from './routes/management.asset-management.preventive-maintenance'
@@ -508,10 +578,28 @@ const ManufacturingDevelopmentAutomationDevelopmentIndexRoute =
     path: '/manufacturing-development/automation-development/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementSustainabilityManagementIndexRoute =
+  ManagementSustainabilityManagementIndexRouteImport.update({
+    id: '/management/sustainability-management/',
+    path: '/management/sustainability-management/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementQualityManagementIndexRoute =
   ManagementQualityManagementIndexRouteImport.update({
     id: '/management/quality-management/',
     path: '/management/quality-management/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementIndexRoute =
+  ManagementKnowledgeManagementIndexRouteImport.update({
+    id: '/management/knowledge-management/',
+    path: '/management/knowledge-management/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCommunicationManagementIndexRoute =
+  ManagementCommunicationManagementIndexRouteImport.update({
+    id: '/management/communication-management/',
+    path: '/management/communication-management/',
     getParentRoute: () => rootRouteImport,
   } as any)
 const DevelopmentResearchInnovationIndexRoute =
@@ -598,6 +686,156 @@ const ManufacturingDevelopmentAutomationDevelopmentIdRoute =
     path: '/manufacturing-development/automation-development/$id',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementSustainabilityManagementWaterManagementRoute =
+  ManagementSustainabilityManagementWaterManagementRouteImport.update({
+    id: '/management/sustainability-management/water-management',
+    path: '/management/sustainability-management/water-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSustainabilityManagementWasteManagementRoute =
+  ManagementSustainabilityManagementWasteManagementRouteImport.update({
+    id: '/management/sustainability-management/waste-management',
+    path: '/management/sustainability-management/waste-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSustainabilityManagementSustainabilityReportingRoute =
+  ManagementSustainabilityManagementSustainabilityReportingRouteImport.update({
+    id: '/management/sustainability-management/sustainability-reporting',
+    path: '/management/sustainability-management/sustainability-reporting',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSustainabilityManagementReportsRoute =
+  ManagementSustainabilityManagementReportsRouteImport.update({
+    id: '/management/sustainability-management/reports',
+    path: '/management/sustainability-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSustainabilityManagementRecyclingManagementRoute =
+  ManagementSustainabilityManagementRecyclingManagementRouteImport.update({
+    id: '/management/sustainability-management/recycling-management',
+    path: '/management/sustainability-management/recycling-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSustainabilityManagementOverviewRoute =
+  ManagementSustainabilityManagementOverviewRouteImport.update({
+    id: '/management/sustainability-management/overview',
+    path: '/management/sustainability-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSustainabilityManagementEsgRoute =
+  ManagementSustainabilityManagementEsgRouteImport.update({
+    id: '/management/sustainability-management/esg',
+    path: '/management/sustainability-management/esg',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSustainabilityManagementEnvironmentalComplianceRoute =
+  ManagementSustainabilityManagementEnvironmentalComplianceRouteImport.update({
+    id: '/management/sustainability-management/environmental-compliance',
+    path: '/management/sustainability-management/environmental-compliance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSustainabilityManagementEnergyMonitoringRoute =
+  ManagementSustainabilityManagementEnergyMonitoringRouteImport.update({
+    id: '/management/sustainability-management/energy-monitoring',
+    path: '/management/sustainability-management/energy-monitoring',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSustainabilityManagementCarbonFootprintRoute =
+  ManagementSustainabilityManagementCarbonFootprintRouteImport.update({
+    id: '/management/sustainability-management/carbon-footprint',
+    path: '/management/sustainability-management/carbon-footprint',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementWarehouseRoute =
+  ManagementSupplyChainManagementWarehouseRouteImport.update({
+    id: '/management/supply-chain-management/warehouse',
+    path: '/management/supply-chain-management/warehouse',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementTransportationRoute =
+  ManagementSupplyChainManagementTransportationRouteImport.update({
+    id: '/management/supply-chain-management/transportation',
+    path: '/management/supply-chain-management/transportation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementSupplyPlanningRoute =
+  ManagementSupplyChainManagementSupplyPlanningRouteImport.update({
+    id: '/management/supply-chain-management/supply-planning',
+    path: '/management/supply-chain-management/supply-planning',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementSupplyAnalyticsRoute =
+  ManagementSupplyChainManagementSupplyAnalyticsRouteImport.update({
+    id: '/management/supply-chain-management/supply-analytics',
+    path: '/management/supply-chain-management/supply-analytics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementReverseLogisticsRoute =
+  ManagementSupplyChainManagementReverseLogisticsRouteImport.update({
+    id: '/management/supply-chain-management/reverse-logistics',
+    path: '/management/supply-chain-management/reverse-logistics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementReportsRoute =
+  ManagementSupplyChainManagementReportsRouteImport.update({
+    id: '/management/supply-chain-management/reports',
+    path: '/management/supply-chain-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementPackagingManagementRoute =
+  ManagementSupplyChainManagementPackagingManagementRouteImport.update({
+    id: '/management/supply-chain-management/packaging-management',
+    path: '/management/supply-chain-management/packaging-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementOverviewRoute =
+  ManagementSupplyChainManagementOverviewRouteImport.update({
+    id: '/management/supply-chain-management/overview',
+    path: '/management/supply-chain-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementMaterialPlanningRoute =
+  ManagementSupplyChainManagementMaterialPlanningRouteImport.update({
+    id: '/management/supply-chain-management/material-planning',
+    path: '/management/supply-chain-management/material-planning',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementLogisticsRoute =
+  ManagementSupplyChainManagementLogisticsRouteImport.update({
+    id: '/management/supply-chain-management/logistics',
+    path: '/management/supply-chain-management/logistics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementInventoryRoute =
+  ManagementSupplyChainManagementInventoryRouteImport.update({
+    id: '/management/supply-chain-management/inventory',
+    path: '/management/supply-chain-management/inventory',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementFleetManagementRoute =
+  ManagementSupplyChainManagementFleetManagementRouteImport.update({
+    id: '/management/supply-chain-management/fleet-management',
+    path: '/management/supply-chain-management/fleet-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementDistributionRoute =
+  ManagementSupplyChainManagementDistributionRouteImport.update({
+    id: '/management/supply-chain-management/distribution',
+    path: '/management/supply-chain-management/distribution',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementDispatchManagementRoute =
+  ManagementSupplyChainManagementDispatchManagementRouteImport.update({
+    id: '/management/supply-chain-management/dispatch-management',
+    path: '/management/supply-chain-management/dispatch-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSupplyChainManagementDemandPlanningRoute =
+  ManagementSupplyChainManagementDemandPlanningRouteImport.update({
+    id: '/management/supply-chain-management/demand-planning',
+    path: '/management/supply-chain-management/demand-planning',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementSalesManagementTerritoryManagementRoute =
   ManagementSalesManagementTerritoryManagementRouteImport.update({
     id: '/management/sales-management/territory-management',
@@ -676,6 +914,132 @@ const ManagementSalesManagementChannelPartnersRoute =
     path: '/management/sales-management/channel-partners',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementRiskManagementVendorRiskRoute =
+  ManagementRiskManagementVendorRiskRouteImport.update({
+    id: '/management/risk-management/vendor-risk',
+    path: '/management/risk-management/vendor-risk',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementReportsRoute =
+  ManagementRiskManagementReportsRouteImport.update({
+    id: '/management/risk-management/reports',
+    path: '/management/risk-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementRegulatoryComplianceRoute =
+  ManagementRiskManagementRegulatoryComplianceRouteImport.update({
+    id: '/management/risk-management/regulatory-compliance',
+    path: '/management/risk-management/regulatory-compliance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementProjectRiskRoute =
+  ManagementRiskManagementProjectRiskRouteImport.update({
+    id: '/management/risk-management/project-risk',
+    path: '/management/risk-management/project-risk',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementOverviewRoute =
+  ManagementRiskManagementOverviewRouteImport.update({
+    id: '/management/risk-management/overview',
+    path: '/management/risk-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementOperationalRiskRoute =
+  ManagementRiskManagementOperationalRiskRouteImport.update({
+    id: '/management/risk-management/operational-risk',
+    path: '/management/risk-management/operational-risk',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementLicensesRoute =
+  ManagementRiskManagementLicensesRouteImport.update({
+    id: '/management/risk-management/licenses',
+    path: '/management/risk-management/licenses',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementLegalRegisterRoute =
+  ManagementRiskManagementLegalRegisterRouteImport.update({
+    id: '/management/risk-management/legal-register',
+    path: '/management/risk-management/legal-register',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementIsoComplianceRoute =
+  ManagementRiskManagementIsoComplianceRouteImport.update({
+    id: '/management/risk-management/iso-compliance',
+    path: '/management/risk-management/iso-compliance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementInternalComplianceRoute =
+  ManagementRiskManagementInternalComplianceRouteImport.update({
+    id: '/management/risk-management/internal-compliance',
+    path: '/management/risk-management/internal-compliance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementIncidentManagementRoute =
+  ManagementRiskManagementIncidentManagementRouteImport.update({
+    id: '/management/risk-management/incident-management',
+    path: '/management/risk-management/incident-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementFinancialRiskRoute =
+  ManagementRiskManagementFinancialRiskRouteImport.update({
+    id: '/management/risk-management/financial-risk',
+    path: '/management/risk-management/financial-risk',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementEnterpriseRiskRoute =
+  ManagementRiskManagementEnterpriseRiskRouteImport.update({
+    id: '/management/risk-management/enterprise-risk',
+    path: '/management/risk-management/enterprise-risk',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementDisasterRecoveryRoute =
+  ManagementRiskManagementDisasterRecoveryRouteImport.update({
+    id: '/management/risk-management/disaster-recovery',
+    path: '/management/risk-management/disaster-recovery',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementComplianceRiskRoute =
+  ManagementRiskManagementComplianceRiskRouteImport.update({
+    id: '/management/risk-management/compliance-risk',
+    path: '/management/risk-management/compliance-risk',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementComplianceReportsRoute =
+  ManagementRiskManagementComplianceReportsRouteImport.update({
+    id: '/management/risk-management/compliance-reports',
+    path: '/management/risk-management/compliance-reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementComplianceReportingRoute =
+  ManagementRiskManagementComplianceReportingRouteImport.update({
+    id: '/management/risk-management/compliance-reporting',
+    path: '/management/risk-management/compliance-reporting',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementComplianceOverviewRoute =
+  ManagementRiskManagementComplianceOverviewRouteImport.update({
+    id: '/management/risk-management/compliance-overview',
+    path: '/management/risk-management/compliance-overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementCertificationsRoute =
+  ManagementRiskManagementCertificationsRouteImport.update({
+    id: '/management/risk-management/certifications',
+    path: '/management/risk-management/certifications',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementBusinessContinuityRoute =
+  ManagementRiskManagementBusinessContinuityRouteImport.update({
+    id: '/management/risk-management/business-continuity',
+    path: '/management/risk-management/business-continuity',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementRiskManagementAuditComplianceRoute =
+  ManagementRiskManagementAuditComplianceRouteImport.update({
+    id: '/management/risk-management/audit-compliance',
+    path: '/management/risk-management/audit-compliance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementQualityManagementRootCauseAnalysisRoute =
   ManagementQualityManagementRootCauseAnalysisRouteImport.update({
     id: '/management/quality-management/root-cause-analysis',
@@ -730,6 +1094,12 @@ const ManagementQualityManagementFinalInspectionRoute =
     path: '/management/quality-management/final-inspection',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementQualityManagementComplianceReportingRoute =
+  ManagementQualityManagementComplianceReportingRouteImport.update({
+    id: '/management/quality-management/compliance-reporting',
+    path: '/management/quality-management/compliance-reporting',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementQualityManagementComplianceRoute =
   ManagementQualityManagementComplianceRouteImport.update({
     id: '/management/quality-management/compliance',
@@ -752,6 +1122,12 @@ const ManagementQualityManagementAuditManagementRoute =
   ManagementQualityManagementAuditManagementRouteImport.update({
     id: '/management/quality-management/audit-management',
     path: '/management/quality-management/audit-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementQualityManagementAuditComplianceRoute =
+  ManagementQualityManagementAuditComplianceRouteImport.update({
+    id: '/management/quality-management/audit-compliance',
+    path: '/management/quality-management/audit-compliance',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementProjectManagementWbsRoute =
@@ -1016,6 +1392,66 @@ const ManagementMarketingManagementBrandManagementRoute =
   ManagementMarketingManagementBrandManagementRouteImport.update({
     id: '/management/marketing-management/brand-management',
     path: '/management/marketing-management/brand-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementWikiRoute =
+  ManagementKnowledgeManagementWikiRouteImport.update({
+    id: '/management/knowledge-management/wiki',
+    path: '/management/knowledge-management/wiki',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementTrainingMaterialsRoute =
+  ManagementKnowledgeManagementTrainingMaterialsRouteImport.update({
+    id: '/management/knowledge-management/training-materials',
+    path: '/management/knowledge-management/training-materials',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementTemplatesRoute =
+  ManagementKnowledgeManagementTemplatesRouteImport.update({
+    id: '/management/knowledge-management/templates',
+    path: '/management/knowledge-management/templates',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementTechnicalLibraryRoute =
+  ManagementKnowledgeManagementTechnicalLibraryRouteImport.update({
+    id: '/management/knowledge-management/technical-library',
+    path: '/management/knowledge-management/technical-library',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementSopLibraryRoute =
+  ManagementKnowledgeManagementSopLibraryRouteImport.update({
+    id: '/management/knowledge-management/sop-library',
+    path: '/management/knowledge-management/sop-library',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementReportsRoute =
+  ManagementKnowledgeManagementReportsRouteImport.update({
+    id: '/management/knowledge-management/reports',
+    path: '/management/knowledge-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementOverviewRoute =
+  ManagementKnowledgeManagementOverviewRouteImport.update({
+    id: '/management/knowledge-management/overview',
+    path: '/management/knowledge-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementLessonsLearnedRoute =
+  ManagementKnowledgeManagementLessonsLearnedRouteImport.update({
+    id: '/management/knowledge-management/lessons-learned',
+    path: '/management/knowledge-management/lessons-learned',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementDocumentRepositoryRoute =
+  ManagementKnowledgeManagementDocumentRepositoryRouteImport.update({
+    id: '/management/knowledge-management/document-repository',
+    path: '/management/knowledge-management/document-repository',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementKnowledgeManagementBestPracticesRoute =
+  ManagementKnowledgeManagementBestPracticesRouteImport.update({
+    id: '/management/knowledge-management/best-practices',
+    path: '/management/knowledge-management/best-practices',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementHrmManagementWorkforcePlanningRoute =
@@ -1293,6 +1729,60 @@ const ManagementCrmManagementAccountManagementRoute =
   ManagementCrmManagementAccountManagementRouteImport.update({
     id: '/management/crm-management/account-management',
     path: '/management/crm-management/account-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCommunicationManagementVideoMeetingsRoute =
+  ManagementCommunicationManagementVideoMeetingsRouteImport.update({
+    id: '/management/communication-management/video-meetings',
+    path: '/management/communication-management/video-meetings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCommunicationManagementReportsRoute =
+  ManagementCommunicationManagementReportsRouteImport.update({
+    id: '/management/communication-management/reports',
+    path: '/management/communication-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCommunicationManagementOverviewRoute =
+  ManagementCommunicationManagementOverviewRouteImport.update({
+    id: '/management/communication-management/overview',
+    path: '/management/communication-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCommunicationManagementNotificationsRoute =
+  ManagementCommunicationManagementNotificationsRouteImport.update({
+    id: '/management/communication-management/notifications',
+    path: '/management/communication-management/notifications',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCommunicationManagementInternalSocialNetworkRoute =
+  ManagementCommunicationManagementInternalSocialNetworkRouteImport.update({
+    id: '/management/communication-management/internal-social-network',
+    path: '/management/communication-management/internal-social-network',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCommunicationManagementEmailRoute =
+  ManagementCommunicationManagementEmailRouteImport.update({
+    id: '/management/communication-management/email',
+    path: '/management/communication-management/email',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCommunicationManagementCollaborationWorkspaceRoute =
+  ManagementCommunicationManagementCollaborationWorkspaceRouteImport.update({
+    id: '/management/communication-management/collaboration-workspace',
+    path: '/management/communication-management/collaboration-workspace',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCommunicationManagementChatRoute =
+  ManagementCommunicationManagementChatRouteImport.update({
+    id: '/management/communication-management/chat',
+    path: '/management/communication-management/chat',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementCommunicationManagementAnnouncementsRoute =
+  ManagementCommunicationManagementAnnouncementsRouteImport.update({
+    id: '/management/communication-management/announcements',
+    path: '/management/communication-management/announcements',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementAssetManagementToolManagementRoute =
@@ -2821,6 +3311,15 @@ export interface FileRoutesByFullPath {
   '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
   '/management/asset-management/reports': typeof ManagementAssetManagementReportsRoute
   '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
+  '/management/communication-management/announcements': typeof ManagementCommunicationManagementAnnouncementsRoute
+  '/management/communication-management/chat': typeof ManagementCommunicationManagementChatRoute
+  '/management/communication-management/collaboration-workspace': typeof ManagementCommunicationManagementCollaborationWorkspaceRoute
+  '/management/communication-management/email': typeof ManagementCommunicationManagementEmailRoute
+  '/management/communication-management/internal-social-network': typeof ManagementCommunicationManagementInternalSocialNetworkRoute
+  '/management/communication-management/notifications': typeof ManagementCommunicationManagementNotificationsRoute
+  '/management/communication-management/overview': typeof ManagementCommunicationManagementOverviewRoute
+  '/management/communication-management/reports': typeof ManagementCommunicationManagementReportsRoute
+  '/management/communication-management/video-meetings': typeof ManagementCommunicationManagementVideoMeetingsRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
   '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
   '/management/crm-management/complaint-management': typeof ManagementCrmManagementComplaintManagementRoute
@@ -2868,6 +3367,16 @@ export interface FileRoutesByFullPath {
   '/management/hrm-management/reports': typeof ManagementHrmManagementReportsRoute
   '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
   '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
+  '/management/knowledge-management/best-practices': typeof ManagementKnowledgeManagementBestPracticesRoute
+  '/management/knowledge-management/document-repository': typeof ManagementKnowledgeManagementDocumentRepositoryRoute
+  '/management/knowledge-management/lessons-learned': typeof ManagementKnowledgeManagementLessonsLearnedRoute
+  '/management/knowledge-management/overview': typeof ManagementKnowledgeManagementOverviewRoute
+  '/management/knowledge-management/reports': typeof ManagementKnowledgeManagementReportsRoute
+  '/management/knowledge-management/sop-library': typeof ManagementKnowledgeManagementSopLibraryRoute
+  '/management/knowledge-management/technical-library': typeof ManagementKnowledgeManagementTechnicalLibraryRoute
+  '/management/knowledge-management/templates': typeof ManagementKnowledgeManagementTemplatesRoute
+  '/management/knowledge-management/training-materials': typeof ManagementKnowledgeManagementTrainingMaterialsRoute
+  '/management/knowledge-management/wiki': typeof ManagementKnowledgeManagementWikiRoute
   '/management/marketing-management/brand-management': typeof ManagementMarketingManagementBrandManagementRoute
   '/management/marketing-management/branding': typeof ManagementMarketingManagementBrandingRoute
   '/management/marketing-management/campaigns': typeof ManagementMarketingManagementCampaignsRoute
@@ -2912,10 +3421,12 @@ export interface FileRoutesByFullPath {
   '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
   '/management/project-management/time-tracking': typeof ManagementProjectManagementTimeTrackingRoute
   '/management/project-management/wbs': typeof ManagementProjectManagementWbsRoute
+  '/management/quality-management/audit-compliance': typeof ManagementQualityManagementAuditComplianceRoute
   '/management/quality-management/audit-management': typeof ManagementQualityManagementAuditManagementRoute
   '/management/quality-management/calibration': typeof ManagementQualityManagementCalibrationRoute
   '/management/quality-management/capa': typeof ManagementQualityManagementCapaRoute
   '/management/quality-management/compliance': typeof ManagementQualityManagementComplianceRoute
+  '/management/quality-management/compliance-reporting': typeof ManagementQualityManagementComplianceReportingRoute
   '/management/quality-management/final-inspection': typeof ManagementQualityManagementFinalInspectionRoute
   '/management/quality-management/in-process-inspection': typeof ManagementQualityManagementInProcessInspectionRoute
   '/management/quality-management/incoming-inspection': typeof ManagementQualityManagementIncomingInspectionRoute
@@ -2925,6 +3436,27 @@ export interface FileRoutesByFullPath {
   '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
   '/management/quality-management/reports': typeof ManagementQualityManagementReportsRoute
   '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
+  '/management/risk-management/audit-compliance': typeof ManagementRiskManagementAuditComplianceRoute
+  '/management/risk-management/business-continuity': typeof ManagementRiskManagementBusinessContinuityRoute
+  '/management/risk-management/certifications': typeof ManagementRiskManagementCertificationsRoute
+  '/management/risk-management/compliance-overview': typeof ManagementRiskManagementComplianceOverviewRoute
+  '/management/risk-management/compliance-reporting': typeof ManagementRiskManagementComplianceReportingRoute
+  '/management/risk-management/compliance-reports': typeof ManagementRiskManagementComplianceReportsRoute
+  '/management/risk-management/compliance-risk': typeof ManagementRiskManagementComplianceRiskRoute
+  '/management/risk-management/disaster-recovery': typeof ManagementRiskManagementDisasterRecoveryRoute
+  '/management/risk-management/enterprise-risk': typeof ManagementRiskManagementEnterpriseRiskRoute
+  '/management/risk-management/financial-risk': typeof ManagementRiskManagementFinancialRiskRoute
+  '/management/risk-management/incident-management': typeof ManagementRiskManagementIncidentManagementRoute
+  '/management/risk-management/internal-compliance': typeof ManagementRiskManagementInternalComplianceRoute
+  '/management/risk-management/iso-compliance': typeof ManagementRiskManagementIsoComplianceRoute
+  '/management/risk-management/legal-register': typeof ManagementRiskManagementLegalRegisterRoute
+  '/management/risk-management/licenses': typeof ManagementRiskManagementLicensesRoute
+  '/management/risk-management/operational-risk': typeof ManagementRiskManagementOperationalRiskRoute
+  '/management/risk-management/overview': typeof ManagementRiskManagementOverviewRoute
+  '/management/risk-management/project-risk': typeof ManagementRiskManagementProjectRiskRoute
+  '/management/risk-management/regulatory-compliance': typeof ManagementRiskManagementRegulatoryComplianceRoute
+  '/management/risk-management/reports': typeof ManagementRiskManagementReportsRoute
+  '/management/risk-management/vendor-risk': typeof ManagementRiskManagementVendorRiskRoute
   '/management/sales-management/channel-partners': typeof ManagementSalesManagementChannelPartnersRoute
   '/management/sales-management/contracts': typeof ManagementSalesManagementContractsRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
@@ -2938,6 +3470,31 @@ export interface FileRoutesByFullPath {
   '/management/sales-management/sales-orders': typeof ManagementSalesManagementSalesOrdersRoute
   '/management/sales-management/sales-planning': typeof ManagementSalesManagementSalesPlanningRoute
   '/management/sales-management/territory-management': typeof ManagementSalesManagementTerritoryManagementRoute
+  '/management/supply-chain-management/demand-planning': typeof ManagementSupplyChainManagementDemandPlanningRoute
+  '/management/supply-chain-management/dispatch-management': typeof ManagementSupplyChainManagementDispatchManagementRoute
+  '/management/supply-chain-management/distribution': typeof ManagementSupplyChainManagementDistributionRoute
+  '/management/supply-chain-management/fleet-management': typeof ManagementSupplyChainManagementFleetManagementRoute
+  '/management/supply-chain-management/inventory': typeof ManagementSupplyChainManagementInventoryRoute
+  '/management/supply-chain-management/logistics': typeof ManagementSupplyChainManagementLogisticsRoute
+  '/management/supply-chain-management/material-planning': typeof ManagementSupplyChainManagementMaterialPlanningRoute
+  '/management/supply-chain-management/overview': typeof ManagementSupplyChainManagementOverviewRoute
+  '/management/supply-chain-management/packaging-management': typeof ManagementSupplyChainManagementPackagingManagementRoute
+  '/management/supply-chain-management/reports': typeof ManagementSupplyChainManagementReportsRoute
+  '/management/supply-chain-management/reverse-logistics': typeof ManagementSupplyChainManagementReverseLogisticsRoute
+  '/management/supply-chain-management/supply-analytics': typeof ManagementSupplyChainManagementSupplyAnalyticsRoute
+  '/management/supply-chain-management/supply-planning': typeof ManagementSupplyChainManagementSupplyPlanningRoute
+  '/management/supply-chain-management/transportation': typeof ManagementSupplyChainManagementTransportationRoute
+  '/management/supply-chain-management/warehouse': typeof ManagementSupplyChainManagementWarehouseRoute
+  '/management/sustainability-management/carbon-footprint': typeof ManagementSustainabilityManagementCarbonFootprintRoute
+  '/management/sustainability-management/energy-monitoring': typeof ManagementSustainabilityManagementEnergyMonitoringRoute
+  '/management/sustainability-management/environmental-compliance': typeof ManagementSustainabilityManagementEnvironmentalComplianceRoute
+  '/management/sustainability-management/esg': typeof ManagementSustainabilityManagementEsgRoute
+  '/management/sustainability-management/overview': typeof ManagementSustainabilityManagementOverviewRoute
+  '/management/sustainability-management/recycling-management': typeof ManagementSustainabilityManagementRecyclingManagementRoute
+  '/management/sustainability-management/reports': typeof ManagementSustainabilityManagementReportsRoute
+  '/management/sustainability-management/sustainability-reporting': typeof ManagementSustainabilityManagementSustainabilityReportingRoute
+  '/management/sustainability-management/waste-management': typeof ManagementSustainabilityManagementWasteManagementRoute
+  '/management/sustainability-management/water-management': typeof ManagementSustainabilityManagementWaterManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   '/manufacturing-development/lean-manufacturing/$id': typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -2952,7 +3509,10 @@ export interface FileRoutesByFullPath {
   '/development/manufacturing-development/': typeof DevelopmentManufacturingDevelopmentIndexRoute
   '/development/product-development/': typeof DevelopmentProductDevelopmentIndexRoute
   '/development/research-innovation/': typeof DevelopmentResearchInnovationIndexRoute
+  '/management/communication-management/': typeof ManagementCommunicationManagementIndexRoute
+  '/management/knowledge-management/': typeof ManagementKnowledgeManagementIndexRoute
   '/management/quality-management/': typeof ManagementQualityManagementIndexRoute
+  '/management/sustainability-management/': typeof ManagementSustainabilityManagementIndexRoute
   '/manufacturing-development/automation-development/': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing/': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   '/manufacturing-development/mass-production-readiness/': typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -3200,6 +3760,15 @@ export interface FileRoutesByTo {
   '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
   '/management/asset-management/reports': typeof ManagementAssetManagementReportsRoute
   '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
+  '/management/communication-management/announcements': typeof ManagementCommunicationManagementAnnouncementsRoute
+  '/management/communication-management/chat': typeof ManagementCommunicationManagementChatRoute
+  '/management/communication-management/collaboration-workspace': typeof ManagementCommunicationManagementCollaborationWorkspaceRoute
+  '/management/communication-management/email': typeof ManagementCommunicationManagementEmailRoute
+  '/management/communication-management/internal-social-network': typeof ManagementCommunicationManagementInternalSocialNetworkRoute
+  '/management/communication-management/notifications': typeof ManagementCommunicationManagementNotificationsRoute
+  '/management/communication-management/overview': typeof ManagementCommunicationManagementOverviewRoute
+  '/management/communication-management/reports': typeof ManagementCommunicationManagementReportsRoute
+  '/management/communication-management/video-meetings': typeof ManagementCommunicationManagementVideoMeetingsRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
   '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
   '/management/crm-management/complaint-management': typeof ManagementCrmManagementComplaintManagementRoute
@@ -3247,6 +3816,16 @@ export interface FileRoutesByTo {
   '/management/hrm-management/reports': typeof ManagementHrmManagementReportsRoute
   '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
   '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
+  '/management/knowledge-management/best-practices': typeof ManagementKnowledgeManagementBestPracticesRoute
+  '/management/knowledge-management/document-repository': typeof ManagementKnowledgeManagementDocumentRepositoryRoute
+  '/management/knowledge-management/lessons-learned': typeof ManagementKnowledgeManagementLessonsLearnedRoute
+  '/management/knowledge-management/overview': typeof ManagementKnowledgeManagementOverviewRoute
+  '/management/knowledge-management/reports': typeof ManagementKnowledgeManagementReportsRoute
+  '/management/knowledge-management/sop-library': typeof ManagementKnowledgeManagementSopLibraryRoute
+  '/management/knowledge-management/technical-library': typeof ManagementKnowledgeManagementTechnicalLibraryRoute
+  '/management/knowledge-management/templates': typeof ManagementKnowledgeManagementTemplatesRoute
+  '/management/knowledge-management/training-materials': typeof ManagementKnowledgeManagementTrainingMaterialsRoute
+  '/management/knowledge-management/wiki': typeof ManagementKnowledgeManagementWikiRoute
   '/management/marketing-management/brand-management': typeof ManagementMarketingManagementBrandManagementRoute
   '/management/marketing-management/branding': typeof ManagementMarketingManagementBrandingRoute
   '/management/marketing-management/campaigns': typeof ManagementMarketingManagementCampaignsRoute
@@ -3291,10 +3870,12 @@ export interface FileRoutesByTo {
   '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
   '/management/project-management/time-tracking': typeof ManagementProjectManagementTimeTrackingRoute
   '/management/project-management/wbs': typeof ManagementProjectManagementWbsRoute
+  '/management/quality-management/audit-compliance': typeof ManagementQualityManagementAuditComplianceRoute
   '/management/quality-management/audit-management': typeof ManagementQualityManagementAuditManagementRoute
   '/management/quality-management/calibration': typeof ManagementQualityManagementCalibrationRoute
   '/management/quality-management/capa': typeof ManagementQualityManagementCapaRoute
   '/management/quality-management/compliance': typeof ManagementQualityManagementComplianceRoute
+  '/management/quality-management/compliance-reporting': typeof ManagementQualityManagementComplianceReportingRoute
   '/management/quality-management/final-inspection': typeof ManagementQualityManagementFinalInspectionRoute
   '/management/quality-management/in-process-inspection': typeof ManagementQualityManagementInProcessInspectionRoute
   '/management/quality-management/incoming-inspection': typeof ManagementQualityManagementIncomingInspectionRoute
@@ -3304,6 +3885,27 @@ export interface FileRoutesByTo {
   '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
   '/management/quality-management/reports': typeof ManagementQualityManagementReportsRoute
   '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
+  '/management/risk-management/audit-compliance': typeof ManagementRiskManagementAuditComplianceRoute
+  '/management/risk-management/business-continuity': typeof ManagementRiskManagementBusinessContinuityRoute
+  '/management/risk-management/certifications': typeof ManagementRiskManagementCertificationsRoute
+  '/management/risk-management/compliance-overview': typeof ManagementRiskManagementComplianceOverviewRoute
+  '/management/risk-management/compliance-reporting': typeof ManagementRiskManagementComplianceReportingRoute
+  '/management/risk-management/compliance-reports': typeof ManagementRiskManagementComplianceReportsRoute
+  '/management/risk-management/compliance-risk': typeof ManagementRiskManagementComplianceRiskRoute
+  '/management/risk-management/disaster-recovery': typeof ManagementRiskManagementDisasterRecoveryRoute
+  '/management/risk-management/enterprise-risk': typeof ManagementRiskManagementEnterpriseRiskRoute
+  '/management/risk-management/financial-risk': typeof ManagementRiskManagementFinancialRiskRoute
+  '/management/risk-management/incident-management': typeof ManagementRiskManagementIncidentManagementRoute
+  '/management/risk-management/internal-compliance': typeof ManagementRiskManagementInternalComplianceRoute
+  '/management/risk-management/iso-compliance': typeof ManagementRiskManagementIsoComplianceRoute
+  '/management/risk-management/legal-register': typeof ManagementRiskManagementLegalRegisterRoute
+  '/management/risk-management/licenses': typeof ManagementRiskManagementLicensesRoute
+  '/management/risk-management/operational-risk': typeof ManagementRiskManagementOperationalRiskRoute
+  '/management/risk-management/overview': typeof ManagementRiskManagementOverviewRoute
+  '/management/risk-management/project-risk': typeof ManagementRiskManagementProjectRiskRoute
+  '/management/risk-management/regulatory-compliance': typeof ManagementRiskManagementRegulatoryComplianceRoute
+  '/management/risk-management/reports': typeof ManagementRiskManagementReportsRoute
+  '/management/risk-management/vendor-risk': typeof ManagementRiskManagementVendorRiskRoute
   '/management/sales-management/channel-partners': typeof ManagementSalesManagementChannelPartnersRoute
   '/management/sales-management/contracts': typeof ManagementSalesManagementContractsRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
@@ -3317,6 +3919,31 @@ export interface FileRoutesByTo {
   '/management/sales-management/sales-orders': typeof ManagementSalesManagementSalesOrdersRoute
   '/management/sales-management/sales-planning': typeof ManagementSalesManagementSalesPlanningRoute
   '/management/sales-management/territory-management': typeof ManagementSalesManagementTerritoryManagementRoute
+  '/management/supply-chain-management/demand-planning': typeof ManagementSupplyChainManagementDemandPlanningRoute
+  '/management/supply-chain-management/dispatch-management': typeof ManagementSupplyChainManagementDispatchManagementRoute
+  '/management/supply-chain-management/distribution': typeof ManagementSupplyChainManagementDistributionRoute
+  '/management/supply-chain-management/fleet-management': typeof ManagementSupplyChainManagementFleetManagementRoute
+  '/management/supply-chain-management/inventory': typeof ManagementSupplyChainManagementInventoryRoute
+  '/management/supply-chain-management/logistics': typeof ManagementSupplyChainManagementLogisticsRoute
+  '/management/supply-chain-management/material-planning': typeof ManagementSupplyChainManagementMaterialPlanningRoute
+  '/management/supply-chain-management/overview': typeof ManagementSupplyChainManagementOverviewRoute
+  '/management/supply-chain-management/packaging-management': typeof ManagementSupplyChainManagementPackagingManagementRoute
+  '/management/supply-chain-management/reports': typeof ManagementSupplyChainManagementReportsRoute
+  '/management/supply-chain-management/reverse-logistics': typeof ManagementSupplyChainManagementReverseLogisticsRoute
+  '/management/supply-chain-management/supply-analytics': typeof ManagementSupplyChainManagementSupplyAnalyticsRoute
+  '/management/supply-chain-management/supply-planning': typeof ManagementSupplyChainManagementSupplyPlanningRoute
+  '/management/supply-chain-management/transportation': typeof ManagementSupplyChainManagementTransportationRoute
+  '/management/supply-chain-management/warehouse': typeof ManagementSupplyChainManagementWarehouseRoute
+  '/management/sustainability-management/carbon-footprint': typeof ManagementSustainabilityManagementCarbonFootprintRoute
+  '/management/sustainability-management/energy-monitoring': typeof ManagementSustainabilityManagementEnergyMonitoringRoute
+  '/management/sustainability-management/environmental-compliance': typeof ManagementSustainabilityManagementEnvironmentalComplianceRoute
+  '/management/sustainability-management/esg': typeof ManagementSustainabilityManagementEsgRoute
+  '/management/sustainability-management/overview': typeof ManagementSustainabilityManagementOverviewRoute
+  '/management/sustainability-management/recycling-management': typeof ManagementSustainabilityManagementRecyclingManagementRoute
+  '/management/sustainability-management/reports': typeof ManagementSustainabilityManagementReportsRoute
+  '/management/sustainability-management/sustainability-reporting': typeof ManagementSustainabilityManagementSustainabilityReportingRoute
+  '/management/sustainability-management/waste-management': typeof ManagementSustainabilityManagementWasteManagementRoute
+  '/management/sustainability-management/water-management': typeof ManagementSustainabilityManagementWaterManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   '/manufacturing-development/lean-manufacturing/$id': typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -3331,7 +3958,10 @@ export interface FileRoutesByTo {
   '/development/manufacturing-development': typeof DevelopmentManufacturingDevelopmentIndexRoute
   '/development/product-development': typeof DevelopmentProductDevelopmentIndexRoute
   '/development/research-innovation': typeof DevelopmentResearchInnovationIndexRoute
+  '/management/communication-management': typeof ManagementCommunicationManagementIndexRoute
+  '/management/knowledge-management': typeof ManagementKnowledgeManagementIndexRoute
   '/management/quality-management': typeof ManagementQualityManagementIndexRoute
+  '/management/sustainability-management': typeof ManagementSustainabilityManagementIndexRoute
   '/manufacturing-development/automation-development': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   '/manufacturing-development/mass-production-readiness': typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -3587,6 +4217,15 @@ export interface FileRoutesById {
   '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
   '/management/asset-management/reports': typeof ManagementAssetManagementReportsRoute
   '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
+  '/management/communication-management/announcements': typeof ManagementCommunicationManagementAnnouncementsRoute
+  '/management/communication-management/chat': typeof ManagementCommunicationManagementChatRoute
+  '/management/communication-management/collaboration-workspace': typeof ManagementCommunicationManagementCollaborationWorkspaceRoute
+  '/management/communication-management/email': typeof ManagementCommunicationManagementEmailRoute
+  '/management/communication-management/internal-social-network': typeof ManagementCommunicationManagementInternalSocialNetworkRoute
+  '/management/communication-management/notifications': typeof ManagementCommunicationManagementNotificationsRoute
+  '/management/communication-management/overview': typeof ManagementCommunicationManagementOverviewRoute
+  '/management/communication-management/reports': typeof ManagementCommunicationManagementReportsRoute
+  '/management/communication-management/video-meetings': typeof ManagementCommunicationManagementVideoMeetingsRoute
   '/management/crm-management/account-management': typeof ManagementCrmManagementAccountManagementRoute
   '/management/crm-management/accounts': typeof ManagementCrmManagementAccountsRoute
   '/management/crm-management/complaint-management': typeof ManagementCrmManagementComplaintManagementRoute
@@ -3634,6 +4273,16 @@ export interface FileRoutesById {
   '/management/hrm-management/reports': typeof ManagementHrmManagementReportsRoute
   '/management/hrm-management/travel-expense': typeof ManagementHrmManagementTravelExpenseRoute
   '/management/hrm-management/workforce-planning': typeof ManagementHrmManagementWorkforcePlanningRoute
+  '/management/knowledge-management/best-practices': typeof ManagementKnowledgeManagementBestPracticesRoute
+  '/management/knowledge-management/document-repository': typeof ManagementKnowledgeManagementDocumentRepositoryRoute
+  '/management/knowledge-management/lessons-learned': typeof ManagementKnowledgeManagementLessonsLearnedRoute
+  '/management/knowledge-management/overview': typeof ManagementKnowledgeManagementOverviewRoute
+  '/management/knowledge-management/reports': typeof ManagementKnowledgeManagementReportsRoute
+  '/management/knowledge-management/sop-library': typeof ManagementKnowledgeManagementSopLibraryRoute
+  '/management/knowledge-management/technical-library': typeof ManagementKnowledgeManagementTechnicalLibraryRoute
+  '/management/knowledge-management/templates': typeof ManagementKnowledgeManagementTemplatesRoute
+  '/management/knowledge-management/training-materials': typeof ManagementKnowledgeManagementTrainingMaterialsRoute
+  '/management/knowledge-management/wiki': typeof ManagementKnowledgeManagementWikiRoute
   '/management/marketing-management/brand-management': typeof ManagementMarketingManagementBrandManagementRoute
   '/management/marketing-management/branding': typeof ManagementMarketingManagementBrandingRoute
   '/management/marketing-management/campaigns': typeof ManagementMarketingManagementCampaignsRoute
@@ -3678,10 +4327,12 @@ export interface FileRoutesById {
   '/management/project-management/task-management': typeof ManagementProjectManagementTaskManagementRoute
   '/management/project-management/time-tracking': typeof ManagementProjectManagementTimeTrackingRoute
   '/management/project-management/wbs': typeof ManagementProjectManagementWbsRoute
+  '/management/quality-management/audit-compliance': typeof ManagementQualityManagementAuditComplianceRoute
   '/management/quality-management/audit-management': typeof ManagementQualityManagementAuditManagementRoute
   '/management/quality-management/calibration': typeof ManagementQualityManagementCalibrationRoute
   '/management/quality-management/capa': typeof ManagementQualityManagementCapaRoute
   '/management/quality-management/compliance': typeof ManagementQualityManagementComplianceRoute
+  '/management/quality-management/compliance-reporting': typeof ManagementQualityManagementComplianceReportingRoute
   '/management/quality-management/final-inspection': typeof ManagementQualityManagementFinalInspectionRoute
   '/management/quality-management/in-process-inspection': typeof ManagementQualityManagementInProcessInspectionRoute
   '/management/quality-management/incoming-inspection': typeof ManagementQualityManagementIncomingInspectionRoute
@@ -3691,6 +4342,27 @@ export interface FileRoutesById {
   '/management/quality-management/quality-planning': typeof ManagementQualityManagementQualityPlanningRoute
   '/management/quality-management/reports': typeof ManagementQualityManagementReportsRoute
   '/management/quality-management/root-cause-analysis': typeof ManagementQualityManagementRootCauseAnalysisRoute
+  '/management/risk-management/audit-compliance': typeof ManagementRiskManagementAuditComplianceRoute
+  '/management/risk-management/business-continuity': typeof ManagementRiskManagementBusinessContinuityRoute
+  '/management/risk-management/certifications': typeof ManagementRiskManagementCertificationsRoute
+  '/management/risk-management/compliance-overview': typeof ManagementRiskManagementComplianceOverviewRoute
+  '/management/risk-management/compliance-reporting': typeof ManagementRiskManagementComplianceReportingRoute
+  '/management/risk-management/compliance-reports': typeof ManagementRiskManagementComplianceReportsRoute
+  '/management/risk-management/compliance-risk': typeof ManagementRiskManagementComplianceRiskRoute
+  '/management/risk-management/disaster-recovery': typeof ManagementRiskManagementDisasterRecoveryRoute
+  '/management/risk-management/enterprise-risk': typeof ManagementRiskManagementEnterpriseRiskRoute
+  '/management/risk-management/financial-risk': typeof ManagementRiskManagementFinancialRiskRoute
+  '/management/risk-management/incident-management': typeof ManagementRiskManagementIncidentManagementRoute
+  '/management/risk-management/internal-compliance': typeof ManagementRiskManagementInternalComplianceRoute
+  '/management/risk-management/iso-compliance': typeof ManagementRiskManagementIsoComplianceRoute
+  '/management/risk-management/legal-register': typeof ManagementRiskManagementLegalRegisterRoute
+  '/management/risk-management/licenses': typeof ManagementRiskManagementLicensesRoute
+  '/management/risk-management/operational-risk': typeof ManagementRiskManagementOperationalRiskRoute
+  '/management/risk-management/overview': typeof ManagementRiskManagementOverviewRoute
+  '/management/risk-management/project-risk': typeof ManagementRiskManagementProjectRiskRoute
+  '/management/risk-management/regulatory-compliance': typeof ManagementRiskManagementRegulatoryComplianceRoute
+  '/management/risk-management/reports': typeof ManagementRiskManagementReportsRoute
+  '/management/risk-management/vendor-risk': typeof ManagementRiskManagementVendorRiskRoute
   '/management/sales-management/channel-partners': typeof ManagementSalesManagementChannelPartnersRoute
   '/management/sales-management/contracts': typeof ManagementSalesManagementContractsRoute
   '/management/sales-management/customer-orders-management': typeof ManagementSalesManagementCustomerOrdersManagementRoute
@@ -3704,6 +4376,31 @@ export interface FileRoutesById {
   '/management/sales-management/sales-orders': typeof ManagementSalesManagementSalesOrdersRoute
   '/management/sales-management/sales-planning': typeof ManagementSalesManagementSalesPlanningRoute
   '/management/sales-management/territory-management': typeof ManagementSalesManagementTerritoryManagementRoute
+  '/management/supply-chain-management/demand-planning': typeof ManagementSupplyChainManagementDemandPlanningRoute
+  '/management/supply-chain-management/dispatch-management': typeof ManagementSupplyChainManagementDispatchManagementRoute
+  '/management/supply-chain-management/distribution': typeof ManagementSupplyChainManagementDistributionRoute
+  '/management/supply-chain-management/fleet-management': typeof ManagementSupplyChainManagementFleetManagementRoute
+  '/management/supply-chain-management/inventory': typeof ManagementSupplyChainManagementInventoryRoute
+  '/management/supply-chain-management/logistics': typeof ManagementSupplyChainManagementLogisticsRoute
+  '/management/supply-chain-management/material-planning': typeof ManagementSupplyChainManagementMaterialPlanningRoute
+  '/management/supply-chain-management/overview': typeof ManagementSupplyChainManagementOverviewRoute
+  '/management/supply-chain-management/packaging-management': typeof ManagementSupplyChainManagementPackagingManagementRoute
+  '/management/supply-chain-management/reports': typeof ManagementSupplyChainManagementReportsRoute
+  '/management/supply-chain-management/reverse-logistics': typeof ManagementSupplyChainManagementReverseLogisticsRoute
+  '/management/supply-chain-management/supply-analytics': typeof ManagementSupplyChainManagementSupplyAnalyticsRoute
+  '/management/supply-chain-management/supply-planning': typeof ManagementSupplyChainManagementSupplyPlanningRoute
+  '/management/supply-chain-management/transportation': typeof ManagementSupplyChainManagementTransportationRoute
+  '/management/supply-chain-management/warehouse': typeof ManagementSupplyChainManagementWarehouseRoute
+  '/management/sustainability-management/carbon-footprint': typeof ManagementSustainabilityManagementCarbonFootprintRoute
+  '/management/sustainability-management/energy-monitoring': typeof ManagementSustainabilityManagementEnergyMonitoringRoute
+  '/management/sustainability-management/environmental-compliance': typeof ManagementSustainabilityManagementEnvironmentalComplianceRoute
+  '/management/sustainability-management/esg': typeof ManagementSustainabilityManagementEsgRoute
+  '/management/sustainability-management/overview': typeof ManagementSustainabilityManagementOverviewRoute
+  '/management/sustainability-management/recycling-management': typeof ManagementSustainabilityManagementRecyclingManagementRoute
+  '/management/sustainability-management/reports': typeof ManagementSustainabilityManagementReportsRoute
+  '/management/sustainability-management/sustainability-reporting': typeof ManagementSustainabilityManagementSustainabilityReportingRoute
+  '/management/sustainability-management/waste-management': typeof ManagementSustainabilityManagementWasteManagementRoute
+  '/management/sustainability-management/water-management': typeof ManagementSustainabilityManagementWaterManagementRoute
   '/manufacturing-development/automation-development/$id': typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   '/manufacturing-development/automation-development/new': typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   '/manufacturing-development/lean-manufacturing/$id': typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -3718,7 +4415,10 @@ export interface FileRoutesById {
   '/development/manufacturing-development/': typeof DevelopmentManufacturingDevelopmentIndexRoute
   '/development/product-development/': typeof DevelopmentProductDevelopmentIndexRoute
   '/development/research-innovation/': typeof DevelopmentResearchInnovationIndexRoute
+  '/management/communication-management/': typeof ManagementCommunicationManagementIndexRoute
+  '/management/knowledge-management/': typeof ManagementKnowledgeManagementIndexRoute
   '/management/quality-management/': typeof ManagementQualityManagementIndexRoute
+  '/management/sustainability-management/': typeof ManagementSustainabilityManagementIndexRoute
   '/manufacturing-development/automation-development/': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing/': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   '/manufacturing-development/mass-production-readiness/': typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -3975,6 +4675,15 @@ export interface FileRouteTypes {
     | '/management/asset-management/preventive-maintenance'
     | '/management/asset-management/reports'
     | '/management/asset-management/tool-management'
+    | '/management/communication-management/announcements'
+    | '/management/communication-management/chat'
+    | '/management/communication-management/collaboration-workspace'
+    | '/management/communication-management/email'
+    | '/management/communication-management/internal-social-network'
+    | '/management/communication-management/notifications'
+    | '/management/communication-management/overview'
+    | '/management/communication-management/reports'
+    | '/management/communication-management/video-meetings'
     | '/management/crm-management/account-management'
     | '/management/crm-management/accounts'
     | '/management/crm-management/complaint-management'
@@ -4022,6 +4731,16 @@ export interface FileRouteTypes {
     | '/management/hrm-management/reports'
     | '/management/hrm-management/travel-expense'
     | '/management/hrm-management/workforce-planning'
+    | '/management/knowledge-management/best-practices'
+    | '/management/knowledge-management/document-repository'
+    | '/management/knowledge-management/lessons-learned'
+    | '/management/knowledge-management/overview'
+    | '/management/knowledge-management/reports'
+    | '/management/knowledge-management/sop-library'
+    | '/management/knowledge-management/technical-library'
+    | '/management/knowledge-management/templates'
+    | '/management/knowledge-management/training-materials'
+    | '/management/knowledge-management/wiki'
     | '/management/marketing-management/brand-management'
     | '/management/marketing-management/branding'
     | '/management/marketing-management/campaigns'
@@ -4066,10 +4785,12 @@ export interface FileRouteTypes {
     | '/management/project-management/task-management'
     | '/management/project-management/time-tracking'
     | '/management/project-management/wbs'
+    | '/management/quality-management/audit-compliance'
     | '/management/quality-management/audit-management'
     | '/management/quality-management/calibration'
     | '/management/quality-management/capa'
     | '/management/quality-management/compliance'
+    | '/management/quality-management/compliance-reporting'
     | '/management/quality-management/final-inspection'
     | '/management/quality-management/in-process-inspection'
     | '/management/quality-management/incoming-inspection'
@@ -4079,6 +4800,27 @@ export interface FileRouteTypes {
     | '/management/quality-management/quality-planning'
     | '/management/quality-management/reports'
     | '/management/quality-management/root-cause-analysis'
+    | '/management/risk-management/audit-compliance'
+    | '/management/risk-management/business-continuity'
+    | '/management/risk-management/certifications'
+    | '/management/risk-management/compliance-overview'
+    | '/management/risk-management/compliance-reporting'
+    | '/management/risk-management/compliance-reports'
+    | '/management/risk-management/compliance-risk'
+    | '/management/risk-management/disaster-recovery'
+    | '/management/risk-management/enterprise-risk'
+    | '/management/risk-management/financial-risk'
+    | '/management/risk-management/incident-management'
+    | '/management/risk-management/internal-compliance'
+    | '/management/risk-management/iso-compliance'
+    | '/management/risk-management/legal-register'
+    | '/management/risk-management/licenses'
+    | '/management/risk-management/operational-risk'
+    | '/management/risk-management/overview'
+    | '/management/risk-management/project-risk'
+    | '/management/risk-management/regulatory-compliance'
+    | '/management/risk-management/reports'
+    | '/management/risk-management/vendor-risk'
     | '/management/sales-management/channel-partners'
     | '/management/sales-management/contracts'
     | '/management/sales-management/customer-orders-management'
@@ -4092,6 +4834,31 @@ export interface FileRouteTypes {
     | '/management/sales-management/sales-orders'
     | '/management/sales-management/sales-planning'
     | '/management/sales-management/territory-management'
+    | '/management/supply-chain-management/demand-planning'
+    | '/management/supply-chain-management/dispatch-management'
+    | '/management/supply-chain-management/distribution'
+    | '/management/supply-chain-management/fleet-management'
+    | '/management/supply-chain-management/inventory'
+    | '/management/supply-chain-management/logistics'
+    | '/management/supply-chain-management/material-planning'
+    | '/management/supply-chain-management/overview'
+    | '/management/supply-chain-management/packaging-management'
+    | '/management/supply-chain-management/reports'
+    | '/management/supply-chain-management/reverse-logistics'
+    | '/management/supply-chain-management/supply-analytics'
+    | '/management/supply-chain-management/supply-planning'
+    | '/management/supply-chain-management/transportation'
+    | '/management/supply-chain-management/warehouse'
+    | '/management/sustainability-management/carbon-footprint'
+    | '/management/sustainability-management/energy-monitoring'
+    | '/management/sustainability-management/environmental-compliance'
+    | '/management/sustainability-management/esg'
+    | '/management/sustainability-management/overview'
+    | '/management/sustainability-management/recycling-management'
+    | '/management/sustainability-management/reports'
+    | '/management/sustainability-management/sustainability-reporting'
+    | '/management/sustainability-management/waste-management'
+    | '/management/sustainability-management/water-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
     | '/manufacturing-development/lean-manufacturing/$id'
@@ -4106,7 +4873,10 @@ export interface FileRouteTypes {
     | '/development/manufacturing-development/'
     | '/development/product-development/'
     | '/development/research-innovation/'
+    | '/management/communication-management/'
+    | '/management/knowledge-management/'
     | '/management/quality-management/'
+    | '/management/sustainability-management/'
     | '/manufacturing-development/automation-development/'
     | '/manufacturing-development/lean-manufacturing/'
     | '/manufacturing-development/mass-production-readiness/'
@@ -4354,6 +5124,15 @@ export interface FileRouteTypes {
     | '/management/asset-management/preventive-maintenance'
     | '/management/asset-management/reports'
     | '/management/asset-management/tool-management'
+    | '/management/communication-management/announcements'
+    | '/management/communication-management/chat'
+    | '/management/communication-management/collaboration-workspace'
+    | '/management/communication-management/email'
+    | '/management/communication-management/internal-social-network'
+    | '/management/communication-management/notifications'
+    | '/management/communication-management/overview'
+    | '/management/communication-management/reports'
+    | '/management/communication-management/video-meetings'
     | '/management/crm-management/account-management'
     | '/management/crm-management/accounts'
     | '/management/crm-management/complaint-management'
@@ -4401,6 +5180,16 @@ export interface FileRouteTypes {
     | '/management/hrm-management/reports'
     | '/management/hrm-management/travel-expense'
     | '/management/hrm-management/workforce-planning'
+    | '/management/knowledge-management/best-practices'
+    | '/management/knowledge-management/document-repository'
+    | '/management/knowledge-management/lessons-learned'
+    | '/management/knowledge-management/overview'
+    | '/management/knowledge-management/reports'
+    | '/management/knowledge-management/sop-library'
+    | '/management/knowledge-management/technical-library'
+    | '/management/knowledge-management/templates'
+    | '/management/knowledge-management/training-materials'
+    | '/management/knowledge-management/wiki'
     | '/management/marketing-management/brand-management'
     | '/management/marketing-management/branding'
     | '/management/marketing-management/campaigns'
@@ -4445,10 +5234,12 @@ export interface FileRouteTypes {
     | '/management/project-management/task-management'
     | '/management/project-management/time-tracking'
     | '/management/project-management/wbs'
+    | '/management/quality-management/audit-compliance'
     | '/management/quality-management/audit-management'
     | '/management/quality-management/calibration'
     | '/management/quality-management/capa'
     | '/management/quality-management/compliance'
+    | '/management/quality-management/compliance-reporting'
     | '/management/quality-management/final-inspection'
     | '/management/quality-management/in-process-inspection'
     | '/management/quality-management/incoming-inspection'
@@ -4458,6 +5249,27 @@ export interface FileRouteTypes {
     | '/management/quality-management/quality-planning'
     | '/management/quality-management/reports'
     | '/management/quality-management/root-cause-analysis'
+    | '/management/risk-management/audit-compliance'
+    | '/management/risk-management/business-continuity'
+    | '/management/risk-management/certifications'
+    | '/management/risk-management/compliance-overview'
+    | '/management/risk-management/compliance-reporting'
+    | '/management/risk-management/compliance-reports'
+    | '/management/risk-management/compliance-risk'
+    | '/management/risk-management/disaster-recovery'
+    | '/management/risk-management/enterprise-risk'
+    | '/management/risk-management/financial-risk'
+    | '/management/risk-management/incident-management'
+    | '/management/risk-management/internal-compliance'
+    | '/management/risk-management/iso-compliance'
+    | '/management/risk-management/legal-register'
+    | '/management/risk-management/licenses'
+    | '/management/risk-management/operational-risk'
+    | '/management/risk-management/overview'
+    | '/management/risk-management/project-risk'
+    | '/management/risk-management/regulatory-compliance'
+    | '/management/risk-management/reports'
+    | '/management/risk-management/vendor-risk'
     | '/management/sales-management/channel-partners'
     | '/management/sales-management/contracts'
     | '/management/sales-management/customer-orders-management'
@@ -4471,6 +5283,31 @@ export interface FileRouteTypes {
     | '/management/sales-management/sales-orders'
     | '/management/sales-management/sales-planning'
     | '/management/sales-management/territory-management'
+    | '/management/supply-chain-management/demand-planning'
+    | '/management/supply-chain-management/dispatch-management'
+    | '/management/supply-chain-management/distribution'
+    | '/management/supply-chain-management/fleet-management'
+    | '/management/supply-chain-management/inventory'
+    | '/management/supply-chain-management/logistics'
+    | '/management/supply-chain-management/material-planning'
+    | '/management/supply-chain-management/overview'
+    | '/management/supply-chain-management/packaging-management'
+    | '/management/supply-chain-management/reports'
+    | '/management/supply-chain-management/reverse-logistics'
+    | '/management/supply-chain-management/supply-analytics'
+    | '/management/supply-chain-management/supply-planning'
+    | '/management/supply-chain-management/transportation'
+    | '/management/supply-chain-management/warehouse'
+    | '/management/sustainability-management/carbon-footprint'
+    | '/management/sustainability-management/energy-monitoring'
+    | '/management/sustainability-management/environmental-compliance'
+    | '/management/sustainability-management/esg'
+    | '/management/sustainability-management/overview'
+    | '/management/sustainability-management/recycling-management'
+    | '/management/sustainability-management/reports'
+    | '/management/sustainability-management/sustainability-reporting'
+    | '/management/sustainability-management/waste-management'
+    | '/management/sustainability-management/water-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
     | '/manufacturing-development/lean-manufacturing/$id'
@@ -4485,7 +5322,10 @@ export interface FileRouteTypes {
     | '/development/manufacturing-development'
     | '/development/product-development'
     | '/development/research-innovation'
+    | '/management/communication-management'
+    | '/management/knowledge-management'
     | '/management/quality-management'
+    | '/management/sustainability-management'
     | '/manufacturing-development/automation-development'
     | '/manufacturing-development/lean-manufacturing'
     | '/manufacturing-development/mass-production-readiness'
@@ -4740,6 +5580,15 @@ export interface FileRouteTypes {
     | '/management/asset-management/preventive-maintenance'
     | '/management/asset-management/reports'
     | '/management/asset-management/tool-management'
+    | '/management/communication-management/announcements'
+    | '/management/communication-management/chat'
+    | '/management/communication-management/collaboration-workspace'
+    | '/management/communication-management/email'
+    | '/management/communication-management/internal-social-network'
+    | '/management/communication-management/notifications'
+    | '/management/communication-management/overview'
+    | '/management/communication-management/reports'
+    | '/management/communication-management/video-meetings'
     | '/management/crm-management/account-management'
     | '/management/crm-management/accounts'
     | '/management/crm-management/complaint-management'
@@ -4787,6 +5636,16 @@ export interface FileRouteTypes {
     | '/management/hrm-management/reports'
     | '/management/hrm-management/travel-expense'
     | '/management/hrm-management/workforce-planning'
+    | '/management/knowledge-management/best-practices'
+    | '/management/knowledge-management/document-repository'
+    | '/management/knowledge-management/lessons-learned'
+    | '/management/knowledge-management/overview'
+    | '/management/knowledge-management/reports'
+    | '/management/knowledge-management/sop-library'
+    | '/management/knowledge-management/technical-library'
+    | '/management/knowledge-management/templates'
+    | '/management/knowledge-management/training-materials'
+    | '/management/knowledge-management/wiki'
     | '/management/marketing-management/brand-management'
     | '/management/marketing-management/branding'
     | '/management/marketing-management/campaigns'
@@ -4831,10 +5690,12 @@ export interface FileRouteTypes {
     | '/management/project-management/task-management'
     | '/management/project-management/time-tracking'
     | '/management/project-management/wbs'
+    | '/management/quality-management/audit-compliance'
     | '/management/quality-management/audit-management'
     | '/management/quality-management/calibration'
     | '/management/quality-management/capa'
     | '/management/quality-management/compliance'
+    | '/management/quality-management/compliance-reporting'
     | '/management/quality-management/final-inspection'
     | '/management/quality-management/in-process-inspection'
     | '/management/quality-management/incoming-inspection'
@@ -4844,6 +5705,27 @@ export interface FileRouteTypes {
     | '/management/quality-management/quality-planning'
     | '/management/quality-management/reports'
     | '/management/quality-management/root-cause-analysis'
+    | '/management/risk-management/audit-compliance'
+    | '/management/risk-management/business-continuity'
+    | '/management/risk-management/certifications'
+    | '/management/risk-management/compliance-overview'
+    | '/management/risk-management/compliance-reporting'
+    | '/management/risk-management/compliance-reports'
+    | '/management/risk-management/compliance-risk'
+    | '/management/risk-management/disaster-recovery'
+    | '/management/risk-management/enterprise-risk'
+    | '/management/risk-management/financial-risk'
+    | '/management/risk-management/incident-management'
+    | '/management/risk-management/internal-compliance'
+    | '/management/risk-management/iso-compliance'
+    | '/management/risk-management/legal-register'
+    | '/management/risk-management/licenses'
+    | '/management/risk-management/operational-risk'
+    | '/management/risk-management/overview'
+    | '/management/risk-management/project-risk'
+    | '/management/risk-management/regulatory-compliance'
+    | '/management/risk-management/reports'
+    | '/management/risk-management/vendor-risk'
     | '/management/sales-management/channel-partners'
     | '/management/sales-management/contracts'
     | '/management/sales-management/customer-orders-management'
@@ -4857,6 +5739,31 @@ export interface FileRouteTypes {
     | '/management/sales-management/sales-orders'
     | '/management/sales-management/sales-planning'
     | '/management/sales-management/territory-management'
+    | '/management/supply-chain-management/demand-planning'
+    | '/management/supply-chain-management/dispatch-management'
+    | '/management/supply-chain-management/distribution'
+    | '/management/supply-chain-management/fleet-management'
+    | '/management/supply-chain-management/inventory'
+    | '/management/supply-chain-management/logistics'
+    | '/management/supply-chain-management/material-planning'
+    | '/management/supply-chain-management/overview'
+    | '/management/supply-chain-management/packaging-management'
+    | '/management/supply-chain-management/reports'
+    | '/management/supply-chain-management/reverse-logistics'
+    | '/management/supply-chain-management/supply-analytics'
+    | '/management/supply-chain-management/supply-planning'
+    | '/management/supply-chain-management/transportation'
+    | '/management/supply-chain-management/warehouse'
+    | '/management/sustainability-management/carbon-footprint'
+    | '/management/sustainability-management/energy-monitoring'
+    | '/management/sustainability-management/environmental-compliance'
+    | '/management/sustainability-management/esg'
+    | '/management/sustainability-management/overview'
+    | '/management/sustainability-management/recycling-management'
+    | '/management/sustainability-management/reports'
+    | '/management/sustainability-management/sustainability-reporting'
+    | '/management/sustainability-management/waste-management'
+    | '/management/sustainability-management/water-management'
     | '/manufacturing-development/automation-development/$id'
     | '/manufacturing-development/automation-development/new'
     | '/manufacturing-development/lean-manufacturing/$id'
@@ -4871,7 +5778,10 @@ export interface FileRouteTypes {
     | '/development/manufacturing-development/'
     | '/development/product-development/'
     | '/development/research-innovation/'
+    | '/management/communication-management/'
+    | '/management/knowledge-management/'
     | '/management/quality-management/'
+    | '/management/sustainability-management/'
     | '/manufacturing-development/automation-development/'
     | '/manufacturing-development/lean-manufacturing/'
     | '/manufacturing-development/mass-production-readiness/'
@@ -5066,6 +5976,15 @@ export interface RootRouteChildren {
   ManagementAssetManagementPreventiveMaintenanceRoute: typeof ManagementAssetManagementPreventiveMaintenanceRoute
   ManagementAssetManagementReportsRoute: typeof ManagementAssetManagementReportsRoute
   ManagementAssetManagementToolManagementRoute: typeof ManagementAssetManagementToolManagementRoute
+  ManagementCommunicationManagementAnnouncementsRoute: typeof ManagementCommunicationManagementAnnouncementsRoute
+  ManagementCommunicationManagementChatRoute: typeof ManagementCommunicationManagementChatRoute
+  ManagementCommunicationManagementCollaborationWorkspaceRoute: typeof ManagementCommunicationManagementCollaborationWorkspaceRoute
+  ManagementCommunicationManagementEmailRoute: typeof ManagementCommunicationManagementEmailRoute
+  ManagementCommunicationManagementInternalSocialNetworkRoute: typeof ManagementCommunicationManagementInternalSocialNetworkRoute
+  ManagementCommunicationManagementNotificationsRoute: typeof ManagementCommunicationManagementNotificationsRoute
+  ManagementCommunicationManagementOverviewRoute: typeof ManagementCommunicationManagementOverviewRoute
+  ManagementCommunicationManagementReportsRoute: typeof ManagementCommunicationManagementReportsRoute
+  ManagementCommunicationManagementVideoMeetingsRoute: typeof ManagementCommunicationManagementVideoMeetingsRoute
   ManagementCrmManagementAccountManagementRoute: typeof ManagementCrmManagementAccountManagementRoute
   ManagementCrmManagementAccountsRoute: typeof ManagementCrmManagementAccountsRoute
   ManagementCrmManagementComplaintManagementRoute: typeof ManagementCrmManagementComplaintManagementRoute
@@ -5113,6 +6032,16 @@ export interface RootRouteChildren {
   ManagementHrmManagementReportsRoute: typeof ManagementHrmManagementReportsRoute
   ManagementHrmManagementTravelExpenseRoute: typeof ManagementHrmManagementTravelExpenseRoute
   ManagementHrmManagementWorkforcePlanningRoute: typeof ManagementHrmManagementWorkforcePlanningRoute
+  ManagementKnowledgeManagementBestPracticesRoute: typeof ManagementKnowledgeManagementBestPracticesRoute
+  ManagementKnowledgeManagementDocumentRepositoryRoute: typeof ManagementKnowledgeManagementDocumentRepositoryRoute
+  ManagementKnowledgeManagementLessonsLearnedRoute: typeof ManagementKnowledgeManagementLessonsLearnedRoute
+  ManagementKnowledgeManagementOverviewRoute: typeof ManagementKnowledgeManagementOverviewRoute
+  ManagementKnowledgeManagementReportsRoute: typeof ManagementKnowledgeManagementReportsRoute
+  ManagementKnowledgeManagementSopLibraryRoute: typeof ManagementKnowledgeManagementSopLibraryRoute
+  ManagementKnowledgeManagementTechnicalLibraryRoute: typeof ManagementKnowledgeManagementTechnicalLibraryRoute
+  ManagementKnowledgeManagementTemplatesRoute: typeof ManagementKnowledgeManagementTemplatesRoute
+  ManagementKnowledgeManagementTrainingMaterialsRoute: typeof ManagementKnowledgeManagementTrainingMaterialsRoute
+  ManagementKnowledgeManagementWikiRoute: typeof ManagementKnowledgeManagementWikiRoute
   ManagementMarketingManagementBrandManagementRoute: typeof ManagementMarketingManagementBrandManagementRoute
   ManagementMarketingManagementBrandingRoute: typeof ManagementMarketingManagementBrandingRoute
   ManagementMarketingManagementCampaignsRoute: typeof ManagementMarketingManagementCampaignsRoute
@@ -5157,10 +6086,12 @@ export interface RootRouteChildren {
   ManagementProjectManagementTaskManagementRoute: typeof ManagementProjectManagementTaskManagementRoute
   ManagementProjectManagementTimeTrackingRoute: typeof ManagementProjectManagementTimeTrackingRoute
   ManagementProjectManagementWbsRoute: typeof ManagementProjectManagementWbsRoute
+  ManagementQualityManagementAuditComplianceRoute: typeof ManagementQualityManagementAuditComplianceRoute
   ManagementQualityManagementAuditManagementRoute: typeof ManagementQualityManagementAuditManagementRoute
   ManagementQualityManagementCalibrationRoute: typeof ManagementQualityManagementCalibrationRoute
   ManagementQualityManagementCapaRoute: typeof ManagementQualityManagementCapaRoute
   ManagementQualityManagementComplianceRoute: typeof ManagementQualityManagementComplianceRoute
+  ManagementQualityManagementComplianceReportingRoute: typeof ManagementQualityManagementComplianceReportingRoute
   ManagementQualityManagementFinalInspectionRoute: typeof ManagementQualityManagementFinalInspectionRoute
   ManagementQualityManagementInProcessInspectionRoute: typeof ManagementQualityManagementInProcessInspectionRoute
   ManagementQualityManagementIncomingInspectionRoute: typeof ManagementQualityManagementIncomingInspectionRoute
@@ -5170,6 +6101,27 @@ export interface RootRouteChildren {
   ManagementQualityManagementQualityPlanningRoute: typeof ManagementQualityManagementQualityPlanningRoute
   ManagementQualityManagementReportsRoute: typeof ManagementQualityManagementReportsRoute
   ManagementQualityManagementRootCauseAnalysisRoute: typeof ManagementQualityManagementRootCauseAnalysisRoute
+  ManagementRiskManagementAuditComplianceRoute: typeof ManagementRiskManagementAuditComplianceRoute
+  ManagementRiskManagementBusinessContinuityRoute: typeof ManagementRiskManagementBusinessContinuityRoute
+  ManagementRiskManagementCertificationsRoute: typeof ManagementRiskManagementCertificationsRoute
+  ManagementRiskManagementComplianceOverviewRoute: typeof ManagementRiskManagementComplianceOverviewRoute
+  ManagementRiskManagementComplianceReportingRoute: typeof ManagementRiskManagementComplianceReportingRoute
+  ManagementRiskManagementComplianceReportsRoute: typeof ManagementRiskManagementComplianceReportsRoute
+  ManagementRiskManagementComplianceRiskRoute: typeof ManagementRiskManagementComplianceRiskRoute
+  ManagementRiskManagementDisasterRecoveryRoute: typeof ManagementRiskManagementDisasterRecoveryRoute
+  ManagementRiskManagementEnterpriseRiskRoute: typeof ManagementRiskManagementEnterpriseRiskRoute
+  ManagementRiskManagementFinancialRiskRoute: typeof ManagementRiskManagementFinancialRiskRoute
+  ManagementRiskManagementIncidentManagementRoute: typeof ManagementRiskManagementIncidentManagementRoute
+  ManagementRiskManagementInternalComplianceRoute: typeof ManagementRiskManagementInternalComplianceRoute
+  ManagementRiskManagementIsoComplianceRoute: typeof ManagementRiskManagementIsoComplianceRoute
+  ManagementRiskManagementLegalRegisterRoute: typeof ManagementRiskManagementLegalRegisterRoute
+  ManagementRiskManagementLicensesRoute: typeof ManagementRiskManagementLicensesRoute
+  ManagementRiskManagementOperationalRiskRoute: typeof ManagementRiskManagementOperationalRiskRoute
+  ManagementRiskManagementOverviewRoute: typeof ManagementRiskManagementOverviewRoute
+  ManagementRiskManagementProjectRiskRoute: typeof ManagementRiskManagementProjectRiskRoute
+  ManagementRiskManagementRegulatoryComplianceRoute: typeof ManagementRiskManagementRegulatoryComplianceRoute
+  ManagementRiskManagementReportsRoute: typeof ManagementRiskManagementReportsRoute
+  ManagementRiskManagementVendorRiskRoute: typeof ManagementRiskManagementVendorRiskRoute
   ManagementSalesManagementChannelPartnersRoute: typeof ManagementSalesManagementChannelPartnersRoute
   ManagementSalesManagementContractsRoute: typeof ManagementSalesManagementContractsRoute
   ManagementSalesManagementCustomerOrdersManagementRoute: typeof ManagementSalesManagementCustomerOrdersManagementRoute
@@ -5183,6 +6135,31 @@ export interface RootRouteChildren {
   ManagementSalesManagementSalesOrdersRoute: typeof ManagementSalesManagementSalesOrdersRoute
   ManagementSalesManagementSalesPlanningRoute: typeof ManagementSalesManagementSalesPlanningRoute
   ManagementSalesManagementTerritoryManagementRoute: typeof ManagementSalesManagementTerritoryManagementRoute
+  ManagementSupplyChainManagementDemandPlanningRoute: typeof ManagementSupplyChainManagementDemandPlanningRoute
+  ManagementSupplyChainManagementDispatchManagementRoute: typeof ManagementSupplyChainManagementDispatchManagementRoute
+  ManagementSupplyChainManagementDistributionRoute: typeof ManagementSupplyChainManagementDistributionRoute
+  ManagementSupplyChainManagementFleetManagementRoute: typeof ManagementSupplyChainManagementFleetManagementRoute
+  ManagementSupplyChainManagementInventoryRoute: typeof ManagementSupplyChainManagementInventoryRoute
+  ManagementSupplyChainManagementLogisticsRoute: typeof ManagementSupplyChainManagementLogisticsRoute
+  ManagementSupplyChainManagementMaterialPlanningRoute: typeof ManagementSupplyChainManagementMaterialPlanningRoute
+  ManagementSupplyChainManagementOverviewRoute: typeof ManagementSupplyChainManagementOverviewRoute
+  ManagementSupplyChainManagementPackagingManagementRoute: typeof ManagementSupplyChainManagementPackagingManagementRoute
+  ManagementSupplyChainManagementReportsRoute: typeof ManagementSupplyChainManagementReportsRoute
+  ManagementSupplyChainManagementReverseLogisticsRoute: typeof ManagementSupplyChainManagementReverseLogisticsRoute
+  ManagementSupplyChainManagementSupplyAnalyticsRoute: typeof ManagementSupplyChainManagementSupplyAnalyticsRoute
+  ManagementSupplyChainManagementSupplyPlanningRoute: typeof ManagementSupplyChainManagementSupplyPlanningRoute
+  ManagementSupplyChainManagementTransportationRoute: typeof ManagementSupplyChainManagementTransportationRoute
+  ManagementSupplyChainManagementWarehouseRoute: typeof ManagementSupplyChainManagementWarehouseRoute
+  ManagementSustainabilityManagementCarbonFootprintRoute: typeof ManagementSustainabilityManagementCarbonFootprintRoute
+  ManagementSustainabilityManagementEnergyMonitoringRoute: typeof ManagementSustainabilityManagementEnergyMonitoringRoute
+  ManagementSustainabilityManagementEnvironmentalComplianceRoute: typeof ManagementSustainabilityManagementEnvironmentalComplianceRoute
+  ManagementSustainabilityManagementEsgRoute: typeof ManagementSustainabilityManagementEsgRoute
+  ManagementSustainabilityManagementOverviewRoute: typeof ManagementSustainabilityManagementOverviewRoute
+  ManagementSustainabilityManagementRecyclingManagementRoute: typeof ManagementSustainabilityManagementRecyclingManagementRoute
+  ManagementSustainabilityManagementReportsRoute: typeof ManagementSustainabilityManagementReportsRoute
+  ManagementSustainabilityManagementSustainabilityReportingRoute: typeof ManagementSustainabilityManagementSustainabilityReportingRoute
+  ManagementSustainabilityManagementWasteManagementRoute: typeof ManagementSustainabilityManagementWasteManagementRoute
+  ManagementSustainabilityManagementWaterManagementRoute: typeof ManagementSustainabilityManagementWaterManagementRoute
   ManufacturingDevelopmentAutomationDevelopmentIdRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIdRoute
   ManufacturingDevelopmentAutomationDevelopmentNewRoute: typeof ManufacturingDevelopmentAutomationDevelopmentNewRoute
   ManufacturingDevelopmentLeanManufacturingIdRoute: typeof ManufacturingDevelopmentLeanManufacturingIdRoute
@@ -5193,7 +6170,10 @@ export interface RootRouteChildren {
   ManufacturingDevelopmentPilotProductionNewRoute: typeof ManufacturingDevelopmentPilotProductionNewRoute
   ManufacturingDevelopmentRoboticsIntegrationIdRoute: typeof ManufacturingDevelopmentRoboticsIntegrationIdRoute
   ManufacturingDevelopmentRoboticsIntegrationNewRoute: typeof ManufacturingDevelopmentRoboticsIntegrationNewRoute
+  ManagementCommunicationManagementIndexRoute: typeof ManagementCommunicationManagementIndexRoute
+  ManagementKnowledgeManagementIndexRoute: typeof ManagementKnowledgeManagementIndexRoute
   ManagementQualityManagementIndexRoute: typeof ManagementQualityManagementIndexRoute
+  ManagementSustainabilityManagementIndexRoute: typeof ManagementSustainabilityManagementIndexRoute
   ManufacturingDevelopmentAutomationDevelopmentIndexRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   ManufacturingDevelopmentLeanManufacturingIndexRoute: typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
   ManufacturingDevelopmentMassProductionReadinessIndexRoute: typeof ManufacturingDevelopmentMassProductionReadinessIndexRoute
@@ -5350,11 +6330,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/sustainability-management/': {
+      id: '/management/sustainability-management/'
+      path: '/management/sustainability-management'
+      fullPath: '/management/sustainability-management/'
+      preLoaderRoute: typeof ManagementSustainabilityManagementIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/quality-management/': {
       id: '/management/quality-management/'
       path: '/management/quality-management'
       fullPath: '/management/quality-management/'
       preLoaderRoute: typeof ManagementQualityManagementIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/': {
+      id: '/management/knowledge-management/'
+      path: '/management/knowledge-management'
+      fullPath: '/management/knowledge-management/'
+      preLoaderRoute: typeof ManagementKnowledgeManagementIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/communication-management/': {
+      id: '/management/communication-management/'
+      path: '/management/communication-management'
+      fullPath: '/management/communication-management/'
+      preLoaderRoute: typeof ManagementCommunicationManagementIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/development/research-innovation/': {
@@ -5455,6 +6456,181 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/sustainability-management/water-management': {
+      id: '/management/sustainability-management/water-management'
+      path: '/management/sustainability-management/water-management'
+      fullPath: '/management/sustainability-management/water-management'
+      preLoaderRoute: typeof ManagementSustainabilityManagementWaterManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sustainability-management/waste-management': {
+      id: '/management/sustainability-management/waste-management'
+      path: '/management/sustainability-management/waste-management'
+      fullPath: '/management/sustainability-management/waste-management'
+      preLoaderRoute: typeof ManagementSustainabilityManagementWasteManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sustainability-management/sustainability-reporting': {
+      id: '/management/sustainability-management/sustainability-reporting'
+      path: '/management/sustainability-management/sustainability-reporting'
+      fullPath: '/management/sustainability-management/sustainability-reporting'
+      preLoaderRoute: typeof ManagementSustainabilityManagementSustainabilityReportingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sustainability-management/reports': {
+      id: '/management/sustainability-management/reports'
+      path: '/management/sustainability-management/reports'
+      fullPath: '/management/sustainability-management/reports'
+      preLoaderRoute: typeof ManagementSustainabilityManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sustainability-management/recycling-management': {
+      id: '/management/sustainability-management/recycling-management'
+      path: '/management/sustainability-management/recycling-management'
+      fullPath: '/management/sustainability-management/recycling-management'
+      preLoaderRoute: typeof ManagementSustainabilityManagementRecyclingManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sustainability-management/overview': {
+      id: '/management/sustainability-management/overview'
+      path: '/management/sustainability-management/overview'
+      fullPath: '/management/sustainability-management/overview'
+      preLoaderRoute: typeof ManagementSustainabilityManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sustainability-management/esg': {
+      id: '/management/sustainability-management/esg'
+      path: '/management/sustainability-management/esg'
+      fullPath: '/management/sustainability-management/esg'
+      preLoaderRoute: typeof ManagementSustainabilityManagementEsgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sustainability-management/environmental-compliance': {
+      id: '/management/sustainability-management/environmental-compliance'
+      path: '/management/sustainability-management/environmental-compliance'
+      fullPath: '/management/sustainability-management/environmental-compliance'
+      preLoaderRoute: typeof ManagementSustainabilityManagementEnvironmentalComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sustainability-management/energy-monitoring': {
+      id: '/management/sustainability-management/energy-monitoring'
+      path: '/management/sustainability-management/energy-monitoring'
+      fullPath: '/management/sustainability-management/energy-monitoring'
+      preLoaderRoute: typeof ManagementSustainabilityManagementEnergyMonitoringRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/sustainability-management/carbon-footprint': {
+      id: '/management/sustainability-management/carbon-footprint'
+      path: '/management/sustainability-management/carbon-footprint'
+      fullPath: '/management/sustainability-management/carbon-footprint'
+      preLoaderRoute: typeof ManagementSustainabilityManagementCarbonFootprintRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/warehouse': {
+      id: '/management/supply-chain-management/warehouse'
+      path: '/management/supply-chain-management/warehouse'
+      fullPath: '/management/supply-chain-management/warehouse'
+      preLoaderRoute: typeof ManagementSupplyChainManagementWarehouseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/transportation': {
+      id: '/management/supply-chain-management/transportation'
+      path: '/management/supply-chain-management/transportation'
+      fullPath: '/management/supply-chain-management/transportation'
+      preLoaderRoute: typeof ManagementSupplyChainManagementTransportationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/supply-planning': {
+      id: '/management/supply-chain-management/supply-planning'
+      path: '/management/supply-chain-management/supply-planning'
+      fullPath: '/management/supply-chain-management/supply-planning'
+      preLoaderRoute: typeof ManagementSupplyChainManagementSupplyPlanningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/supply-analytics': {
+      id: '/management/supply-chain-management/supply-analytics'
+      path: '/management/supply-chain-management/supply-analytics'
+      fullPath: '/management/supply-chain-management/supply-analytics'
+      preLoaderRoute: typeof ManagementSupplyChainManagementSupplyAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/reverse-logistics': {
+      id: '/management/supply-chain-management/reverse-logistics'
+      path: '/management/supply-chain-management/reverse-logistics'
+      fullPath: '/management/supply-chain-management/reverse-logistics'
+      preLoaderRoute: typeof ManagementSupplyChainManagementReverseLogisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/reports': {
+      id: '/management/supply-chain-management/reports'
+      path: '/management/supply-chain-management/reports'
+      fullPath: '/management/supply-chain-management/reports'
+      preLoaderRoute: typeof ManagementSupplyChainManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/packaging-management': {
+      id: '/management/supply-chain-management/packaging-management'
+      path: '/management/supply-chain-management/packaging-management'
+      fullPath: '/management/supply-chain-management/packaging-management'
+      preLoaderRoute: typeof ManagementSupplyChainManagementPackagingManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/overview': {
+      id: '/management/supply-chain-management/overview'
+      path: '/management/supply-chain-management/overview'
+      fullPath: '/management/supply-chain-management/overview'
+      preLoaderRoute: typeof ManagementSupplyChainManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/material-planning': {
+      id: '/management/supply-chain-management/material-planning'
+      path: '/management/supply-chain-management/material-planning'
+      fullPath: '/management/supply-chain-management/material-planning'
+      preLoaderRoute: typeof ManagementSupplyChainManagementMaterialPlanningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/logistics': {
+      id: '/management/supply-chain-management/logistics'
+      path: '/management/supply-chain-management/logistics'
+      fullPath: '/management/supply-chain-management/logistics'
+      preLoaderRoute: typeof ManagementSupplyChainManagementLogisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/inventory': {
+      id: '/management/supply-chain-management/inventory'
+      path: '/management/supply-chain-management/inventory'
+      fullPath: '/management/supply-chain-management/inventory'
+      preLoaderRoute: typeof ManagementSupplyChainManagementInventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/fleet-management': {
+      id: '/management/supply-chain-management/fleet-management'
+      path: '/management/supply-chain-management/fleet-management'
+      fullPath: '/management/supply-chain-management/fleet-management'
+      preLoaderRoute: typeof ManagementSupplyChainManagementFleetManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/distribution': {
+      id: '/management/supply-chain-management/distribution'
+      path: '/management/supply-chain-management/distribution'
+      fullPath: '/management/supply-chain-management/distribution'
+      preLoaderRoute: typeof ManagementSupplyChainManagementDistributionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/dispatch-management': {
+      id: '/management/supply-chain-management/dispatch-management'
+      path: '/management/supply-chain-management/dispatch-management'
+      fullPath: '/management/supply-chain-management/dispatch-management'
+      preLoaderRoute: typeof ManagementSupplyChainManagementDispatchManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/supply-chain-management/demand-planning': {
+      id: '/management/supply-chain-management/demand-planning'
+      path: '/management/supply-chain-management/demand-planning'
+      fullPath: '/management/supply-chain-management/demand-planning'
+      preLoaderRoute: typeof ManagementSupplyChainManagementDemandPlanningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/sales-management/territory-management': {
       id: '/management/sales-management/territory-management'
       path: '/management/sales-management/territory-management'
@@ -5546,6 +6722,153 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementSalesManagementChannelPartnersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/risk-management/vendor-risk': {
+      id: '/management/risk-management/vendor-risk'
+      path: '/management/risk-management/vendor-risk'
+      fullPath: '/management/risk-management/vendor-risk'
+      preLoaderRoute: typeof ManagementRiskManagementVendorRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/reports': {
+      id: '/management/risk-management/reports'
+      path: '/management/risk-management/reports'
+      fullPath: '/management/risk-management/reports'
+      preLoaderRoute: typeof ManagementRiskManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/regulatory-compliance': {
+      id: '/management/risk-management/regulatory-compliance'
+      path: '/management/risk-management/regulatory-compliance'
+      fullPath: '/management/risk-management/regulatory-compliance'
+      preLoaderRoute: typeof ManagementRiskManagementRegulatoryComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/project-risk': {
+      id: '/management/risk-management/project-risk'
+      path: '/management/risk-management/project-risk'
+      fullPath: '/management/risk-management/project-risk'
+      preLoaderRoute: typeof ManagementRiskManagementProjectRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/overview': {
+      id: '/management/risk-management/overview'
+      path: '/management/risk-management/overview'
+      fullPath: '/management/risk-management/overview'
+      preLoaderRoute: typeof ManagementRiskManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/operational-risk': {
+      id: '/management/risk-management/operational-risk'
+      path: '/management/risk-management/operational-risk'
+      fullPath: '/management/risk-management/operational-risk'
+      preLoaderRoute: typeof ManagementRiskManagementOperationalRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/licenses': {
+      id: '/management/risk-management/licenses'
+      path: '/management/risk-management/licenses'
+      fullPath: '/management/risk-management/licenses'
+      preLoaderRoute: typeof ManagementRiskManagementLicensesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/legal-register': {
+      id: '/management/risk-management/legal-register'
+      path: '/management/risk-management/legal-register'
+      fullPath: '/management/risk-management/legal-register'
+      preLoaderRoute: typeof ManagementRiskManagementLegalRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/iso-compliance': {
+      id: '/management/risk-management/iso-compliance'
+      path: '/management/risk-management/iso-compliance'
+      fullPath: '/management/risk-management/iso-compliance'
+      preLoaderRoute: typeof ManagementRiskManagementIsoComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/internal-compliance': {
+      id: '/management/risk-management/internal-compliance'
+      path: '/management/risk-management/internal-compliance'
+      fullPath: '/management/risk-management/internal-compliance'
+      preLoaderRoute: typeof ManagementRiskManagementInternalComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/incident-management': {
+      id: '/management/risk-management/incident-management'
+      path: '/management/risk-management/incident-management'
+      fullPath: '/management/risk-management/incident-management'
+      preLoaderRoute: typeof ManagementRiskManagementIncidentManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/financial-risk': {
+      id: '/management/risk-management/financial-risk'
+      path: '/management/risk-management/financial-risk'
+      fullPath: '/management/risk-management/financial-risk'
+      preLoaderRoute: typeof ManagementRiskManagementFinancialRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/enterprise-risk': {
+      id: '/management/risk-management/enterprise-risk'
+      path: '/management/risk-management/enterprise-risk'
+      fullPath: '/management/risk-management/enterprise-risk'
+      preLoaderRoute: typeof ManagementRiskManagementEnterpriseRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/disaster-recovery': {
+      id: '/management/risk-management/disaster-recovery'
+      path: '/management/risk-management/disaster-recovery'
+      fullPath: '/management/risk-management/disaster-recovery'
+      preLoaderRoute: typeof ManagementRiskManagementDisasterRecoveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/compliance-risk': {
+      id: '/management/risk-management/compliance-risk'
+      path: '/management/risk-management/compliance-risk'
+      fullPath: '/management/risk-management/compliance-risk'
+      preLoaderRoute: typeof ManagementRiskManagementComplianceRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/compliance-reports': {
+      id: '/management/risk-management/compliance-reports'
+      path: '/management/risk-management/compliance-reports'
+      fullPath: '/management/risk-management/compliance-reports'
+      preLoaderRoute: typeof ManagementRiskManagementComplianceReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/compliance-reporting': {
+      id: '/management/risk-management/compliance-reporting'
+      path: '/management/risk-management/compliance-reporting'
+      fullPath: '/management/risk-management/compliance-reporting'
+      preLoaderRoute: typeof ManagementRiskManagementComplianceReportingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/compliance-overview': {
+      id: '/management/risk-management/compliance-overview'
+      path: '/management/risk-management/compliance-overview'
+      fullPath: '/management/risk-management/compliance-overview'
+      preLoaderRoute: typeof ManagementRiskManagementComplianceOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/certifications': {
+      id: '/management/risk-management/certifications'
+      path: '/management/risk-management/certifications'
+      fullPath: '/management/risk-management/certifications'
+      preLoaderRoute: typeof ManagementRiskManagementCertificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/business-continuity': {
+      id: '/management/risk-management/business-continuity'
+      path: '/management/risk-management/business-continuity'
+      fullPath: '/management/risk-management/business-continuity'
+      preLoaderRoute: typeof ManagementRiskManagementBusinessContinuityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/risk-management/audit-compliance': {
+      id: '/management/risk-management/audit-compliance'
+      path: '/management/risk-management/audit-compliance'
+      fullPath: '/management/risk-management/audit-compliance'
+      preLoaderRoute: typeof ManagementRiskManagementAuditComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/quality-management/root-cause-analysis': {
       id: '/management/quality-management/root-cause-analysis'
       path: '/management/quality-management/root-cause-analysis'
@@ -5609,6 +6932,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementQualityManagementFinalInspectionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/quality-management/compliance-reporting': {
+      id: '/management/quality-management/compliance-reporting'
+      path: '/management/quality-management/compliance-reporting'
+      fullPath: '/management/quality-management/compliance-reporting'
+      preLoaderRoute: typeof ManagementQualityManagementComplianceReportingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/quality-management/compliance': {
       id: '/management/quality-management/compliance'
       path: '/management/quality-management/compliance'
@@ -5635,6 +6965,13 @@ declare module '@tanstack/react-router' {
       path: '/management/quality-management/audit-management'
       fullPath: '/management/quality-management/audit-management'
       preLoaderRoute: typeof ManagementQualityManagementAuditManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/quality-management/audit-compliance': {
+      id: '/management/quality-management/audit-compliance'
+      path: '/management/quality-management/audit-compliance'
+      fullPath: '/management/quality-management/audit-compliance'
+      preLoaderRoute: typeof ManagementQualityManagementAuditComplianceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/project-management/wbs': {
@@ -5943,6 +7280,76 @@ declare module '@tanstack/react-router' {
       path: '/management/marketing-management/brand-management'
       fullPath: '/management/marketing-management/brand-management'
       preLoaderRoute: typeof ManagementMarketingManagementBrandManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/wiki': {
+      id: '/management/knowledge-management/wiki'
+      path: '/management/knowledge-management/wiki'
+      fullPath: '/management/knowledge-management/wiki'
+      preLoaderRoute: typeof ManagementKnowledgeManagementWikiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/training-materials': {
+      id: '/management/knowledge-management/training-materials'
+      path: '/management/knowledge-management/training-materials'
+      fullPath: '/management/knowledge-management/training-materials'
+      preLoaderRoute: typeof ManagementKnowledgeManagementTrainingMaterialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/templates': {
+      id: '/management/knowledge-management/templates'
+      path: '/management/knowledge-management/templates'
+      fullPath: '/management/knowledge-management/templates'
+      preLoaderRoute: typeof ManagementKnowledgeManagementTemplatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/technical-library': {
+      id: '/management/knowledge-management/technical-library'
+      path: '/management/knowledge-management/technical-library'
+      fullPath: '/management/knowledge-management/technical-library'
+      preLoaderRoute: typeof ManagementKnowledgeManagementTechnicalLibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/sop-library': {
+      id: '/management/knowledge-management/sop-library'
+      path: '/management/knowledge-management/sop-library'
+      fullPath: '/management/knowledge-management/sop-library'
+      preLoaderRoute: typeof ManagementKnowledgeManagementSopLibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/reports': {
+      id: '/management/knowledge-management/reports'
+      path: '/management/knowledge-management/reports'
+      fullPath: '/management/knowledge-management/reports'
+      preLoaderRoute: typeof ManagementKnowledgeManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/overview': {
+      id: '/management/knowledge-management/overview'
+      path: '/management/knowledge-management/overview'
+      fullPath: '/management/knowledge-management/overview'
+      preLoaderRoute: typeof ManagementKnowledgeManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/lessons-learned': {
+      id: '/management/knowledge-management/lessons-learned'
+      path: '/management/knowledge-management/lessons-learned'
+      fullPath: '/management/knowledge-management/lessons-learned'
+      preLoaderRoute: typeof ManagementKnowledgeManagementLessonsLearnedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/document-repository': {
+      id: '/management/knowledge-management/document-repository'
+      path: '/management/knowledge-management/document-repository'
+      fullPath: '/management/knowledge-management/document-repository'
+      preLoaderRoute: typeof ManagementKnowledgeManagementDocumentRepositoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/knowledge-management/best-practices': {
+      id: '/management/knowledge-management/best-practices'
+      path: '/management/knowledge-management/best-practices'
+      fullPath: '/management/knowledge-management/best-practices'
+      preLoaderRoute: typeof ManagementKnowledgeManagementBestPracticesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/hrm-management/workforce-planning': {
@@ -6272,6 +7679,69 @@ declare module '@tanstack/react-router' {
       path: '/management/crm-management/account-management'
       fullPath: '/management/crm-management/account-management'
       preLoaderRoute: typeof ManagementCrmManagementAccountManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/communication-management/video-meetings': {
+      id: '/management/communication-management/video-meetings'
+      path: '/management/communication-management/video-meetings'
+      fullPath: '/management/communication-management/video-meetings'
+      preLoaderRoute: typeof ManagementCommunicationManagementVideoMeetingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/communication-management/reports': {
+      id: '/management/communication-management/reports'
+      path: '/management/communication-management/reports'
+      fullPath: '/management/communication-management/reports'
+      preLoaderRoute: typeof ManagementCommunicationManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/communication-management/overview': {
+      id: '/management/communication-management/overview'
+      path: '/management/communication-management/overview'
+      fullPath: '/management/communication-management/overview'
+      preLoaderRoute: typeof ManagementCommunicationManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/communication-management/notifications': {
+      id: '/management/communication-management/notifications'
+      path: '/management/communication-management/notifications'
+      fullPath: '/management/communication-management/notifications'
+      preLoaderRoute: typeof ManagementCommunicationManagementNotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/communication-management/internal-social-network': {
+      id: '/management/communication-management/internal-social-network'
+      path: '/management/communication-management/internal-social-network'
+      fullPath: '/management/communication-management/internal-social-network'
+      preLoaderRoute: typeof ManagementCommunicationManagementInternalSocialNetworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/communication-management/email': {
+      id: '/management/communication-management/email'
+      path: '/management/communication-management/email'
+      fullPath: '/management/communication-management/email'
+      preLoaderRoute: typeof ManagementCommunicationManagementEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/communication-management/collaboration-workspace': {
+      id: '/management/communication-management/collaboration-workspace'
+      path: '/management/communication-management/collaboration-workspace'
+      fullPath: '/management/communication-management/collaboration-workspace'
+      preLoaderRoute: typeof ManagementCommunicationManagementCollaborationWorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/communication-management/chat': {
+      id: '/management/communication-management/chat'
+      path: '/management/communication-management/chat'
+      fullPath: '/management/communication-management/chat'
+      preLoaderRoute: typeof ManagementCommunicationManagementChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/communication-management/announcements': {
+      id: '/management/communication-management/announcements'
+      path: '/management/communication-management/announcements'
+      fullPath: '/management/communication-management/announcements'
+      preLoaderRoute: typeof ManagementCommunicationManagementAnnouncementsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/asset-management/tool-management': {
@@ -8694,6 +10164,24 @@ const rootRouteChildren: RootRouteChildren = {
   ManagementAssetManagementReportsRoute: ManagementAssetManagementReportsRoute,
   ManagementAssetManagementToolManagementRoute:
     ManagementAssetManagementToolManagementRoute,
+  ManagementCommunicationManagementAnnouncementsRoute:
+    ManagementCommunicationManagementAnnouncementsRoute,
+  ManagementCommunicationManagementChatRoute:
+    ManagementCommunicationManagementChatRoute,
+  ManagementCommunicationManagementCollaborationWorkspaceRoute:
+    ManagementCommunicationManagementCollaborationWorkspaceRoute,
+  ManagementCommunicationManagementEmailRoute:
+    ManagementCommunicationManagementEmailRoute,
+  ManagementCommunicationManagementInternalSocialNetworkRoute:
+    ManagementCommunicationManagementInternalSocialNetworkRoute,
+  ManagementCommunicationManagementNotificationsRoute:
+    ManagementCommunicationManagementNotificationsRoute,
+  ManagementCommunicationManagementOverviewRoute:
+    ManagementCommunicationManagementOverviewRoute,
+  ManagementCommunicationManagementReportsRoute:
+    ManagementCommunicationManagementReportsRoute,
+  ManagementCommunicationManagementVideoMeetingsRoute:
+    ManagementCommunicationManagementVideoMeetingsRoute,
   ManagementCrmManagementAccountManagementRoute:
     ManagementCrmManagementAccountManagementRoute,
   ManagementCrmManagementAccountsRoute: ManagementCrmManagementAccountsRoute,
@@ -8769,6 +10257,26 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementHrmManagementTravelExpenseRoute,
   ManagementHrmManagementWorkforcePlanningRoute:
     ManagementHrmManagementWorkforcePlanningRoute,
+  ManagementKnowledgeManagementBestPracticesRoute:
+    ManagementKnowledgeManagementBestPracticesRoute,
+  ManagementKnowledgeManagementDocumentRepositoryRoute:
+    ManagementKnowledgeManagementDocumentRepositoryRoute,
+  ManagementKnowledgeManagementLessonsLearnedRoute:
+    ManagementKnowledgeManagementLessonsLearnedRoute,
+  ManagementKnowledgeManagementOverviewRoute:
+    ManagementKnowledgeManagementOverviewRoute,
+  ManagementKnowledgeManagementReportsRoute:
+    ManagementKnowledgeManagementReportsRoute,
+  ManagementKnowledgeManagementSopLibraryRoute:
+    ManagementKnowledgeManagementSopLibraryRoute,
+  ManagementKnowledgeManagementTechnicalLibraryRoute:
+    ManagementKnowledgeManagementTechnicalLibraryRoute,
+  ManagementKnowledgeManagementTemplatesRoute:
+    ManagementKnowledgeManagementTemplatesRoute,
+  ManagementKnowledgeManagementTrainingMaterialsRoute:
+    ManagementKnowledgeManagementTrainingMaterialsRoute,
+  ManagementKnowledgeManagementWikiRoute:
+    ManagementKnowledgeManagementWikiRoute,
   ManagementMarketingManagementBrandManagementRoute:
     ManagementMarketingManagementBrandManagementRoute,
   ManagementMarketingManagementBrandingRoute:
@@ -8856,6 +10364,8 @@ const rootRouteChildren: RootRouteChildren = {
   ManagementProjectManagementTimeTrackingRoute:
     ManagementProjectManagementTimeTrackingRoute,
   ManagementProjectManagementWbsRoute: ManagementProjectManagementWbsRoute,
+  ManagementQualityManagementAuditComplianceRoute:
+    ManagementQualityManagementAuditComplianceRoute,
   ManagementQualityManagementAuditManagementRoute:
     ManagementQualityManagementAuditManagementRoute,
   ManagementQualityManagementCalibrationRoute:
@@ -8863,6 +10373,8 @@ const rootRouteChildren: RootRouteChildren = {
   ManagementQualityManagementCapaRoute: ManagementQualityManagementCapaRoute,
   ManagementQualityManagementComplianceRoute:
     ManagementQualityManagementComplianceRoute,
+  ManagementQualityManagementComplianceReportingRoute:
+    ManagementQualityManagementComplianceReportingRoute,
   ManagementQualityManagementFinalInspectionRoute:
     ManagementQualityManagementFinalInspectionRoute,
   ManagementQualityManagementInProcessInspectionRoute:
@@ -8881,6 +10393,45 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementQualityManagementReportsRoute,
   ManagementQualityManagementRootCauseAnalysisRoute:
     ManagementQualityManagementRootCauseAnalysisRoute,
+  ManagementRiskManagementAuditComplianceRoute:
+    ManagementRiskManagementAuditComplianceRoute,
+  ManagementRiskManagementBusinessContinuityRoute:
+    ManagementRiskManagementBusinessContinuityRoute,
+  ManagementRiskManagementCertificationsRoute:
+    ManagementRiskManagementCertificationsRoute,
+  ManagementRiskManagementComplianceOverviewRoute:
+    ManagementRiskManagementComplianceOverviewRoute,
+  ManagementRiskManagementComplianceReportingRoute:
+    ManagementRiskManagementComplianceReportingRoute,
+  ManagementRiskManagementComplianceReportsRoute:
+    ManagementRiskManagementComplianceReportsRoute,
+  ManagementRiskManagementComplianceRiskRoute:
+    ManagementRiskManagementComplianceRiskRoute,
+  ManagementRiskManagementDisasterRecoveryRoute:
+    ManagementRiskManagementDisasterRecoveryRoute,
+  ManagementRiskManagementEnterpriseRiskRoute:
+    ManagementRiskManagementEnterpriseRiskRoute,
+  ManagementRiskManagementFinancialRiskRoute:
+    ManagementRiskManagementFinancialRiskRoute,
+  ManagementRiskManagementIncidentManagementRoute:
+    ManagementRiskManagementIncidentManagementRoute,
+  ManagementRiskManagementInternalComplianceRoute:
+    ManagementRiskManagementInternalComplianceRoute,
+  ManagementRiskManagementIsoComplianceRoute:
+    ManagementRiskManagementIsoComplianceRoute,
+  ManagementRiskManagementLegalRegisterRoute:
+    ManagementRiskManagementLegalRegisterRoute,
+  ManagementRiskManagementLicensesRoute: ManagementRiskManagementLicensesRoute,
+  ManagementRiskManagementOperationalRiskRoute:
+    ManagementRiskManagementOperationalRiskRoute,
+  ManagementRiskManagementOverviewRoute: ManagementRiskManagementOverviewRoute,
+  ManagementRiskManagementProjectRiskRoute:
+    ManagementRiskManagementProjectRiskRoute,
+  ManagementRiskManagementRegulatoryComplianceRoute:
+    ManagementRiskManagementRegulatoryComplianceRoute,
+  ManagementRiskManagementReportsRoute: ManagementRiskManagementReportsRoute,
+  ManagementRiskManagementVendorRiskRoute:
+    ManagementRiskManagementVendorRiskRoute,
   ManagementSalesManagementChannelPartnersRoute:
     ManagementSalesManagementChannelPartnersRoute,
   ManagementSalesManagementContractsRoute:
@@ -8905,6 +10456,56 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementSalesManagementSalesPlanningRoute,
   ManagementSalesManagementTerritoryManagementRoute:
     ManagementSalesManagementTerritoryManagementRoute,
+  ManagementSupplyChainManagementDemandPlanningRoute:
+    ManagementSupplyChainManagementDemandPlanningRoute,
+  ManagementSupplyChainManagementDispatchManagementRoute:
+    ManagementSupplyChainManagementDispatchManagementRoute,
+  ManagementSupplyChainManagementDistributionRoute:
+    ManagementSupplyChainManagementDistributionRoute,
+  ManagementSupplyChainManagementFleetManagementRoute:
+    ManagementSupplyChainManagementFleetManagementRoute,
+  ManagementSupplyChainManagementInventoryRoute:
+    ManagementSupplyChainManagementInventoryRoute,
+  ManagementSupplyChainManagementLogisticsRoute:
+    ManagementSupplyChainManagementLogisticsRoute,
+  ManagementSupplyChainManagementMaterialPlanningRoute:
+    ManagementSupplyChainManagementMaterialPlanningRoute,
+  ManagementSupplyChainManagementOverviewRoute:
+    ManagementSupplyChainManagementOverviewRoute,
+  ManagementSupplyChainManagementPackagingManagementRoute:
+    ManagementSupplyChainManagementPackagingManagementRoute,
+  ManagementSupplyChainManagementReportsRoute:
+    ManagementSupplyChainManagementReportsRoute,
+  ManagementSupplyChainManagementReverseLogisticsRoute:
+    ManagementSupplyChainManagementReverseLogisticsRoute,
+  ManagementSupplyChainManagementSupplyAnalyticsRoute:
+    ManagementSupplyChainManagementSupplyAnalyticsRoute,
+  ManagementSupplyChainManagementSupplyPlanningRoute:
+    ManagementSupplyChainManagementSupplyPlanningRoute,
+  ManagementSupplyChainManagementTransportationRoute:
+    ManagementSupplyChainManagementTransportationRoute,
+  ManagementSupplyChainManagementWarehouseRoute:
+    ManagementSupplyChainManagementWarehouseRoute,
+  ManagementSustainabilityManagementCarbonFootprintRoute:
+    ManagementSustainabilityManagementCarbonFootprintRoute,
+  ManagementSustainabilityManagementEnergyMonitoringRoute:
+    ManagementSustainabilityManagementEnergyMonitoringRoute,
+  ManagementSustainabilityManagementEnvironmentalComplianceRoute:
+    ManagementSustainabilityManagementEnvironmentalComplianceRoute,
+  ManagementSustainabilityManagementEsgRoute:
+    ManagementSustainabilityManagementEsgRoute,
+  ManagementSustainabilityManagementOverviewRoute:
+    ManagementSustainabilityManagementOverviewRoute,
+  ManagementSustainabilityManagementRecyclingManagementRoute:
+    ManagementSustainabilityManagementRecyclingManagementRoute,
+  ManagementSustainabilityManagementReportsRoute:
+    ManagementSustainabilityManagementReportsRoute,
+  ManagementSustainabilityManagementSustainabilityReportingRoute:
+    ManagementSustainabilityManagementSustainabilityReportingRoute,
+  ManagementSustainabilityManagementWasteManagementRoute:
+    ManagementSustainabilityManagementWasteManagementRoute,
+  ManagementSustainabilityManagementWaterManagementRoute:
+    ManagementSustainabilityManagementWaterManagementRoute,
   ManufacturingDevelopmentAutomationDevelopmentIdRoute:
     ManufacturingDevelopmentAutomationDevelopmentIdRoute,
   ManufacturingDevelopmentAutomationDevelopmentNewRoute:
@@ -8925,7 +10526,13 @@ const rootRouteChildren: RootRouteChildren = {
     ManufacturingDevelopmentRoboticsIntegrationIdRoute,
   ManufacturingDevelopmentRoboticsIntegrationNewRoute:
     ManufacturingDevelopmentRoboticsIntegrationNewRoute,
+  ManagementCommunicationManagementIndexRoute:
+    ManagementCommunicationManagementIndexRoute,
+  ManagementKnowledgeManagementIndexRoute:
+    ManagementKnowledgeManagementIndexRoute,
   ManagementQualityManagementIndexRoute: ManagementQualityManagementIndexRoute,
+  ManagementSustainabilityManagementIndexRoute:
+    ManagementSustainabilityManagementIndexRoute,
   ManufacturingDevelopmentAutomationDevelopmentIndexRoute:
     ManufacturingDevelopmentAutomationDevelopmentIndexRoute,
   ManufacturingDevelopmentLeanManufacturingIndexRoute:

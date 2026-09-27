@@ -44,7 +44,11 @@ export type WidgetCategory =
   | "pd"
   | "md"
   | "pm"
-  | "sales";
+  | "sales"
+  | "supply-chain"
+  | "risk"
+  | "communication"
+  | "sustainability";
 
 /**
  * Simulated roles for access control. There is no auth system yet — identity is
@@ -92,7 +96,29 @@ export type WidgetPageId =
   // Sales Management Overview
   | "sales-overview"
   // Marketing Management Overview
-  | "marketing-overview";
+  | "marketing-overview"
+  // Supply Chain Management Overview
+  | "supply-chain-overview"
+  // Risk Management Overviews
+  | "risk-overview"
+  | "risk-reports"
+  // Compliance Management Overviews
+  | "compliance-overview"
+  | "compliance-reports"
+  // Knowledge Management Overview
+  | "knowledge-overview"
+  // Communication Management Overview
+  | "communication-overview"
+  // Sustainability Management Overview & Submodules
+  | "sustainability-overview"
+  | "sustainability-esg"
+  | "sustainability-carbon-footprint"
+  | "sustainability-energy-monitoring"
+  | "sustainability-water-management"
+  | "sustainability-waste-management"
+  | "sustainability-recycling-management"
+  | "sustainability-environmental-compliance"
+  | "sustainability-reporting";
 
 /** Grid spans per breakpoint tier, expressed in that tier's column count. */
 export type WidgetSpan = {

@@ -14,6 +14,12 @@ import { ASSET_WIDGETS } from "./content/asset";
 import { QUALITY_WIDGETS } from "./content/quality";
 import { SALES_WIDGETS } from "./content/sales";
 import { MARKETING_WIDGETS } from "./content/marketing";
+import { SUPPLY_CHAIN_WIDGETS } from "./content/supply-chain";
+import { RISK_WIDGETS } from "./content/risk";
+import { COMPLIANCE_WIDGETS } from "./content/compliance";
+import { KNOWLEDGE_WIDGETS } from "./content/knowledge";
+import { COMMUNICATION_WIDGETS } from "./content/communication";
+import { SUSTAINABILITY_WIDGETS } from "./content/sustainability";
 
 /* ===========================================================================
    Widget registry
@@ -41,6 +47,12 @@ const ALL_DEFINITIONS: WidgetDefinition[] = [
   ...QUALITY_WIDGETS,
   ...SALES_WIDGETS,
   ...MARKETING_WIDGETS,
+  ...SUPPLY_CHAIN_WIDGETS,
+  ...RISK_WIDGETS,
+  ...COMPLIANCE_WIDGETS,
+  ...KNOWLEDGE_WIDGETS,
+  ...COMMUNICATION_WIDGETS,
+  ...SUSTAINABILITY_WIDGETS,
   // Future modules append here: ...INVENTORY_WIDGETS, ...FLEET_WIDGETS, ...
 ];
 

@@ -5,6 +5,9 @@ import { HRM_PAGE_KPIS } from "../content/hrm/hrmKpiMap";
 import { ADMIN_PAGE_KPIS } from "../content/admin/adminKpiMap";
 import { PROCUREMENT_PAGE_KPIS } from "../content/procurement/procurementKpiMap";
 import { QUALITY_PAGE_KPIS } from "../content/quality/qualityKpiMap";
+import { KNOWLEDGE_PAGE_KPIS } from "../content/knowledge/knowledgeKpiMap";
+import { COMMUNICATION_PAGE_KPIS } from "../content/communication/communicationKpiMap";
+import { SUSTAINABILITY_PAGE_KPIS } from "../content/sustainability/sustainabilityKpiMap";
 import type { WidgetPageId } from "../types";
 
 /* ===========================================================================
@@ -48,7 +51,10 @@ export function KpiQuickAddLayer({ pageId, onOpen }: KpiQuickAddLayerProps) {
       CRM_PAGE_KPIS[pageId] ??
       HRM_PAGE_KPIS[pageId] ??
       ADMIN_PAGE_KPIS[pageId] ??
-      QUALITY_PAGE_KPIS[pageId];
+      QUALITY_PAGE_KPIS[pageId] ??
+      KNOWLEDGE_PAGE_KPIS[pageId] ??
+      COMMUNICATION_PAGE_KPIS[pageId] ??
+      SUSTAINABILITY_PAGE_KPIS[pageId];
     if (!map) return;
     const root = document.querySelector("main");
     if (!root) return;

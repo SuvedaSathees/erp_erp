@@ -155,7 +155,6 @@ export function hrmOverviewOptions() {
   return queryOptions<HrmOverviewData>({
     queryKey: ["hrm-management", "overview"],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 80));
       return MOCK_HRM_DATA;
     },
   });

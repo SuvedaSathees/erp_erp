@@ -36,6 +36,9 @@ import { ADMIN_PAGE_KPIS } from "../content/admin/adminKpiMap";
 import { PROCUREMENT_PAGE_KPIS } from "../content/procurement/procurementKpiMap";
 import { BD_PAGE_KPIS } from "../content/bd/bdKpiMap";
 import { QUALITY_PAGE_KPIS } from "../content/quality/qualityKpiMap";
+import { KNOWLEDGE_PAGE_KPIS } from "../content/knowledge/knowledgeKpiMap";
+import { COMMUNICATION_PAGE_KPIS } from "../content/communication/communicationKpiMap";
+import { SUSTAINABILITY_PAGE_KPIS } from "../content/sustainability/sustainabilityKpiMap";
 
 // ===========================================================================
 // 1. WidgetPreferenceService
@@ -177,6 +180,24 @@ export function getPageIdFromPathname(pathname: string): WidgetPageId | null {
   if (pathname.startsWith("/management/project-management/overview")) return "pm-overview";
   if (pathname.startsWith("/management/asset-management/overview")) return "asset-overview";
   if (pathname.startsWith("/management/quality-management/overview")) return "quality-overview";
+  if (pathname.startsWith("/management/sales-management/overview")) return "sales-overview";
+  if (pathname.startsWith("/management/marketing-management/overview")) return "marketing-overview";
+  if (pathname.startsWith("/management/supply-chain-management/overview")) return "supply-chain-overview";
+  if (pathname.startsWith("/management/risk-management/overview")) return "risk-overview";
+  if (pathname.startsWith("/management/risk-management/reports")) return "risk-reports";
+  if (pathname.startsWith("/management/risk-management/compliance-overview")) return "compliance-overview";
+  if (pathname.startsWith("/management/risk-management/compliance-reports")) return "compliance-reports";
+  if (pathname.startsWith("/management/knowledge-management/overview")) return "knowledge-overview";
+  if (pathname.startsWith("/management/communication-management/overview")) return "communication-overview";
+  if (pathname.startsWith("/management/sustainability-management/overview")) return "sustainability-overview";
+  if (pathname.startsWith("/management/sustainability-management/esg")) return "sustainability-esg";
+  if (pathname.startsWith("/management/sustainability-management/carbon-footprint")) return "sustainability-carbon-footprint";
+  if (pathname.startsWith("/management/sustainability-management/energy-monitoring")) return "sustainability-energy-monitoring";
+  if (pathname.startsWith("/management/sustainability-management/water-management")) return "sustainability-water-management";
+  if (pathname.startsWith("/management/sustainability-management/waste-management")) return "sustainability-waste-management";
+  if (pathname.startsWith("/management/sustainability-management/recycling-management")) return "sustainability-recycling-management";
+  if (pathname.startsWith("/management/sustainability-management/environmental-compliance")) return "sustainability-environmental-compliance";
+  if (pathname.startsWith("/management/sustainability-management/sustainability-reporting")) return "sustainability-reporting";
   return null;
 }
 
@@ -426,7 +447,10 @@ export function KPIWidgetCard({
          HRM_PAGE_KPIS[pageId]?.[label] ??
          ADMIN_PAGE_KPIS[pageId]?.[label] ??
          BD_PAGE_KPIS[pageId]?.[label] ??
-         QUALITY_PAGE_KPIS[pageId]?.[label])
+         QUALITY_PAGE_KPIS[pageId]?.[label] ??
+         KNOWLEDGE_PAGE_KPIS[pageId]?.[label] ??
+         COMMUNICATION_PAGE_KPIS[pageId]?.[label] ??
+         SUSTAINABILITY_PAGE_KPIS[pageId]?.[label])
       : undefined;
 
     if (!id) {
@@ -448,6 +472,8 @@ export function KPIWidgetCard({
         ADMIN_PAGE_KPIS,
         BD_PAGE_KPIS,
         QUALITY_PAGE_KPIS,
+        KNOWLEDGE_PAGE_KPIS,
+        COMMUNICATION_PAGE_KPIS,
       ];
       for (const m of allMaps) {
         for (const pid of Object.keys(m)) {
@@ -483,10 +509,24 @@ export function KPIWidgetCard({
     return WidgetPreferenceService.isAdded(prefs, "dashboard", widgetId);
   }, [prefs, widgetId]);
 
+  const targetOverviewPageId: WidgetPageId = useMemo(() => {
+    if (pageId && pageId.startsWith("sustainability-")) return "sustainability-overview";
+    if (pageId && pageId.startsWith("communication-")) return "communication-overview";
+    if (pageId && pageId.startsWith("knowledge-")) return "knowledge-overview";
+    return "finance-overview";
+  }, [pageId]);
+
+  const targetOverviewLabel = useMemo(() => {
+    if (targetOverviewPageId === "sustainability-overview") return "Sustainability Overview";
+    if (targetOverviewPageId === "communication-overview") return "Communication Overview";
+    if (targetOverviewPageId === "knowledge-overview") return "Knowledge Overview";
+    return "Finance Overview";
+  }, [targetOverviewPageId]);
+
   const isAddedToOverview = useMemo(() => {
     if (!widgetId) return false;
-    return WidgetPreferenceService.isAdded(prefs, "finance-overview", widgetId);
-  }, [prefs, widgetId]);
+    return WidgetPreferenceService.isAdded(prefs, targetOverviewPageId, widgetId);
+  }, [prefs, targetOverviewPageId, widgetId]);
 
   const isPinned = useMemo(() => {
     if (!widgetId || !pageId) return false;
@@ -512,12 +552,12 @@ export function KPIWidgetCard({
     if (!widgetId) return;
     const action = WidgetPreferenceService.toggleWidget(
       prefs,
-      "finance-overview",
+      targetOverviewPageId,
       widgetId,
       update,
     );
     showBlurToast(
-      action === "added" ? "✓ Added to Finance Overview" : "✓ Removed from Finance Overview",
+      action === "added" ? `✓ Added to ${targetOverviewLabel}` : `✓ Removed from ${targetOverviewLabel}`,
     );
   };
 
@@ -624,7 +664,7 @@ export function KPIWidgetCard({
               >
                 <span className="flex items-center gap-3">
                   <Layers3 className="h-4 w-4 text-[#0A3C75]" />
-                  {isAddedToOverview ? "Remove from Overview" : "Add to Finance Overview"}
+                  {isAddedToOverview ? `Remove from ${targetOverviewLabel}` : `Add to ${targetOverviewLabel}`}
                 </span>
                 {isAddedToOverview ? (
                   <Check className="h-4 w-4 text-emerald-500" />

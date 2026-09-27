@@ -70,11 +70,25 @@ export const WidgetShell = memo(function WidgetShell({
     return WidgetPreferenceService.isAdded(prefs, "dashboard", instance.widgetId);
   }, [prefs, instance.widgetId]);
 
-  const isAddedToOverview = useMemo(() => {
-    return WidgetPreferenceService.isAdded(prefs, "finance-overview", instance.widgetId);
-  }, [prefs, instance.widgetId]);
-
   const activePage = useMemo(() => pageId ?? "dashboard", [pageId]);
+
+  const targetOverviewPageId: WidgetPageId = useMemo(() => {
+    if (activePage.startsWith("sustainability-")) return "sustainability-overview";
+    if (activePage.startsWith("communication-")) return "communication-overview";
+    if (activePage.startsWith("knowledge-")) return "knowledge-overview";
+    return "finance-overview";
+  }, [activePage]);
+
+  const targetOverviewLabel = useMemo(() => {
+    if (targetOverviewPageId === "sustainability-overview") return "Sustainability Overview";
+    if (targetOverviewPageId === "communication-overview") return "Communication Overview";
+    if (targetOverviewPageId === "knowledge-overview") return "Knowledge Overview";
+    return "Finance Overview";
+  }, [targetOverviewPageId]);
+
+  const isAddedToOverview = useMemo(() => {
+    return WidgetPreferenceService.isAdded(prefs, targetOverviewPageId, instance.widgetId);
+  }, [prefs, targetOverviewPageId, instance.widgetId]);
 
   const isPinned = useMemo(() => {
     return WidgetPreferenceService.isPinned(prefs, activePage, instance.widgetId);
@@ -102,14 +116,14 @@ export const WidgetShell = memo(function WidgetShell({
   const handleToggleOverview = useCallback(() => {
     const action = WidgetPreferenceService.toggleWidget(
       prefs,
-      "finance-overview",
+      targetOverviewPageId,
       instance.widgetId,
       update,
     );
     showBlurToast(
-      action === "added" ? "✓ Added to Finance Overview" : "✓ Removed from Finance Overview",
+      action === "added" ? `✓ Added to ${targetOverviewLabel}` : `✓ Removed from ${targetOverviewLabel}`,
     );
-  }, [prefs, instance.widgetId, update]);
+  }, [prefs, targetOverviewPageId, targetOverviewLabel, instance.widgetId, update]);
 
   const handleTogglePin = useCallback(() => {
     const pinVal = WidgetPreferenceService.togglePin(prefs, activePage, instance.widgetId, update);

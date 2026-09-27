@@ -104,7 +104,6 @@ export function adminOverviewOptions() {
   return queryOptions<AdminOverviewData>({
     queryKey: ["administration-management", "overview"],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 80));
       return MOCK_ADMIN_DATA;
     },
   });

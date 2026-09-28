@@ -61,15 +61,23 @@ export function resolveSize(size: WidgetSize, def: WidgetDefinition): Exclude<Wi
 export function resolveSpan(instance: WidgetInstance, def: WidgetDefinition): Required<WidgetSpan> {
   const preset = SIZE_SPANS[resolveSize(instance.size, def)];
 
-  // Smart responsive spans for 6-card PM KPIs and 50/50 panels so they perfectly fill rows without blank whitespace or cramped columns
+  // Smart responsive spans for 6-card PM / Risk / Compliance KPIs and 50/50 panels so they perfectly fill rows without blank whitespace or cramped columns
   let smartOverride: Partial<WidgetSpan> | undefined;
-  if (instance.widgetId.startsWith("kpi.pm.")) {
-    smartOverride = { xl: 10, lg: 1, md: 2 };
+  if (
+    instance.id.startsWith("risk-kpi-") ||
+    instance.id.startsWith("comp-kpi-") ||
+    instance.widgetId.startsWith("kpi.pm.") ||
+    (instance.widgetId.startsWith("kpi.risk.") && !instance.id.startsWith("risk-rep-")) ||
+    instance.widgetId.startsWith("kpi.compliance.")
+  ) {
+    smartOverride = { xl: 10, lg: 2, md: 3 };
   } else if (
     instance.widgetId === "chart.pm.execution-status" ||
     instance.widgetId === "chart.pm.resource-utilization" ||
     instance.widgetId === "table.pm.top-risks" ||
-    instance.widgetId === "table.pm.milestones"
+    instance.widgetId === "table.pm.milestones" ||
+    instance.widgetId === "panel.compliance.obligations-matrix" ||
+    instance.widgetId === "panel.compliance.remediation-actions"
   ) {
     smartOverride = { xl: 30, lg: 3, md: 6 };
   }

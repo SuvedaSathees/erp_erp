@@ -5,6 +5,7 @@ import {
   CURRENT_USER_ID,
   fetchPreferences,
   savePreferences,
+  getCachedPreferencesSync,
 } from "@/services/widgetPreferencesService";
 import type { WidgetPreferencesDoc, WidgetPreferencesPatch } from "../types";
 

@@ -108,6 +108,15 @@ export * as sopAiService from "./sopAiService";
 export * as sopExportService from "./sopExportService";
 export * as smartFactoryDevelopmentService from "./smartFactoryDevelopmentService";
 export * as manufacturingExcellenceService from "./manufacturingExcellenceService";
+export * as enterpriseRiskService from "./enterpriseRiskService";
+export * as operationalRiskService from "./operationalRiskService";
+export * as financialRiskService from "./financialRiskService";
+export * as projectRiskService from "./projectRiskService";
+export * as vendorRiskService from "./vendorRiskService";
+export * as complianceRiskService from "./complianceRiskService";
+export * as incidentManagementService from "./incidentManagementService";
+export * as businessContinuityService from "./businessContinuityService";
+export * as disasterRecoveryService from "./disasterRecoveryService";
 
 // Phase 3D Business Development Services (DB-backed)
 export * as marketResearchService from "./marketResearchService";

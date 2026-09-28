@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useState, useEffect, useRef, useMemo, type ReactNode } from "react";
+import { useState, useEffect, useRef, useMemo, lazy, Suspense, memo, type ReactNode } from "react";
 import {
   LayoutDashboard,
   Landmark,
@@ -57,6 +57,10 @@ import {
   Users,
   FolderKanban,
   TrendingUp,
+  Megaphone,
+  Truck,
+  Mail,
+  Leaf,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { company } from "@/lib/companyConfig";
@@ -68,7 +72,12 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";
+
+const ProductScoreBanner = lazy(() =>
+  import("@/components/erp/ProductScoreBanner").then((m) => ({
+    default: m.ProductScoreBanner,
+  }))
+);
 
 type Icon = React.ComponentType<{ className?: string }>;
 
@@ -114,9 +123,17 @@ type SearchTarget = {
   badgeType?: string;
 };
 
+function isLeafActive(child: LeafItem, pathname: string): boolean {
+  const cleanPath = (pathname || "").replace(/\/+$/, "");
+  if (child.subItems && child.subItems.length > 0) {
+    return child.subItems.some((sub) => cleanPath === sub.to || cleanPath.startsWith(sub.to + "/"));
+  }
+  return cleanPath.startsWith(child.matchPrefix ?? child.to);
+}
+
 function groupContainsActive(group: GroupItem, pathname: string): boolean {
   return group.children.some((child) => {
-    if (child.kind === "leaf") return pathname.startsWith(child.matchPrefix ?? child.to);
+    if (child.kind === "leaf") return isLeafActive(child, pathname);
     if (child.kind === "group") return groupContainsActive(child, pathname);
     return false;
   });
@@ -307,6 +324,27 @@ const NAV_GROUPS: GroupItem[] = [
           },
           {
             kind: "leaf",
+            to: "/management/marketing-management/overview",
+            matchPrefix: "/management/marketing-management",
+            label: "Marketing",
+            icon: Megaphone,
+            subItems: [
+              { to: "/management/marketing-management/overview", label: "Overview" },
+              { to: "/management/marketing-management/campaigns", label: "Campaigns" },
+              { to: "/management/marketing-management/digital-marketing", label: "Digital Marketing" },
+              { to: "/management/marketing-management/email-marketing", label: "Email Marketing" },
+              { to: "/management/marketing-management/social-media", label: "Social Media" },
+              { to: "/management/marketing-management/events", label: "Events" },
+              { to: "/management/marketing-management/brand-management", label: "Brand Management" },
+              { to: "/management/marketing-management/market-research", label: "Market Research" },
+              { to: "/management/marketing-management/leads-management", label: "Lead Generation" },
+              { to: "/management/marketing-management/competitor-analysis", label: "Competitor Analysis" },
+              { to: "/management/marketing-management/marketing-analytics", label: "Marketing Analytics" },
+              { to: "/management/marketing-management/reports", label: "Report" },
+            ],
+          },
+          {
+            kind: "leaf",
             to: "/management/crm-management/overview",
             matchPrefix: "/management/crm-management",
             label: "CRM",
@@ -425,6 +463,43 @@ const NAV_GROUPS: GroupItem[] = [
           },
           {
             kind: "leaf",
+            to: "/management/risk-management/overview",
+            label: "Risk",
+            icon: ShieldAlert,
+            subItems: [
+              { to: "/management/risk-management/overview", label: "Overview" },
+              { to: "/management/risk-management/enterprise-risk", label: "Enterprise Risk" },
+              { to: "/management/risk-management/operational-risk", label: "Operational Risk" },
+              { to: "/management/risk-management/financial-risk", label: "Financial Risk" },
+              { to: "/management/risk-management/vendor-risk", label: "Vendor Risk" },
+              { to: "/management/risk-management/project-risk", label: "Project Risk" },
+              { to: "/management/risk-management/compliance-risk", label: "Compliance Risk" },
+              { to: "/management/risk-management/incident-management", label: "Incident Management" },
+              { to: "/management/risk-management/business-continuity", label: "Business Continuity" },
+              { to: "/management/risk-management/disaster-recovery", label: "Disaster Recovery" },
+              { to: "/management/risk-management/reports", label: "Report" },
+            ],
+          },
+          {
+            kind: "leaf",
+            to: "/management/risk-management/compliance-overview",
+            label: "Compliance",
+            icon: ShieldCheck,
+            subItems: [
+              { to: "/management/risk-management/compliance-overview", label: "Overview" },
+              { to: "/management/risk-management/regulatory-compliance", label: "Regulatory Compliance" },
+              { to: "/management/risk-management/internal-compliance", label: "Internal Compliance" },
+              { to: "/management/risk-management/licenses", label: "Licenses" },
+              { to: "/management/risk-management/certifications", label: "Certifications" },
+              { to: "/management/risk-management/iso-compliance", label: "ISO Compliance" },
+              { to: "/management/risk-management/legal-register", label: "Legal Register" },
+              { to: "/management/risk-management/audit-compliance", label: "Audit Compliance" },
+              { to: "/management/risk-management/compliance-reporting", label: "Statutory Filings" },
+              { to: "/management/risk-management/compliance-reports", label: "Report" },
+            ],
+          },
+          {
+            kind: "leaf",
             to: "/management/asset-management/overview",
             matchPrefix: "/management/asset-management",
             label: "Asset",
@@ -461,9 +536,85 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/management/quality-management/root-cause-analysis", label: "Root Cause Analysis" },
               { to: "/management/quality-management/audit-management", label: "Audit Management" },
               { to: "/management/quality-management/calibration", label: "Calibration" },
-              { to: "/management/quality-management/compliance", label: "Compliance" },
               { to: "/management/quality-management/quality-analytics", label: "Quality Analytics" },
               { to: "/management/quality-management/reports", label: "Report" },
+            ],
+          },
+          {
+            kind: "leaf",
+            to: "/management/knowledge-management/overview",
+            matchPrefix: "/management/knowledge-management",
+            label: "Knowledge",
+            icon: BookOpen,
+            subItems: [
+              { to: "/management/knowledge-management/overview", label: "Overview" },
+              { to: "/management/knowledge-management/sop-library", label: "SOP Library" },
+              { to: "/management/knowledge-management/document-repository", label: "Document Repository" },
+              { to: "/management/knowledge-management/templates", label: "Templates" },
+              { to: "/management/knowledge-management/lessons-learned", label: "Lessons Learned" },
+              { to: "/management/knowledge-management/best-practices", label: "Best Practices" },
+              { to: "/management/knowledge-management/technical-library", label: "Technical Library" },
+              { to: "/management/knowledge-management/wiki", label: "Wiki" },
+              { to: "/management/knowledge-management/training-materials", label: "Training Materials" },
+              { to: "/management/knowledge-management/reports", label: "Reports" },
+            ],
+          },
+          {
+            kind: "leaf",
+            to: "/management/communication-management/overview",
+            matchPrefix: "/management/communication-management",
+            label: "Communication",
+            icon: Mail,
+            subItems: [
+              { to: "/management/communication-management/overview", label: "Overview" },
+              { to: "/management/communication-management/email", label: "Email" },
+              { to: "/management/communication-management/chat", label: "Chat" },
+              { to: "/management/communication-management/video-meetings", label: "Video Meetings" },
+              { to: "/management/communication-management/notifications", label: "Notifications" },
+              { to: "/management/communication-management/announcements", label: "Announcements" },
+              { to: "/management/communication-management/collaboration-workspace", label: "Collaboration Workspace" },
+              { to: "/management/communication-management/internal-social-network", label: "Internal Social Network" },
+              { to: "/management/communication-management/reports", label: "Reports" },
+            ],
+          },
+          {
+            kind: "leaf",
+            to: "/management/supply-chain-management/overview",
+            matchPrefix: "/management/supply-chain-management",
+            label: "Supply Chain",
+            icon: Truck,
+            subItems: [
+              { to: "/management/supply-chain-management/overview", label: "Overview" },
+              { to: "/management/supply-chain-management/demand-planning", label: "Demand Planning" },
+              { to: "/management/supply-chain-management/supply-planning", label: "Supply Planning" },
+              { to: "/management/supply-chain-management/inventory", label: "Inventory" },
+              { to: "/management/supply-chain-management/warehouse", label: "Warehouse" },
+              { to: "/management/supply-chain-management/material-planning", label: "Material Planning" },
+              { to: "/management/supply-chain-management/logistics", label: "Logistics & Distribution" },
+              { to: "/management/supply-chain-management/fleet-management", label: "Fleet Management" },
+              { to: "/management/supply-chain-management/packaging-management", label: "Packaging Management" },
+              { to: "/management/supply-chain-management/reverse-logistics", label: "Reverse Logistics Management" },
+              { to: "/management/supply-chain-management/supply-analytics", label: "Supply Analytics" },
+              { to: "/management/supply-chain-management/reports", label: "Report" },
+            ],
+          },
+          {
+            kind: "leaf",
+            to: "/management/sustainability-management/overview",
+            matchPrefix: "/management/sustainability-management",
+            label: "Sustainability",
+            icon: Leaf,
+            subItems: [
+              { to: "/management/sustainability-management/overview", label: "Overview" },
+              { to: "/management/sustainability-management/esg", label: "ESG" },
+              { to: "/management/sustainability-management/carbon-footprint", label: "Carbon Footprint" },
+              { to: "/management/sustainability-management/energy-monitoring", label: "Energy Monitoring" },
+              { to: "/management/sustainability-management/water-management", label: "Water Management" },
+              { to: "/management/sustainability-management/waste-management", label: "Waste Management" },
+              { to: "/management/sustainability-management/recycling-management", label: "Recycling Management" },
+              { to: "/management/sustainability-management/environmental-compliance", label: "Environmental Compliance" },
+              { to: "/management/sustainability-management/sustainability-reporting", label: "Sustainability Reporting" },
+              { to: "/management/sustainability-management/reports", label: "Reports" },
             ],
           },
         ],
@@ -539,7 +690,7 @@ function renderFlyoutChildren(
       );
     }
     if (child.kind === "leaf") {
-      const isActive = pathname.startsWith(child.matchPrefix ?? child.to);
+      const isActive = isLeafActive(child, pathname);
       return (
         <li key={child.to}>
           <Link
@@ -825,6 +976,35 @@ function NavInert({
   );
 }
 
+let cachedOpenGroups: string[] | null = null;
+function getCachedOpenGroups(): string[] {
+  if (cachedOpenGroups !== null) return cachedOpenGroups;
+  if (typeof window !== "undefined") {
+    try {
+      const saved = localStorage.getItem("magnertia_sidebar_open_groups");
+      if (saved) {
+        cachedOpenGroups = JSON.parse(saved);
+        return cachedOpenGroups!;
+      }
+    } catch {
+      // ignore
+    }
+  }
+  cachedOpenGroups = [];
+  return cachedOpenGroups;
+}
+
+function setCachedOpenGroups(groups: string[]) {
+  cachedOpenGroups = groups;
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem("magnertia_sidebar_open_groups", JSON.stringify(groups));
+    } catch {
+      // ignore
+    }
+  }
+}
+
 function NavGroup({
   group,
   pathname,
@@ -841,17 +1021,7 @@ function NavGroup({
   const containsActive = groupContainsActive(group, pathname);
   const Icon = group.icon;
 
-  const [openGroups, setOpenGroups] = useState<string[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("magnertia_sidebar_open_groups");
-        if (saved) return JSON.parse(saved);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    return [];
-  });
+  const [openGroups, setOpenGroups] = useState<string[]>(getCachedOpenGroups);
 
   const handleOpenChange = (open: boolean) => {
     setOpenGroups((prev) => {
@@ -860,13 +1030,7 @@ function NavGroup({
           ? prev
           : [...prev, group.label]
         : prev.filter((g) => g !== group.label);
-      if (typeof window !== "undefined") {
-        try {
-          localStorage.setItem("magnertia_sidebar_open_groups", JSON.stringify(next));
-        } catch (e) {
-          console.error(e);
-        }
-      }
+      setCachedOpenGroups(next);
       return next;
     });
   };
@@ -926,7 +1090,7 @@ function NavGroup({
     );
   }
 
-  const isOpen = openGroups.includes(group.label) || (openGroups.length === 0 && containsActive);
+  const isOpen = openGroups.includes(group.label) || containsActive;
 
   return (
     <li>
@@ -972,7 +1136,7 @@ function NavGroup({
                   <NavLeaf
                     key={child.to}
                     item={child}
-                    active={pathname.startsWith(child.matchPrefix ?? child.to)}
+                    active={isLeafActive(child, pathname)}
                     isCollapsed={isCollapsed}
                     onNavigate={onNavigate}
                     depth={depth + 1}
@@ -995,6 +1159,90 @@ function NavGroup({
   );
 }
 
+// Build flat array of searchable targets once at module scope
+let staticSearchTargets: SearchTarget[] | null = null;
+function getSearchTargets(): SearchTarget[] {
+  if (staticSearchTargets) return staticSearchTargets;
+  const list: SearchTarget[] = [];
+  TOP_ITEMS.forEach((item) => {
+    if (item.kind === "leaf") {
+      list.push({
+        label: item.label,
+        to: item.to,
+        breadcrumbs: [],
+        icon: item.icon,
+        badge: item.badge,
+        badgeType: item.badgeType,
+      });
+      if (item.subItems) {
+        item.subItems.forEach((sub) => {
+          list.push({
+            label: sub.label,
+            to: sub.to,
+            breadcrumbs: [item.label],
+            icon: item.icon,
+            badge: sub.badge,
+            badgeType: sub.badgeType,
+          });
+        });
+      }
+    }
+  });
+
+  const traverseGroup = (group: GroupItem, parentBreadcrumbs: string[]) => {
+    const currentBreadcrumbs = [...parentBreadcrumbs, group.label];
+    group.children.forEach((child) => {
+      if (child.kind === "leaf") {
+        list.push({
+          label: child.label,
+          to: child.to,
+          breadcrumbs: currentBreadcrumbs,
+          icon: child.icon,
+          badge: child.badge,
+          badgeType: child.badgeType,
+        });
+        if (child.subItems) {
+          child.subItems.forEach((sub) => {
+            list.push({
+              label: sub.label,
+              to: sub.to,
+              breadcrumbs: [...currentBreadcrumbs, child.label],
+              icon: child.icon,
+              badge: sub.badge,
+              badgeType: sub.badgeType,
+            });
+          });
+        }
+      } else if (child.kind === "group") {
+        traverseGroup(child, currentBreadcrumbs);
+      } else if (child.kind === "inert") {
+        list.push({
+          label: child.label,
+          to: "#",
+          breadcrumbs: currentBreadcrumbs,
+          icon: child.icon,
+          badge: child.badge,
+          badgeType: child.badgeType,
+        });
+      }
+    });
+  };
+
+  NAV_GROUPS.forEach((group) => {
+    traverseGroup(group, []);
+  });
+
+  list.push({
+    label: "Settings",
+    to: "/settings",
+    breadcrumbs: [],
+    icon: Settings,
+  });
+
+  staticSearchTargets = list;
+  return list;
+}
+
 function SidebarNav({
   isCollapsed,
   searchQuery,
@@ -1003,13 +1251,13 @@ function SidebarNav({
 }: {
   isCollapsed: boolean;
   searchQuery: string;
-  setSearchQuery: (q: string) => void;
+  setSearchQuery: (query: string) => void;
   onNavigate?: () => void;
 }) {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const routerState = useRouterState();
+  const pathname = routerState.location.pathname;
   const navRef = useRef<HTMLDivElement>(null);
 
-  // Handle scroll persistence
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const scrollTop = e.currentTarget.scrollTop;
     if (typeof window !== "undefined") {
@@ -1062,97 +1310,15 @@ function SidebarNav({
     }
   };
 
-  // Build flat array of searchable targets
-  const searchTargets = useMemo(() => {
-    const list: SearchTarget[] = [];
-    TOP_ITEMS.forEach((item) => {
-      if (item.kind === "leaf") {
-        list.push({
-          label: item.label,
-          to: item.to,
-          breadcrumbs: [],
-          icon: item.icon,
-          badge: item.badge,
-          badgeType: item.badgeType,
-        });
-        if (item.subItems) {
-          item.subItems.forEach((sub) => {
-            list.push({
-              label: sub.label,
-              to: sub.to,
-              breadcrumbs: [item.label],
-              icon: item.icon,
-              badge: sub.badge,
-              badgeType: sub.badgeType,
-            });
-          });
-        }
-      }
-    });
-
-    const traverseGroup = (group: GroupItem, parentBreadcrumbs: string[]) => {
-      const currentBreadcrumbs = [...parentBreadcrumbs, group.label];
-      group.children.forEach((child) => {
-        if (child.kind === "leaf") {
-          list.push({
-            label: child.label,
-            to: child.to,
-            breadcrumbs: currentBreadcrumbs,
-            icon: child.icon,
-            badge: child.badge,
-            badgeType: child.badgeType,
-          });
-          if (child.subItems) {
-            child.subItems.forEach((sub) => {
-              list.push({
-                label: sub.label,
-                to: sub.to,
-                breadcrumbs: [...currentBreadcrumbs, child.label],
-                icon: child.icon,
-                badge: sub.badge,
-                badgeType: sub.badgeType,
-              });
-            });
-          }
-        } else if (child.kind === "group") {
-          traverseGroup(child, currentBreadcrumbs);
-        } else if (child.kind === "inert") {
-          list.push({
-            label: child.label,
-            to: "#",
-            breadcrumbs: currentBreadcrumbs,
-            icon: child.icon,
-            badge: child.badge,
-            badgeType: child.badgeType,
-          });
-        }
-      });
-    };
-
-    NAV_GROUPS.forEach((group) => {
-      traverseGroup(group, []);
-    });
-
-    // Add Settings footer
-    list.push({
-      label: "Settings",
-      to: "/settings",
-      breadcrumbs: [],
-      icon: Settings,
-    });
-
-    return list;
-  }, []);
-
   const filteredSearchTargets = useMemo(() => {
     if (!searchQuery) return [];
     const query = searchQuery.toLowerCase().trim();
-    return searchTargets.filter(
+    return getSearchTargets().filter(
       (t) =>
         t.label.toLowerCase().includes(query) ||
         t.breadcrumbs.some((b) => b.toLowerCase().includes(query)),
     );
-  }, [searchQuery, searchTargets]);
+  }, [searchQuery]);
 
   const { favorites } = useFavorites();
 
@@ -1453,7 +1619,7 @@ function Topbar({
   tabs,
 }: {
   onMenuClick: () => void;
-  title: string;
+  title?: string;
   breadcrumb?: string;
   description?: string;
   actions?: ReactNode;
@@ -1512,9 +1678,11 @@ function Topbar({
               })()}
             </div>
           )}
-          <h1 className="font-display text-[26px] font-bold leading-tight tracking-tight text-foreground sm:text-[28px]">
-            {title}
-          </h1>
+          {title && (
+            <h1 className="font-display text-[26px] font-bold leading-tight tracking-tight text-foreground sm:text-[28px]">
+              {title}
+            </h1>
+          )}
           {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
         </div>
 
@@ -1603,6 +1771,9 @@ export function AppShell({
   // 7. Project (/management/project-management)
   // 8. Asset (/management/asset-management)
   // 9. Quality (/management/quality-management)
+  // 10. Supply Chain (/management/supply-chain-management)
+  // 11. Sustainability (/management/sustainability-management)
+  // 12. Communication (/management/communication-management)
   const isManagementModule =
     rawPathname.startsWith("/management/administration-management/") ||
     rawPathname.startsWith("/management/sales-management/") ||
@@ -1612,17 +1783,26 @@ export function AppShell({
     rawPathname.startsWith("/management/procurement-management/") ||
     rawPathname.startsWith("/management/project-management/") ||
     rawPathname.startsWith("/management/asset-management/") ||
-    rawPathname.startsWith("/management/quality-management/");
+    rawPathname.startsWith("/management/quality-management/") ||
+    rawPathname.startsWith("/management/risk-management/") ||
+    rawPathname.startsWith("/management/knowledge-management/") ||
+    rawPathname.startsWith("/management/sustainability-management/") ||
+    rawPathname.startsWith("/management/communication-management/") ||
+    rawPathname.startsWith("/management/supply-chain-management/");
 
   // Extract path segments
   const pathSegments = rawPathname.split("/").filter(Boolean);
 
-  // Exclude overview, report, index, or module root pages as requested
+  // Per user request:
+  // "dont keeep the score in overview and report( 3rd img)"
+  // "i need this for all the sub moduel"
+  // Score banner is enabled on ALL submodules, and cleanly excluded on overview & report registers.
   const isExcluded =
-    rawPathname.endsWith("/overview") ||
+    rawPathname.includes("overview") ||
+    rawPathname.includes("compliance-reports") ||
     rawPathname.endsWith("/reports") ||
-    rawPathname.includes("/overview/") ||
-    rawPathname.includes("/reports/") ||
+    rawPathname.endsWith("/report") ||
+    (rawPathname.includes("report") && !rawPathname.includes("compliance-reporting") && !rawPathname.includes("sustainability-reporting")) ||
     rawPathname.endsWith("/index") ||
     rawPathname === "/management" ||
     pathSegments.length < 3; // Must be at least /management/<module>/<submodule>
@@ -1799,7 +1979,7 @@ export function AppShell({
             isCollapsed ? "lg:pl-[72px]" : "lg:pl-[280px]",
           )}
         >
-          {title && (
+          {(title || breadcrumb || tabs) && (
             <Topbar
               onMenuClick={() => setMobileOpen(true)}
               title={title}
@@ -1812,7 +1992,13 @@ export function AppShell({
           <main className="flex-1 px-4 py-6 lg:px-8 lg:py-7 min-w-0 max-w-full overflow-x-hidden">
             {showScoreBanner && (
               <div className="mb-6 w-full animate-in fade-in duration-300">
-                <ProductScoreBanner submoduleKey={detectedSubmoduleKey} />
+                <Suspense
+                  fallback={
+                    <div className="h-24 w-full rounded-xl border border-border/50 bg-card/40 animate-pulse" />
+                  }
+                >
+                  <ProductScoreBanner submoduleKey={detectedSubmoduleKey} />
+                </Suspense>
               </div>
             )}
             {children}

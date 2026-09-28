@@ -12,8 +12,10 @@ import type { WidgetPreferencesDoc, WidgetPreferencesPatch } from "@/widgets/typ
    on cloud deployments without skeleton lockups.
    =========================================================================== */
 
-/** Identity the preferences doc is keyed by. Re-exported for query keys. */
 export const CURRENT_USER_ID = WIDGETS_CURRENT_USER;
+
+const STORAGE_KEY = `magnertia_widget_prefs_${CURRENT_USER_ID}`;
+let inMemoryPrefs: WidgetPreferencesDoc | null = null;
 
 export const FALLBACK_PREFS: WidgetPreferencesDoc = {
   _id: `widget_preferences::${CURRENT_USER_ID}`,
@@ -26,46 +28,84 @@ export const FALLBACK_PREFS: WidgetPreferencesDoc = {
   updatedAt: new Date().toISOString(),
 };
 
-export async function fetchPreferences(): Promise<WidgetPreferencesDoc> {
-  const timeoutPromise = new Promise<WidgetPreferencesDoc>((resolve) =>
-    setTimeout(() => resolve(FALLBACK_PREFS), 300)
-  );
+/** Synchronously retrieve cached preferences from memory or localStorage. */
+export function getCachedPreferencesSync(): WidgetPreferencesDoc {
+  if (inMemoryPrefs) return inMemoryPrefs;
+  if (typeof window !== "undefined") {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === "object") {
+          inMemoryPrefs = parsed;
+          return parsed;
+        }
+      }
+    } catch {
+      // ignore JSON errors
+    }
+  }
+  return FALLBACK_PREFS;
+}
 
-  try {
-    const fetchPromise = (async () => {
+function persistLocalPrefs(doc: WidgetPreferencesDoc) {
+  inMemoryPrefs = doc;
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(doc));
+    } catch {
+      // ignore localStorage quota errors
+    }
+  }
+}
+
+export async function fetchPreferences(): Promise<WidgetPreferencesDoc> {
+  const cached = getCachedPreferencesSync();
+  const hasLocal = cached !== FALLBACK_PREFS && Object.keys(cached.pages || {}).length > 0;
+
+  const fetchPromise = (async () => {
+    try {
       const res = await getWidgetPreferencesFn();
       if (res && typeof res === "object" && "success" in res && res.success && "data" in res && res.data) {
-        return res.data as WidgetPreferencesDoc;
+        const doc = res.data as WidgetPreferencesDoc;
+        persistLocalPrefs(doc);
+        return doc;
       }
-      return FALLBACK_PREFS;
-    })();
+    } catch (err) {
+      console.warn("fetchPreferences network sync notice:", err);
+    }
+    return cached;
+  })();
 
-    return await Promise.race([fetchPromise, timeoutPromise]);
-  } catch (err) {
-    console.warn("fetchPreferences failed, using fallback preferences:", err);
-    return FALLBACK_PREFS;
+  if (hasLocal) {
+    // If local preferences exist, return immediately without blocking UI
+    fetchPromise.catch(() => {});
+    return cached;
   }
+
+  // Fast safety race so initial cold start never blocks user interaction
+  const timeoutPromise = new Promise<WidgetPreferencesDoc>((resolve) =>
+    setTimeout(() => resolve(cached), 150)
+  );
+
+  return await Promise.race([fetchPromise, timeoutPromise]);
 }
 
 export async function savePreferences(
   patch: WidgetPreferencesPatch,
 ): Promise<WidgetPreferencesDoc> {
-  const timeoutPromise = new Promise<WidgetPreferencesDoc>((resolve) =>
-    setTimeout(() => resolve(FALLBACK_PREFS), 500)
-  );
+  const current = getCachedPreferencesSync();
+  const next: WidgetPreferencesDoc = {
+    ...current,
+    ...patch,
+    updatedAt: new Date().toISOString(),
+  };
+  persistLocalPrefs(next);
 
-  try {
-    const savePromise = (async () => {
-      const res = await updateWidgetPreferencesFn({ data: patch });
-      if (res && typeof res === "object" && "success" in res && res.success && "data" in res && res.data) {
-        return res.data as WidgetPreferencesDoc;
-      }
-      return FALLBACK_PREFS;
-    })();
+  // Background persist to server function without stalling client response
+  updateWidgetPreferencesFn({ data: patch }).catch((err) => {
+    console.warn("Background updateWidgetPreferencesFn notice:", err);
+  });
 
-    return await Promise.race([savePromise, timeoutPromise]);
-  } catch (err) {
-    console.warn("savePreferences failed, returning current fallback:", err);
-    return FALLBACK_PREFS;
-  }
+  return next;
 }

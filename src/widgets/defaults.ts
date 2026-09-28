@@ -356,6 +356,221 @@ export const DEFAULT_LAYOUTS: Record<WidgetPageId, WidgetInstance[]> = {
     // AI Commercial Intelligence & Margin Copilot (Full Width)
     { ...base, id: "sales-ai", widgetId: "ai.sales.commercial-intelligence", size: "full" },
   ],
+  "marketing-overview": [
+    // 10 Marketing Executive KPIs
+    { ...base, id: "mkt-kpi-campaigns", widgetId: "kpi.marketing.active-campaigns", size: "sm" },
+    { ...base, id: "mkt-kpi-reach", widgetId: "kpi.marketing.campaign-reach", size: "sm" },
+    { ...base, id: "mkt-kpi-visits", widgetId: "kpi.marketing.website-visits", size: "sm" },
+    { ...base, id: "mkt-kpi-leads", widgetId: "kpi.marketing.leads-generated", size: "sm" },
+    { ...base, id: "mkt-kpi-mql", widgetId: "kpi.marketing.mql", size: "sm" },
+    { ...base, id: "mkt-kpi-sql", widgetId: "kpi.marketing.sql", size: "sm" },
+    { ...base, id: "mkt-kpi-opps", widgetId: "kpi.marketing.pipeline-opportunities", size: "sm" },
+    { ...base, id: "mkt-kpi-revenue", widgetId: "kpi.marketing.campaign-revenue", size: "sm" },
+    { ...base, id: "mkt-kpi-roi", widgetId: "kpi.marketing.roi", size: "sm" },
+    { ...base, id: "mkt-kpi-cpl", widgetId: "kpi.marketing.cost-per-lead", size: "sm" },
+
+    // 10 Operations Submodules Hub (Full Width)
+    { ...base, id: "mkt-hub-modules", widgetId: "grid.marketing.submodules-hub", size: "full" },
+
+    // Channel Performance (spans 2 of 3) + Campaign Funnel (1 of 3)
+    { ...base, id: "mkt-channels", widgetId: "table.marketing.channel-performance", size: "xl" },
+    { ...base, id: "mkt-funnel", widgetId: "chart.marketing.campaign-funnel", size: "md" },
+
+    // Leads by Source / Geography (1 of 3) + Budget vs Actual (1 of 3) + Recent Activities (1 of 3)
+    { ...base, id: "mkt-leads-source", widgetId: "chart.marketing.leads-by-source", size: "md" },
+    { ...base, id: "mkt-budget-control", widgetId: "panel.marketing.budget-vs-actual", size: "md" },
+    { ...base, id: "mkt-recent-activities", widgetId: "table.marketing.recent-activities", size: "md" },
+
+    // Active Campaigns Master Register (Full Width)
+    { ...base, id: "mkt-campaigns-table", widgetId: "table.marketing.active-campaigns", size: "full" },
+
+    // AI Marketing Intelligence (Full Width)
+    { ...base, id: "mkt-ai-copilot", widgetId: "ai.marketing.intelligence", size: "full" },
+  ],
+  "supply-chain-overview": [
+    // 9 Supply Chain & Demand Planning KPIs
+    { ...base, id: "scm-kpi-demand", widgetId: "kpi.supply-chain.forecast-demand", size: "sm" },
+    { ...base, id: "scm-kpi-accuracy", widgetId: "kpi.supply-chain.forecast-accuracy", size: "sm" },
+    { ...base, id: "scm-kpi-value", widgetId: "kpi.supply-chain.forecast-value", size: "sm" },
+    { ...base, id: "scm-kpi-signals", widgetId: "kpi.supply-chain.demand-signals", size: "sm" },
+    { ...base, id: "scm-kpi-adjustments", widgetId: "kpi.supply-chain.pending-adjustments", size: "sm" },
+    { ...base, id: "scm-kpi-orders", widgetId: "kpi.supply-chain.open-sales-orders", size: "sm" },
+    { ...base, id: "scm-kpi-stockouts", widgetId: "kpi.supply-chain.stockout-risk", size: "sm" },
+    { ...base, id: "scm-kpi-service", widgetId: "kpi.supply-chain.service-level", size: "sm" },
+    { ...base, id: "scm-kpi-inventory", widgetId: "kpi.supply-chain.inventory-impact", size: "sm" },
+
+    // Middle tier: Forecast vs Actual Trend (2/3) + Accuracy Donut (1/3)
+    { ...base, id: "scm-trend", widgetId: "chart.supply-chain.forecast-trend", size: "xl" },
+    { ...base, id: "scm-accuracy", widgetId: "chart.supply-chain.accuracy-donut", size: "md" },
+
+    // Second tier: Demand Drivers (1/3) + Recent Adjustments Table (2/3)
+    { ...base, id: "scm-drivers", widgetId: "list.supply-chain.demand-drivers", size: "md" },
+    { ...base, id: "scm-adjustments", widgetId: "table.supply-chain.recent-adjustments", size: "xl" },
+
+    // Third tier: Upcoming Actions (1/3) + Consensus Pipeline (2/3)
+    { ...base, id: "scm-actions", widgetId: "list.supply-chain.upcoming-actions", size: "md" },
+    { ...base, id: "scm-consensus", widgetId: "table.supply-chain.consensus-pipeline", size: "xl" },
+  ],
+
+  /**
+   * Risk Management Overview — matches screenshot layout:
+   * 6 top KPI cards (10*6=60), 3 visual matrix/analytics cards (20*3=60), 3 operational tables (20*3=60), 1 AI Command Center (60).
+   * Fully covers 60 columns on desktop with ZERO blank space.
+   */
+  "risk-overview": [
+    { ...base, id: "risk-kpi-total", widgetId: "kpi.risk.total-risks", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "risk-kpi-critical", widgetId: "kpi.risk.critical-risks", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "risk-kpi-high", widgetId: "kpi.risk.high-risks", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "risk-kpi-medium", widgetId: "kpi.risk.medium-risks", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "risk-kpi-low", widgetId: "kpi.risk.low-risks", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "risk-kpi-overdue", widgetId: "kpi.risk.overdue-actions", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+
+    // Row 2: Visual Risk Matrix & Analytics (3 across = 20 + 20 + 20 = 60)
+    { ...base, id: "risk-panel-heat-map", widgetId: "panel.risk.heat-map", size: "md" },
+    { ...base, id: "risk-panel-category", widgetId: "panel.risk.category-distribution", size: "md" },
+    { ...base, id: "risk-panel-trend", widgetId: "panel.risk.trend", size: "md" },
+
+    // Row 3: Operational KRI, Top Risks, and Mitigation Actions (3 across = 20 + 20 + 20 = 60)
+    { ...base, id: "risk-panel-kri", widgetId: "panel.risk.kri-list", size: "md" },
+    { ...base, id: "risk-panel-top-risks", widgetId: "panel.risk.top-risks", size: "md" },
+    { ...base, id: "risk-panel-actions", widgetId: "panel.risk.treatment-actions", size: "md" },
+
+    // Row 4: AI Risk Intelligence Command Center (Full Width = 60)
+    { ...base, id: "risk-panel-insights", widgetId: "panel.risk.quick-insights", size: "full" },
+  ],
+
+  "risk-reports": [
+    { ...base, id: "risk-rep-total", widgetId: "kpi.risk.total-risks", size: "sm", spanOverride: { xl: 15, lg: 3, md: 3 } },
+    { ...base, id: "risk-rep-critical", widgetId: "kpi.risk.critical-risks", size: "sm", spanOverride: { xl: 15, lg: 3, md: 3 } },
+    { ...base, id: "risk-rep-residual", widgetId: "kpi.risk.residual-exposure", size: "sm", spanOverride: { xl: 15, lg: 3, md: 3 } },
+    { ...base, id: "risk-rep-overdue", widgetId: "kpi.risk.overdue-actions", size: "sm", spanOverride: { xl: 15, lg: 3, md: 3 } },
+    { ...base, id: "risk-rep-trend", widgetId: "panel.risk.trend", size: "lg" },
+    { ...base, id: "risk-rep-category", widgetId: "panel.risk.category-distribution", size: "lg" },
+    { ...base, id: "risk-rep-top", widgetId: "panel.risk.top-risks", size: "lg" },
+    { ...base, id: "risk-rep-kri", widgetId: "panel.risk.kri-list", size: "lg" },
+  ],
+
+  /**
+   * Compliance Management Overview & Reports
+   * 6 top KPI cards (10*6=60), 3 domain/trend cards (20*3=60), 2 obligation registers (30*2=60), 1 AI Command Center (60).
+   * Fully covers 60 columns on desktop with ZERO blank space.
+   */
+  "compliance-overview": [
+    { ...base, id: "comp-kpi-overall", widgetId: "kpi.compliance.overall-score", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "comp-kpi-licenses", widgetId: "kpi.compliance.active-licenses", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "comp-kpi-iso", widgetId: "kpi.compliance.iso-readiness", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "comp-kpi-obligations", widgetId: "kpi.compliance.obligations-fulfilled", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "comp-kpi-filings", widgetId: "kpi.compliance.filings-on-time", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "comp-kpi-gaps", widgetId: "kpi.compliance.open-gaps", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+
+    // Row 2: Health Trend, Domain Breakdown & Deadlines (3 across = 20 + 20 + 20 = 60)
+    { ...base, id: "comp-panel-trend", widgetId: "panel.compliance.health-trend", size: "md" },
+    { ...base, id: "comp-panel-domain", widgetId: "panel.compliance.domain-distribution", size: "md" },
+    { ...base, id: "comp-panel-filings", widgetId: "panel.compliance.filings-deadlines", size: "md" },
+
+    // Row 3: Key Obligations Register (1/2) & Remediation Tracker (1/2) = 30 + 30 = 60
+    { ...base, id: "comp-panel-obligations", widgetId: "panel.compliance.obligations-matrix", size: "lg" },
+    { ...base, id: "comp-panel-remediation", widgetId: "panel.compliance.remediation-actions", size: "lg" },
+
+    // Row 4: AI Regulatory Intelligence Command Center (Full Width = 60)
+    { ...base, id: "comp-panel-ai", widgetId: "panel.compliance.ai-intelligence", size: "full" },
+  ],
+
+  "compliance-reports": [
+    { ...base, id: "comp-rep-score", widgetId: "kpi.compliance.overall-score", size: "sm", spanOverride: { xl: 15, lg: 3, md: 3 } },
+    { ...base, id: "comp-rep-filings", widgetId: "kpi.compliance.filings-on-time", size: "sm", spanOverride: { xl: 15, lg: 3, md: 3 } },
+    { ...base, id: "comp-rep-capas", widgetId: "kpi.compliance.audit-capas", size: "sm", spanOverride: { xl: 15, lg: 3, md: 3 } },
+    { ...base, id: "comp-rep-updates", widgetId: "kpi.compliance.legal-updates", size: "sm", spanOverride: { xl: 15, lg: 3, md: 3 } },
+    { ...base, id: "comp-rep-trend", widgetId: "panel.compliance.health-trend", size: "lg" },
+    { ...base, id: "comp-rep-domain", widgetId: "panel.compliance.domain-distribution", size: "lg" },
+  ],
+
+  "knowledge-overview": [
+    // Row 1: 5 Circular Icon Metric Widgets (Matching Finance Overview 5-col grid)
+    { ...base, id: "knw-kpi-total-assets", widgetId: "kpi.knowledge.total-assets", size: "sm" },
+    { ...base, id: "knw-kpi-active-sops", widgetId: "kpi.knowledge.active-sops", size: "sm" },
+    { ...base, id: "knw-kpi-doc-vault", widgetId: "kpi.knowledge.document-vault", size: "sm" },
+    { ...base, id: "knw-kpi-best-practices", widgetId: "kpi.knowledge.best-practices", size: "sm" },
+    { ...base, id: "knw-kpi-templates", widgetId: "kpi.knowledge.controlled-templates", size: "sm" },
+
+    // Row 2: 5 Circular Icon Metric Widgets (Matching Finance Overview 5-col grid)
+    { ...base, id: "knw-kpi-wikis", widgetId: "kpi.knowledge.published-wikis", size: "sm" },
+    { ...base, id: "knw-kpi-tech-specs", widgetId: "kpi.knowledge.tech-specs", size: "sm" },
+    { ...base, id: "knw-kpi-pending-reviews", widgetId: "kpi.knowledge.pending-sop-reviews", size: "sm" },
+    { ...base, id: "knw-kpi-training", widgetId: "kpi.knowledge.training-compliance", size: "sm" },
+    { ...base, id: "knw-kpi-lessons", widgetId: "kpi.knowledge.lessons-learned", size: "sm" },
+
+    // Dual Side-by-Side Analytical Panels
+    { ...base, id: "knw-panel-growth-trend", widgetId: "chart.knowledge.growth-trend", size: "xl" },
+    { ...base, id: "knw-panel-health-summary", widgetId: "list.knowledge.health-summary", size: "md" },
+
+    // Knowledge Operations Ledger + Alerts
+    { ...base, id: "knw-panel-ops-ledger", widgetId: "table.knowledge.operations-ledger", size: "xl" },
+    { ...base, id: "knw-panel-alerts", widgetId: "insight.knowledge.audit-alerts", size: "md" },
+
+    // AI Knowledge Intelligence Center
+    { ...base, id: "knw-panel-ai", widgetId: "ai.knowledge.intelligence", size: "full" },
+  ],
+
+  "communication-overview": [
+    // Row 1: 6 Circular Icon Metric Widgets (Matching screenshot 6-col grid: 10/60 each)
+    { ...base, id: "comm-kpi-total-emails", widgetId: "kpi.communication.total-emails", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "comm-kpi-messages", widgetId: "kpi.communication.realtime-messages", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "comm-kpi-meetings", widgetId: "kpi.communication.video-meetings", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "comm-kpi-notifications", widgetId: "kpi.communication.notifications", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "comm-kpi-announcements", widgetId: "kpi.communication.announcements", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+    { ...base, id: "comm-kpi-response-sla", widgetId: "kpi.communication.response-sla", size: "sm", spanOverride: { xl: 10, lg: 2, md: 3 } },
+
+    // Row 2: Volume Trends Area Chart (2/3) + Domain Donut Distribution (1/3)
+    { ...base, id: "comm-panel-volume-trend", widgetId: "chart.communication.volume-trend", size: "xl" },
+    { ...base, id: "comm-panel-domain-dist", widgetId: "chart.communication.domain-distribution", size: "md" },
+
+    // Row 3: AI Assistant (1/3) + SLA Performance Bar Chart (2/3)
+    { ...base, id: "comm-panel-ai", widgetId: "ai.communication.assistant", size: "md" },
+    { ...base, id: "comm-panel-sla-perf", widgetId: "chart.communication.sla-performance", size: "xl" },
+
+    // Row 4: Operations Ledger (Full Width)
+    { ...base, id: "comm-panel-ops-ledger", widgetId: "table.communication.operations-ledger", size: "full" },
+
+    // Row 5: Infrastructure & Gateways
+    { ...base, id: "comm-panel-gateways", widgetId: "insight.communication.channel-alerts", size: "full" },
+  ],
+
+  "sustainability-overview": [
+    // Row 1: 5 KPI Widgets (Matching 5-col grid from Image 2: 12/60 each)
+    { ...base, id: "sust-kpi-ghg", widgetId: "kpi.sustainability.ghg-emissions", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sust-kpi-esg-scorecard", widgetId: "kpi.sustainability.esg-scorecard", size: "sm", pinned: true, spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sust-kpi-energy", widgetId: "kpi.sustainability.energy-consumption", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sust-kpi-water", widgetId: "kpi.sustainability.water-consumption", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sust-kpi-waste", widgetId: "kpi.sustainability.waste-generated", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+
+    // Row 2: 5 KPI Widgets
+    { ...base, id: "sust-kpi-recycling", widgetId: "kpi.sustainability.recycling-rate", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sust-kpi-carbon-intensity", widgetId: "kpi.sustainability.carbon-intensity", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sust-kpi-compliance", widgetId: "kpi.sustainability.environmental-compliance", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sust-kpi-initiatives", widgetId: "kpi.sustainability.esg-initiatives", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sust-kpi-reporting", widgetId: "kpi.sustainability.statutory-reporting", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+
+    // Row 3: Dual Analytical Panels matching Image 2
+    { ...base, id: "sust-panel-decarbonization", widgetId: "panel.sustainability.decarbonization-trend", size: "xl" },
+    { ...base, id: "sust-panel-health-summary", widgetId: "panel.sustainability.health-summary", size: "md" },
+
+    // Row 4: Facility Matrix & Compliance Permits
+    { ...base, id: "sust-panel-facility-matrix", widgetId: "panel.sustainability.facility-matrix", size: "xl" },
+    { ...base, id: "sust-panel-permits", widgetId: "panel.sustainability.compliance-permits", size: "md" },
+
+    // Row 5: AI Copilot & Initiatives Ledger
+    { ...base, id: "sust-panel-ai", widgetId: "panel.sustainability.ai-copilot", size: "md" },
+    { ...base, id: "sust-panel-ledger", widgetId: "panel.sustainability.initiatives-ledger", size: "xl" },
+  ],
+  "sustainability-esg": [],
+  "sustainability-carbon-footprint": [],
+  "sustainability-energy-monitoring": [],
+  "sustainability-water-management": [],
+  "sustainability-waste-management": [],
+  "sustainability-recycling-management": [],
+  "sustainability-environmental-compliance": [],
+  "sustainability-reporting": [],
 };
 
 /** Display metadata for each widget surface. */
@@ -385,6 +600,23 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
   "asset-overview": { label: "Asset Management Overview", route: "/management/asset-management/overview" },
   "quality-overview": { label: "Quality Overview", route: "/management/quality-management/overview" },
   "sales-overview": { label: "Sales Overview", route: "/management/sales-management/overview" },
+  "marketing-overview": { label: "Marketing Overview", route: "/management/marketing-management/overview" },
+  "supply-chain-overview": { label: "Supply Chain Overview", route: "/management/supply-chain-management/overview" },
+  "risk-overview": { label: "Risk Management Overview", route: "/management/risk-management/overview" },
+  "risk-reports": { label: "Risk Management Reports", route: "/management/risk-management/reports" },
+  "compliance-overview": { label: "Compliance Overview", route: "/management/risk-management/compliance-overview" },
+  "compliance-reports": { label: "Compliance Reports", route: "/management/risk-management/compliance-reports" },
+  "knowledge-overview": { label: "Knowledge Overview", route: "/management/knowledge-management/overview" },
+  "communication-overview": { label: "Communication Overview", route: "/management/communication-management/overview" },
+  "sustainability-overview": { label: "Sustainability Overview", route: "/management/sustainability-management/overview" },
+  "sustainability-esg": { label: "ESG Strategy", route: "/management/sustainability-management/esg" },
+  "sustainability-carbon-footprint": { label: "Carbon Footprint", route: "/management/sustainability-management/carbon-footprint" },
+  "sustainability-energy-monitoring": { label: "Energy Monitoring", route: "/management/sustainability-management/energy-monitoring" },
+  "sustainability-water-management": { label: "Water Management", route: "/management/sustainability-management/water-management" },
+  "sustainability-waste-management": { label: "Waste Management", route: "/management/sustainability-management/waste-management" },
+  "sustainability-recycling-management": { label: "Recycling Management", route: "/management/sustainability-management/recycling-management" },
+  "sustainability-environmental-compliance": { label: "Environmental Compliance", route: "/management/sustainability-management/environmental-compliance" },
+  "sustainability-reporting": { label: "Sustainability Reporting", route: "/management/sustainability-management/sustainability-reporting" },
 };
 
 /**
@@ -394,6 +626,7 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
 export const PLACEABLE_PAGES: WidgetPageId[] = [
   "dashboard",
   "finance-overview",
+  "sustainability-overview",
   "crm-overview",
   "hrm-overview",
   "admin-overview",
@@ -406,6 +639,14 @@ export const PLACEABLE_PAGES: WidgetPageId[] = [
   "asset-overview",
   "quality-overview",
   "sales-overview",
+  "marketing-overview",
+  "supply-chain-overview",
+  "risk-overview",
+  "risk-reports",
+  "compliance-overview",
+  "compliance-reports",
+  "knowledge-overview",
+  "communication-overview",
 ];
 
 /** Deep-copy a default layout so callers can never mutate the shared constant. */

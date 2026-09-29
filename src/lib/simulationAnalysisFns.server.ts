@@ -59,7 +59,6 @@ const DEFAULT_RECORD: SimulationRecord = {
   ...calculateSimulationScores({}),
 } as any;
 
-export { DEFAULT_RECORD };
 
 export const getSimulationAnalysisFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: SimulationRecord }> => {

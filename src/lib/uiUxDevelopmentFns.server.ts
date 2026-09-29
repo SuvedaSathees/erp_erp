@@ -56,7 +56,6 @@ const DEFAULT_RECORD: UiUxDevelopmentRecord = {
   ...calculateUiUxDevelopmentScores({}),
 } as any;
 
-export { DEFAULT_RECORD };
 
 export const getUiUxDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: UiUxDevelopmentRecord }> => {

@@ -68,8 +68,6 @@ export const DEFAULT_RECORD: CertificationReadinessRecord = {
   auditTrail: [],
 } as any;
 
-export { DEFAULT_RECORD };
-
 export const getCertificationReadinessFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: CertificationReadinessRecord }> => {
     const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });

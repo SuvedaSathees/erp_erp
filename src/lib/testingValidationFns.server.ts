@@ -69,7 +69,6 @@ export const DEFAULT_RECORD: TestingValidationRecord = {
   auditTrail: [],
 } as any;
 
-export { DEFAULT_RECORD };
 
 export const getTestingValidationFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: TestingValidationRecord }> => {

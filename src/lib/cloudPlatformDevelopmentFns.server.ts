@@ -56,7 +56,6 @@ const DEFAULT_RECORD: CloudPlatformRecord = {
   ...calculateCloudPlatformScores({}),
 } as any;
 
-export { DEFAULT_RECORD };
 
 export const getCloudPlatformDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: CloudPlatformRecord }> => {

@@ -102,7 +102,6 @@ const DEFAULT_RECORD: AiModelRecord = {
   ],
 } as any;
 
-export { DEFAULT_RECORD };
 
 export const getAiModelDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: AiModelRecord }> => {

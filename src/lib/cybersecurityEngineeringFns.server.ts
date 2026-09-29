@@ -56,7 +56,6 @@ const DEFAULT_RECORD: CybersecurityRecord = {
   ...calculateCybersecurityScores({}),
 } as any;
 
-export { DEFAULT_RECORD };
 
 export const getCybersecurityEngineeringFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: CybersecurityRecord }> => {

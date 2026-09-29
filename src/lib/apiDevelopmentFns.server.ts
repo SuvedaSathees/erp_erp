@@ -57,7 +57,6 @@ const DEFAULT_RECORD: ApiDevelopmentRecord = {
   ...calculateApiDevelopmentScores({}),
 } as any;
 
-export { DEFAULT_RECORD };
 
 export const getApiDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: ApiDevelopmentRecord }> => {

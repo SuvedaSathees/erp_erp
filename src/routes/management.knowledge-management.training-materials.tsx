@@ -2,8 +2,10 @@
 // Management -> Knowledge Management -> Training Materials
 // Learning Content, Course Modules, Assessments, Quizzes, Competency & Learner Analytics
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getTrainingMaterialsRecordFn } from "@/lib/trainingMaterialsFns.server";
 import {
   FileText,
   FileCheck,
@@ -104,7 +106,13 @@ function TrainingMaterialsManagementPage() {
   >("create-edit");
 
   // Form State
+  const { data: dbRecord } = useQuery({
+    queryKey: ["training-materials", "record"],
+    queryFn: () => getTrainingMaterialsRecordFn({ data: {} }),
+  });
+
   const [formData, setFormData] = useState<TrainingMaterialRecord>(PRIMARY_TRAINING_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data); }, [dbRecord]);
   const [kpis, setKpis] = useState(TRAINING_KPIS);
   const [objectives, setObjectives] = useState<LearningObjectiveItem[]>(TRAINING_LEARNING_OBJECTIVES);
   const [trainingFiles, setTrainingFiles] = useState<TrainingFileItem[]>(TRAINING_MATERIALS_FILES);

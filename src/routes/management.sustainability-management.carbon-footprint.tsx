@@ -2,8 +2,10 @@
 // Management -> Sustainability Management -> Carbon Footprint
 // Aligned with Light Enterprise Theme (Image 2 Reference)
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getSustainabilityManagementRecordFn } from "@/lib/sustainabilityManagementFns.server";
 import {
   Cloud,
   TrendingDown,
@@ -40,10 +42,16 @@ import { cn } from "@/lib/utils";
 import { mockCarbonFootprint } from "@/services/sustainabilityManagementService";
 
 function CarbonFootprintPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["sustainability-management", "record"],
+    queryFn: () => getSustainabilityManagementRecordFn({ data: {} }),
+  });
+
   const [selectedPlant, setSelectedPlant] = useState("Gigafactory 1 - Chennai");
   const [reportingYear, setReportingYear] = useState("FY 2026");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [data, setData] = useState(mockCarbonFootprint);
+  useEffect(() => { if (dbRecord?.data) setData(dbRecord.data); }, [dbRecord]);
   const [showAddEmissionModal, setShowAddEmissionModal] = useState(false);
   const [showTargetModal, setShowTargetModal] = useState(false);
 

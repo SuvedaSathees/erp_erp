@@ -2,8 +2,10 @@
 // Management -> Sustainability Management -> ESG
 // Aligned with Light Enterprise Theme (Image 2 Reference)
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getSustainabilityManagementRecordFn } from "@/lib/sustainabilityManagementFns.server";
 import {
   Leaf,
   Users,
@@ -40,6 +42,11 @@ import { cn } from "@/lib/utils";
 import { mockESGProgram } from "@/services/sustainabilityManagementService";
 
 function ESGManagementPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["sustainability-management", "record"],
+    queryFn: () => getSustainabilityManagementRecordFn({ data: {} }),
+  });
+
   const [selectedPlant, setSelectedPlant] = useState("Gigafactory 1 - Chennai");
   const [selectedYear, setSelectedYear] = useState("FY 2026");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -56,6 +63,7 @@ function ESGManagementPage() {
 
   // Form states
   const [programData, setProgramData] = useState(mockESGProgram);
+  useEffect(() => { if (dbRecord?.data) setProgramData(dbRecord.data); }, [dbRecord]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);

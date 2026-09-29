@@ -4,6 +4,8 @@
 
 import React, { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getCommunicationManagementRecordFn } from "@/lib/communicationManagementFns.server";
 import {
   FileSpreadsheet,
   Download,
@@ -51,6 +53,11 @@ export const Route = createFileRoute("/management/communication-management/repor
 });
 
 function CommunicationReportsPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["communication-management", "record"],
+    queryFn: () => getCommunicationManagementRecordFn({ data: {} }),
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [reportsList, setReportsList] = useState<CommunicationReportDef[]>(MOCK_COMMUNICATION_REPORTS);

@@ -2,8 +2,10 @@
 // Management -> Risk Management -> Incident Management
 // Incident Management Form - MAICW Classification & Incident Response Engine
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getIncidentManagementRecordFn } from "@/lib/incidentManagementFns.server";
 import {
   AlertTriangle,
   AlertCircle,
@@ -112,10 +114,16 @@ export const Route = createFileRoute(
 export function IncidentManagementPage() {
   const { toast } = useToast();
 
+  const { data: dbRecord } = useQuery({
+    queryKey: ["incident-management", "record"],
+    queryFn: () => getIncidentManagementRecordFn({ data: {} }),
+  });
+
   // Active Incident record (defaults to PRIMARY_INCIDENT_RECORD matching screenshot)
   const [activeIncident, setActiveIncident] = useState<IncidentRecord>(
     incidentManagementService.getPrimaryIncident(),
   );
+  useEffect(() => { if (dbRecord?.data) setActiveIncident(dbRecord.data); }, [dbRecord]);
 
   const [activeTab, setActiveTab] = useState<string>("overview");
 

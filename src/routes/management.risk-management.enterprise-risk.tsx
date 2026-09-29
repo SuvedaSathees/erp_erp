@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { getEnterpriseRiskRecordFn, listEnterpriseRiskRecordsFn } from "@/lib/enterpriseRiskFns.server";
 import {
   Shield,
   ShieldAlert,
@@ -107,8 +109,22 @@ export const Route = createFileRoute("/management/risk-management/enterprise-ris
 });
 
 export function EnterpriseRiskPage() {
+  // --- Prisma-backed queries with inline fallback ---
+  const { data: dbRecord } = useQuery({
+    queryKey: ["enterprise-risk", "record"],
+    queryFn: () => getEnterpriseRiskRecordFn({ data: {} }),
+  });
+  const { data: dbList } = useQuery({
+    queryKey: ["enterprise-risk", "list"],
+    queryFn: () => listEnterpriseRiskRecordsFn({ data: {} }),
+  });
+
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [activeRisk, setActiveRisk] = useState<EnterpriseRiskRecord>(PRIMARY_ACTIVE_RISK);
+
+  useEffect(() => {
+    if (dbRecord?.data) setActiveRisk(dbRecord.data);
+  }, [dbRecord]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isNewRiskModalOpen, setIsNewRiskModalOpen] = useState(false);
   const [selectedRiskForModal, setSelectedRiskForModal] = useState<EnterpriseRiskRecord | null>(null);
@@ -129,8 +145,10 @@ export function EnterpriseRiskPage() {
   const inherentCalc = calculateRiskScore(simLikelihood, simImpact);
   const residualCalc = calculateRiskScore(simResLikelihood, simResImpact);
 
+  const allRisks = dbList?.data ?? FULL_ENTERPRISE_RISKS;
+
   const filteredRegister = useMemo(() => {
-    return FULL_ENTERPRISE_RISKS.filter((r) => {
+    return allRisks.filter((r) => {
       const matchesSearch =
         r.id.toLowerCase().includes(registerSearch.toLowerCase()) ||
         r.title.toLowerCase().includes(registerSearch.toLowerCase()) ||
@@ -140,14 +158,14 @@ export function EnterpriseRiskPage() {
       const matchesPri = priorityFilter === "All" || r.priority === priorityFilter;
       return matchesSearch && matchesCat && matchesPri;
     });
-  }, [registerSearch, categoryFilter, priorityFilter]);
+  }, [allRisks, registerSearch, categoryFilter, priorityFilter]);
 
   const handleExportCSV = () => {
     const csvContent =
       "data:text/csv;charset=utf-8," +
       ["ID,Risk Code,Title,Category,Type,Owner,Inherent Score,Residual Score,Trend,Status"]
         .concat(
-          FULL_ENTERPRISE_RISKS.map(
+          allRisks.map(
             (r) =>
               `"${r.id}","${r.riskCode}","${r.title}","${r.category}","${r.type}","${r.owner}",${r.inherentScore},${r.residualScore},"${r.trend}","${r.status}"`,
           ),

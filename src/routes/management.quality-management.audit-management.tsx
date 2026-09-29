@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getAuditRecordFn } from "@/lib/auditFns.server";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
 import { AuditHeader } from "@/components/erp/audit/AuditHeader";
@@ -49,7 +51,13 @@ export const Route = createFileRoute(
 });
 
 export function AuditManagementPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["quality-audit", "record"],
+    queryFn: () => getAuditRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<AuditRecord>(INITIAL_AUDIT_RECORD);
+  useEffect(() => { if (dbRecord?.data) setRecord(dbRecord.data); }, [dbRecord]);
   const [activeStep, setActiveStep] = useState<number>(3);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);

@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { listEnterpriseRiskRecordsFn } from "@/lib/enterpriseRiskFns.server";
 import {
   FileText,
   Download,
@@ -45,6 +47,13 @@ export const Route = createFileRoute("/management/risk-management/reports")({
 });
 
 export function RiskManagementReportPage() {
+  // --- Prisma-backed query with inline fallback ---
+  const { data: dbList } = useQuery({
+    queryKey: ["enterprise-risk", "list"],
+    queryFn: () => listEnterpriseRiskRecordsFn({ data: {} }),
+  });
+  const allRisks = dbList?.data ?? FULL_ENTERPRISE_RISKS;
+
   const [selectedReportId, setSelectedReportId] = useState<string>("REP-01");
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
@@ -68,7 +77,7 @@ export function RiskManagementReportPage() {
       "data:text/csv;charset=utf-8," +
       ["ID,Title,Category,Inherent,Residual,Trend,Status"]
         .concat(
-          FULL_ENTERPRISE_RISKS.map(
+          allRisks.map(
             (r) =>
               `"${r.id}","${r.title}","${r.category}",${r.inherentScore},${r.residualScore},"${r.trend}","${r.status}"`,
           ),
@@ -338,7 +347,7 @@ export function RiskManagementReportPage() {
                               </tr>
                             </thead>
                             <tbody>
-                              {FULL_ENTERPRISE_RISKS.map((r) => (
+                              {allRisks.map((r) => (
                                 <tr key={r.id} className="border-t border-border/20 hover:bg-muted/20">
                                   <td className="p-2.5 font-mono font-semibold text-primary">{r.id}</td>
                                   <td className="p-2.5">

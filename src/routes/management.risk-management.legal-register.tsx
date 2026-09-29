@@ -2,8 +2,10 @@
 // Management -> Compliance -> Legal Register
 // Legal Register Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getLegalRegisterRecordFn } from "@/lib/legalRegisterFns.server";
 import {
   FileText,
   AlertTriangle,
@@ -114,8 +116,15 @@ export default function LegalRegisterManagementPage() {
     | "reports"
   >("overview");
 
+  // Prisma-backed query with inline fallback
+  const { data: dbRecord } = useQuery({
+    queryKey: ["legal-register", "record"],
+    queryFn: () => getLegalRegisterRecordFn({ data: {} }),
+  });
+
   // Controlled form state
   const [formData, setFormData] = useState<LegalRegisterRecord>(PRIMARY_LEGAL_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data as LegalRegisterRecord); }, [dbRecord]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 

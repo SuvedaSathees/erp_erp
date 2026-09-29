@@ -2,8 +2,10 @@
 // Management -> Knowledge Management -> Lessons Learned
 // Lessons Learned Form — MAICW Classification, RCA, Corrective/Preventive Actions, and Knowledge Reuse
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getLessonsLearnedRecordFn } from "@/lib/lessonsLearnedFns.server";
 import {
   FileText,
   FileCheck,
@@ -98,7 +100,13 @@ function LessonsLearnedPage() {
   >("overview");
 
   // Controlled form state
+  const { data: dbRecord } = useQuery({
+    queryKey: ["lessons-learned", "record"],
+    queryFn: () => getLessonsLearnedRecordFn({ data: {} }),
+  });
+
   const [formData, setFormData] = useState<LessonRecord>(PRIMARY_LESSON_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data); }, [dbRecord]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [lessonRegister, setLessonRegister] = useState<LessonRecord[]>(LESSONS_MASTER_REGISTER);
   const [actionTab, setActionTab] = useState<"corrective" | "preventive" | "recommendations">("corrective");

@@ -2,8 +2,10 @@
 // Management -> Knowledge Management -> SOP Library
 // SOP Library Form — MAICW Classification, Overview, Distribution, Training & Controlled Audit Reports
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getSopLibraryRecordFn } from "@/lib/sopLibraryFns.server";
 import {
   FileText,
   FileCheck,
@@ -94,7 +96,13 @@ function SOPLibraryPage() {
   >("overview");
 
   // Controlled form state
+  const { data: dbRecord } = useQuery({
+    queryKey: ["sop-library", "record"],
+    queryFn: () => getSopLibraryRecordFn({ data: {} }),
+  });
+
   const [formData, setFormData] = useState<SOPRecord>(PRIMARY_SOP_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data); }, [dbRecord]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [linkDocModal, setLinkDocModal] = useState(false);
   const [newSOPModal, setNewSOPModal] = useState(false);

@@ -15,6 +15,7 @@ import { FqcQualityCertificateCard } from "@/components/erp/fqc/FqcQualityCertif
 import { FqcRecentDefectsCard } from "@/components/erp/fqc/FqcRecentDefectsCard";
 import { FqcAiInsightsCard } from "@/components/erp/fqc/FqcAiInsightsCard";
 import { CreateFqcModal } from "@/components/erp/fqc/CreateFqcModal";
+import { getFqcRecordFn } from "@/lib/fqcFns.server";
 import { INITIAL_FQC_RECORD } from "@/services/fqcService";
 import { FqcRecord, FqcCharacteristic, FqcDefect } from "@/services/fqcTypes";
 import { Button } from "@/components/ui/button";
@@ -56,7 +57,13 @@ export function FinalInspectionPage() {
     queryFn: () => qualityManagementService.fetchInspectionRecords(),
   });
 
+  const { data: dbFqcRecord } = useQuery({
+    queryKey: ["fqc", "record"],
+    queryFn: () => getFqcRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<FqcRecord>(INITIAL_FQC_RECORD);
+  useEffect(() => { if (dbFqcRecord?.data) setRecord(dbFqcRecord.data); }, [dbFqcRecord]);
   const [activeStep, setActiveStep] = useState<number>(3);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState(false);

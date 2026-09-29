@@ -15,6 +15,7 @@ import { IqcInspectionSummaryCard } from "@/components/erp/iqc/IqcInspectionSumm
 import { IqcDefectsCard } from "@/components/erp/iqc/IqcDefectsCard";
 import { IqcDispositionCard } from "@/components/erp/iqc/IqcDispositionCard";
 import { CreateIqcModal } from "@/components/erp/iqc/CreateIqcModal";
+import { getIqcRecordFn } from "@/lib/iqcFns.server";
 import {
   INITIAL_IQC_RECORD,
   recalculateIqcStats,
@@ -50,7 +51,13 @@ export function IncomingInspectionPage() {
     queryFn: () => qualityManagementService.fetchInspectionRecords(),
   });
 
+  const { data: dbIqcRecord } = useQuery({
+    queryKey: ["iqc", "record"],
+    queryFn: () => getIqcRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<IqcRecord>(INITIAL_IQC_RECORD);
+  useEffect(() => { if (dbIqcRecord?.data) setRecord(dbIqcRecord.data); }, [dbIqcRecord]);
   const [activeStep, setActiveStep] = useState<number>(3);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState(false);

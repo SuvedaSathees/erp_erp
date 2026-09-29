@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getComplianceRecordFn } from "@/lib/complianceFns.server";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
 import { ComplianceHeader } from "@/components/erp/compliance/ComplianceHeader";
@@ -42,7 +44,13 @@ export const Route = createFileRoute(
 });
 
 export function CompliancePage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["quality-compliance", "record"],
+    queryFn: () => getComplianceRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<ComplianceRecord>(INITIAL_COMPLIANCE_RECORD);
+  useEffect(() => { if (dbRecord?.data) setRecord(dbRecord.data); }, [dbRecord]);
   const [activeStep, setActiveStep] = useState<number>(3); // Step 3: Obligations Register
   const [showAllSections, setShowAllSections] = useState<boolean>(false);
 

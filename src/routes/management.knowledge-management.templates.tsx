@@ -2,8 +2,10 @@
 // Management -> Knowledge Management -> Templates
 // Templates Form — MAICW Classification, Standard Structure, Required Fields & Usage Intelligence
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getTemplatesRecordFn } from "@/lib/templatesFns.server";
 import {
   FileText,
   FileCheck,
@@ -90,7 +92,13 @@ function TemplatesPage() {
   >("overview");
 
   // Controlled form state
+  const { data: dbRecord } = useQuery({
+    queryKey: ["templates", "record"],
+    queryFn: () => getTemplatesRecordFn({ data: {} }),
+  });
+
   const [formData, setFormData] = useState<TemplateRecord>(PRIMARY_TEMPLATE_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data); }, [dbRecord]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [templateRegister, setTemplateRegister] = useState<TemplateRecord[]>(TEMPLATE_MASTER_REGISTER);
   const [structureItems, setStructureItems] = useState<StandardStructureItem[]>(TEMPLATE_STRUCTURE_ITEMS);

@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getRcaRecordFn } from "@/lib/rcaFns.server";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
 import { RcaHeader } from "@/components/erp/rca/RcaHeader";
@@ -50,7 +52,13 @@ export const Route = createFileRoute(
 });
 
 export function RootCauseAnalysisPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["rca", "record"],
+    queryFn: () => getRcaRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<RcaRecord>(INITIAL_RCA_RECORD);
+  useEffect(() => { if (dbRecord?.data) setRecord(dbRecord.data); }, [dbRecord]);
   const [activeStep, setActiveStep] = useState<number>(5);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);

@@ -26,6 +26,7 @@ import { NcrDispositionTab } from "@/components/erp/ncr/tabs/NcrDispositionTab";
 import { NcrAttachmentsTab } from "@/components/erp/ncr/tabs/NcrAttachmentsTab";
 import { NcrHistoryTab } from "@/components/erp/ncr/tabs/NcrHistoryTab";
 
+import { getNcrRecordFn } from "@/lib/ncrFns.server";
 import { INITIAL_NCR_RECORD } from "@/services/ncrService";
 import { NcrRecord } from "@/services/ncrTypes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -67,7 +68,13 @@ export function NcrManagementPage() {
     queryFn: () => qualityManagementService.fetchNcrRecords(),
   });
 
+  const { data: dbNcrRecord } = useQuery({
+    queryKey: ["ncr-form", "record"],
+    queryFn: () => getNcrRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<NcrRecord>(INITIAL_NCR_RECORD);
+  useEffect(() => { if (dbNcrRecord?.data) setRecord(dbNcrRecord.data); }, [dbNcrRecord]);
   const [activeStep, setActiveStep] = useState<number>(1);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);

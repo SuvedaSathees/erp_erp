@@ -2,8 +2,10 @@
 // Management -> Knowledge Management -> Wiki
 // Collaborative Articles, Rich/Markdown Editor, Article Structure, Knowledge Tree & Analytics
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getWikiRecordFn } from "@/lib/wikiFns.server";
 import {
   FileText,
   FileCheck,
@@ -117,7 +119,13 @@ function WikiManagementPage() {
   >("create-edit");
 
   // Form State
+  const { data: dbRecord } = useQuery({
+    queryKey: ["wiki", "record"],
+    queryFn: () => getWikiRecordFn({ data: {} }),
+  });
+
   const [formData, setFormData] = useState<WikiArticleRecord>(PRIMARY_WIKI_ARTICLE);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data); }, [dbRecord]);
   const [kpis, setKpis] = useState(WIKI_KPIS);
   const [structure, setStructure] = useState<ArticleStructureItem[]>(WIKI_ARTICLE_STRUCTURE);
   const [mediaFiles, setMediaFiles] = useState<WikiMediaItem[]>(WIKI_MEDIA_FILES);

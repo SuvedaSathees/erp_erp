@@ -1,5 +1,7 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getProjectPlanningRecordFn } from "@/lib/projectPlanningFns.server";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProjectManagementTabBar } from "@/components/erp/ProjectManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -86,7 +88,13 @@ export function WbsFormPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const { data: dbRecord } = useQuery({
+    queryKey: ["project-planning", "record"],
+    queryFn: () => getProjectPlanningRecordFn({ data: {} }),
+  });
+
   const [wbsList, setWbsList] = useState<WbsElement[]>(INITIAL_WBS_ELEMENTS);
+  useEffect(() => { if (dbRecord?.data?.wbsElements) setWbsList(dbRecord.data.wbsElements); }, [dbRecord]);
   const [selectedWbsCode, setSelectedWbsCode] = useState<string>("2.2.3");
   const [isFavorite, setIsFavorite] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);

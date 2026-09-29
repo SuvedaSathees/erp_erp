@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getCalibrationRecordFn } from "@/lib/calibrationFns.server";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
 import { CalibrationHeader } from "@/components/erp/calibration/CalibrationHeader";
@@ -53,7 +55,13 @@ export const Route = createFileRoute(
 });
 
 export function CalibrationPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["calibration", "record"],
+    queryFn: () => getCalibrationRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<CalibrationRecord>(INITIAL_CALIBRATION_RECORD);
+  useEffect(() => { if (dbRecord?.data) setRecord(dbRecord.data); }, [dbRecord]);
   const [activeStep, setActiveStep] = useState<number>(4);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [certificateModalOpen, setCertificateModalOpen] = useState<boolean>(false);

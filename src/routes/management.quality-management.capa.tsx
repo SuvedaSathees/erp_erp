@@ -16,6 +16,7 @@ import { CapaAiInsightsCard } from "@/components/erp/capa/CapaAiInsightsCard";
 import { CapaLinkedRecordsCard } from "@/components/erp/capa/CapaLinkedRecordsCard";
 import { CreateCapaModal } from "@/components/erp/capa/CreateCapaModal";
 
+import { getCapaRecordFn } from "@/lib/capaFns.server";
 import { INITIAL_CAPA_RECORD } from "@/services/capaService";
 import { CapaRecord, CapaActionItem } from "@/services/capaTypes";
 import { Button } from "@/components/ui/button";
@@ -44,7 +45,13 @@ export function CapaPage() {
     queryFn: () => qualityManagementService.fetchCapaRecords(),
   });
 
+  const { data: dbCapaRecord } = useQuery({
+    queryKey: ["capa-form", "record"],
+    queryFn: () => getCapaRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<CapaRecord>(INITIAL_CAPA_RECORD);
+  useEffect(() => { if (dbCapaRecord?.data) setRecord(dbCapaRecord.data); }, [dbCapaRecord]);
   const [activeStep, setActiveStep] = useState<number>(5);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);

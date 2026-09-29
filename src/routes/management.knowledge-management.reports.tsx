@@ -2,8 +2,10 @@
 // Management -> Knowledge -> Reports
 // Controlled Master Reports, Finance-Style StatCards, Automated Schedules & Audit Analytics
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getKnowledgeManagementReportsRecordFn } from "@/lib/knowledgeManagementReportsFns.server";
 import {
   FileText,
   Download,
@@ -57,7 +59,13 @@ export const Route = createFileRoute("/management/knowledge-management/reports")
 });
 
 function KnowledgeReportsPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["km-reports", "record"],
+    queryFn: () => getKnowledgeManagementReportsRecordFn({ data: {} }),
+  });
+
   const [reports, setReports] = useState<ControlledKnowledgeReport[]>(CONTROLLED_KNOWLEDGE_REPORTS);
+  useEffect(() => { if (dbRecord?.data) setReports(dbRecord.data); }, [dbRecord]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All Reports");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("All");

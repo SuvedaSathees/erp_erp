@@ -2,8 +2,10 @@
 // Management -> Risk Management -> Compliance Risk
 // Compliance Risk Form - MAICW Classification & Regulatory Assurance Engine
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { getComplianceRiskRecordFn, listComplianceRiskRecordsFn } from "@/lib/complianceRiskFns.server";
 import {
   FileText,
   AlertTriangle,
@@ -112,6 +114,16 @@ export const Route = createFileRoute(
 export function ComplianceRiskPage() {
   const { toast } = useToast();
 
+  // --- Prisma-backed queries with inline fallback ---
+  const { data: dbRecord } = useQuery({
+    queryKey: ["compliance-risk", "record"],
+    queryFn: () => getComplianceRiskRecordFn({ data: {} }),
+  });
+  const { data: dbList } = useQuery({
+    queryKey: ["compliance-risk", "list"],
+    queryFn: () => listComplianceRiskRecordsFn({ data: {} }),
+  });
+
   // Active risk record (defaults to PRIMARY_COMPLIANCE_RISK matching screenshot)
   const [activeRisk, setActiveRisk] = useState<ComplianceRiskRecord>(
     complianceRiskService.getPrimaryRisk(),
@@ -124,6 +136,13 @@ export function ComplianceRiskPage() {
   const [allRisks, setAllRisks] = useState<ComplianceRiskRecord[]>(
     complianceRiskService.getFullRisks(),
   );
+
+  useEffect(() => {
+    if (dbRecord?.data) setActiveRisk(dbRecord.data);
+  }, [dbRecord]);
+  useEffect(() => {
+    if (dbList?.data) setAllRisks(dbList.data);
+  }, [dbList]);
   const [requirements, setRequirements] = useState<ComplianceRequirementItem[]>(
     complianceRiskService.getRequirements(),
   );

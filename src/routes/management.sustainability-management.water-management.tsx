@@ -2,8 +2,10 @@
 // Management -> Sustainability Management -> Water Management
 // Aligned with Light Enterprise Theme (Image 2 Reference)
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getSustainabilityManagementRecordFn } from "@/lib/sustainabilityManagementFns.server";
 import {
   Droplet,
   Recycle,
@@ -38,10 +40,16 @@ import { cn } from "@/lib/utils";
 import { mockWaterManagement } from "@/services/sustainabilityManagementService";
 
 function WaterManagementPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["sustainability-management", "record"],
+    queryFn: () => getSustainabilityManagementRecordFn({ data: {} }),
+  });
+
   const [selectedPlant, setSelectedPlant] = useState("Gigafactory 1 - Chennai");
   const [reportingPeriod, setReportingPeriod] = useState("FY 2026");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [data, setData] = useState(mockWaterManagement);
+  useEffect(() => { if (dbRecord?.data) setData(dbRecord.data); }, [dbRecord]);
   const [showAddWaterModal, setShowAddWaterModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedMeterPin, setSelectedMeterPin] = useState<string | null>("WM-PL-001");

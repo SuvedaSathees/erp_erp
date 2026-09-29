@@ -4,6 +4,8 @@
 
 import React, { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getCommunicationManagementRecordFn } from "@/lib/communicationManagementFns.server";
 import {
   Video,
   Mic,
@@ -53,6 +55,11 @@ export const Route = createFileRoute("/management/communication-management/video
 });
 
 function VideoMeetingsPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["communication-management", "record"],
+    queryFn: () => getCommunicationManagementRecordFn({ data: {} }),
+  });
+
   const [activeNavTab, setActiveNavTab] = useState<string>("overview");
   const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [isVideoOn, setIsVideoOn] = useState<boolean>(true);

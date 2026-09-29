@@ -2,6 +2,7 @@ import { useState , useEffect} from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { projectManagementService } from "@/services";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { getProjectPlanningRecordFn } from "@/lib/projectPlanningFns.server";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProjectManagementTabBar } from "@/components/erp/ProjectManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -89,8 +90,14 @@ export function ProjectPlanningPage() {
     queryFn: () => projectManagementService.fetchProjects(),
   });
 
+  const { data: dbRecord } = useQuery({
+    queryKey: ["project-planning", "record"],
+    queryFn: () => getProjectPlanningRecordFn({ data: {} }),
+  });
+
   const navigate = useNavigate();
   const [record, setRecord] = useState<ProjectPlanningRecord>(INITIAL_PLANNING_RECORD);
+  useEffect(() => { if (dbRecord?.data) setRecord(dbRecord.data); }, [dbRecord]);
   const [isFavorite, setIsFavorite] = useState(false);
   const [ganttView, setGanttView] = useState<"Day" | "Week" | "Month">("Week");
   const [isRefreshing, setIsRefreshing] = useState(false);

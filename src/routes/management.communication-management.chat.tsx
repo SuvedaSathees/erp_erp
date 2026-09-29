@@ -4,6 +4,8 @@
 
 import React, { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getCommunicationManagementRecordFn } from "@/lib/communicationManagementFns.server";
 import {
   MessageSquare,
   Users,
@@ -59,6 +61,11 @@ export const Route = createFileRoute("/management/communication-management/chat"
 });
 
 function ChatManagementPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["communication-management", "record"],
+    queryFn: () => getCommunicationManagementRecordFn({ data: {} }),
+  });
+
   const [filterType, setFilterType] = useState<string>("all");
   const [chatSearch, setChatSearch] = useState<string>("");
   const [selectedChatId, setSelectedChatId] = useState<string>("CHAT-2026-0015");

@@ -2,8 +2,10 @@
 // Management -> Compliance -> Licenses
 // Licenses Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getLicensesRecordFn } from "@/lib/licensesFns.server";
 import {
   FileText,
   AlertTriangle,
@@ -109,8 +111,15 @@ export default function LicensesManagementPage() {
     | "reports"
   >("overview");
 
+  // Prisma-backed query with inline fallback
+  const { data: dbRecord } = useQuery({
+    queryKey: ["licenses", "record"],
+    queryFn: () => getLicensesRecordFn({ data: {} }),
+  });
+
   // Controlled form state
   const [formData, setFormData] = useState(PRIMARY_LICENSE_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data as typeof PRIMARY_LICENSE_RECORD); }, [dbRecord]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 

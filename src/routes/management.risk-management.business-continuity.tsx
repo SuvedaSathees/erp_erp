@@ -2,8 +2,10 @@
 // Management -> Risk Management -> Business Continuity
 // Business Continuity Form - MAICW Classification & Resilience Assurance Engine
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getBusinessContinuityRecordFn } from "@/lib/businessContinuityFns.server";
 import {
   FileText,
   AlertTriangle,
@@ -112,10 +114,16 @@ export const Route = createFileRoute(
 export function BusinessContinuityPage() {
   const { toast } = useToast();
 
+  const { data: dbRecord } = useQuery({
+    queryKey: ["business-continuity", "record"],
+    queryFn: () => getBusinessContinuityRecordFn({ data: {} }),
+  });
+
   // Active BCP record (defaults to PRIMARY_BCP_RECORD matching screenshot)
   const [activePlan, setActivePlan] = useState<BusinessContinuityRecord>(
     businessContinuityService.getPrimaryBCP(),
   );
+  useEffect(() => { if (dbRecord?.data) setActivePlan(dbRecord.data); }, [dbRecord]);
 
   const [activeTab, setActiveTab] = useState<string>("general");
 

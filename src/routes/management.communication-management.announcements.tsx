@@ -2,8 +2,10 @@
 // Management -> Communication Management -> Announcements
 // Complete 5-Step Announcement Wizard matching Screenshot 5 and Specifications
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getCommunicationManagementRecordFn } from "@/lib/communicationManagementFns.server";
 import {
   Megaphone,
   Save,
@@ -50,11 +52,17 @@ export const Route = createFileRoute("/management/communication-management/annou
 });
 
 function AnnouncementsManagementPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["communication-management", "record"],
+    queryFn: () => getCommunicationManagementRecordFn({ data: {} }),
+  });
+
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [contentTab, setContentTab] = useState<string>("content");
   const [audienceTab, setAudienceTab] = useState<string>("recipients");
   const [previewTab, setPreviewTab] = useState<string>("in_app");
   const [announcement, setAnnouncement] = useState(INITIAL_ANNOUNCEMENT_RECORD);
+  useEffect(() => { if (dbRecord?.data) setAnnouncement(dbRecord.data); }, [dbRecord]);
   const [notifyInApp, setNotifyInApp] = useState<boolean>(true);
   const [notifyEmail, setNotifyEmail] = useState<boolean>(true);
   const [notifySms, setNotifySms] = useState<boolean>(false);

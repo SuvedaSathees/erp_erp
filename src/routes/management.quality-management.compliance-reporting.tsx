@@ -2,8 +2,10 @@
 // Management -> Compliance -> Compliance Reporting
 // Compliance Reporting Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getComplianceReportingRecordFn } from "@/lib/complianceReportingFns.server";
 import {
   FileText,
   AlertTriangle,
@@ -115,8 +117,15 @@ export default function ComplianceReportingManagementPage() {
     | "reports"
   >("overview");
 
+  // Prisma-backed query with inline fallback
+  const { data: dbRecord } = useQuery({
+    queryKey: ["compliance-reporting", "record"],
+    queryFn: () => getComplianceReportingRecordFn({ data: {} }),
+  });
+
   // Controlled form state
   const [formData, setFormData] = useState<ComplianceReportingRecord>(PRIMARY_COMPLIANCE_REPORT);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data as ComplianceReportingRecord); }, [dbRecord]);
   // Dynamic KPIs state
   const [kpis, setKpis] = useState({
     total: 42,

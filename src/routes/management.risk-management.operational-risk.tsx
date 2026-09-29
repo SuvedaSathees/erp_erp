@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { getOperationalRiskRecordFn, listOperationalRiskRecordsFn } from "@/lib/operationalRiskFns.server";
 import {
   Shield,
   ShieldAlert,
@@ -110,8 +112,22 @@ export const Route = createFileRoute("/management/risk-management/operational-ri
 });
 
 export function OperationalRiskPage() {
+  // --- Prisma-backed queries with inline fallback ---
+  const { data: dbRecord } = useQuery({
+    queryKey: ["operational-risk", "record"],
+    queryFn: () => getOperationalRiskRecordFn({ data: {} }),
+  });
+  const { data: dbList } = useQuery({
+    queryKey: ["operational-risk", "list"],
+    queryFn: () => listOperationalRiskRecordsFn({ data: {} }),
+  });
+
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [activeRisk, setActiveRisk] = useState<OpRiskRecord>(PRIMARY_OP_RISK);
+
+  useEffect(() => {
+    if (dbRecord?.data) setActiveRisk(dbRecord.data);
+  }, [dbRecord]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isNewRiskModalOpen, setIsNewRiskModalOpen] = useState(false);
   const [isLogIncidentModalOpen, setIsLogIncidentModalOpen] = useState(false);
@@ -131,8 +147,10 @@ export function OperationalRiskPage() {
   const inherentScore = simLikelihood * simImpact;
   const residualScore = simResLikelihood * simResImpact;
 
+  const allRisks = dbList?.data ?? FULL_OPERATIONAL_RISKS;
+
   const filteredRegister = useMemo(() => {
-    return FULL_OPERATIONAL_RISKS.filter((r) => {
+    return allRisks.filter((r) => {
       const matchesSearch =
         r.id.toLowerCase().includes(registerSearch.toLowerCase()) ||
         r.title.toLowerCase().includes(registerSearch.toLowerCase()) ||
@@ -142,14 +160,14 @@ export function OperationalRiskPage() {
       const matchesPri = priorityFilter === "All" || r.priority === priorityFilter;
       return matchesSearch && matchesCat && matchesPri;
     });
-  }, [registerSearch, categoryFilter, priorityFilter]);
+  }, [allRisks, registerSearch, categoryFilter, priorityFilter]);
 
   const handleExportCSV = () => {
     const csvContent =
       "data:text/csv;charset=utf-8," +
       ["ID,Risk Code,Title,Category,Type,Owner,Inherent Score,Residual Score,Trend,Status"]
         .concat(
-          FULL_OPERATIONAL_RISKS.map(
+          allRisks.map(
             (r) =>
               `"${r.id}","${r.riskCode}","${r.title}","${r.category}","${r.type}","${r.owner}",${r.inherentScore},${r.residualScore},"${r.trend}","${r.status}"`,
           ),

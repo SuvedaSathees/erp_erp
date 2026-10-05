@@ -39,7 +39,7 @@ export function calculateCloudPlatformScores(input: Partial<CloudPlatformFormInp
   };
 }
 
-const DEFAULT_RECORD: CloudPlatformRecord = {
+export const DEFAULT_RECORD: CloudPlatformRecord = {
   id: "cld-rec-0001",
   cloudPlatformDevelopmentId: "CLD-2024-0001",
   formCode: "CLD-F-2024-25",

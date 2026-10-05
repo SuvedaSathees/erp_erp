@@ -39,7 +39,7 @@ export function calculateCybersecurityScores(input: Partial<CybersecurityFormInp
   };
 }
 
-const DEFAULT_RECORD: CybersecurityRecord = {
+export const DEFAULT_RECORD: CybersecurityRecord = {
   id: "cse-rec-0018",
   cybersecurityEngineeringId: "CSE-2024-0018",
   formCode: "CSEF-2024-25",

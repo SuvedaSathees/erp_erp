@@ -39,7 +39,7 @@ export function calculateApiDevelopmentScores(input: Partial<ApiDevelopmentFormI
   };
 }
 
-const DEFAULT_RECORD: ApiDevelopmentRecord = {
+export const DEFAULT_RECORD: ApiDevelopmentRecord = {
   id: "api-rec-0017",
   apiDevelopmentId: "API-2024-0017",
   formCode: "APF-2024-25",

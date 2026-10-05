@@ -42,7 +42,7 @@ export function calculateAiModelDevelopmentScores(input: Partial<AiModelFormInpu
   };
 }
 
-const DEFAULT_RECORD: AiModelRecord = {
+export const DEFAULT_RECORD: AiModelRecord = {
   id: "aimd-rec-0018",
   aiModelDevelopmentId: "AIMD-2024-0018",
   formCode: "AMDF-2024-25",

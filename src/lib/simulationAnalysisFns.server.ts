@@ -43,7 +43,7 @@ export function calculateSimulationScores(input: Partial<SimulationFormInput>) {
   };
 }
 
-const DEFAULT_RECORD: SimulationRecord = {
+export const DEFAULT_RECORD: SimulationRecord = {
   id: "sim-rec-0027",
   simulationId: "SIM-2024-0027",
   formCode: "SIMF-2024-25",

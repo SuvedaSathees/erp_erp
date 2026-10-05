@@ -39,7 +39,7 @@ export function calculateUiUxDevelopmentScores(input: Partial<UiUxDevelopmentFor
   };
 }
 
-const DEFAULT_RECORD: UiUxDevelopmentRecord = {
+export const DEFAULT_RECORD: UiUxDevelopmentRecord = {
   id: "uiux-rec-0017",
   uiUxDevelopmentId: "UIUX-2024-0017",
   formCode: "UIUX-F-2024-25",

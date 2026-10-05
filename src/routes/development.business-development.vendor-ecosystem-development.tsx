@@ -182,6 +182,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function VendorEcosystemDevelopmentPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["vendor-ecosystem"],
+    queryFn: vendorEcosystemService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Vendor Ecosystem Development" breadcrumb="Development > Business Development > Vendor Ecosystem Development">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <VendorEcosystemDevelopmentPageForm />;
+}
+
+function VendorEcosystemDevelopmentPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["vendor-ecosystem"],
@@ -202,7 +219,7 @@ function VendorEcosystemDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Vendor Ecosystem Development reference UI image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -370,7 +387,7 @@ function VendorEcosystemDevelopmentPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Vendor Ecosystem Development" breadcrumb={[{ label: "Business Development" }, { label: "Vendor Ecosystem Development" }]}>
+      <AppShell title="Vendor Ecosystem Development" breadcrumb="Development > Business Development > Vendor Ecosystem Development">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

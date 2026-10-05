@@ -182,6 +182,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function InvestorRelationsDevelopmentPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["investor-relations"],
+    queryFn: investorRelationsService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Investor Relations Development" breadcrumb="Development > Business Development > Investor Relations Development">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <InvestorRelationsDevelopmentPageForm />;
+}
+
+function InvestorRelationsDevelopmentPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["investor-relations"],
@@ -202,7 +219,7 @@ function InvestorRelationsDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Investor Relations Development reference UI image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -371,7 +388,7 @@ function InvestorRelationsDevelopmentPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Investor Relations Development" breadcrumb={[{ label: "Business Development" }, { label: "Investor Relations Development" }]}>
+      <AppShell title="Investor Relations Development" breadcrumb="Development > Business Development > Investor Relations Development">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

@@ -12,6 +12,7 @@ import {
   submitDevelopmentFn,
   reviewDevelopmentFn,
 } from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
 const MODULE_TYPE = "firmware-development";
 
@@ -101,7 +102,7 @@ const DEFAULT_MOCK_RECORD: FirmwareDevelopmentRecord = {
 
 export const getFirmwareDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: FirmwareDevelopmentRecord }> => {
-    const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (result) return { success: true, data: result as any };
     return { success: true, data: DEFAULT_MOCK_RECORD };
   }
@@ -110,7 +111,7 @@ export const getFirmwareDevelopmentFn = createServerFn({ method: "GET" }).handle
 export const saveFirmwareDevelopmentDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<FirmwareDevelopmentFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: FirmwareDevelopmentRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base = current ?? DEFAULT_MOCK_RECORD;
     const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateFirmwareDevelopmentScores(updatedInput);
@@ -129,7 +130,7 @@ export const saveFirmwareDevelopmentDraftFn = createServerFn({ method: "POST" })
 export const advanceFirmwareDevelopmentStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: FirmwareDevelopmentStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: FirmwareDevelopmentRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base: any = current ?? DEFAULT_MOCK_RECORD;
     const stageMap: Record<string, { label: string; stageNumber: number }> = {
       firmware_architecture_implementation: { label: "Stage 1: Firmware Architecture & Implementation", stageNumber: 1 },
@@ -158,7 +159,7 @@ export const advanceFirmwareDevelopmentStageFn = createServerFn({ method: "POST"
 export const submitFirmwareDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: FirmwareDevelopmentRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
       const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
       return { success: true, data: result as any };

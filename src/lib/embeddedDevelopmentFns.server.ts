@@ -12,6 +12,7 @@ import {
   submitDevelopmentFn,
   reviewDevelopmentFn,
 } from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
 const MODULE_TYPE = "embedded-development";
 
@@ -109,7 +110,7 @@ const DEFAULT_MOCK_RECORD: EmbeddedDevelopmentRecord = {
 
 export const getEmbeddedDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: EmbeddedDevelopmentRecord }> => {
-    const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (result) return { success: true, data: result as any };
     return { success: true, data: DEFAULT_MOCK_RECORD };
   }
@@ -118,7 +119,7 @@ export const getEmbeddedDevelopmentFn = createServerFn({ method: "GET" }).handle
 export const saveEmbeddedDevelopmentDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<EmbeddedDevelopmentFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: EmbeddedDevelopmentRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base = current ?? DEFAULT_MOCK_RECORD;
     const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateEmbeddedDevelopmentScores(updatedInput);
@@ -137,7 +138,7 @@ export const saveEmbeddedDevelopmentDraftFn = createServerFn({ method: "POST" })
 export const advanceEmbeddedDevelopmentStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: EmbeddedDevelopmentStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: EmbeddedDevelopmentRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base: any = current ?? DEFAULT_MOCK_RECORD;
     const stageMap: Record<string, { label: string; stageNumber: number }> = {
       platform_configuration: { label: "Stage 1: Platform Configuration", stageNumber: 1 },
@@ -166,7 +167,7 @@ export const advanceEmbeddedDevelopmentStageFn = createServerFn({ method: "POST"
 export const submitEmbeddedDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: EmbeddedDevelopmentRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
       const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
       return { success: true, data: result as any };

@@ -151,6 +151,23 @@ function ScoreGauge({
 }
 
 export function ValuePropositionDevelopmentPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["value-proposition"],
+    queryFn: valuePropositionService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Value Proposition Development" breadcrumb="Development > Business Development > Value Proposition Development">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <ValuePropositionDevelopmentPageForm />;
+}
+
+function ValuePropositionDevelopmentPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["value-proposition"],
@@ -167,7 +184,7 @@ export function ValuePropositionDevelopmentPage() {
   const [newFileName, setNewFileName] = useState("");
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -262,7 +279,7 @@ export function ValuePropositionDevelopmentPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Value Proposition Development" breadcrumb={[{ label: "Business Development" }, { label: "Value Proposition Development" }]}>
+      <AppShell title="Value Proposition Development" breadcrumb="Development > Business Development > Value Proposition Development">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

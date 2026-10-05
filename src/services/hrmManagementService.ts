@@ -47,7 +47,7 @@ export async function updateEmployee(data: Parameters<typeof updateEmployeeFn>[0
 }
 
 export async function deleteEmployee(id: string) {
-  return deleteEmployeeFn(id);
+  return deleteEmployeeFn({ data: id });
 }
 
 export async function createLeaveRequest(data: Parameters<typeof createLeaveRequestFn>[0]) {

@@ -187,6 +187,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function ExportDevelopmentPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["export-development"],
+    queryFn: exportDevelopmentService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Export Development" breadcrumb="Development > Business Development > Export Development">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <ExportDevelopmentPageForm />;
+}
+
+function ExportDevelopmentPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["export-development"],
@@ -207,7 +224,7 @@ function ExportDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Export Development reference UI image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -379,7 +396,7 @@ function ExportDevelopmentPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Export Development" breadcrumb={[{ label: "Business Development" }, { label: "Export Development" }]}>
+      <AppShell title="Export Development" breadcrumb="Development > Business Development > Export Development">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

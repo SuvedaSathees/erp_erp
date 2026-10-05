@@ -92,6 +92,23 @@ export function toApiShape(dbRecord: any): any {
   };
 }
 
+function isPlainObject(v: unknown): v is Record<string, any> {
+  return typeof v === "object" && v !== null && !Array.isArray(v) && !(v instanceof Date);
+}
+
+// Seeded DB records only carry a few fields; fill everything else from the module's defaults.
+export function withDefaults<T>(defaults: T, record: any): T | null {
+  if (!record) return null;
+  const out: any = { ...(defaults as any) };
+  for (const [key, value] of Object.entries(record)) {
+    if (value === null || value === undefined) continue;
+    const base = out[key];
+    if (Array.isArray(value) && value.length === 0 && Array.isArray(base) && base.length > 0) continue;
+    out[key] = isPlainObject(value) && isPlainObject(base) ? withDefaults(base, value) : value;
+  }
+  return out;
+}
+
 export function fromApiShape(flat: any, moduleType: string): {
   header: Record<string, any>;
   formData: Record<string, any>;

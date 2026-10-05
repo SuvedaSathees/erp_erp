@@ -44,7 +44,7 @@ export const createAdminUserFn = createServerFn({ method: "POST" })
       role: string;
     }) => data,
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     try {
       const prisma = await getPrisma();
       const count = await prisma.employee.count();
@@ -222,7 +222,7 @@ export const createDepartmentMasterFn = createServerFn({ method: "POST" })
       head: string;
     }) => data,
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     try {
       const prisma = await getPrisma();
       const dept = await prisma.department.create({
@@ -281,7 +281,7 @@ export const getRolesFn = createServerFn({ method: "GET" }).handler(async () => 
 
 export const createRoleFn = createServerFn({ method: "POST" })
   .validator((data: { name: string; description: string }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     try {
       const prisma = await getPrisma();
       const count = await prisma.designation.count();

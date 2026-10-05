@@ -179,6 +179,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function SalesChannelDevelopmentPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["sales-channel"],
+    queryFn: salesChannelService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Sales Channel Development" breadcrumb="Development > Business Development > Sales Channel Development">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <SalesChannelDevelopmentPageForm />;
+}
+
+function SalesChannelDevelopmentPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["sales-channel"],
@@ -199,7 +216,7 @@ function SalesChannelDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Sales Channel Development reference UI image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -364,7 +381,7 @@ function SalesChannelDevelopmentPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Sales Channel Development" breadcrumb={[{ label: "Business Development" }, { label: "Sales Channel Development" }]}>
+      <AppShell title="Sales Channel Development" breadcrumb="Development > Business Development > Sales Channel Development">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

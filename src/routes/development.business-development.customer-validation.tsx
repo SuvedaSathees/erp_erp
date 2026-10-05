@@ -175,6 +175,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function CustomerValidationPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["customer-validation"],
+    queryFn: customerValidationService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Customer Validation" breadcrumb="Development > Business Development > Customer Validation">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <CustomerValidationPageForm />;
+}
+
+function CustomerValidationPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["customer-validation"],
@@ -195,7 +212,7 @@ function CustomerValidationPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Customer Validation reference
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -364,7 +381,7 @@ function CustomerValidationPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Customer Validation" breadcrumb={[{ label: "Business Development" }, { label: "Customer Validation" }]}>
+      <AppShell title="Customer Validation" breadcrumb="Development > Business Development > Customer Validation">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

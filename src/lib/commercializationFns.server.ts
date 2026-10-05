@@ -17,6 +17,7 @@ import {
   submitDevelopmentFn,
   reviewDevelopmentFn,
 } from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
 const MODULE_TYPE = "commercialization";
 
@@ -32,23 +33,147 @@ const DEFAULT_COMMERCIALIZATION_RECORD: CommercializationRecord = {
   businessUnit: "Smart Mobility Division",
   commercializationManager: "Rohit Verma",
   launchTargetDate: "2024-11-15",
+
+  linkedProductId: "prd-1001",
+  linkedProductCode: "PRD-1001",
+  linkedTechnologyId: "tec-0032",
+  linkedTechnologyCode: "TEC-2024-0032",
+  linkedPatentId: "pat-0123",
+  linkedPatentCode: "PAT-2024-0123",
+  linkedBusinessCaseId: "bc-0045",
+  linkedBusinessCaseCode: "BC-2024-0045",
+
   stages: [
     { stage: "product_readiness", label: "Product Readiness", completed: true, active: false, completedAt: "2024-05-12" },
     { stage: "manufacturing_supply_chain", label: "Manufacturing & Supply Chain", completed: true, active: false, completedAt: "2024-05-18" },
     { stage: "sales_marketing_planning", label: "Sales & Marketing Planning", completed: true, active: false, completedAt: "2024-05-25" },
     { stage: "executive_review", label: "Executive Review", completed: false, active: true },
   ],
-  productOverview: { productName: "Autonomous EV Docking System Pro", productCategory: "Automotive & Charging Infrastructure", productDescription: "Next-gen autonomous robotic EV charging interface.", targetIndustry: "Electric Mobility / EV Infrastructure", targetCustomers: ["EV Charging Operators", "Fleet Owners", "Automotive OEMs"], valueProposition: "Reduces EV docking time by 75%.", competitiveAdvantage: "Patented multi-sensor fusion algorithms." },
-  marketAnalysis: { tamAmount: 450000000, samAmount: 180000000, somAmount: 65000000, customerSegments: "Commercial EV fleet operators.", competitorAnalysis: "Primary competitors offer manual plug-in systems.", marketEntryStrategy: "Direct Enterprise Sales + OEM Licensing", demandForecast5Yr: 185000000 },
-  productReadiness: { inheritedTrl: "TRL 6", inheritedMrl: "MRL 4", certificationStatus: "Fully Certified", regulatoryCompliance: "ISO 26262 & CE Compliant", productValidationStatus: "Field Validated", productionReadiness: "Pilot Line Ready", launchReadinessScore: 82 },
-  manufacturingSupplyChain: { manufacturingStrategy: "Contract Manufacturing (CM)", productionCapacityAnnual: "2,500 Units / Year", contractManufacturer: "Flextronics", keySuppliers: ["TI", "Sony", "Bosch"], procurementStatus: "Component Sourced", inventoryReadiness: "Safety Stock Established", distributionNetwork: "Regional logistics hubs." },
-  financialPlanning: { initialInvestment: 45000000, manufacturingCostPerUnit: 180000, sellingPricePerUnit: 350000, revenueProjection5Yr: 245000000, breakEvenPeriodMonths: 18, grossMarginPct: 48.57, roiPct: 185 },
-  salesMarketing: { salesModel: "B2B Enterprise Direct", pricingStrategy: "Value-Based Pricing", marketingChannels: ["Industry Expos", "Digital ABM"], distributionChannels: ["Direct Sales Force", "OEM Integrators"], brandingStrategy: "Premier autonomous charging interface.", launchCampaign: "Global unveiling at EV Tech Expo.", customerSupportStrategy: "24/7 SLA-backed monitoring." },
-  partnerships: { strategicPartners: ["Tata Motors", "ABB"], technologyPartners: ["NVIDIA", "Qualcomm"], manufacturingPartners: ["Foxconn", "Flex"], channelPartners: ["Siemens", "Schneider"], governmentSupport: ["FAME II Grant"], investors: ["Sequoia Climate Tech"], partnershipStatus: "MoU Executed" },
-  riskAssessment: { technicalRisk: 2, marketRisk: 2, financialRisk: 3, operationalRisk: 2, regulatoryRisk: 2, overallRiskScore: 32, riskMitigationPlan: "Multi-sourcing and Tier-1 CM partners." },
-  aiAnalytics: { aiMarketOpportunityScore: 88, aiLaunchReadinessScore: 82, aiRevenueForecast5Yr: 268000000, aiCustomerAdoptionPredictionPct: 76, aiCompetitivePositionScore: 84, aiGrowthStrategy: "Accelerate B2B partnerships.", aiRecommendations: "Proceed to product launch." },
-  summary: { productReadinessScore: 82, marketReadinessScore: 88, financialReadinessScore: 85, commercializationScore: 84, riskControlScore: 68, overallLaunchReadiness: 81, recommendedAction: "Proceed to Product Launch", recommendationText: "Proceed to Product Launch" },
-  attachments: [],
+
+  productOverview: {
+    productName: "Autonomous EV Docking System Pro",
+    productCategory: "Automotive & Charging Infrastructure",
+    productDescription:
+      "A next-generation autonomous robotic EV charging interface featuring AI vision alignment, 98.2% cycle reliability, and climate-proof enclosure for commercial fleet depots.",
+    targetIndustry: "Electric Mobility / EV Infrastructure",
+    targetCustomers: ["EV Charging Operators", "Fleet Owners", "Automotive OEMs"],
+    valueProposition:
+      "Reduces EV docking time by 75% and eliminates human plug-in error with sub-centimeter automated vision alignment.",
+    competitiveAdvantage:
+      "Patented multi-sensor fusion algorithms, climate-proof vision enclosure, and modular retrofitting capability for existing charging stations.",
+  },
+
+  marketAnalysis: {
+    tamAmount: 450000000,
+    samAmount: 180000000,
+    somAmount: 65000000,
+    customerSegments:
+      "Commercial EV fleet operators, public highway fast-charging networks, municipal transit depots, and logistics hubs.",
+    competitorAnalysis:
+      "Primary competitors offer manual plug-in systems or 1st-gen inductive pads with lower efficiency and higher thermal loss.",
+    marketEntryStrategy: "Direct Enterprise Sales + OEM Licensing",
+    demandForecast5Yr: 185000000,
+  },
+
+  productReadiness: {
+    inheritedTrl: "TRL 6 – Technology Demonstrated in Relevant Environment",
+    inheritedMrl: "MRL 4 – Laboratory Capability Demonstrated",
+    certificationStatus: "Fully Certified",
+    regulatoryCompliance: "ISO 26262 & CE Compliant",
+    productValidationStatus: "Field Validated",
+    productionReadiness: "Pilot Line Ready",
+    launchReadinessScore: 82,
+  },
+
+  manufacturingSupplyChain: {
+    manufacturingStrategy: "Contract Manufacturing (CM)",
+    productionCapacityAnnual: "2,500 Units / Year",
+    contractManufacturer: "Flextronics Mobility Division",
+    keySuppliers: ["Texas Instruments", "Sony Semiconductor", "Bosch Auto"],
+    procurementStatus: "Component Sourced",
+    inventoryReadiness: "Safety Stock Established",
+    distributionNetwork:
+      "Regional logistics hubs in Delhi NCR, Bengaluru, and Stuttgart. Direct shipping to OEM assembly lines.",
+  },
+
+  financialPlanning: {
+    initialInvestment: 45000000,
+    manufacturingCostPerUnit: 180000,
+    sellingPricePerUnit: 350000,
+    revenueProjection5Yr: 245000000,
+    breakEvenPeriodMonths: 18,
+    grossMarginPct: 48.57,
+    roiPct: 185,
+  },
+
+  salesMarketing: {
+    salesModel: "B2B Enterprise Direct",
+    pricingStrategy: "Value-Based Pricing",
+    marketingChannels: ["Industry Expos", "Digital ABM", "Executive Summits", "White Papers"],
+    distributionChannels: ["Direct Sales Force", "OEM System Integrators", "Certified Distributors"],
+    brandingStrategy:
+      "Position as premier ultra-reliable autonomous charging interface for EV infrastructure.",
+    launchCampaign:
+      "Global unveiling at EV Tech Expo followed by 3 pilot deployment showcases with lead fleet customers.",
+    customerSupportStrategy:
+      "24/7 SLA-backed telemetry monitoring, remote diagnostics, and on-site field maintenance within 4 hours.",
+  },
+
+  partnerships: {
+    strategicPartners: ["Tata Motors", "ABB E-Mobility"],
+    technologyPartners: ["NVIDIA Automotive", "Qualcomm"],
+    manufacturingPartners: ["Foxconn Industrial", "Flex"],
+    channelPartners: ["Siemens Energy", "Schneider Electric"],
+    governmentSupport: ["FAME II Grant", "MeitY R&D Scheme"],
+    investors: ["Sequoia Climate Tech", "CleanEnergy Ventures"],
+    partnershipStatus: "MoU Executed",
+  },
+
+  riskAssessment: {
+    technicalRisk: 2,
+    marketRisk: 2,
+    financialRisk: 3,
+    operationalRisk: 2,
+    regulatoryRisk: 2,
+    overallRiskScore: 32,
+    riskMitigationPlan:
+      "Mitigating supply chain risks via multi-sourcing, manufacturing risks via Tier-1 CM partner, and regulatory risks via pre-certified modular subassemblies.",
+  },
+
+  aiAnalytics: {
+    aiMarketOpportunityScore: 88,
+    aiLaunchReadinessScore: 82,
+    aiRevenueForecast5Yr: 268000000,
+    aiCustomerAdoptionPredictionPct: 76,
+    aiCompetitivePositionScore: 84,
+    aiGrowthStrategy:
+      "Accelerate B2B enterprise partnerships and expand OEM co-development. Target 15% market penetration within 24 months.",
+    aiRecommendations:
+      "Proceed to product launch with pilot fleet partners. Establish regional service support hubs prior to Q4 volume shipment.",
+  },
+
+  summary: {
+    productReadinessScore: 82,
+    marketReadinessScore: 88,
+    financialReadinessScore: 85,
+    commercializationScore: 84,
+    riskControlScore: 68,
+    overallLaunchReadiness: 81,
+    recommendedAction: "Proceed to Product Launch",
+    recommendationText: "Proceed to Product Launch",
+  },
+
+  attachments: [
+    { id: "att-1", fileName: "Business_Plan.pdf", fileSize: "2.4 MB", fileType: "PDF", uploadDate: "2024-05-10", uploadedBy: "Rohit Verma" },
+    { id: "att-2", fileName: "Go-to-Market_Plan.pdf", fileSize: "3.1 MB", fileType: "PDF", uploadDate: "2024-05-12", uploadedBy: "Neha Sharma" },
+    { id: "att-3", fileName: "Market_Research.pdf", fileSize: "4.5 MB", fileType: "PDF", uploadDate: "2024-05-14", uploadedBy: "Vikram Singh" },
+    { id: "att-4", fileName: "Financial_Model.xlsx", fileSize: "1.8 MB", fileType: "XLSX", uploadDate: "2024-05-16", uploadedBy: "Amitabh Shah" },
+    { id: "att-5", fileName: "Pricing_Strategy.pdf", fileSize: "2.0 MB", fileType: "PDF", uploadDate: "2024-05-18", uploadedBy: "Arjun Mehta" },
+    { id: "att-6", fileName: "Partnership_Agreement.pdf", fileSize: "3.6 MB", fileType: "PDF", uploadDate: "2024-05-20", uploadedBy: "Dr. Anil Patel" },
+    { id: "att-7", fileName: "Regulatory_Documents.pdf", fileSize: "1.5 MB", fileType: "PDF", uploadDate: "2024-05-22", uploadedBy: "Sanjay Kumar" },
+    { id: "att-8", fileName: "Launch_Plan.pptx", fileSize: "8.2 MB", fileType: "PPTX", uploadDate: "2024-05-25", uploadedBy: "Rohit Verma" },
+  ],
+
   reviewRows: [
     { role: "Commercialization Manager", person: "Rohit Verma", decision: "Approved", status: "Approved", date: "15 May 2024" },
     { role: "Product Manager", person: "Neha Sharma", decision: "Approved", status: "Approved", date: "18 May 2024" },
@@ -56,11 +181,22 @@ const DEFAULT_COMMERCIALIZATION_RECORD: CommercializationRecord = {
     { role: "Operations Head", person: "Arjun Mehta", decision: "Pending", status: "In Review", date: "-" },
     { role: "CTO", person: "Dr. Anil Patel", decision: "Pending", status: "Pending", date: "-" },
   ],
-  approvalDecision: null, reviewComments: null, approvalDate: null,
-  linkedProductLaunchProjectId: null, linkedProductLaunchProjectCode: null,
-  createdBy: "Rohit Verma", createdAt: "2024-05-10 09:30 AM", lastModifiedBy: "Rohit Verma", updatedAt: "2024-05-25 04:45 PM",
+
+  approvalDecision: null,
+  reviewComments: null,
+  approvalDate: null,
+  linkedProductLaunchProjectId: null,
+  linkedProductLaunchProjectCode: null,
+
+  createdBy: "Rohit Verma",
+  createdAt: "2024-05-10 09:30 AM",
+  lastModifiedBy: "Rohit Verma",
+  updatedAt: "2024-05-25 04:45 PM",
+
   auditTrail: [
     { id: "aud-1", timestamp: "2024-05-10 09:30 AM", actor: "Rohit Verma", event: "Created Commercialization Plan CMP-2024-0021", kind: "workflow" },
+    { id: "aud-2", timestamp: "2024-05-14 11:15 AM", actor: "Neha Sharma", event: "Updated Market Analysis and TAM/SAM/SOM estimates", kind: "audit" },
+    { id: "aud-3", timestamp: "2024-05-18 02:40 PM", actor: "Vikram Singh", event: "Verified Manufacturing & Supply Chain strategy with CM", kind: "workflow" },
     { id: "aud-4", timestamp: "2024-05-25 04:45 PM", actor: "Rohit Verma", event: "Submitted for Executive Review", kind: "workflow" },
   ],
 } as any;
@@ -106,7 +242,7 @@ function computeDerivedFinancialsAndScores(input: CommercializationFormInput): {
 }
 
 async function getOrDefault(): Promise<CommercializationRecord> {
-  const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+  const result = withDefaults(DEFAULT_COMMERCIALIZATION_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   return (result as any) ?? DEFAULT_COMMERCIALIZATION_RECORD;
 }
 

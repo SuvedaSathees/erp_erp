@@ -180,6 +180,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 export function RevenueModelDevelopmentPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["revenue-model"],
+    queryFn: revenueModelService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Revenue Model Development" breadcrumb="Development > Business Development > Revenue Model Development">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <RevenueModelDevelopmentPageForm />;
+}
+
+function RevenueModelDevelopmentPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["revenue-model"],
@@ -200,7 +217,7 @@ export function RevenueModelDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Revenue Model Development reference UI image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -363,7 +380,7 @@ export function RevenueModelDevelopmentPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Revenue Model Development" breadcrumb={[{ label: "Business Development" }, { label: "Revenue Model Development" }]}>
+      <AppShell title="Revenue Model Development" breadcrumb="Development > Business Development > Revenue Model Development">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

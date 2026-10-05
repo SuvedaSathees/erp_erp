@@ -135,7 +135,7 @@ export const searchTransactionsFn = createServerFn({ method: "GET" })
       pageSize?: number;
     }) => data,
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     try {
       const prisma = await getPrisma();
       const journals = await prisma.journal.findMany({

@@ -12,6 +12,7 @@ import {
   submitDevelopmentFn,
   reviewDevelopmentFn,
 } from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
 const MODULE_TYPE = "mobile-development";
 
@@ -114,7 +115,7 @@ const DEFAULT_MOCK_RECORD: MobileDevelopmentRecord = {
 
 export const getMobileDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
-    const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (result) return { success: true, data: result as any };
     return { success: true, data: DEFAULT_MOCK_RECORD };
   }
@@ -123,7 +124,7 @@ export const getMobileDevelopmentFn = createServerFn({ method: "GET" }).handler(
 export const saveMobileDevelopmentDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<MobileDevelopmentFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base = current ?? DEFAULT_MOCK_RECORD;
     const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateMobileDevelopmentScores(updatedInput);
@@ -142,7 +143,7 @@ export const saveMobileDevelopmentDraftFn = createServerFn({ method: "POST" })
 export const advanceMobileDevelopmentStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: MobileDevelopmentStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base: any = current ?? DEFAULT_MOCK_RECORD;
     const stageMap: Record<string, { label: string; stageNumber: number }> = {
       mobile_architecture_uiux: { label: "Stage 1: Mobile Architecture & UI/UX", stageNumber: 1 },
@@ -171,7 +172,7 @@ export const advanceMobileDevelopmentStageFn = createServerFn({ method: "POST" }
 export const submitMobileDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
       const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
       return { success: true, data: result as any };

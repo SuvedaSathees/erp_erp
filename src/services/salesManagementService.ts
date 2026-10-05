@@ -14,7 +14,7 @@ export async function fetchSalesOrders() {
 }
 
 export async function fetchSalesOrderById(id: string) {
-  return getSalesOrderByIdFn(id);
+  return getSalesOrderByIdFn({ data: id });
 }
 
 export async function fetchQuotations() {

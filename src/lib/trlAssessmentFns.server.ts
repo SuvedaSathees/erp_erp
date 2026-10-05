@@ -17,6 +17,7 @@ import {
   submitDevelopmentFn,
   reviewDevelopmentFn,
 } from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
 const MODULE_TYPE = "trl-assessment";
 
@@ -30,8 +31,17 @@ const DEFAULT_TRL_RECORD: TrlAssessmentRecord = {
   currentStageLabel: "Executive Review",
   version: "1.2",
   businessUnit: "Smart Mobility Division",
-  assessmentTeam: ["Rohit Verma", "Neha Sharma", "Vikram Singh", "Amitabh Shah", "Arjun Mehta", "Dr. Anil Patel", "Sanjay Kumar"],
+  assessmentTeam: [
+    "Rohit Verma",
+    "Neha Sharma",
+    "Vikram Singh",
+    "Amitabh Shah",
+    "Arjun Mehta",
+    "Dr. Anil Patel",
+    "Sanjay Kumar",
+  ],
   assessmentDate: "2024-05-20",
+
   linkedTechnologyId: "tec-0032",
   linkedTechnologyCode: "TEC-2024-0032",
   linkedResearchProjectId: "res-0018",
@@ -40,6 +50,7 @@ const DEFAULT_TRL_RECORD: TrlAssessmentRecord = {
   linkedPrototypeCode: "PRD-2024-0012",
   linkedProductId: "prd-1001",
   linkedProductCode: "PRD-1001",
+
   stages: [
     { stage: "technology_assessment", label: "Technology Assessment", completed: true, active: false, completedAt: "2024-05-10" },
     { stage: "technical_validation", label: "Technical Validation", completed: true, active: false, completedAt: "2024-05-14" },
@@ -47,23 +58,105 @@ const DEFAULT_TRL_RECORD: TrlAssessmentRecord = {
     { stage: "risk_commercial_assessment", label: "Risk & Commercial Assessment", completed: true, active: false, completedAt: "2024-05-19" },
     { stage: "executive_review", label: "Executive Review", completed: false, active: true },
   ],
+
   technologyInfo: {
     technologyName: "Autonomous Docking System",
     technologyDomain: "Robotics & Automation",
-    technologyDescription: "An autonomous docking system for EVs using vision algorithms, sensor fusion and AI control.",
+    technologyDescription:
+      "An autonomous docking system for EVs using vision algorithms, sensor fusion and AI control for precise, safe and reliable alignment and docking.",
     productCategory: "Automotive",
     applicationArea: ["Electric Vehicles", "Smart Charging", "Fleet Management"],
     innovationType: "Incremental Innovation",
     strategicImportance: 5,
   },
-  currentAssessment: { currentTrlLevel: 5, previousTrlLevel: 4, targetTrlLevel: 7, assessmentMethod: "Field Demonstration", assessmentEvidence: "Pilot deployment at two EV charging stations.", assessmentScore: 78, confidenceLevel: 82 },
-  technicalValidation: { scientificValidation: 5, laboratoryValidation: 5, prototypeValidation: 5, systemIntegration: 4, functionalDemonstration: 5, environmentalValidation: 4, validationEvidence: "Lab tests and 300+ docking cycles completed with 97% success rate." },
-  technologyDemonstration: { demonstrationEnvironment: "Pilot Plant", testResults: "Successful demonstration. Docking accuracy avg. 98.2%.", performanceMetrics: "Alignment: 98.2%, Time: 18s, Success: 97%", reliabilityResults: "MTBF: 650 hours", safetyAssessment: 5, complianceStatus: "Partially Compliant", demonstrationOutcome: "Technology meets requirements." },
-  riskAssessment: { technicalRisk: 2, manufacturingRisk: 3, supplyChainRisk: 3, regulatoryRisk: 2, commercialRisk: 2, overallRiskScore: 32, riskMitigationPlan: "Mitigating through partnerships and early compliance." },
-  commercialReadiness: { mrlLevel: 3, marketReadiness: 4, customerValidation: 4, investmentReadiness: 4, businessReadiness: 4, commercialPotential: 4, goToMarketStatus: "Pilot / Early Market" },
-  aiAssessment: { aiTechnologyScore: 84, aiReadinessPrediction: "On Track", aiTechnicalGapAnalysis: "Improve vision robustness in low-light.", aiDevelopmentRoadmap: "Enhance sensor fusion and conduct field trials.", aiRiskPrediction: "Moderate technical risk, low market risk.", aiRecommendation: "Proceed to TRL 6.", aiEstimatedTimeToNextTrl: "3 – 4 Months" },
-  summary: { overallTechnicalScore: 80, validationScore: 83, commercialScore: 77, riskScore: 68, finalTrlScore: 78, recommendedTrlLevel: "TRL 6", recommendation: "Advance to Next TRL" },
-  attachments: [],
+
+  currentAssessment: {
+    currentTrlLevel: 5,
+    previousTrlLevel: 4,
+    targetTrlLevel: 7,
+    assessmentMethod: "Field Demonstration",
+    assessmentEvidence:
+      "Pilot deployment at two EV charging stations with controlled environment testing and performance evaluation.",
+    assessmentScore: 78,
+    confidenceLevel: 82,
+  },
+
+  technicalValidation: {
+    scientificValidation: 5,
+    laboratoryValidation: 5,
+    prototypeValidation: 5,
+    systemIntegration: 4,
+    functionalDemonstration: 5,
+    environmentalValidation: 4,
+    validationEvidence:
+      "Lab tests, subsystem integration, environmental stress tests, and 300+ docking cycles completed with 97% success rate.",
+  },
+
+  technologyDemonstration: {
+    demonstrationEnvironment: "Pilot Plant",
+    testResults: "Successful demonstration in pilot environment with real EVs. Docking accuracy avg. 98.2%.",
+    performanceMetrics: "Alignment Accuracy: 98.2%, Docking Time: 18s, Cycle Success Rate: 97%",
+    reliabilityResults: "MTBF: 650 hours, No critical failures observed in pilot operation.",
+    safetyAssessment: 5,
+    complianceStatus: "Partially Compliant",
+    demonstrationOutcome:
+      "Technology meets functional requirements and demonstrates stable performance in pilot setup.",
+  },
+
+  riskAssessment: {
+    technicalRisk: 2,
+    manufacturingRisk: 3,
+    supplyChainRisk: 3,
+    regulatoryRisk: 2,
+    commercialRisk: 2,
+    overallRiskScore: 32,
+    riskMitigationPlan:
+      "Mitigating manufacturing risks through supplier partnerships, regulatory risks via early compliance engagement, and technical risks via extended testing.",
+  },
+
+  commercialReadiness: {
+    mrlLevel: 3,
+    marketReadiness: 4,
+    customerValidation: 4,
+    investmentReadiness: 4,
+    businessReadiness: 4,
+    commercialPotential: 4,
+    goToMarketStatus: "Pilot / Early Market",
+  },
+
+  aiAssessment: {
+    aiTechnologyScore: 84,
+    aiReadinessPrediction: "On Track",
+    aiTechnicalGapAnalysis:
+      "Improve vision algorithm robustness in low-light conditions. Optimize docking speed.",
+    aiDevelopmentRoadmap:
+      "Enhance sensor fusion, refine control algorithms, and conduct extended field trials.",
+    aiRiskPrediction: "Moderate technical risk, low market risk.",
+    aiRecommendation: "Proceed to TRL 6 with extended field testing.",
+    aiEstimatedTimeToNextTrl: "3 – 4 Months",
+  },
+
+  summary: {
+    overallTechnicalScore: 80,
+    validationScore: 83,
+    commercialScore: 77,
+    riskScore: 68, // Risk Safety Control Score (100 - 32 Risk = 68 Safety)
+    finalTrlScore: 78,
+    recommendedTrlLevel: "TRL 6",
+    recommendation: "Advance to Next TRL",
+  },
+
+  attachments: [
+    { id: "att-1", fileName: "Test_Reports.pdf", fileSize: "2.4 MB", fileType: "PDF", uploadDate: "2024-05-18", uploadedBy: "Neha Sharma" },
+    { id: "att-2", fileName: "Validation_Report.pdf", fileSize: "3.1 MB", fileType: "PDF", uploadDate: "2024-05-18", uploadedBy: "Vikram Singh" },
+    { id: "att-3", fileName: "Technical_Drawings.pdf", fileSize: "4.5 MB", fileType: "PDF", uploadDate: "2024-05-16", uploadedBy: "Amitabh Shah" },
+    { id: "att-4", fileName: "Prototype_Images.zip", fileSize: "12.8 MB", fileType: "ZIP", uploadDate: "2024-05-15", uploadedBy: "Rohit Verma" },
+    { id: "att-5", fileName: "Laboratory_Report.pdf", fileSize: "2.0 MB", fileType: "PDF", uploadDate: "2024-05-14", uploadedBy: "Neha Sharma" },
+    { id: "att-6", fileName: "Simulation_Results.pdf", fileSize: "3.6 MB", fileType: "PDF", uploadDate: "2024-05-12", uploadedBy: "Dr. Anil Patel" },
+    { id: "att-7", fileName: "Certification_Report.pdf", fileSize: "1.8 MB", fileType: "PDF", uploadDate: "2024-05-10", uploadedBy: "Arjun Mehta" },
+    { id: "att-8", fileName: "Assessment_Report.pdf", fileSize: "2.7 MB", fileType: "PDF", uploadDate: "2024-05-20", uploadedBy: "Rohit Verma" },
+  ],
+
   reviewRows: [
     { role: "Technical Reviewer", person: "Neha Sharma", decision: "Approved", status: "Approved", date: "18 May 2024" },
     { role: "R&D Manager", person: "Vikram Singh", decision: "Approved", status: "Approved", date: "19 May 2024" },
@@ -71,11 +164,22 @@ const DEFAULT_TRL_RECORD: TrlAssessmentRecord = {
     { role: "Innovation Director", person: "Arjun Mehta", decision: "Pending", status: "In Review", date: "-" },
     { role: "CTO", person: "Dr. Anil Patel", decision: "Pending", status: "Pending", date: "-" },
   ],
-  approvalDecision: null, reviewComments: null, approvalDate: null,
-  linkedMrlAssessmentId: null, linkedMrlAssessmentCode: null,
-  createdBy: "Rohit Verma", createdAt: "2024-05-20 09:15 AM", lastModifiedBy: "Rohit Verma", updatedAt: "2024-05-20 04:32 PM",
+
+  approvalDecision: null,
+  reviewComments: null,
+  approvalDate: null,
+  linkedMrlAssessmentId: null,
+  linkedMrlAssessmentCode: null,
+
+  createdBy: "Rohit Verma",
+  createdAt: "2024-05-20 09:15 AM",
+  lastModifiedBy: "Rohit Verma",
+  updatedAt: "2024-05-20 04:32 PM",
+
   auditTrail: [
     { id: "aud-1", timestamp: "2024-05-20 09:15 AM", actor: "Rohit Verma", event: "Created TRL Assessment TRL-2024-0087", kind: "workflow" },
+    { id: "aud-2", timestamp: "2024-05-20 11:30 AM", actor: "Neha Sharma", event: "Uploaded validation test reports", kind: "audit" },
+    { id: "aud-3", timestamp: "2024-05-20 02:15 PM", actor: "Vikram Singh", event: "Completed Stage 4 Risk & Commercial Assessment", kind: "workflow" },
     { id: "aud-4", timestamp: "2024-05-20 04:32 PM", actor: "Rohit Verma", event: "Submitted for Executive Review", kind: "workflow" },
   ],
 } as any;
@@ -123,7 +227,7 @@ function computeDerivedScores(input: TrlFormInput): { aiAssessment: TrlAIAssessm
 }
 
 async function getOrDefault(): Promise<TrlAssessmentRecord> {
-  const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+  const result = withDefaults(DEFAULT_TRL_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   return (result as any) ?? DEFAULT_TRL_RECORD;
 }
 

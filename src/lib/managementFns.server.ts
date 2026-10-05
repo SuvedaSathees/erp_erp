@@ -41,7 +41,7 @@ export const getEmployeesFn = createServerFn({ method: "GET" }).handler(async ()
 
 export const getEmployeeByIdFn = createServerFn({ method: "GET" })
   .validator((id: string) => id)
-  .handler(async ({ input: id }) => {
+  .handler(async ({ data: id }) => {
     const prisma = await getPrisma();
     return prisma.employee.findUnique({
       where: { id },
@@ -56,7 +56,7 @@ export const createEmployeeFn = createServerFn({ method: "POST" })
     designationId?: string; location?: string; branch?: string; businessUnit?: string;
     grade?: string; employmentType?: string; annualCTC?: number;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.employee.create({
       data: {
@@ -81,7 +81,7 @@ export const createEmployeeFn = createServerFn({ method: "POST" })
 
 export const updateEmployeeFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; [key: string]: any }) => data)
-  .handler(async ({ input: { id, ...data } }) => {
+  .handler(async ({ data: { id, ...data } }) => {
     const prisma = await getPrisma();
     if (data.joiningDate) data.joiningDate = new Date(data.joiningDate);
     return prisma.employee.update({ where: { id }, data });
@@ -89,7 +89,7 @@ export const updateEmployeeFn = createServerFn({ method: "POST" })
 
 export const deleteEmployeeFn = createServerFn({ method: "POST" })
   .validator((id: string) => id)
-  .handler(async ({ input: id }) => {
+  .handler(async ({ data: id }) => {
     const prisma = await getPrisma();
     return prisma.employee.delete({ where: { id } });
   });
@@ -108,7 +108,7 @@ export const getDepartmentsFn = createServerFn({ method: "GET" }).handler(async 
 
 export const createDepartmentFn = createServerFn({ method: "POST" })
   .validator((data: { code: string; name: string; headOfDept?: string; location?: string }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.department.create({ data: input });
   });
@@ -141,7 +141,7 @@ export const getLeaveRequestsFn = createServerFn({ method: "GET" }).handler(asyn
 
 export const createLeaveRequestFn = createServerFn({ method: "POST" })
   .validator((data: { employeeId: string; leaveCode: string; leaveType: string; startDate: string; endDate: string; days: number; reason?: string }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.leaveRequest.create({
       data: {
@@ -158,7 +158,7 @@ export const createLeaveRequestFn = createServerFn({ method: "POST" })
 
 export const updateLeaveRequestFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; status: string; approvedBy?: string }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.leaveRequest.update({
       where: { id: input.id },
@@ -269,21 +269,21 @@ export const createCrmLeadFn = createServerFn({ method: "POST" })
     industry?: string; city?: string; state?: string; leadSource?: string;
     description?: string;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.crmLead.create({ data: input as any });
   });
 
 export const updateCrmLeadFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; [key: string]: any }) => data)
-  .handler(async ({ input: { id, ...data } }) => {
+  .handler(async ({ data: { id, ...data } }) => {
     const prisma = await getPrisma();
     return prisma.crmLead.update({ where: { id }, data });
   });
 
 export const deleteCrmLeadFn = createServerFn({ method: "POST" })
   .validator((id: string) => id)
-  .handler(async ({ input: id }) => {
+  .handler(async ({ data: id }) => {
     const prisma = await getPrisma();
     return prisma.crmLead.delete({ where: { id } });
   });
@@ -306,7 +306,7 @@ export const createCrmOpportunityFn = createServerFn({ method: "POST" })
     probability?: number; ownerName: string; leadId?: string; accountId?: string;
     productService?: string; expectedCloseDate?: string;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.crmOpportunity.create({
       data: {
@@ -336,7 +336,7 @@ export const createCrmAccountFn = createServerFn({ method: "POST" })
     website?: string; phone?: string; email?: string; ownerName?: string;
     billingCity?: string; billingState?: string;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.crmAccount.create({ data: input });
   });
@@ -354,7 +354,7 @@ export const createCrmContactFn = createServerFn({ method: "POST" })
     contactCode: string; firstName: string; lastName: string; fullName: string;
     email?: string; phone?: string; designation?: string; accountId?: string;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.crmContact.create({ data: input });
   });
@@ -377,14 +377,14 @@ export const createSupportTicketFn = createServerFn({ method: "POST" })
     priority?: string; category?: string; accountId?: string;
     contactName?: string; contactEmail?: string; assignedTo?: string;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.supportTicket.create({ data: input as any });
   });
 
 export const updateSupportTicketFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; status?: string; assignedTo?: string; resolution?: string }) => data)
-  .handler(async ({ input: { id, ...data } }) => {
+  .handler(async ({ data: { id, ...data } }) => {
     const prisma = await getPrisma();
     return prisma.supportTicket.update({ where: { id }, data: data as any });
   });
@@ -435,7 +435,7 @@ export const getSalesOrdersFn = createServerFn({ method: "GET" }).handler(async 
 
 export const getSalesOrderByIdFn = createServerFn({ method: "GET" })
   .validator((id: string) => id)
-  .handler(async ({ input: id }) => {
+  .handler(async ({ data: id }) => {
     const prisma = await getPrisma();
     return prisma.salesOrder.findUnique({
       where: { id },
@@ -450,7 +450,7 @@ export const createSalesOrderFn = createServerFn({ method: "POST" })
     salesPerson?: string; territory?: string; notes?: string;
     lines: Array<{ productCode: string; productName: string; quantity: number; unitPrice: number; taxRate?: number; uom?: string }>;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     const lines = input.lines.map((l, i) => ({
       lineNumber: i + 1,
@@ -486,7 +486,7 @@ export const createSalesOrderFn = createServerFn({ method: "POST" })
 
 export const updateSalesOrderStatusFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; status: string }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.salesOrder.update({ where: { id: input.id }, data: { status: input.status as any } });
   });
@@ -543,7 +543,7 @@ export const getPurchaseOrdersFn = createServerFn({ method: "GET" }).handler(asy
 
 export const getPurchaseOrderByIdFn = createServerFn({ method: "GET" })
   .validator((id: string) => id)
-  .handler(async ({ input: id }) => {
+  .handler(async ({ data: id }) => {
     const prisma = await getPrisma();
     return prisma.purchaseOrder.findUnique({
       where: { id },
@@ -558,7 +558,7 @@ export const createPurchaseOrderFn = createServerFn({ method: "POST" })
     requestedBy?: string; notes?: string;
     lines: Array<{ itemCode: string; itemName: string; quantity: number; unitPrice: number; taxRate?: number; uom?: string }>;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     const lines = input.lines.map((l, i) => ({
       lineNumber: i + 1,
@@ -593,7 +593,7 @@ export const createPurchaseOrderFn = createServerFn({ method: "POST" })
 
 export const updatePurchaseOrderStatusFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; status: string; approvedBy?: string }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.purchaseOrder.update({
       where: { id: input.id },
@@ -623,7 +623,7 @@ export const createSupplierFn = createServerFn({ method: "POST" })
     phone?: string; city?: string; state?: string; gstin?: string;
     paymentTerms?: string;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.supplier.create({ data: input });
   });
@@ -678,7 +678,7 @@ export const getProjectsFn = createServerFn({ method: "GET" }).handler(async () 
 
 export const getProjectByIdFn = createServerFn({ method: "GET" })
   .validator((id: string) => id)
-  .handler(async ({ input: id }) => {
+  .handler(async ({ data: id }) => {
     const prisma = await getPrisma();
     return prisma.project.findUnique({
       where: { id },
@@ -696,7 +696,7 @@ export const createProjectFn = createServerFn({ method: "POST" })
     category?: string; startDate?: string; endDate?: string;
     projectManager: string; department?: string; clientName?: string; budget?: number;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.project.create({
       data: {
@@ -717,7 +717,7 @@ export const createProjectFn = createServerFn({ method: "POST" })
 
 export const updateProjectFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; [key: string]: any }) => data)
-  .handler(async ({ input: { id, ...data } }) => {
+  .handler(async ({ data: { id, ...data } }) => {
     const prisma = await getPrisma();
     if (data.startDate) data.startDate = new Date(data.startDate);
     if (data.endDate) data.endDate = new Date(data.endDate);
@@ -726,7 +726,7 @@ export const updateProjectFn = createServerFn({ method: "POST" })
 
 export const getProjectTasksFn = createServerFn({ method: "GET" })
   .validator((projectId: string) => projectId)
-  .handler(async ({ input: projectId }) => {
+  .handler(async ({ data: projectId }) => {
     const prisma = await getPrisma();
     return prisma.projectTask.findMany({
       where: { projectId },
@@ -741,7 +741,7 @@ export const createProjectTaskFn = createServerFn({ method: "POST" })
     priority?: string; assigneeId?: string; assigneeName?: string;
     milestoneId?: string; startDate?: string; dueDate?: string; estimatedHours?: number;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.projectTask.create({
       data: {
@@ -762,7 +762,7 @@ export const createProjectTaskFn = createServerFn({ method: "POST" })
 
 export const updateProjectTaskFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; status?: string; actualHours?: number; completedDate?: string }) => data)
-  .handler(async ({ input: { id, ...data } }) => {
+  .handler(async ({ data: { id, ...data } }) => {
     const prisma = await getPrisma();
     const updateData: any = { ...data };
     if (data.completedDate) updateData.completedDate = new Date(data.completedDate);
@@ -771,7 +771,7 @@ export const updateProjectTaskFn = createServerFn({ method: "POST" })
 
 export const getMilestonesFn = createServerFn({ method: "GET" })
   .validator((projectId: string) => projectId)
-  .handler(async ({ input: projectId }) => {
+  .handler(async ({ data: projectId }) => {
     const prisma = await getPrisma();
     return prisma.milestone.findMany({
       where: { projectId },
@@ -835,7 +835,7 @@ export const createAuditLogFn = createServerFn({ method: "POST" })
     action: string; module: string; entity?: string; entityId?: string;
     description?: string; performedBy: string; oldValue?: string; newValue?: string;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.auditLog.create({ data: input });
   });
@@ -900,7 +900,7 @@ export const createCapaRecordFn = createServerFn({ method: "POST" })
     source?: string; department?: string; assignedTo?: string; initiatedBy?: string;
     problemStatement?: string; targetDate?: string; relatedNcrId?: string;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.capaRecord.create({
       data: {
@@ -914,7 +914,7 @@ export const createCapaRecordFn = createServerFn({ method: "POST" })
 
 export const updateCapaRecordFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; status?: string; rootCause?: string; actionPlan?: string; verification?: string }) => data)
-  .handler(async ({ input: { id, ...data } }) => {
+  .handler(async ({ data: { id, ...data } }) => {
     const prisma = await getPrisma();
     return prisma.capaRecord.update({ where: { id }, data: data as any });
   });
@@ -934,7 +934,7 @@ export const createNcrRecordFn = createServerFn({ method: "POST" })
     productCode?: string; productName?: string; batchNumber?: string;
     defectType?: string; assignedTo?: string; targetDate?: string;
   }) => data)
-  .handler(async ({ input }) => {
+  .handler(async ({ data: input }) => {
     const prisma = await getPrisma();
     return prisma.ncrRecord.create({
       data: {

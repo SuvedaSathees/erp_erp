@@ -181,6 +181,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function DistributorDevelopmentPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["distributor"],
+    queryFn: distributorService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Distributor Development" breadcrumb="Development > Business Development > Distributor Development">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <DistributorDevelopmentPageForm />;
+}
+
+function DistributorDevelopmentPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["distributor"],
@@ -201,7 +218,7 @@ function DistributorDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Distributor Development reference UI image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -367,7 +384,7 @@ function DistributorDevelopmentPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Distributor Development" breadcrumb={[{ label: "Business Development" }, { label: "Distributor Development" }]}>
+      <AppShell title="Distributor Development" breadcrumb="Development > Business Development > Distributor Development">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

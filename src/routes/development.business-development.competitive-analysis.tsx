@@ -179,6 +179,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function CompetitiveAnalysisPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["competitive-analysis"],
+    queryFn: competitiveAnalysisService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Competitive Analysis" breadcrumb="Development > Business Development > Competitive Analysis">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <CompetitiveAnalysisPageForm />;
+}
+
+function CompetitiveAnalysisPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["competitive-analysis"],
@@ -199,7 +216,7 @@ function CompetitiveAnalysisPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Competitive Analysis reference UI image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -365,7 +382,7 @@ function CompetitiveAnalysisPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Competitive Analysis" breadcrumb={[{ label: "Business Development" }, { label: "Competitive Analysis" }]}>
+      <AppShell title="Competitive Analysis" breadcrumb="Development > Business Development > Competitive Analysis">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

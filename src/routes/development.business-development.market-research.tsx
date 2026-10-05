@@ -175,6 +175,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function MarketResearchPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["market-research"],
+    queryFn: marketResearchService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Market Research" breadcrumb="Development > Business Development > Market Research">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <MarketResearchPageForm />;
+}
+
+function MarketResearchPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["market-research"],
@@ -195,7 +212,7 @@ function MarketResearchPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Market Research reference image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -360,7 +377,7 @@ function MarketResearchPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Market Research" breadcrumb={[{ label: "Business Development" }, { label: "Market Research" }]}>
+      <AppShell title="Market Research" breadcrumb="Development > Business Development > Market Research">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

@@ -49,7 +49,7 @@ export async function updateLead(data: Parameters<typeof updateCrmLeadFn>[0]) {
 }
 
 export async function deleteLead(id: string) {
-  return deleteCrmLeadFn(id);
+  return deleteCrmLeadFn({ data: id });
 }
 
 export async function createOpportunity(data: Parameters<typeof createCrmOpportunityFn>[0]) {

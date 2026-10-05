@@ -17,7 +17,7 @@ export async function fetchProjects() {
 }
 
 export async function fetchProjectById(id: string) {
-  return getProjectByIdFn(id);
+  return getProjectByIdFn({ data: id });
 }
 
 export async function fetchProjectTasks(projectId: string) {

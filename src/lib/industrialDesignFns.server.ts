@@ -12,6 +12,7 @@ import {
   submitDevelopmentFn,
   reviewDevelopmentFn,
 } from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
 const MODULE_TYPE = "industrial-design";
 
@@ -113,7 +114,7 @@ const DEFAULT_MOCK_RECORD: IndustrialDesignRecord = {
 
 export const getIndustrialDesignFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
-    const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (result) return { success: true, data: result as any };
     return { success: true, data: DEFAULT_MOCK_RECORD };
   }
@@ -122,7 +123,7 @@ export const getIndustrialDesignFn = createServerFn({ method: "GET" }).handler(
 export const saveIndustrialDesignDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: IndustrialDesignFormInput }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base = current ?? DEFAULT_MOCK_RECORD;
     const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateIndustrialDesignScores(updatedInput);
@@ -141,7 +142,7 @@ export const saveIndustrialDesignDraftFn = createServerFn({ method: "POST" })
 export const advanceIndustrialDesignStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: IndustrialDesignStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base: any = current ?? DEFAULT_MOCK_RECORD;
     const stageMap: Record<string, { label: string; stageNumber: number }> = {
       concept_design: { label: "Stage 1: Concept Design", stageNumber: 1 },
@@ -171,7 +172,7 @@ export const advanceIndustrialDesignStageFn = createServerFn({ method: "POST" })
 export const submitIndustrialDesignFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
-    const current = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
       const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
       return { success: true, data: result as any };

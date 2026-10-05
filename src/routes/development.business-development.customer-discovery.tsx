@@ -115,6 +115,23 @@ function ScoreGauge({ label, score, max = 100, sub }: { label: string; score: nu
 }
 
 function CustomerDiscoveryPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["customer-discovery"],
+    queryFn: customerDiscoveryService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Customer Discovery" breadcrumb="Development > Business Development > Customer Discovery">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <CustomerDiscoveryPageForm />;
+}
+
+function CustomerDiscoveryPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["customer-discovery"],
@@ -128,7 +145,7 @@ function CustomerDiscoveryPage() {
   const [viewingFile, setViewingFile] = useState<string | null>(null);
 
   // Form State according to MAICW specifications
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -196,7 +213,7 @@ function CustomerDiscoveryPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Customer Discovery" breadcrumb={[{ label: "Business Development" }, { label: "Customer Discovery" }]}>
+      <AppShell title="Customer Discovery" breadcrumb="Development > Business Development > Customer Discovery">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

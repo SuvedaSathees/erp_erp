@@ -187,6 +187,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function CorporateStrategyDevelopmentPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["corporate-strategy"],
+    queryFn: corporateStrategyService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Corporate Strategy Development" breadcrumb="Development > Business Development > Corporate Strategy Development">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <CorporateStrategyDevelopmentPageForm />;
+}
+
+function CorporateStrategyDevelopmentPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["corporate-strategy"],
@@ -207,7 +224,7 @@ function CorporateStrategyDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Corporate Strategy Development reference UI image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -376,7 +393,7 @@ function CorporateStrategyDevelopmentPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Corporate Strategy Development" breadcrumb={[{ label: "Business Development" }, { label: "Corporate Strategy Development" }]}>
+      <AppShell title="Corporate Strategy Development" breadcrumb="Development > Business Development > Corporate Strategy Development">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

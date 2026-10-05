@@ -15,7 +15,7 @@ export async function fetchPurchaseOrders() {
 }
 
 export async function fetchPurchaseOrderById(id: string) {
-  return getPurchaseOrderByIdFn(id);
+  return getPurchaseOrderByIdFn({ data: id });
 }
 
 export async function fetchSuppliers() {

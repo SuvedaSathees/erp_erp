@@ -190,6 +190,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 function BusinessScalingDevelopmentPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["business-scaling"],
+    queryFn: businessScalingService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Business Scaling Development" breadcrumb="Development > Business Development > Business Scaling Development">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <BusinessScalingDevelopmentPageForm />;
+}
+
+function BusinessScalingDevelopmentPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["business-scaling"],
@@ -210,7 +227,7 @@ function BusinessScalingDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Business Scaling Development reference UI image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -380,7 +397,7 @@ function BusinessScalingDevelopmentPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Business Scaling Development" breadcrumb={[{ label: "Business Development" }, { label: "Business Scaling Development" }]}>
+      <AppShell title="Business Scaling Development" breadcrumb="Development > Business Development > Business Scaling Development">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

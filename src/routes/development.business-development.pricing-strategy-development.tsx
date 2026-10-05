@@ -179,6 +179,23 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
 }
 
 export function PricingStrategyDevelopmentPage() {
+  const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
+    queryKey: ["pricing-strategy"],
+    queryFn: pricingStrategyService.fetchRecord,
+  });
+  if (isRecordLoading || !loadedRecord) {
+    return (
+      <AppShell title="Pricing Strategy Development" breadcrumb="Development > Business Development > Pricing Strategy Development">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      </AppShell>
+    );
+  }
+  return <PricingStrategyDevelopmentPageForm />;
+}
+
+function PricingStrategyDevelopmentPageForm() {
   const queryClient = useQueryClient();
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["pricing-strategy"],
@@ -199,7 +216,7 @@ export function PricingStrategyDevelopmentPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // Form State according to Pricing Strategy Development reference UI image
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(() => loadedRecord ?? null);
 
   React.useEffect(() => {
     if (loadedRecord && !formData) {
@@ -362,7 +379,7 @@ export function PricingStrategyDevelopmentPage() {
 
   if (isRecordLoading || !formData) {
     return (
-      <AppShell title="Pricing Strategy Development" breadcrumb={[{ label: "Business Development" }, { label: "Pricing Strategy Development" }]}>
+      <AppShell title="Pricing Strategy Development" breadcrumb="Development > Business Development > Pricing Strategy Development">
         <div className="flex items-center justify-center h-64">
           <div className="text-muted-foreground">Loading...</div>
         </div>

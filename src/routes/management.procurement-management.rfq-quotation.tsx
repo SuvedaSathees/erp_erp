@@ -2071,7 +2071,7 @@ export function RfqQuotationPage() {
                   <button
                     type="button"
                     onClick={() => setShowAwardModal(true)}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-indigo-700 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-primary cursor-pointer"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" /> Sign-off Award
                   </button>

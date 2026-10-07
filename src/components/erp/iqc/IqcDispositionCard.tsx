@@ -318,7 +318,7 @@ Verified Status: Digitally Archived in Secure Repository
         <div className="bg-card border border-border rounded-xl p-4 sm:p-5 shadow-xs space-y-3 text-xs min-w-0">
           <div className="flex items-center justify-between pb-2 border-b border-border">
             <div className="flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-purple-600" />
+              <Sparkles className="w-4 h-4 text-primary" />
               <h3 className="text-sm font-bold text-foreground">AI Quality Insights</h3>
             </div>
             <button
@@ -341,7 +341,7 @@ Verified Status: Digitally Archived in Secure Repository
                   <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                 )}
                 {item.type === "recommendation" && (
-                  <Sparkles className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+                  <Sparkles className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                 )}
                 {item.type === "success" && (
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -420,7 +420,7 @@ Verified Status: Digitally Archived in Secure Repository
         <DialogContent className="max-w-xl w-full p-5 bg-card border border-border shadow-xl rounded-xl">
           <DialogHeader className="pb-2 border-b border-border">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-purple-600" />
+              <Sparkles className="w-5 h-5 text-primary" />
               <div>
                 <DialogTitle className="text-sm font-bold text-foreground">
                   AI Quality Intelligence & Vendor Risk Telemetry
@@ -444,7 +444,7 @@ Verified Status: Digitally Archived in Secure Repository
               </div>
               <div className="bg-muted/30 p-2 rounded-lg border border-border">
                 <span className="text-[10px] text-muted-foreground block">Recommended Sampling</span>
-                <span className="text-base font-bold text-purple-600 font-mono">Tightened (L-III)</span>
+                <span className="text-base font-bold text-primary font-mono">Tightened (L-III)</span>
               </div>
             </div>
 

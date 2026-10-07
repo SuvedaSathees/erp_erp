@@ -83,7 +83,7 @@ export function RcaFishboneCard({
       case "Man":
         return <User className="w-4 h-4 text-blue-600 dark:text-blue-400" />;
       case "Machine":
-        return <Cpu className="w-4 h-4 text-purple-600 dark:text-purple-400" />;
+        return <Cpu className="w-4 h-4 text-primary dark:text-blue-400" />;
       case "Material":
         return <Box className="w-4 h-4 text-amber-600 dark:text-amber-400" />;
       case "Method":

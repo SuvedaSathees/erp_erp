@@ -48,6 +48,8 @@ import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { TreeTable, type TreeColumn } from "@/components/erp/TreeTable";
 import { DataTable, EmptyState } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import { ErpButton } from "@/components/erp/Button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -65,10 +67,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { formatCurrency } from "@/lib/mock-data";
-import * as chartOfAccountsService from "@/services/chartOfAccountsService";
-import * as generalLedgerService from "@/services/generalLedgerService";
-import * as journalEntryService from "@/services/journalEntryService";
+import { formatCurrency } from "@/lib/format";
+import { chartOfAccountsService, generalLedgerService, journalEntryService } from "@/services";
 import type {
   AccountFilters,
   AccountNode,
@@ -650,15 +650,17 @@ function GeneralLedgerPage() {
     return records;
   }, [journalsQuery.data, flatAccounts]);
 
-  const dbError =
-    accountsQuery.error?.message ||
-    allAccountsQuery.error?.message ||
-    journalsQuery.error?.message ||
-    trialBalanceQuery.error?.message ||
-    activityQuery.error?.message ||
-    summaryQuery.error?.message;
+  const primaryError =
+    accountsQuery.error ||
+    allAccountsQuery.error ||
+    journalsQuery.error ||
+    trialBalanceQuery.error;
 
-  if (dbError) {
+  const isError = Boolean(primaryError);
+
+  useQueryErrorToast(isError, primaryError, "Failed to load general ledger records.");
+
+  if (isError && !accountsQuery.data && !journalsQuery.data) {
     return (
       <AppShell
         title="Finance"
@@ -666,38 +668,16 @@ function GeneralLedgerPage() {
         description="View and analyze all enterprise balances, entries, and workflow controls in your general ledger."
         tabs={<FinanceTabBar />}
       >
-        <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-8 text-center max-w-2xl mx-auto mt-12 shadow-sm">
-          <BrainCircuit className="h-12 w-12 text-destructive mx-auto mb-4 animate-pulse" />
-          <h3 className="text-[16px] font-bold text-foreground mb-2">
-            Database Connection Required
-          </h3>
-          <p className="text-sm text-muted-foreground mb-5 leading-relaxed">{dbError}</p>
-          <div className="rounded-lg bg-card border border-border p-4 text-[13px] text-left space-y-2">
-            <p className="font-semibold text-foreground">How to configure MongoDB Atlas:</p>
-            <ol className="list-decimal list-inside space-y-1.5 text-muted-foreground">
-              <li>
-                Open your project local{" "}
-                <code className="bg-muted px-1 py-0.5 rounded text-foreground font-mono">.env</code>{" "}
-                file.
-              </li>
-              <li>
-                Replace the{" "}
-                <code className="bg-muted px-1 py-0.5 rounded text-foreground font-mono">
-                  &lt;db_password&gt;
-                </code>{" "}
-                placeholder in the{" "}
-                <code className="bg-muted px-1 py-0.5 rounded text-foreground font-mono">
-                  MONGODB_URI
-                </code>{" "}
-                variable with your database password.
-              </li>
-              <li>
-                Save the file and refresh the page. The system will automatically seed default
-                ledger data and run calculations.
-              </li>
-            </ol>
-          </div>
-        </div>
+        <QueryErrorState
+          title="Failed to Load General Ledger"
+          error={primaryError}
+          onRetry={() => {
+            accountsQuery.refetch();
+            allAccountsQuery.refetch();
+            journalsQuery.refetch();
+            trialBalanceQuery.refetch();
+          }}
+        />
       </AppShell>
     );
   }
@@ -819,7 +799,21 @@ function GeneralLedgerPage() {
             </div>
 
             {accountsQuery.isLoading ? (
-              <div className="h-[240px] animate-pulse bg-muted/40" />
+              <div className="p-4 space-y-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="flex items-center justify-between border-b border-border/40 pb-2.5">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="h-4 w-16" />
+                      <Skeleton className="h-4 w-48" />
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-4 w-20" />
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : pagedAccounts.length === 0 ? (
               <EmptyState
                 title="No accounts found"
@@ -1543,7 +1537,7 @@ function GeneralLedgerPage() {
                       Base currency equivalents will be calculated: ₹
                       {(
                         journalTotalDebit * (newJournalInput.currencyInfo?.exchangeRate || 1)
-                      ).toLocaleString()}
+                      ).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                   )}
                 </div>
@@ -2126,12 +2120,28 @@ function JournalEntryTable({
         { key: "status", header: "Status", cell: (r) => <StatusBadge status={r.status} /> },
       ]}
       mobileCard={(r) => (
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="font-semibold">{r.journalNumber}</div>
-            <div className="text-xs text-muted-foreground">{r.postingDate.slice(0, 10)}</div>
+        <div className="space-y-2.5">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <span className="font-bold text-primary">{r.journalNumber}</span>
+              <div className="text-xs text-muted-foreground mt-0.5">{r.journalType}</div>
+            </div>
+            <StatusBadge status={r.status} />
           </div>
-          <StatusBadge status={r.status} />
+          <div className="flex items-center justify-between text-xs text-muted-foreground border-y border-border/50 py-1.5">
+            <span>Posting Date</span>
+            <span className="font-medium text-foreground tabular">{r.postingDate.slice(0, 10)}</span>
+          </div>
+          <div className="flex items-center justify-between text-xs pt-0.5">
+            <div>
+              <span className="text-muted-foreground block text-[11px]">Total Debit</span>
+              <span className="font-bold text-foreground tabular">{formatCurrency(r.totalDebit)}</span>
+            </div>
+            <div className="text-right">
+              <span className="text-muted-foreground block text-[11px]">Total Credit</span>
+              <span className="font-bold text-foreground tabular">{formatCurrency(r.totalCredit)}</span>
+            </div>
+          </div>
         </div>
       )}
     />
@@ -2182,12 +2192,28 @@ function ApprovalQueueTable({
         },
         { key: "status", header: "Status", cell: (r) => <StatusBadge status={r.status} /> },
       ]}
-      mobileCard={(r) => (
-        <div className="flex items-center justify-between">
-          <div className="font-semibold">{r.journalNumber}</div>
-          <StatusBadge status={r.status} />
-        </div>
-      )}
+      mobileCard={(r) => {
+        const next = r.approvalSteps.find((s) => s.status === "Pending");
+        return (
+          <div className="space-y-2.5">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <span className="font-bold text-primary">{r.journalNumber}</span>
+                <div className="text-xs text-muted-foreground mt-0.5">{r.journalType}</div>
+              </div>
+              <StatusBadge status={r.status} />
+            </div>
+            <div className="flex items-center justify-between text-xs text-muted-foreground border-y border-border/50 py-1.5">
+              <span>Next Approver</span>
+              <span className="font-semibold text-foreground">{next ? next.level : "Fully Approved"}</span>
+            </div>
+            <div className="flex items-center justify-between text-xs pt-0.5">
+              <span className="text-muted-foreground">Total Debit</span>
+              <span className="font-bold text-foreground tabular">{formatCurrency(r.totalDebit)}</span>
+            </div>
+          </div>
+        );
+      }}
     />
   );
 }

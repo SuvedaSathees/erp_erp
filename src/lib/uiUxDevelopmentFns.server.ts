@@ -5,10 +5,15 @@ import type {
   UiUxDevelopmentRecord,
   UiUxDevelopmentStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   UI/UX Development — Server Functions & Workflow Engine
-   =========================================================================== */
+const MODULE_TYPE = "uiux-development";
 
 export function calculateUiUxDevelopmentScores(input: Partial<UiUxDevelopmentFormInput>) {
   const researchReadiness = input.researchReadinessScore ?? 88;
@@ -35,7 +40,7 @@ export function calculateUiUxDevelopmentScores(input: Partial<UiUxDevelopmentFor
   };
 }
 
-const DEFAULT_RECORD: UiUxDevelopmentRecord = {
+export const DEFAULT_RECORD: UiUxDevelopmentRecord = {
   id: "uiux-rec-0017",
   uiUxDevelopmentId: "UIUX-2024-0017",
   formCode: "UIUX-F-2024-25",
@@ -288,51 +293,45 @@ const DEFAULT_RECORD: UiUxDevelopmentRecord = {
     { id: "aud3", timestamp: "19 Jun 2024 11:45 AM", user: "Rahul Sharma", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80", action: "Uploaded Attachments", details: "Uploaded High_Fidelity_Design.fig (45.2 MB) and WCAG Audit report.", ipAddress: "192.168.1.104" },
     { id: "aud4", timestamp: "18 Jun 2024 10:15 AM", user: "Rahul Sharma", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80", action: "Created Project", details: "Initialized UI/UX Development Record UIUX-2024-0017.", ipAddress: "192.168.1.104" },
   ],
-};
+} as any;
 
-export { DEFAULT_RECORD };
-
-let currentRecord: UiUxDevelopmentRecord = { ...DEFAULT_RECORD };
 
 export const getUiUxDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: UiUxDevelopmentRecord }> => {
-    return { success: true, data: currentRecord };
+    const result = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_RECORD };
   }
 );
 
 export const saveUiUxDevelopmentDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<UiUxDevelopmentFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: UiUxDevelopmentRecord }> => {
-    const input = data.input;
-    const scores = calculateUiUxDevelopmentScores({ ...currentRecord, ...input });
-
-    currentRecord = {
-      ...currentRecord,
-      ...input,
+    const current = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
+    const scores = calculateUiUxDevelopmentScores(updatedInput);
+    const record = {
+      ...base,
+      input: updatedInput,
       ...scores,
-      lastModified: new Date().toISOString(),
-      lastUpdated:
-        new Date().toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }) +
-        " " +
-        new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      projectName: (base as any).uiUxProjectName ?? "",
+      ownerName: (base as any).designerName ?? "Rahul Sharma",
+      recordCode: (base as any).id ?? (base as any).uiUxDevelopmentId ?? "",
     };
-
-    return { success: true, data: currentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitUiUxDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: UiUxDevelopmentRecord }> => {
-    currentRecord = {
-      ...currentRecord,
-      workflowStatus: "In Review",
-      lastModified: new Date().toISOString(),
-    };
-    return { success: true, data: currentRecord };
+    const current = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_RECORD };
   });
 
 export const reviewUiUxDevelopmentFn = createServerFn({ method: "POST" })
@@ -344,24 +343,14 @@ export const reviewUiUxDevelopmentFn = createServerFn({ method: "POST" })
     }) => data
   )
   .handler(async ({ data }): Promise<{ success: boolean; data: UiUxDevelopmentRecord }> => {
-    const { decision, comments } = data;
-    const statusMap: Record<UiUxDevelopmentApprovalDecision, UiUxDevelopmentStatus> = {
-      Approved: "Approved",
-      "Approved with Conditions": "In Review",
-      "Changes Requested": "Changes Requested",
-      Rejected: "Archived",
-      Pending: "In Review",
-    };
-
-    currentRecord = {
-      ...currentRecord,
-      approvalDecision: decision,
-      reviewComments: comments ?? currentRecord.reviewComments,
-      approvalDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      workflowStatus: statusMap[decision] ?? currentRecord.workflowStatus,
-      lastModified: new Date().toISOString(),
-    };
-
-    return { success: true, data: currentRecord };
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "UX Review Board",
+        reviewerName: "Review Board",
+      },
+    });
+    return { success: true, data: result as any };
   });
-

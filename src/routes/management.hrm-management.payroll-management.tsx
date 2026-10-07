@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { hrmManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
@@ -155,11 +157,17 @@ const DEPARTMENT_HEADCOUNT_PIE = [
   { name: "Engineering", value: 48, percentage: "38.4%", color: "#2563EB" },
   { name: "Manufacturing", value: 28, percentage: "22.4%", color: "#06B6D4" },
   { name: "Sales", value: 20, percentage: "16.0%", color: "#F59E0B" },
-  { name: "Administration", value: 18, percentage: "14.4%", color: "#8B5CF6" },
+  { name: "Administration", value: 18, percentage: "14.4%", color: "#0A3C75" },
   { name: "Finance", value: 11, percentage: "8.8%", color: "#EC4899" },
 ];
 
 export default function PayrollManagementPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["hrm", "payroll"]],
+    queryFn: () => hrmManagementService.fetchPayrollRecords(),
+  });
+
   const [activeTab, setActiveTab] = useState<string>("earnings");
   const [isProcessModalOpen, setIsProcessModalOpen] = useState(false);
   const [isAdvanceModalOpen, setIsAdvanceModalOpen] = useState(false);
@@ -272,7 +280,7 @@ export default function PayrollManagementPage() {
 
               {/* 2. Gross Payroll */}
               <div className="p-3 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center gap-3 shadow-2xs">
-                <div className="p-2 rounded-lg bg-indigo-50 text-indigo-600">
+                <div className="p-2 rounded-lg bg-blue-50 text-primary">
                   <CreditCard className="h-5 w-5" />
                 </div>
                 <div>
@@ -305,12 +313,12 @@ export default function PayrollManagementPage() {
 
               {/* 5. Employer Cost */}
               <div className="p-3 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center gap-3 shadow-2xs">
-                <div className="p-2 rounded-lg bg-purple-50 text-purple-600">
+                <div className="p-2 rounded-lg bg-blue-50 text-primary">
                   <Building2 className="h-5 w-5" />
                 </div>
                 <div>
                   <div className="text-[10px] text-muted-foreground font-semibold">Employer Cost</div>
-                  <div className="text-sm font-extrabold text-purple-700 font-mono">₹ 47,20,000</div>
+                  <div className="text-sm font-extrabold text-primary font-mono">₹ 47,20,000</div>
                 </div>
               </div>
             </div>
@@ -327,7 +335,7 @@ export default function PayrollManagementPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Calendar className="h-3.5 w-3.5 text-indigo-600" />
+              <Calendar className="h-3.5 w-3.5 text-primary" />
               <div>
                 <div className="text-[10px] text-muted-foreground">Processing Date</div>
                 <div className="font-semibold text-slate-900">14 May 2024 05:30 PM</div>
@@ -343,7 +351,7 @@ export default function PayrollManagementPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <User className="h-3.5 w-3.5 text-purple-600" />
+              <User className="h-3.5 w-3.5 text-primary" />
               <div>
                 <div className="text-[10px] text-muted-foreground">Prepared By</div>
                 <div className="font-semibold text-slate-900">Priya Nair</div>
@@ -520,7 +528,7 @@ export default function PayrollManagementPage() {
 
                   <div className="flex justify-between">
                     <span className="text-slate-600 flex items-center gap-1">
-                      <span className="h-2 w-2 rounded-full bg-purple-500" /> Gratuity
+                      <span className="h-2 w-2 rounded-full bg-blue-500" /> Gratuity
                     </span>
                     <span className="font-mono font-bold text-slate-900">₹ 1,15,000</span>
                   </div>
@@ -681,7 +689,7 @@ export default function PayrollManagementPage() {
                       <span className="font-mono font-bold text-slate-900">₹ 37,500 <span className="text-slate-400 font-normal text-[10px]">(4.3%)</span></span>
                     </div>
                     <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-indigo-500 rounded-full w-[4.3%]" />
+                      <div className="h-full bg-blue-500 rounded-full w-[4.3%]" />
                     </div>
                   </div>
 
@@ -828,9 +836,9 @@ export default function PayrollManagementPage() {
                 <span className="text-[10px] text-amber-800 font-semibold">LOP Days Logged</span>
                 <div className="text-base font-bold font-mono text-amber-900">4.5 Days Total</div>
               </div>
-              <div className="p-3.5 rounded-xl border border-slate-200 bg-purple-50/40 space-y-1">
-                <span className="text-[10px] text-purple-800 font-semibold">Total Overtime Hours</span>
-                <div className="text-base font-bold font-mono text-purple-900">142.5 Hours</div>
+              <div className="p-3.5 rounded-xl border border-slate-200 bg-blue-50/40 space-y-1">
+                <span className="text-[10px] text-primary font-semibold">Total Overtime Hours</span>
+                <div className="text-base font-bold font-mono text-blue-900">142.5 Hours</div>
               </div>
             </div>
           </div>

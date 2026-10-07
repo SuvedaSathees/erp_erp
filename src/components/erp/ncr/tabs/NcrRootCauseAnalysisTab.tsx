@@ -101,7 +101,7 @@ export function NcrRootCauseAnalysisTab({
       <div className="bg-card rounded-xl border border-border/80 p-5 shadow-xs space-y-4">
         <div className="flex items-center justify-between pb-3 border-b border-border/40">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-950/40 text-purple-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-primary flex items-center justify-center">
               <Network className="h-4 w-4" />
             </div>
             <div>

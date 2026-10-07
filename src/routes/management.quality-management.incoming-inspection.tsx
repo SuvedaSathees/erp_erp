@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { qualityManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
@@ -12,6 +15,7 @@ import { IqcInspectionSummaryCard } from "@/components/erp/iqc/IqcInspectionSumm
 import { IqcDefectsCard } from "@/components/erp/iqc/IqcDefectsCard";
 import { IqcDispositionCard } from "@/components/erp/iqc/IqcDispositionCard";
 import { CreateIqcModal } from "@/components/erp/iqc/CreateIqcModal";
+import { getIqcRecordFn } from "@/lib/iqcFns.server";
 import {
   INITIAL_IQC_RECORD,
   recalculateIqcStats,
@@ -23,7 +27,6 @@ import {
   ShieldCheck,
   CheckCircle2,
 } from "lucide-react";
-import { toast } from "sonner";
 
 export const Route = createFileRoute(
   "/management/quality-management/incoming-inspection",
@@ -42,7 +45,19 @@ export const Route = createFileRoute(
 });
 
 export function IncomingInspectionPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: ["quality", "inspections"],
+    queryFn: () => qualityManagementService.fetchInspectionRecords(),
+  });
+
+  const { data: dbIqcRecord } = useQuery({
+    queryKey: ["iqc", "record"],
+    queryFn: () => getIqcRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<IqcRecord>(INITIAL_IQC_RECORD);
+  useEffect(() => { if (dbIqcRecord?.data) setRecord(dbIqcRecord.data); }, [dbIqcRecord]);
   const [activeStep, setActiveStep] = useState<number>(3);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -336,7 +351,7 @@ export function IncomingInspectionPage() {
 
             {/* Section 2 */}
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-wider text-purple-600 dark:text-purple-400">
+              <div className="flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-wider text-primary dark:text-blue-400">
                 <span>Phase 2: Quarantine & Sampling Plan (ANSI/ASQ Z1.4)</span>
               </div>
               <IqcSamplingPlanCard

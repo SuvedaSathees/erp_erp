@@ -37,10 +37,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { company, formatCurrency, formatSignedCurrency } from "@/lib/mock-data";
-import { loadTransactionsData } from "@/services/financialManagementService";
-import * as reportingEngineService from "@/services/reportingEngineService";
-import * as transactionService from "@/services/transactionService";
+import { company } from "@/lib/companyConfig";
+import { formatCurrency, formatSignedCurrency } from "@/lib/format";
+import { loadTransactionsData, reportingEngineService, transactionService } from "@/services";
 import type {
   DashboardQuery,
   TransactionDetail,

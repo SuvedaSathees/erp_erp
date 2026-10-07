@@ -88,7 +88,7 @@ export function ResourcesRequirementsSection({
             <div>
               <div className="flex items-center justify-between border-b border-border/60 pb-2.5 mb-2.5">
                 <span className="font-bold text-foreground flex items-center gap-1.5 text-xs">
-                  <Monitor className="h-4 w-4 text-indigo-600 shrink-0" /> Software Systems & Forms
+                  <Monitor className="h-4 w-4 text-primary shrink-0" /> Software Systems & Forms
                 </span>
                 <Badge variant="secondary" className="text-[10px] font-mono font-bold shrink-0">
                   {softwareAndForms.length} Items
@@ -111,7 +111,7 @@ export function ResourcesRequirementsSection({
                     </div>
                     <Badge
                       variant="outline"
-                      className="text-[10px] font-semibold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800 shrink-0 whitespace-nowrap"
+                      className="text-[10px] font-semibold bg-blue-50 text-primary dark:bg-blue-950/40 dark:text-blue-300 border-blue-200 dark:border-blue-800 shrink-0 whitespace-nowrap"
                     >
                       Active
                     </Badge>

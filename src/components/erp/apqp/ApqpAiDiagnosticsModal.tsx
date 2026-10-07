@@ -65,7 +65,7 @@ export const ApqpAiDiagnosticsModal: React.FC<ApqpAiDiagnosticsModalProps> = ({
         <DialogHeader className="pb-3 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-purple-600/20 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-lg bg-primary/20 text-primary dark:text-blue-400 flex items-center justify-center font-bold">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
@@ -77,7 +77,7 @@ export const ApqpAiDiagnosticsModal: React.FC<ApqpAiDiagnosticsModalProps> = ({
                 </DialogDescription>
               </div>
             </div>
-            <Badge className="bg-purple-600 text-white font-bold text-xs px-2.5 py-0.5">
+            <Badge className="bg-primary text-white font-bold text-xs px-2.5 py-0.5">
               Health Score: {aiAssessment.healthScore}/100
             </Badge>
           </div>
@@ -115,9 +115,9 @@ export const ApqpAiDiagnosticsModal: React.FC<ApqpAiDiagnosticsModalProps> = ({
               </p>
             </div>
 
-            <div className="p-2.5 rounded-lg bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800">
-              <div className="flex items-center gap-1.5 font-bold text-purple-800 dark:text-purple-300">
-                <Zap className="w-4 h-4 text-purple-600" />
+            <div className="p-2.5 rounded-lg bg-blue-50/70 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center gap-1.5 font-bold text-primary dark:text-blue-300">
+                <Zap className="w-4 h-4 text-primary" />
                 <span>Process Optimization Opportunity</span>
               </div>
               <p className="text-[11px] text-muted-foreground mt-1 pl-5">

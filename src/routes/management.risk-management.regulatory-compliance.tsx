@@ -2,8 +2,10 @@
 // Management -> Risk Management -> Regulatory Compliance
 // Regulatory Compliance Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getRegulatoryComplianceRecordFn } from "@/lib/regulatoryComplianceFns.server";
 import {
   FileText,
   AlertTriangle,
@@ -144,10 +146,17 @@ const SUBMODULE_TABS = [
 export function RegulatoryCompliancePage() {
   const { toast } = useToast();
 
+  // Prisma-backed query with inline fallback
+  const { data: dbRecord } = useQuery({
+    queryKey: ["regulatory-compliance", "record"],
+    queryFn: () => getRegulatoryComplianceRecordFn({ data: {} }),
+  });
+
   // Active record state (matches screenshot by default)
   const [activeRecord, setActiveRecord] = useState<RegulatoryComplianceRecord>(
     regulatoryComplianceService.getPrimaryRecord()
   );
+  useEffect(() => { if (dbRecord?.data) setActiveRecord(dbRecord.data as RegulatoryComplianceRecord); }, [dbRecord]);
 
   // Tab state: "overview" (General) or "reports" (Reports)
   const [activeSubmodule, setActiveSubmodule] = useState<string>("overview");

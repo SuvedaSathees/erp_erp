@@ -54,7 +54,10 @@ import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
-import { DataTable } from "@/components/erp/DataTable";
+import { StatusBadge } from "@/components/erp/StatusBadge";
+import { DataTable, EmptyState } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -70,7 +73,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
-import { company } from "@/lib/mock-data";
+import { company } from "@/lib/companyConfig";
 import { loadAuditTrailDashboard } from "@/services/financialManagementService";
 import * as auditTrailService from "@/services/auditTrailService";
 import type {
@@ -158,8 +161,11 @@ function AuditTrailPage() {
     setExportOpen(false);
   };
 
+  const isError = dashboardQuery.isError;
   const isLoading = dashboardQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(isError, dashboardQuery.error, "Failed to load audit trail dashboard.");
 
   // Filter logs list
   const logsList = data?.logs || [];
@@ -196,28 +202,21 @@ function AuditTrailPage() {
       description="Track and review all system changes and user activities for compliance and accountability."
       tabs={<FinanceTabBar />}
     >
-      {isLoading || !data ? (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />
-            ))}
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="h-[500px] animate-pulse rounded-xl bg-muted" />
-            <div className="space-y-6">
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-            </div>
-          </div>
-        </div>
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Audit Trail"
+          error={dashboardQuery.error}
+          onRetry={() => dashboardQuery.refetch()}
+        />
+      ) : isLoading || !data ? (
+        <AuditSkeleton />
       ) : (
         <div className="space-y-5">
           {/* KPI Stat Cards Grid */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <StatCard
               label="Total Activities (YTD)"
-              value={data.kpis.totalActivitiesYTD.toLocaleString()}
+              value={data.kpis.totalActivitiesYTD.toLocaleString("en-IN")}
               neutralText="All logged operations"
               icon={<Layers className="h-5 w-5" />}
               iconBg="bg-primary/10"
@@ -225,7 +224,7 @@ function AuditTrailPage() {
             />
             <StatCard
               label="Unique Users"
-              value={data.kpis.uniqueUsersCount.toString()}
+              value={data.kpis.uniqueUsersCount.toLocaleString("en-IN")}
               neutralText="Active system actors"
               icon={<User className="h-5 w-5" />}
               iconBg="bg-blue-500/10"
@@ -233,7 +232,7 @@ function AuditTrailPage() {
             />
             <StatCard
               label="Successful Activities"
-              value={data.kpis.successfulActivitiesCount.toLocaleString()}
+              value={data.kpis.successfulActivitiesCount.toLocaleString("en-IN")}
               neutralText="100% of recorded activities"
               icon={<CheckCircle className="h-5 w-5" />}
               iconBg="bg-green-500/10"
@@ -241,7 +240,7 @@ function AuditTrailPage() {
             />
             <StatCard
               label="Failed Activities"
-              value={data.kpis.failedActivitiesCount.toString()}
+              value={data.kpis.failedActivitiesCount.toLocaleString("en-IN")}
               neutralText="0 errors recorded"
               icon={<AlertTriangle className="h-5 w-5" />}
               iconBg="bg-amber-500/10"
@@ -249,11 +248,11 @@ function AuditTrailPage() {
             />
             <StatCard
               label="Sensitive Changes"
-              value={data.kpis.sensitiveChangesCount.toLocaleString()}
+              value={data.kpis.sensitiveChangesCount.toLocaleString("en-IN")}
               neutralText="Keyword-based detection"
               icon={<Shield className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -402,7 +401,7 @@ function AuditTrailPage() {
                                 : r.activityType === "Create"
                                   ? "bg-green-50 text-green-700 border-green-200"
                                   : r.activityType === "Approve"
-                                    ? "bg-purple-50 text-purple-700 border-purple-200"
+                                    ? "bg-blue-50 text-primary border-blue-200"
                                     : "bg-blue-50 text-blue-700 border-blue-200"
                             }`}
                           >
@@ -459,17 +458,27 @@ function AuditTrailPage() {
                       },
                     ]}
                     mobileCard={(r) => (
-                      <div className="space-y-1" onClick={() => handleRowClick(r)}>
-                        <div className="flex justify-between font-semibold">
-                          <span>{r.description}</span>
-                          <span>{r.status}</span>
+                      <div className="space-y-2.5" onClick={() => handleRowClick(r)}>
+                        <div className="flex justify-between items-start gap-2">
+                          <div>
+                            <span className="font-semibold text-foreground">{r.description}</span>
+                            <div className="text-xs text-muted-foreground mt-0.5">{r.module} • {r.user}</div>
+                          </div>
+                          <StatusBadge status={r.status === "Success" ? "Active" : "Rejected"} />
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          {r.timestamp} • {r.user}
+                        <div className="flex justify-between items-center text-xs border-y border-border/60 py-1.5">
+                          <span className="font-mono text-muted-foreground">{r.referenceId}</span>
+                          <span className="text-muted-foreground tabular">{r.timestamp}</span>
                         </div>
                       </div>
                     )}
                     onRowClick={handleRowClick}
+                    empty={
+                      <EmptyState
+                        title="No audit logs found"
+                        description="No audit activity entries matched your current search and filter settings."
+                      />
+                    }
                   />
                 </div>
               ) : activeTab === "security" ? (
@@ -522,7 +531,20 @@ function AuditTrailPage() {
                           cell: (r) => <span className="font-mono">{r.ipAddress}</span>,
                         },
                       ]}
-                      mobileCard={(r) => <div>{r.eventName}</div>}
+                      mobileCard={(r) => (
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-start gap-2">
+                            <span className="font-bold text-destructive">{r.eventName}</span>
+                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                              r.severity === "Critical" ? "bg-red-100 text-red-800" : "bg-orange-100 text-orange-800"
+                            }`}>
+                              {r.severity}
+                            </span>
+                          </div>
+                          <div className="text-xs text-muted-foreground">User: {r.user} • IP: <span className="font-mono">{r.ipAddress}</span></div>
+                          <div className="text-xs text-muted-foreground tabular">{r.timestamp}</div>
+                        </div>
+                      )}
                     />
                   ) : (
                     <div className="py-12 space-y-3 max-w-md mx-auto">
@@ -571,7 +593,18 @@ function AuditTrailPage() {
                           cell: (r) => <span className="font-semibold">{r.user}</span>,
                         },
                       ]}
-                      mobileCard={(r) => <div>{r.parameter}</div>}
+                      mobileCard={(r) => (
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-start gap-2">
+                            <span className="font-bold text-foreground">{r.parameter}</span>
+                            <StatusBadge status="Approved" />
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            <span>Before: <span className="line-through">{r.beforeValue}</span></span> → <span className="font-semibold text-primary">{r.afterValue}</span>
+                          </div>
+                          <div className="text-xs text-muted-foreground">By: {r.user} • <span className="tabular">{r.timestamp}</span></div>
+                        </div>
+                      )}
                     />
                   ) : (
                     <div className="py-12 space-y-3 max-w-md mx-auto">
@@ -612,7 +645,7 @@ function AuditTrailPage() {
                     {
                       label: "Sensitive Changes",
                       count: data.kpis.sensitiveChangesCount,
-                      icon: <Shield className="h-4 w-4 text-purple-500" />,
+                      icon: <Shield className="h-4 w-4 text-blue-600" />,
                     },
                     {
                       label: "System Events",
@@ -632,7 +665,7 @@ function AuditTrailPage() {
                         {filter.label}
                       </span>
                       <span className="text-muted-foreground text-[10px] block tabular">
-                        {filter.count.toLocaleString()} Activities
+                        {filter.count.toLocaleString("en-IN")} Activities
                       </span>
                     </div>
                   ))}
@@ -706,8 +739,8 @@ function AuditTrailPage() {
                     </ResponsiveContainer>
                     <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
                       <div>
-                        <div className="font-display text-[14px] font-bold text-foreground">
-                          {data.kpis.totalActivitiesYTD.toLocaleString()}
+                        <div className="font-display text-[14px] font-bold text-foreground tabular">
+                          {data.kpis.totalActivitiesYTD.toLocaleString("en-IN")}
                         </div>
                         <div className="text-[8px] text-muted-foreground uppercase tracking-wider">
                           Total Activities
@@ -726,8 +759,8 @@ function AuditTrailPage() {
                           />
                           {entry.name}
                         </span>
-                        <span className="font-semibold text-foreground">
-                          {entry.percentage}% ({entry.value.toLocaleString()})
+                        <span className="font-semibold text-foreground tabular">
+                          {entry.percentage}% ({entry.value.toLocaleString("en-IN")})
                         </span>
                       </li>
                     ))}
@@ -935,5 +968,36 @@ function AuditTrailPage() {
         </DialogContent>
       </Dialog>
     </AppShell>
+  );
+}
+
+function AuditSkeleton() {
+  return (
+    <div className="space-y-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-[104px] rounded-xl" />
+        ))}
+      </div>
+      <div className="flex gap-6 border-b border-border pb-3">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-4 w-24" />
+        ))}
+      </div>
+      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="card-soft p-4 space-y-4">
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-9 min-w-[200px] flex-1 rounded-md" />
+            <Skeleton className="h-9 w-28 rounded-md" />
+            <Skeleton className="h-9 w-28 rounded-md" />
+          </div>
+          <Skeleton className="h-[420px] w-full rounded-lg" />
+        </div>
+        <div className="space-y-6">
+          <Skeleton className="h-[260px] rounded-xl" />
+          <Skeleton className="h-[220px] rounded-xl" />
+        </div>
+      </div>
+    </div>
   );
 }

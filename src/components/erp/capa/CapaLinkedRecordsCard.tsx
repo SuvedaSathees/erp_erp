@@ -64,7 +64,7 @@ export function CapaLinkedRecordsCard({ record }: CapaLinkedRecordsCardProps) {
             className="p-3 hover:bg-muted/30 transition-colors flex items-center justify-between group"
           >
             <div className="flex items-center gap-2.5">
-              <ShieldCheck className="w-4 h-4 text-purple-600" />
+              <ShieldCheck className="w-4 h-4 text-primary" />
               <div>
                 <span className="font-semibold text-foreground group-hover:text-primary">
                   AUD-2026-0018

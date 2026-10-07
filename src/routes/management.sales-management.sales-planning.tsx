@@ -89,7 +89,7 @@ const CHANNEL_REVENUE_DATA = [
   { name: "Dealer", value: 25, color: "#2563EB" },
   { name: "Distributor", value: 20, color: "#0EA5E9" },
   { name: "GeM / Govt.", value: 15, color: "#F59E0B" },
-  { name: "Export", value: 5, color: "#8B5CF6" },
+  { name: "Export", value: 5, color: "#0A3C75" },
 ];
 
 const PRODUCT_WISE_TARGETS = [
@@ -640,7 +640,7 @@ export default function SalesPlanningPage() {
 
                 {/* Metric 4 */}
                 <div className="p-3.5 rounded-xl border border-border/70 bg-slate-50/50 flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center shrink-0">
+                  <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
                     <ShieldCheck className="h-6 w-6" />
                   </div>
                   <div>
@@ -730,7 +730,7 @@ export default function SalesPlanningPage() {
                     </div>
                     <div className="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full bg-purple-500" />
+                        <span className="h-2 w-2 rounded-full bg-blue-500" />
                         <span className="font-semibold text-slate-800">Global Pilot Exports</span>
                       </div>
                       <span className="font-bold text-slate-900 tabular">₹5.0 Cr (10%)</span>
@@ -813,7 +813,7 @@ export default function SalesPlanningPage() {
             </div>
 
             {/* AI Sales Intelligence & Workflow Banner */}
-            <div className="bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-emerald-50/30 border border-primary/20 rounded-xl p-4 shadow-xs">
+            <div className="bg-gradient-to-r from-blue-50/70 via-blue-50/40 to-emerald-50/30 border border-primary/20 rounded-xl p-4 shadow-xs">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-border/60">
                 <div className="flex items-center gap-2.5">
                   <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
@@ -872,7 +872,7 @@ export default function SalesPlanningPage() {
                 </div>
 
                 <div className="p-2.5 rounded-lg bg-white border border-border/70 shadow-2xs hover:border-primary/40 transition-colors">
-                  <div className="flex items-center gap-1.5 text-indigo-600 mb-1">
+                  <div className="flex items-center gap-1.5 text-primary mb-1">
                     <Building2 className="h-3.5 w-3.5" />
                     <span className="text-[11px] font-bold">GeM Portal 2×</span>
                   </div>
@@ -880,7 +880,7 @@ export default function SalesPlanningPage() {
                 </div>
 
                 <div className="p-2.5 rounded-lg bg-white border border-border/70 shadow-2xs hover:border-primary/40 transition-colors">
-                  <div className="flex items-center gap-1.5 text-purple-600 mb-1">
+                  <div className="flex items-center gap-1.5 text-primary mb-1">
                     <Lightbulb className="h-3.5 w-3.5" />
                     <span className="text-[11px] font-bold">11kW Product Mix</span>
                   </div>
@@ -1058,7 +1058,7 @@ export default function SalesPlanningPage() {
               </div>
               <div className="p-3 border rounded-lg bg-slate-50">
                 <p className="font-bold text-slate-800">Opportunity-Based Pipeline</p>
-                <p className="text-base font-bold text-indigo-600 mt-1">₹52.30 Cr</p>
+                <p className="text-base font-bold text-primary mt-1">₹52.30 Cr</p>
                 <p className="text-muted-foreground mt-1">Weighted probability: 68%</p>
               </div>
               <div className="p-3 border rounded-lg bg-emerald-50/50 border-emerald-200">
@@ -1152,14 +1152,14 @@ export default function SalesPlanningPage() {
             <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-colors space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-slate-900 text-[13px]">Global Pilot Exports</span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">Expansion</span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-primary border border-blue-200">Expansion</span>
               </div>
               <p className="text-slate-600 leading-relaxed">
                 Pilot distributor partnerships in Middle East & ASEAN regions for 11kW AC Dual Port chargers meeting CE/IEC compliance.
               </p>
               <div className="pt-2 border-t border-slate-200 flex justify-between font-semibold">
                 <span className="text-slate-500">Target Allocation:</span>
-                <span className="text-purple-700 font-bold">₹5.0 Cr</span>
+                <span className="text-primary font-bold">₹5.0 Cr</span>
               </div>
             </div>
           </div>

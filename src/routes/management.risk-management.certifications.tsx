@@ -2,8 +2,10 @@
 // Management -> Compliance -> Certifications
 // Certifications Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getCertificationsRecordFn } from "@/lib/certificationsFns.server";
 import {
   FileText,
   AlertTriangle,
@@ -112,8 +114,15 @@ export default function CertificationsManagementPage() {
     | "reports"
   >("overview");
 
+  // Prisma-backed query with inline fallback
+  const { data: dbRecord } = useQuery({
+    queryKey: ["certifications", "record"],
+    queryFn: () => getCertificationsRecordFn({ data: {} }),
+  });
+
   // Controlled form state
   const [formData, setFormData] = useState(PRIMARY_CERTIFICATION_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data as typeof PRIMARY_CERTIFICATION_RECORD); }, [dbRecord]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 

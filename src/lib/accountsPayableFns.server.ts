@@ -549,7 +549,47 @@ export const getTopVendorsFn = createServerFn({ method: "POST" })
     }
   });
 
-// 11. Payment Summary
+// 11. Vendor Directory List
+export const getVendorListFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    try {
+      const prisma = await getPrisma();
+      const vendors = await prisma.vendor.findMany({
+        include: { invoices: true },
+        orderBy: { name: "asc" },
+      });
+
+      const rows = vendors.map((v) => {
+        const outstanding = v.invoices
+          .filter((i) => i.status !== "Paid" && i.status !== "Canceled")
+          .reduce((sum, i) => sum + Number(i.dueAmount), 0);
+        const totalSpend = v.invoices.reduce(
+          (sum, i) => sum + Number(i.amount || 0),
+          0,
+        );
+        return {
+          id: v.vendorCode,
+          name: v.name,
+          category: v.category,
+          status: v.status as string,
+          outstanding: Math.round(outstanding),
+          totalSpend: Math.round(totalSpend),
+          invoiceCount: v.invoices.length,
+          paymentTerms: v.paymentTerms,
+          email: v.email || "",
+          phone: v.phone || "",
+          rating: 4.5,
+        };
+      });
+
+      return { success: true, data: rows };
+    } catch (err) {
+      return { success: false, error: (err as Error).message };
+    }
+  },
+);
+
+// 12. Payment Summary
 export const getPayablePaymentSummaryFn = createServerFn({ method: "POST" })
   .validator((query: DashboardQuery) => query)
   .handler(async ({ data: _query }) => {

@@ -46,7 +46,7 @@ export const BomEngineeringHeader: React.FC<BomEngineeringHeaderProps> = ({
 
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <span className="text-[11px] font-semibold text-muted-foreground bg-muted/60 px-1.5 py-0.5 rounded border border-border/50 font-mono">
-              Rev {record.version.toFixed(1)}
+              Rev {Number(record.version).toFixed(1)}
             </span>
             <span>Product: <strong className="text-foreground">{record.product}</strong></span>
             <span>•</span>

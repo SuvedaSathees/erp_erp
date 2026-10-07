@@ -118,6 +118,46 @@ export * as incidentManagementService from "./incidentManagementService";
 export * as businessContinuityService from "./businessContinuityService";
 export * as disasterRecoveryService from "./disasterRecoveryService";
 
+// Phase 3D Business Development Services (DB-backed)
+export * as marketResearchService from "./marketResearchService";
+export * as customerDiscoveryService from "./customerDiscoveryService";
+export * as customerValidationService from "./customerValidationService";
+export * as competitiveAnalysisService from "./competitiveAnalysisService";
+export * as pricingStrategyService from "./pricingStrategyService";
+export * as valuePropositionService from "./valuePropositionService";
+export * as businessModelService from "./businessModelService";
+export * as revenueModelService from "./revenueModelService";
+export * as goToMarketService from "./goToMarketService";
+export * as salesChannelService from "./salesChannelService";
+export * as partnershipService from "./partnershipService";
+export * as dealerNetworkService from "./dealerNetworkService";
+export * as distributorService from "./distributorService";
+export * as franchiseService from "./franchiseService";
+export * as exportDevelopmentService from "./exportDevelopmentService";
+export * as internationalExpansionService from "./internationalExpansionService";
+export * as vendorEcosystemService from "./vendorEcosystemService";
+export * as investorRelationsService from "./investorRelationsService";
+export * as fundraisingService from "./fundraisingService";
+export * as corporateStrategyService from "./corporateStrategyService";
+export * as businessScalingService from "./businessScalingService";
+export * as businessTransformationService from "./businessTransformationService";
+
+// Phase 2 Management Module Services (DB-backed)
+export * as hrmManagementService from "./hrmManagementService";
+export * as crmManagementService from "./crmManagementService";
+export * as salesManagementService from "./salesManagementService";
+export * as procurementManagementService from "./procurementManagementService";
+export * as projectManagementService from "./projectManagementService";
+export * as qualityManagementService from "./qualityManagementService";
+export {
+  fetchAuditLogs,
+  fetchPolicies,
+  fetchDocumentControls,
+  fetchApprovalMatrices,
+  fetchAdminKpis,
+  createAuditLog,
+} from "./administrationService";
+
 
 
 

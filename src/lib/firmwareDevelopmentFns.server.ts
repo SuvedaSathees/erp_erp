@@ -6,43 +6,26 @@ import type {
   FirmwareDevelopmentStage,
   FirmwareDevelopmentStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Firmware Development — Server Functions & Workflow Engine
-   ---------------------------------------------------------------------------
-   Manages the 4-stage Firmware Development lifecycle:
-     Stage 1: Firmware Architecture & Implementation (configure HAL/BSP, middleware, application logic & git commits)
-     Stage 2: Communication & Security (communication stack, diagnostics, secure boot, OTA & security analysis)
-     Stage 3: Testing & Release (automated build pipeline, static analysis, unit/integration testing & release candidate)
-     Stage 4: Engineering Review (Review Board decision: Approved / Approved with Conditions / Revision Required / Rejected)
-
-   Upon 'Approved' decision:
-     - Auto-creates & links downstream Hardware Bring-up project (HB-2024-0089)
-       and surfaces its ID to proceed to Hardware Bring-up.
-   =========================================================================== */
+const MODULE_TYPE = "firmware-development";
 
 export function calculateFirmwareDevelopmentScores(input: Partial<FirmwareDevelopmentFormInput>) {
-  // 1. Firmware Readiness (0-100)
   const firmwareReadiness = 90;
-
-  // 2. Code Quality (0-100)
   const codeQuality = input.codeCoverage && input.codeCoverage >= 90 ? 92 : 86;
-
-  // 3. Security Readiness (0-100)
   const securityReadiness = input.securityScore ?? 92;
-
-  // 4. Test Coverage (0-100)
   const testCoverage = Math.round(input.codeCoverage ?? 94.6);
 
-  // Overall Firmware Score (/100)
   const overallFirmwareScore = Math.round(
-    firmwareReadiness * 0.25 +
-      codeQuality * 0.25 +
-      securityReadiness * 0.25 +
-      testCoverage * 0.25
+    firmwareReadiness * 0.25 + codeQuality * 0.25 + securityReadiness * 0.25 + testCoverage * 0.25
   );
 
-  // AI Assessment Sub-scores (single source of truth with Panel 9)
   const aiCodeQualityScore = codeQuality;
   const aiPerformanceOptimization = 90;
   const aiMemoryOptimization = 89;
@@ -51,7 +34,6 @@ export function calculateFirmwareDevelopmentScores(input: Partial<FirmwareDevelo
   const aiMaintainabilityScore = 91;
   const aiOverallFirmwareScore = overallFirmwareScore;
 
-  // Key Highlights dynamic list
   const highlights: string[] = [];
   highlights.push("All critical modules implemented");
   highlights.push(`Code coverage achieved ${testCoverage}%`);
@@ -61,21 +43,12 @@ export function calculateFirmwareDevelopmentScores(input: Partial<FirmwareDevelo
 
   return {
     summary: {
-      overallFirmwareScore,
-      firmwareReadiness,
-      codeQuality,
-      securityReadiness,
-      testCoverage,
+      overallFirmwareScore, firmwareReadiness, codeQuality, securityReadiness, testCoverage,
       recommendation: "Proceed to Hardware Bring-up",
     },
     aiAssessment: {
-      aiOverallFirmwareScore,
-      aiCodeQualityScore,
-      aiPerformanceOptimization,
-      aiMemoryOptimization,
-      aiSecurityAnalysis,
-      aiBugPrediction,
-      aiMaintainabilityScore,
+      aiOverallFirmwareScore, aiCodeQualityScore, aiPerformanceOptimization,
+      aiMemoryOptimization, aiSecurityAnalysis, aiBugPrediction, aiMaintainabilityScore,
     },
     keyHighlights: highlights,
   };
@@ -333,7 +306,7 @@ const DEFAULT_FIRMWARE_DEVELOPMENT_INPUT: FirmwareDevelopmentFormInput = {
   approvalDate: "2024-06-20",
 };
 
-let currentFirmwareDevelopmentRecord: FirmwareDevelopmentRecord = {
+const DEFAULT_MOCK_RECORD: FirmwareDevelopmentRecord = {
   id: "fwd-rec-2024-0017",
   firmwareId: "FWD-2024-0017",
   formCode: "FWF-2024-25",
@@ -435,228 +408,86 @@ let currentFirmwareDevelopmentRecord: FirmwareDevelopmentRecord = {
       status: "Under Review",
     },
   ],
-};
+} as any;
 
-/** Get current Firmware Development Record */
 export const getFirmwareDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: FirmwareDevelopmentRecord }> => {
-    return { success: true, data: currentFirmwareDevelopmentRecord };
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   }
 );
 
-/** Save Draft */
 export const saveFirmwareDevelopmentDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<FirmwareDevelopmentFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: FirmwareDevelopmentRecord }> => {
-    const updatedInput = { ...currentFirmwareDevelopmentRecord.input, ...data.input };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_MOCK_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateFirmwareDevelopmentScores(updatedInput);
-
-    currentFirmwareDevelopmentRecord = {
-      ...currentFirmwareDevelopmentRecord,
+    const record = {
+      ...base,
       input: updatedInput,
       ...scores,
-      lastUpdated: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      lastModified: new Date().toISOString(),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rajesh Varma",
-          event: "Saved draft updates to Firmware Development Form",
-          stage: currentFirmwareDevelopmentRecord.currentStage,
-          status: currentFirmwareDevelopmentRecord.status,
-        },
-        ...currentFirmwareDevelopmentRecord.auditTrail,
-      ],
+      projectName: (base as any).firmwareProjectName ?? "",
+      ownerName: (base as any).firmwareLeadName ?? "Rajesh Varma",
+      recordCode: (base as any).id ?? (base as any).firmwareId ?? "",
     };
-
-    return { success: true, data: currentFirmwareDevelopmentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Advance Stage */
 export const advanceFirmwareDevelopmentStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: FirmwareDevelopmentStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: FirmwareDevelopmentRecord }> => {
-    const stageMap: Record<FirmwareDevelopmentStage, { label: string; stageNumber: number }> = {
-      firmware_architecture_implementation: {
-        label: "Stage 1: Firmware Architecture & Implementation",
-        stageNumber: 1,
-      },
-      communication_security: {
-        label: "Stage 2: Communication & Security",
-        stageNumber: 2,
-      },
-      testing_release: {
-        label: "Stage 3: Testing & Release",
-        stageNumber: 3,
-      },
-      engineering_review: {
-        label: "Stage 4: Engineering Review",
-        stageNumber: 4,
-      },
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? DEFAULT_MOCK_RECORD;
+    const stageMap: Record<string, { label: string; stageNumber: number }> = {
+      firmware_architecture_implementation: { label: "Stage 1: Firmware Architecture & Implementation", stageNumber: 1 },
+      communication_security: { label: "Stage 2: Communication & Security", stageNumber: 2 },
+      testing_release: { label: "Stage 3: Testing & Release", stageNumber: 3 },
+      engineering_review: { label: "Stage 4: Engineering Review", stageNumber: 4 },
     };
-
     const target = stageMap[data.targetStage];
-
-    currentFirmwareDevelopmentRecord = {
-      ...currentFirmwareDevelopmentRecord,
+    const record = {
+      ...base,
       currentStage: data.targetStage,
       currentStageLabel: target.label,
-      stages: currentFirmwareDevelopmentRecord.stages.map((stg) => {
+      stages: (base.stages ?? []).map((stg: any) => {
         if (stg.stageNumber < target.stageNumber) return { ...stg, status: "completed" };
         if (stg.stageNumber === target.stageNumber) return { ...stg, status: "in_progress" };
         return { ...stg, status: "pending" };
       }),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rajesh Varma",
-          event: `Advanced to ${target.label}`,
-          stage: data.targetStage,
-          status: currentFirmwareDevelopmentRecord.status,
-        },
-        ...currentFirmwareDevelopmentRecord.auditTrail,
-      ],
+      projectName: base.firmwareProjectName ?? "",
+      ownerName: base.firmwareLeadName ?? "Rajesh Varma",
+      recordCode: base.id ?? base.firmwareId ?? "",
     };
-
-    return { success: true, data: currentFirmwareDevelopmentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Submit for Review */
 export const submitFirmwareDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: FirmwareDevelopmentRecord }> => {
-    currentFirmwareDevelopmentRecord = {
-      ...currentFirmwareDevelopmentRecord,
-      status: "Under Review",
-      currentStage: "engineering_review",
-      currentStageLabel: "Stage 4: Engineering Review",
-      stages: currentFirmwareDevelopmentRecord.stages.map((stg) =>
-        stg.id === "engineering_review" ? { ...stg, status: "in_progress" } : { ...stg, status: "completed" }
-      ),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rajesh Varma",
-          event: "Submitted Firmware Release for Stage 4 Engineering Review Board",
-          stage: "engineering_review",
-          status: "Under Review",
-        },
-        ...currentFirmwareDevelopmentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentFirmwareDevelopmentRecord };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   });
 
-/** Review Board Decision */
 export const reviewFirmwareDevelopmentFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: FirmwareDevelopmentApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: FirmwareDevelopmentApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: FirmwareDevelopmentRecord }> => {
-    let newStatus: FirmwareDevelopmentStatus = "Under Review";
-    let linkedHardwareId: string | null = currentFirmwareDevelopmentRecord.linkedHardwareBringupId ?? null;
-    let eventMessage = "";
-
-    if (data.decision === "Approved") {
-      newStatus = "Approved";
-      linkedHardwareId = "HB-2024-0089";
-      eventMessage = "Review Board Approved Firmware Development. Auto-created downstream Hardware Bring-up project HB-2024-0089. Firmware Lead notified: 'Proceed to Hardware Bring-up'.";
-    } else if (data.decision === "Approved with Conditions") {
-      newStatus = "Approved with Conditions";
-      eventMessage = "Review Board Approved with Conditions. Firmware Lead notified: 'Improve Firmware'. Record remains editable.";
-    } else if (data.decision === "Revision Required") {
-      newStatus = "Revision Required";
-      eventMessage = "Review Board requested revisions. Firmware Lead notified: 'Reassess Code & Testing'. Returned to Testing & Release stage.";
-    } else if (data.decision === "Rejected") {
-      newStatus = "Rejected";
-      eventMessage = "Review Board Rejected Firmware Development. Project archived. Firmware Lead notified: 'Close Firmware Development'.";
-    }
-
-    const updatedReviewers = currentFirmwareDevelopmentRecord.input.reviewers.map((rev) => {
-      if (rev.role === "Firmware Lead" || rev.role === "Engineering Manager") {
-        return {
-          ...rev,
-          decision: data.decision === "Approved" || data.decision === "Approved with Conditions" ? ("Approved" as const) : ("Rejected" as const),
-          status: data.decision,
-          date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-        };
-      }
-      return rev;
-    });
-
-    currentFirmwareDevelopmentRecord = {
-      ...currentFirmwareDevelopmentRecord,
-      status: newStatus,
-      approvalDecision: data.decision,
-      approvalDate: new Date().toLocaleDateString("en-CA"),
-      reviewComments: data.comments || "",
-      linkedHardwareBringupId: linkedHardwareId,
-      stages: currentFirmwareDevelopmentRecord.stages.map((stg) => {
-        if (data.decision === "Approved" || data.decision === "Approved with Conditions") {
-          return { ...stg, status: "completed" };
-        }
-        if (data.decision === "Revision Required" && stg.id === "engineering_review") {
-          return { ...stg, status: "pending" };
-        }
-        return stg;
-      }),
-      currentStage:
-        data.decision === "Revision Required"
-          ? "testing_release"
-          : "engineering_review",
-      input: {
-        ...currentFirmwareDevelopmentRecord.input,
-        approvalDecision: data.decision,
-        reviewComments: data.comments || "",
-        approvalDate: new Date().toLocaleDateString("en-CA"),
-        reviewers: updatedReviewers,
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Engineering Review Board",
+        reviewerName: "Review Board",
       },
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Lead Firmware Engineer (Review Board)",
-          event: eventMessage,
-          stage: currentFirmwareDevelopmentRecord.currentStage,
-          status: newStatus,
-        },
-        ...currentFirmwareDevelopmentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentFirmwareDevelopmentRecord };
+    });
+    return { success: true, data: result as any };
   });

@@ -1,5 +1,5 @@
+import { DEFAULT_FACTORY_LAYOUT_RECORD } from "@/lib/factoryLayoutMock";
 import {
-  DEFAULT_FACTORY_LAYOUT_RECORD,
   getFactoryLayoutFn,
   reviewFactoryLayoutFn,
   saveFactoryLayoutDraftFn,

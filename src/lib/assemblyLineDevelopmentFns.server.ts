@@ -1,14 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
-import type {
-  AssemblyLineApprovalDecision,
-  AssemblyLineFormInput,
-  AssemblyLineRecord,
-  AssemblyLineStatus,
-} from "@/services/types";
+import type { AssemblyLineRecord } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Assembly Line Development — Server Functions & Workflow Engine
-   =========================================================================== */
+const MODULE_TYPE = "assembly-line-development";
 
 export function calculateAssemblyLineScores(record: Partial<AssemblyLineRecord>) {
   const layoutScore = record.layoutDesignScore ?? 88;
@@ -18,7 +19,6 @@ export function calculateAssemblyLineScores(record: Partial<AssemblyLineRecord>)
   const performanceScore = record.performanceScore ?? 86;
   const aiScore = record.aiReadinessScore ?? 88;
 
-  // Weighted score calculations
   const overallScore = Math.round(
     layoutScore * 0.25 +
       workstationScore * 0.15 +
@@ -180,94 +180,49 @@ export const DEFAULT_ASSEMBLY_LINE_RECORD: AssemblyLineRecord = {
     { id: "a-3", timestamp: "19 Jun 2024 02:15 PM", user: "Vikram Singh", action: "QMS Review", details: "Quality checklist validated for Pilot Run.", ipAddress: "192.168.1.115" },
     { id: "a-4", timestamp: "20 Jun 2024 04:25 PM", user: "Rahul Sharma", action: "Form Submitted", details: "Record submitted for board review.", ipAddress: "192.168.1.102" },
   ],
-};
+} as any;
 
-let activeRecordStore: AssemblyLineRecord = { ...DEFAULT_ASSEMBLY_LINE_RECORD };
-
-export const getAssemblyLineFn = createServerFn({ method: "GET" }).handler(
-  async (): Promise<{ success: boolean; data: AssemblyLineRecord }> => {
-    return { success: true, data: activeRecordStore };
-  }
-);
+export const getAssemblyLineFn = createServerFn({ method: "GET" }).handler(async () => {
+  const result = withDefaults(DEFAULT_ASSEMBLY_LINE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
+  return { success: true, data: DEFAULT_ASSEMBLY_LINE_RECORD };
+});
 
 export const saveAssemblyLineDraftFn = createServerFn({ method: "POST" })
-  .validator((data: { id?: string; input: Partial<AssemblyLineFormInput> }) => data)
-  .handler(async ({ data }): Promise<{ success: boolean; data: AssemblyLineRecord }> => {
-    const { input } = data;
-    const { ...rest } = input;
-
-    // Apply changes
-    activeRecordStore = {
-      ...activeRecordStore,
-      ...rest,
-      lastModified: new Date().toISOString(),
-      lastUpdated: new Date().toLocaleString(),
+  .validator((data: { id?: string; input: any }) => data)
+  .handler(async ({ data }) => {
+    const record = {
+      ...data.input,
+      projectName: data.input.projectName ?? "",
+      ownerName: data.input.assemblyLineEngineer?.name ?? data.input.ownerName ?? "",
+      recordCode: data.input.assemblyLineId ?? data.input.id ?? "",
     };
-
-    // Recalculate scores
-    const calculated = calculateAssemblyLineScores(activeRecordStore);
-    activeRecordStore = {
-      ...activeRecordStore,
-      ...calculated,
-    };
-
-    return { success: true, data: activeRecordStore };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
 export const submitAssemblyLineFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
-  .handler(async (): Promise<{ success: boolean; data: AssemblyLineRecord }> => {
-    activeRecordStore = {
-      ...activeRecordStore,
-      workflowStatus: "In Review",
-      lastUpdated: new Date().toLocaleString(),
-    };
-
-    return { success: true, data: activeRecordStore };
+  .handler(async () => {
+    const current = withDefaults(DEFAULT_ASSEMBLY_LINE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result };
+    }
+    return { success: true, data: DEFAULT_ASSEMBLY_LINE_RECORD };
   });
 
 export const reviewAssemblyLineFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: AssemblyLineApprovalDecision;
-      comments?: string;
-    }) => data
-  )
-  .handler(async ({ data }): Promise<{ success: boolean; data: AssemblyLineRecord }> => {
-    const { decision, comments } = data;
-
-    let finalStatus: AssemblyLineStatus = "In Review";
-    if (decision === "Approved") {
-      finalStatus = "Approved";
-    } else if (decision === "Changes Requested") {
-      finalStatus = "Changes Requested";
-    } else if (decision === "Rejected") {
-      finalStatus = "Rejected";
-    }
-
-    activeRecordStore = {
-      ...activeRecordStore,
-      approvalDecision: decision,
-      reviewComments: comments || "",
-      workflowStatus: finalStatus,
-      approvalDate: new Date().toLocaleDateString(),
-      lastUpdated: new Date().toLocaleString(),
-    };
-
-    // Update the Assembly Line Engineer reviewer record as a mock demonstration
-    activeRecordStore.reviewers = activeRecordStore.reviewers.map((rev) => {
-      if (rev.role === "Assembly Line Engineer") {
-        return {
-          ...rev,
-          decision,
-          comments: comments || "Reviewed.",
-          date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }),
-          status: "Completed" as const,
-        };
-      }
-      return rev;
+  .validator((data: { id: string; decision: string; comments?: string }) => data)
+  .handler(async ({ data }) => {
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Assembly Line Engineer",
+        reviewerName: "Current User",
+      },
     });
-
-    return { success: true, data: activeRecordStore };
+    return { success: true, data: result };
   });

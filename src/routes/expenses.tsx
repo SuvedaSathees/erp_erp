@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Wallet, Plus, Download, Filter, MoreHorizontal } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { AppShell, PageHeader } from "@/components/erp/AppShell";
@@ -6,16 +7,33 @@ import { ErpButton } from "@/components/erp/Button";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, type Column } from "@/components/erp/DataTable";
 import { KpiCard } from "@/components/erp/KpiCard";
-import { expenses, expenseCategories, formatCurrency } from "@/lib/mock-data";
+import { analyticsEngineService } from "@/services";
+import { formatCurrency } from "@/lib/format";
 
 export const Route = createFileRoute("/expenses")({
   head: () => ({ meta: [{ title: "Expenses · Magnertia ERP" }] }),
   component: ExpensesPage,
 });
 
-type Expense = (typeof expenses)[number];
+type Expense = {
+  id: string;
+  date: string;
+  description: string;
+  category: string;
+  amount: number;
+  status: string;
+  vendor: string;
+  paidVia: string;
+};
 
 function ExpensesPage() {
+  const { data } = useQuery({
+    queryKey: ["expenses", "line-items"],
+    queryFn: () => analyticsEngineService.fetchExpenseLineItems(),
+  });
+
+  const expenses = (data?.rows ?? []) as Expense[];
+  const expenseCategories = data?.categories ?? [];
   const total = expenseCategories.reduce((s, c) => s + c.amount, 0);
 
   const columns: Column<Expense>[] = [
@@ -41,7 +59,7 @@ function ExpensesPage() {
     {
       key: "vendor",
       header: "Vendor",
-      cell: (r) => <span className="font-medium text-foreground">{r.vendor}</span>,
+      cell: (r) => <span className="font-medium text-foreground">{r.vendor || r.description}</span>,
     },
     {
       key: "amount",
@@ -94,17 +112,17 @@ function ExpensesPage() {
           delta={{ value: "3.2%", positive: false }}
         />
         <KpiCard
-          label="Electricity Cost"
-          value={formatCurrency(expenseCategories[0].amount, true)}
+          label="Top Category"
+          value={formatCurrency(expenseCategories[0]?.amount ?? 0, true)}
           icon={Wallet}
-          hint="43% of total"
+          hint={expenseCategories[0]?.category ?? "—"}
         />
         <KpiCard
           label="Pending Approvals"
-          value="3"
+          value={String(expenses.filter((e) => e.status === "Pending").length)}
           icon={Wallet}
           tone="warning"
-          hint="₹277K pending"
+          hint="Awaiting review"
         />
         <KpiCard
           label="Recurring Monthly"
@@ -157,7 +175,7 @@ function ExpensesPage() {
           <p className="text-xs text-muted-foreground">Share of total spend</p>
           <ul className="mt-4 space-y-3">
             {expenseCategories.map((c) => {
-              const pct = (c.amount / total) * 100;
+              const pct = total > 0 ? (c.amount / total) * 100 : 0;
               return (
                 <li key={c.category}>
                   <div className="flex items-center justify-between text-sm">
@@ -195,7 +213,7 @@ function ExpensesPage() {
             <>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <div className="truncate text-sm font-semibold text-foreground">{r.vendor}</div>
+                  <div className="truncate text-sm font-semibold text-foreground">{r.vendor || r.description}</div>
                   <div className="mt-0.5 text-xs text-muted-foreground">
                     {r.category} · {r.date}
                   </div>

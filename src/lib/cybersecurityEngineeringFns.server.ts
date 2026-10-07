@@ -5,10 +5,15 @@ import type {
   CybersecurityRecord,
   CybersecurityStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Cybersecurity Engineering — Server Functions & Workflow Engine
-   =========================================================================== */
+const MODULE_TYPE = "cybersecurity-engineering";
 
 export function calculateCybersecurityScores(input: Partial<CybersecurityFormInput>) {
   const threatReadiness = 90;
@@ -35,7 +40,7 @@ export function calculateCybersecurityScores(input: Partial<CybersecurityFormInp
   };
 }
 
-const DEFAULT_RECORD: CybersecurityRecord = {
+export const DEFAULT_RECORD: CybersecurityRecord = {
   id: "cse-rec-0018",
   cybersecurityEngineeringId: "CSE-2024-0018",
   formCode: "CSEF-2024-25",
@@ -353,51 +358,45 @@ const DEFAULT_RECORD: CybersecurityRecord = {
       ipAddress: "192.168.1.104",
     },
   ],
-};
+} as any;
 
-export { DEFAULT_RECORD };
-
-let currentRecord: CybersecurityRecord = { ...DEFAULT_RECORD };
 
 export const getCybersecurityEngineeringFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: CybersecurityRecord }> => {
-    return { success: true, data: currentRecord };
+    const result = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_RECORD };
   }
 );
 
 export const saveCybersecurityEngineeringDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<CybersecurityFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: CybersecurityRecord }> => {
-    const input = data.input;
-    const scores = calculateCybersecurityScores({ ...currentRecord, ...input });
-
-    currentRecord = {
-      ...currentRecord,
-      ...input,
+    const current = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
+    const scores = calculateCybersecurityScores(updatedInput);
+    const record = {
+      ...base,
+      input: updatedInput,
       ...scores,
-      lastModified: new Date().toISOString(),
-      lastUpdated:
-        new Date().toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }) +
-        " " +
-        new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      projectName: (base as any).securityProjectName ?? "",
+      ownerName: (base as any).securityArchitectName ?? "Rahul Sharma",
+      recordCode: (base as any).id ?? (base as any).cybersecurityEngineeringId ?? "",
     };
-
-    return { success: true, data: currentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitCybersecurityEngineeringFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: CybersecurityRecord }> => {
-    currentRecord = {
-      ...currentRecord,
-      workflowStatus: "In Review",
-      lastModified: new Date().toISOString(),
-    };
-    return { success: true, data: currentRecord };
+    const current = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_RECORD };
   });
 
 export const reviewCybersecurityEngineeringFn = createServerFn({ method: "POST" })
@@ -409,23 +408,14 @@ export const reviewCybersecurityEngineeringFn = createServerFn({ method: "POST" 
     }) => data
   )
   .handler(async ({ data }): Promise<{ success: boolean; data: CybersecurityRecord }> => {
-    const { decision, comments } = data;
-    const statusMap: Record<CybersecurityApprovalDecision, CybersecurityStatus> = {
-      Approved: "Approved",
-      "Approved with Conditions": "In Review",
-      "Changes Requested": "Changes Requested",
-      Rejected: "Archived",
-      Pending: "In Review",
-    };
-
-    currentRecord = {
-      ...currentRecord,
-      approvalDecision: decision,
-      reviewComments: comments ?? currentRecord.reviewComments,
-      approvalDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      workflowStatus: statusMap[decision] ?? currentRecord.workflowStatus,
-      lastModified: new Date().toISOString(),
-    };
-
-    return { success: true, data: currentRecord };
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Security Review Board",
+        reviewerName: "Review Board",
+      },
+    });
+    return { success: true, data: result as any };
   });

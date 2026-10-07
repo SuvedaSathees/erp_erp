@@ -1,5 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { MassProductionReadiness } from "@/lib/mass-production-readiness/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "mass-production-readiness";
 
 export const MOCK_READINESS_RECORD_56: MassProductionReadiness = {
   id: "RDR-2024-00056",
@@ -141,31 +151,31 @@ export const MOCK_READINESS_RECORD_56: MassProductionReadiness = {
     { id: "at-rdr-03", timestamp: "16 Jun 2024 02:30 PM", user: "Neha Reddy", action: "PPAP Customer Approved", description: "Verified PPAP status Customer Approved." },
     { id: "at-rdr-04", timestamp: "17 Jun 2024 03:55 PM", user: "Rahul Sharma", action: "Submitted for Executive Review", description: "Submitted package for executive sign-off." },
   ],
-};
-
-let mockReadinessDatabase: Record<string, MassProductionReadiness> = {
-  "RDR-2024-00056": MOCK_READINESS_RECORD_56,
-};
+} as any;
 
 export const getMassProductionReadinessFn = createServerFn({ method: "GET" })
   .validator((data?: { id?: string }) => data)
-  .handler(async ({ data }) => {
-    const id = data?.id || "RDR-2024-00056";
-    const record = mockReadinessDatabase[id] || MOCK_READINESS_RECORD_56;
-    return { success: true, data: record };
+  .handler(async () => {
+    const result = withDefaults(MOCK_READINESS_RECORD_56, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result };
+    return { success: true, data: MOCK_READINESS_RECORD_56 };
   });
 
 export const listMassProductionReadinessFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: Object.values(mockReadinessDatabase) };
+  const results = await listDevelopmentRecordsFn({ data: { moduleType: MODULE_TYPE } });
+  if (results && results.length > 0) return { success: true, data: results.map((r: any) => withDefaults(MOCK_READINESS_RECORD_56, r)) };
+  return { success: true, data: [MOCK_READINESS_RECORD_56] };
 });
 
 export const saveMassProductionReadinessFn = createServerFn({ method: "POST" })
   .validator((data: { record: MassProductionReadiness }) => data)
   .handler(async ({ data }) => {
-    const updated = {
+    const record = {
       ...data.record,
-      lastUpdated: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      projectName: data.record.readinessTitle ?? (data.record as any).projectName ?? "",
+      ownerName: data.record.processOwner ?? (data.record as any).ownerName ?? "",
+      recordCode: data.record.id ?? "",
     };
-    mockReadinessDatabase[updated.id] = updated;
-    return { success: true, data: updated };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });

@@ -427,7 +427,7 @@ export function QualityPlanningPage() {
                       <div className="p-3 rounded-lg border border-border/70 bg-muted/20 space-y-1.5">
                         <div className="flex items-center justify-between text-xs">
                           <span className="font-bold text-foreground">Gage R&R Repeatability Study</span>
-                          <span className="text-purple-600 dark:text-purple-400 font-semibold font-mono">6.8% (&lt; 10% Acceptable)</span>
+                          <span className="text-primary dark:text-blue-400 font-semibold font-mono">6.8% (&lt; 10% Acceptable)</span>
                         </div>
                         <p className="text-[11px] text-muted-foreground leading-relaxed">
                           10 parts, 3 operators, 3 trials on Mitutoyo Digimatic instruments verify measurement system reliability.
@@ -537,7 +537,7 @@ export function QualityPlanningPage() {
 
             {/* Section 2: Phase Deliverables Table */}
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-xs font-bold text-primary dark:text-blue-400 uppercase tracking-wider">
                 <span>Phase 3: 5-Phase Key Deliverables Matrix</span>
               </div>
               <ApqpDeliverablesTable

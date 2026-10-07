@@ -2,8 +2,10 @@
 // Management -> Communication Management -> Email
 // Complete Email Form matching Screenshot 1 and Specifications
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getCommunicationManagementRecordFn } from "@/lib/communicationManagementFns.server";
 import {
   Mail,
   Send,
@@ -51,8 +53,14 @@ export const Route = createFileRoute("/management/communication-management/email
 });
 
 function EmailManagementPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["communication-management", "record"],
+    queryFn: () => getCommunicationManagementRecordFn({ data: {} }),
+  });
+
   const [activeSubTab, setActiveSubTab] = useState<string>("compose");
   const [emailData, setEmailData] = useState(INITIAL_EMAIL_RECORD);
+  useEffect(() => { if (dbRecord?.data) setEmailData(dbRecord.data); }, [dbRecord]);
   const [toInput, setToInput] = useState("");
   const [isScheduled, setIsScheduled] = useState(false);
   const [setReminder, setSetReminder] = useState(false);

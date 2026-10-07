@@ -166,7 +166,7 @@ const DEPT_HEADCOUNT_PIE = [
   { name: "Sales", value: 42, percentage: "16.9%", color: "#F59E0B" },
   { name: "Finance", value: 22, percentage: "8.9%", color: "#06B6D4" },
   { name: "HR", value: 12, percentage: "4.8%", color: "#EC4899" },
-  { name: "Others", value: 35, percentage: "14.1%", color: "#8B5CF6" },
+  { name: "Others", value: 35, percentage: "14.1%", color: "#0A3C75" },
 ];
 
 const ATTRITION_TREND_DATA = [
@@ -189,7 +189,7 @@ const RECRUITMENT_SOURCES_PIE = [
   { name: "Campus Drives", value: 35, color: "#2563EB" },
   { name: "Employee Referrals", value: 30, color: "#10B981" },
   { name: "Direct Job Portals", value: 25, color: "#F59E0B" },
-  { name: "Staffing Agencies", value: 10, color: "#8B5CF6" },
+  { name: "Staffing Agencies", value: 10, color: "#0A3C75" },
 ];
 
 const LEAVE_MONTHLY_TREND = [
@@ -313,7 +313,7 @@ export function HrAnalyticsPage() {
           <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-semibold text-slate-600">New Hires</span>
-              <div className="p-1.5 rounded-lg bg-purple-50 text-purple-600">
+              <div className="p-1.5 rounded-lg bg-blue-50 text-primary">
                 <UserPlus className="h-4 w-4" />
               </div>
             </div>
@@ -565,7 +565,7 @@ export function HrAnalyticsPage() {
                     { stage: "Applications Received", count: "1,248", pct: "100%", w: "100%", color: "bg-blue-600" },
                     { stage: "Shortlisted Profiles", count: "284", pct: "22.8%", w: "65%", color: "bg-blue-500" },
                     { stage: "Interviews Completed", count: "142", pct: "11.4%", w: "45%", color: "bg-amber-500" },
-                    { stage: "Offers Released", count: "68", pct: "5.4%", w: "30%", color: "bg-purple-500" },
+                    { stage: "Offers Released", count: "68", pct: "5.4%", w: "30%", color: "bg-blue-500" },
                     { stage: "Candidates Joined", count: "18", pct: "1.4%", w: "18%", color: "bg-emerald-600" },
                   ].map((s) => (
                     <div key={s.stage} className="space-y-1">

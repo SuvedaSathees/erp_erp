@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { getVendorRiskRecordFn, listVendorRiskRecordsFn } from "@/lib/vendorRiskFns.server";
 import {
   Users,
   AlertTriangle,
@@ -115,10 +117,27 @@ export const Route = createFileRoute("/management/risk-management/vendor-risk")(
 });
 
 export function VendorRiskPage() {
+  // --- Prisma-backed queries with inline fallback ---
+  const { data: dbRecord } = useQuery({
+    queryKey: ["vendor-risk", "record"],
+    queryFn: () => getVendorRiskRecordFn({ data: {} }),
+  });
+  const { data: dbList } = useQuery({
+    queryKey: ["vendor-risk", "list"],
+    queryFn: () => listVendorRiskRecordsFn({ data: {} }),
+  });
+
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [matrixView, setMatrixView] = useState<"Inherent" | "Residual">("Inherent");
   const [activeRisk, setActiveRisk] = useState<VendorRiskRecord>(PRIMARY_VENDOR_RISK);
   const [allRisks, setAllRisks] = useState<VendorRiskRecord[]>(FULL_VENDOR_RISKS);
+
+  useEffect(() => {
+    if (dbRecord?.data) setActiveRisk(dbRecord.data);
+  }, [dbRecord]);
+  useEffect(() => {
+    if (dbList?.data) setAllRisks(dbList.data);
+  }, [dbList]);
 
   // Modals
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

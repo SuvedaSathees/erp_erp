@@ -508,13 +508,13 @@ export function EquipmentFormPage() {
           <div className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground font-medium">Idle Equipment</span>
-              <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <PauseCircle className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-1">
-              <span className="text-2xl font-bold font-mono text-purple-600">10</span>
-              <span className="block text-[10px] text-purple-700 dark:text-purple-400 font-medium">
+              <span className="text-2xl font-bold font-mono text-primary">10</span>
+              <span className="block text-[10px] text-primary dark:text-blue-400 font-medium">
                 5.38% of Total
               </span>
             </div>
@@ -572,7 +572,7 @@ export function EquipmentFormPage() {
                     <circle cx="50" cy="50" r="38" stroke="#2563eb" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="133.5" />
                     <circle cx="50" cy="50" r="38" stroke="#06b6d4" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="186.1" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="222.0" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="222.0" />
                     <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="246.4" />
                     <circle cx="50" cy="50" r="38" stroke="#64748b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="260.5" />
                   </svg>
@@ -588,7 +588,7 @@ export function EquipmentFormPage() {
                     { name: "Production", count: "82", color: "bg-blue-600" },
                     { name: "Material Handling", count: "41", color: "bg-emerald-500" },
                     { name: "Electrical", count: "28", color: "bg-cyan-500" },
-                    { name: "Testing & Labs", count: "19", color: "bg-purple-500" },
+                    { name: "Testing & Labs", count: "19", color: "bg-blue-500" },
                     { name: "Utility", count: "11", color: "bg-amber-500" },
                     { name: "Other Fleet", count: "5", color: "bg-slate-500" },
                   ].map((item) => (
@@ -630,8 +630,8 @@ export function EquipmentFormPage() {
                   <span className="text-[8.5px] text-muted-foreground font-medium mt-0.5">Maint.</span>
                 </div>
                 <div className="flex-1 flex flex-col items-center gap-0.5">
-                  <span className="text-[9px] font-bold font-mono text-purple-600">10</span>
-                  <div className="w-full bg-purple-500 rounded-t-sm" style={{ height: "11px" }} />
+                  <span className="text-[9px] font-bold font-mono text-primary">10</span>
+                  <div className="w-full bg-blue-500 rounded-t-sm" style={{ height: "11px" }} />
                   <span className="text-[8.5px] text-muted-foreground font-medium mt-0.5">Idle</span>
                 </div>
                 <div className="flex-1 flex flex-col items-center gap-0.5">
@@ -655,11 +655,11 @@ export function EquipmentFormPage() {
                   </span>
                   <span className="font-mono font-bold text-amber-700 dark:text-amber-300">12 (6.5%)</span>
                 </div>
-                <div className="flex items-center justify-between px-1.5 py-0.5 rounded bg-purple-50/60 dark:bg-purple-950/20">
-                  <span className="flex items-center gap-1 font-medium text-purple-800 dark:text-purple-300">
-                    <span className="h-1.5 w-1.5 rounded-full bg-purple-500" /> Standby & Tool Crib
+                <div className="flex items-center justify-between px-1.5 py-0.5 rounded bg-blue-50/60 dark:bg-blue-950/20">
+                  <span className="flex items-center gap-1 font-medium text-primary dark:text-blue-300">
+                    <span className="h-1.5 w-1.5 rounded-full bg-blue-500" /> Standby & Tool Crib
                   </span>
-                  <span className="font-mono font-bold text-purple-700 dark:text-purple-300">10 (5.4%)</span>
+                  <span className="font-mono font-bold text-primary dark:text-blue-300">10 (5.4%)</span>
                 </div>
               </div>
 
@@ -1034,7 +1034,7 @@ export function EquipmentFormPage() {
               <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">
                 {activeItem.status}
               </Badge>
-              <Badge variant="outline" className="text-[10px] bg-purple-50 text-purple-700 border-purple-200">
+              <Badge variant="outline" className="text-[10px] bg-blue-50 text-primary border-blue-200">
                 {activeItem.criticality} Criticality
               </Badge>
             </div>
@@ -1135,7 +1135,7 @@ export function EquipmentFormPage() {
                     <span className="font-medium text-slate-900 dark:text-white">{activeItem.custodian}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Activity className="h-3.5 w-3.5 text-purple-600 shrink-0" />
+                    <Activity className="h-3.5 w-3.5 text-primary shrink-0" />
                     <span className="text-muted-foreground">Operator:</span>
                     <span className="font-medium text-slate-900 dark:text-white">{activeItem.operator}</span>
                   </div>
@@ -1257,7 +1257,7 @@ export function EquipmentFormPage() {
                   { name: "Breakdown", pct: 42, color: "bg-rose-500" },
                   { name: "Setup / Adjustment", pct: 19, color: "bg-amber-500" },
                   { name: "Waiting for Material", pct: 15, color: "bg-yellow-500" },
-                  { name: "Power Failure", pct: 10, color: "bg-purple-500" },
+                  { name: "Power Failure", pct: 10, color: "bg-blue-500" },
                   { name: "Other Reasons", pct: 14, color: "bg-slate-500" },
                 ].map((item) => (
                   <div key={item.name} className="space-y-0.5">

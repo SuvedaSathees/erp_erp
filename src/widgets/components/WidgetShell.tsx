@@ -15,6 +15,7 @@ import type { WidgetInstance, WidgetTheme, WidgetPageId } from "../types";
 import { useWidgetPreferences } from "../hooks/useWidgetPreferences";
 import { WidgetPreferenceService, WidgetActions, WithinWidgetContext } from "./WidgetCustomizer";
 import { toast } from "sonner";
+import { WidgetErrorBoundary } from "./WidgetErrorBoundary";
 
 /* ===========================================================================
    WidgetShell — one grid cell
@@ -32,7 +33,7 @@ const THEME_RING: Record<WidgetTheme, string> = {
   default: "",
   blue: "ring-2 ring-[var(--widget-accent-blue)]/60",
   green: "ring-2 ring-[var(--widget-accent-green)]/60",
-  purple: "ring-2 ring-[var(--widget-accent-purple)]/60",
+  teal: "ring-2 ring-[var(--widget-accent-teal)]/60",
 };
 
 export type WidgetShellProps = ComponentPropsWithoutRef<"div"> & {
@@ -199,7 +200,9 @@ export const WidgetShell = memo(function WidgetShell({
       {/* Passes the stretched cell height through to the content's own card, so
           cards sharing a row stay equal height exactly as they did before. */}
       <WithinWidgetContext.Provider value={true}>
-        <div className="h-full [&>*]:h-full">{children}</div>
+        <WidgetErrorBoundary widgetTitle={def.title}>
+          <div className="h-full [&>*]:h-full">{children}</div>
+        </WidgetErrorBoundary>
       </WithinWidgetContext.Provider>
       {overlay}
     </div>

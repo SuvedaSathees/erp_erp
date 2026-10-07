@@ -1,10 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
-import type {
-  ControlPlanRecord,
-  ControlPlanFormInput,
-  ControlPlanCharacteristic,
-  ControlPlanApprovalDecision,
-} from "@/services/types";
+import type { ControlPlanRecord, ControlPlanCharacteristic } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "control-plan";
 
 export const INITIAL_CONTROL_PLAN_RECORD: ControlPlanRecord = {
   id: "cp-rec-00056",
@@ -282,50 +287,49 @@ export const INITIAL_CONTROL_PLAN_RECORD: ControlPlanRecord = {
     { id: "log-cp-04", timestamp: "21 Jun 2024 04:45 PM", user: "Arun Kumar", action: "Process Control Validation", description: "Validated shop floor controls, poka-yoke, and Cpk targets.", stage: "Stage 3 - Process Control Validation" },
     { id: "log-cp-05", timestamp: "01 Jul 2024 04:25 PM", user: "Rahul Sharma", action: "Submit for Board Review", description: "Submitted Control Plan for executive approval board sign-off.", stage: "Stage 4 - Executive Review" },
   ],
-};
-
-let currentControlPlanRecordState: ControlPlanRecord = { ...INITIAL_CONTROL_PLAN_RECORD };
+} as any;
 
 export const getControlPlanRecordFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: currentControlPlanRecordState };
+  const result = withDefaults(INITIAL_CONTROL_PLAN_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
+  return { success: true, data: INITIAL_CONTROL_PLAN_RECORD };
 });
 
 export const saveControlPlanDraftFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { input: ControlPlanFormInput })
+  .validator((data: unknown) => data as { input: any })
   .handler(async ({ data }) => {
-    currentControlPlanRecordState = {
-      ...currentControlPlanRecordState,
+    const record = {
       ...data.input,
-      lastModifiedBy: "Current User",
-      lastModifiedDate: new Date().toLocaleString(),
-      workflowStatus: "Draft",
+      projectName: data.input.controlPlanTitle ?? data.input.projectName ?? "",
+      ownerName: data.input.processOwner ?? data.input.ownerName ?? "",
+      recordCode: data.input.controlPlanId ?? data.input.id ?? "",
     };
-    return { success: true, data: currentControlPlanRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
 export const submitControlPlanFn = createServerFn({ method: "POST" }).handler(async () => {
-  currentControlPlanRecordState = {
-    ...currentControlPlanRecordState,
-    workflowStatus: "In Review",
-    workflowStage: "Review",
-    lastModifiedBy: "Current User",
-    lastModifiedDate: new Date().toLocaleString(),
-  };
-  return { success: true, data: currentControlPlanRecordState };
+  const current = withDefaults(INITIAL_CONTROL_PLAN_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (current?.id) {
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    return { success: true, data: result };
+  }
+  return { success: true, data: INITIAL_CONTROL_PLAN_RECORD };
 });
 
 export const addCharacteristicFn = createServerFn({ method: "POST" })
   .validator((data: unknown) => data as Omit<ControlPlanCharacteristic, "id">)
   .handler(async ({ data }) => {
+    const current = withDefaults(INITIAL_CONTROL_PLAN_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const currentData = current || INITIAL_CONTROL_PLAN_RECORD;
     const newChar: ControlPlanCharacteristic = {
       ...data,
       id: `char-${Date.now()}`,
+    } as any;
+    const updatedRecord = {
+      ...currentData,
+      characteristics: [...(currentData.characteristics || []), newChar],
     };
-    const updatedChars = [...currentControlPlanRecordState.characteristics, newChar];
-    currentControlPlanRecordState = {
-      ...currentControlPlanRecordState,
-      characteristics: updatedChars,
-      lastModifiedDate: new Date().toLocaleString(),
-    };
-    return { success: true, data: currentControlPlanRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: updatedRecord } });
+    return { success: true, data: result };
   });

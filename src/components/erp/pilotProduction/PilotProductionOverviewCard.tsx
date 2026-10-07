@@ -46,7 +46,7 @@ export const PilotProductionOverviewCard: React.FC<PilotProductionOverviewCardPr
                   <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[8px] font-bold ring-1 ring-background">
                     VK
                   </div>
-                  <div className="w-4 h-4 rounded-full bg-purple-500 text-white flex items-center justify-center text-[8px] font-bold ring-1 ring-background">
+                  <div className="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center text-[8px] font-bold ring-1 ring-background">
                     NR
                   </div>
                   <div className="w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center text-[8px] font-bold ring-1 ring-background">

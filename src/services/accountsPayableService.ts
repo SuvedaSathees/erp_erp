@@ -7,7 +7,6 @@ import {
   getPayableKpisFn,
   getPayablePaymentInfoFn,
 } from "@/lib/accountsPayableFns.server";
-import { agingPayable, apKpisRaw } from "@/lib/mock-data";
 import type {
   AgingReport,
   DashboardQuery,
@@ -25,7 +24,7 @@ export async function fetchOutstandingPayables(query: DashboardQuery): Promise<A
   } catch (err) {
     console.error("Failed to fetch payable aging report from server:", err);
   }
-  return agingPayable;
+  return { total: 0, buckets: [] };
 }
 
 export async function retrievePaymentInformation(ref: string): Promise<PaymentDetail | null> {
@@ -38,8 +37,6 @@ export async function retrievePaymentInformation(ref: string): Promise<PaymentDe
   return null;
 }
 
-// -- Accounts Payable dashboard KPIs --
-
 export async function calculateTotalPayables(query: DashboardQuery): Promise<number> {
   try {
     const res = await getPayableKpisFn({ data: query });
@@ -47,7 +44,7 @@ export async function calculateTotalPayables(query: DashboardQuery): Promise<num
   } catch (err) {
     console.error("Failed to calculate total payables from server:", err);
   }
-  return apKpisRaw.totalPayables;
+  return 0;
 }
 
 export async function calculateOverdueAmount(
@@ -61,7 +58,7 @@ export async function calculateOverdueAmount(
   } catch (err) {
     console.error("Failed to calculate overdue amount from server:", err);
   }
-  return { amount: apKpisRaw.overdueAmount, pctOfTotal: apKpisRaw.overduePctOfTotal };
+  return { amount: 0, pctOfTotal: 0 };
 }
 
 export async function calculateDueWithin30Days(
@@ -75,7 +72,7 @@ export async function calculateDueWithin30Days(
   } catch (err) {
     console.error("Failed to calculate due within 30 days from server:", err);
   }
-  return { amount: apKpisRaw.dueWithin30Days, pctOfTotal: apKpisRaw.dueWithin30PctOfTotal };
+  return { amount: 0, pctOfTotal: 0 };
 }
 
 export async function countOpenInvoices(query: DashboardQuery): Promise<number> {
@@ -85,10 +82,8 @@ export async function countOpenInvoices(query: DashboardQuery): Promise<number> 
   } catch (err) {
     console.error("Failed to count open invoices from server:", err);
   }
-  return apKpisRaw.openInvoices;
+  return 0;
 }
-
-// -- Invoice list & detail --
 
 export async function retrieveInvoiceList(
   query: DashboardQuery,

@@ -1,5 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { LeanManufacturing } from "@/lib/lean-manufacturing/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "lean-manufacturing";
 
 export const MOCK_LEAN_RECORD_123: LeanManufacturing = {
   id: "LEAN-2024-00123",
@@ -149,31 +159,31 @@ export const MOCK_LEAN_RECORD_123: LeanManufacturing = {
     { id: "at-lm-03", timestamp: "15 Jun 2024 05:30 PM", user: "Neha Reddy", action: "5S Audit Completed", description: "Completed 5S workplace audit." },
     { id: "at-lm-04", timestamp: "17 Jun 2024 03:45 PM", user: "Rahul Sharma", action: "Submitted for Approval", description: "Submitted package for executive review." },
   ],
-};
-
-let mockLeanDatabase: Record<string, LeanManufacturing> = {
-  "LEAN-2024-00123": MOCK_LEAN_RECORD_123,
-};
+} as any;
 
 export const getLeanManufacturingFn = createServerFn({ method: "GET" })
   .validator((data?: { id?: string }) => data)
-  .handler(async ({ data }) => {
-    const id = data?.id || "LEAN-2024-00123";
-    const record = mockLeanDatabase[id] || MOCK_LEAN_RECORD_123;
-    return { success: true, data: record };
+  .handler(async () => {
+    const result = withDefaults(MOCK_LEAN_RECORD_123, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result };
+    return { success: true, data: MOCK_LEAN_RECORD_123 };
   });
 
 export const listLeanManufacturingFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: Object.values(mockLeanDatabase) };
+  const results = await listDevelopmentRecordsFn({ data: { moduleType: MODULE_TYPE } });
+  if (results && results.length > 0) return { success: true, data: results.map((r: any) => withDefaults(MOCK_LEAN_RECORD_123, r)) };
+  return { success: true, data: [MOCK_LEAN_RECORD_123] };
 });
 
 export const saveLeanManufacturingFn = createServerFn({ method: "POST" })
   .validator((data: { record: LeanManufacturing }) => data)
   .handler(async ({ data }) => {
-    const updated = {
+    const record = {
       ...data.record,
-      lastUpdated: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      projectName: data.record.leanProjectTitle ?? (data.record as any).projectName ?? "",
+      ownerName: data.record.processOwner ?? (data.record as any).ownerName ?? "",
+      recordCode: data.record.id ?? "",
     };
-    mockLeanDatabase[updated.id] = updated;
-    return { success: true, data: updated };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });

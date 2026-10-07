@@ -66,8 +66,8 @@ export const ProcessValidationTopBadges: React.FC<ProcessValidationTopBadgesProp
       <div className="bg-card border border-border rounded-lg p-3 shadow-sm flex flex-col justify-between">
         <span className="text-[10px] text-muted-foreground font-semibold uppercase block">AI Health Score</span>
         <div className="flex items-center gap-2 my-1">
-          <Sparkles className="w-5 h-5 text-purple-500 shrink-0" />
-          <span className="font-black text-purple-600 dark:text-purple-400 text-base">{record.aiAssessment.healthScore} <span className="text-xs font-semibold text-muted-foreground">/100</span></span>
+          <Sparkles className="w-5 h-5 text-blue-600 shrink-0" />
+          <span className="font-black text-primary dark:text-blue-400 text-base">{record.aiAssessment.healthScore} <span className="text-xs font-semibold text-muted-foreground">/100</span></span>
         </div>
         <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Good</span>
       </div>

@@ -21,7 +21,7 @@ export const ApqpQuickActionsPanel: React.FC<ApqpQuickActionsPanelProps> = ({
     { label: "Create Control Plan", icon: FileCheck, color: "text-blue-500" },
     { label: "Create PPAP", icon: Plus, color: "text-primary" },
     { label: "Upload Process Flow", icon: Upload, color: "text-emerald-500" },
-    { label: "Upload Requirements", icon: Upload, color: "text-purple-500" },
+    { label: "Upload Requirements", icon: Upload, color: "text-blue-600" },
     { label: "Schedule Review", icon: Calendar, color: "text-teal-500" },
     { label: "View APQP Dashboard", icon: BarChart3, color: "text-blue-600" },
   ];

@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { qualityManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
@@ -18,6 +20,7 @@ import { IpqcFirstPieceTab } from "@/components/erp/ipqc/tabs/IpqcFirstPieceTab"
 import { IpqcDefectsTab } from "@/components/erp/ipqc/tabs/IpqcDefectsTab";
 import { IpqcDispositionTab } from "@/components/erp/ipqc/tabs/IpqcDispositionTab";
 import { CreateIpqcModal } from "@/components/erp/ipqc/CreateIpqcModal";
+import { getIpqcRecordFn } from "@/lib/ipqcFns.server";
 import { INITIAL_IPQC_RECORD } from "@/services/ipqcService";
 import type {
   IpqcRecord,
@@ -57,7 +60,19 @@ export const Route = createFileRoute(
 });
 
 export function InProcessInspectionPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["quality", "inspections"]],
+    queryFn: () => qualityManagementService.fetchInspectionRecords(),
+  });
+
+  const { data: dbIpqcRecord } = useQuery({
+    queryKey: ["ipqc", "record"],
+    queryFn: () => getIpqcRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<IpqcRecord>(INITIAL_IPQC_RECORD);
+  useEffect(() => { if (dbIpqcRecord?.data) setRecord(dbIpqcRecord.data); }, [dbIpqcRecord]);
   const [activeStep, setActiveStep] = useState<number>(3);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState(false);

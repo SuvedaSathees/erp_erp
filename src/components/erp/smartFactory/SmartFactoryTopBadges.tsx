@@ -47,7 +47,7 @@ export const SmartFactoryTopBadges: React.FC<SmartFactoryTopBadgesProps> = ({
   const getScoreRating = (val: number) => {
     if (val >= 90) return { text: "Excellent", color: "text-emerald-600 dark:text-emerald-400" };
     if (val >= 80) return { text: "Very Good", color: "text-blue-600 dark:text-blue-400" };
-    if (val >= 70) return { text: "Good", color: "text-indigo-600 dark:text-indigo-400" };
+    if (val >= 70) return { text: "Good", color: "text-primary dark:text-blue-400" };
     if (val >= 60) return { text: "Moderate", color: "text-amber-600 dark:text-amber-400" };
     return { text: "Needs Work", color: "text-rose-600 dark:text-rose-400" };
   };
@@ -102,7 +102,7 @@ export const SmartFactoryTopBadges: React.FC<SmartFactoryTopBadgesProps> = ({
             {getScoreRating(record.integrationScore).text}
           </span>
         </div>
-        {renderGaugeRing(record.integrationScore, "#8b5cf6", "Systems")}
+        {renderGaugeRing(record.integrationScore, "#0A3C75", "Systems")}
       </div>
 
       {/* Badge 4: Automation Score */}

@@ -142,7 +142,7 @@ export function WorkInstructionApprovalSection({
                   <SelectItem value="Revision Required" className="text-xs text-amber-600 font-semibold">
                     Revision Required
                   </SelectItem>
-                  <SelectItem value="On Hold" className="text-xs text-purple-600">
+                  <SelectItem value="On Hold" className="text-xs text-primary">
                     On Hold
                   </SelectItem>
                   <SelectItem value="Rejected" className="text-xs text-destructive font-semibold">

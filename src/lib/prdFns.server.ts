@@ -4,45 +4,29 @@ import type {
   PrdFormInput,
   PrdRecord,
   PrdStage,
-  PrdStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Product Requirements Document (PRD) — Server Functions & Workflow Engine
-   ---------------------------------------------------------------------------
-   Manages the 4-stage PRD lifecycle:
-     Stage 1: Product Definition
-     Stage 2: Functional & UX Requirements
-     Stage 3: Technical Requirements
-     Stage 4: Executive Review (Decision: Approved / Approved with Conditions / Revision Required / Rejected)
-
-   Upon 'Approved' decision:
-     - Auto-creates linked System Design project (e.g. SYS-2024-0092)
-       and surfaces its ID.
-   =========================================================================== */
+const MODULE_TYPE = "prd";
 
 export function calculatePrdScores(input: Partial<PrdFormInput>) {
-  // Business Readiness (0-100)
   const bizReqsCount = input.businessRequirements?.length || 3;
   const businessReadiness = Math.min(100, Math.round(70 + bizReqsCount * 7.5));
-
-  // Functional Completeness (0-100)
   const funcReqsCount = input.functionalRequirements?.length || 4;
   const functionalCompleteness = Math.min(100, Math.round(65 + funcReqsCount * 6.5));
-
-  // Technical Readiness (0-100)
   const attachmentsCount = input.attachments?.length || 4;
   const technicalReadiness = Math.min(100, Math.round(72 + attachmentsCount * 4));
-
-  // Quality Readiness (0-100)
   const qualityReadiness = Math.min(100, Math.round((businessReadiness + functionalCompleteness + technicalReadiness) / 3));
-
-  // Overall PRD Score
   const overallPrdScore = Math.round(
     businessReadiness * 0.3 + functionalCompleteness * 0.3 + technicalReadiness * 0.25 + qualityReadiness * 0.15
   );
-
-  // AI Quality Sub-scores
   const requirementCompleteness = Math.min(98, Math.max(75, Math.round(overallPrdScore * 0.96 + 3)));
   const requirementConsistency = Math.min(99, Math.max(78, Math.round(overallPrdScore * 0.97 + 2)));
   const riskAssessment = Math.min(95, Math.max(70, Math.round(overallPrdScore * 0.92 + 5)));
@@ -52,33 +36,22 @@ export function calculatePrdScores(input: Partial<PrdFormInput>) {
     requirementCompleteness * 0.25 + requirementConsistency * 0.25 + riskAssessment * 0.2 + scopeValidation * 0.15 + aiConfidenceScore * 0.15
   );
 
-  const keyHighlights = [
-    `All ${bizReqsCount} critical business objectives & revenue targets fully aligned.`,
-    `${funcReqsCount} top functional user stories defined with priority matrices.`,
-    `Security & ISO 27001 compliance standards validated by Architecture Board.`,
-    `AI Assessment completed with ${aiConfidenceScore}% high confidence.`,
-  ];
-
   return {
-    readinessSummary: {
-      overallPrdScore,
-      businessReadiness,
-      functionalCompleteness,
-      technicalReadiness,
-      qualityReadiness,
-    },
+    readinessSummary: { overallPrdScore, businessReadiness, functionalCompleteness, technicalReadiness, qualityReadiness },
     aiQuality: {
-      overallAiQualityScore,
-      requirementCompleteness,
-      requirementConsistency,
-      riskAssessment,
-      scopeValidation,
-      aiConfidenceScore,
-      aiInsightsSummary: "PRD scope is rigorously defined. Functional requirements cover 100% of user journeys for v2.3 Wireless Charging.",
+      overallAiQualityScore, requirementCompleteness, requirementConsistency, riskAssessment, scopeValidation, aiConfidenceScore,
+      aiInsightsSummary: "PRD scope is rigorously defined.",
     },
-    keyHighlights,
+    keyHighlights: [
+      `All ${bizReqsCount} critical business objectives fully aligned.`,
+      `${funcReqsCount} top functional user stories defined.`,
+      `Security & compliance standards validated.`,
+      `AI Assessment completed with ${aiConfidenceScore}% confidence.`,
+    ],
   };
 }
+
+const initialCalculated = calculatePrdScores({});
 
 const INITIAL_INPUT: PrdFormInput = {
   prdTitle: "Smart EV Charger Pro — v2.3 Wireless & RFID Module PRD",
@@ -164,234 +137,86 @@ const INITIAL_INPUT: PrdFormInput = {
   approvalDate: "2024-05-08",
 };
 
-const initialCalculated = calculatePrdScores(INITIAL_INPUT);
-
 let DEFAULT_PRD_RECORD: PrdRecord = {
   id: "prd-record-0017",
   prdId: "PRD-2024-0017",
   formCode: "PRD-2024-08",
-  prdTitle: INITIAL_INPUT.prdTitle,
-  prdVersion: INITIAL_INPUT.prdVersion,
+  prdTitle: "Smart EV Charger Pro — v2.3 Wireless & RFID Module PRD",
+  prdVersion: "v1.0",
   status: "executive_review",
   currentStage: "executive_review",
   currentStageLabel: "Executive Review",
   createdOn: "2024-04-25",
-
-  linkedProductId: INITIAL_INPUT.linkedProductId,
-  linkedProductName: INITIAL_INPUT.linkedProductName,
-  linkedRoadmapId: INITIAL_INPUT.linkedRoadmapId,
-  linkedRoadmapName: INITIAL_INPUT.linkedRoadmapName,
-  linkedReleaseId: INITIAL_INPUT.linkedReleaseId,
-  linkedReleaseName: INITIAL_INPUT.linkedReleaseName,
-
-  businessUnit: INITIAL_INPUT.businessUnit,
-  productOwnerId: INITIAL_INPUT.productOwnerId,
-  productOwnerName: INITIAL_INPUT.productOwnerName,
-  productOwnerAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-  plannedReleaseDate: INITIAL_INPUT.plannedReleaseDate,
-
+  linkedProductId: "prd-1001",
+  linkedProductName: "Smart EV Charger Pro",
+  linkedRoadmapId: "PRM-2024-0017",
+  linkedRoadmapName: "EV Charger Roadmap 2024-27",
+  linkedReleaseId: "rel-03",
+  linkedReleaseName: "v2.3 – Wireless Charging & RFID",
+  businessUnit: "Smart EV Infrastructure",
+  productOwnerId: "usr-104",
+  productOwnerName: "Vikram Sharma",
+  productOwnerAvatar: "",
+  plannedReleaseDate: "2024-11-15",
   dateCreated: "2024-04-25",
   lastModified: new Date().toISOString().split("T")[0],
   version: "v1.0",
-
-  stages: [
-    { stage: "product_definition", label: "Product Definition", completed: true, active: false, completedAt: "2024-04-28" },
-    { stage: "functional_ux_requirements", label: "Functional & UX", completed: true, active: false, completedAt: "2024-04-30" },
-    { stage: "technical_requirements", label: "Technical Requirements", completed: true, active: false, completedAt: "2024-05-02" },
-    { stage: "executive_review", label: "Executive Review", completed: false, active: true },
-  ],
-
+  stages: [],
   input: INITIAL_INPUT,
   aiQuality: initialCalculated.aiQuality,
   readinessSummary: initialCalculated.readinessSummary,
   keyHighlights: initialCalculated.keyHighlights,
-
   linkedSystemDesignId: null,
   approvalDecision: null,
   approvalDate: null,
   reviewComments: null,
-
-  auditTrail: [
-    { id: "aud-001", timestamp: "2024-04-25 09:30", user: "Vikram Sharma", action: "PRD Record Created", details: "PRD created from Approved Product Roadmap PRM-2024-0017." },
-    { id: "aud-002", timestamp: "2024-04-28 11:00", user: "Vikram Sharma", action: "Stage Completed", details: "Stage 1: Product Definition scope locked." },
-    { id: "aud-003", timestamp: "2024-04-30 15:45", user: "Vikram Sharma", action: "Stage Completed", details: "Stage 2: Functional & UX Requirements user stories verified." },
-    { id: "aud-004", timestamp: "2024-05-02 14:20", user: "Vikram Sharma", action: "Stage Completed", details: "Stage 3: Technical Requirements & System Architecture approved." },
-    { id: "aud-005", timestamp: "2024-05-02 14:25", user: "Vikram Sharma", action: "Submitted for Executive Review", details: "Submitted PRD package to Executive Review Committee." },
-  ],
-};
-
-/* ===========================================================================
-   Server Functions
-   =========================================================================== */
+  auditTrail: [],
+} as any;
 
 export const getPrdFn = createServerFn({ method: "GET" }).handler(async () => {
+  const result = withDefaults(DEFAULT_PRD_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
   return { success: true, data: DEFAULT_PRD_RECORD };
 });
 
 export const savePrdDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: PrdFormInput }) => data)
   .handler(async ({ data }) => {
-    const updatedCalc = calculatePrdScores(data.input);
-
-    DEFAULT_PRD_RECORD = {
-      ...DEFAULT_PRD_RECORD,
-      prdTitle: data.input.prdTitle,
-      prdVersion: data.input.prdVersion,
-      input: data.input,
-      readinessSummary: updatedCalc.readinessSummary,
-      aiQuality: updatedCalc.aiQuality,
-      keyHighlights: updatedCalc.keyHighlights,
-      lastModified: new Date().toISOString().split("T")[0],
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toISOString().replace("T", " ").substring(0, 16),
-          user: data.input.productOwnerName || "Product Owner",
-          action: "Saved Draft",
-          details: "Updated PRD text fields, requirements, and recalculated readiness scores.",
-        },
-        ...DEFAULT_PRD_RECORD.auditTrail,
-      ],
+    const record = {
+      ...data.input,
+      id: data.id,
+      projectName: data.input.prdTitle ?? "",
+      ownerName: data.input.productOwnerName ?? "",
     };
-    return { success: true, data: DEFAULT_PRD_RECORD };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
 export const advancePrdStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: PrdStage }) => data)
   .handler(async ({ data }) => {
-    const stageOrder: PrdStage[] = [
-      "product_definition",
-      "functional_ux_requirements",
-      "technical_requirements",
-      "executive_review",
-    ];
-
-    const targetIdx = stageOrder.indexOf(data.targetStage);
-    const today = new Date().toISOString().split("T")[0];
-
-    const newStages = DEFAULT_PRD_RECORD.stages.map((s, idx) => {
-      if (idx < targetIdx) return { ...s, completed: true, active: false, completedAt: s.completedAt || today };
-      if (idx === targetIdx) return { ...s, active: true, completed: false };
-      return { ...s, active: false, completed: false };
-    });
-
-    DEFAULT_PRD_RECORD = {
-      ...DEFAULT_PRD_RECORD,
-      currentStage: data.targetStage,
-      currentStageLabel:
-        data.targetStage === "product_definition"
-          ? "Product Definition"
-          : data.targetStage === "functional_ux_requirements"
-          ? "Functional & UX"
-          : data.targetStage === "technical_requirements"
-          ? "Technical Requirements"
-          : "Executive Review",
-      status: data.targetStage as PrdStatus,
-      stages: newStages,
-      lastModified: today,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toISOString().replace("T", " ").substring(0, 16),
-          user: DEFAULT_PRD_RECORD.productOwnerName,
-          action: "Stage Advanced",
-          details: `Advanced workflow stage to ${data.targetStage}.`,
-        },
-        ...DEFAULT_PRD_RECORD.auditTrail,
-      ],
-    };
-
     return { success: true, data: DEFAULT_PRD_RECORD };
   });
 
 export const submitPrdFn = createServerFn({ method: "POST" })
   .validator((data: string) => data)
-  .handler(async () => {
-    const today = new Date().toISOString().split("T")[0];
-    const newStages = DEFAULT_PRD_RECORD.stages.map((s) => {
-      if (s.stage === "executive_review") return { ...s, active: true, completed: false };
-      return { ...s, completed: true, active: false, completedAt: s.completedAt || today };
-    });
-
-    DEFAULT_PRD_RECORD = {
-      ...DEFAULT_PRD_RECORD,
-      status: "executive_review",
-      currentStage: "executive_review",
-      currentStageLabel: "Executive Review",
-      stages: newStages,
-      lastModified: today,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toISOString().replace("T", " ").substring(0, 16),
-          user: DEFAULT_PRD_RECORD.productOwnerName,
-          action: "Submitted for Executive Review",
-          details: "Submitted PRD specification package to PRD Executive Review Committee.",
-        },
-        ...DEFAULT_PRD_RECORD.auditTrail,
-      ],
-    };
-
-    return { success: true, data: DEFAULT_PRD_RECORD };
+  .handler(async ({ data }) => {
+    const id = data || DEFAULT_PRD_RECORD.id;
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    return { success: true, data: result };
   });
 
 export const reviewPrdFn = createServerFn({ method: "POST" })
-  .validator((data: {
-    id: string;
-    decision: PrdApprovalDecision;
-    comments?: string;
-  }) => data)
+  .validator((data: { id: string; decision: PrdApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }) => {
-    const today = new Date().toISOString().split("T")[0];
-    let newStatus: PrdStatus = "executive_review";
-    let linkedSystemDesignId: string | null = DEFAULT_PRD_RECORD.linkedSystemDesignId || null;
-
-    if (data.decision === "approved") {
-      newStatus = "approved";
-      linkedSystemDesignId = linkedSystemDesignId || `SYS-2024-${Math.floor(1000 + Math.random() * 9000)}`;
-    } else if (data.decision === "approved_with_conditions") {
-      newStatus = "approved_with_conditions";
-      linkedSystemDesignId = linkedSystemDesignId || `SYS-2024-${Math.floor(1000 + Math.random() * 9000)}`;
-    } else if (data.decision === "revision_required") {
-      newStatus = "revision_required";
-    } else if (data.decision === "rejected") {
-      newStatus = "rejected";
-    }
-
-    const newStages = DEFAULT_PRD_RECORD.stages.map((s) => {
-      if (s.stage === "executive_review") {
-        return {
-          ...s,
-          completed: data.decision === "approved" || data.decision === "approved_with_conditions",
-          active: data.decision === "revision_required",
-          completedAt: data.decision === "approved" || data.decision === "approved_with_conditions" ? today : undefined,
-        };
-      }
-      return s;
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "PRD Review Committee",
+        reviewerName: "PRD Review Committee",
+      },
     });
-
-    DEFAULT_PRD_RECORD = {
-      ...DEFAULT_PRD_RECORD,
-      status: newStatus,
-      approvalDecision: data.decision,
-      approvalDate: today,
-      reviewComments: data.comments || null,
-      linkedSystemDesignId: linkedSystemDesignId,
-      stages: newStages,
-      lastModified: today,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toISOString().replace("T", " ").substring(0, 16),
-          user: "PRD Review Committee",
-          action: `Executive Review Decision: ${data.decision.toUpperCase()}`,
-          details: `Decision: ${data.decision}. Comments: ${data.comments || "None"}. ${
-            linkedSystemDesignId ? `System Design Project ${linkedSystemDesignId} auto-created.` : ""
-          }`,
-        },
-        ...DEFAULT_PRD_RECORD.auditTrail,
-      ],
-    };
-
-    return { success: true, data: DEFAULT_PRD_RECORD };
+    return { success: true, data: result };
   });

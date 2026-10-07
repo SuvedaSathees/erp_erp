@@ -5,10 +5,15 @@ import type {
   CloudPlatformRecord,
   CloudPlatformStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Cloud Platform Development — Server Functions & Workflow Engine
-   =========================================================================== */
+const MODULE_TYPE = "cloud-platform-development";
 
 export function calculateCloudPlatformScores(input: Partial<CloudPlatformFormInput>) {
   const architecture = 88;
@@ -35,7 +40,7 @@ export function calculateCloudPlatformScores(input: Partial<CloudPlatformFormInp
   };
 }
 
-const DEFAULT_RECORD: CloudPlatformRecord = {
+export const DEFAULT_RECORD: CloudPlatformRecord = {
   id: "cld-rec-0001",
   cloudPlatformDevelopmentId: "CLD-2024-0001",
   formCode: "CLD-F-2024-25",
@@ -381,51 +386,45 @@ const DEFAULT_RECORD: CloudPlatformRecord = {
       ipAddress: "192.168.1.104",
     },
   ],
-};
+} as any;
 
-export { DEFAULT_RECORD };
-
-let currentRecord: CloudPlatformRecord = { ...DEFAULT_RECORD };
 
 export const getCloudPlatformDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: CloudPlatformRecord }> => {
-    return { success: true, data: currentRecord };
+    const result = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_RECORD };
   }
 );
 
 export const saveCloudPlatformDevelopmentDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<CloudPlatformFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: CloudPlatformRecord }> => {
-    const input = data.input;
-    const scores = calculateCloudPlatformScores({ ...currentRecord, ...input });
-
-    currentRecord = {
-      ...currentRecord,
-      ...input,
+    const current = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
+    const scores = calculateCloudPlatformScores(updatedInput);
+    const record = {
+      ...base,
+      input: updatedInput,
       ...scores,
-      lastModified: new Date().toISOString(),
-      lastUpdated:
-        new Date().toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }) +
-        " " +
-        new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      projectName: (base as any).cloudProjectName ?? "",
+      ownerName: (base as any).cloudArchitectName ?? "Rahul Sharma",
+      recordCode: (base as any).id ?? (base as any).cloudPlatformDevelopmentId ?? "",
     };
-
-    return { success: true, data: currentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitCloudPlatformDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: CloudPlatformRecord }> => {
-    currentRecord = {
-      ...currentRecord,
-      workflowStatus: "In Review",
-      lastModified: new Date().toISOString(),
-    };
-    return { success: true, data: currentRecord };
+    const current = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_RECORD };
   });
 
 export const reviewCloudPlatformDevelopmentFn = createServerFn({ method: "POST" })
@@ -437,23 +436,14 @@ export const reviewCloudPlatformDevelopmentFn = createServerFn({ method: "POST" 
     }) => data
   )
   .handler(async ({ data }): Promise<{ success: boolean; data: CloudPlatformRecord }> => {
-    const { decision, comments } = data;
-    const statusMap: Record<CloudPlatformApprovalDecision, CloudPlatformStatus> = {
-      Approved: "Approved",
-      "Approved with Conditions": "In Review",
-      "Changes Requested": "Changes Requested",
-      Rejected: "Archived",
-      Pending: "In Review",
-    };
-
-    currentRecord = {
-      ...currentRecord,
-      approvalDecision: decision,
-      reviewComments: comments ?? currentRecord.reviewComments,
-      approvalDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      workflowStatus: statusMap[decision] ?? currentRecord.workflowStatus,
-      lastModified: new Date().toISOString(),
-    };
-
-    return { success: true, data: currentRecord };
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Cloud Architecture Review Board",
+        reviewerName: "Review Board",
+      },
+    });
+    return { success: true, data: result as any };
   });

@@ -1,8 +1,6 @@
 import { getReceivableKpisFn, recordReceivableReceiptFn } from "@/lib/accountsReceivableFns.server";
-import { arKpisRaw } from "@/lib/mock-data";
 import type { DashboardQuery, ReceivableInvoice, ReceivePaymentInput } from "./types";
 
-// Matches the diagram's "Retrieve Collection Summary" step for the KPI row.
 export async function retrieveCollectionAmount(query: DashboardQuery): Promise<number> {
   try {
     const res = await getReceivableKpisFn({ data: query });
@@ -10,7 +8,7 @@ export async function retrieveCollectionAmount(query: DashboardQuery): Promise<n
   } catch (err) {
     console.error("Failed to retrieve collection amount from server:", err);
   }
-  return arKpisRaw.collectedThisMonth;
+  return 0;
 }
 
 export async function recordReceipt(input: ReceivePaymentInput): Promise<ReceivableInvoice> {

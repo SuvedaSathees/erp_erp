@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { getProjectRiskRecordFn, listProjectRiskRecordsFn } from "@/lib/projectRiskFns.server";
 import {
   ClipboardList,
   AlertTriangle,
@@ -115,10 +117,27 @@ export const Route = createFileRoute("/management/risk-management/project-risk")
 });
 
 export function ProjectRiskPage() {
+  // --- Prisma-backed queries with inline fallback ---
+  const { data: dbRecord } = useQuery({
+    queryKey: ["project-risk", "record"],
+    queryFn: () => getProjectRiskRecordFn({ data: {} }),
+  });
+  const { data: dbList } = useQuery({
+    queryKey: ["project-risk", "list"],
+    queryFn: () => listProjectRiskRecordsFn({ data: {} }),
+  });
+
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [matrixView, setMatrixView] = useState<"Inherent" | "Residual">("Inherent");
   const [activeRisk, setActiveRisk] = useState<ProjectRiskRecord>(PRIMARY_PROJECT_RISK);
   const [allRisks, setAllRisks] = useState<ProjectRiskRecord[]>(FULL_PROJECT_RISKS);
+
+  useEffect(() => {
+    if (dbRecord?.data) setActiveRisk(dbRecord.data);
+  }, [dbRecord]);
+  useEffect(() => {
+    if (dbList?.data) setAllRisks(dbList.data);
+  }, [dbList]);
 
   // Modals
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

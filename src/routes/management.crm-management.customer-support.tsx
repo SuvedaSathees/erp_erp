@@ -1,5 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -242,7 +245,67 @@ const LINKED_DOCUMENTS = [
 ];
 
 function CustomerSupportPage() {
+  const ticketsQuery = useQuery({
+    queryKey: ["crm", "support-tickets"],
+    queryFn: () => crmManagementService.fetchSupportTickets(),
+  });
+
+  const queryClient = useQueryClient();
+
+  const createTicketMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.createTicket(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Support ticket created successfully");
+    },
+    onError: () => toast.error("Failed to create ticket"),
+  });
+
+  const updateTicketMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.updateTicket(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Ticket updated successfully");
+    },
+    onError: () => toast.error("Failed to update ticket"),
+  });
+
+
+  const dbTicket: SupportTicketRecord | null = (() => {
+    const list = ticketsQuery.data ?? [];
+    if (list.length === 0) return null;
+    const t: any = list[0];
+    return {
+      ...INITIAL_TICKET,
+      id: t.id,
+      ticketNumber: t.ticketNumber ?? INITIAL_TICKET.ticketNumber,
+      ticketSubject: t.subject ?? INITIAL_TICKET.ticketSubject,
+      priority: t.priority ?? INITIAL_TICKET.priority,
+      status: t.status ?? INITIAL_TICKET.status,
+      issueCategory: t.category ?? INITIAL_TICKET.issueCategory,
+      contactPerson: t.contactName ?? INITIAL_TICKET.contactPerson,
+      email: t.contactEmail ?? INITIAL_TICKET.email,
+      supportOwner: t.assignedTo
+        ? { name: t.assignedTo, avatar: t.assignedTo.split(" ").map((w: string) => w[0]).join(""), email: "" }
+        : INITIAL_TICKET.supportOwner,
+      customerName: t.account?.name ?? INITIAL_TICKET.customerName,
+      accountName: t.account?.name ?? INITIAL_TICKET.accountName,
+      description: t.description ?? INITIAL_TICKET.description,
+      createdDate: t.createdAt
+        ? new Date(t.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
+        : INITIAL_TICKET.createdDate,
+    };
+  })();
+
   const [ticket, setTicket] = useState<SupportTicketRecord>(INITIAL_TICKET);
+  const [dbApplied, setDbApplied] = useState(false);
+
+  useEffect(() => {
+    if (dbTicket && !dbApplied) {
+      setTicket(dbTicket);
+      setDbApplied(true);
+    }
+  }, [dbTicket, dbApplied]);
 
   // Modals
   const [isNewTicketOpen, setIsNewTicketOpen] = useState(false);
@@ -968,9 +1031,9 @@ function CustomerSupportPage() {
                         <div className="text-[10px] text-amber-700 font-semibold">In Progress</div>
                         <div className="text-lg font-extrabold text-amber-900">22</div>
                       </div>
-                      <div className="p-2.5 bg-purple-50/60 rounded-lg border border-purple-200">
-                        <div className="text-[10px] text-purple-700 font-semibold">Awaiting Response</div>
-                        <div className="text-lg font-extrabold text-purple-900">11</div>
+                      <div className="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200">
+                        <div className="text-[10px] text-primary font-semibold">Awaiting Response</div>
+                        <div className="text-lg font-extrabold text-blue-900">11</div>
                       </div>
                       <div className="p-2.5 bg-rose-50/60 rounded-lg border border-rose-200">
                         <div className="text-[10px] text-rose-700 font-semibold">Overdue</div>
@@ -1047,14 +1110,14 @@ function CustomerSupportPage() {
                         onClick={() => showNotification("Activity logged into support thread.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Calendar className="h-4 w-4 text-purple-600" />
+                        <Calendar className="h-4 w-4 text-primary" />
                         <span>Add Activity</span>
                       </button>
                       <button
                         onClick={() => showNotification("Document upload window active.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Paperclip className="h-4 w-4 text-indigo-600" />
+                        <Paperclip className="h-4 w-4 text-primary" />
                         <span>Upload Doc</span>
                       </button>
                       <button

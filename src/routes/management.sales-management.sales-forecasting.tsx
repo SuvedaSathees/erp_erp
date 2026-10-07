@@ -84,7 +84,7 @@ const TERRITORY_FORECAST_DATA = [
   { name: "Tamil Nadu", value: 45, color: "#2563EB" },
   { name: "Karnataka", value: 22, color: "#0EA5E9" },
   { name: "Kerala", value: 12, color: "#10B981" },
-  { name: "Telangana", value: 10, color: "#8B5CF6" },
+  { name: "Telangana", value: 10, color: "#0A3C75" },
   { name: "Others", value: 11, color: "#F59E0B" },
 ];
 

@@ -4,6 +4,14 @@ import type {
   ProcessValidationFormInput,
   ValidationTrialRunSummary,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "process-validation";
 
 export const INITIAL_PROCESS_VALIDATION_RECORD: ProcessValidationRecord = {
   id: "pv-rec-00078",
@@ -158,45 +166,51 @@ export const INITIAL_PROCESS_VALIDATION_RECORD: ProcessValidationRecord = {
     { id: "log-pv-04", timestamp: "16 Jun 2024 04:45 PM", user: "Arun Kumar", action: "Process Capability Verification", description: "Verified Cp = 1.67, Cpk = 1.58, and SPC charts.", stage: "Stage 3 - Capability Verification" },
     { id: "log-pv-05", timestamp: "17 Jun 2024 03:45 PM", user: "Rahul Sharma", action: "Submit for Executive Review", description: "Submitted Process Validation package for review board approval.", stage: "Stage 4 - Executive Review" },
   ],
-};
-
-let currentProcessValidationRecordState: ProcessValidationRecord = { ...INITIAL_PROCESS_VALIDATION_RECORD };
+} as any;
 
 export const getProcessValidationRecordFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: currentProcessValidationRecordState };
+  const result = withDefaults(INITIAL_PROCESS_VALIDATION_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result as any };
+  return { success: true, data: INITIAL_PROCESS_VALIDATION_RECORD };
 });
 
 export const saveProcessValidationDraftFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { input: ProcessValidationFormInput })
+  .validator((data: { record: Partial<ProcessValidationRecord> }) => data)
   .handler(async ({ data }) => {
-    currentProcessValidationRecordState = {
-      ...currentProcessValidationRecordState,
-      ...data.input,
-      lastModifiedBy: "Current User",
-      lastModifiedDate: new Date().toLocaleString(),
-      workflowStatus: "Draft",
+    const current = withDefaults(INITIAL_PROCESS_VALIDATION_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? INITIAL_PROCESS_VALIDATION_RECORD;
+    const record = {
+      ...base,
+      ...data.record,
+      projectName: (data.record as any).validationTitle ?? (base as any).validationTitle ?? "",
+      ownerName: (data.record as any).processOwnerName ?? (base as any).processOwnerName ?? "Vikram Singh",
+      recordCode: (base as any).id ?? (base as any).validationId ?? "",
     };
-    return { success: true, data: currentProcessValidationRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitProcessValidationFn = createServerFn({ method: "POST" }).handler(async () => {
-  currentProcessValidationRecordState = {
-    ...currentProcessValidationRecordState,
-    workflowStatus: "In Review",
-    workflowStage: "Review",
-    lastModifiedBy: "Current User",
-    lastModifiedDate: new Date().toLocaleString(),
-  };
-  return { success: true, data: currentProcessValidationRecordState };
+  const current = withDefaults(INITIAL_PROCESS_VALIDATION_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (current?.id) {
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    return { success: true, data: result as any };
+  }
+  return { success: true, data: INITIAL_PROCESS_VALIDATION_RECORD };
 });
 
 export const updateTrialRunSummaryFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as ValidationTrialRunSummary)
+  .validator((data: { trialRuns: ValidationTrialRunSummary[] }) => data)
   .handler(async ({ data }) => {
-    currentProcessValidationRecordState = {
-      ...currentProcessValidationRecordState,
-      trialRunSummary: data,
-      lastModifiedDate: new Date().toLocaleString(),
+    const current = withDefaults(INITIAL_PROCESS_VALIDATION_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? INITIAL_PROCESS_VALIDATION_RECORD;
+    const record = {
+      ...base,
+      trialRunSummary: data.trialRuns,
+      projectName: base.validationTitle ?? "",
+      ownerName: base.processOwnerName ?? "Vikram Singh",
+      recordCode: base.id ?? base.validationId ?? "",
     };
-    return { success: true, data: currentProcessValidationRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });

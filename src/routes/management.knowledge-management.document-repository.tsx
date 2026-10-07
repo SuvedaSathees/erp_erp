@@ -2,8 +2,10 @@
 // Management -> Knowledge Management -> Document Repository
 // Document Repository Form — MAICW Classification, Content Storage, Access Control, and Analytics
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getDocumentRepositoryRecordFn } from "@/lib/documentRepositoryFns.server";
 import {
   FileText,
   FileCheck,
@@ -85,6 +87,11 @@ export const Route = createFileRoute("/management/knowledge-management/document-
 });
 
 function DocumentRepositoryPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["document-repository", "record"],
+    queryFn: () => getDocumentRepositoryRecordFn({ data: {} }),
+  });
+
   const [activeTab, setActiveTab] = useState<
     | "register"
     | "create-edit"
@@ -100,6 +107,7 @@ function DocumentRepositoryPage() {
 
   // Controlled form state
   const [formData, setFormData] = useState<DocumentRecord>(PRIMARY_DOCUMENT_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data); }, [dbRecord]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [docRegister, setDocRegister] = useState<DocumentRecord[]>(DOCUMENT_MASTER_REGISTER);
   const [tags, setTags] = useState<string[]>(["Inspection", "Quality", "EVSE", "Testing"]);

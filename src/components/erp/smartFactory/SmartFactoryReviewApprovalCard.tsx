@@ -42,7 +42,7 @@ export const SmartFactoryReviewApprovalCard: React.FC<SmartFactoryReviewApproval
       case "Revision Required":
         return <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200 text-[10px] font-semibold">Revision Required</Badge>;
       case "On Hold":
-        return <Badge className="bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border-purple-200 text-[10px] font-semibold">On Hold</Badge>;
+        return <Badge className="bg-blue-50 text-primary dark:bg-blue-950/40 dark:text-blue-300 border-blue-200 text-[10px] font-semibold">On Hold</Badge>;
       case "Rejected":
         return <Badge className="bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border-rose-200 text-[10px] font-semibold">Rejected</Badge>;
       default:
@@ -140,7 +140,7 @@ export const SmartFactoryReviewApprovalCard: React.FC<SmartFactoryReviewApproval
                   <SelectItem value="Approved" className="text-xs text-emerald-600 font-semibold">Approved</SelectItem>
                   <SelectItem value="Approved with Conditions" className="text-xs text-blue-600">Approved with Conditions</SelectItem>
                   <SelectItem value="Revision Required" className="text-xs text-amber-600 font-semibold">Revision Required</SelectItem>
-                  <SelectItem value="On Hold" className="text-xs text-purple-600">On Hold</SelectItem>
+                  <SelectItem value="On Hold" className="text-xs text-primary">On Hold</SelectItem>
                   <SelectItem value="Rejected" className="text-xs text-destructive font-semibold">Rejected</SelectItem>
                 </SelectContent>
               </Select>

@@ -2,8 +2,10 @@
 // Management -> Compliance -> ISO Compliance
 // ISO Compliance Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getIsoComplianceRecordFn } from "@/lib/isoComplianceFns.server";
 import {
   FileText,
   AlertTriangle,
@@ -112,8 +114,15 @@ export default function ISOComplianceManagementPage() {
     | "reports"
   >("overview");
 
+  // Prisma-backed query with inline fallback
+  const { data: dbRecord } = useQuery({
+    queryKey: ["iso-compliance", "record"],
+    queryFn: () => getIsoComplianceRecordFn({ data: {} }),
+  });
+
   // Controlled form state
   const [formData, setFormData] = useState(PRIMARY_ISO_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data as typeof PRIMARY_ISO_RECORD); }, [dbRecord]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 

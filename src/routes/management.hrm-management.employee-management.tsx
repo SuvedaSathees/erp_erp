@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { hrmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -201,7 +203,69 @@ const ASSIGNED_ASSETS = [
 ];
 
 export default function EmployeeManagementPage() {
+  const employeesQuery = useQuery({
+    queryKey: ["hrm", "employees"],
+    queryFn: () => hrmManagementService.fetchEmployees(),
+  });
+
+  const queryClient = useQueryClient();
+
+  const createEmployeeMutation = useMutation({
+    mutationFn: (input: any) => hrmManagementService.createEmployee(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["hrm"] });
+      toast.success("Employee created successfully");
+    },
+    onError: () => toast.error("Failed to create employee"),
+  });
+
+  const updateEmployeeMutation = useMutation({
+    mutationFn: (input: any) => hrmManagementService.updateEmployee(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["hrm"] });
+      toast.success("Employee updated successfully");
+    },
+    onError: () => toast.error("Failed to update employee"),
+  });
+
+  const deleteEmployeeMutation = useMutation({
+    mutationFn: (input: any) => hrmManagementService.deleteEmployee(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["hrm"] });
+      toast.success("Employee deleted successfully");
+    },
+    onError: () => toast.error("Failed to delete employee"),
+  });
+
+
   const [profile, setProfile] = useState<EmployeeProfile>(INITIAL_PROFILE);
+  const [dbApplied, setDbApplied] = useState(false);
+
+  useEffect(() => {
+    const list = employeesQuery.data as any[] | undefined;
+    if (list && list.length > 0 && !dbApplied) {
+      const e = list[0];
+      setProfile((prev) => ({
+        ...prev,
+        employeeId: e.id,
+        employeeNumber: e.employeeCode ?? prev.employeeNumber,
+        name: e.fullName ?? prev.name,
+        designation: e.designation ?? prev.designation,
+        department: e.department ?? prev.department,
+        status: e.status ?? prev.status,
+        officialEmail: e.email ?? prev.officialEmail,
+        location: e.location ?? prev.location,
+        joiningDate: e.joiningDate
+          ? new Date(e.joiningDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+          : prev.joiningDate,
+        annualCTC: e.annualCTC
+          ? `₹ ${Number(e.annualCTC).toLocaleString("en-IN")}`
+          : prev.annualCTC,
+      }));
+      setDbApplied(true);
+    }
+  }, [employeesQuery.data, dbApplied]);
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isNewEmployeeModalOpen, setIsNewEmployeeModalOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
@@ -1058,7 +1122,7 @@ export default function EmployeeManagementPage() {
                     <div className="font-bold text-slate-900">Next Review Date</div>
                     <div className="text-slate-500">01 Oct 2024</div>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-purple-50 text-purple-700">
+                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-blue-50 text-primary">
                     in 5 Mos
                   </span>
                 </div>

@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { getFinancialRiskRecordFn, listFinancialRiskRecordsFn } from "@/lib/financialRiskFns.server";
 import {
   ShieldAlert,
   ShieldCheck,
@@ -111,10 +113,27 @@ export const Route = createFileRoute("/management/risk-management/financial-risk
 });
 
 export function FinancialRiskPage() {
+  // --- Prisma-backed queries with inline fallback ---
+  const { data: dbRecord } = useQuery({
+    queryKey: ["financial-risk", "record"],
+    queryFn: () => getFinancialRiskRecordFn({ data: {} }),
+  });
+  const { data: dbList } = useQuery({
+    queryKey: ["financial-risk", "list"],
+    queryFn: () => listFinancialRiskRecordsFn({ data: {} }),
+  });
+
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [matrixView, setMatrixView] = useState<"Inherent" | "Residual">("Inherent");
   const [activeRisk, setActiveRisk] = useState<FinancialRiskRecord>(PRIMARY_FINANCIAL_RISK);
   const [allRisks, setAllRisks] = useState<FinancialRiskRecord[]>(FULL_FINANCIAL_RISKS);
+
+  useEffect(() => {
+    if (dbRecord?.data) setActiveRisk(dbRecord.data);
+  }, [dbRecord]);
+  useEffect(() => {
+    if (dbList?.data) setAllRisks(dbList.data);
+  }, [dbList]);
 
   // Modals
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

@@ -1,5 +1,8 @@
 import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -422,7 +425,7 @@ const RECENT_ACTIVITIES = [
     type: "Note",
     subject: "Discussed Requirement Details",
     outcome: "Requirement Understood",
-    outcomeColor: "bg-purple-100 text-purple-700 border-purple-300",
+    outcomeColor: "bg-blue-100 text-primary border-blue-300",
     nextAction: "Prepare Demo Plan",
     nextActionDate: "20 Apr 2024",
     assignedTo: "Rahul Sharma",
@@ -431,7 +434,63 @@ const RECENT_ACTIVITIES = [
 ];
 
 function LeadManagementPage() {
+  const leadsQuery = useQuery({
+    queryKey: ["crm", "leads"],
+    queryFn: () => crmManagementService.fetchLeads(),
+  });
+
+  const queryClient = useQueryClient();
+
+  const createLeadMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.createLead(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Lead created successfully");
+    },
+    onError: () => toast.error("Failed to create lead"),
+  });
+
+  const updateLeadMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.updateLead(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Lead updated successfully");
+    },
+    onError: () => toast.error("Failed to update lead"),
+  });
+
+  const deleteLeadMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.deleteLead(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Lead deleted successfully");
+    },
+    onError: () => toast.error("Failed to delete lead"),
+  });
+
+  const dbLeads: LeadRecord[] = (leadsQuery.data ?? []).map((l: any) => ({
+    ...INITIAL_LEADS[0],
+    id: l.id,
+    leadNumber: l.leadNumber,
+    leadName: l.leadName,
+    leadType: l.leadType ?? "Business",
+    status: l.status ?? "New",
+    rating: l.rating ?? "Warm",
+    priority: l.priority ?? "Medium",
+    owner: { name: l.ownerName ?? "", avatar: (l.ownerName ?? "").split(" ").map((w: string) => w[0]).join(""), email: l.ownerEmail ?? "" },
+    contactPerson: l.contactPerson ?? "",
+    email: l.email ?? "",
+    mobile: l.phone ?? "",
+    orgName: l.orgName ?? "",
+    industry: l.industry ?? "",
+    city: l.city ?? "",
+    state: l.state ?? "",
+    leadSource: l.leadSource ?? "",
+    description: l.description ?? "",
+    createdDate: new Date(l.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+  }));
   const [leads, setLeads] = useState<LeadRecord[]>(INITIAL_LEADS);
+  const mergedLeads = dbLeads.length > 0 ? dbLeads : leads;
   const [selectedLeadId, setSelectedLeadId] = useState<string>("LEAD-0000578");
   const [activeTab, setActiveTab] = useState<string>("contact");
 
@@ -443,8 +502,8 @@ function LeadManagementPage() {
 
   // Active Lead Object
   const currentLead = useMemo(() => {
-    return leads.find((l) => l.id === selectedLeadId) || leads[0];
-  }, [leads, selectedLeadId]);
+    return mergedLeads.find((l) => l.id === selectedLeadId) || mergedLeads[0];
+  }, [mergedLeads, selectedLeadId]);
 
   // Form State initialized from current Lead
   const [formState, setFormState] = useState<LeadRecord>(currentLead);
@@ -458,7 +517,7 @@ function LeadManagementPage() {
   // Update formState when selected lead changes
   const handleSelectLead = (id: string) => {
     setSelectedLeadId(id);
-    const target = leads.find((l) => l.id === id);
+    const target = mergedLeads.find((l) => l.id === id);
     if (target) setFormState(target);
   };
 
@@ -498,16 +557,16 @@ function LeadManagementPage() {
   };
 
   // KPI Analytics Computations
-  const totalLeadsCount = leads.length;
-  const qualifiedCount = leads.filter((l) => l.status === "Qualified").length;
-  const hotLeadsCount = leads.filter((l) => l.rating === "Hot").length;
-  const warmLeadsCount = leads.filter((l) => l.rating === "Warm").length;
+  const totalLeadsCount = mergedLeads.length;
+  const qualifiedCount = mergedLeads.filter((l) => l.status === "Qualified").length;
+  const hotLeadsCount = mergedLeads.filter((l) => l.rating === "Hot").length;
+  const warmLeadsCount = mergedLeads.filter((l) => l.rating === "Warm").length;
 
   const leadSourceChartData = [
     { name: "Website", value: 45, color: "#2563eb" },
     { name: "Exhibition", value: 25, color: "#16a34a" },
     { name: "Referral", value: 15, color: "#d97706" },
-    { name: "Social Media", value: 10, color: "#9333ea" },
+    { name: "Social Media", value: 10, color: "#0A3C75" },
     { name: "Direct Enquiry", value: 5, color: "#0891b2" },
   ];
 
@@ -569,7 +628,7 @@ function LeadManagementPage() {
                   onChange={(e) => handleSelectLead(e.target.value)}
                   className="h-8 max-w-[210px] text-xs bg-slate-50 border border-slate-300 rounded-md px-2 font-medium focus:ring-2 focus:ring-primary focus:outline-none truncate"
                 >
-                  {leads.map((l) => (
+                  {mergedLeads.map((l) => (
                     <option key={l.id} value={l.id}>
                       {l.leadNumber} - {l.leadName}
                     </option>

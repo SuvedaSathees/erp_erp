@@ -12,7 +12,7 @@ import {
   TrendingUp,
   Waves,
 } from "lucide-react";
-import { formatCurrency } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/format";
 import type { WidgetDefinition } from "../../types";
 import {
   apCountOptions,

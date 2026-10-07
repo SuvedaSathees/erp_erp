@@ -53,7 +53,9 @@ import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
-import { DataTable } from "@/components/erp/DataTable";
+import { DataTable, EmptyState } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -69,9 +71,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
-import { company, formatCurrency } from "@/lib/mock-data";
-import { loadConsolidationDashboard } from "@/services/financialManagementService";
-import * as consolidationService from "@/services/consolidationService";
+import { company } from "@/lib/companyConfig";
+import { formatCurrency } from "@/lib/format";
+import { consolidationService, loadConsolidationDashboard } from "@/services";
 import type {
   ConsolidationRecord,
   AccountMappingRecord,
@@ -94,6 +96,31 @@ export const Route = createFileRoute("/management/finance/consolidation")({
 });
 
 const QUERY: DashboardQuery = { fiscalYear: company.fiscalYear, companyId: "all" };
+
+function ConsolidationSkeleton() {
+  return (
+    <div className="space-y-5">
+      {/* 5 KPI StatCards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-28 rounded-xl" />
+        ))}
+      </div>
+      {/* Main layout */}
+      <div className="grid gap-5 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_360px]">
+        <div className="space-y-5">
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-[420px] w-full rounded-xl" />
+        </div>
+        <div className="space-y-5">
+          <Skeleton className="h-64 w-full rounded-xl" />
+          <Skeleton className="h-64 w-full rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ConsolidationPage() {
   const queryClient = useQueryClient();
@@ -230,8 +257,15 @@ function ConsolidationPage() {
     setReportOpen(true);
   };
 
+  const isError = dashboardQuery.isError;
   const isLoading = dashboardQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    dashboardQuery.error,
+    "Failed to load consolidation dashboard.",
+  );
 
   // Overview rows
   const allRows = data?.summaryData || [];
@@ -252,21 +286,14 @@ function ConsolidationPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />
-            ))}
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="h-[500px] animate-pulse rounded-xl bg-muted" />
-            <div className="space-y-6">
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-            </div>
-          </div>
-        </div>
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Consolidation Data"
+          error={dashboardQuery.error}
+          onRetry={() => dashboardQuery.refetch()}
+        />
+      ) : isLoading || !data ? (
+        <ConsolidationSkeleton />
       ) : (
         <div className="space-y-5">
           {/* KPI Stat Cards Grid */}
@@ -308,8 +335,8 @@ function ConsolidationPage() {
               value={data.kpis.status}
               neutralText="All Periods Closed"
               icon={<CheckCircle className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -697,7 +724,31 @@ function ConsolidationPage() {
                           ),
                         },
                       ]}
-                      mobileCard={(r) => <div>{r.name}</div>}
+                      mobileCard={(r) => (
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-start gap-2">
+                            <div>
+                              <span className="font-semibold text-foreground block text-sm">{r.name}</span>
+                              <span className="font-mono text-xs text-muted-foreground">{r.code}</span>
+                            </div>
+                            <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                              Full Integration
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                            <span className="text-muted-foreground">Net Profit Contribution</span>
+                            <span className="font-bold tabular text-foreground">
+                              {formatCurrency(r.netProfit)}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      empty={
+                        <EmptyState
+                          title="No subsidiary entities found"
+                          description="No consolidated subsidiaries currently exist for this holding entity."
+                        />
+                      }
                     />
                   </div>
                 </div>
@@ -762,7 +813,34 @@ function ConsolidationPage() {
                           ),
                         },
                       ]}
-                      mobileCard={(r) => <div>{r.ref}</div>}
+                      mobileCard={(r) => (
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-start gap-2">
+                            <div>
+                              <span className="font-mono text-xs font-semibold text-foreground">{r.ref}</span>
+                              <span className="text-xs text-muted-foreground block tabular">{r.date}</span>
+                            </div>
+                            <span className="text-green-600 font-semibold text-xs flex items-center gap-1">
+                              <CheckCircle className="h-3 w-3" /> Fully Matched
+                            </span>
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            <span className="font-medium text-foreground">{r.fromEntity}</span> → <span className="font-medium text-foreground">{r.toEntity}</span>
+                          </div>
+                          <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                            <span className="text-muted-foreground">Amount</span>
+                            <span className="font-bold tabular text-foreground">
+                              {formatCurrency(r.amount)}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      empty={
+                        <EmptyState
+                          title="No intercompany transactions found"
+                          description="No cross-entity transactions recorded for this fiscal period."
+                        />
+                      }
                     />
                   </div>
                 </div>
@@ -907,7 +985,7 @@ function ConsolidationPage() {
                     </li>
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground flex items-center gap-1.5">
-                        <span className="h-2 w-2 rounded-full bg-purple-500" />
+                        <span className="h-2 w-2 rounded-full bg-blue-500" />
                         Consolidation
                       </span>
                       <span className="font-semibold text-foreground">
@@ -1110,7 +1188,17 @@ function ConsolidationPage() {
                   cell: (r) => <span className="text-muted-foreground">{r.message}</span>,
                 },
               ]}
-              mobileCard={(r) => <div>{r.checkName}</div>}
+              mobileCard={(r) => (
+                <div className="space-y-1.5 py-1">
+                  <div className="flex justify-between items-start gap-2">
+                    <span className="font-semibold text-foreground text-xs">{r.checkName}</span>
+                    <span className="text-green-600 font-bold text-xs flex items-center gap-0.5 shrink-0">
+                      <CheckCircle className="h-3.5 w-3.5" /> Passed
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{r.message}</p>
+                </div>
+              )}
             />
           </div>
 
@@ -1205,7 +1293,30 @@ function ConsolidationPage() {
                   ),
                 },
               ]}
-              mobileCard={(r) => <div>{r.sourceAccount}</div>}
+              mobileCard={(r) => (
+                <div className="space-y-2 py-1">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="font-semibold text-muted-foreground">{r.entity}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveMapping(r.id)}
+                      className="text-destructive hover:underline font-semibold text-[11px]"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-muted-foreground block text-[10px]">Subsidiary Code</span>
+                      <span className="font-mono text-foreground">{r.sourceAccount}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block text-[10px]">Target Code</span>
+                      <span className="font-mono text-foreground">{r.targetAccount}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             />
           </div>
 

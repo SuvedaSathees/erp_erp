@@ -494,7 +494,7 @@ export default function OnboardingManagementPage() {
             <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <FileCheck className="h-4 w-4 text-purple-600" />
+                  <FileCheck className="h-4 w-4 text-primary" />
                   Employee Documentation & Compliance Verification
                 </h3>
                 <p className="text-xs text-muted-foreground mt-0.5">

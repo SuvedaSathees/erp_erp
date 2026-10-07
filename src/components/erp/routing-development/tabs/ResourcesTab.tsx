@@ -62,7 +62,7 @@ export const ResourcesTab: React.FC<ResourcesTabProps> = ({ record }) => {
         {/* Required Fixtures */}
         <div className="bg-card p-4 rounded-lg border border-border space-y-3">
           <h3 className="font-bold text-foreground pb-2 border-b border-border flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-purple-500" /> Fixtures ({record.requiredFixturesCount})
+            <ShieldCheck className="w-4 h-4 text-blue-600" /> Fixtures ({record.requiredFixturesCount})
           </h3>
           <ul className="space-y-1.5">
             {record.requiredFixtures.map((f, idx) => (

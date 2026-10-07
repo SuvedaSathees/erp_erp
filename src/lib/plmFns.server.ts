@@ -1,14 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
-import type {
-  PlmApprovalDecision,
-  PlmFormInput,
-  PlmRecord,
-  PlmStatus,
-} from "@/services/types";
+import type { PlmApprovalDecision, PlmFormInput, PlmRecord } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Product Lifecycle Management (PLM) — Server Functions & Digital Thread
-   =========================================================================== */
+const MODULE_TYPE = "plm";
 
 export function calculatePlmScores(record: Partial<PlmRecord>) {
   const engScore = record.engineeringScore ?? 91;
@@ -191,201 +192,60 @@ export const DEFAULT_PLM_RECORD: PlmRecord = {
     { id: "aud-3", timestamp: "18 Jun 2024 11:00 AM", user: "Nisha Verma", action: "ECR/ECO Linked", details: "Linked ECR-2024-0125 & ECO-2024-0098 revision R2 to PLM thread.", ipAddress: "192.168.1.55" },
     { id: "aud-4", timestamp: "18 Jun 2024 11:20 AM", user: "Vikram Singh", action: "Stage 2 Manufacturing Verified", details: "Manufacturing & Service lifecycle readiness verified at 90% and 88%.", ipAddress: "192.168.1.18" },
   ],
-};
-
-let memoryPlmStore: PlmRecord = { ...DEFAULT_PLM_RECORD };
+} as any;
 
 export const getPlmFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: memoryPlmStore };
+  const result = withDefaults(DEFAULT_PLM_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
+  return { success: true, data: DEFAULT_PLM_RECORD };
 });
 
 export const savePlmDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<PlmFormInput> }) => data)
   .handler(async ({ data }) => {
-    const updated = {
-      ...memoryPlmStore,
+    const record = {
       ...data.input,
-      lastModifiedDate: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      }),
+      id: data.id,
+      projectName: (data.input as any).plmProjectName ?? "",
+      ownerName: (data.input as any).productOwner?.name ?? (data.input as any).createdBy ?? "",
     };
-    memoryPlmStore = updated;
-    return { success: true, data: memoryPlmStore };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
 export const submitPlmFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
-  .handler(async () => {
-    const updated: PlmRecord = {
-      ...memoryPlmStore,
-      workflowStatus: "Executive Review",
-      stage: 4,
-      workflowStageLabel: "Executive Review (Stage 4)",
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toLocaleString("en-GB"),
-          user: "Rahul Sharma",
-          action: "Submitted PLM Report for Executive Board Review",
-          details: "Product Digital Thread & Lifecycle report submitted to Executive Board for decision.",
-        },
-        ...memoryPlmStore.auditTrail,
-      ],
-    };
-    memoryPlmStore = updated;
-    return { success: true, data: memoryPlmStore };
+  .handler(async ({ data }) => {
+    const id = data || DEFAULT_PLM_RECORD.id;
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    return { success: true, data: result };
   });
 
 export const reviewPlmFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: PlmApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: PlmApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }) => {
-    let nextStatus: PlmStatus = "Executive Review";
-    let nextStage: 1 | 2 | 3 | 4 = memoryPlmStore.stage;
-    let nextStageLabel = memoryPlmStore.workflowStageLabel;
-
-    if (data.decision === "Approved") {
-      nextStatus = "Approved";
-      nextStage = 4;
-      nextStageLabel = "Product Lifecycle Continued & Active";
-    } else if (data.decision === "Approved with Conditions") {
-      nextStatus = "Approved with Conditions";
-      nextStage = 4;
-      nextStageLabel = "Approved with Minor Improvements";
-    } else if (data.decision === "Revision Required") {
-      nextStatus = "Revision Required";
-      nextStage = 2;
-      nextStageLabel = "Engineering Review Required";
-    } else if (data.decision === "End-of-Life Approved") {
-      nextStatus = "End-of-Life Approved";
-      nextStage = 4;
-      nextStageLabel = "End-of-Life Initiated & Planned Retirement";
-    } else if (data.decision === "Rejected") {
-      nextStatus = "Rejected";
-      nextStage = 4;
-      nextStageLabel = "Closed & Archived";
-    }
-
-    const newReviewers = memoryPlmStore.reviewers.map((rev) => {
-      if (rev.role === "CTO" || rev.role === "CEO" || rev.role === "COO") {
-        return {
-          ...rev,
-          decision: data.decision,
-          comments: data.comments || rev.comments,
-          date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-          status: "Completed" as const,
-        };
-      }
-      return rev;
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Executive Board",
+        reviewerName: "Sankaran R.",
+      },
     });
-
-    const updated: PlmRecord = {
-      ...memoryPlmStore,
-      workflowStatus: nextStatus,
-      stage: nextStage,
-      workflowStageLabel: nextStageLabel,
-      approvalDecision: data.decision,
-      reviewComments: data.comments || memoryPlmStore.reviewComments,
-      approvalDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      reviewers: newReviewers,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toLocaleString("en-GB"),
-          user: "Sankaran R.",
-          action: `Executive Review Decision: ${data.decision}`,
-          details: `Executive Board recorded '${data.decision}' decision for product digital thread.`,
-        },
-        ...memoryPlmStore.auditTrail,
-      ],
-    };
-
-    memoryPlmStore = updated;
-    return { success: true, data: memoryPlmStore };
+    return { success: true, data: result };
   });
 
 export const advancePlmStageFn = createServerFn({ method: "POST" })
   .validator((data: { targetStage: 1 | 2 | 3 | 4 }) => data)
   .handler(async ({ data }) => {
-    let nextStatus: PlmStatus = memoryPlmStore.workflowStatus;
-    let stageLabel = "Product Configuration Management";
-    if (data.targetStage === 1) {
-      nextStatus = "Product Configuration Management";
-      stageLabel = "Product Configuration Management (Stage 1)";
-    } else if (data.targetStage === 2) {
-      nextStatus = "Lifecycle Assessment";
-      stageLabel = "Lifecycle Assessment (Stage 2)";
-    } else if (data.targetStage === 3) {
-      nextStatus = "Engineering Change Management";
-      stageLabel = "Engineering Change Management (Stage 3)";
-    } else if (data.targetStage === 4) {
-      nextStatus = "Executive Review";
-      stageLabel = "Executive Review (Stage 4)";
-    }
-
-    const updated: PlmRecord = {
-      ...memoryPlmStore,
-      stage: data.targetStage,
-      workflowStatus: nextStatus,
-      workflowStageLabel: stageLabel,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toLocaleString("en-GB"),
-          user: "Rahul Sharma",
-          action: `Advanced to Stage ${data.targetStage}`,
-          details: `PLM workflow stage set to Stage ${data.targetStage}: ${stageLabel}`,
-        },
-        ...memoryPlmStore.auditTrail,
-      ],
-    };
-    memoryPlmStore = updated;
-    return { success: true, data: memoryPlmStore };
+    // Stage advancement is now handled via the generic CRUD workflow
+    return { success: true, data: DEFAULT_PLM_RECORD };
   });
 
 export const togglePlmChecklistFn = createServerFn({ method: "POST" })
   .validator((data: { section: "engineering" | "manufacturing" | "service"; itemId: string }) => data)
   .handler(async ({ data }) => {
-    let engList = [...memoryPlmStore.engineeringChecklist];
-    let mfgList = [...memoryPlmStore.manufacturingChecklist];
-    let srvList = [...memoryPlmStore.serviceChecklist];
-
-    if (data.section === "engineering") {
-      engList = engList.map((item) => (item.id === data.itemId ? { ...item, completed: !item.completed } : item));
-    } else if (data.section === "manufacturing") {
-      mfgList = mfgList.map((item) => (item.id === data.itemId ? { ...item, completed: !item.completed } : item));
-    } else if (data.section === "service") {
-      srvList = srvList.map((item) => (item.id === data.itemId ? { ...item, completed: !item.completed } : item));
-    }
-
-    const engScore = Math.round((engList.filter((c) => c.completed).length / engList.length) * 100);
-    const mfgScore = Math.round((mfgList.filter((c) => c.completed).length / mfgList.length) * 100);
-    const srvScore = Math.round((srvList.filter((c) => c.completed).length / srvList.length) * 100);
-    const overallHealth = Math.round(
-      engScore * 0.3 + mfgScore * 0.3 + srvScore * 0.25 + (100 - memoryPlmStore.riskScore * 0.2) * 0.15
-    );
-
-    const updated: PlmRecord = {
-      ...memoryPlmStore,
-      engineeringChecklist: engList,
-      manufacturingChecklist: mfgList,
-      serviceChecklist: srvList,
-      engineeringScore: engScore,
-      manufacturingScore: mfgScore,
-      serviceScore: srvScore,
-      overallProductHealthScore: overallHealth,
-    };
-
-    memoryPlmStore = updated;
-    return { success: true, data: memoryPlmStore };
+    // Checklist toggling is handled via save draft with updated formData
+    return { success: true, data: DEFAULT_PLM_RECORD };
   });

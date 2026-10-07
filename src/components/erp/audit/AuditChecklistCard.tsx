@@ -64,7 +64,7 @@ export function AuditChecklistCard({
         );
       default:
         return (
-          <Badge className="bg-purple-50 text-purple-700 hover:bg-purple-100 dark:bg-purple-950/50 dark:text-purple-400 border border-purple-200 dark:border-purple-800 text-[10px] py-0.5 px-2 font-medium">
+          <Badge className="bg-blue-50 text-primary hover:bg-blue-100 dark:bg-blue-950/50 dark:text-blue-400 border border-blue-200 dark:border-blue-800 text-[10px] py-0.5 px-2 font-medium">
             <Lightbulb className="w-2.5 h-2.5 mr-1" />
             OFI
           </Badge>

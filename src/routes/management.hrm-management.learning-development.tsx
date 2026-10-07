@@ -263,7 +263,7 @@ export function LearningDevelopmentPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Award className="h-3.5 w-3.5 text-indigo-600" />
+              <Award className="h-3.5 w-3.5 text-primary" />
               <div>
                 <div className="text-[10px] text-muted-foreground">Skill</div>
                 <div className="font-semibold text-slate-900">CAD Design</div>
@@ -279,7 +279,7 @@ export function LearningDevelopmentPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <User className="h-3.5 w-3.5 text-purple-600" />
+              <User className="h-3.5 w-3.5 text-primary" />
               <div>
                 <div className="text-[10px] text-muted-foreground">Trainer</div>
                 <div className="font-semibold text-slate-900">Arun Kumar</div>
@@ -752,7 +752,7 @@ export function LearningDevelopmentPage() {
                   {[
                     { label: "Trainer Knowledge & Clarity", rating: "4.8 / 5", pct: 96, color: "bg-emerald-600" },
                     { label: "Course Content & Lab Materials", rating: "4.6 / 5", pct: 92, color: "bg-blue-600" },
-                    { label: "Practical Relevance to Projects", rating: "4.4 / 5", pct: 88, color: "bg-purple-600" },
+                    { label: "Practical Relevance to Projects", rating: "4.4 / 5", pct: 88, color: "bg-primary" },
                     { label: "Classroom Lab Infrastructure", rating: "4.3 / 5", pct: 86, color: "bg-amber-600" },
                   ].map((f) => (
                     <div key={f.label} className="p-3 rounded-lg border border-slate-100 bg-slate-50/60 space-y-1.5">
@@ -797,7 +797,7 @@ export function LearningDevelopmentPage() {
                       <div className="font-bold text-slate-900">Level 3: Behavior</div>
                       <div className="text-[10px] text-slate-500">On-the-job application in CAD assemblies</div>
                     </div>
-                    <span className="font-mono font-bold text-purple-700">In Progress</span>
+                    <span className="font-mono font-bold text-primary">In Progress</span>
                   </div>
 
                   <div className="p-2.5 rounded-lg border border-slate-100 bg-slate-50/60 flex items-center justify-between">
@@ -1040,7 +1040,7 @@ export function LearningDevelopmentPage() {
           <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <CheckSquare className="h-4 w-4 text-purple-600" />
+                <CheckSquare className="h-4 w-4 text-primary" />
                 Record Assessment Score
               </h3>
               <button
@@ -1097,7 +1097,7 @@ export function LearningDevelopmentPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 font-semibold cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary font-semibold cursor-pointer"
                 >
                   Save Score
                 </button>

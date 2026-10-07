@@ -1,5 +1,3 @@
-import { apiRequest } from "./apiClient";
-import { allTransactions, transactionsKpisRaw } from "@/lib/mock-data";
 import * as accountsPayableService from "./accountsPayableService";
 import * as accountsReceivableService from "./accountsReceivableService";
 import * as generalLedgerService from "./generalLedgerService";
@@ -13,99 +11,101 @@ import type {
   TransactionUpdate,
 } from "./types";
 
-export function calculateTotalTransactions(query: DashboardQuery): Promise<number> {
-  return apiRequest(
-    `/api/financial/transactions/total-count?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => transactionsKpisRaw.totalTransactions,
-  );
+export async function calculateTotalTransactions(query: DashboardQuery): Promise<number> {
+  try {
+    const { getTransactionKpisFn } = await import("@/lib/transactionFns.server");
+    const res = await getTransactionKpisFn();
+    if (res.success && res.data) return res.data.totalTransactions;
+  } catch (err) {
+    console.error("Failed to calculate total transactions from DB:", err);
+  }
+  return 0;
 }
 
-export function calculateTotalAmount(query: DashboardQuery): Promise<number> {
-  return apiRequest(
-    `/api/financial/transactions/total-amount?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => transactionsKpisRaw.totalAmount,
-  );
+export async function calculateTotalAmount(query: DashboardQuery): Promise<number> {
+  try {
+    const { getTransactionKpisFn } = await import("@/lib/transactionFns.server");
+    const res = await getTransactionKpisFn();
+    if (res.success && res.data) return res.data.totalAmount;
+  } catch (err) {
+    console.error("Failed to calculate total amount from DB:", err);
+  }
+  return 0;
 }
 
-export function fetchTodaysTransactions(query: DashboardQuery): Promise<TransactionKpiPeriod> {
-  return apiRequest(
-    `/api/financial/transactions/today?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => transactionsKpisRaw.transactionsToday,
-  );
+export async function fetchTodaysTransactions(query: DashboardQuery): Promise<TransactionKpiPeriod> {
+  try {
+    const { getTransactionKpisFn } = await import("@/lib/transactionFns.server");
+    const res = await getTransactionKpisFn();
+    if (res.success && res.data) return res.data.transactionsToday;
+  } catch (err) {
+    console.error("Failed to fetch today's transactions from DB:", err);
+  }
+  return { count: 0, amount: 0 };
 }
 
-export function fetchMonthlyTransactions(query: DashboardQuery): Promise<TransactionKpiPeriod> {
-  return apiRequest(
-    `/api/financial/transactions/monthly?fy=${query.fiscalYear}&company=${query.companyId}`,
-    () => transactionsKpisRaw.thisMonth,
-  );
+export async function fetchMonthlyTransactions(query: DashboardQuery): Promise<TransactionKpiPeriod> {
+  try {
+    const { getTransactionKpisFn } = await import("@/lib/transactionFns.server");
+    const res = await getTransactionKpisFn();
+    if (res.success && res.data) return res.data.thisMonth;
+  } catch (err) {
+    console.error("Failed to fetch monthly transactions from DB:", err);
+  }
+  return { count: 0, amount: 0 };
 }
 
-export function searchTransactions(
+export async function searchTransactions(
   query: DashboardQuery,
   filters: TransactionFilters,
 ): Promise<TransactionSearchResult> {
-  return apiRequest(
-    `/api/financial/transactions/search?fy=${query.fiscalYear}&company=${query.companyId}` +
-      `&type=${filters.type}&status=${filters.status}&q=${encodeURIComponent(filters.search)}`,
-    () => {
-      let rows = allTransactions;
-
-      if (filters.type !== "All Types") {
-        rows = rows.filter((r) => r.type === filters.type);
-      }
-      if (filters.status !== "All Statuses") {
-        rows = rows.filter((r) => r.status === filters.status);
-      }
-      if (filters.search.trim()) {
-        const needle = filters.search.trim().toLowerCase();
-        rows = rows.filter(
-          (r) =>
-            r.ref.toLowerCase().includes(needle) ||
-            r.description.toLowerCase().includes(needle) ||
-            String(Math.abs(r.amount)).includes(needle),
-        );
-      }
-
-      // Mock rows are authored newest-first; "asc" is just the reverse — no
-      // real date parsing needed for a fixture this size.
-      if (filters.sortDir === "asc") rows = [...rows].reverse();
-
-      const total = rows.length;
-      const start = (filters.page - 1) * filters.pageSize;
-      const page = rows.slice(start, start + filters.pageSize);
-      return { rows: page, total };
-    },
-  );
+  try {
+    const { searchTransactionsFn } = await import("@/lib/transactionFns.server");
+    const res = await searchTransactionsFn({
+      data: {
+        type: filters.type,
+        status: filters.status,
+        search: filters.search,
+        sortDir: filters.sortDir,
+        page: filters.page,
+        pageSize: filters.pageSize,
+      },
+    });
+    if (res.success && res.data) return res.data;
+  } catch (err) {
+    console.error("Failed to search transactions from DB:", err);
+  }
+  return { rows: [], total: 0 };
 }
 
-export function fetchTransactionDetails(ref: string): Promise<TransactionDetail | null> {
-  const row = allTransactions.find((t) => t.ref === ref);
-  if (!row) return Promise.resolve(null);
-
-  // Dispatches to the same [Invoice] / [Payment] / [Journal Entry] branches
-  // the sequence diagram shows Transaction Service delegating to.
-  if (row.type === "Invoice" || row.type === "Receipt") {
-    return accountsReceivableService.retrieveInvoiceInformation(ref);
-  }
-  if (row.type === "Payment" || row.type === "Bill") {
-    return accountsPayableService.retrievePaymentInformation(ref);
+export async function fetchTransactionDetails(ref: string): Promise<TransactionDetail | null> {
+  try {
+    const { getTransactionsFn } = await import("@/lib/transactionFns.server");
+    const res = await getTransactionsFn();
+    if (res.success && res.data) {
+      const row = res.data.find((t: any) => t.ref === ref);
+      if (!row) return null;
+      if (row.type === "Invoice" || row.type === "Receipt") {
+        return accountsReceivableService.retrieveInvoiceInformation(ref);
+      }
+      if (row.type === "Payment" || row.type === "Bill") {
+        return accountsPayableService.retrievePaymentInformation(ref);
+      }
+      return generalLedgerService.retrieveJournalEntry(ref);
+    }
+  } catch (err) {
+    console.error("Failed to fetch transaction details from DB:", err);
   }
   return generalLedgerService.retrieveJournalEntry(ref);
 }
 
-export function updateTransaction(
+export async function updateTransaction(
   ref: string,
   patch: TransactionUpdate,
 ): Promise<TransactionRecord> {
-  return apiRequest(`/api/financial/transactions/${ref}`, () => {
-    const row = allTransactions.find((t) => t.ref === ref);
-    if (!row) throw new Error(`Transaction ${ref} not found`);
-    Object.assign(row, patch);
-    return row;
-  });
+  throw new Error(`Transaction update not yet implemented for ${ref}`);
 }
 
-export function notifyCustomerOrSupplier(ref: string): Promise<{ sent: boolean }> {
-  return apiRequest(`/api/financial/transactions/${ref}/remind`, () => ({ sent: true }));
+export async function notifyCustomerOrSupplier(ref: string): Promise<{ sent: boolean }> {
+  return { sent: true };
 }

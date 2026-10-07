@@ -3,33 +3,28 @@ import type {
   TestingApprovalDecision,
   TestingFormInput,
   TestingValidationRecord,
-  TestingStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Testing & Validation — Server Functions & Quality Engine
-   =========================================================================== */
+const MODULE_TYPE = "testing-validation";
 
 export function calculateQualityScores(input: Partial<TestingFormInput>) {
   const functional = 90;
   const reliability = 92;
   const compliance = 93;
   const validation = 89;
-
-  const overallScore = Math.round(
-    functional * 0.25 + reliability * 0.25 + compliance * 0.25 + validation * 0.25
-  );
-
-  return {
-    functionalScore: functional,
-    reliabilityScore: reliability,
-    complianceScore: compliance,
-    validationScore: validation,
-    overallQualityScore: overallScore,
-  };
+  const overallScore = Math.round(functional * 0.25 + reliability * 0.25 + compliance * 0.25 + validation * 0.25);
+  return { functionalScore: functional, reliabilityScore: reliability, complianceScore: compliance, validationScore: validation, overallQualityScore: overallScore };
 }
 
-const DEFAULT_RECORD: TestingValidationRecord = {
+export const DEFAULT_RECORD: TestingValidationRecord = {
   id: "tv-rec-0075",
   testingValidationId: "TV-2024-0075",
   formCode: "TVF-2024-25",
@@ -425,80 +420,49 @@ const DEFAULT_RECORD: TestingValidationRecord = {
       ipAddress: "192.168.1.104",
     },
   ],
-};
+} as any;
 
-export { DEFAULT_RECORD };
-
-let currentRecord: TestingValidationRecord = { ...DEFAULT_RECORD };
 
 export const getTestingValidationFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: TestingValidationRecord }> => {
-    return { success: true, data: currentRecord };
+    const result = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_RECORD };
   }
 );
 
 export const saveTestingValidationDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<TestingFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: TestingValidationRecord }> => {
-    const input = data.input;
-    const scores = calculateQualityScores({ ...currentRecord, ...input });
-
-    currentRecord = {
-      ...currentRecord,
-      ...input,
-      ...scores,
-      lastModified: new Date().toISOString(),
-      lastUpdated:
-        new Date().toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }) +
-        " " +
-        new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+    const record = {
+      ...data.input,
+      id: data.id,
+      projectName: (data.input as any).testProjectName ?? "",
+      ownerName: (data.input as any).testEngineerName ?? "",
     };
-
-    return { success: true, data: currentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitTestingValidationFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
-  .handler(async (): Promise<{ success: boolean; data: TestingValidationRecord }> => {
-    currentRecord = {
-      ...currentRecord,
-      workflowStatus: "In Review",
-      lastModified: new Date().toISOString(),
-    };
-    return { success: true, data: currentRecord };
+  .handler(async ({ data }): Promise<{ success: boolean; data: TestingValidationRecord }> => {
+    const id = data || DEFAULT_RECORD.id;
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    return { success: true, data: result as any };
   });
 
 export const reviewTestingValidationFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: TestingApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: TestingApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: TestingValidationRecord }> => {
-    const { decision, comments } = data;
-    const statusMap: Record<TestingApprovalDecision, TestingStatus> = {
-      Approved: "Approved",
-      "Approved with Conditions": "In Review",
-      "Revision Required": "Changes Requested",
-      "On Hold": "In Review",
-      Rejected: "Archived",
-      Pending: "In Review",
-    };
-
-    currentRecord = {
-      ...currentRecord,
-      approvalDecision: decision,
-      reviewComments: comments ?? currentRecord.reviewComments,
-      approvalDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      workflowStatus: statusMap[decision] ?? currentRecord.workflowStatus,
-      lastModified: new Date().toISOString(),
-    };
-
-    return { success: true, data: currentRecord };
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "QA Review Board",
+        reviewerName: "Rahul Sharma",
+      },
+    });
+    return { success: true, data: result as any };
   });

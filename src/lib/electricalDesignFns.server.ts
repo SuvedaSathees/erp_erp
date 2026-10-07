@@ -6,43 +6,26 @@ import type {
   ElectricalDesignStage,
   ElectricalDesignStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Electrical Design — Server Functions & Workflow Engine
-   ---------------------------------------------------------------------------
-   Manages the 4-stage Electrical Design lifecycle:
-     Stage 1: Electrical Architecture (system architecture, power distribution, protection strategy & AI analysis)
-     Stage 2: Circuit & PCB Design (schematics, PCB stack-up, component placement & interface definition)
-     Stage 3: Simulation & Validation (circuit, power, thermal, fault analysis & safety/compliance validation)
-     Stage 4: Engineering Review (Review Board decision: Approved / Approved with Conditions / Revision Required / Rejected)
-
-   Upon 'Approved' decision:
-     - Links/initiates downstream Prototype Manufacturing project (PM-2024-0089)
-       and surfaces its ID to proceed to Prototype Manufacturing.
-   =========================================================================== */
+const MODULE_TYPE = "electrical-design";
 
 export function calculateElectricalDesignScores(input: Partial<ElectricalDesignFormInput>) {
-  // 1. Power System Readiness (0-100)
   const powerSystemReadiness = 88;
-
-  // 2. Circuit Readiness (0-100)
   const circuitReadiness = input.pcbLayerCount && input.pcbLayerCount >= 6 ? 85 : 80;
-
-  // 3. Electrical Safety Score (0-100)
   const electricalSafetyScore = input.electricalSafetyScore ?? 88;
-
-  // 4. Compliance Score (0-100)
   const complianceScore = input.complianceScore ?? 85;
 
-  // Overall Electrical Design Score (/100)
   const overallElectricalDesignScore = Math.round(
-    powerSystemReadiness * 0.25 +
-      circuitReadiness * 0.25 +
-      electricalSafetyScore * 0.25 +
-      complianceScore * 0.25
+    powerSystemReadiness * 0.25 + circuitReadiness * 0.25 + electricalSafetyScore * 0.25 + complianceScore * 0.25
   );
 
-  // AI Assessment Sub-scores (single source of truth with Panel 9)
   const aiDesignQualityScore = Math.min(99, Math.max(75, Math.round(overallElectricalDesignScore * 1.02)));
   const aiPowerOptimization = 85;
   const aiCircuitReview = 87;
@@ -51,34 +34,20 @@ export function calculateElectricalDesignScores(input: Partial<ElectricalDesignF
   const aiReliabilityPrediction = 85;
   const aiOverallElectricalScore = overallElectricalDesignScore;
 
-  // Key Highlights dynamic list
   const highlights: string[] = [];
   highlights.push("High efficiency power architecture designed");
-  if (input.applicableStandards?.some((s) => s.includes("61000"))) {
-    highlights.push("EMC design complies with IEC 61000 series");
-  } else {
-    highlights.push("EMC design complies with IEC 61000 series");
-  }
+  highlights.push("EMC design complies with IEC 61000 series");
   highlights.push(`Electrical safety design meets target score (${electricalSafetyScore}/100)`);
   highlights.push("AI optimization reduced power loss by 8.7%");
 
   return {
     summary: {
-      overallElectricalDesignScore,
-      powerSystemReadiness,
-      circuitReadiness,
-      electricalSafetyScore,
-      complianceScore,
-      recommendation: "Proceed to PCB Layout Design",
+      overallElectricalDesignScore, powerSystemReadiness, circuitReadiness,
+      electricalSafetyScore, complianceScore, recommendation: "Proceed to PCB Layout Design",
     },
     aiAssessment: {
-      aiOverallElectricalScore,
-      aiDesignQualityScore,
-      aiPowerOptimization,
-      aiCircuitReview,
-      aiThermalAssessment,
-      aiEmcRecommendations,
-      aiReliabilityPrediction,
+      aiOverallElectricalScore, aiDesignQualityScore, aiPowerOptimization,
+      aiCircuitReview, aiThermalAssessment, aiEmcRecommendations, aiReliabilityPrediction,
     },
     keyHighlights: highlights,
   };
@@ -338,7 +307,7 @@ const DEFAULT_ELECTRICAL_DESIGN_INPUT: ElectricalDesignFormInput = {
   approvalDate: "2024-06-20",
 };
 
-let currentElectricalDesignRecord: ElectricalDesignRecord = {
+const DEFAULT_MOCK_RECORD: ElectricalDesignRecord = {
   id: "ed-rec-2024-0017",
   designId: "ED-2024-0017",
   formCode: "EDF-2024-25",
@@ -438,228 +407,86 @@ let currentElectricalDesignRecord: ElectricalDesignRecord = {
       status: "Under Review",
     },
   ],
-};
+} as any;
 
-/** Get current Electrical Design Record */
 export const getElectricalDesignFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: ElectricalDesignRecord }> => {
-    return { success: true, data: currentElectricalDesignRecord };
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   }
 );
 
-/** Save Draft */
 export const saveElectricalDesignDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<ElectricalDesignFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: ElectricalDesignRecord }> => {
-    const updatedInput = { ...currentElectricalDesignRecord.input, ...data.input };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_MOCK_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateElectricalDesignScores(updatedInput);
-
-    currentElectricalDesignRecord = {
-      ...currentElectricalDesignRecord,
+    const record = {
+      ...base,
       input: updatedInput,
       ...scores,
-      lastUpdated: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      lastModified: new Date().toISOString(),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Ananya Iyer",
-          event: "Saved draft updates to Electrical Design Form",
-          stage: currentElectricalDesignRecord.currentStage,
-          status: currentElectricalDesignRecord.status,
-        },
-        ...currentElectricalDesignRecord.auditTrail,
-      ],
+      projectName: (base as any).designProjectName ?? "",
+      ownerName: (base as any).electricalEngineerName ?? "Ananya Iyer",
+      recordCode: (base as any).id ?? (base as any).designId ?? "",
     };
-
-    return { success: true, data: currentElectricalDesignRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Advance Stage */
 export const advanceElectricalDesignStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: ElectricalDesignStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: ElectricalDesignRecord }> => {
-    const stageMap: Record<ElectricalDesignStage, { label: string; stageNumber: number }> = {
-      electrical_architecture: {
-        label: "Stage 1: Electrical Architecture",
-        stageNumber: 1,
-      },
-      circuit_pcb_design: {
-        label: "Stage 2: Circuit & PCB Design",
-        stageNumber: 2,
-      },
-      simulation_validation: {
-        label: "Stage 3: Simulation & Validation",
-        stageNumber: 3,
-      },
-      engineering_review: {
-        label: "Stage 4: Engineering Review",
-        stageNumber: 4,
-      },
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? DEFAULT_MOCK_RECORD;
+    const stageMap: Record<string, { label: string; stageNumber: number }> = {
+      electrical_architecture: { label: "Stage 1: Electrical Architecture", stageNumber: 1 },
+      circuit_pcb_design: { label: "Stage 2: Circuit & PCB Design", stageNumber: 2 },
+      simulation_validation: { label: "Stage 3: Simulation & Validation", stageNumber: 3 },
+      engineering_review: { label: "Stage 4: Engineering Review", stageNumber: 4 },
     };
-
     const target = stageMap[data.targetStage];
-
-    currentElectricalDesignRecord = {
-      ...currentElectricalDesignRecord,
+    const record = {
+      ...base,
       currentStage: data.targetStage,
       currentStageLabel: target.label,
-      stages: currentElectricalDesignRecord.stages.map((stg) => {
+      stages: (base.stages ?? []).map((stg: any) => {
         if (stg.stageNumber < target.stageNumber) return { ...stg, status: "completed" };
         if (stg.stageNumber === target.stageNumber) return { ...stg, status: "in_progress" };
         return { ...stg, status: "pending" };
       }),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Ananya Iyer",
-          event: `Advanced to ${target.label}`,
-          stage: data.targetStage,
-          status: currentElectricalDesignRecord.status,
-        },
-        ...currentElectricalDesignRecord.auditTrail,
-      ],
+      projectName: base.designProjectName ?? "",
+      ownerName: base.electricalEngineerName ?? "Ananya Iyer",
+      recordCode: base.id ?? base.designId ?? "",
     };
-
-    return { success: true, data: currentElectricalDesignRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Submit for Review */
 export const submitElectricalDesignFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: ElectricalDesignRecord }> => {
-    currentElectricalDesignRecord = {
-      ...currentElectricalDesignRecord,
-      status: "Under Review",
-      currentStage: "engineering_review",
-      currentStageLabel: "Stage 4: Engineering Review",
-      stages: currentElectricalDesignRecord.stages.map((stg) =>
-        stg.id === "engineering_review" ? { ...stg, status: "in_progress" } : { ...stg, status: "completed" }
-      ),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Ananya Iyer",
-          event: "Submitted Electrical Design for Stage 4 Engineering Review Board",
-          stage: "engineering_review",
-          status: "Under Review",
-        },
-        ...currentElectricalDesignRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentElectricalDesignRecord };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   });
 
-/** Review Board Decision */
 export const reviewElectricalDesignFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: ElectricalDesignApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: ElectricalDesignApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: ElectricalDesignRecord }> => {
-    let newStatus: ElectricalDesignStatus = "Under Review";
-    let linkedPrototypeId: string | null = currentElectricalDesignRecord.linkedPrototypeManufacturingId ?? null;
-    let eventMessage = "";
-
-    if (data.decision === "Approved") {
-      newStatus = "Approved";
-      linkedPrototypeId = "PM-2024-0089";
-      eventMessage = "Review Board Approved Electrical Design. Linked to downstream Prototype Manufacturing project PM-2024-0089. Electrical Engineer notified: 'Proceed to Prototype Manufacturing'.";
-    } else if (data.decision === "Approved with Conditions") {
-      newStatus = "Approved with Conditions";
-      eventMessage = "Review Board Approved with Conditions. Electrical Engineer notified: 'Improve Electrical Design'. Record remains editable.";
-    } else if (data.decision === "Revision Required") {
-      newStatus = "Revision Required";
-      eventMessage = "Review Board requested revisions. Electrical Engineer notified: 'Reassess Circuit & Safety Design'. Returned to Simulation & Validation stage.";
-    } else if (data.decision === "Rejected") {
-      newStatus = "Rejected";
-      eventMessage = "Review Board Rejected Electrical Design. Record archived. Electrical Engineer notified: 'Close Electrical Design Project'.";
-    }
-
-    const updatedReviewers = currentElectricalDesignRecord.input.reviewers.map((rev) => {
-      if (rev.role === "Electronics Engineer" || rev.role === "Engineering Manager") {
-        return {
-          ...rev,
-          decision: data.decision === "Approved" || data.decision === "Approved with Conditions" ? ("Approved" as const) : ("Rejected" as const),
-          status: data.decision,
-          date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-        };
-      }
-      return rev;
-    });
-
-    currentElectricalDesignRecord = {
-      ...currentElectricalDesignRecord,
-      status: newStatus,
-      approvalDecision: data.decision,
-      approvalDate: new Date().toLocaleDateString("en-CA"),
-      reviewComments: data.comments || "",
-      linkedPrototypeManufacturingId: linkedPrototypeId,
-      stages: currentElectricalDesignRecord.stages.map((stg) => {
-        if (data.decision === "Approved" || data.decision === "Approved with Conditions") {
-          return { ...stg, status: "completed" };
-        }
-        if (data.decision === "Revision Required" && stg.id === "engineering_review") {
-          return { ...stg, status: "pending" };
-        }
-        return stg;
-      }),
-      currentStage:
-        data.decision === "Revision Required"
-          ? "simulation_validation"
-          : "engineering_review",
-      input: {
-        ...currentElectricalDesignRecord.input,
-        approvalDecision: data.decision,
-        reviewComments: data.comments || "",
-        approvalDate: new Date().toLocaleDateString("en-CA"),
-        reviewers: updatedReviewers,
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Engineering Review Board",
+        reviewerName: "Review Board",
       },
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Lead Electronics Engineer (Review Board)",
-          event: eventMessage,
-          stage: currentElectricalDesignRecord.currentStage,
-          status: newStatus,
-        },
-        ...currentElectricalDesignRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentElectricalDesignRecord };
+    });
+    return { success: true, data: result as any };
   });

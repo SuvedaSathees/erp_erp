@@ -5,10 +5,15 @@ import type {
   AiModelRecord,
   AiModelStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   AI Model Development — Server Functions & Workflow Engine
-   =========================================================================== */
+const MODULE_TYPE = "ai-model-development";
 
 export function calculateAiModelDevelopmentScores(input: Partial<AiModelFormInput>) {
   const datasetReadiness = 87;
@@ -38,7 +43,7 @@ export function calculateAiModelDevelopmentScores(input: Partial<AiModelFormInpu
   };
 }
 
-const DEFAULT_RECORD: AiModelRecord = {
+export const DEFAULT_RECORD: AiModelRecord = {
   id: "aimd-rec-0018",
   aiModelDevelopmentId: "AIMD-2024-0018",
   formCode: "AMDF-2024-25",
@@ -214,79 +219,57 @@ const DEFAULT_RECORD: AiModelRecord = {
     { id: "aud3", timestamp: "19 Jun 2024 11:45 AM", user: "Rahul Sharma", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80", action: "Uploaded Datasets", details: "Uploaded EV_Usage_Historical dataset (2.4 TB Parquet).", ipAddress: "192.168.1.104" },
     { id: "aud4", timestamp: "18 Jun 2024 10:15 AM", user: "Rahul Sharma", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80", action: "Created Project", details: "Initialized AI Model Development Record AIMD-2024-0018.", ipAddress: "192.168.1.104" },
   ],
-};
+} as any;
 
-export { DEFAULT_RECORD };
-
-let currentRecord: AiModelRecord = { ...DEFAULT_RECORD };
 
 export const getAiModelDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: AiModelRecord }> => {
-    return { success: true, data: currentRecord };
+    const result = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_RECORD };
   }
 );
 
 export const saveAiModelDevelopmentDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<AiModelFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: AiModelRecord }> => {
-    const input = data.input;
-    const scores = calculateAiModelDevelopmentScores({ ...currentRecord, ...input });
-
-    currentRecord = {
-      ...currentRecord,
-      ...input,
+    const current = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_RECORD;
+    const merged = { ...base, ...data.input };
+    const scores = calculateAiModelDevelopmentScores(merged as any);
+    const record = {
+      ...merged,
       ...scores,
-      lastModified: new Date().toISOString(),
-      lastUpdated:
-        new Date().toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }) +
-        " " +
-        new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      projectName: (base as any).aiProjectName ?? "",
+      ownerName: (base as any).aiLeadEngineerName ?? "Rahul Sharma",
+      recordCode: (base as any).id ?? (base as any).aiModelDevelopmentId ?? "",
     };
-
-    return { success: true, data: currentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitAiModelDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: AiModelRecord }> => {
-    currentRecord = {
-      ...currentRecord,
-      workflowStatus: "In Review",
-      lastModified: new Date().toISOString(),
-    };
-    return { success: true, data: currentRecord };
+    const current = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_RECORD };
   });
 
 export const reviewAiModelDevelopmentFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: AiModelApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: AiModelApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: AiModelRecord }> => {
-    const { decision, comments } = data;
-    const statusMap: Record<AiModelApprovalDecision, AiModelStatus> = {
-      Approved: "Approved",
-      "Approved with Conditions": "In Review",
-      "Changes Requested": "Changes Requested",
-      Rejected: "Archived",
-      Pending: "In Review",
-    };
-
-    currentRecord = {
-      ...currentRecord,
-      approvalDecision: decision,
-      reviewComments: comments ?? currentRecord.reviewComments,
-      approvalDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      workflowStatus: statusMap[decision] ?? currentRecord.workflowStatus,
-      lastModified: new Date().toISOString(),
-    };
-
-    return { success: true, data: currentRecord };
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "AI Review Board",
+        reviewerName: "Review Board",
+      },
+    });
+    return { success: true, data: result as any };
   });

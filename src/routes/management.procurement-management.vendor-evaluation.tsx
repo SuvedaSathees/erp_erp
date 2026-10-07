@@ -475,17 +475,17 @@ export function VendorEvaluationPage() {
           {/* Card 4: CAPA Corrective Actions */}
           <div className="rounded-xl border border-border/80 bg-card p-4 shadow-xs flex flex-col justify-between space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
+              <div className="flex items-center gap-2 text-primary dark:text-blue-400">
                 <AlertTriangle className="h-5 w-5" />
                 <span className="text-xs font-bold text-foreground">Corrective Actions (CAPA)</span>
               </div>
-              <span className="rounded bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-bold text-purple-600">Active</span>
+              <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary">Active</span>
             </div>
             <div>
               <div className="text-xl font-black text-foreground font-mono">{vendor.capaSummary}</div>
               <div className="text-xs text-muted-foreground mt-0.5">Statutory Compliance: <strong className="text-emerald-600 font-bold">{vendor.complianceScore}%</strong></div>
             </div>
-            <button type="button" onClick={() => setActiveTab("cap")} className="text-[11px] font-semibold text-purple-600 hover:underline text-left cursor-pointer">
+            <button type="button" onClick={() => setActiveTab("cap")} className="text-[11px] font-semibold text-primary hover:underline text-left cursor-pointer">
               Manage CAPA Tickets ({capTickets.length}) →
             </button>
           </div>

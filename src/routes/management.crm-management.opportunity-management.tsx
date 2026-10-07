@@ -1,5 +1,8 @@
 import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -363,7 +366,7 @@ const RECENT_ACTIVITIES = [
     type: "Call",
     subject: "Requirement Discussion",
     outcome: "Interested",
-    outcomeColor: "bg-purple-50 text-purple-700 border-purple-200",
+    outcomeColor: "bg-blue-50 text-primary border-blue-200",
     nextAction: "Schedule Product Demo",
     nextActionDate: "18 May 2024",
     assignedTo: "Rahul Sharma",
@@ -384,7 +387,40 @@ const RECENT_ACTIVITIES = [
 ];
 
 function OpportunityManagementPage() {
+  const oppsQuery = useQuery({
+    queryKey: ["crm", "opportunities"],
+    queryFn: () => crmManagementService.fetchOpportunities(),
+  });
+
+  const queryClient = useQueryClient();
+
+  const createOpportunityMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.createOpportunity(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Opportunity created successfully");
+    },
+    onError: () => toast.error("Failed to create opportunity"),
+  });
+
+  const dbOpps: OpportunityRecord[] = (oppsQuery.data ?? []).map((o: any) => ({
+    ...INITIAL_OPPORTUNITIES[0],
+    id: o.id,
+    opportunityNumber: o.opportunityNumber,
+    opportunityName: o.name,
+    stage: o.stage ?? "Discovery",
+    owner: { name: o.ownerName ?? "", avatar: (o.ownerName ?? "").split(" ").map((w: string) => w[0]).join(""), email: "" },
+    accountName: o.account?.name ?? "",
+    sourceLead: o.lead?.leadName ?? "",
+    grossValue: Number(o.amount ?? 0),
+    netOpportunityValue: Number(o.amount ?? 0),
+    probability: Number(o.probability ?? 0),
+    expectedCloseDate: o.expectedCloseDate ? new Date(o.expectedCloseDate).toLocaleDateString("en-IN") : "",
+    productService: o.productService ?? "",
+    createdDate: new Date(o.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+  }));
   const [opportunities, setOpportunities] = useState<OpportunityRecord[]>(INITIAL_OPPORTUNITIES);
+  const mergedOpps = dbOpps.length > 0 ? dbOpps : opportunities;
   const [selectedOppId, setSelectedOppId] = useState<string>("OPP-001");
 
   // Dialog States
@@ -395,8 +431,8 @@ function OpportunityManagementPage() {
 
   // Active Record Object
   const currentOpp = useMemo(() => {
-    return opportunities.find((o) => o.id === selectedOppId) || opportunities[0];
-  }, [opportunities, selectedOppId]);
+    return mergedOpps.find((o) => o.id === selectedOppId) || mergedOpps[0];
+  }, [mergedOpps, selectedOppId]);
 
   const [formState, setFormState] = useState<OpportunityRecord>(currentOpp);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -1278,7 +1314,7 @@ function OpportunityManagementPage() {
                         onClick={() => showNotification("Meeting invite generated for " + formState.accountName)}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Calendar className="h-4 w-4 text-purple-600" />
+                        <Calendar className="h-4 w-4 text-primary" />
                         <span>Schedule</span>
                       </button>
                       <button
@@ -1306,7 +1342,7 @@ function OpportunityManagementPage() {
                         onClick={() => showNotification("Document attachment window ready.")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Paperclip className="h-4 w-4 text-indigo-600" />
+                        <Paperclip className="h-4 w-4 text-primary" />
                         <span>Upload</span>
                       </button>
                     </div>

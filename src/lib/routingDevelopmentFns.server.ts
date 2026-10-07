@@ -6,6 +6,14 @@ import type {
   RoutingApprovalDecision,
   RoutingRecommendation,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "routing-development";
 
 export const INITIAL_ROUTING_RECORD: RoutingRecord = {
   id: "rtg-rec-000123",
@@ -305,59 +313,53 @@ export const INITIAL_ROUTING_RECORD: RoutingRecord = {
     { id: "log-07", timestamp: "25 Jun 2024 05:00 PM", user: "Sankaran R.", action: "Executive Approval", description: "Routing Review Board completed evaluation. Recommendation set to Release for Production.", stage: "Stage 4 - Executive Review" },
     { id: "log-08", timestamp: "01 Jul 2024 09:00 AM", user: "MES System", action: "Enterprise Manufacturing Sync", description: "Routing published to MES, APS, Shop Floor Execution, and ERP Database.", stage: "Enterprise Manufacturing Repository" },
   ],
-};
-
-let currentRoutingRecordState: RoutingRecord = { ...INITIAL_ROUTING_RECORD };
+} as any;
 
 export const getRoutingRecordFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: currentRoutingRecordState };
+  const result = withDefaults(INITIAL_ROUTING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result as any };
+  return { success: true, data: INITIAL_ROUTING_RECORD };
 });
 
 export const saveRoutingDraftFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { input: RoutingFormInput })
+  .validator((data: { record: Partial<RoutingRecord> }) => data)
   .handler(async ({ data }) => {
-    currentRoutingRecordState = {
-      ...currentRoutingRecordState,
-      ...data.input,
-      lastModifiedBy: "Current User",
-      lastModifiedDate: new Date().toLocaleString(),
-      workflowStatus: "Draft",
+    const current = withDefaults(INITIAL_ROUTING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? INITIAL_ROUTING_RECORD;
+    const record = {
+      ...base,
+      ...data.record,
+      projectName: (data.record as any).routingName ?? (base as any).routingName ?? "",
+      ownerName: (data.record as any).processOwner ?? (base as any).processOwner ?? "Rahul Sharma",
+      recordCode: (base as any).id ?? (base as any).routingId ?? "",
     };
-    return { success: true, data: currentRoutingRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitRoutingFn = createServerFn({ method: "POST" }).handler(async () => {
-  currentRoutingRecordState = {
-    ...currentRoutingRecordState,
-    workflowStatus: "In Review",
-    workflowStage: "Review by Review Board",
-    lastModifiedBy: "Current User",
-    lastModifiedDate: new Date().toLocaleString(),
-  };
-  return { success: true, data: currentRoutingRecordState };
+  const current = withDefaults(INITIAL_ROUTING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (current?.id) {
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    return { success: true, data: result as any };
+  }
+  return { success: true, data: INITIAL_ROUTING_RECORD };
 });
 
 export const addRoutingOperationFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as Omit<RoutingOperation, "id">)
+  .validator((data: { operation: RoutingOperation }) => data)
   .handler(async ({ data }) => {
-    const newOp: RoutingOperation = {
-      ...data,
-      id: `op-${Date.now()}`,
+    const current = withDefaults(INITIAL_ROUTING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? INITIAL_ROUTING_RECORD;
+    const operations = [...(base.operations ?? []), data.operation];
+    const record = {
+      ...base,
+      operations,
+      totalOperationsCount: operations.length,
+      projectName: base.routingName ?? "",
+      ownerName: base.processOwner ?? "Rahul Sharma",
+      recordCode: base.id ?? base.routingId ?? "",
     };
-    const updatedOps = [...currentRoutingRecordState.operations, newOp];
-    const newTotalSetup = updatedOps.reduce((acc, curr) => acc + curr.setupTimeMins, 0);
-    const newTotalCycle = updatedOps.reduce((acc, curr) => acc + curr.cycleTimeMins, 0);
-    const newTotalLabour = updatedOps.reduce((acc, curr) => acc + curr.labourCount, 0);
-
-    currentRoutingRecordState = {
-      ...currentRoutingRecordState,
-      operations: updatedOps,
-      totalOperationsCount: updatedOps.length,
-      totalSetupTimeMins: newTotalSetup,
-      totalCycleTimeMins: newTotalCycle,
-      totalLabourCount: newTotalLabour,
-      lastModifiedDate: new Date().toLocaleString(),
-    };
-
-    return { success: true, data: currentRoutingRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });

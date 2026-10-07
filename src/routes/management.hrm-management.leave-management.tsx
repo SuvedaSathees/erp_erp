@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { hrmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -127,13 +129,7 @@ export interface PendingApprovalItem {
   status: "Pending" | "Approved" | "Rejected";
 }
 
-const INITIAL_REQUESTS: LeaveRequestItem[] = [
-  { id: "1", leaveNumber: "LV-2024-00125", leaveType: "Annual Leave", fromDate: "20 May 2024", toDate: "24 May 2024", days: 5.0, status: "Submitted", approvedBy: "-" },
-  { id: "2", leaveNumber: "LV-2024-00102", leaveType: "Sick Leave", fromDate: "08 May 2024", toDate: "08 May 2024", days: 1.0, status: "Approved", approvedBy: "Arun Kumar" },
-  { id: "3", leaveNumber: "LV-2024-00088", leaveType: "Casual Leave", fromDate: "30 Apr 2024", toDate: "30 Apr 2024", days: 1.0, status: "Approved", approvedBy: "Arun Kumar" },
-  { id: "4", leaveNumber: "LV-2024-00071", leaveType: "Annual Leave", fromDate: "15 Apr 2024", toDate: "19 Apr 2024", days: 5.0, status: "Approved", approvedBy: "Arun Kumar" },
-  { id: "5", leaveNumber: "LV-2024-00045", leaveType: "Comp Off", fromDate: "05 Apr 2024", toDate: "05 Apr 2024", days: 1.0, status: "Approved", approvedBy: "Arun Kumar" },
-];
+const FALLBACK_REQUESTS: LeaveRequestItem[] = [];
 
 const INITIAL_APPROVALS: PendingApprovalItem[] = [
   { id: "APP-01", employee: "Priya Nair", leaveType: "Annual Leave", fromDate: "22 May 2024", days: 3.0, level: "Manager", status: "Pending" },
@@ -151,7 +147,41 @@ const LEAVE_BALANCES = [
 
 export default function LeaveManagementPage() {
   const [activeTab, setActiveTab] = useState<string>("request");
-  const [requests, setRequests] = useState<LeaveRequestItem[]>(INITIAL_REQUESTS);
+  const leaveQuery = useQuery({
+    queryKey: ["hrm", "leave-requests"],
+    queryFn: () => hrmManagementService.fetchLeaveRequests(),
+  });
+
+  const queryClient = useQueryClient();
+
+  const createLeaveMutation = useMutation({
+    mutationFn: (input: any) => hrmManagementService.createLeaveRequest(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["hrm"] });
+      toast.success("Leave request submitted successfully");
+    },
+    onError: () => toast.error("Failed to submit leave request"),
+  });
+
+  const updateLeaveMutation = useMutation({
+    mutationFn: (input: any) => hrmManagementService.updateLeaveRequest(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["hrm"] });
+      toast.success("Leave request updated successfully");
+    },
+    onError: () => toast.error("Failed to update leave request"),
+  });
+
+  const requests: LeaveRequestItem[] = (leaveQuery.data ?? []).map((r: any) => ({
+    id: r.id,
+    leaveNumber: r.leaveCode,
+    leaveType: r.leaveType,
+    fromDate: new Date(r.startDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+    toDate: new Date(r.endDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+    days: r.days,
+    status: (r.status === "Pending" ? "Submitted" : r.status) as LeaveRequestItem["status"],
+    approvedBy: r.approvedBy ?? "-",
+  }));
   const [approvals, setApprovals] = useState<PendingApprovalItem[]>(INITIAL_APPROVALS);
 
   // Form State (Matching Screenshot)
@@ -166,20 +196,10 @@ export default function LeaveManagementPage() {
 
   const handleSubmitLeave = (e: React.FormEvent) => {
     e.preventDefault();
-    const newReq: LeaveRequestItem = {
-      id: `${requests.length + 1}`,
-      leaveNumber: `LV-2024-001${requests.length + 26}`,
-      leaveType,
-      fromDate: "20 May 2024",
-      toDate: "24 May 2024",
-      days: 5.0,
-      status: "Submitted",
-      approvedBy: "-",
-    };
-    setRequests([newReq, ...requests]);
     toast.success("Leave request submitted successfully to Arun Kumar for approval", {
       description: "Balance validation passed. Attendance and calendar updated.",
     });
+    leaveQuery.refetch();
   };
 
   const handleApprove = (id: string, emp: string) => {
@@ -801,9 +821,9 @@ export default function LeaveManagementPage() {
                   <button
                     type="button"
                     onClick={() => setActiveTab("calendar")}
-                    className="w-full flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-indigo-600 hover:bg-indigo-50/40 text-slate-700 transition cursor-pointer text-[11px]"
+                    className="w-full flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-primary hover:bg-blue-50/40 text-slate-700 transition cursor-pointer text-[11px]"
                   >
-                    <div className="p-1 rounded-md bg-indigo-50 text-indigo-600"><CalendarDays className="h-3.5 w-3.5" /></div>
+                    <div className="p-1 rounded-md bg-blue-50 text-primary"><CalendarDays className="h-3.5 w-3.5" /></div>
                     <div className="text-left">
                       <div className="font-bold text-slate-900">Leave Calendar</div>
                       <div className="text-[9px] text-muted-foreground">View Team Calendar</div>
@@ -813,9 +833,9 @@ export default function LeaveManagementPage() {
                   <button
                     type="button"
                     onClick={() => setActiveTab("policies")}
-                    className="w-full flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-purple-600 hover:bg-purple-50/40 text-slate-700 transition cursor-pointer text-[11px]"
+                    className="w-full flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-primary hover:bg-blue-50/40 text-slate-700 transition cursor-pointer text-[11px]"
                   >
-                    <div className="p-1 rounded-md bg-purple-50 text-purple-600"><FileText className="h-3.5 w-3.5" /></div>
+                    <div className="p-1 rounded-md bg-blue-50 text-primary"><FileText className="h-3.5 w-3.5" /></div>
                     <div className="text-left">
                       <div className="font-bold text-slate-900">Leave Policy</div>
                       <div className="text-[9px] text-muted-foreground">View Leave Policies</div>
@@ -1036,7 +1056,7 @@ export default function LeaveManagementPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
                 <div className="text-muted-foreground text-[11px] font-semibold">Earned Comp Off Balance</div>
-                <div className="text-lg font-bold font-mono text-purple-700">2.0 Days Available</div>
+                <div className="text-lg font-bold font-mono text-primary">2.0 Days Available</div>
                 <div className="text-[11px] text-slate-500">Credited for Weekend Shift Deployment</div>
               </div>
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">

@@ -733,7 +733,7 @@ function MasterDataManagementPage() {
                           </span>
                         </td>
                         <td className="py-2 px-3 text-center">
-                          <span className={cn("rounded px-1.5 py-0.5 text-[9px] font-bold", attr.unique ? "bg-purple-500/10 text-purple-600" : "text-muted-foreground")}>
+                          <span className={cn("rounded px-1.5 py-0.5 text-[9px] font-bold", attr.unique ? "bg-primary/10 text-primary" : "text-muted-foreground")}>
                             {attr.unique ? "Unique" : "-"}
                           </span>
                         </td>
@@ -778,7 +778,7 @@ function MasterDataManagementPage() {
                 </div>
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Sync Latency</span>
-                  <div className="text-xl font-bold font-mono text-purple-600">&lt; 150 ms</div>
+                  <div className="text-xl font-bold font-mono text-primary">&lt; 150 ms</div>
                   <p className="text-[10px] text-muted-foreground">Cross-subsystem replication speed</p>
                 </div>
               </div>
@@ -957,7 +957,7 @@ function MasterDataManagementPage() {
             MAICW: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
             <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
             <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-            <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
+            <span className="text-blue-600 font-bold">C</span> (Calculated) |{" "}
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div>

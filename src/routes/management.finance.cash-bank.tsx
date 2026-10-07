@@ -49,6 +49,8 @@ import { PaginationFooter } from "@/components/erp/PaginationFooter";
 import { StatCard } from "@/components/erp/StatCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, type Column, EmptyState } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -63,11 +65,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { company, formatCurrency, formatSignedCurrency } from "@/lib/mock-data";
-import { loadCashBankDashboard } from "@/services/financialManagementService";
-import * as cashBankService from "@/services/cashBankService";
-import * as bankAccountService from "@/services/bankAccountService";
-import * as bankReconciliatorService from "@/services/bankReconciliatorService";
+import { company } from "@/lib/companyConfig";
+import { formatCurrency, formatSignedCurrency } from "@/lib/format";
+import {
+  cashBankService,
+  bankAccountService,
+  bankReconciliatorService,
+  loadCashBankDashboard,
+} from "@/services";
 import type {
   BankAccount,
   BankAccountType,
@@ -102,8 +107,32 @@ const TYPE_OPTIONS: { label: string; value: "All Types" | BankAccountType }[] = 
   { label: "Payroll", value: "Payroll" },
   { label: "Collections", value: "Collections" },
   { label: "Petty Cash", value: "Petty Cash" },
-  { label: "Savings", value: "Savings" },
 ];
+
+function CashBankSkeleton() {
+  return (
+    <div className="space-y-5">
+      {/* 5 KPI StatCards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-28 rounded-xl" />
+        ))}
+      </div>
+      {/* Main layout */}
+      <div className="grid gap-5 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_360px]">
+        <div className="space-y-5">
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-[420px] w-full rounded-xl" />
+        </div>
+        <div className="space-y-5">
+          <Skeleton className="h-64 w-full rounded-xl" />
+          <Skeleton className="h-64 w-full rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const STATUS_OPTIONS: { label: string; value: "All Statuses" | BankAccountStatus }[] = [
   { label: "All Statuses", value: "All Statuses" },
@@ -302,8 +331,15 @@ function CashBankPage() {
     return `${sign}${symbol}${v.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
+  const isError = dashboardQuery.isError || accountsQuery.isError;
   const isLoading = dashboardQuery.isLoading || accountsQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    dashboardQuery.error || accountsQuery.error,
+    "Failed to load cash and bank dashboard.",
+  );
 
   return (
     <AppShell
@@ -318,21 +354,17 @@ function CashBankPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />
-            ))}
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="h-[500px] animate-pulse rounded-xl bg-muted" />
-            <div className="space-y-6">
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-            </div>
-          </div>
-        </div>
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Cash & Bank Data"
+          error={dashboardQuery.error || accountsQuery.error}
+          onRetry={() => {
+            dashboardQuery.refetch();
+            accountsQuery.refetch();
+          }}
+        />
+      ) : isLoading || !data ? (
+        <CashBankSkeleton />
       ) : (
         <div className="space-y-5">
           {/* Headline KPIs */}
@@ -395,8 +427,8 @@ function CashBankPage() {
                 tone: "positive",
               }}
               icon={<Clock className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -557,7 +589,7 @@ function CashBankPage() {
                                   r.type === "Operating"
                                     ? "bg-blue-50 border-blue-200 text-blue-700"
                                     : r.type === "Payroll"
-                                      ? "bg-purple-50 border-purple-200 text-purple-700"
+                                      ? "bg-blue-50 border-blue-200 text-primary"
                                       : r.type === "Collections"
                                         ? "bg-green-50 border-green-200 text-green-700"
                                         : r.type === "Petty Cash"
@@ -640,51 +672,53 @@ function CashBankPage() {
                         ]}
                         mobileCard={(r) => (
                           <div className="space-y-2">
-                            <div className="flex justify-between items-start">
-                              <button
-                                onClick={() => setDetailAccount(r)}
-                                className="font-semibold text-foreground hover:text-primary"
-                              >
-                                {r.name}
-                              </button>
-                              <span className="font-bold">
+                            <div className="flex justify-between items-start gap-2">
+                              <div>
+                                <button
+                                  onClick={() => setDetailAccount(r)}
+                                  className="font-semibold text-foreground hover:text-primary text-left text-sm"
+                                >
+                                  {r.name}
+                                </button>
+                                <span className="text-xs text-muted-foreground block">
+                                  {r.bankName} • {r.type}
+                                </span>
+                              </div>
+                              <StatusBadge status={r.status} />
+                            </div>
+                            <div className="flex justify-between items-center text-xs">
+                              <span className="font-mono text-muted-foreground">{r.accountNo}</span>
+                              <span className="font-bold tabular text-sm text-foreground">
                                 {formatCurrencyLocal(r.currentBalance, r.currency)}
                               </span>
                             </div>
-                            <div className="flex justify-between text-xs text-muted-foreground">
-                              <span>
-                                {r.bankName} • {r.type}
-                              </span>
-                              <span>{r.accountNo}</span>
-                            </div>
-                            <div className="flex justify-between items-center pt-1 border-t border-border">
-                              <span
-                                className={`text-xs ${r.status === "Active" ? "text-green-600" : "text-gray-500"}`}
+                            <div className="flex justify-end gap-2 pt-2 border-t border-border/50">
+                              <ErpButton
+                                variant="outline"
+                                size="xs"
+                                onClick={() => setDetailAccount(r)}
                               >
-                                {r.status}
-                              </span>
-                              <div className="flex gap-2">
-                                <ErpButton
-                                  variant="outline"
-                                  size="xs"
-                                  onClick={() => setDetailAccount(r)}
-                                >
-                                  Details
-                                </ErpButton>
-                                <ErpButton
-                                  variant="outline"
-                                  size="xs"
-                                  onClick={() => {
-                                    setReconcileAccountNo(r.accountNo);
-                                    setReconcileOpen(true);
-                                  }}
-                                >
-                                  Reconcile
-                                </ErpButton>
-                              </div>
+                                View Details
+                              </ErpButton>
+                              <ErpButton
+                                variant="outline"
+                                size="xs"
+                                onClick={() => {
+                                  setReconcileAccountNo(r.accountNo);
+                                  setReconcileOpen(true);
+                                }}
+                              >
+                                Reconcile
+                              </ErpButton>
                             </div>
                           </div>
                         )}
+                        empty={
+                          <EmptyState
+                            title="No bank accounts found"
+                            description="No accounts matched your search and filter criteria."
+                          />
+                        }
                       />
                     </div>
 
@@ -904,22 +938,30 @@ function CashBankPage() {
                           ]}
                           mobileCard={(r: CashTransaction) => (
                             <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="font-semibold text-foreground">
-                                  {r.description}
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground block text-sm">
+                                    {r.description}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {r.category}
+                                  </span>
+                                </div>
+                                <StatusBadge status={r.status} />
+                              </div>
+                              <div className="flex justify-between items-center text-xs">
+                                <span className="font-mono text-muted-foreground">
+                                  {r.reference} • <span className="tabular">{r.date}</span>
                                 </span>
                                 <span
-                                  className={`font-bold ${r.type === "Inflow" ? "text-green-600" : "text-foreground"}`}
+                                  className={`font-bold tabular text-sm ${r.type === "Inflow" ? "text-green-600" : "text-foreground"}`}
                                 >
                                   {r.type === "Inflow" ? "+" : "-"}
                                   {formatCurrency(r.amount)}
                                 </span>
                               </div>
-                              <div className="flex justify-between text-xs text-muted-foreground">
-                                <span>
-                                  {r.date} • {r.reference}
-                                </span>
-                                <span>{r.category}</span>
+                              <div className="text-[11px] text-muted-foreground font-mono">
+                                A/C: {r.bankAccountNo}
                               </div>
                             </div>
                           )}
@@ -1032,10 +1074,10 @@ function CashBankPage() {
                         ]}
                         mobileCard={(r: BankAccount) => (
                           <div className="space-y-2">
-                            <div className="flex justify-between items-start">
+                            <div className="flex justify-between items-start gap-2">
                               <div>
                                 <div className="font-semibold text-foreground">{r.name}</div>
-                                <div className="text-xs text-muted-foreground">{r.accountNo}</div>
+                                <div className="text-xs text-muted-foreground">{r.bankName} • {r.accountNo}</div>
                               </div>
                               <span
                                 className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
@@ -1047,16 +1089,36 @@ function CashBankPage() {
                                 {r.reconciliationStatus}
                               </span>
                             </div>
-                            <div className="flex justify-between pt-2 border-t border-border text-xs">
-                              <span className="text-muted-foreground">
-                                Unreconciled Difference:
-                              </span>
-                              <span
-                                className={`font-bold ${r.unreconciledAmount > 0 ? "text-destructive" : "text-green-600"}`}
-                              >
-                                {formatCurrencyLocal(r.unreconciledAmount, r.currency)}
-                              </span>
+                            <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-border/50">
+                              <div>
+                                <span className="text-muted-foreground block">Ledger Balance</span>
+                                <span className="font-semibold tabular text-foreground">
+                                  {formatCurrencyLocal(r.currentBalance, r.currency)}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground block">Unreconciled</span>
+                                <span
+                                  className={`font-bold tabular ${r.unreconciledAmount > 0 ? "text-destructive" : "text-green-600"}`}
+                                >
+                                  {formatCurrencyLocal(r.unreconciledAmount, r.currency)}
+                                </span>
+                              </div>
                             </div>
+                            {r.reconciliationStatus !== "Reconciled" && (
+                              <div className="flex justify-end pt-1">
+                                <ErpButton
+                                  variant="outline"
+                                  size="xs"
+                                  onClick={() => {
+                                    setReconcileAccountNo(r.accountNo);
+                                    setReconcileOpen(true);
+                                  }}
+                                >
+                                  Reconcile
+                                </ErpButton>
+                              </div>
+                            )}
                           </div>
                         )}
                       />
@@ -1141,15 +1203,21 @@ function CashBankPage() {
                           ]}
                           mobileCard={(r: ChequeRecord) => (
                             <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="font-semibold text-foreground">{r.payee}</span>
-                                <span className="font-bold">{formatCurrency(r.amount)}</span>
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground block">{r.payee}</span>
+                                  <span className="font-mono text-xs text-muted-foreground">{r.chequeNo}</span>
+                                </div>
+                                <StatusBadge status={r.status} />
                               </div>
-                              <div className="flex justify-between text-xs text-muted-foreground">
-                                <span>
-                                  {r.chequeNo} • {r.issueDate}
+                              <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground tabular">{r.issueDate}</span>
+                                <span className="font-bold tabular text-sm text-foreground">
+                                  {formatCurrency(r.amount)}
                                 </span>
-                                <span>{r.status}</span>
+                              </div>
+                              <div className="text-[11px] text-muted-foreground font-mono">
+                                A/C: {r.bankAccountNo}
                               </div>
                             </div>
                           )}
@@ -1236,15 +1304,21 @@ function CashBankPage() {
                           ]}
                           mobileCard={(r: DepositRecord) => (
                             <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="font-semibold text-foreground">{r.source}</span>
-                                <span className="font-bold">{formatCurrency(r.amount)}</span>
+                              <div className="flex justify-between items-start gap-2">
+                                <div>
+                                  <span className="font-semibold text-foreground block">{r.source}</span>
+                                  <span className="font-mono text-xs text-muted-foreground">{r.depositNo}</span>
+                                </div>
+                                <StatusBadge status={r.status} />
                               </div>
-                              <div className="flex justify-between text-xs text-muted-foreground">
-                                <span>
-                                  {r.depositNo} • {r.depositDate}
+                              <div className="flex justify-between items-center text-xs pt-1 border-t border-border/50">
+                                <span className="text-muted-foreground tabular">{r.depositDate}</span>
+                                <span className="font-bold tabular text-sm text-foreground">
+                                  {formatCurrency(r.amount)}
                                 </span>
-                                <span>{r.status}</span>
+                              </div>
+                              <div className="text-[11px] text-muted-foreground font-mono">
+                                A/C: {r.bankAccountNo}
                               </div>
                             </div>
                           )}

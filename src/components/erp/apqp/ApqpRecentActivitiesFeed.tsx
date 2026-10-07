@@ -16,7 +16,7 @@ export const ApqpRecentActivitiesFeed: React.FC<ApqpRecentActivitiesFeedProps> =
       <div>
         <div className="flex justify-between items-center pb-2 border-b border-border mb-2.5">
           <div className="flex items-center gap-1.5">
-            <Activity className="w-4 h-4 text-purple-500" />
+            <Activity className="w-4 h-4 text-blue-600" />
             <h2 className="font-bold text-foreground text-xs">Recent Activities</h2>
           </div>
         </div>
@@ -24,7 +24,7 @@ export const ApqpRecentActivitiesFeed: React.FC<ApqpRecentActivitiesFeedProps> =
         <div className="space-y-2.5">
           {activities.map((act) => (
             <div key={act.id} className="flex items-start gap-2.5">
-              <div className="w-2 h-2 rounded-full bg-purple-500 mt-1 shrink-0" />
+              <div className="w-2 h-2 rounded-full bg-blue-500 mt-1 shrink-0" />
               <div className="flex-1 min-w-0">
                 <div className="font-semibold text-foreground text-[11px] truncate">
                   {act.action}

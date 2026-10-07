@@ -821,7 +821,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                       type: "Embedded Systems Development",
                       id: rec.linkedEmbeddedDev.code,
                       title: "ESP32 Charging Controller Firmware Platform",
-                      route: "/development/research-innovation/embedded-systems/new",
+                      route: "/development/research-innovation/embedded-systems-development/new",
                     })
                   }
                   className="font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 text-left truncate cursor-pointer font-mono"

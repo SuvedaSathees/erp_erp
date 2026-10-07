@@ -1,8 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
-import type {
-  ManufacturingExcellenceRecord,
-  ExcellenceFormInput,
-} from "@/services/types";
+import type { ManufacturingExcellenceRecord } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "manufacturing-excellence";
 
 export const INITIAL_MANUFACTURING_EXCELLENCE_RECORD: ManufacturingExcellenceRecord = {
   id: "mex-rec-2024-00045",
@@ -231,90 +238,51 @@ export const INITIAL_MANUFACTURING_EXCELLENCE_RECORD: ManufacturingExcellenceRec
     { id: "aud-mex-3", timestamp: "01 Jun 2024 02:15 PM", user: "Sneha Iyer", action: "Quality & ESG Integrated", details: "OEE, FPY, and carbon emission metrics synced." },
     { id: "aud-mex-4", timestamp: "17 Jun 2024 03:45 PM", user: "Rahul Sharma", action: "Submitted for Review", details: "Initiative submitted to Manufacturing Excellence Review Board." },
   ],
-};
-
-let currentRecord: ManufacturingExcellenceRecord = { ...INITIAL_MANUFACTURING_EXCELLENCE_RECORD };
+} as any;
 
 export const getExcellenceRecordFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: currentRecord };
+  const result = withDefaults(INITIAL_MANUFACTURING_EXCELLENCE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
+  return { success: true, data: INITIAL_MANUFACTURING_EXCELLENCE_RECORD };
 });
 
 export const saveExcellenceDraftFn = createServerFn({ method: "POST" })
-  .validator((data: { input: ExcellenceFormInput }) => data)
+  .validator((data: { input: any }) => data)
   .handler(async ({ data }) => {
-    currentRecord = {
-      ...currentRecord,
+    const record = {
       ...data.input,
-      lastModifiedDate: new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }) + " " + new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      projectName: data.input.initiativeTitle ?? data.input.projectName ?? "",
+      ownerName: data.input.processOwner ?? data.input.ownerName ?? "",
+      recordCode: data.input.manufacturingExcellenceId ?? data.input.id ?? "",
     };
-
-    // Calculate Overall Manufacturing Excellence Score
-    const avgScore = Math.round(
-      (currentRecord.operationalExcellenceScore +
-        currentRecord.digitalExcellenceScore +
-        currentRecord.qualityExcellenceScore +
-        currentRecord.sustainabilityScore +
-        currentRecord.aiExcellenceScore) / 5
-    );
-    currentRecord.overallManufacturingExcellenceScore = avgScore;
-
-    return { success: true, data: currentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
 export const submitExcellenceReviewFn = createServerFn({ method: "POST" }).handler(async () => {
-  currentRecord.workflowStatus = "Under Review";
-  currentRecord.workflowStage = "Performance Monitoring";
-  currentRecord.auditTrail.unshift({
-    id: `aud-${Date.now()}`,
-    timestamp: new Date().toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }) + " " + new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-    user: "Current User",
-    action: "Submitted for Review",
-    details: "Initiative submitted to Manufacturing Excellence Review Board authorization.",
-  });
-  return { success: true, data: currentRecord };
+  const current = withDefaults(INITIAL_MANUFACTURING_EXCELLENCE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (current?.id) {
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    return { success: true, data: result };
+  }
+  return { success: true, data: INITIAL_MANUFACTURING_EXCELLENCE_RECORD };
 });
 
 export const updateExcellenceDecisionFn = createServerFn({ method: "POST" })
-  .validator((data: { decision: "Approved" | "Approved with Conditions" | "Revision Required" | "Rejected"; comments: string }) => data)
+  .validator((data: { decision: string; comments: string }) => data)
   .handler(async ({ data }) => {
-    currentRecord.approvalDecision = data.decision;
-    currentRecord.reviewComments = data.comments;
-    currentRecord.approvalDate = new Date().toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-
-    if (data.decision === "Approved") {
-      currentRecord.workflowStatus = "Approved";
-      currentRecord.workflowStage = "Completed";
-    } else if (data.decision === "Approved with Conditions") {
-      currentRecord.workflowStatus = "Approved with Conditions";
-    } else if (data.decision === "Revision Required") {
-      currentRecord.workflowStatus = "Revision Required";
-    } else {
-      currentRecord.workflowStatus = "Rejected";
+    const current = withDefaults(INITIAL_MANUFACTURING_EXCELLENCE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await reviewDevelopmentFn({
+        data: {
+          id: current.id,
+          decision: data.decision,
+          comments: data.comments,
+          reviewerRole: "Excellence Manager",
+          reviewerName: "Current User",
+        },
+      });
+      return { success: true, data: result };
     }
-
-    currentRecord.auditTrail.unshift({
-      id: `aud-${Date.now()}`,
-      timestamp: new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }) + " " + new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-      user: "Current User",
-      action: `Decision: ${data.decision}`,
-      details: data.comments || `Review decision updated to ${data.decision}.`,
-    });
-
-    return { success: true, data: currentRecord };
+    return { success: true, data: INITIAL_MANUFACTURING_EXCELLENCE_RECORD };
   });

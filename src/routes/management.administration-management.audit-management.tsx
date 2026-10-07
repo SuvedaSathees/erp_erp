@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { fetchAuditLogs , createAuditLog } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { AdminManagementTabBar } from "@/components/erp/AdminManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -46,6 +49,35 @@ const AUDIT_TIMELINE_DATA = [
 ];
 
 function AuditManagementPage() {
+  const auditQuery = useQuery({
+    queryKey: ["admin", "audit-logs"],
+    queryFn: () => fetchAuditLogs(),
+  });
+
+  const queryClient = useQueryClient();
+
+  const createAuditLogMutation = useMutation({
+    mutationFn: (input: any) => createAuditLog(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin"] });
+      toast.success("Audit log entry created");
+    },
+    onError: () => toast.error("Failed to create audit log entry"),
+  });
+
+  const dbTimeline = (auditQuery.data ?? []).map((a: any) => ({
+    id: a.id,
+    time: new Date(a.timestamp).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+    type: a.module ?? "System",
+    action: a.action,
+    by: a.performedBy,
+    module: a.module ?? "",
+    record: a.entityId ?? a.entity ?? "",
+    status: "Success",
+    desc: a.description ?? "",
+    badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+  }));
+
   const [activeTab, setActiveTab] = useState<"overview" | "changes" | "security" | "timeline">("overview");
 
   // Master Form State
@@ -74,7 +106,7 @@ function AuditManagementPage() {
 
   const [filterModule, setFilterModule] = useState("ALL");
   const [showExportModal, setShowExportModal] = useState(false);
-  const [timelineLogs] = useState(AUDIT_TIMELINE_DATA);
+  const timelineLogs = dbTimeline.length > 0 ? dbTimeline : AUDIT_TIMELINE_DATA;
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -361,7 +393,7 @@ function AuditManagementPage() {
               <div>
                 <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
                   <span>Timestamp</span>
-                  <span className="text-[10px] font-bold text-purple-500 bg-purple-500/10 px-1 rounded">C</span>
+                  <span className="text-[10px] font-bold text-blue-600 bg-primary/10 px-1 rounded">C</span>
                 </label>
                 <input
                   type="text"
@@ -374,7 +406,7 @@ function AuditManagementPage() {
               <div>
                 <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
                   <span>Source</span>
-                  <span className="text-[10px] font-bold text-purple-500 bg-purple-500/10 px-1 rounded">C</span>
+                  <span className="text-[10px] font-bold text-blue-600 bg-primary/10 px-1 rounded">C</span>
                 </label>
                 <select
                   value={auditMaster.source}
@@ -388,7 +420,7 @@ function AuditManagementPage() {
               <div>
                 <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
                   <span>IP Address</span>
-                  <span className="text-[10px] font-bold text-purple-500 bg-purple-500/10 px-1 rounded">C</span>
+                  <span className="text-[10px] font-bold text-blue-600 bg-primary/10 px-1 rounded">C</span>
                 </label>
                 <input
                   type="text"
@@ -414,7 +446,7 @@ function AuditManagementPage() {
               <div>
                 <label className="text-xs font-medium text-muted-foreground flex items-center justify-between">
                   <span>Session ID</span>
-                  <span className="text-[10px] font-bold text-purple-500 bg-purple-500/10 px-1 rounded">C</span>
+                  <span className="text-[10px] font-bold text-blue-600 bg-primary/10 px-1 rounded">C</span>
                 </label>
                 <input
                   type="text"
@@ -830,7 +862,7 @@ function AuditManagementPage() {
             MAICW: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
             <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
             <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-            <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
+            <span className="text-blue-600 font-bold">C</span> (Calculated) |{" "}
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div>

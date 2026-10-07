@@ -6,35 +6,22 @@ import type {
   ElectronicsDesignStage,
   ElectronicsDesignStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Electronics Design — Server Functions & Workflow Engine
-   ---------------------------------------------------------------------------
-   Manages the 4-stage Electronics Design lifecycle:
-     Stage 1: Electronic System Architecture (define functional blocks, circuit architecture & embedded interfaces)
-     Stage 2: Component Selection & Circuit Design (component selection, schematic design & hardware interface validation)
-     Stage 3: Verification & Simulation (circuit/signal/power integrity simulation & ERC/compliance verification)
-     Stage 4: Engineering Review (Review Board decision: Approved / Approved with Conditions / Revision Required / Rejected)
-
-   Upon 'Approved' decision:
-     - Auto-creates & links downstream PCB Layout Design project (PCB-2024-0089)
-       and surfaces its ID to proceed to PCB Layout Design.
-   =========================================================================== */
+const MODULE_TYPE = "electronics-design";
 
 export function calculateElectronicsDesignScores(input: Partial<ElectronicsDesignFormInput>) {
-  // 1. Architecture Readiness (0-100)
   const architectureReadiness = 88;
-
-  // 2. Circuit Readiness (0-100)
   const circuitReadiness = input.estimatedLayerCount && input.estimatedLayerCount >= 6 ? 85 : 82;
-
-  // 3. Hardware Interface Score (0-100)
   const hardwareInterfaceScore = input.hardwareInterfaceScore ?? 87;
-
-  // 4. Reliability Score (0-100)
   const reliabilityScore = input.reliabilityScore ?? 86;
 
-  // Overall Electronics Design Score (/100)
   const overallElectronicsDesignScore = Math.round(
     architectureReadiness * 0.25 +
       circuitReadiness * 0.25 +
@@ -42,7 +29,6 @@ export function calculateElectronicsDesignScores(input: Partial<ElectronicsDesig
       reliabilityScore * 0.25
   );
 
-  // AI Assessment Sub-scores (single source of truth with Panel 9)
   const aiDesignQualityScore = Math.min(99, Math.max(75, Math.round(overallElectronicsDesignScore * 1.02)));
   const aiComponentOptimization = 85;
   const aiCircuitReview = 87;
@@ -51,7 +37,6 @@ export function calculateElectronicsDesignScores(input: Partial<ElectronicsDesig
   const aiReliabilityPrediction = 88;
   const aiOverallElectronicsScore = overallElectronicsDesignScore;
 
-  // Key Highlights dynamic list
   const highlights: string[] = [];
   highlights.push("Optimized component selection reduced cost by 8%");
   highlights.push("High-speed signal design up to 500 MHz");
@@ -336,7 +321,7 @@ const DEFAULT_ELECTRONICS_DESIGN_INPUT: ElectronicsDesignFormInput = {
   approvalDate: "2024-06-20",
 };
 
-let currentElectronicsDesignRecord: ElectronicsDesignRecord = {
+const DEFAULT_MOCK_RECORD: ElectronicsDesignRecord = {
   id: "en-rec-2024-0017",
   designId: "EN-2024-0017",
   formCode: "EDF-2024-25",
@@ -436,228 +421,86 @@ let currentElectronicsDesignRecord: ElectronicsDesignRecord = {
       status: "Under Review",
     },
   ],
-};
+} as any;
 
-/** Get current Electronics Design Record */
 export const getElectronicsDesignFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: ElectronicsDesignRecord }> => {
-    return { success: true, data: currentElectronicsDesignRecord };
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   }
 );
 
-/** Save Draft */
 export const saveElectronicsDesignDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<ElectronicsDesignFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: ElectronicsDesignRecord }> => {
-    const updatedInput = { ...currentElectronicsDesignRecord.input, ...data.input };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_MOCK_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateElectronicsDesignScores(updatedInput);
-
-    currentElectronicsDesignRecord = {
-      ...currentElectronicsDesignRecord,
+    const record = {
+      ...base,
       input: updatedInput,
       ...scores,
-      lastUpdated: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      lastModified: new Date().toISOString(),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rohit Nair",
-          event: "Saved draft updates to Electronics Design Form",
-          stage: currentElectronicsDesignRecord.currentStage,
-          status: currentElectronicsDesignRecord.status,
-        },
-        ...currentElectronicsDesignRecord.auditTrail,
-      ],
+      projectName: (base as any).designProjectName ?? "",
+      ownerName: (base as any).electronicsEngineerName ?? "Rohit Nair",
+      recordCode: (base as any).id ?? (base as any).designId ?? "",
     };
-
-    return { success: true, data: currentElectronicsDesignRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Advance Stage */
 export const advanceElectronicsDesignStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: ElectronicsDesignStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: ElectronicsDesignRecord }> => {
-    const stageMap: Record<ElectronicsDesignStage, { label: string; stageNumber: number }> = {
-      electronic_system_architecture: {
-        label: "Stage 1: Electronic System Architecture",
-        stageNumber: 1,
-      },
-      component_selection_circuit_design: {
-        label: "Stage 2: Component Selection & Circuit Design",
-        stageNumber: 2,
-      },
-      verification_simulation: {
-        label: "Stage 3: Verification & Simulation",
-        stageNumber: 3,
-      },
-      engineering_review: {
-        label: "Stage 4: Engineering Review",
-        stageNumber: 4,
-      },
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? DEFAULT_MOCK_RECORD;
+    const stageMap: Record<string, { label: string; stageNumber: number }> = {
+      electronic_system_architecture: { label: "Stage 1: Electronic System Architecture", stageNumber: 1 },
+      component_selection_circuit_design: { label: "Stage 2: Component Selection & Circuit Design", stageNumber: 2 },
+      verification_simulation: { label: "Stage 3: Verification & Simulation", stageNumber: 3 },
+      engineering_review: { label: "Stage 4: Engineering Review", stageNumber: 4 },
     };
-
     const target = stageMap[data.targetStage];
-
-    currentElectronicsDesignRecord = {
-      ...currentElectronicsDesignRecord,
+    const record = {
+      ...base,
       currentStage: data.targetStage,
       currentStageLabel: target.label,
-      stages: currentElectronicsDesignRecord.stages.map((stg) => {
+      stages: (base.stages ?? []).map((stg: any) => {
         if (stg.stageNumber < target.stageNumber) return { ...stg, status: "completed" };
         if (stg.stageNumber === target.stageNumber) return { ...stg, status: "in_progress" };
         return { ...stg, status: "pending" };
       }),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rohit Nair",
-          event: `Advanced to ${target.label}`,
-          stage: data.targetStage,
-          status: currentElectronicsDesignRecord.status,
-        },
-        ...currentElectronicsDesignRecord.auditTrail,
-      ],
+      projectName: base.designProjectName ?? "",
+      ownerName: base.electronicsEngineerName ?? "Rohit Nair",
+      recordCode: base.id ?? base.designId ?? "",
     };
-
-    return { success: true, data: currentElectronicsDesignRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Submit for Review */
 export const submitElectronicsDesignFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: ElectronicsDesignRecord }> => {
-    currentElectronicsDesignRecord = {
-      ...currentElectronicsDesignRecord,
-      status: "Under Review",
-      currentStage: "engineering_review",
-      currentStageLabel: "Stage 4: Engineering Review",
-      stages: currentElectronicsDesignRecord.stages.map((stg) =>
-        stg.id === "engineering_review" ? { ...stg, status: "in_progress" } : { ...stg, status: "completed" }
-      ),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rohit Nair",
-          event: "Submitted Electronics Design for Stage 4 Engineering Review Board",
-          stage: "engineering_review",
-          status: "Under Review",
-        },
-        ...currentElectronicsDesignRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentElectronicsDesignRecord };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   });
 
-/** Review Board Decision */
 export const reviewElectronicsDesignFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: ElectronicsDesignApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: ElectronicsDesignApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: ElectronicsDesignRecord }> => {
-    let newStatus: ElectronicsDesignStatus = "Under Review";
-    let linkedPcbId: string | null = currentElectronicsDesignRecord.linkedPcbLayoutId ?? null;
-    let eventMessage = "";
-
-    if (data.decision === "Approved") {
-      newStatus = "Approved";
-      linkedPcbId = "PCB-2024-0089";
-      eventMessage = "Review Board Approved Electronics Design. Auto-created downstream PCB Layout Design project PCB-2024-0089. Electronics Engineer notified: 'Proceed to PCB Layout Design'.";
-    } else if (data.decision === "Approved with Conditions") {
-      newStatus = "Approved with Conditions";
-      eventMessage = "Review Board Approved with Conditions. Electronics Engineer notified: 'Improve Electronics Design'. Record remains editable.";
-    } else if (data.decision === "Revision Required") {
-      newStatus = "Revision Required";
-      eventMessage = "Review Board requested revisions. Electronics Engineer notified: 'Reassess Circuit & Component Selection'. Returned to Verification & Simulation stage.";
-    } else if (data.decision === "Rejected") {
-      newStatus = "Rejected";
-      eventMessage = "Review Board Rejected Electronics Design. Record archived. Electronics Engineer notified: 'Close Electronics Design Project'.";
-    }
-
-    const updatedReviewers = currentElectronicsDesignRecord.input.reviewers.map((rev) => {
-      if (rev.role === "Electronics Engineer" || rev.role === "Engineering Manager") {
-        return {
-          ...rev,
-          decision: data.decision === "Approved" || data.decision === "Approved with Conditions" ? ("Approved" as const) : ("Rejected" as const),
-          status: data.decision,
-          date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-        };
-      }
-      return rev;
-    });
-
-    currentElectronicsDesignRecord = {
-      ...currentElectronicsDesignRecord,
-      status: newStatus,
-      approvalDecision: data.decision,
-      approvalDate: new Date().toLocaleDateString("en-CA"),
-      reviewComments: data.comments || "",
-      linkedPcbLayoutId: linkedPcbId,
-      stages: currentElectronicsDesignRecord.stages.map((stg) => {
-        if (data.decision === "Approved" || data.decision === "Approved with Conditions") {
-          return { ...stg, status: "completed" };
-        }
-        if (data.decision === "Revision Required" && stg.id === "engineering_review") {
-          return { ...stg, status: "pending" };
-        }
-        return stg;
-      }),
-      currentStage:
-        data.decision === "Revision Required"
-          ? "verification_simulation"
-          : "engineering_review",
-      input: {
-        ...currentElectronicsDesignRecord.input,
-        approvalDecision: data.decision,
-        reviewComments: data.comments || "",
-        approvalDate: new Date().toLocaleDateString("en-CA"),
-        reviewers: updatedReviewers,
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Engineering Review Board",
+        reviewerName: "Review Board",
       },
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Lead Electronics Engineer (Review Board)",
-          event: eventMessage,
-          stage: currentElectronicsDesignRecord.currentStage,
-          status: newStatus,
-        },
-        ...currentElectronicsDesignRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentElectronicsDesignRecord };
+    });
+    return { success: true, data: result as any };
   });

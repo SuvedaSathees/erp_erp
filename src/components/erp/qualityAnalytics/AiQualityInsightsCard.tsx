@@ -23,7 +23,7 @@ export function AiQualityInsightsCard({ insights }: AiQualityInsightsCardProps) 
       case "success":
         return <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />;
       case "root-cause":
-        return <Settings2 className="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0" />;
+        return <Settings2 className="w-4 h-4 text-primary dark:text-blue-400 shrink-0" />;
       case "recommendation":
         return <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />;
       default:
@@ -38,7 +38,7 @@ export function AiQualityInsightsCard({ insights }: AiQualityInsightsCardProps) 
           Quality Analytics Insights (AI)
         </CardTitle>
 
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-primary dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
           <Sparkles className="w-3 h-3" />
           AI Powered
         </span>

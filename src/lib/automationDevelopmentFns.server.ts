@@ -1,5 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { AutomationDevelopment } from "@/lib/automation-development/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "automation-development";
 
 export const MOCK_AUTOMATION_RECORD_45: AutomationDevelopment = {
   id: "APD-2024-00045",
@@ -249,31 +257,33 @@ export const MOCK_AUTOMATION_RECORD_45: AutomationDevelopment = {
     { id: "at-ap-03", timestamp: "10 Jun 2024 11:00 AM", user: "Neha Reddy", action: "FAT Completed", description: "Factory Acceptance Test executed successfully at vendor facility." },
     { id: "at-ap-04", timestamp: "17 Jun 2024 04:30 PM", user: "Rahul Sharma", action: "Submitted for Approval", description: "Submitted package for executive review." },
   ],
-};
-
-let mockAutomationDatabase: Record<string, AutomationDevelopment> = {
-  "APD-2024-00045": MOCK_AUTOMATION_RECORD_45,
-};
+} as any;
 
 export const getAutomationDevelopmentFn = createServerFn({ method: "GET" })
   .validator((data?: { id?: string }) => data)
   .handler(async ({ data }) => {
-    const id = data?.id || "APD-2024-00045";
-    const record = mockAutomationDatabase[id] || MOCK_AUTOMATION_RECORD_45;
-    return { success: true, data: record };
+    const result = withDefaults(MOCK_AUTOMATION_RECORD_45, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE, id: data?.id } }));
+    if (result) return { success: true, data: result };
+    return { success: true, data: MOCK_AUTOMATION_RECORD_45 };
   });
 
 export const listAutomationDevelopmentFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: Object.values(mockAutomationDatabase) };
+  const results = await listDevelopmentRecordsFn({ data: { moduleType: MODULE_TYPE } });
+  if (results && results.length > 0) {
+    return { success: true, data: results.map((r: any) => withDefaults(MOCK_AUTOMATION_RECORD_45, r)) };
+  }
+  return { success: true, data: [MOCK_AUTOMATION_RECORD_45] };
 });
 
 export const saveAutomationDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data: { record: AutomationDevelopment }) => data)
   .handler(async ({ data }) => {
-    const updated = {
+    const record = {
       ...data.record,
-      lastUpdated: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      projectName: data.record.automationProjectTitle ?? (data.record as any).projectName ?? "",
+      ownerName: data.record.automationEngineer ?? (data.record as any).ownerName ?? "",
+      recordCode: data.record.id ?? data.record.projectNumber ?? "",
     };
-    mockAutomationDatabase[updated.id] = updated;
-    return { success: true, data: updated };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });

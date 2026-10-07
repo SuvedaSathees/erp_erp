@@ -3,6 +3,15 @@ import type {
   SmartFactoryDevelopmentRecord,
   SmartFactoryFormInput,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "smart-factory";
 
 export const INITIAL_SMART_FACTORY_RECORD: SmartFactoryDevelopmentRecord = {
   id: "sf-rec-2024-00015",
@@ -221,90 +230,54 @@ export const INITIAL_SMART_FACTORY_RECORD: SmartFactoryDevelopmentRecord = {
     { id: "aud-3", timestamp: "01 Jun 2024 02:15 PM", user: "Arun Kumar", action: "Systems Integrated", details: "MES, ERP, and Digital Twin status updated to connected." },
     { id: "aud-4", timestamp: "17 Jun 2024 03:45 PM", user: "Rahul Sharma", action: "Submitted for Review", details: "Record submitted for executive review board authorization." },
   ],
-};
-
-let currentRecord: SmartFactoryDevelopmentRecord = { ...INITIAL_SMART_FACTORY_RECORD };
+} as any;
 
 export const getSmartFactoryRecordFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: currentRecord };
+  const result = withDefaults(INITIAL_SMART_FACTORY_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result as any };
+  return { success: true, data: INITIAL_SMART_FACTORY_RECORD };
 });
 
 export const saveSmartFactoryDraftFn = createServerFn({ method: "POST" })
-  .validator((data: { input: SmartFactoryFormInput }) => data)
+  .validator((data: { record: Partial<SmartFactoryDevelopmentRecord> }) => data)
   .handler(async ({ data }) => {
-    currentRecord = {
-      ...currentRecord,
-      ...data.input,
-      lastModifiedDate: new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }) + " " + new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+    const current = withDefaults(INITIAL_SMART_FACTORY_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? INITIAL_SMART_FACTORY_RECORD;
+    const record = {
+      ...base,
+      ...data.record,
+      projectName: (data.record as any).smartFactoryProjectTitle ?? (base as any).smartFactoryProjectTitle ?? "",
+      ownerName: (data.record as any).projectManager ?? (base as any).projectManager ?? "Vikram Singh",
+      recordCode: (base as any).id ?? (base as any).smartFactoryProjectId ?? "",
     };
-
-    // Auto calculate overall readiness score
-    const avgScore = Math.round(
-      (currentRecord.infrastructureReadinessScore +
-        currentRecord.integrationScore +
-        currentRecord.aiReadinessScore +
-        currentRecord.automationScore +
-        currentRecord.operationalScore +
-        currentRecord.validationScore) / 6
-    );
-    currentRecord.overallSmartFactoryReadiness = avgScore;
-
-    return { success: true, data: currentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitSmartFactoryReviewFn = createServerFn({ method: "POST" }).handler(async () => {
-  currentRecord.workflowStatus = "Under Review";
-  currentRecord.workflowStage = "Testing & Validation";
-  currentRecord.auditTrail.unshift({
-    id: `aud-${Date.now()}`,
-    timestamp: new Date().toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }) + " " + new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-    user: "Current User",
-    action: "Submitted for Review",
-    details: "Project submitted to Smart Factory Executive Review Board.",
-  });
-  return { success: true, data: currentRecord };
+  const current = withDefaults(INITIAL_SMART_FACTORY_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (current?.id) {
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    return { success: true, data: result as any };
+  }
+  return { success: true, data: INITIAL_SMART_FACTORY_RECORD };
 });
 
 export const updateSmartFactoryDecisionFn = createServerFn({ method: "POST" })
-  .validator((data: { decision: "Approved" | "Approved with Conditions" | "Revision Required" | "Rejected"; comments: string }) => data)
+  .validator((data: { decision: string; comments?: string }) => data)
   .handler(async ({ data }) => {
-    currentRecord.approvalDecision = data.decision;
-    currentRecord.reviewComments = data.comments;
-    currentRecord.approvalDate = new Date().toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-    if (data.decision === "Approved") {
-      currentRecord.workflowStatus = "Approved";
-      currentRecord.workflowStage = "Commissioning";
-    } else if (data.decision === "Approved with Conditions") {
-      currentRecord.workflowStatus = "Approved with Conditions";
-    } else if (data.decision === "Revision Required") {
-      currentRecord.workflowStatus = "Revision Required";
-    } else {
-      currentRecord.workflowStatus = "Rejected";
+    const current = withDefaults(INITIAL_SMART_FACTORY_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await reviewDevelopmentFn({
+        data: {
+          id: current.id,
+          decision: data.decision,
+          comments: data.comments,
+          reviewerRole: "Smart Factory Review Board",
+          reviewerName: "Review Board",
+        },
+      });
+      return { success: true, data: result as any };
     }
-
-    currentRecord.auditTrail.unshift({
-      id: `aud-${Date.now()}`,
-      timestamp: new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }) + " " + new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-      user: "Current User",
-      action: `Decision: ${data.decision}`,
-      details: data.comments || `Review decision updated to ${data.decision}.`,
-    });
-
-    return { success: true, data: currentRecord };
+    return { success: true, data: INITIAL_SMART_FACTORY_RECORD };
   });

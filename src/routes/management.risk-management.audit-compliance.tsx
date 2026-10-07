@@ -2,8 +2,10 @@
 // Management -> Compliance -> Audit Compliance
 // Audit Compliance Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getAuditComplianceRecordFn } from "@/lib/auditComplianceFns.server";
 import {
   FileText,
   AlertTriangle,
@@ -114,8 +116,15 @@ export default function AuditComplianceManagementPage() {
     | "reports"
   >("overview");
 
+  // Prisma-backed query with inline fallback
+  const { data: dbRecord } = useQuery({
+    queryKey: ["audit-compliance", "record"],
+    queryFn: () => getAuditComplianceRecordFn({ data: {} }),
+  });
+
   // Controlled form state
   const [formData, setFormData] = useState<AuditComplianceRecord>(PRIMARY_AUDIT_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data as AuditComplianceRecord); }, [dbRecord]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 

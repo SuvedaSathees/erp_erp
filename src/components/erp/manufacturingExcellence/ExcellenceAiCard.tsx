@@ -19,9 +19,9 @@ export const ExcellenceAiCard: React.FC<ExcellenceAiCardProps> = ({
     const colors = {
       M: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 border-red-200",
       A: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-200",
-      I: "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200",
+      I: "bg-blue-100 text-primary dark:bg-blue-950 dark:text-blue-300 border-blue-200",
       C: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-200",
-      W: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 border-indigo-200",
+      W: "bg-blue-100 text-primary dark:bg-blue-950 dark:text-blue-300 border-blue-200",
     };
     return (
       <span

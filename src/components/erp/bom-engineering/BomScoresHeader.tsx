@@ -29,7 +29,7 @@ export const BomScoresHeader: React.FC<BomScoresHeaderProps> = ({ record }) => {
       label: "Quality Readiness",
       score: record.qualityReadinessScore,
       status: record.qualityReadinessScore >= 90 ? "Excellent" : "Good",
-      color: "#8b5cf6", // Purple
+      color: "#0A3C75", // Navy
     },
     {
       label: "Cost Score",

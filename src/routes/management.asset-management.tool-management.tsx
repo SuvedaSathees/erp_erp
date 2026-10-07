@@ -446,13 +446,13 @@ export function ToolManagementFormPage() {
           <div className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground font-medium">In Maintenance</span>
-              <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <RotateCcw className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-1">
-              <span className="text-2xl font-bold font-mono text-purple-600">68</span>
-              <span className="block text-[10px] text-purple-700 dark:text-purple-400 font-medium">
+              <span className="text-2xl font-bold font-mono text-primary">68</span>
+              <span className="block text-[10px] text-primary dark:text-blue-400 font-medium">
                 2.77% of Total
               </span>
             </div>
@@ -509,7 +509,7 @@ export function ToolManagementFormPage() {
                     <circle cx="50" cy="50" r="38" stroke="#2563eb" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="154.7" />
                     <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="204.4" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="250.6" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="250.6" />
                     <circle cx="50" cy="50" r="38" stroke="#06b6d4" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="279.5" />
                     <circle cx="50" cy="50" r="38" stroke="#64748b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="297.7" />
                   </svg>
@@ -524,7 +524,7 @@ export function ToolManagementFormPage() {
                     { name: "Cutting Tools", count: "865", color: "bg-blue-600" },
                     { name: "Measuring", count: "512", color: "bg-emerald-500" },
                     { name: "Hand Tools", count: "476", color: "bg-amber-500" },
-                    { name: "Power Tools", count: "298", color: "bg-purple-500" },
+                    { name: "Power Tools", count: "298", color: "bg-blue-500" },
                     { name: "Special Tools", count: "187", color: "bg-cyan-500" },
                     { name: "Other Tools", count: "120", color: "bg-slate-500" },
                   ].map((item) => (
@@ -566,8 +566,8 @@ export function ToolManagementFormPage() {
                   <span className="text-[8px] text-muted-foreground font-medium mt-0.5 truncate">Issued</span>
                 </div>
                 <div className="flex-1 flex flex-col items-center gap-0.5">
-                  <span className="text-[8.5px] font-bold font-mono text-purple-600">68</span>
-                  <div className="w-full bg-purple-500 rounded-t-sm" style={{ height: "8px" }} />
+                  <span className="text-[8.5px] font-bold font-mono text-primary">68</span>
+                  <div className="w-full bg-blue-500 rounded-t-sm" style={{ height: "8px" }} />
                   <span className="text-[8px] text-muted-foreground font-medium mt-0.5 truncate">Maint</span>
                 </div>
                 <div className="flex-1 flex flex-col items-center gap-0.5">
@@ -816,7 +816,7 @@ export function ToolManagementFormPage() {
                                 ? "bg-amber-50 text-amber-700 border-amber-200"
                                 : tool.status === "Calibration Due"
                                 ? "bg-rose-50 text-rose-700 border-rose-200"
-                                : "bg-purple-50 text-purple-700 border-purple-200"
+                                : "bg-blue-50 text-primary border-blue-200"
                             )}
                           >
                             {tool.status}
@@ -1125,8 +1125,8 @@ export function ToolManagementFormPage() {
                 {[
                   { name: "Ramesh Kumar", count: 84, max: 100, color: "bg-blue-600" },
                   { name: "S. Mohan", count: 76, max: 100, color: "bg-teal-500" },
-                  { name: "Karthik Raj", count: 65, max: 100, color: "bg-indigo-600" },
-                  { name: "Vijay Prakash", count: 54, max: 100, color: "bg-purple-600" },
+                  { name: "Karthik Raj", count: 65, max: 100, color: "bg-primary" },
+                  { name: "Vijay Prakash", count: 54, max: 100, color: "bg-primary" },
                   { name: "Anand Kumar", count: 42, max: 100, color: "bg-amber-500" },
                   { name: "Others", count: 161, max: 200, color: "bg-slate-500" },
                 ].map((item) => (
@@ -1169,12 +1169,12 @@ export function ToolManagementFormPage() {
                 <svg className="h-full w-full overflow-visible" viewBox="0 0 200 60">
                   <defs>
                     <linearGradient id="maintGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.3" />
-                      <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.0" />
+                      <stop offset="0%" stopColor="#0A3C75" stopOpacity="0.3" />
+                      <stop offset="100%" stopColor="#0A3C75" stopOpacity="0.0" />
                     </linearGradient>
                   </defs>
                   <polygon points="10,50 50,45 90,40 130,32 170,25 190,15 190,55 10,55" fill="url(#maintGrad)" />
-                  <polyline points="10,50 50,45 90,40 130,32 170,25 190,15" fill="none" stroke="#8b5cf6" strokeWidth="2" />
+                  <polyline points="10,50 50,45 90,40 130,32 170,25 190,15" fill="none" stroke="#0A3C75" strokeWidth="2" />
                 </svg>
               </div>
 

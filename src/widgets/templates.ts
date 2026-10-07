@@ -182,7 +182,7 @@ const instanceSchema = z.object({
   id: z.string(),
   widgetId: z.string(),
   size: z.enum(["sm", "md", "lg", "xl", "full", "auto"]),
-  theme: z.enum(["default", "blue", "green", "purple"]),
+  theme: z.enum(["default", "blue", "green", "teal"]),
   pinned: z.boolean(),
   customTitle: z.string().nullish(),
   hidden: z.boolean().nullish(),

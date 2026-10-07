@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getQualityAnalyticsRecordFn } from "@/lib/qualityAnalyticsFns.server";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
 import { QualityAnalyticsHeader } from "@/components/erp/qualityAnalytics/QualityAnalyticsHeader";
@@ -39,7 +41,13 @@ export const Route = createFileRoute(
 });
 
 export function QualityAnalyticsPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["quality-analytics", "record"],
+    queryFn: () => getQualityAnalyticsRecordFn({ data: {} }),
+  });
+
   const [dataset, setDataset] = useState<QualityAnalyticsDataset>(INITIAL_ANALYTICS_DATASET);
+  useEffect(() => { if (dbRecord?.data) setDataset(dbRecord.data); }, [dbRecord]);
   const [selectedPlant, setSelectedPlant] = useState<string>("All Plants");
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 

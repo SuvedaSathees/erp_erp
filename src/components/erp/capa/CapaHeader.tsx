@@ -192,8 +192,8 @@ export function CapaHeader({
           </span>
 
           {/* CAPA Status Pill */}
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-50/90 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/60 shadow-2xs whitespace-nowrap shrink-0">
-            <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50/90 text-primary dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 shadow-2xs whitespace-nowrap shrink-0">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
             {record.status}
           </span>
         </div>

@@ -40,7 +40,9 @@ import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { ErpButton } from "@/components/erp/Button";
 import { CardHeader } from "@/components/erp/CardHeader";
 import { StatCard } from "@/components/erp/StatCard";
-import { DataTable } from "@/components/erp/DataTable";
+import { DataTable, EmptyState } from "@/components/erp/DataTable";
+import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import {
   Dialog,
   DialogContent,
@@ -56,10 +58,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
-import { company, formatCurrency, mockCostCenterCommitments } from "@/lib/mock-data";
-import { loadCostCentersDashboard } from "@/services/financialManagementService";
-import * as costCenterService from "@/services/costCenterService";
-import * as budgetService from "@/services/budgetService";
+import { company } from "@/lib/companyConfig";
+import { formatCurrency } from "@/lib/format";
+import { costCenterService, budgetService, loadCostCentersDashboard } from "@/services";
 import type {
   CostCenterRecord,
   NewCostCenterInput,
@@ -83,6 +84,31 @@ export const Route = createFileRoute("/management/finance/cost-centers")({
 
 const QUERY: DashboardQuery = { fiscalYear: company.fiscalYear, companyId: "all" };
 
+function CostCentersSkeleton() {
+  return (
+    <div className="space-y-5">
+      {/* 5 KPI StatCards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-28 rounded-xl" />
+        ))}
+      </div>
+      {/* Main layout */}
+      <div className="grid gap-5 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_360px]">
+        <div className="space-y-5">
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-[420px] w-full rounded-xl" />
+        </div>
+        <div className="space-y-5">
+          <Skeleton className="h-64 w-full rounded-xl" />
+          <Skeleton className="h-64 w-full rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const TYPES = ["Operational", "Support", "Administrative", "Revenue-Generating"];
 
 const DEPARTMENTS = [
@@ -98,6 +124,10 @@ const DEPARTMENTS = [
 
 function CostCentersPage() {
   const queryClient = useQueryClient();
+  const { data: commitments = [] } = useQuery({
+    queryKey: ["cost-centers", "commitments"],
+    queryFn: () => costCenterService.fetchCommitments(),
+  });
   const [activeTab, setActiveTab] = useState<
     "overview" | "hierarchy" | "budgets" | "actuals" | "commitments" | "reports"
   >("overview");
@@ -246,8 +276,15 @@ function CostCentersPage() {
     uploadMutation.mutate({ name: "fy2025_cost_centers_budget.csv" });
   };
 
+  const isError = dashboardQuery.isError;
   const isLoading = dashboardQuery.isLoading;
   const data = dashboardQuery.data;
+
+  useQueryErrorToast(
+    isError,
+    dashboardQuery.error,
+    "Failed to load cost centers dashboard.",
+  );
 
   // Filter cost centers
   const allCCs = data?.costCenters || [];
@@ -274,10 +311,15 @@ function CostCentersPage() {
                 : "bg-background border-border text-muted-foreground text-[11px] ml-8"
           }`}
         >
-          <FolderTree className="h-3.5 w-3.5 shrink-0" />
-          <span>{node.name}</span>
+          <FolderTree className="h-4 w-4 shrink-0" />
+          <span className="truncate flex-1">{node.name}</span>
+          <span className="tabular font-mono text-[11px] text-muted-foreground">{node.code}</span>
         </div>
-        {node.children && node.children.map((child) => renderHierarchyNode(child, depth + 1))}
+        {node.children && node.children.length > 0 && (
+          <div className="space-y-2 border-l border-border/80 pl-2 ml-3">
+            {node.children.map((child) => renderHierarchyNode(child, depth + 1))}
+          </div>
+        )}
       </div>
     );
   };
@@ -286,7 +328,7 @@ function CostCentersPage() {
     <AppShell
       title="Finance"
       breadcrumb="Management"
-      description="Manage, monitor, and analyze cost center performance across the organization."
+      description="Manage organizational cost structures, track department expenses and allocations."
       tabs={<FinanceTabBar />}
       topbarActions={
         <ErpButton onClick={() => setCcOpen(true)} size="md">
@@ -295,21 +337,14 @@ function CostCentersPage() {
         </ErpButton>
       }
     >
-      {isLoading || !data ? (
-        <div className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />
-            ))}
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="h-[500px] animate-pulse rounded-xl bg-muted" />
-            <div className="space-y-6">
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-              <div className="h-48 animate-pulse rounded-xl bg-muted" />
-            </div>
-          </div>
-        </div>
+      {isError && !data ? (
+        <QueryErrorState
+          title="Failed to Load Cost Centers"
+          error={dashboardQuery.error}
+          onRetry={() => dashboardQuery.refetch()}
+        />
+      ) : isLoading || !data ? (
+        <CostCentersSkeleton />
       ) : (
         <div className="space-y-5">
           {/* KPI Stat Cards Grid */}
@@ -351,8 +386,8 @@ function CostCentersPage() {
               value={`${data.kpis.budgetUtilization}%`}
               neutralText="This Fiscal Year"
               icon={<Layers className="h-5 w-5" />}
-              iconBg="bg-purple-500/10"
-              iconColor="text-purple-500"
+              iconBg="bg-primary/10"
+              iconColor="text-blue-600"
             />
           </div>
 
@@ -558,16 +593,53 @@ function CostCentersPage() {
                           },
                         ]}
                         mobileCard={(r) => (
-                          <div className="space-y-1">
-                            <div className="flex justify-between font-semibold">
-                              <span>{r.name}</span>
-                              <span>{formatCurrency(r.actual)}</span>
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-start gap-2">
+                              <div>
+                                <span className="font-semibold text-foreground block text-sm">{r.name}</span>
+                                <span className="text-xs text-muted-foreground">{r.department} • <span className="font-mono">{r.code}</span></span>
+                              </div>
+                              <span
+                                className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                  r.status === "Active"
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {r.status}
+                              </span>
                             </div>
-                            <div className="text-xs text-muted-foreground">
-                              Budget: {formatCurrency(r.budget)} • {r.status}
+                            <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-border/50">
+                              <div>
+                                <span className="text-muted-foreground block">Budget</span>
+                                <span className="font-semibold tabular text-foreground">
+                                  {formatCurrency(r.budget)}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground block">Actual</span>
+                                <span className="font-semibold tabular text-foreground">
+                                  {formatCurrency(r.actual)}
+                                </span>
+                              </div>
                             </div>
+                            <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                              <span className="text-muted-foreground">Variance</span>
+                              <span
+                                className={`font-semibold tabular ${r.variance < 0 ? "text-destructive" : "text-green-600"}`}
+                              >
+                                {formatCurrency(r.variance)} ({r.utilization.toFixed(1)}%)
+                              </span>
+                            </div>
+                            <Progress value={r.utilization} className="h-1.5" />
                           </div>
                         )}
+                        empty={
+                          <EmptyState
+                            title="No cost centers found"
+                            description="No cost centers matched your search and filter criteria."
+                          />
+                        }
                       />
                     </div>
 
@@ -696,8 +768,19 @@ function CostCentersPage() {
                           },
                         ]}
                         mobileCard={(r) => (
-                          <div>
-                            {r.name} - {formatCurrency(r.budget)}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-start gap-2">
+                              <div>
+                                <span className="font-semibold text-foreground block text-sm">{r.name}</span>
+                                <span className="text-xs text-muted-foreground">{r.type} • <span className="font-mono">{r.code}</span></span>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                              <span className="text-muted-foreground">Master Budget Allocation</span>
+                              <span className="font-bold tabular text-foreground">
+                                {formatCurrency(r.budget)}
+                              </span>
+                            </div>
                           </div>
                         )}
                       />
@@ -735,8 +818,19 @@ function CostCentersPage() {
                           },
                         ]}
                         mobileCard={(r) => (
-                          <div>
-                            {r.name} - {formatCurrency(r.actual)}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-start gap-2">
+                              <div>
+                                <span className="font-semibold text-foreground block text-sm">{r.name}</span>
+                                <span className="font-mono text-xs text-muted-foreground">{r.code}</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                              <span className="text-muted-foreground">YTD Actual Expense</span>
+                              <span className="font-bold tabular text-green-600">
+                                {formatCurrency(r.actual)}
+                              </span>
+                            </div>
                           </div>
                         )}
                       />
@@ -749,8 +843,8 @@ function CostCentersPage() {
                   <div className="space-y-4">
                     <h3 className="font-semibold text-lg">Purchase Order & Contract Commitments</h3>
                     <div className="card-soft overflow-hidden">
-                      <DataTable<(typeof mockCostCenterCommitments)[0]>
-                        data={mockCostCenterCommitments}
+                      <DataTable<(typeof commitments)[0]>
+                        data={commitments}
                         columns={[
                           {
                             key: "id",
@@ -790,8 +884,23 @@ function CostCentersPage() {
                           },
                         ]}
                         mobileCard={(r) => (
-                          <div>
-                            {r.id} - {formatCurrency(r.commitmentAmount)}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-start gap-2">
+                              <div>
+                                <span className="font-mono text-xs font-semibold text-foreground">{r.id}</span>
+                                <span className="text-xs font-medium text-foreground block">{r.costCenter}</span>
+                              </div>
+                              <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800">
+                                {r.status}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground">{r.description}</p>
+                            <div className="flex items-center justify-between text-xs pt-1 border-t border-border/50">
+                              <span className="text-muted-foreground">Committed Amount</span>
+                              <span className="font-bold tabular text-primary">
+                                {formatCurrency(r.commitmentAmount)}
+                              </span>
+                            </div>
                           </div>
                         )}
                       />

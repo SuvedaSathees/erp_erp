@@ -10,22 +10,17 @@ import type {
   CommercializationStatus,
   CommercializationSummary,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Commercialization Planning — Server Functions (MongoDB-backed with live fallback)
-   ---------------------------------------------------------------------------
-   Manages the 4-stage Commercialization Planning lifecycle:
-     Stage 1: Product Readiness
-     Stage 2: Manufacturing & Supply Chain
-     Stage 3: Sales & Marketing Planning
-     Stage 4: Executive Review (Decision: Approved / Approved with Conditions / Revision Required / Rejected)
+const MODULE_TYPE = "commercialization";
 
-   Upon 'Approved' decision:
-     - Auto-creates linked Product Launch Project (e.g. PRJ-LAUNCH-2024-0088)
-       and surfaces its ID.
-   =========================================================================== */
-
-// Canonical mock record matching 1_15_Commercialization_Planning.png reference specs
 const DEFAULT_COMMERCIALIZATION_RECORD: CommercializationRecord = {
   id: "cmp-record-0021",
   commercializationPlanId: "CMP-2024-0021",
@@ -204,316 +199,190 @@ const DEFAULT_COMMERCIALIZATION_RECORD: CommercializationRecord = {
     { id: "aud-3", timestamp: "2024-05-18 02:40 PM", actor: "Vikram Singh", event: "Verified Manufacturing & Supply Chain strategy with CM", kind: "workflow" },
     { id: "aud-4", timestamp: "2024-05-25 04:45 PM", actor: "Rohit Verma", event: "Submitted for Executive Review", kind: "workflow" },
   ],
-};
-
-// In-memory store
-const inMemoryStore: Map<string, CommercializationRecord> = new Map([
-  [DEFAULT_COMMERCIALIZATION_RECORD.id, DEFAULT_COMMERCIALIZATION_RECORD],
-  ["CMP-2024-0021", DEFAULT_COMMERCIALIZATION_RECORD],
-]);
+} as any;
 
 function computeDerivedFinancialsAndScores(input: CommercializationFormInput): {
-  grossMarginPct: number;
-  roiPct: number;
-  aiAnalytics: CommercializationAIAnalytics;
-  summary: CommercializationSummary;
+  grossMarginPct: number; roiPct: number; aiAnalytics: CommercializationAIAnalytics; summary: CommercializationSummary;
 } {
   const fp = input.financialPlanning;
   const cost = fp.manufacturingCostPerUnit || 1;
   const price = fp.sellingPricePerUnit || 1;
   const inv = fp.initialInvestment || 1;
   const rev = fp.revenueProjection5Yr || 0;
-
   const grossMarginPct = price > 0 ? Number((((price - cost) / price) * 100).toFixed(2)) : 0;
-  const roiPct = inv > 0 ? Math.round((((rev - inv) / inv) * 100)) : 0;
-
+  const roiPct = inv > 0 ? Math.round(((rev - inv) / inv) * 100) : 0;
   const ra = input.riskAssessment;
   const riskStarsAvg = (ra.technicalRisk + ra.marketRisk + ra.financialRisk + ra.operationalRisk + ra.regulatoryRisk) / 5;
   const computedRiskScore = Math.round((riskStarsAvg / 5) * 60 + 10);
   const riskControlScore = 100 - computedRiskScore;
-
   const productReadinessScore = input.productReadiness.launchReadinessScore || 82;
   const marketReadinessScore = 88;
-  const financialReadinessScore = Math.min(98, Math.max(50, Math.round(grossMarginPct * 1.2 + (roiPct / 10))));
+  const financialReadinessScore = Math.min(98, Math.max(50, Math.round(grossMarginPct * 1.2 + roiPct / 10)));
   const commercializationScore = Math.round((productReadinessScore + marketReadinessScore + financialReadinessScore) / 3);
-
-  const overallLaunchReadiness = Math.round(
-    productReadinessScore * 0.3 +
-      marketReadinessScore * 0.25 +
-      financialReadinessScore * 0.25 +
-      riskControlScore * 0.2,
-  );
+  const overallLaunchReadiness = Math.round(productReadinessScore * 0.3 + marketReadinessScore * 0.25 + financialReadinessScore * 0.25 + riskControlScore * 0.2);
 
   return {
-    grossMarginPct,
-    roiPct,
+    grossMarginPct, roiPct,
     aiAnalytics: {
       aiMarketOpportunityScore: Math.min(99, Math.round(marketReadinessScore * 1.02)),
       aiLaunchReadinessScore: overallLaunchReadiness,
       aiRevenueForecast5Yr: Math.round(rev * 1.09),
       aiCustomerAdoptionPredictionPct: 76,
       aiCompetitivePositionScore: 84,
-      aiGrowthStrategy:
-        "Accelerate B2B enterprise partnerships and expand OEM co-development. Target 15% market penetration within 24 months.",
-      aiRecommendations:
-        "Proceed to product launch with pilot fleet partners. Establish regional service support hubs prior to Q4 volume shipment.",
+      aiGrowthStrategy: "Accelerate B2B enterprise partnerships and expand OEM co-development.",
+      aiRecommendations: "Proceed to product launch with pilot fleet partners.",
     },
     summary: {
-      productReadinessScore,
-      marketReadinessScore,
-      financialReadinessScore,
-      commercializationScore,
-      riskControlScore,
-      overallLaunchReadiness,
-      recommendedAction: input.approvalDecision === "Approved" ? "Proceed to Product Launch" : "Proceed to Product Launch",
+      productReadinessScore, marketReadinessScore, financialReadinessScore, commercializationScore,
+      riskControlScore, overallLaunchReadiness,
+      recommendedAction: "Proceed to Product Launch",
       recommendationText: "Proceed to Product Launch",
     },
   };
 }
 
+async function getOrDefault(): Promise<CommercializationRecord> {
+  const result = withDefaults(DEFAULT_COMMERCIALIZATION_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  return (result as any) ?? DEFAULT_COMMERCIALIZATION_RECORD;
+}
+
+async function saveRecord(record: any): Promise<CommercializationRecord> {
+  const r = {
+    ...record,
+    projectName: record.commercializationProject ?? "",
+    ownerName: record.commercializationManager ?? "Rohit Verma",
+    recordCode: record.id ?? record.commercializationPlanId ?? "",
+  };
+  return (await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: r } })) as any;
+}
+
 export const getCommercializationLookupsFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<CommercializationLookups> => {
     return {
-      productCategories: [
-        "Automotive & Charging Infrastructure",
-        "Industrial Automation",
-        "Clean Energy Systems",
-        "Autonomous Robotics",
-      ],
-      targetIndustries: [
-        "Electric Mobility / EV Infrastructure",
-        "Commercial Fleet Logistics",
-        "Smart Municipal Transit",
-        "Industrial Ports & Warehousing",
-      ],
-      marketEntryStrategies: [
-        "Direct Enterprise Sales + OEM Licensing",
-        "Pilot Fleet Deployment",
-        "Channel Partner Distribution",
-        "Joint Venture Launch",
-      ],
-      certificationStatuses: [
-        "Fully Certified",
-        "In Certification Review",
-        "Testing Phase",
-        "Pending Filing",
-      ],
-      regulatoryCompliances: [
-        "ISO 26262 & CE Compliant",
-        "Partially Compliant",
-        "Under Audit",
-        "Self-Certified",
-      ],
+      productCategories: ["Automotive & Charging Infrastructure", "Industrial Automation", "Clean Energy Systems", "Autonomous Robotics"],
+      targetIndustries: ["Electric Mobility / EV Infrastructure", "Commercial Fleet Logistics", "Smart Municipal Transit", "Industrial Ports & Warehousing"],
+      marketEntryStrategies: ["Direct Enterprise Sales + OEM Licensing", "Pilot Fleet Deployment", "Channel Partner Distribution", "Joint Venture Launch"],
+      certificationStatuses: ["Fully Certified", "In Certification Review", "Testing Phase", "Pending Filing"],
+      regulatoryCompliances: ["ISO 26262 & CE Compliant", "Partially Compliant", "Under Audit", "Self-Certified"],
       productValidationStatuses: ["Field Validated", "Lab Validated", "In Field Testing", "Specification Stage"],
       productionReadinesses: ["Pilot Line Ready", "Tooling In Progress", "Prototype Stage", "Mass Production Certified"],
-      manufacturingStrategies: [
-        "Contract Manufacturing (CM)",
-        "In-House Assembly",
-        "Hybrid Production",
-        "Licensed Third-Party",
-      ],
-      procurementStatuses: [
-        "Component Sourced",
-        "Long Lead Items Ordered",
-        "RFQs In Review",
-        "Full Supply Chain Secured",
-      ],
-      inventoryReadinesses: [
-        "Safety Stock Established",
-        "Buffer Stock In Transit",
-        "Pre-production Sourced",
-        "Just-In-Time Setup",
-      ],
-      salesModels: [
-        "B2B Enterprise Direct",
-        "B2B2C Platform",
-        "Direct & Channel Hybrid",
-        "Hardware-as-a-Service (HaaS)",
-      ],
-      pricingStrategies: [
-        "Value-Based Pricing",
-        "Cost-Plus Margin",
-        "Tiered Subscription + Hardware",
-        "Competitive Skimming",
-      ],
+      manufacturingStrategies: ["Contract Manufacturing (CM)", "In-House Assembly", "Hybrid Production", "Licensed Third-Party"],
+      procurementStatuses: ["Component Sourced", "Long Lead Items Ordered", "RFQs In Review", "Full Supply Chain Secured"],
+      inventoryReadinesses: ["Safety Stock Established", "Buffer Stock In Transit", "Pre-production Sourced", "Just-In-Time Setup"],
+      salesModels: ["B2B Enterprise Direct", "B2B2C Platform", "Direct & Channel Hybrid", "Hardware-as-a-Service (HaaS)"],
+      pricingStrategies: ["Value-Based Pricing", "Cost-Plus Margin", "Tiered Subscription + Hardware", "Competitive Skimming"],
       partnershipStatuses: ["MoU Executed", "Definitive Agreement", "In Negotiation", "Active Partnership"],
-      businessUnits: [
-        "Smart Mobility Division",
-        "Robotics & Mechatronics",
-        "Clean Energy Solutions",
-        "Advanced R&D Center",
-      ],
-      commercializationManagers: [
-        "Rohit Verma",
-        "Neha Sharma",
-        "Vikram Singh",
-        "Amitabh Shah",
-        "Arjun Mehta",
-        "Dr. Anil Patel",
-      ],
-      recommendedActions: [
-        "Proceed to Product Launch",
-        "Refine Go-to-Market Strategy",
-        "Expand Pilot Testing",
-        "Hold / Re-evaluate Strategy",
-      ],
+      businessUnits: ["Smart Mobility Division", "Robotics & Mechatronics", "Clean Energy Solutions", "Advanced R&D Center"],
+      commercializationManagers: ["Rohit Verma", "Neha Sharma", "Vikram Singh", "Amitabh Shah", "Arjun Mehta", "Dr. Anil Patel"],
+      recommendedActions: ["Proceed to Product Launch", "Refine Go-to-Market Strategy", "Expand Pilot Testing", "Hold / Re-evaluate Strategy"],
     };
   },
 );
 
 export const getCommercializationListFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<CommercializationListRow[]> => {
-    return Array.from(inMemoryStore.values()).map((r: CommercializationRecord) => ({
-      id: r.id,
-      commercializationPlanId: r.commercializationPlanId,
-      commercializationProject: r.commercializationProject,
-      productName: r.productOverview.productName,
-      status: r.status,
-      overallLaunchReadiness: r.summary.overallLaunchReadiness,
-      roiPct: r.financialPlanning.roiPct,
-      launchTargetDate: r.launchTargetDate,
-      updatedAt: r.updatedAt,
-    }));
+    const records = await listDevelopmentRecordsFn({ data: { moduleType: MODULE_TYPE } });
+    if (records.length > 0) {
+      return records.map((r: any) => ({
+        id: r.id, commercializationPlanId: r.commercializationPlanId ?? r.recordCode,
+        commercializationProject: r.commercializationProject ?? r.projectName,
+        productName: r.productOverview?.productName ?? "",
+        status: r.status ?? r.workflowStatus,
+        overallLaunchReadiness: r.summary?.overallLaunchReadiness ?? 0,
+        roiPct: r.financialPlanning?.roiPct ?? 0,
+        launchTargetDate: r.launchTargetDate ?? "", updatedAt: r.updatedAt ?? "",
+      }));
+    }
+    const d: any = DEFAULT_COMMERCIALIZATION_RECORD;
+    return [{
+      id: d.id, commercializationPlanId: d.commercializationPlanId,
+      commercializationProject: d.commercializationProject,
+      productName: d.productOverview.productName, status: d.status,
+      overallLaunchReadiness: d.summary.overallLaunchReadiness,
+      roiPct: d.financialPlanning.roiPct, launchTargetDate: d.launchTargetDate, updatedAt: d.updatedAt,
+    }];
   },
 );
 
 export const getCommercializationFn = createServerFn({ method: "GET" })
   .validator((d: string) => d)
-  .handler(async ({ data: id }): Promise<CommercializationRecord> => {
-    return inMemoryStore.get(id) || inMemoryStore.get("cmp-record-0021") || DEFAULT_COMMERCIALIZATION_RECORD;
+  .handler(async (): Promise<CommercializationRecord> => {
+    return await getOrDefault();
   });
 
 export const saveCommercializationDraftFn = createServerFn({ method: "POST" })
   .validator((d: { id?: string; input: CommercializationFormInput }) => d)
   .handler(async ({ data: { id, input } }): Promise<CommercializationRecord> => {
-    const targetId = id || "cmp-record-0021";
-    const existing = inMemoryStore.get(targetId) || DEFAULT_COMMERCIALIZATION_RECORD;
-
+    const existing = await getOrDefault();
     const { grossMarginPct, roiPct, aiAnalytics, summary } = computeDerivedFinancialsAndScores(input);
-
-    const updated: CommercializationRecord = {
+    const updated = {
       ...existing,
-      id: targetId,
       commercializationProject: input.commercializationProject,
       businessUnit: input.businessUnit,
       commercializationManager: input.commercializationManager,
       launchTargetDate: input.launchTargetDate,
-      linkedProductId: input.linkedProductId ?? existing.linkedProductId,
-      linkedTechnologyId: input.linkedTechnologyId ?? existing.linkedTechnologyId,
-      linkedPatentId: input.linkedPatentId ?? existing.linkedPatentId,
-      linkedBusinessCaseId: input.linkedBusinessCaseId ?? existing.linkedBusinessCaseId,
+      linkedProductId: input.linkedProductId ?? (existing as any).linkedProductId,
+      linkedTechnologyId: input.linkedTechnologyId ?? (existing as any).linkedTechnologyId,
+      linkedPatentId: input.linkedPatentId ?? (existing as any).linkedPatentId,
+      linkedBusinessCaseId: input.linkedBusinessCaseId ?? (existing as any).linkedBusinessCaseId,
       productOverview: input.productOverview,
       marketAnalysis: input.marketAnalysis,
       productReadiness: input.productReadiness,
       manufacturingSupplyChain: input.manufacturingSupplyChain,
-      financialPlanning: {
-        ...input.financialPlanning,
-        grossMarginPct,
-        roiPct,
-      },
+      financialPlanning: { ...input.financialPlanning, grossMarginPct, roiPct },
       salesMarketing: input.salesMarketing,
       partnerships: input.partnerships,
       riskAssessment: input.riskAssessment,
-      aiAnalytics,
-      summary,
+      aiAnalytics, summary,
       attachments: input.attachments,
       lastModifiedBy: "Rohit Verma",
       updatedAt: new Date().toISOString().replace("T", " ").substring(0, 19),
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
-          actor: "Rohit Verma",
-          event: "Saved Commercialization Plan draft updates",
-          kind: "audit",
-        },
-        ...existing.auditTrail,
-      ],
     };
-
-    inMemoryStore.set(targetId, updated);
-    return updated;
+    return await saveRecord(updated);
   });
 
 export const completeCommercializationStageFn = createServerFn({ method: "POST" })
   .validator((d: { id: string; stage: CommercializationStage }) => d)
   .handler(async ({ data: { id, stage } }): Promise<CommercializationRecord> => {
-    const existing = inMemoryStore.get(id) || DEFAULT_COMMERCIALIZATION_RECORD;
-    const stageOrder: CommercializationStage[] = [
-      "product_readiness",
-      "manufacturing_supply_chain",
-      "sales_marketing_planning",
-      "executive_review",
-    ];
-
+    const existing: any = await getOrDefault();
+    const stageOrder: CommercializationStage[] = ["product_readiness", "manufacturing_supply_chain", "sales_marketing_planning", "executive_review"];
     const idx = stageOrder.indexOf(stage);
     const nextStage = idx < stageOrder.length - 1 ? stageOrder[idx + 1] : stage;
-
-    const newStages = existing.stages.map((st) => {
+    const newStages = (existing.stages ?? []).map((st: any) => {
       if (st.stage === stage) return { ...st, completed: true, active: false, completedAt: new Date().toISOString().substring(0, 10) };
       if (st.stage === nextStage) return { ...st, active: true };
       return st;
     });
-
-    const updated: CommercializationRecord = {
+    const updated = {
       ...existing,
       currentStage: nextStage,
-      currentStageLabel: newStages.find((s) => s.stage === nextStage)?.label || nextStage,
+      currentStageLabel: newStages.find((s: any) => s.stage === nextStage)?.label || nextStage,
       status: nextStage as CommercializationStatus,
       stages: newStages,
       updatedAt: new Date().toISOString().replace("T", " ").substring(0, 19),
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
-          actor: "Rohit Verma",
-          event: `Completed stage: ${stage}`,
-          kind: "workflow",
-          stage,
-        },
-        ...existing.auditTrail,
-      ],
     };
-
-    inMemoryStore.set(id, updated);
-    return updated;
+    return await saveRecord(updated);
   });
 
 export const submitCommercializationFn = createServerFn({ method: "POST" })
   .validator((d: string) => d)
-  .handler(async ({ data: id }): Promise<CommercializationRecord> => {
-    const existing = inMemoryStore.get(id) || DEFAULT_COMMERCIALIZATION_RECORD;
-
-    const updated: CommercializationRecord = {
+  .handler(async (): Promise<CommercializationRecord> => {
+    const existing: any = await getOrDefault();
+    const updated = {
       ...existing,
       status: "executive_review",
       currentStage: "executive_review",
       currentStageLabel: "Executive Review",
       updatedAt: new Date().toISOString().replace("T", " ").substring(0, 19),
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
-          actor: "Rohit Verma",
-          event: "Submitted Commercialization Plan for Executive Review",
-          kind: "workflow",
-          fromStatus: existing.status,
-          toStatus: "executive_review",
-        },
-        ...existing.auditTrail,
-      ],
     };
-
-    inMemoryStore.set(id, updated);
-    return updated;
+    return await saveRecord(updated);
   });
 
 export const reviewCommercializationFn = createServerFn({ method: "POST" })
   .validator((d: { id: string; decision: CommercializationApprovalDecision; comments?: string; approvalDate?: string }) => d)
   .handler(async ({ data: { id, decision, comments, approvalDate } }): Promise<CommercializationRecord> => {
-    const existing = inMemoryStore.get(id) || DEFAULT_COMMERCIALIZATION_RECORD;
+    const existing: any = await getOrDefault();
     const now = approvalDate || new Date().toISOString().substring(0, 10);
-
     let nextStatus: CommercializationStatus = "executive_review";
     let launchId: string | undefined;
     let launchCode: string | undefined;
@@ -521,7 +390,7 @@ export const reviewCommercializationFn = createServerFn({ method: "POST" })
     if (decision === "Approved") {
       nextStatus = "approved";
       launchId = `launch-${Date.now()}`;
-      launchCode = `PRJ-LAUNCH-2024-0088`;
+      launchCode = "PRJ-LAUNCH-2024-0088";
     } else if (decision === "Approved with Conditions") {
       nextStatus = "approved_with_conditions";
     } else if (decision === "Revision Required") {
@@ -530,14 +399,7 @@ export const reviewCommercializationFn = createServerFn({ method: "POST" })
       nextStatus = "rejected";
     }
 
-    const updatedReviewRows = existing.reviewRows.map((r) => ({
-      ...r,
-      decision: (decision === "Approved" ? "Approved" : decision === "Rejected" ? "Rejected" : "Approved") as any,
-      status: (decision === "Approved" ? "Approved" : "Revision Requested") as any,
-      date: now,
-    }));
-
-    const updated: CommercializationRecord = {
+    const updated = {
       ...existing,
       status: nextStatus,
       approvalDecision: decision,
@@ -545,43 +407,18 @@ export const reviewCommercializationFn = createServerFn({ method: "POST" })
       approvalDate: now,
       linkedProductLaunchProjectId: launchId || existing.linkedProductLaunchProjectId,
       linkedProductLaunchProjectCode: launchCode || existing.linkedProductLaunchProjectCode,
-      reviewRows: updatedReviewRows,
       updatedAt: new Date().toISOString().replace("T", " ").substring(0, 19),
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
-          actor: "Commercial Review Board",
-          event: `Executive Review decision: ${decision}. ${launchCode ? `Auto-created Product Launch Project ${launchCode}.` : ""}`,
-          kind: "workflow",
-          fromStatus: existing.status,
-          toStatus: nextStatus,
-        },
-        ...existing.auditTrail,
-      ],
     };
-
-    inMemoryStore.set(id, updated);
-    return updated;
+    return await saveRecord(updated);
   });
 
 export const generateCommercializationReportFn = createServerFn({ method: "POST" })
   .validator((d: string) => d)
-  .handler(async ({ data: id }): Promise<CommercializationRecord> => {
-    const existing = inMemoryStore.get(id) || DEFAULT_COMMERCIALIZATION_RECORD;
-    const updated: CommercializationRecord = {
+  .handler(async (): Promise<CommercializationRecord> => {
+    const existing: any = await getOrDefault();
+    const updated = {
       ...existing,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
-          actor: "Rohit Verma",
-          event: "Generated comprehensive Commercialization Plan PDF Report",
-          kind: "audit",
-        },
-        ...existing.auditTrail,
-      ],
+      updatedAt: new Date().toISOString().replace("T", " ").substring(0, 19),
     };
-    inMemoryStore.set(id, updated);
-    return updated;
+    return await saveRecord(updated);
   });

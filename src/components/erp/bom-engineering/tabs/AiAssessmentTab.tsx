@@ -16,7 +16,7 @@ export const AiAssessmentTab: React.FC<AiAssessmentTabProps> = ({
       {/* Top Banner */}
       <div className="bg-card p-4 rounded-lg border border-border flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-100 dark:bg-purple-950 rounded-lg text-purple-600 dark:text-purple-400">
+          <div className="p-2 bg-blue-100 dark:bg-blue-950 rounded-lg text-primary dark:text-blue-400">
             <Sparkles className="w-6 h-6" />
           </div>
           <div>
@@ -29,9 +29,9 @@ export const AiAssessmentTab: React.FC<AiAssessmentTabProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 bg-purple-50 dark:bg-purple-950 px-4 py-2 rounded-xl border border-purple-200 dark:border-purple-800 shadow-sm">
+        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950 px-4 py-2 rounded-xl border border-blue-200 dark:border-blue-800 shadow-sm">
           <span className="text-xs text-muted-foreground font-semibold">AI BOM Health Score:</span>
-          <span className="text-lg font-black text-purple-600 dark:text-purple-400">
+          <span className="text-lg font-black text-primary dark:text-blue-400">
             {aiInsights.healthScore} / 100
           </span>
         </div>

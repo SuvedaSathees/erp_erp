@@ -896,7 +896,7 @@ Review Notes: ${form.reviewComments || "Executive committee launch review."}
                 <div className="card-soft p-5 bg-card border border-border/80 rounded-xl space-y-4 shadow-sm">
                   <div className="flex items-center justify-between border-b border-border/50 pb-3">
                     <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <Target className="h-4 w-4 text-purple-600" />
+                      <Target className="h-4 w-4 text-primary" />
                       4. Go-To-Market (GTM) & Distribution
                     </h3>
                   </div>

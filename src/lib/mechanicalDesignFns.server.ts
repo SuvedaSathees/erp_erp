@@ -6,51 +6,36 @@ import type {
   MechanicalDesignStage,
   MechanicalDesignStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Mechanical Design — Server Functions & Workflow Engine
-   ---------------------------------------------------------------------------
-   Manages the 4-stage Mechanical Design lifecycle:
-     Stage 1: Mechanical Engineering Design (assembly structure, part design, mechanisms, 3D CAD)
-     Stage 2: Material & Manufacturing Validation (material selection, DFM/DFA, GD&T, cost optimization)
-     Stage 3: Simulation & Validation (FEA/CAE stress, thermal, fatigue, vibration simulation & quality validation)
-     Stage 4: Engineering Review (Review Board decision: Approved / Approved with Conditions / Revision Required / Rejected)
-
-   Upon 'Approved' decision:
-     - Auto-creates & links downstream Prototype Manufacturing project (e.g. PM-2024-0089 / PROTO-2024-0102)
-       and surfaces its ID to proceed to Prototype Manufacturing.
-   =========================================================================== */
+const MODULE_TYPE = "mechanical-design";
 
 export function calculateMechanicalDesignScores(input: Partial<MechanicalDesignFormInput>) {
-  // 1. Structural Readiness (0-100)
   const validationScore = input.validationScore ?? 86;
-  const numParts = input.numberOfComponents ?? 125;
   const structuralReadiness = Math.min(99, Math.max(70, Math.round(validationScore * 0.6 + 36)));
 
-  // 2. Manufacturability (0-100)
   const isDfm = input.designMethodology?.includes("DFM") ?? true;
   const manufacturability = isDfm ? 86 : 78;
 
-  // 3. Reliability (0-100)
   const relTarget = input.reliabilityTarget ?? 98;
   const reliability = Math.min(98, Math.max(70, Math.round(relTarget * 0.87)));
 
-  // 4. Simulation (0-100)
   const completedAnalyses = (input.engineeringAnalyses || []).filter(
     (a) => a.status === "Completed"
   ).length;
   const totalAnalyses = (input.engineeringAnalyses || []).length || 6;
   const simulation = Math.min(98, Math.max(70, Math.round((completedAnalyses / totalAnalyses) * 30 + 65)));
 
-  // Overall Mechanical Design Score (/100)
   const overallMechanicalDesignScore = Math.round(
-    structuralReadiness * 0.3 +
-      manufacturability * 0.25 +
-      reliability * 0.25 +
-      simulation * 0.2
+    structuralReadiness * 0.3 + manufacturability * 0.25 + reliability * 0.25 + simulation * 0.2
   );
 
-  // AI Mechanical Design Gauge Sub-scores
   const aiDesignQuality = Math.min(99, Math.max(75, Math.round(overallMechanicalDesignScore * 1.01)));
   const aiManufacturability = Math.min(99, Math.max(75, Math.round(manufacturability * 1.0)));
   const aiStructuralAssessment = Math.min(99, Math.max(75, Math.round(structuralReadiness * 1.02)));
@@ -59,9 +44,7 @@ export function calculateMechanicalDesignScores(input: Partial<MechanicalDesignF
     (aiDesignQuality + aiManufacturability + aiStructuralAssessment + aiCostOptimization) / 4
   );
 
-  // Dynamic Key Highlights Checklist derived from inputs
   const highlights: string[] = [];
-
   highlights.push("Optimized weight reduction of 12.5% achieved");
   highlights.push("Structural safety factor within target");
   if (input.designMethodology?.includes("DFM")) {
@@ -69,7 +52,6 @@ export function calculateMechanicalDesignScores(input: Partial<MechanicalDesignF
   } else {
     highlights.push("Manufacturability validation complete");
   }
-
   if (input.materialGrade) {
     highlights.push(`AI suggested material change (${input.materialGrade}) reduces cost by 8%`);
   } else {
@@ -77,20 +59,8 @@ export function calculateMechanicalDesignScores(input: Partial<MechanicalDesignF
   }
 
   return {
-    summary: {
-      overallMechanicalDesignScore,
-      structuralReadiness,
-      manufacturability,
-      reliability,
-      simulation,
-    },
-    aiAssessment: {
-      aiOverallScore,
-      aiDesignQuality,
-      aiManufacturability,
-      aiStructuralAssessment,
-      aiCostOptimization,
-    },
+    summary: { overallMechanicalDesignScore, structuralReadiness, manufacturability, reliability, simulation },
+    aiAssessment: { aiOverallScore, aiDesignQuality, aiManufacturability, aiStructuralAssessment, aiCostOptimization },
     keyHighlights: highlights,
   };
 }
@@ -385,7 +355,7 @@ const DEFAULT_MECHANICAL_DESIGN_INPUT: MechanicalDesignFormInput = {
   approvalDate: "2024-06-20",
 };
 
-let currentMechanicalDesignRecord: MechanicalDesignRecord = {
+const DEFAULT_MOCK_RECORD: MechanicalDesignRecord = {
   id: "md-rec-2024-0017",
   designId: "MD-2024-0017",
   formCode: "MDF-2024-25",
@@ -485,228 +455,86 @@ let currentMechanicalDesignRecord: MechanicalDesignRecord = {
       status: "Under Review",
     },
   ],
-};
+} as any;
 
-/** Get current Mechanical Design Record */
 export const getMechanicalDesignFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: MechanicalDesignRecord }> => {
-    return { success: true, data: currentMechanicalDesignRecord };
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   }
 );
 
-/** Save Draft */
 export const saveMechanicalDesignDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<MechanicalDesignFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: MechanicalDesignRecord }> => {
-    const updatedInput = { ...currentMechanicalDesignRecord.input, ...data.input };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_MOCK_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateMechanicalDesignScores(updatedInput);
-
-    currentMechanicalDesignRecord = {
-      ...currentMechanicalDesignRecord,
+    const record = {
+      ...base,
       input: updatedInput,
       ...scores,
-      lastUpdated: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      lastModified: new Date().toISOString(),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rahul Sharma",
-          event: "Saved draft updates to Mechanical Design Form",
-          stage: currentMechanicalDesignRecord.currentStage,
-          status: currentMechanicalDesignRecord.status,
-        },
-        ...currentMechanicalDesignRecord.auditTrail,
-      ],
+      projectName: (base as any).designProjectName ?? "",
+      ownerName: (base as any).mechanicalEngineerName ?? "Rahul Sharma",
+      recordCode: (base as any).id ?? (base as any).designId ?? "",
     };
-
-    return { success: true, data: currentMechanicalDesignRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Advance Stage */
 export const advanceMechanicalDesignStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: MechanicalDesignStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: MechanicalDesignRecord }> => {
-    const stageMap: Record<MechanicalDesignStage, { label: string; stageNumber: number }> = {
-      mechanical_engineering_design: {
-        label: "Stage 1: Mechanical Engineering Design",
-        stageNumber: 1,
-      },
-      material_manufacturing_validation: {
-        label: "Stage 2: Material & Manufacturing Validation",
-        stageNumber: 2,
-      },
-      simulation_validation: {
-        label: "Stage 3: Simulation & Validation",
-        stageNumber: 3,
-      },
-      engineering_review: {
-        label: "Stage 4: Engineering Review",
-        stageNumber: 4,
-      },
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? DEFAULT_MOCK_RECORD;
+    const stageMap: Record<string, { label: string; stageNumber: number }> = {
+      mechanical_engineering_design: { label: "Stage 1: Mechanical Engineering Design", stageNumber: 1 },
+      material_manufacturing_validation: { label: "Stage 2: Material & Manufacturing Validation", stageNumber: 2 },
+      simulation_validation: { label: "Stage 3: Simulation & Validation", stageNumber: 3 },
+      engineering_review: { label: "Stage 4: Engineering Review", stageNumber: 4 },
     };
-
     const target = stageMap[data.targetStage];
-
-    currentMechanicalDesignRecord = {
-      ...currentMechanicalDesignRecord,
+    const record = {
+      ...base,
       currentStage: data.targetStage,
       currentStageLabel: target.label,
-      stages: currentMechanicalDesignRecord.stages.map((stg) => {
+      stages: (base.stages ?? []).map((stg: any) => {
         if (stg.stageNumber < target.stageNumber) return { ...stg, status: "completed" };
         if (stg.stageNumber === target.stageNumber) return { ...stg, status: "in_progress" };
         return { ...stg, status: "pending" };
       }),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rahul Sharma",
-          event: `Advanced to ${target.label}`,
-          stage: data.targetStage,
-          status: currentMechanicalDesignRecord.status,
-        },
-        ...currentMechanicalDesignRecord.auditTrail,
-      ],
+      projectName: base.designProjectName ?? "",
+      ownerName: base.mechanicalEngineerName ?? "Rahul Sharma",
+      recordCode: base.id ?? base.designId ?? "",
     };
-
-    return { success: true, data: currentMechanicalDesignRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Submit for Review */
 export const submitMechanicalDesignFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: MechanicalDesignRecord }> => {
-    currentMechanicalDesignRecord = {
-      ...currentMechanicalDesignRecord,
-      status: "Under Review",
-      currentStage: "engineering_review",
-      currentStageLabel: "Stage 4: Engineering Review",
-      stages: currentMechanicalDesignRecord.stages.map((stg) =>
-        stg.id === "engineering_review" ? { ...stg, status: "in_progress" } : { ...stg, status: "completed" }
-      ),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rahul Sharma",
-          event: "Submitted Mechanical Design for Stage 4 Engineering Review Board",
-          stage: "engineering_review",
-          status: "Under Review",
-        },
-        ...currentMechanicalDesignRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentMechanicalDesignRecord };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   });
 
-/** Review Board Decision */
 export const reviewMechanicalDesignFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: MechanicalDesignApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: MechanicalDesignApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: MechanicalDesignRecord }> => {
-    let newStatus: MechanicalDesignStatus = "Under Review";
-    let linkedPrototypeId: string | null = currentMechanicalDesignRecord.linkedPrototypeManufacturingId ?? null;
-    let eventMessage = "";
-
-    if (data.decision === "Approved") {
-      newStatus = "Approved";
-      linkedPrototypeId = "PM-2024-0089";
-      eventMessage = "Review Board Approved Mechanical Design. Auto-created downstream Prototype Manufacturing project PM-2024-0089. Mechanical Engineer notified: 'Proceed to Prototype Manufacturing'.";
-    } else if (data.decision === "Approved with Conditions") {
-      newStatus = "Approved with Conditions";
-      eventMessage = "Review Board Approved with Conditions. Mechanical Engineer notified: 'Improve Design'. Record remains editable.";
-    } else if (data.decision === "Revision Required") {
-      newStatus = "Revision Required";
-      eventMessage = "Review Board requested revisions. Mechanical Engineer notified: 'Reassess Engineering Analysis / Update Mechanical Design'. Returned to Simulation & Validation stage.";
-    } else if (data.decision === "Rejected") {
-      newStatus = "Rejected";
-      eventMessage = "Review Board Rejected Mechanical Design. Record archived. Mechanical Engineer notified: 'Close Design Project'.";
-    }
-
-    const updatedReviewers = currentMechanicalDesignRecord.input.reviewers.map((rev) => {
-      if (rev.role === "Lead Design Engineer" || rev.role === "Engineering Manager") {
-        return {
-          ...rev,
-          decision: data.decision === "Approved" || data.decision === "Approved with Conditions" ? ("Approved" as const) : ("Rejected" as const),
-          status: data.decision,
-          date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-        };
-      }
-      return rev;
-    });
-
-    currentMechanicalDesignRecord = {
-      ...currentMechanicalDesignRecord,
-      status: newStatus,
-      approvalDecision: data.decision,
-      approvalDate: new Date().toLocaleDateString("en-CA"),
-      reviewComments: data.comments || "",
-      linkedPrototypeManufacturingId: linkedPrototypeId,
-      stages: currentMechanicalDesignRecord.stages.map((stg) => {
-        if (data.decision === "Approved" || data.decision === "Approved with Conditions") {
-          return { ...stg, status: "completed" };
-        }
-        if (data.decision === "Revision Required" && stg.id === "engineering_review") {
-          return { ...stg, status: "pending" };
-        }
-        return stg;
-      }),
-      currentStage:
-        data.decision === "Revision Required"
-          ? "simulation_validation"
-          : "engineering_review",
-      input: {
-        ...currentMechanicalDesignRecord.input,
-        approvalDecision: data.decision,
-        reviewComments: data.comments || "",
-        approvalDate: new Date().toLocaleDateString("en-CA"),
-        reviewers: updatedReviewers,
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Engineering Review Board",
+        reviewerName: "Review Board",
       },
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Lead Design Engineer (Review Board)",
-          event: eventMessage,
-          stage: currentMechanicalDesignRecord.currentStage,
-          status: newStatus,
-        },
-        ...currentMechanicalDesignRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentMechanicalDesignRecord };
+    });
+    return { success: true, data: result as any };
   });

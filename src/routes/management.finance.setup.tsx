@@ -4,6 +4,8 @@ import { Link as LinkIcon, BookOpen } from "lucide-react";
 import { AppShell } from "@/components/erp/AppShell";
 import { FinanceTabBar } from "@/components/erp/FinanceTabBar";
 import { StatusBadge } from "@/components/erp/StatusBadge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState, useQueryErrorToast } from "@/components/erp/QueryErrorState";
 import * as generalLedgerService from "@/services/generalLedgerService";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -41,6 +43,12 @@ function SetupPage() {
         ).data
       : undefined;
 
+  useQueryErrorToast(
+    integrationQuery.isError,
+    integrationQuery.error,
+    "Failed to load integration settings.",
+  );
+
   return (
     <AppShell
       title="Setup & Integrations"
@@ -48,7 +56,16 @@ function SetupPage() {
       description="Configure and manage real-time ledger updates from sub-modules and external ERP gateways."
       tabs={<FinanceTabBar />}
     >
-      <div className="grid gap-6 md:grid-cols-2">
+      {integrationQuery.isError && !integrations ? (
+        <QueryErrorState
+          title="Failed to Load Setup & Integrations"
+          error={integrationQuery.error}
+          onRetry={() => integrationQuery.refetch()}
+        />
+      ) : integrationQuery.isLoading ? (
+        <SetupSkeleton />
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2">
         {/* Section K: Workflow Integration toggles */}
         <div className="card-soft p-5 bg-card border border-border rounded-xl">
           <div className="mb-4 flex items-center justify-between border-b border-border/40 pb-2">
@@ -226,7 +243,53 @@ function SetupPage() {
           </div>
         </div>
       </div>
+      )}
     </AppShell>
+  );
+}
+
+function SetupSkeleton() {
+  return (
+    <div className="grid gap-6 md:grid-cols-2">
+      <div className="card-soft p-5 bg-card border border-border rounded-xl space-y-4">
+        <div className="flex items-center gap-3 border-b border-border/40 pb-3">
+          <Skeleton className="h-6 w-6 rounded" />
+          <div className="space-y-1.5 flex-1">
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-3 w-64" />
+          </div>
+        </div>
+        <div className="space-y-3 pt-2">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="flex items-center justify-between border-b border-border/60 pb-2.5">
+              <Skeleton className="h-4 w-36" />
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-5 w-16 rounded-full" />
+                <Skeleton className="h-6 w-24 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="card-soft p-5 bg-card border border-border rounded-xl space-y-4">
+        <div className="flex items-center gap-3 border-b border-border/40 pb-3">
+          <Skeleton className="h-6 w-6 rounded" />
+          <div className="space-y-1.5 flex-1">
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-3 w-64" />
+          </div>
+        </div>
+        <div className="space-y-4 pt-2">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="border-b border-border/40 pb-2.5 space-y-1.5">
+              <Skeleton className="h-4 w-44" />
+              <Skeleton className="h-3 w-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 

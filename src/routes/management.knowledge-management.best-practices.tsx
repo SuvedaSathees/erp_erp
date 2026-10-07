@@ -2,8 +2,10 @@
 // Management -> Knowledge Management -> Best Practices
 // Best Practices Form — MAICW Classification, Impact Metrics, Actions, Standardization, and Reuse
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getBestPracticesRecordFn } from "@/lib/bestPracticesFns.server";
 import {
   FileText,
   FileCheck,
@@ -106,7 +108,13 @@ function BestPracticesManagementPage() {
   >("overview");
 
   // Form State
+  const { data: dbRecord } = useQuery({
+    queryKey: ["best-practices", "record"],
+    queryFn: () => getBestPracticesRecordFn({ data: {} }),
+  });
+
   const [formData, setFormData] = useState<BestPracticeRecord>(PRIMARY_BEST_PRACTICE_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data); }, [dbRecord]);
   const [kpis, setKpis] = useState(BEST_PRACTICES_EXECUTIVE_KPIS);
   const [impactMetrics, setImpactMetrics] = useState<PerformanceImpactItem[]>(BEST_PRACTICE_IMPACT_METRICS);
   const [actionsList, setActionsList] = useState<PracticeActionItem[]>(BEST_PRACTICE_ACTIONS);

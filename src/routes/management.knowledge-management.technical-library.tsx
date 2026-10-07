@@ -2,8 +2,10 @@
 // Management -> Knowledge Management -> Technical Library
 // Technical Specifications, Engineering Parameters, CAD/STEP Drawings, Simulation & Standards References
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getTechnicalLibraryRecordFn } from "@/lib/technicalLibraryFns.server";
 import {
   FileText,
   FileCheck,
@@ -100,7 +102,13 @@ function TechnicalLibraryPage() {
   >("overview");
 
   // Form State
+  const { data: dbRecord } = useQuery({
+    queryKey: ["technical-library", "record"],
+    queryFn: () => getTechnicalLibraryRecordFn({ data: {} }),
+  });
+
   const [formData, setFormData] = useState<TechnicalLibraryRecord>(PRIMARY_TECHNICAL_RECORD);
+  useEffect(() => { if (dbRecord?.data) setFormData(dbRecord.data); }, [dbRecord]);
   const [kpis, setKpis] = useState(TECHNICAL_LIBRARY_KPIS);
   const [parameters, setParameters] = useState<TechnicalParameterItem[]>(TECHNICAL_PARAMETERS_DATA);
   const [files, setFiles] = useState<TechnicalDocumentFileItem[]>(TECHNICAL_DOCUMENTS_FILES);

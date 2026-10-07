@@ -72,7 +72,7 @@ export const PilotProductionTopBadges: React.FC<PilotProductionTopBadgesProps> =
           <span className="text-[10px] text-muted-foreground font-semibold uppercase block">OEE</span>
           <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-1 block">Good</span>
         </div>
-        {renderGaugeRing(record.oee, "#8b5cf6")}
+        {renderGaugeRing(record.oee, "#0A3C75")}
       </div>
 
       {/* Badge 4: FPY */}
@@ -123,7 +123,7 @@ export const PilotProductionTopBadges: React.FC<PilotProductionTopBadgesProps> =
       <div className="bg-card border border-border rounded-lg p-3 shadow-sm flex items-center justify-between">
         <div>
           <span className="text-[10px] text-muted-foreground font-semibold uppercase block">AI Health Score</span>
-          <span className="text-xs font-bold text-purple-600 dark:text-purple-400 mt-1 flex items-center gap-1">
+          <span className="text-xs font-bold text-primary dark:text-blue-400 mt-1 flex items-center gap-1">
             <Sparkles className="w-3 h-3" /> Good
           </span>
         </div>
@@ -134,7 +134,7 @@ export const PilotProductionTopBadges: React.FC<PilotProductionTopBadgesProps> =
               cx="22"
               cy="22"
               r="18"
-              stroke="#8b5cf6"
+              stroke="#0A3C75"
               strokeWidth="3.5"
               strokeDasharray={2 * Math.PI * 18}
               strokeDashoffset={2 * Math.PI * 18 - (record.aiAssessment.healthScore / 100) * 2 * Math.PI * 18}

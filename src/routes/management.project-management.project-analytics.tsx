@@ -735,7 +735,7 @@ Generated: ${new Date().toLocaleString()}
                     <circle cx="50" cy="50" r="38" stroke="#3b82f6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="92" />
                     <circle cx="50" cy="50" r="38" stroke="#06b6d4" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="160" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="196" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="196" />
                     <circle cx="50" cy="50" r="38" stroke="#64748b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="221" />
                     <circle cx="50" cy="50" r="38" stroke="#f97316" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="235" />
                   </svg>
@@ -750,7 +750,7 @@ Generated: ${new Date().toLocaleString()}
                     { label: "Labour", pct: "38.6%", amt: "₹ 67.3 L", color: "bg-blue-500" },
                     { label: "Material", pct: "28.4%", amt: "₹ 49.5 L", color: "bg-emerald-500" },
                     { label: "Subcontract", pct: "14.9%", amt: "₹ 26.0 L", color: "bg-cyan-500" },
-                    { label: "Equipment", pct: "10.8%", amt: "₹ 18.8 L", color: "bg-purple-500" },
+                    { label: "Equipment", pct: "10.8%", amt: "₹ 18.8 L", color: "bg-blue-500" },
                     { label: "Other Costs", pct: "6.1%", amt: "₹ 10.6 L", color: "bg-slate-500" },
                     { label: "Contingency", pct: "1.2%", amt: "₹ 2.1 L", color: "bg-orange-500" },
                   ].map((row) => (
@@ -787,7 +787,7 @@ Generated: ${new Date().toLocaleString()}
                 <div className="flex items-center justify-center gap-3 text-[10px] font-semibold">
                   <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-emerald-500" /> Progress (%)</span>
                   <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-blue-600" /> Billed (%)</span>
-                  <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-purple-600" /> Collection (%)</span>
+                  <span className="flex items-center gap-1"><div className="h-2 w-2 rounded-full bg-primary" /> Collection (%)</span>
                 </div>
 
                 <div className="h-40 w-full">
@@ -806,16 +806,16 @@ Generated: ${new Date().toLocaleString()}
                     <polyline fill="none" stroke="#10b981" strokeWidth="1.5" points="35,92 75,82 115,72 155,60 195,48 235,38" />
                     {/* Billed curve (Blue) */}
                     <polyline fill="none" stroke="#2563eb" strokeWidth="1.5" points="35,98 75,88 115,82 155,68 195,56 235,46" />
-                    {/* Collection curve (Purple) */}
-                    <polyline fill="none" stroke="#9333ea" strokeWidth="1.5" points="35,102 75,94 115,86 155,75 195,64 235,55" />
+                    {/* Collection curve (Navy) */}
+                    <polyline fill="none" stroke="#0A3C75" strokeWidth="1.5" points="35,102 75,94 115,86 155,75 195,64 235,55" />
 
                     <circle cx="235" cy="38" r="2" fill="#10b981" />
                     <circle cx="235" cy="46" r="2" fill="#2563eb" />
-                    <circle cx="235" cy="55" r="2" fill="#9333ea" />
+                    <circle cx="235" cy="55" r="2" fill="#0A3C75" />
 
                     <text x="238" y="38" fontSize="7" fill="#10b981" fontWeight="bold">65%</text>
                     <text x="238" y="46" fontSize="7" fill="#2563eb" fontWeight="bold">57%</text>
-                    <text x="238" y="56" fontSize="7" fill="#9333ea" fontWeight="bold">47%</text>
+                    <text x="238" y="56" fontSize="7" fill="#0A3C75" fontWeight="bold">47%</text>
 
                     <text x="28" y="120" fontSize="7" fill="#64748b">Apr 26</text>
                     <text x="68" y="120" fontSize="7" fill="#64748b">May 26</text>
@@ -1015,7 +1015,7 @@ Generated: ${new Date().toLocaleString()}
                     className="p-1 rounded hover:bg-muted/30 cursor-pointer transition-colors"
                   >
                     <span className="text-[10px] text-muted-foreground block">Received</span>
-                    <span className="text-base font-bold font-mono text-purple-600">₹ 118.0 L</span>
+                    <span className="text-base font-bold font-mono text-primary">₹ 118.0 L</span>
                     <span className="text-[9px] text-muted-foreground block">83% of Billed</span>
                   </div>
                   <div

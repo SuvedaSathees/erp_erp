@@ -6,35 +6,22 @@ import type {
   SoftwareDevelopmentStage,
   SoftwareDevelopmentStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Software Development — Server Functions & Workflow Engine
-   ---------------------------------------------------------------------------
-   Manages the 4-stage Software Development lifecycle:
-     Stage 1: Software Architecture & Planning (microservices design, tech stack config, modules setup)
-     Stage 2: Development & Integration (backend microservices, frontend SPA, REST/GraphQL APIs & git commits)
-     Stage 3: Testing & Deployment (automated CI/CD pipeline, SAST/DAST scanning, test execution & staging deployment)
-     Stage 4: Engineering Review (Review Board decision: Approved / Approved with Conditions / Revision Required / Rejected)
-
-   Upon 'Approved' decision:
-     - Auto-creates/links downstream System Integration project (SI-2024-0089)
-       and surfaces its ID to proceed to System Integration.
-   =========================================================================== */
+const MODULE_TYPE = "software-development";
 
 export function calculateSoftwareDevelopmentScores(input: Partial<SoftwareDevelopmentFormInput>) {
-  // 1. Development Progress (0-100)
   const developmentProgress = 88;
-
-  // 2. Architecture Readiness (0-100)
   const architectureReadiness = input.technologyReadinessScore ?? 87;
-
-  // 3. Testing Readiness (0-100)
   const testingReadiness = Math.round(input.codeCoverage ?? 87.5);
-
-  // 4. Deployment Readiness (0-100)
   const deploymentReadiness = input.securityScore ?? 90;
 
-  // Overall Software Score (/100)
   const overallSoftwareScore = Math.round(
     developmentProgress * 0.25 +
       architectureReadiness * 0.25 +
@@ -42,7 +29,6 @@ export function calculateSoftwareDevelopmentScores(input: Partial<SoftwareDevelo
       deploymentReadiness * 0.25
   );
 
-  // AI Assessment Sub-scores (single source of truth with Panel 9)
   const aiCodeQualityScore = 88;
   const aiArchitectureAssessment = architectureReadiness;
   const aiPerformanceOptimization = 86;
@@ -51,7 +37,6 @@ export function calculateSoftwareDevelopmentScores(input: Partial<SoftwareDevelo
   const aiTechnicalDebtAnalysis = 85;
   const aiOverallSoftwareScore = overallSoftwareScore;
 
-  // Key Highlights dynamic list
   const highlights: string[] = [];
   highlights.push("Microservices architecture implemented");
   highlights.push("CI/CD pipeline with 95% automation");
@@ -344,7 +329,7 @@ const DEFAULT_SOFTWARE_DEVELOPMENT_INPUT: SoftwareDevelopmentFormInput = {
   approvalDate: "2024-06-20",
 };
 
-let currentSoftwareDevelopmentRecord: SoftwareDevelopmentRecord = {
+const DEFAULT_MOCK_RECORD: SoftwareDevelopmentRecord = {
   id: "swd-rec-2024-0017",
   softwareId: "SWD-2024-0017",
   formCode: "SWF-2024-25",
@@ -446,228 +431,86 @@ let currentSoftwareDevelopmentRecord: SoftwareDevelopmentRecord = {
       status: "Under Review",
     },
   ],
-};
+} as any;
 
-/** Get current Software Development Record */
 export const getSoftwareDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: SoftwareDevelopmentRecord }> => {
-    return { success: true, data: currentSoftwareDevelopmentRecord };
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   }
 );
 
-/** Save Draft */
 export const saveSoftwareDevelopmentDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<SoftwareDevelopmentFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: SoftwareDevelopmentRecord }> => {
-    const updatedInput = { ...currentSoftwareDevelopmentRecord.input, ...data.input };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_MOCK_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateSoftwareDevelopmentScores(updatedInput);
-
-    currentSoftwareDevelopmentRecord = {
-      ...currentSoftwareDevelopmentRecord,
+    const record = {
+      ...base,
       input: updatedInput,
       ...scores,
-      lastUpdated: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      lastModified: new Date().toISOString(),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rahul Sharma",
-          event: "Saved draft updates to Software Development Form",
-          stage: currentSoftwareDevelopmentRecord.currentStage,
-          status: currentSoftwareDevelopmentRecord.status,
-        },
-        ...currentSoftwareDevelopmentRecord.auditTrail,
-      ],
+      projectName: (base as any).softwareProjectName ?? "",
+      ownerName: (base as any).softwareArchitectName ?? "Rahul Sharma",
+      recordCode: (base as any).id ?? (base as any).softwareId ?? "",
     };
-
-    return { success: true, data: currentSoftwareDevelopmentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Advance Stage */
 export const advanceSoftwareDevelopmentStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: SoftwareDevelopmentStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: SoftwareDevelopmentRecord }> => {
-    const stageMap: Record<SoftwareDevelopmentStage, { label: string; stageNumber: number }> = {
-      software_architecture_planning: {
-        label: "Stage 1: Software Architecture & Planning",
-        stageNumber: 1,
-      },
-      development_integration: {
-        label: "Stage 2: Development & Integration",
-        stageNumber: 2,
-      },
-      testing_deployment: {
-        label: "Stage 3: Testing & Deployment",
-        stageNumber: 3,
-      },
-      engineering_review: {
-        label: "Stage 4: Engineering Review",
-        stageNumber: 4,
-      },
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? DEFAULT_MOCK_RECORD;
+    const stageMap: Record<string, { label: string; stageNumber: number }> = {
+      software_architecture_planning: { label: "Stage 1: Software Architecture & Planning", stageNumber: 1 },
+      development_integration: { label: "Stage 2: Development & Integration", stageNumber: 2 },
+      testing_deployment: { label: "Stage 3: Testing & Deployment", stageNumber: 3 },
+      engineering_review: { label: "Stage 4: Engineering Review", stageNumber: 4 },
     };
-
     const target = stageMap[data.targetStage];
-
-    currentSoftwareDevelopmentRecord = {
-      ...currentSoftwareDevelopmentRecord,
+    const record = {
+      ...base,
       currentStage: data.targetStage,
       currentStageLabel: target.label,
-      stages: currentSoftwareDevelopmentRecord.stages.map((stg) => {
+      stages: (base.stages ?? []).map((stg: any) => {
         if (stg.stageNumber < target.stageNumber) return { ...stg, status: "completed" };
         if (stg.stageNumber === target.stageNumber) return { ...stg, status: "in_progress" };
         return { ...stg, status: "pending" };
       }),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rahul Sharma",
-          event: `Advanced to ${target.label}`,
-          stage: data.targetStage,
-          status: currentSoftwareDevelopmentRecord.status,
-        },
-        ...currentSoftwareDevelopmentRecord.auditTrail,
-      ],
+      projectName: base.softwareProjectName ?? "",
+      ownerName: base.softwareArchitectName ?? "Rahul Sharma",
+      recordCode: base.id ?? base.softwareId ?? "",
     };
-
-    return { success: true, data: currentSoftwareDevelopmentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Submit for Review */
 export const submitSoftwareDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: SoftwareDevelopmentRecord }> => {
-    currentSoftwareDevelopmentRecord = {
-      ...currentSoftwareDevelopmentRecord,
-      status: "Under Review",
-      currentStage: "engineering_review",
-      currentStageLabel: "Stage 4: Engineering Review",
-      stages: currentSoftwareDevelopmentRecord.stages.map((stg) =>
-        stg.id === "engineering_review" ? { ...stg, status: "in_progress" } : { ...stg, status: "completed" }
-      ),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rahul Sharma",
-          event: "Submitted Software Release for Stage 4 Engineering Review Board",
-          stage: "engineering_review",
-          status: "Under Review",
-        },
-        ...currentSoftwareDevelopmentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentSoftwareDevelopmentRecord };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   });
 
-/** Review Board Decision */
 export const reviewSoftwareDevelopmentFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: SoftwareDevelopmentApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: SoftwareDevelopmentApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: SoftwareDevelopmentRecord }> => {
-    let newStatus: SoftwareDevelopmentStatus = "Under Review";
-    let linkedSystemIntegrationId: string | null = currentSoftwareDevelopmentRecord.linkedSystemIntegrationId ?? null;
-    let eventMessage = "";
-
-    if (data.decision === "Approved") {
-      newStatus = "Approved";
-      linkedSystemIntegrationId = "SI-2024-0089";
-      eventMessage = "Review Board Approved Software Development. Auto-created/linked downstream System Integration project SI-2024-0089 (converging Embedded, Firmware, Electronics, and Software streams). Software Architect notified: 'Proceed to System Integration'.";
-    } else if (data.decision === "Approved with Conditions") {
-      newStatus = "Approved with Conditions";
-      eventMessage = "Review Board Approved with Conditions. Software Architect notified: 'Improve Software'. Record remains editable.";
-    } else if (data.decision === "Revision Required") {
-      newStatus = "Revision Required";
-      eventMessage = "Review Board requested revisions. Software Architect notified: 'Reassess Architecture & Testing'. Returned to Testing & Deployment stage.";
-    } else if (data.decision === "Rejected") {
-      newStatus = "Rejected";
-      eventMessage = "Review Board Rejected Software Development. Project archived. Software Architect notified: 'Close Software Development'.";
-    }
-
-    const updatedReviewers = currentSoftwareDevelopmentRecord.input.reviewers.map((rev) => {
-      if (rev.role === "Software Architect" || rev.role === "Development Lead") {
-        return {
-          ...rev,
-          decision: data.decision === "Approved" || data.decision === "Approved with Conditions" ? ("Approved" as const) : ("Rejected" as const),
-          status: data.decision,
-          date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-        };
-      }
-      return rev;
-    });
-
-    currentSoftwareDevelopmentRecord = {
-      ...currentSoftwareDevelopmentRecord,
-      status: newStatus,
-      approvalDecision: data.decision,
-      approvalDate: new Date().toLocaleDateString("en-CA"),
-      reviewComments: data.comments || "",
-      linkedSystemIntegrationId,
-      stages: currentSoftwareDevelopmentRecord.stages.map((stg) => {
-        if (data.decision === "Approved" || data.decision === "Approved with Conditions") {
-          return { ...stg, status: "completed" };
-        }
-        if (data.decision === "Revision Required" && stg.id === "engineering_review") {
-          return { ...stg, status: "pending" };
-        }
-        return stg;
-      }),
-      currentStage:
-        data.decision === "Revision Required"
-          ? "testing_deployment"
-          : "engineering_review",
-      input: {
-        ...currentSoftwareDevelopmentRecord.input,
-        approvalDecision: data.decision,
-        reviewComments: data.comments || "",
-        approvalDate: new Date().toLocaleDateString("en-CA"),
-        reviewers: updatedReviewers,
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Engineering Review Board",
+        reviewerName: "Review Board",
       },
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Lead Software Architect (Review Board)",
-          event: eventMessage,
-          stage: currentSoftwareDevelopmentRecord.currentStage,
-          status: newStatus,
-        },
-        ...currentSoftwareDevelopmentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentSoftwareDevelopmentRecord };
+    });
+    return { success: true, data: result as any };
   });

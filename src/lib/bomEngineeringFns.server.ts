@@ -3,9 +3,16 @@ import type {
   BomEngineeringRecord,
   BomFormInput,
   BomItemNode,
-  BomApprovalDecision,
-  BomRecommendation,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "bom-engineering";
 
 export const INITIAL_BOM_RECORD: BomEngineeringRecord = {
   id: "bom-rec-00125",
@@ -384,56 +391,54 @@ export const INITIAL_BOM_RECORD: BomEngineeringRecord = {
     { id: "aud-07", timestamp: "25 Jun 2024 05:30 PM", user: "Arvind Swaminathan", action: "Executive Board Approval", description: "All 8 board members completed review. Status set to Approved with Conditions.", stage: "Stage 4 - Executive Review" },
     { id: "aud-08", timestamp: "01 Jul 2024 09:00 AM", user: "System Repository", action: "Enterprise Sync", description: "BOM published to ERP Database, PLM, MES, and MRP downstream modules.", stage: "Enterprise Product Repository" },
   ],
-};
-
-let currentRecordState: BomEngineeringRecord = { ...INITIAL_BOM_RECORD };
+} as any;
 
 export const getBomRecordFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: currentRecordState };
+  const result = withDefaults(INITIAL_BOM_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
+  return { success: true, data: INITIAL_BOM_RECORD };
 });
 
 export const saveBomDraftFn = createServerFn({ method: "POST" })
   .validator((data: unknown) => data as { input: BomFormInput })
   .handler(async ({ data }) => {
-    currentRecordState = {
-      ...currentRecordState,
-      ...data.input,
-      lastModifiedBy: "Current User",
-      lastModifiedDate: new Date().toLocaleString(),
-      workflowStatus: "Draft",
+    const record = {
+      ...(data.input as any),
+      projectName: (data.input as any).bomName ?? "",
+      ownerName: (data.input as any).processOwner ?? "",
+      recordCode: (data.input as any).id ?? (data.input as any).bomId ?? "",
     };
-    return { success: true, data: currentRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
 export const submitBomFn = createServerFn({ method: "POST" }).handler(async () => {
-  currentRecordState = {
-    ...currentRecordState,
-    workflowStatus: "In Review",
-    workflowStage: "Executive Board Review",
-    lastModifiedBy: "Current User",
-    lastModifiedDate: new Date().toLocaleString(),
-  };
-  return { success: true, data: currentRecordState };
+  const current = withDefaults(INITIAL_BOM_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (current?.id) {
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    return { success: true, data: result };
+  }
+  return { success: true, data: INITIAL_BOM_RECORD };
 });
 
 export const addBomItemFn = createServerFn({ method: "POST" })
   .validator((data: unknown) => data as Omit<BomItemNode, "id">)
   .handler(async ({ data }) => {
-    const newItem: BomItemNode = {
-      ...data,
-      id: `item-${Date.now()}`,
-    };
-    const updatedItems = [...currentRecordState.items, newItem];
-    const newTotalCost = updatedItems.reduce((acc, curr) => acc + curr.totalCost, 0);
-
-    currentRecordState = {
-      ...currentRecordState,
+    const current = withDefaults(INITIAL_BOM_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (!current) return { success: true, data: INITIAL_BOM_RECORD };
+    const newItem: BomItemNode = { ...data, id: `item-${Date.now()}` } as any;
+    const updatedItems = [...(current.items ?? []), newItem];
+    const newTotalCost = updatedItems.reduce((acc: number, curr: any) => acc + (curr.totalCost ?? 0), 0);
+    const record = {
+      ...current,
       items: updatedItems,
       totalItemsCount: updatedItems.length,
       totalBomCost: newTotalCost,
-      costVariance: newTotalCost - currentRecordState.targetCost,
-      lastModifiedDate: new Date().toLocaleString(),
+      costVariance: newTotalCost - (current.targetCost ?? 0),
+      projectName: current.bomName ?? "",
+      ownerName: current.processOwner ?? "",
+      recordCode: current.id ?? current.bomId ?? "",
     };
-
-    return { success: true, data: currentRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });

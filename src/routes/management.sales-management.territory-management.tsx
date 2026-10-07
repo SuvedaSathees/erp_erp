@@ -107,7 +107,7 @@ const initialTerritoriesData: Record<string, {
       { name: "Direct Enterprise", value: 2.25, share: "30%", color: "#22C55E" },
       { name: "Master Distributors", value: 1.5, share: "20%", color: "#0284C7" },
       { name: "System Integrators / EPC", value: 0.75, share: "10%", color: "#F59E0B" },
-      { name: "GeM / State Tenders", value: 0.375, share: "5%", color: "#6366F1" },
+      { name: "GeM / State Tenders", value: 0.375, share: "5%", color: "#3B82F6" },
     ],
     districts: [
       {

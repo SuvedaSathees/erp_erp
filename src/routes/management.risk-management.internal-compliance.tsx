@@ -2,8 +2,10 @@
 // Management -> Risk Management -> Internal Compliance
 // Internal Compliance Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getInternalComplianceRecordFn } from "@/lib/internalComplianceFns.server";
 import {
   FileText,
   AlertTriangle,
@@ -148,10 +150,17 @@ const INTERNAL_SUBMODULE_TABS = [
 export function InternalCompliancePage() {
   const { toast } = useToast();
 
+  // Prisma-backed query with inline fallback
+  const { data: dbRecord } = useQuery({
+    queryKey: ["internal-compliance", "record"],
+    queryFn: () => getInternalComplianceRecordFn({ data: {} }),
+  });
+
   // Active record state (matches screenshot by default)
   const [activeRecord, setActiveRecord] = useState<InternalComplianceRecord>(
     internalComplianceService.getPrimaryRecord()
   );
+  useEffect(() => { if (dbRecord?.data) setActiveRecord(dbRecord.data as InternalComplianceRecord); }, [dbRecord]);
 
   // Tab state: "overview" (General) or "reports" (Reports)
   const [activeSubmodule, setActiveSubmodule] = useState<string>("overview");

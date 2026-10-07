@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { qualityManagementService } from "@/services";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
@@ -13,6 +15,7 @@ import { FqcQualityCertificateCard } from "@/components/erp/fqc/FqcQualityCertif
 import { FqcRecentDefectsCard } from "@/components/erp/fqc/FqcRecentDefectsCard";
 import { FqcAiInsightsCard } from "@/components/erp/fqc/FqcAiInsightsCard";
 import { CreateFqcModal } from "@/components/erp/fqc/CreateFqcModal";
+import { getFqcRecordFn } from "@/lib/fqcFns.server";
 import { INITIAL_FQC_RECORD } from "@/services/fqcService";
 import { FqcRecord, FqcCharacteristic, FqcDefect } from "@/services/fqcTypes";
 import { Button } from "@/components/ui/button";
@@ -48,7 +51,19 @@ export const Route = createFileRoute(
 });
 
 export function FinalInspectionPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["quality", "inspections"]],
+    queryFn: () => qualityManagementService.fetchInspectionRecords(),
+  });
+
+  const { data: dbFqcRecord } = useQuery({
+    queryKey: ["fqc", "record"],
+    queryFn: () => getFqcRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<FqcRecord>(INITIAL_FQC_RECORD);
+  useEffect(() => { if (dbFqcRecord?.data) setRecord(dbFqcRecord.data); }, [dbFqcRecord]);
   const [activeStep, setActiveStep] = useState<number>(3);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -341,7 +356,7 @@ export function FinalInspectionPage() {
                 />
                 <div className="p-4 rounded-xl bg-card border border-border/80 space-y-2 text-xs">
                   <h3 className="font-semibold text-foreground text-sm flex items-center gap-1.5">
-                    <Award className="w-4 h-4 text-purple-600" />
+                    <Award className="w-4 h-4 text-primary" />
                     Dispatch Authorization Checklist
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-muted-foreground pt-1">

@@ -6,40 +6,30 @@ import type {
   IndustrialDesignStage,
   IndustrialDesignStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Industrial Design — Server Functions & Workflow Engine
-   ---------------------------------------------------------------------------
-   Manages the 4-stage Industrial Design lifecycle:
-     Stage 1: Concept Design (Vision, form factor, ergonomics, concept sketches, AI analysis)
-     Stage 2: Material & Manufacturing Design (Materials, DFM/DFA, tooling, cost optimization)
-     Stage 3: Prototype Validation (User testing, eco-design, regulatory, compliance score)
-     Stage 4: Executive Review (Decision: Approved / Approved with Conditions / Revision Required / Rejected)
-
-   Upon 'Approved' decision:
-     - Auto-creates / links downstream Mechanical Design project (e.g. MECH-2024-0042)
-       and surfaces its ID to proceed to Mechanical Engineering Design.
-   =========================================================================== */
+const MODULE_TYPE = "industrial-design";
 
 export function calculateIndustrialDesignScores(input: Partial<IndustrialDesignFormInput>) {
-  // 1. User Experience (0-100) - based on Ergonomic & Validation Scores
   const ergonomicScore = input.ergonomicScore ?? 86;
   const validationScore = input.validationScore ?? 84;
   const userExperience = Math.round(ergonomicScore * 0.55 + validationScore * 0.45);
 
-  // 2. Manufacturability (0-100)
   const manufacturability = input.manufacturabilityScore ?? 85;
 
-  // 3. Sustainability (0-100)
   const complianceScore = input.complianceScore ?? 86;
   const recyclability = input.recyclabilityPercent ?? 85;
   const sustainability = Math.min(100, Math.round(complianceScore * 0.6 + recyclability * 0.4));
 
-  // 4. Brand Alignment (0-100)
   const visualAppeal = input.visualAppealScore ?? 88;
   const brandAlignment = Math.min(100, Math.round(visualAppeal * 0.9 + 4));
 
-  // Overall Design Score (/100)
   const overallDesignScore = Math.round(
     userExperience * 0.3 +
       manufacturability * 0.25 +
@@ -47,37 +37,18 @@ export function calculateIndustrialDesignScores(input: Partial<IndustrialDesignF
       brandAlignment * 0.25
   );
 
-  // AI Quality Sub-scores
   const aiDesignQualityScore = Math.min(99, Math.max(75, Math.round(overallDesignScore * 0.98 + 3)));
   const aiOverallDesignScore = Math.round(aiDesignQualityScore * 0.98);
 
-  // Derived Key Highlights Checklist (dynamic from input data)
   const highlights: string[] = [];
-
-  if (input.formFactor || input.ergonomicConsiderations) {
-    highlights.push("Ergonomic and user-friendly design");
-  } else {
-    highlights.push("Ergonomic and user-friendly design");
-  }
-
-  if (input.brandIdentityAlignment || input.surfaceFinish) {
-    highlights.push("Premium aesthetics with strong brand alignment");
-  } else {
-    highlights.push("Premium aesthetics with strong brand alignment");
-  }
-
-  if (input.manufacturingProcess && input.manufacturingProcess.length > 0) {
-    highlights.push("High manufacturability and easy assembly");
-  } else {
-    highlights.push("High manufacturability and easy assembly");
-  }
-
+  highlights.push("Ergonomic and user-friendly design");
+  highlights.push("Premium aesthetics with strong brand alignment");
+  highlights.push("High manufacturability and easy assembly");
   if (input.recyclabilityPercent) {
     highlights.push(`Sustainable material with ${input.recyclabilityPercent}% recyclability`);
   } else {
     highlights.push("Sustainable material with high recyclability");
   }
-
   highlights.push(`Excellent AI design evaluation score (${aiOverallDesignScore}/100)`);
 
   return {
@@ -211,7 +182,7 @@ const INITIAL_INPUT: IndustrialDesignFormInput = {
   approvalDate: new Date().toISOString().split("T")[0],
 };
 
-let currentRecord: IndustrialDesignRecord = {
+const DEFAULT_MOCK_RECORD: IndustrialDesignRecord = {
   id: "id-rec-0017",
   designId: "ID-2024-0017",
   formCode: "IDF-2024-25",
@@ -258,204 +229,87 @@ let currentRecord: IndustrialDesignRecord = {
     { id: "aud-4", timestamp: "15 Jul 2024 05:00 PM", user: "Pooja Iyer", action: "Stage 3 Completed", details: "Functional prototype tested with positive feedback." },
     { id: "aud-5", timestamp: "20 Jun 2024 04:25 PM", user: "Rohit Verma", action: "Submitted for Review", details: "Industrial Design submitted to Executive Design Board." },
   ],
-};
+} as any;
 
-// 1. Get Record
-export const getIndustrialDesignFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: currentRecord };
-});
+export const getIndustrialDesignFn = createServerFn({ method: "GET" }).handler(
+  async (): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_MOCK_RECORD };
+  }
+);
 
-// 2. Save Draft
 export const saveIndustrialDesignDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: IndustrialDesignFormInput }) => data)
-  .handler(async ({ data }) => {
-    const scores = calculateIndustrialDesignScores(data.input);
-    const now = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-
-    currentRecord = {
-      ...currentRecord,
-      designProjectName: data.input.designProjectName || currentRecord.designProjectName,
-      designVersion: data.input.designVersion || currentRecord.designVersion,
-      businessUnit: data.input.businessUnit || currentRecord.businessUnit,
-      industrialDesignerName: data.input.industrialDesignerName || currentRecord.industrialDesignerName,
-      lastUpdated: now,
-      lastModified: now,
-      input: data.input,
+  .handler(async ({ data }): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_MOCK_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
+    const scores = calculateIndustrialDesignScores(updatedInput);
+    const record = {
+      ...base,
+      input: updatedInput,
       ...scores,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: now,
-          user: data.input.industrialDesignerName || "Rohit Verma",
-          action: "Saved Draft",
-          details: "Industrial design specification draft saved.",
-        },
-        ...currentRecord.auditTrail,
-      ],
+      projectName: (base as any).designProjectName ?? "",
+      ownerName: (base as any).industrialDesignerName ?? "Rohit Verma",
+      recordCode: (base as any).id ?? (base as any).designId ?? "",
     };
-
-    return { success: true, data: currentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-// 3. Advance Stage
 export const advanceIndustrialDesignStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: IndustrialDesignStage }) => data)
-  .handler(async ({ data }) => {
-    const now = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-
-    let statusLabel: IndustrialDesignStatus = "Concept Design";
-    let stageLabel = "Stage 1: Concept Design";
-
-    if (data.targetStage === "material_manufacturing_design") {
-      statusLabel = "Material & Mfg Design";
-      stageLabel = "Stage 2: Material & Mfg Design";
-    } else if (data.targetStage === "prototype_validation") {
-      statusLabel = "Prototype Validation";
-      stageLabel = "Stage 3: Prototype Validation";
-    } else if (data.targetStage === "executive_review") {
-      statusLabel = "Under Review";
-      stageLabel = "Stage 4: Executive Review";
-    }
-
-    const updatedStages = currentRecord.stages.map((s) => {
-      if (s.stage === data.targetStage) {
-        return { ...s, active: true, completed: false };
-      }
-      return { ...s, active: false };
-    });
-
-    currentRecord = {
-      ...currentRecord,
-      status: statusLabel,
-      currentStage: data.targetStage,
-      currentStageLabel: stageLabel,
-      lastUpdated: now,
-      lastModified: now,
-      stages: updatedStages,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: now,
-          user: currentRecord.industrialDesignerName,
-          action: "Stage Advanced",
-          details: `Advanced workflow stage to ${stageLabel}.`,
-        },
-        ...currentRecord.auditTrail,
-      ],
+  .handler(async ({ data }): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? DEFAULT_MOCK_RECORD;
+    const stageMap: Record<string, { label: string; stageNumber: number }> = {
+      concept_design: { label: "Stage 1: Concept Design", stageNumber: 1 },
+      material_manufacturing_design: { label: "Stage 2: Material & Mfg Design", stageNumber: 2 },
+      prototype_validation: { label: "Stage 3: Prototype Validation", stageNumber: 3 },
+      executive_review: { label: "Stage 4: Executive Review", stageNumber: 4 },
     };
-
-    return { success: true, data: currentRecord };
+    const target = stageMap[data.targetStage];
+    const record = {
+      ...base,
+      currentStage: data.targetStage,
+      currentStageLabel: target.label,
+      stages: (base.stages ?? []).map((stg: any) => {
+        const stgNum = stg.stageNumber ?? (Object.keys(stageMap).indexOf(stg.stage) + 1);
+        if (stgNum < target.stageNumber) return { ...stg, completed: true, active: false, status: "completed" };
+        if (stgNum === target.stageNumber) return { ...stg, completed: false, active: true, status: "in_progress" };
+        return { ...stg, completed: false, active: false, status: "pending" };
+      }),
+      projectName: base.designProjectName ?? "",
+      ownerName: base.industrialDesignerName ?? "Rohit Verma",
+      recordCode: base.id ?? base.designId ?? "",
+    };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-// 4. Submit for Review
 export const submitIndustrialDesignFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
-  .handler(async () => {
-    const now = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-
-    currentRecord = {
-      ...currentRecord,
-      status: "Under Review",
-      currentStage: "executive_review",
-      currentStageLabel: "Industrial Design Review Board",
-      lastUpdated: now,
-      lastModified: now,
-      stages: currentRecord.stages.map((s) =>
-        s.stage === "executive_review" ? { ...s, active: true, completed: false } : { ...s, active: false, completed: true }
-      ),
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: now,
-          user: currentRecord.industrialDesignerName,
-          action: "Submitted for Review",
-          details: "Industrial Design record submitted to Executive Board for final approval decision.",
-        },
-        ...currentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentRecord };
+  .handler(async (): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   });
 
-// 5. Review Decision & Mechanical Design Hand-off
 export const reviewIndustrialDesignFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: IndustrialDesignApprovalDecision;
-      comments?: string;
-    }) => data
-  )
-  .handler(async ({ data }) => {
-    const now = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-
-    let newStatus: IndustrialDesignStatus = "Under Review";
-    let mechanicalDesignId: string | null = currentRecord.linkedMechanicalDesignId || null;
-
-    if (data.decision === "approved") {
-      newStatus = "Approved";
-      // Auto-create / link downstream Mechanical Design project as specified in sequence diagram
-      if (!mechanicalDesignId) {
-        mechanicalDesignId = "MECH-2024-0042";
-      }
-    } else if (data.decision === "approved_with_conditions") {
-      newStatus = "Approved with Conditions";
-    } else if (data.decision === "revision_required") {
-      newStatus = "Revision Required";
-    } else if (data.decision === "rejected") {
-      newStatus = "Rejected";
-    }
-
-    const updatedReviewers = currentRecord.input.reviewers.map((r) => {
-      if (r.role === "CTO" || r.role === "Industrial Designer") {
-        return {
-          ...r,
-          decision:
-            data.decision === "approved"
-              ? ("Approved" as const)
-              : data.decision === "revision_required"
-              ? ("Revision Required" as const)
-              : data.decision === "rejected"
-              ? ("Rejected" as const)
-              : ("Approved" as const),
-          status: "Completed",
-          date: now.split(" ")[0],
-        };
-      }
-      return r;
-    });
-
-    currentRecord = {
-      ...currentRecord,
-      status: newStatus,
-      approvalDecision: data.decision,
-      approvalDate: now.split(" ")[0],
-      reviewComments: data.comments || currentRecord.reviewComments,
-      linkedMechanicalDesignId: mechanicalDesignId,
-      lastUpdated: now,
-      lastModified: now,
-      input: {
-        ...currentRecord.input,
-        reviewers: updatedReviewers,
-        approvalDecision: data.decision,
-        reviewComments: data.comments || currentRecord.input.reviewComments,
-        approvalDate: now.split(" ")[0],
+  .validator((data: { id: string; decision: IndustrialDesignApprovalDecision; comments?: string }) => data)
+  .handler(async ({ data }): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Executive Review Board",
+        reviewerName: "Review Board",
       },
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: now,
-          user: "Executive Review Board",
-          action: `Decision: ${newStatus}`,
-          details:
-            data.decision === "approved"
-              ? `Industrial Design approved. Mechanical Design project ${mechanicalDesignId} created and linked.`
-              : `Review decision rendered: ${newStatus}. Comments: ${data.comments || "None"}.`,
-        },
-        ...currentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentRecord };
+    });
+    return { success: true, data: result as any };
   });

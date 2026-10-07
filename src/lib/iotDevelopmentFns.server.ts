@@ -5,10 +5,15 @@ import type {
   IotRecord,
   IotStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   IoT Development — Server Functions & Connected-Device Engine
-   =========================================================================== */
+const MODULE_TYPE = "iot-development";
 
 export function calculateIotScores(record: Partial<IotRecord>) {
   const hwScore = record.hardwareScore ?? 89;
@@ -192,62 +197,44 @@ export const DEFAULT_IOT_RECORD: IotRecord = {
     { id: "aud-3", timestamp: "19 Jun 2024 02:15 PM", user: "Ananya Iyer", action: "Telemetry Pipeline Enabled", details: "Azure IoT Hub telemetry streaming & AI predictive maintenance connected.", ipAddress: "192.168.1.88" },
     { id: "aud-4", timestamp: "20 Jun 2024 04:25 PM", user: "Rohit Nair", action: "Security Verification", details: "Recorded Approved with Conditions decision pending minor TLS certificate update.", ipAddress: "192.168.1.99" },
   ],
-};
+} as any;
 
-let memoryIotStore: IotRecord = { ...DEFAULT_IOT_RECORD };
-
-export const getIotFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: memoryIotStore };
-});
+export const getIotFn = createServerFn({ method: "GET" }).handler(
+  async (): Promise<{ success: boolean; data: IotRecord }> => {
+    const result = withDefaults(DEFAULT_IOT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_IOT_RECORD };
+  }
+);
 
 export const saveIotDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<IotFormInput> }) => data)
-  .handler(async ({ data }) => {
-    const updated = {
-      ...memoryIotStore,
+  .handler(async ({ data }): Promise<{ success: boolean; data: IotRecord }> => {
+    const current = withDefaults(DEFAULT_IOT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_IOT_RECORD;
+    const updatedInput = { ...(base as any), ...data.input };
+    const scores = calculateIotScores(updatedInput);
+    const record = {
+      ...base,
       ...data.input,
-      lastModifiedDate: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      }),
-      lastUpdated: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      }),
+      ...scores,
+      projectName: (base as any).iotProjectName ?? "",
+      ownerName: (base as any).iotArchitect?.name ?? "Rahul Sharma",
+      recordCode: (base as any).id ?? (base as any).iotDevelopmentId ?? "",
     };
-    memoryIotStore = updated;
-    return { success: true, data: memoryIotStore };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitIotFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
-  .handler(async () => {
-    const updated: IotRecord = {
-      ...memoryIotStore,
-      workflowStatus: "In Review",
-      stage: 4,
-      workflowStageLabel: "Review & Production Deployment (Stage 4)",
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toLocaleString("en-GB"),
-          user: "Rahul Sharma",
-          action: "Submitted IoT Solution for Production Deployment Review",
-          details: "IoT Solution submitted to Architecture Review Board for Production authorization.",
-        },
-        ...memoryIotStore.auditTrail,
-      ],
-    };
-    memoryIotStore = updated;
-    return { success: true, data: memoryIotStore };
+  .handler(async (): Promise<{ success: boolean; data: IotRecord }> => {
+    const current = withDefaults(DEFAULT_IOT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_IOT_RECORD };
   });
 
 export const reviewIotFn = createServerFn({ method: "POST" })
@@ -258,144 +245,76 @@ export const reviewIotFn = createServerFn({ method: "POST" })
       comments?: string;
     }) => data
   )
-  .handler(async ({ data }) => {
-    let nextStatus: IotStatus = "In Review";
-    let nextStage: 1 | 2 | 3 | 4 = memoryIotStore.stage;
-    let nextStageLabel = memoryIotStore.workflowStageLabel;
-
-    if (data.decision === "Approved") {
-      nextStatus = "Production";
-      nextStage = 4;
-      nextStageLabel = "Live Production Monitoring Active";
-    } else if (data.decision === "Approved with Conditions") {
-      nextStatus = "Approved with Conditions";
-      nextStage = 4;
-      nextStageLabel = "Approved with Minor Security Conditions";
-    } else if (data.decision === "Revision Required") {
-      nextStatus = "Revision Required";
-      nextStage = 2;
-      nextStageLabel = "Device Architecture Revision Required";
-    } else if (data.decision === "Rejected") {
-      nextStatus = "Rejected";
-      nextStage = 4;
-      nextStageLabel = "Closed & Archived";
-    }
-
-    const newReviewers = memoryIotStore.reviewers.map((rev) => {
-      if (rev.role === "IoT Architect" || rev.role === "CTO" || rev.role === "Security Engineer") {
-        return {
-          ...rev,
-          decision: data.decision,
-          comments: data.comments || rev.comments,
-          date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-          status: "Completed" as const,
-        };
-      }
-      return rev;
+  .handler(async ({ data }): Promise<{ success: boolean; data: IotRecord }> => {
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "IoT Architecture Review Board",
+        reviewerName: "Review Board",
+      },
     });
-
-    const updated: IotRecord = {
-      ...memoryIotStore,
-      workflowStatus: nextStatus,
-      stage: nextStage,
-      workflowStageLabel: nextStageLabel,
-      approvalDecision: data.decision,
-      reviewComments: data.comments || memoryIotStore.reviewComments,
-      approvalDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      reviewers: newReviewers,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toLocaleString("en-GB"),
-          user: "Rahul Sharma",
-          action: `Architecture Decision: ${data.decision}`,
-          details: `IoT Architecture Review Board recorded '${data.decision}' decision. Production Status: ${data.decision === "Approved" ? "PRODUCTION LIVE" : "IN REVIEW"}`,
-        },
-        ...memoryIotStore.auditTrail,
-      ],
-    };
-
-    memoryIotStore = updated;
-    return { success: true, data: memoryIotStore };
+    return { success: true, data: result as any };
   });
 
 export const advanceIotStageFn = createServerFn({ method: "POST" })
   .validator((data: { targetStage: 1 | 2 | 3 | 4 }) => data)
-  .handler(async ({ data }) => {
-    let nextStatus: IotStatus = memoryIotStore.workflowStatus;
-    let stageLabel = "Device & Connectivity Design";
-    if (data.targetStage === 1) {
-      nextStatus = "Device & Connectivity Design";
-      stageLabel = "Device & Connectivity Design (Stage 1)";
-    } else if (data.targetStage === 2) {
-      nextStatus = "Device Registration & Integration";
-      stageLabel = "Device Registration & Integration (Stage 2)";
-    } else if (data.targetStage === 3) {
-      nextStatus = "Telemetry & Analytics";
-      stageLabel = "Telemetry & Analytics (Stage 3)";
-    } else if (data.targetStage === 4) {
-      nextStatus = "In Review";
-      stageLabel = "Review & Production Deployment (Stage 4)";
-    }
-
-    const updated: IotRecord = {
-      ...memoryIotStore,
-      stage: data.targetStage,
-      workflowStatus: nextStatus,
-      workflowStageLabel: stageLabel,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toLocaleString("en-GB"),
-          user: "Rahul Sharma",
-          action: `Advanced to Stage ${data.targetStage}`,
-          details: `IoT workflow stage set to Stage ${data.targetStage}: ${stageLabel}`,
-        },
-        ...memoryIotStore.auditTrail,
-      ],
+  .handler(async ({ data }): Promise<{ success: boolean; data: IotRecord }> => {
+    const current = withDefaults(DEFAULT_IOT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? DEFAULT_IOT_RECORD;
+    const stageLabels: Record<number, string> = {
+      1: "Device & Connectivity Design (Stage 1)",
+      2: "Device Registration & Integration (Stage 2)",
+      3: "Telemetry & Analytics (Stage 3)",
+      4: "Review & Production Deployment (Stage 4)",
     };
-    memoryIotStore = updated;
-    return { success: true, data: memoryIotStore };
+    const record = {
+      ...base,
+      stage: data.targetStage,
+      workflowStageLabel: stageLabels[data.targetStage],
+      projectName: base.iotProjectName ?? "",
+      ownerName: base.iotArchitect?.name ?? "Rahul Sharma",
+      recordCode: base.id ?? base.iotDevelopmentId ?? "",
+    };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const toggleIotChecklistFn = createServerFn({ method: "POST" })
   .validator((data: { section: "deviceMgmt" | "dataCollection" | "integration"; itemId: string }) => data)
-  .handler(async ({ data }) => {
-    let dmList = [...memoryIotStore.deviceMgmtChecklist];
-    let dcList = [...memoryIotStore.dataCollectionChecklist];
-    let igList = [...memoryIotStore.integrationChecklist];
+  .handler(async ({ data }): Promise<{ success: boolean; data: IotRecord }> => {
+    const current = withDefaults(DEFAULT_IOT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? DEFAULT_IOT_RECORD;
 
+    const toggleList = (list: any[]) =>
+      list.map((item: any) => (item.id === data.itemId ? { ...item, completed: !item.completed } : item));
+
+    const updates: any = {};
     if (data.section === "deviceMgmt") {
-      dmList = dmList.map((item) => (item.id === data.itemId ? { ...item, completed: !item.completed } : item));
+      updates.deviceMgmtChecklist = toggleList(base.deviceMgmtChecklist ?? []);
+      updates.deviceMgmtScore = Math.round(
+        (updates.deviceMgmtChecklist.filter((c: any) => c.completed).length / updates.deviceMgmtChecklist.length) * 100
+      );
     } else if (data.section === "dataCollection") {
-      dcList = dcList.map((item) => (item.id === data.itemId ? { ...item, completed: !item.completed } : item));
+      updates.dataCollectionChecklist = toggleList(base.dataCollectionChecklist ?? []);
+      updates.analyticsScore = Math.round(
+        (updates.dataCollectionChecklist.filter((c: any) => c.completed).length / updates.dataCollectionChecklist.length) * 100
+      );
     } else if (data.section === "integration") {
-      igList = igList.map((item) => (item.id === data.itemId ? { ...item, completed: !item.completed } : item));
+      updates.integrationChecklist = toggleList(base.integrationChecklist ?? []);
+      updates.integrationScore = Math.round(
+        (updates.integrationChecklist.filter((c: any) => c.completed).length / updates.integrationChecklist.length) * 100
+      );
     }
 
-    const dmScore = Math.round((dmList.filter((c) => c.completed).length / dmList.length) * 100);
-    const dcScore = Math.round((dcList.filter((c) => c.completed).length / dcList.length) * 100);
-    const igScore = Math.round((igList.filter((c) => c.completed).length / igList.length) * 100);
-
-    const overallScore = Math.round(
-      memoryIotStore.hardwareScore * 0.2 +
-        memoryIotStore.connectivityScore * 0.25 +
-        memoryIotStore.securityScore * 0.25 +
-        memoryIotStore.deploymentScore * 0.15 +
-        memoryIotStore.aiOverallIotScore * 0.15
-    );
-
-    const updated: IotRecord = {
-      ...memoryIotStore,
-      deviceMgmtChecklist: dmList,
-      dataCollectionChecklist: dcList,
-      integrationChecklist: igList,
-      deviceMgmtScore: dmScore,
-      analyticsScore: dcScore,
-      integrationScore: igScore,
-      overallIotSolutionScore: overallScore,
+    const record = {
+      ...base,
+      ...updates,
+      projectName: base.iotProjectName ?? "",
+      ownerName: base.iotArchitect?.name ?? "Rahul Sharma",
+      recordCode: base.id ?? base.iotDevelopmentId ?? "",
     };
-
-    memoryIotStore = updated;
-    return { success: true, data: memoryIotStore };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });

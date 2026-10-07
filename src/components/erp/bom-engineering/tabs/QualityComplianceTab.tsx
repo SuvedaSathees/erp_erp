@@ -21,9 +21,9 @@ export const QualityComplianceTab: React.FC<QualityComplianceTabProps> = ({
             Governs critical safety components, inspection rules, regulatory compliance (ISO/IEC/RoHS), and full serial traceability.
           </p>
         </div>
-        <div className="flex items-center gap-2 bg-purple-50 dark:bg-purple-950 px-3 py-1.5 rounded-lg border border-purple-200 dark:border-purple-800">
+        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800">
           <span className="text-xs text-muted-foreground font-semibold">Quality Score:</span>
-          <span className="text-sm font-extrabold text-purple-600 dark:text-purple-400">
+          <span className="text-sm font-extrabold text-primary dark:text-blue-400">
             {record.qualityReadinessScore}% Good
           </span>
         </div>
@@ -62,7 +62,7 @@ export const QualityComplianceTab: React.FC<QualityComplianceTabProps> = ({
 
         <div className="bg-card p-4 rounded-lg border border-border space-y-3">
           <h3 className="font-bold text-foreground pb-2 border-b border-border flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-purple-500" /> Inspection & Verification Rules
+            <ShieldCheck className="w-4 h-4 text-blue-600" /> Inspection & Verification Rules
           </h3>
           <p className="text-muted-foreground leading-relaxed">
             {record.inspectionRequirement}

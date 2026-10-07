@@ -5,10 +5,15 @@ import type {
   ProductionEngineeringRecord,
   ProductionEngineeringStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Production Engineering — Server Functions & Workflow Engine
-   =========================================================================== */
+const MODULE_TYPE = "production-engineering";
 
 export function calculateProductionEngineeringScores(record: Partial<ProductionEngineeringRecord>) {
   const designScore = record.designReadinessScore ?? 88;
@@ -18,7 +23,6 @@ export function calculateProductionEngineeringScores(record: Partial<ProductionE
   const performanceScore = record.performanceScore ?? 89;
   const aiScore = record.aiEngineeringScore ?? 87;
 
-  // Weighted score calculations
   const overallScore = Math.round(
     designScore * 0.25 +
       resourceScore * 0.15 +
@@ -191,50 +195,44 @@ export const DEFAULT_PRODUCTION_ENGINEERING_RECORD: ProductionEngineeringRecord 
     { id: "a-3", timestamp: "19 Jun 2024 02:15 PM", user: "Vikram Singh", action: "QMS Review", details: "Quality checklist validated for FAI.", ipAddress: "192.168.1.115" },
     { id: "a-4", timestamp: "20 Jun 2024 04:25 PM", user: "Rahul Sharma", action: "Form Submitted", details: "Record submitted for executive review board.", ipAddress: "192.168.1.102" },
   ],
-};
-
-let activeRecordStore: ProductionEngineeringRecord = { ...DEFAULT_PRODUCTION_ENGINEERING_RECORD };
+} as any;
 
 export const getProductionEngineeringFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: ProductionEngineeringRecord }> => {
-    return { success: true, data: activeRecordStore };
+    const result = withDefaults(DEFAULT_PRODUCTION_ENGINEERING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_PRODUCTION_ENGINEERING_RECORD };
   }
 );
 
 export const saveProductionEngineeringDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<ProductionEngineeringFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: ProductionEngineeringRecord }> => {
-    const { input } = data;
-    const { ...rest } = input;
-
-    // Apply changes
-    activeRecordStore = {
-      ...activeRecordStore,
-      ...rest,
-      lastModified: new Date().toISOString(),
-      lastUpdated: new Date().toLocaleString(),
+    const current = withDefaults(DEFAULT_PRODUCTION_ENGINEERING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_PRODUCTION_ENGINEERING_RECORD;
+    const updatedInput = { ...(base as any), ...data.input };
+    const scores = calculateProductionEngineeringScores(updatedInput);
+    const record = {
+      ...base,
+      ...data.input,
+      ...scores,
+      projectName: (base as any).projectName ?? "",
+      ownerName: (base as any).productionEngineerName ?? "Vikram Singh",
+      recordCode: (base as any).id ?? (base as any).productionEngineeringId ?? "",
     };
-
-    // Recalculate scores
-    const calculated = calculateProductionEngineeringScores(activeRecordStore);
-    activeRecordStore = {
-      ...activeRecordStore,
-      ...calculated,
-    };
-
-    return { success: true, data: activeRecordStore };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitProductionEngineeringFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: ProductionEngineeringRecord }> => {
-    activeRecordStore = {
-      ...activeRecordStore,
-      workflowStatus: "In Review",
-      lastUpdated: new Date().toLocaleString(),
-    };
-
-    return { success: true, data: activeRecordStore };
+    const current = withDefaults(DEFAULT_PRODUCTION_ENGINEERING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_PRODUCTION_ENGINEERING_RECORD };
   });
 
 export const reviewProductionEngineeringFn = createServerFn({ method: "POST" })
@@ -246,39 +244,14 @@ export const reviewProductionEngineeringFn = createServerFn({ method: "POST" })
     }) => data
   )
   .handler(async ({ data }): Promise<{ success: boolean; data: ProductionEngineeringRecord }> => {
-    const { decision, comments } = data;
-
-    let finalStatus: ProductionEngineeringStatus = "In Review";
-    if (decision === "Approved") {
-      finalStatus = "Approved";
-    } else if (decision === "Changes Requested") {
-      finalStatus = "Changes Requested";
-    } else if (decision === "Rejected") {
-      finalStatus = "Rejected";
-    }
-
-    activeRecordStore = {
-      ...activeRecordStore,
-      approvalDecision: decision,
-      reviewComments: comments || "",
-      workflowStatus: finalStatus,
-      approvalDate: new Date().toLocaleDateString(),
-      lastUpdated: new Date().toLocaleString(),
-    };
-
-    // Update the Production Engineer reviewer record as a mock demonstration
-    activeRecordStore.reviewers = activeRecordStore.reviewers.map((rev) => {
-      if (rev.role === "Production Engineer") {
-        return {
-          ...rev,
-          decision,
-          comments: comments || "Reviewed.",
-          date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }),
-          status: "Completed" as const,
-        };
-      }
-      return rev;
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Production Engineering Review Board",
+        reviewerName: "Review Board",
+      },
     });
-
-    return { success: true, data: activeRecordStore };
+    return { success: true, data: result as any };
   });

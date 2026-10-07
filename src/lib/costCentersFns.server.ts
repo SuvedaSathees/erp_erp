@@ -169,6 +169,28 @@ export const getCostAllocationRulesFn = createServerFn({ method: "GET" }).handle
   }
 });
 
+export const getCostCenterCommitmentsFn = createServerFn({ method: "GET" }).handler(async () => {
+  try {
+    const prisma = await getPrisma();
+    const commitments = await prisma.costCenterCommitment.findMany({
+      include: { costCenter: { select: { name: true } } },
+      orderBy: { createdAt: "desc" },
+    });
+    return {
+      success: true,
+      data: commitments.map((c: any) => ({
+        id: c.commitmentCode || c.id,
+        costCenter: c.costCenter?.name || "",
+        description: c.description,
+        commitmentAmount: Number(c.commitmentAmount),
+        status: c.status,
+      })),
+    };
+  } catch (err) {
+    return { success: false, error: (err as Error).message };
+  }
+});
+
 export const saveCostAllocationRulesFn = createServerFn({ method: "POST" })
   .validator((rules: CostAllocationRule[]) => rules)
   .handler(async ({ data: rules }) => {

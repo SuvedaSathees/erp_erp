@@ -224,7 +224,7 @@ export function ComplianceGapRemediationCard() {
                   {item.linkedCapa && (
                     <Link
                       to="/management/quality-management/capa"
-                      className="inline-flex items-center gap-1 text-[10px] font-semibold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 px-1.5 py-0.5 rounded border border-purple-200 dark:border-purple-900/50 hover:underline"
+                      className="inline-flex items-center gap-1 text-[10px] font-semibold text-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-900/50 hover:underline"
                     >
                       <span>{item.linkedCapa}</span>
                       <ExternalLink className="w-2.5 h-2.5" />

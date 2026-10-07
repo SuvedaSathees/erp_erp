@@ -1,14 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
-import type {
-  FixtureApprovalDecision,
-  FixtureFormInput,
-  FixtureRecord,
-  FixtureStatus,
-} from "@/services/types";
+import type { FixtureRecord } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Fixture Development — Server Functions & Workflow Engine
-   =========================================================================== */
+const MODULE_TYPE = "fixture-development";
 
 export function calculateFixtureScores(record: Partial<FixtureRecord>) {
   const designScore = record.designReviewScore ?? 88;
@@ -18,7 +19,6 @@ export function calculateFixtureScores(record: Partial<FixtureRecord>) {
   const performanceScore = record.performanceScore ?? 84;
   const aiScore = record.aiEngineeringScore ?? 89;
 
-  // Weighted score calculations
   const overallScore = Math.round(
     designScore * 0.20 +
       manufacturingScore * 0.20 +
@@ -192,94 +192,49 @@ export const DEFAULT_FIXTURE_RECORD: FixtureRecord = {
     { id: "fa-3", timestamp: "19 Jun 2024 02:15 PM", user: "Vikram Singh", action: "Quality Verified", details: "Passed dimensional tolerance test.", ipAddress: "192.168.1.115" },
     { id: "fa-4", timestamp: "20 Jun 2024 04:25 PM", user: "Rahul Sharma", action: "Submitted to Review", details: "Awaiting board approvals.", ipAddress: "192.168.1.102" },
   ],
-};
+} as any;
 
-let activeRecordStore: FixtureRecord = { ...DEFAULT_FIXTURE_RECORD };
-
-export const getFixtureFn = createServerFn({ method: "GET" }).handler(
-  async (): Promise<{ success: boolean; data: FixtureRecord }> => {
-    return { success: true, data: activeRecordStore };
-  }
-);
+export const getFixtureFn = createServerFn({ method: "GET" }).handler(async () => {
+  const result = withDefaults(DEFAULT_FIXTURE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
+  return { success: true, data: DEFAULT_FIXTURE_RECORD };
+});
 
 export const saveFixtureDraftFn = createServerFn({ method: "POST" })
-  .validator((data: { id?: string; input: Partial<FixtureFormInput> }) => data)
-  .handler(async ({ data }): Promise<{ success: boolean; data: FixtureRecord }> => {
-    const { input } = data;
-    const { ...rest } = input;
-
-    // Apply changes
-    activeRecordStore = {
-      ...activeRecordStore,
-      ...rest,
-      lastModified: new Date().toISOString(),
-      lastUpdated: new Date().toLocaleString(),
+  .validator((data: { id?: string; input: any }) => data)
+  .handler(async ({ data }) => {
+    const record = {
+      ...data.input,
+      projectName: data.input.projectName ?? data.input.fixtureName ?? "",
+      ownerName: data.input.fixtureDesignEngineer?.name ?? data.input.ownerName ?? "",
+      recordCode: data.input.fixtureId ?? data.input.id ?? "",
     };
-
-    // Recalculate scores
-    const calculated = calculateFixtureScores(activeRecordStore);
-    activeRecordStore = {
-      ...activeRecordStore,
-      ...calculated,
-    };
-
-    return { success: true, data: activeRecordStore };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
 export const submitFixtureFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
-  .handler(async (): Promise<{ success: boolean; data: FixtureRecord }> => {
-    activeRecordStore = {
-      ...activeRecordStore,
-      workflowStatus: "Executive Review" as FixtureStatus,
-      lastUpdated: new Date().toLocaleString(),
-    };
-
-    return { success: true, data: activeRecordStore };
+  .handler(async () => {
+    const current = withDefaults(DEFAULT_FIXTURE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result };
+    }
+    return { success: true, data: DEFAULT_FIXTURE_RECORD };
   });
 
 export const reviewFixtureFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: FixtureApprovalDecision;
-      comments?: string;
-    }) => data
-  )
-  .handler(async ({ data }): Promise<{ success: boolean; data: FixtureRecord }> => {
-    const { decision, comments } = data;
-
-    let finalStatus: FixtureStatus = "Executive Review";
-    if (decision === "Approved") {
-      finalStatus = "Production Release";
-    } else if (decision === "Changes Requested") {
-      finalStatus = "CAD Design";
-    } else if (decision === "Rejected") {
-      finalStatus = "Completed"; // Aborted / Finished
-    }
-
-    activeRecordStore = {
-      ...activeRecordStore,
-      approvalDecision: decision,
-      reviewComments: comments || "",
-      workflowStatus: finalStatus,
-      approvalDate: new Date().toLocaleDateString(),
-      lastUpdated: new Date().toLocaleString(),
-    };
-
-    // Update reviewer state
-    activeRecordStore.reviewers = activeRecordStore.reviewers.map((rev) => {
-      if (rev.role === "Fixture Design Engineer") {
-        return {
-          ...rev,
-          decision,
-          comments: comments || "Reviewed design.",
-          date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }),
-          status: "Completed" as const,
-        };
-      }
-      return rev;
+  .validator((data: { id: string; decision: string; comments?: string }) => data)
+  .handler(async ({ data }) => {
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Fixture Design Engineer",
+        reviewerName: "Current User",
+      },
     });
-
-    return { success: true, data: activeRecordStore };
+    return { success: true, data: result };
   });

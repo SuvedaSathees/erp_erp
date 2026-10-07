@@ -22,7 +22,7 @@ export const ProcessValidationOverviewCard: React.FC<ProcessValidationOverviewCa
         <div className="space-y-2 text-[11px]">
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground font-semibold">Validation Type</span>
-            <span className="px-2 py-0.5 rounded font-bold text-[10px] bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border border-purple-300">
+            <span className="px-2 py-0.5 rounded font-bold text-[10px] bg-blue-100 dark:bg-blue-950 text-primary dark:text-blue-300 border border-blue-300">
               {record.validationType}
             </span>
           </div>
@@ -58,7 +58,7 @@ export const ProcessValidationOverviewCard: React.FC<ProcessValidationOverviewCa
                   <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[8px] font-bold ring-1 ring-background">
                     NR
                   </div>
-                  <div className="w-4 h-4 rounded-full bg-purple-500 text-white flex items-center justify-center text-[8px] font-bold ring-1 ring-background">
+                  <div className="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center text-[8px] font-bold ring-1 ring-background">
                     RS
                   </div>
                 </div>

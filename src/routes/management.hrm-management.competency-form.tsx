@@ -341,14 +341,14 @@ export function CompetencyFormPage() {
             </div>
 
             {/* 3. Competency Gap */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-purple-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="p-2 rounded-lg bg-purple-100 text-purple-600">
+            <div className="p-2.5 rounded-xl border border-slate-200 bg-blue-50/30 flex items-center gap-2.5 shadow-2xs">
+              <div className="p-2 rounded-lg bg-blue-100 text-primary">
                 <Compass className="h-4 w-4" />
               </div>
               <div>
                 <div className="text-[10px] text-muted-foreground font-semibold">Competency Gap</div>
-                <div className="text-sm font-extrabold text-purple-700 font-mono">0.9</div>
-                <div className="text-[9px] text-purple-700 font-semibold">Moderate</div>
+                <div className="text-sm font-extrabold text-primary font-mono">0.9</div>
+                <div className="text-[9px] text-primary font-semibold">Moderate</div>
               </div>
             </div>
 
@@ -779,9 +779,9 @@ export function CompetencyFormPage() {
                   <button
                     type="button"
                     onClick={() => setIsEvidenceModalOpen(true)}
-                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-purple-600 hover:bg-purple-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
+                    className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-primary hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
-                    <Paperclip className="h-3 w-3 text-purple-600" />
+                    <Paperclip className="h-3 w-3 text-primary" />
                     Add Evidence
                   </button>
 
@@ -1174,7 +1174,7 @@ export function CompetencyFormPage() {
           <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <BrainCircuit className="h-4 w-4 text-purple-600" />
+                <BrainCircuit className="h-4 w-4 text-primary" />
                 Create Development Action Plan
               </h3>
               <button
@@ -1222,7 +1222,7 @@ export function CompetencyFormPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 font-semibold cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary font-semibold cursor-pointer"
                 >
                   Assign Plan
                 </button>

@@ -4,6 +4,8 @@
 
 import React, { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getCommunicationManagementRecordFn } from "@/lib/communicationManagementFns.server";
 import {
   Image,
   FileText,
@@ -62,6 +64,11 @@ export const Route = createFileRoute("/management/communication-management/inter
 });
 
 function InternalSocialNetworkPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["communication-management", "record"],
+    queryFn: () => getCommunicationManagementRecordFn({ data: {} }),
+  });
+
   const [feedFilterTab, setFeedFilterTab] = useState<string>("all");
   const [posts, setPosts] = useState<SocialFeedPost[]>(MOCK_SOCIAL_POSTS);
   const [postContent, setPostContent] = useState<string>("");

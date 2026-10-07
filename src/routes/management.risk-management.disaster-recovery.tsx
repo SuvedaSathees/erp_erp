@@ -2,8 +2,10 @@
 // Management -> Risk Management -> Disaster Recovery
 // Disaster Recovery Form - MAICW Classification & IT Resilience Engine
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getDisasterRecoveryRecordFn } from "@/lib/disasterRecoveryFns.server";
 import {
   Server,
   AlertTriangle,
@@ -109,10 +111,16 @@ export const Route = createFileRoute(
 export function DisasterRecoveryPage() {
   const { toast } = useToast();
 
+  const { data: dbRecord } = useQuery({
+    queryKey: ["disaster-recovery", "record"],
+    queryFn: () => getDisasterRecoveryRecordFn({ data: {} }),
+  });
+
   // Active Plan State
   const [activePlan, setActivePlan] = useState<DisasterRecoveryRecord>(
     disasterRecoveryService.getPrimaryDRP(),
   );
+  useEffect(() => { if (dbRecord?.data) setActivePlan(dbRecord.data); }, [dbRecord]);
 
   const [activeTab, setActiveTab] = useState<string>("general");
 

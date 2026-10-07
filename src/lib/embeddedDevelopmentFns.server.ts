@@ -6,35 +6,22 @@ import type {
   EmbeddedDevelopmentStage,
   EmbeddedDevelopmentStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Embedded Systems Development — Server Functions & Workflow Engine
-   ---------------------------------------------------------------------------
-   Manages the 4-stage Embedded Systems Development lifecycle:
-     Stage 1: Platform Configuration (MCU/SoC setup, BSP, bootloader, RTOS & task scheduling)
-     Stage 2: Firmware Development (device drivers, middleware, application modules & code commit)
-     Stage 3: Testing & Validation (automated build, static analysis, unit/integration & HIL testing)
-     Stage 4: Engineering Review (Review Board decision: Approved / Approved with Conditions / Revision Required / Rejected)
-
-   Upon 'Approved' decision:
-     - Auto-creates & links downstream System Integration project (SI-2024-0089)
-       and surfaces its ID to proceed to System Integration.
-   =========================================================================== */
+const MODULE_TYPE = "embedded-development";
 
 export function calculateEmbeddedDevelopmentScores(input: Partial<EmbeddedDevelopmentFormInput>) {
-  // 1. Firmware Readiness (0-100)
   const firmwareReadiness = 88;
-
-  // 2. Hardware Compatibility (0-100)
   const hardwareCompatibility = 90;
-
-  // 3. Performance Score (0-100)
   const performanceScore = 87;
-
-  // 4. Security Score (0-100)
   const securityScore = input.securityReadinessScore ?? 90;
 
-  // Overall Embedded Score (/100)
   const overallEmbeddedScore = Math.round(
     firmwareReadiness * 0.25 +
       hardwareCompatibility * 0.25 +
@@ -42,14 +29,12 @@ export function calculateEmbeddedDevelopmentScores(input: Partial<EmbeddedDevelo
       securityScore * 0.25
   );
 
-  // AI Assessment Sub-scores (single source of truth with Panel 9)
   const aiFirmwareQualityScore = Math.min(99, Math.max(75, Math.round(overallEmbeddedScore * 1.02)));
   const aiCodeOptimization = 88;
   const aiMemoryOptimization = 89;
   const aiTimingAnalysis = 87;
   const aiOverallEmbeddedScore = overallEmbeddedScore;
 
-  // Key Highlights dynamic list
   const highlights: string[] = [];
   highlights.push("Optimized task scheduling improves CPU utilization by 12%");
   highlights.push("Memory usage optimized, 18% more free SRAM");
@@ -334,7 +319,7 @@ const DEFAULT_EMBEDDED_DEVELOPMENT_INPUT: EmbeddedDevelopmentFormInput = {
   approvalDate: "2024-06-20",
 };
 
-let currentEmbeddedDevelopmentRecord: EmbeddedDevelopmentRecord = {
+const DEFAULT_MOCK_RECORD: EmbeddedDevelopmentRecord = {
   id: "emd-rec-2024-0017",
   developmentId: "EMD-2024-0017",
   formCode: "EMF-2024-25",
@@ -436,228 +421,86 @@ let currentEmbeddedDevelopmentRecord: EmbeddedDevelopmentRecord = {
       status: "Under Review",
     },
   ],
-};
+} as any;
 
-/** Get current Embedded Development Record */
 export const getEmbeddedDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: EmbeddedDevelopmentRecord }> => {
-    return { success: true, data: currentEmbeddedDevelopmentRecord };
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   }
 );
 
-/** Save Draft */
 export const saveEmbeddedDevelopmentDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<EmbeddedDevelopmentFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: EmbeddedDevelopmentRecord }> => {
-    const updatedInput = { ...currentEmbeddedDevelopmentRecord.input, ...data.input };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_MOCK_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateEmbeddedDevelopmentScores(updatedInput);
-
-    currentEmbeddedDevelopmentRecord = {
-      ...currentEmbeddedDevelopmentRecord,
+    const record = {
+      ...base,
       input: updatedInput,
       ...scores,
-      lastUpdated: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      lastModified: new Date().toISOString(),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Kavita Sharma",
-          event: "Saved draft updates to Embedded Systems Development Form",
-          stage: currentEmbeddedDevelopmentRecord.currentStage,
-          status: currentEmbeddedDevelopmentRecord.status,
-        },
-        ...currentEmbeddedDevelopmentRecord.auditTrail,
-      ],
+      projectName: (base as any).developmentProjectName ?? "",
+      ownerName: (base as any).embeddedEngineerName ?? "Kavita Sharma",
+      recordCode: (base as any).id ?? (base as any).developmentId ?? "",
     };
-
-    return { success: true, data: currentEmbeddedDevelopmentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Advance Stage */
 export const advanceEmbeddedDevelopmentStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: EmbeddedDevelopmentStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: EmbeddedDevelopmentRecord }> => {
-    const stageMap: Record<EmbeddedDevelopmentStage, { label: string; stageNumber: number }> = {
-      platform_configuration: {
-        label: "Stage 1: Platform Configuration",
-        stageNumber: 1,
-      },
-      firmware_development: {
-        label: "Stage 2: Firmware Development",
-        stageNumber: 2,
-      },
-      testing_validation: {
-        label: "Stage 3: Testing & Validation",
-        stageNumber: 3,
-      },
-      engineering_review: {
-        label: "Stage 4: Engineering Review",
-        stageNumber: 4,
-      },
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? DEFAULT_MOCK_RECORD;
+    const stageMap: Record<string, { label: string; stageNumber: number }> = {
+      platform_configuration: { label: "Stage 1: Platform Configuration", stageNumber: 1 },
+      firmware_development: { label: "Stage 2: Firmware Development", stageNumber: 2 },
+      testing_validation: { label: "Stage 3: Testing & Validation", stageNumber: 3 },
+      engineering_review: { label: "Stage 4: Engineering Review", stageNumber: 4 },
     };
-
     const target = stageMap[data.targetStage];
-
-    currentEmbeddedDevelopmentRecord = {
-      ...currentEmbeddedDevelopmentRecord,
+    const record = {
+      ...base,
       currentStage: data.targetStage,
       currentStageLabel: target.label,
-      stages: currentEmbeddedDevelopmentRecord.stages.map((stg) => {
+      stages: (base.stages ?? []).map((stg: any) => {
         if (stg.stageNumber < target.stageNumber) return { ...stg, status: "completed" };
         if (stg.stageNumber === target.stageNumber) return { ...stg, status: "in_progress" };
         return { ...stg, status: "pending" };
       }),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Kavita Sharma",
-          event: `Advanced to ${target.label}`,
-          stage: data.targetStage,
-          status: currentEmbeddedDevelopmentRecord.status,
-        },
-        ...currentEmbeddedDevelopmentRecord.auditTrail,
-      ],
+      projectName: base.developmentProjectName ?? "",
+      ownerName: base.embeddedEngineerName ?? "Kavita Sharma",
+      recordCode: base.id ?? base.developmentId ?? "",
     };
-
-    return { success: true, data: currentEmbeddedDevelopmentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Submit for Review */
 export const submitEmbeddedDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: EmbeddedDevelopmentRecord }> => {
-    currentEmbeddedDevelopmentRecord = {
-      ...currentEmbeddedDevelopmentRecord,
-      status: "Under Review",
-      currentStage: "engineering_review",
-      currentStageLabel: "Stage 4: Engineering Review",
-      stages: currentEmbeddedDevelopmentRecord.stages.map((stg) =>
-        stg.id === "engineering_review" ? { ...stg, status: "in_progress" } : { ...stg, status: "completed" }
-      ),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Kavita Sharma",
-          event: "Submitted Embedded Systems Development for Stage 4 Engineering Review Board",
-          stage: "engineering_review",
-          status: "Under Review",
-        },
-        ...currentEmbeddedDevelopmentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentEmbeddedDevelopmentRecord };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   });
 
-/** Review Board Decision */
 export const reviewEmbeddedDevelopmentFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: EmbeddedDevelopmentApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: EmbeddedDevelopmentApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: EmbeddedDevelopmentRecord }> => {
-    let newStatus: EmbeddedDevelopmentStatus = "Under Review";
-    let linkedSystemIntegrationId: string | null = currentEmbeddedDevelopmentRecord.linkedSystemIntegrationId ?? null;
-    let eventMessage = "";
-
-    if (data.decision === "Approved") {
-      newStatus = "Approved";
-      linkedSystemIntegrationId = "SI-2024-0089";
-      eventMessage = "Review Board Approved Embedded Systems Development. Auto-created downstream System Integration project SI-2024-0089. Embedded Engineer notified: 'Proceed to System Integration'.";
-    } else if (data.decision === "Approved with Conditions") {
-      newStatus = "Approved with Conditions";
-      eventMessage = "Review Board Approved with Conditions. Embedded Engineer notified: 'Improve Firmware'. Record remains editable.";
-    } else if (data.decision === "Revision Required") {
-      newStatus = "Revision Required";
-      eventMessage = "Review Board requested revisions. Embedded Engineer notified: 'Reassess Architecture & Firmware'. Returned to Testing & Validation stage.";
-    } else if (data.decision === "Rejected") {
-      newStatus = "Rejected";
-      eventMessage = "Review Board Rejected Embedded Development. Record archived. Embedded Engineer notified: 'Close Embedded Development'.";
-    }
-
-    const updatedReviewers = currentEmbeddedDevelopmentRecord.input.reviewers.map((rev) => {
-      if (rev.role === "Embedded Engineer" || rev.role === "Engineering Manager") {
-        return {
-          ...rev,
-          decision: data.decision === "Approved" || data.decision === "Approved with Conditions" ? ("Approved" as const) : ("Rejected" as const),
-          status: data.decision,
-          date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-        };
-      }
-      return rev;
-    });
-
-    currentEmbeddedDevelopmentRecord = {
-      ...currentEmbeddedDevelopmentRecord,
-      status: newStatus,
-      approvalDecision: data.decision,
-      approvalDate: new Date().toLocaleDateString("en-CA"),
-      reviewComments: data.comments || "",
-      linkedSystemIntegrationId,
-      stages: currentEmbeddedDevelopmentRecord.stages.map((stg) => {
-        if (data.decision === "Approved" || data.decision === "Approved with Conditions") {
-          return { ...stg, status: "completed" };
-        }
-        if (data.decision === "Revision Required" && stg.id === "engineering_review") {
-          return { ...stg, status: "pending" };
-        }
-        return stg;
-      }),
-      currentStage:
-        data.decision === "Revision Required"
-          ? "testing_validation"
-          : "engineering_review",
-      input: {
-        ...currentEmbeddedDevelopmentRecord.input,
-        approvalDecision: data.decision,
-        reviewComments: data.comments || "",
-        approvalDate: new Date().toLocaleDateString("en-CA"),
-        reviewers: updatedReviewers,
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Engineering Review Board",
+        reviewerName: "Review Board",
       },
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Lead Embedded Engineer (Review Board)",
-          event: eventMessage,
-          stage: currentEmbeddedDevelopmentRecord.currentStage,
-          status: newStatus,
-        },
-        ...currentEmbeddedDevelopmentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentEmbeddedDevelopmentRecord };
+    });
+    return { success: true, data: result as any };
   });

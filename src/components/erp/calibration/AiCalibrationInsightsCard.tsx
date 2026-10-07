@@ -16,7 +16,7 @@ export function AiCalibrationInsightsCard({
       case "success":
         return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />;
       case "recommendation":
-        return <Lightbulb className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />;
+        return <Lightbulb className="w-3.5 h-3.5 text-primary dark:text-blue-400 shrink-0" />;
       default:
         return <Info className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />;
     }
@@ -29,7 +29,7 @@ export function AiCalibrationInsightsCard({
       case "success":
         return "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200/60 dark:border-emerald-800/40 text-emerald-950 dark:text-emerald-200";
       case "recommendation":
-        return "bg-purple-50/60 dark:bg-purple-950/20 border-purple-200/60 dark:border-purple-800/40 text-purple-950 dark:text-purple-200";
+        return "bg-blue-50/60 dark:bg-blue-950/20 border-blue-200/60 dark:border-blue-800/40 text-blue-950 dark:text-blue-200";
       default:
         return "bg-blue-50/60 dark:bg-blue-950/20 border-blue-200/60 dark:border-blue-800/40 text-blue-950 dark:text-blue-200";
     }

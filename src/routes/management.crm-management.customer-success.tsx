@@ -471,7 +471,7 @@ function CustomerSuccessPage() {
             <div>
               <label className="block text-slate-500 font-semibold mb-1">Account Owner *</label>
               <div className="flex items-center gap-2 h-8 px-2 bg-white border border-slate-300 rounded">
-                <div className="h-5 w-5 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-[10px]">
+                <div className="h-5 w-5 rounded-full bg-primary text-white flex items-center justify-center font-bold text-[10px]">
                   NK
                 </div>
                 <span className="font-semibold text-slate-800 truncate">{success.accountOwner.name}</span>
@@ -958,7 +958,7 @@ function CustomerSuccessPage() {
                           </div>
                           <div className="p-2 bg-white rounded border border-slate-200">
                             <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-center gap-1">
-                              <Quote className="h-3.5 w-3.5 text-purple-600" /> Testimonials
+                              <Quote className="h-3.5 w-3.5 text-primary" /> Testimonials
                             </div>
                             <div className="text-lg font-extrabold text-slate-900">{success.testimonialsCount}</div>
                           </div>
@@ -1005,27 +1005,27 @@ function CustomerSuccessPage() {
                       <div className="text-[10px] text-rose-700 font-semibold">Critical Customers</div>
                       <div className="text-lg font-extrabold text-rose-900">6 (5%)</div>
                     </div>
-                    <div className="p-2.5 bg-purple-50/60 rounded-lg border border-purple-200">
-                      <div className="text-[10px] text-purple-700 font-semibold">Renewals Due (90d)</div>
-                      <div className="text-lg font-extrabold text-purple-900">14</div>
+                    <div className="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200">
+                      <div className="text-[10px] text-primary font-semibold">Renewals Due (90d)</div>
+                      <div className="text-lg font-extrabold text-blue-900">14</div>
                     </div>
                     <div className="p-2.5 bg-teal-50/60 rounded-lg border border-teal-200">
                       <div className="text-[10px] text-teal-700 font-semibold">Expansion Opps</div>
                       <div className="text-lg font-extrabold text-teal-900">9</div>
                     </div>
-                    <div className="p-2.5 bg-indigo-50/60 rounded-lg border border-indigo-200 flex justify-between items-center">
+                    <div className="p-2.5 bg-blue-50/60 rounded-lg border border-blue-200 flex justify-between items-center">
                       <div>
-                        <div className="text-[10px] text-indigo-700 font-semibold">Avg. Health Score</div>
-                        <div className="text-sm font-extrabold text-indigo-900 font-mono">82%</div>
+                        <div className="text-[10px] text-primary font-semibold">Avg. Health Score</div>
+                        <div className="text-sm font-extrabold text-blue-900 font-mono">82%</div>
                       </div>
                       <div className="relative inline-flex items-center justify-center shrink-0">
                         <svg width="34" height="34" className="transform -rotate-90">
-                          <circle cx="17" cy="17" r="12" stroke="currentColor" strokeWidth="2.5" className="text-indigo-200" fill="transparent" />
+                          <circle cx="17" cy="17" r="12" stroke="currentColor" strokeWidth="2.5" className="text-blue-200" fill="transparent" />
                           <circle
                             cx="17"
                             cy="17"
                             r="12"
-                            stroke="#4f46e5"
+                            stroke="#0A3C75"
                             strokeWidth="2.5"
                             strokeDasharray={2 * Math.PI * 12}
                             strokeDashoffset={2 * Math.PI * 12 * (1 - 0.82)}
@@ -1033,7 +1033,7 @@ function CustomerSuccessPage() {
                             fill="transparent"
                           />
                         </svg>
-                        <span className="absolute text-[8px] font-bold font-mono text-indigo-700">82%</span>
+                        <span className="absolute text-[8px] font-bold font-mono text-primary">82%</span>
                       </div>
                     </div>
                     <div className="p-2.5 bg-slate-100 rounded-lg border border-slate-300">
@@ -1073,9 +1073,9 @@ function CustomerSuccessPage() {
                     </button>
                     <button
                       onClick={() => showNotification("QBR document attachment window ready.")}
-                      className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-indigo-300"
+                      className="p-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-slate-700 transition-all cursor-pointer hover:border-blue-300"
                     >
-                      <Paperclip className="h-4 w-4 text-indigo-600" />
+                      <Paperclip className="h-4 w-4 text-primary" />
                       <span className="font-semibold text-slate-800">Add Document</span>
                     </button>
                   </div>

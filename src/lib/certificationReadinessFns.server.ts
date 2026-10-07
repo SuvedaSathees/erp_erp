@@ -3,12 +3,17 @@ import type {
   CertificationApprovalDecision,
   CertificationFormInput,
   CertificationReadinessRecord,
-  CertificationStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Certification Readiness — Server Functions & Compliance Engine
-   =========================================================================== */
+const MODULE_TYPE = "certification-readiness";
 
 export function calculateReadinessScores(input: Partial<CertificationFormInput>) {
   const doc = 88;
@@ -16,23 +21,11 @@ export function calculateReadinessScores(input: Partial<CertificationFormInput>)
   const compliance = 84;
   const lab = 85;
   const ai = 89;
-
-  const overall = Math.round(
-    doc * 0.2 + testing * 0.25 + compliance * 0.25 + lab * 0.15 + ai * 0.15
-  );
-
-  return {
-    documentationScore: doc,
-    testingScore: testing,
-    complianceScore: compliance,
-    laboratoryScore: lab,
-    aiScore: ai,
-    overallReadinessScore: overall,
-    certificationProbabilityPct: 92,
-  };
+  const overall = Math.round(doc * 0.2 + testing * 0.25 + compliance * 0.25 + lab * 0.15 + ai * 0.15);
+  return { documentationScore: doc, testingScore: testing, complianceScore: compliance, laboratoryScore: lab, aiScore: ai, overallReadinessScore: overall, certificationProbabilityPct: 92 };
 }
 
-const DEFAULT_RECORD: CertificationReadinessRecord = {
+export const DEFAULT_RECORD: CertificationReadinessRecord = {
   id: "cr-rec-0041",
   certificationReadinessId: "CR-2024-0041",
   formCode: "CRF-2024-25",
@@ -362,84 +355,48 @@ const DEFAULT_RECORD: CertificationReadinessRecord = {
       ipAddress: "192.168.1.104",
     },
   ],
-};
-
-export { DEFAULT_RECORD };
-
-let currentRecord: CertificationReadinessRecord = { ...DEFAULT_RECORD };
+} as any;
 
 export const getCertificationReadinessFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: CertificationReadinessRecord }> => {
-    return { success: true, data: currentRecord };
+    const result = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_RECORD };
   }
 );
 
 export const saveCertificationReadinessDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<CertificationFormInput> }) => data)
-  .handler(
-    async ({ data }): Promise<{ success: boolean; data: CertificationReadinessRecord }> => {
-      const input = data.input;
-      const scores = calculateReadinessScores({ ...currentRecord, ...input });
-
-      currentRecord = {
-        ...currentRecord,
-        ...input,
-        ...scores,
-        lastModified: new Date().toISOString(),
-        lastUpdated:
-          new Date().toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }) +
-          " " +
-          new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-      };
-
-      return { success: true, data: currentRecord };
-    }
-  );
+  .handler(async ({ data }): Promise<{ success: boolean; data: CertificationReadinessRecord }> => {
+    const record = {
+      ...data.input,
+      id: data.id,
+      projectName: (data.input as any).certificationProjectName ?? "",
+      ownerName: (data.input as any).complianceManagerName ?? "",
+    };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
+  });
 
 export const submitCertificationReadinessFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
-  .handler(async (): Promise<{ success: boolean; data: CertificationReadinessRecord }> => {
-    currentRecord = {
-      ...currentRecord,
-      workflowStatus: "In Review",
-      lastModified: new Date().toISOString(),
-    };
-    return { success: true, data: currentRecord };
+  .handler(async ({ data }): Promise<{ success: boolean; data: CertificationReadinessRecord }> => {
+    const id = data || DEFAULT_RECORD.id;
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    return { success: true, data: result as any };
   });
 
 export const reviewCertificationReadinessFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: CertificationApprovalDecision;
-      comments?: string;
-    }) => data
-  )
-  .handler(
-    async ({ data }): Promise<{ success: boolean; data: CertificationReadinessRecord }> => {
-      const { decision, comments } = data;
-      const statusMap: Record<CertificationApprovalDecision, CertificationStatus> = {
-        Approved: "Approved",
-        "Approved with Conditions": "In Review",
-        "Revision Required": "Changes Requested",
-        "On Hold": "In Review",
-        Rejected: "Archived",
-        Pending: "In Review",
-      };
-
-      currentRecord = {
-        ...currentRecord,
-        approvalDecision: decision,
-        reviewComments: comments ?? currentRecord.reviewComments,
-        approvalDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-        workflowStatus: statusMap[decision] ?? currentRecord.workflowStatus,
-        lastModified: new Date().toISOString(),
-      };
-
-      return { success: true, data: currentRecord };
-    }
-  );
+  .validator((data: { id: string; decision: CertificationApprovalDecision; comments?: string }) => data)
+  .handler(async ({ data }): Promise<{ success: boolean; data: CertificationReadinessRecord }> => {
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Compliance Board",
+        reviewerName: "Rahul Sharma",
+      },
+    });
+    return { success: true, data: result as any };
+  });

@@ -45,9 +45,9 @@ export const SmartFactoryInfrastructureCard: React.FC<SmartFactoryInfrastructure
                 Digital Infrastructure
               </CardTitle>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800">
-              <span className="text-[10px] font-semibold text-purple-600 dark:text-purple-400 uppercase">Score</span>
-              <span className="font-mono font-bold text-purple-700 dark:text-purple-300 text-xs">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800">
+              <span className="text-[10px] font-semibold text-primary dark:text-blue-400 uppercase">Score</span>
+              <span className="font-mono font-bold text-primary dark:text-blue-300 text-xs">
                 {infraScore} / 100
               </span>
             </div>

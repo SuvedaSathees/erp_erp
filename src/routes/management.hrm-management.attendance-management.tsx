@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { hrmManagementService } from "@/services";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { HrmManagementTabBar } from "@/components/erp/HrmManagementTabBar";
@@ -92,7 +95,6 @@ import {
   Cell,
   Tooltip as RechartsTooltip,
 } from "recharts";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/management/hrm-management/attendance-management")({
   head: () => ({
@@ -149,6 +151,12 @@ const ATTENDANCE_DONUT = [
 ];
 
 export default function AttendanceManagementPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: ["hrm", "attendance"],
+    queryFn: () => hrmManagementService.fetchAttendance(),
+  });
+
   const [activeTab, setActiveTab] = useState<string>("daily");
   const [punches, setPunches] = useState<PunchRecord[]>(INITIAL_PUNCHES);
   const [exceptions, setExceptions] = useState<AttendanceException[]>(INITIAL_EXCEPTIONS);
@@ -332,7 +340,7 @@ export default function AttendanceManagementPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-indigo-600" />
+              <Calendar className="h-4 w-4 text-primary" />
               <div>
                 <div className="text-[10px] text-muted-foreground">Weekly Off</div>
                 <div className="font-bold text-slate-900">Sat, Sun</div>
@@ -340,7 +348,7 @@ export default function AttendanceManagementPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-purple-600" />
+              <FileText className="h-4 w-4 text-primary" />
               <div>
                 <div className="text-[10px] text-muted-foreground">Attendance Policy</div>
                 <div className="font-bold text-slate-900">Standard Policy</div>
@@ -864,9 +872,9 @@ export default function AttendanceManagementPage() {
                   <button
                     type="button"
                     onClick={() => toast.info("Apply for Comp Off form opened")}
-                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-200 hover:border-purple-600 hover:bg-purple-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
+                    className="flex items-center gap-2 p-2 rounded-lg border border-slate-200 hover:border-primary hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
                   >
-                    <RefreshCw className="h-3.5 w-3.5 text-purple-600" />
+                    <RefreshCw className="h-3.5 w-3.5 text-primary" />
                     Apply for Comp Off
                   </button>
 
@@ -988,7 +996,7 @@ export default function AttendanceManagementPage() {
                   <tr className="hover:bg-slate-50/70">
                     <td className="py-3 px-3 font-mono font-bold text-slate-900">08 May 2024</td>
                     <td className="py-3 px-3">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-primary border border-blue-200">
                         On Duty / Client Visit
                       </span>
                     </td>
@@ -1042,7 +1050,7 @@ export default function AttendanceManagementPage() {
               </div>
               <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
                 <div className="text-muted-foreground text-[11px] font-semibold">Comp Off Balance</div>
-                <div className="text-lg font-bold font-mono text-purple-700">2.0 Days Available</div>
+                <div className="text-lg font-bold font-mono text-primary">2.0 Days Available</div>
                 <div className="text-[11px] text-slate-500">Valid until 30 Jun 2024</div>
               </div>
             </div>
@@ -1085,17 +1093,17 @@ export default function AttendanceManagementPage() {
                 <span className="text-[10px] text-amber-800 font-semibold">Paid Leave</span>
                 <div className="text-base font-bold font-mono text-amber-900 mt-1">1.0 Day</div>
               </div>
-              <div className="p-3 bg-purple-50 rounded-xl border border-purple-200">
-                <span className="text-[10px] text-purple-800 font-semibold">Comp Off Used</span>
-                <div className="text-base font-bold font-mono text-purple-900 mt-1">0.0 Days</div>
+              <div className="p-3 bg-blue-50 rounded-xl border border-blue-200">
+                <span className="text-[10px] text-primary font-semibold">Comp Off Used</span>
+                <div className="text-base font-bold font-mono text-blue-900 mt-1">0.0 Days</div>
               </div>
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <span className="text-[10px] text-slate-600 font-semibold">Loss of Pay (LOP)</span>
                 <div className="text-base font-bold font-mono text-slate-800 mt-1">0.0 Days</div>
               </div>
-              <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-200">
-                <span className="text-[10px] text-indigo-800 font-semibold">Total Payable</span>
-                <div className="text-base font-bold font-mono text-indigo-900 mt-1">27.0 / 27 Days</div>
+              <div className="p-3 bg-blue-50 rounded-xl border border-blue-200">
+                <span className="text-[10px] text-primary font-semibold">Total Payable</span>
+                <div className="text-base font-bold font-mono text-blue-900 mt-1">27.0 / 27 Days</div>
               </div>
             </div>
           </div>

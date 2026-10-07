@@ -13,7 +13,7 @@ import type { LucideIcon } from "lucide-react";
 export type WidgetSize = "sm" | "md" | "lg" | "xl" | "full" | "auto";
 
 /** Accent themes from the spec. Backed by --widget-accent-* tokens. */
-export type WidgetTheme = "default" | "blue" | "green" | "purple";
+export type WidgetTheme = "default" | "blue" | "green" | "teal";
 
 /**
  * Library grouping. `category` drives the Widget Library's filter pills, so it

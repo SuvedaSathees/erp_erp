@@ -81,7 +81,7 @@ const channelDiscountShare = [
   { name: "Master Distributors", value: 0.7, share: "25%", color: "#22C55E" },
   { name: "Enterprise Strategic", value: 0.42, share: "15%", color: "#0284C7" },
   { name: "Govt / GeM Tenders", value: 0.28, share: "10%", color: "#F59E0B" },
-  { name: "Export Partners", value: 0.14, share: "5%", color: "#6366F1" },
+  { name: "Export Partners", value: 0.14, share: "5%", color: "#3B82F6" },
 ];
 
 const initialVolumeTiers = [

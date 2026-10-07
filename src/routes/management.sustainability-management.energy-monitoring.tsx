@@ -2,8 +2,10 @@
 // Management -> Sustainability Management -> Energy Monitoring
 // Aligned with Light Enterprise Theme (Image 2 Reference)
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getSustainabilityManagementRecordFn } from "@/lib/sustainabilityManagementFns.server";
 import {
   Zap,
   Leaf,
@@ -33,10 +35,16 @@ import { cn } from "@/lib/utils";
 import { mockEnergyMonitoring } from "@/services/sustainabilityManagementService";
 
 function EnergyMonitoringPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["sustainability-management", "record"],
+    queryFn: () => getSustainabilityManagementRecordFn({ data: {} }),
+  });
+
   const [selectedPlant, setSelectedPlant] = useState("Gigafactory 1 - Chennai");
   const [reportingMonth, setReportingMonth] = useState("Sep 2026");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [data, setData] = useState(mockEnergyMonitoring);
+  useEffect(() => { if (dbRecord?.data) setData(dbRecord.data); }, [dbRecord]);
   const [showAddRecordModal, setShowAddRecordModal] = useState(false);
   const [selectedMeter, setSelectedMeter] = useState("EM-PE-001");
 

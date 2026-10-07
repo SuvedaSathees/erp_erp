@@ -30,7 +30,7 @@ export const ApqpDocumentControlPanel: React.FC<ApqpDocumentControlPanelProps> =
         </div>
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground">Version</span>
-          <span className="font-bold text-foreground">v{record.version.toFixed(1)}</span>
+          <span className="font-bold text-foreground">v{Number(record.version).toFixed(1)}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground">Effective Date</span>

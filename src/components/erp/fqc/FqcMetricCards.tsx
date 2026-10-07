@@ -57,9 +57,9 @@ export function FqcMetricCards({ record }: FqcMetricCardsProps) {
       value: dailyStats.certificatesIssued,
       unit: "COCs",
       icon: Award,
-      color: "text-purple-600 dark:text-purple-400",
-      bg: "bg-purple-50 dark:bg-purple-950/40",
-      border: "border-purple-100 dark:border-purple-900/50",
+      color: "text-primary dark:text-blue-400",
+      bg: "bg-blue-50 dark:bg-blue-950/40",
+      border: "border-blue-100 dark:border-blue-900/50",
     },
     {
       title: "First Pass Yield",

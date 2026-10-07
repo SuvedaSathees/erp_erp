@@ -78,7 +78,7 @@ export function JigAiAssessmentSection({
             size="sm"
             onClick={handleRunAiAnalysis}
             disabled={isAnalyzing}
-            className="gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs shadow-xs"
+            className="gap-1.5 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white font-semibold text-xs shadow-xs"
           >
             {isAnalyzing ? (
               <>
@@ -93,16 +93,16 @@ export function JigAiAssessmentSection({
             )}
           </Button>
 
-          <div className="flex items-center gap-2 bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950/60 dark:to-blue-950/60 border border-indigo-200 dark:border-indigo-800 rounded-xl px-4 py-2">
+          <div className="flex items-center gap-2 bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/60 dark:to-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-xl px-4 py-2">
             <div>
-              <span className="text-[10px] font-semibold uppercase text-indigo-600 dark:text-indigo-400 block tracking-wider">
+              <span className="text-[10px] font-semibold uppercase text-primary dark:text-blue-400 block tracking-wider">
                 AI Engineering Score
               </span>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-extrabold text-indigo-700 dark:text-indigo-300 font-mono">
+                <span className="text-2xl font-extrabold text-primary dark:text-blue-300 font-mono">
                   {aiScore}
                 </span>
-                <span className="text-xs text-indigo-500 font-semibold">/100</span>
+                <span className="text-xs text-blue-600 font-semibold">/100</span>
               </div>
             </div>
           </div>

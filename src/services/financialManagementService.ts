@@ -220,7 +220,7 @@ export async function loadCashBankDashboard(query: DashboardQuery): Promise<Cash
       bankReconciliatorService.generateReconciliationSummary(query),
     ]);
 
-  const cashPositionTrend = [
+  let cashPositionTrend = [
     { month: "Apr '24", inflow: 4800000, outflow: 3600000, netFlow: 1200000 },
     { month: "May '24", inflow: 5200000, outflow: 4000000, netFlow: 1200000 },
     { month: "Jun '24", inflow: 4500000, outflow: 3800000, netFlow: 700000 },
@@ -235,6 +235,13 @@ export async function loadCashBankDashboard(query: DashboardQuery): Promise<Cash
     { month: "Mar '25", inflow: 8500000, outflow: 6500000, netFlow: 2000000 },
     { month: "Apr '25", inflow: 8945320, outflow: 6781240, netFlow: 2164080 },
   ];
+  try {
+    const { getCashPositionTrendFn } = await import("@/lib/dashboardAnalyticsFns.server");
+    const trendRes = await getCashPositionTrendFn();
+    if (trendRes.success && trendRes.data && trendRes.data.length > 0) {
+      cashPositionTrend = trendRes.data;
+    }
+  } catch {}
 
   const accounts = bankAccounts || [];
   const activeAccounts = accounts.filter((a) => a.status === "Active").length;
@@ -688,11 +695,22 @@ export async function loadConsolidationDashboard(
       consolidationService.validateEntityData(query),
     ]);
 
+  let consolidatedRevenue = 48753920.0;
+  let consolidatedNetProfit = 7856410.0;
+  try {
+    const { getDashboardKpisFn } = await import("@/lib/dashboardAnalyticsFns.server");
+    const dbKpis = await getDashboardKpisFn();
+    if (dbKpis.success && dbKpis.data) {
+      consolidatedRevenue = dbKpis.data.totalRevenue || consolidatedRevenue;
+      consolidatedNetProfit = (dbKpis.data.totalRevenue - dbKpis.data.totalExpenses) || consolidatedNetProfit;
+    }
+  } catch {}
+
   const kpis = {
     totalEntities: 12,
-    consolidatedRevenueYTD: 48753920.0,
+    consolidatedRevenueYTD: consolidatedRevenue,
     consolidatedRevenueYTDDelta: 12.45,
-    consolidatedNetProfitYTD: 7856410.0,
+    consolidatedNetProfitYTD: consolidatedNetProfit,
     consolidatedNetProfitYTDDelta: 8.67,
     eliminationEntriesYTD: 1245780.0,
     eliminationEntriesCount: 156,

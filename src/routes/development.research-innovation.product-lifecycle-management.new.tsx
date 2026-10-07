@@ -613,7 +613,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                               : rec.workflowStatus === "Approved with Conditions"
                               ? "bg-amber-500 text-white hover:bg-amber-600"
                               : rec.workflowStatus === "In Review" || rec.workflowStatus === "Executive Review"
-                              ? "bg-purple-600 text-white hover:bg-purple-700"
+                              ? "bg-primary text-white hover:bg-primary"
                               : rec.workflowStatus === "End-of-Life Approved"
                               ? "bg-rose-600 text-white hover:bg-rose-700"
                               : "bg-blue-600 text-white hover:bg-blue-700"
@@ -628,7 +628,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                           <Clock className="mr-2 h-3.5 w-3.5 text-blue-500" /> In Progress
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleStatusChange("Executive Review")} className="cursor-pointer">
-                          <Eye className="mr-2 h-3.5 w-3.5 text-purple-500" /> Executive Review
+                          <Eye className="mr-2 h-3.5 w-3.5 text-blue-600" /> Executive Review
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleStatusChange("Approved")} className="cursor-pointer">
                           <CheckCircle2 className="mr-2 h-3.5 w-3.5 text-emerald-500" /> Approved
@@ -711,7 +711,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                       Create Change Order (ECO)
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setShowAiReportModal(true)} className="gap-2 cursor-pointer">
-                      <Sparkles className="h-4 w-4 text-purple-600" />
+                      <Sparkles className="h-4 w-4 text-primary" />
                       Generate AI Lifecycle Report
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
@@ -1367,12 +1367,12 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
               <CardHeader className="pb-3 border-b border-border/60">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-purple-600" />
+                    <Sparkles className="h-4 w-4 text-primary" />
                     AI Lifecycle Assessment
                   </CardTitle>
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 gap-1 border-purple-200 font-semibold text-xs">
-                      <Sparkles className="h-3 w-3 text-purple-600" />
+                    <Badge className="bg-blue-100 text-primary dark:bg-blue-950/60 dark:text-blue-300 gap-1 border-blue-200 font-semibold text-xs">
+                      <Sparkles className="h-3 w-3 text-primary" />
                       AI Digital Thread Assessment
                     </Badge>
                     <Badge className="bg-emerald-600 text-white font-mono text-xs font-semibold">
@@ -1403,9 +1403,9 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                     <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{rec.aiReliabilityForecast}</span>
                   </div>
 
-                  <div className="p-3 rounded-lg border border-purple-200 dark:border-purple-900/60 bg-purple-50/40 dark:bg-purple-950/20 text-center space-y-1">
-                    <span className="text-purple-900 dark:text-purple-300 block text-[10px]">AI Improvement Suggestions</span>
-                    <span className="text-xs font-bold text-purple-700 dark:text-purple-300 block truncate" title={rec.aiImprovementSuggestions}>
+                  <div className="p-3 rounded-lg border border-blue-200 dark:border-blue-900/60 bg-blue-50/40 dark:bg-blue-950/20 text-center space-y-1">
+                    <span className="text-blue-900 dark:text-blue-300 block text-[10px]">AI Improvement Suggestions</span>
+                    <span className="text-xs font-bold text-primary dark:text-blue-300 block truncate" title={rec.aiImprovementSuggestions}>
                       {rec.aiImprovementSuggestions}
                     </span>
                   </div>
@@ -2132,18 +2132,18 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-purple-600" />
+              <Sparkles className="h-5 w-5 text-primary" />
               AI Product Lifecycle Report
             </DialogTitle>
             <DialogDescription>Predictive analytics across component lifespans and supply chain</DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-2 text-xs">
-            <div className="p-3 bg-purple-50 dark:bg-purple-950/40 rounded-lg border border-purple-200 dark:border-purple-800 space-y-1">
-              <p className="font-bold text-purple-900 dark:text-purple-200">Product Health & Obsolescence Prediction</p>
-              <p className="text-purple-800 dark:text-purple-300 leading-relaxed">
+            <div className="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-lg border border-blue-200 dark:border-blue-800 space-y-1">
+              <p className="font-bold text-blue-900 dark:text-blue-200">Product Health & Obsolescence Prediction</p>
+              <p className="text-primary dark:text-blue-300 leading-relaxed">
                 Predicted active lifespan: 5.2 Years. Low obsolescence risk across MCU & power electronics components. Health Score: <strong>{rec.aiLifecycleScore}/100</strong>.
               </p>
-              <p className="text-purple-700 dark:text-purple-400 text-[11px] pt-1 font-medium">
+              <p className="text-primary dark:text-blue-400 text-[11px] pt-1 font-medium">
                 Recommendation: Continue manufacturing run without component redesign through FY2028.
               </p>
             </div>

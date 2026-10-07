@@ -2,8 +2,10 @@
 // Management -> Communication Management -> Collaboration Workspace
 // Complete Project & Team Digital Collaboration Hub matching Image 2 and Specifications
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getCommunicationManagementRecordFn } from "@/lib/communicationManagementFns.server";
 import {
   FolderKanban,
   CheckSquare,
@@ -110,6 +112,11 @@ const WORKSPACE_PROJECT_POSTS: SocialFeedPost[] = [
 ];
 
 function CollaborationWorkspacePage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["communication-management", "record"],
+    queryFn: () => getCommunicationManagementRecordFn({ data: {} }),
+  });
+
   const [feedTab, setFeedTab] = useState<string>("all");
   const [posts, setPosts] = useState<SocialFeedPost[]>(WORKSPACE_PROJECT_POSTS);
   const [newUpdateText, setNewUpdateText] = useState<string>("");

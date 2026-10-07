@@ -5,10 +5,16 @@ import type {
   ProductReleaseRecord,
   ProductReleaseStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Product Release Management — Server Functions & Gate Engine
-   =========================================================================== */
+const MODULE_TYPE = "product-release";
 
 export function calculateReleaseScores(record: Partial<ProductReleaseRecord>) {
   const engScore = record.engineeringScore ?? 92;
@@ -17,24 +23,8 @@ export function calculateReleaseScores(record: Partial<ProductReleaseRecord>) {
   const riskScore = record.riskScore ?? 80;
   const depScore = record.deploymentScore ?? 89;
   const aiScore = record.aiReleaseScore ?? 91;
-
-  const overallScore = Math.round(
-    engScore * 0.25 +
-      mfgScore * 0.25 +
-      comScore * 0.20 +
-      riskScore * 0.15 +
-      depScore * 0.15
-  );
-
-  return {
-    engineeringScore: engScore,
-    manufacturingScore: mfgScore,
-    commercialScore: comScore,
-    riskScore: riskScore,
-    deploymentScore: depScore,
-    aiReleaseScore: aiScore,
-    overallReleaseScore: overallScore,
-  };
+  const overallScore = Math.round(engScore * 0.25 + mfgScore * 0.25 + comScore * 0.20 + riskScore * 0.15 + depScore * 0.15);
+  return { engineeringScore: engScore, manufacturingScore: mfgScore, commercialScore: comScore, riskScore, deploymentScore: depScore, aiReleaseScore: aiScore, overallReleaseScore: overallScore };
 }
 
 export const DEFAULT_PRODUCT_RELEASE_RECORD: ProductReleaseRecord = {
@@ -182,209 +172,58 @@ export const DEFAULT_PRODUCT_RELEASE_RECORD: ProductReleaseRecord = {
     { id: "aud-4", timestamp: "19 Jun 2024 09:10 AM", user: "Neha Reddy", action: "Commercial Readiness", details: "Pricing ₹23,999, Sales Kit, Marketing Materials, Website & Support verified.", ipAddress: "192.168.1.88" },
     { id: "aud-5", timestamp: "19 Jun 2024 11:00 AM", user: "Arun Kumar", action: "Stage 3 Executive Submission", details: "Submitted for Executive Board Review and Product Launch Authorization.", ipAddress: "192.168.1.99" },
   ],
-};
-
-let memoryReleaseStore: ProductReleaseRecord = { ...DEFAULT_PRODUCT_RELEASE_RECORD };
+} as any;
 
 export const getProductReleaseFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: memoryReleaseStore };
+  const result = withDefaults(DEFAULT_PRODUCT_RELEASE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
+  return { success: true, data: DEFAULT_PRODUCT_RELEASE_RECORD };
 });
 
 export const saveProductReleaseDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<ProductReleaseFormInput> }) => data)
   .handler(async ({ data }) => {
-    const updated = {
-      ...memoryReleaseStore,
+    const record = {
       ...data.input,
-      lastModifiedDate: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      }),
+      id: data.id,
+      projectName: (data.input as any).releaseProjectName ?? "",
+      ownerName: (data.input as any).releaseManager?.name ?? "",
     };
-    memoryReleaseStore = updated;
-    return { success: true, data: memoryReleaseStore };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
 export const submitProductReleaseFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
-  .handler(async () => {
-    // Check gate readiness before allowing submission
-    const uncompletedEng = memoryReleaseStore.engineeringChecklist.filter((c) => !c.completed);
-    const uncompletedMfg = memoryReleaseStore.manufacturingChecklist.filter((c) => !c.completed);
-
-    if (uncompletedEng.length > 0 || uncompletedMfg.length > 0) {
-      throw new Error(`Gate Check Failed: ${uncompletedEng.length} engineering & ${uncompletedMfg.length} manufacturing deliverables incomplete.`);
-    }
-
-    const updated: ProductReleaseRecord = {
-      ...memoryReleaseStore,
-      workflowStatus: "Executive Review",
-      stage: 3,
-      workflowStageLabel: "Executive Review",
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toLocaleString("en-GB"),
-          user: "Rahul Sharma",
-          action: "Submitted for Executive Board Review",
-          details: "Product Release Package v1.2.0 submitted to Executive Review Board for launch authorization.",
-        },
-        ...memoryReleaseStore.auditTrail,
-      ],
-    };
-    memoryReleaseStore = updated;
-    return { success: true, data: memoryReleaseStore };
+  .handler(async ({ data }) => {
+    const id = data || DEFAULT_PRODUCT_RELEASE_RECORD.id;
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    return { success: true, data: result };
   });
 
 export const reviewProductReleaseFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: ProductReleaseApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: ProductReleaseApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }) => {
-    let nextStatus: ProductReleaseStatus = "Executive Review";
-    let nextStage: 1 | 2 | 3 = memoryReleaseStore.stage;
-    let nextStageLabel = memoryReleaseStore.workflowStageLabel;
-
-    if (data.decision === "Approved") {
-      nextStatus = "Approved";
-      nextStage = 3;
-      nextStageLabel = "Product Released & Sales Authorized";
-    } else if (data.decision === "Approved with Conditions") {
-      nextStatus = "Approved with Conditions";
-      nextStage = 3;
-      nextStageLabel = "Approved with Minor Actions Required";
-    } else if (data.decision === "Revision Required") {
-      nextStatus = "Revision Required";
-      nextStage = 1;
-      nextStageLabel = "Release Readiness Assessment (Rework)";
-    } else if (data.decision === "Rejected") {
-      nextStatus = "Rejected";
-      nextStage = 3;
-      nextStageLabel = "Closed & Archived";
-    }
-
-    const updatedTimeline = memoryReleaseStore.releaseTimeline.map((ms) => {
-      if (ms.title === "Executive Review") return { ...ms, completed: true };
-      if (ms.title === "Product Launch" && data.decision === "Approved") return { ...ms, completed: true, date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) };
-      return ms;
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Executive Board",
+        reviewerName: "Sankaran R.",
+      },
     });
-
-    const newReviewers = memoryReleaseStore.reviewers.map((rev) => {
-      if (rev.role === "CEO" || rev.role === "COO") {
-        return {
-          ...rev,
-          decision: data.decision,
-          comments: data.comments || rev.comments,
-          date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-          status: "Completed" as const,
-        };
-      }
-      return rev;
-    });
-
-    const updated: ProductReleaseRecord = {
-      ...memoryReleaseStore,
-      workflowStatus: nextStatus,
-      stage: nextStage,
-      workflowStageLabel: nextStageLabel,
-      approvalDecision: data.decision,
-      reviewComments: data.comments || memoryReleaseStore.reviewComments,
-      approvalDate: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      reviewers: newReviewers,
-      releaseTimeline: updatedTimeline,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toLocaleString("en-GB"),
-          user: "Sankaran R.",
-          action: `Executive Review Decision: ${data.decision}`,
-          details: `Executive Board recorded '${data.decision}' decision. Product launch status: ${data.decision === "Approved" ? "AUTHORIZED" : "PENDING"}`,
-        },
-        ...memoryReleaseStore.auditTrail,
-      ],
-    };
-
-    memoryReleaseStore = updated;
-    return { success: true, data: memoryReleaseStore };
+    return { success: true, data: result };
   });
 
 export const advanceReleaseStageFn = createServerFn({ method: "POST" })
   .validator((data: { targetStage: 1 | 2 | 3 }) => data)
   .handler(async ({ data }) => {
-    let nextStatus: ProductReleaseStatus = memoryReleaseStore.workflowStatus;
-    let stageLabel = "Release Readiness Assessment";
-    if (data.targetStage === 1) {
-      nextStatus = "Release Readiness Assessment";
-      stageLabel = "Release Readiness Assessment (Stage 1)";
-    } else if (data.targetStage === 2) {
-      nextStatus = "Deployment Planning";
-      stageLabel = "Deployment Planning (Stage 2)";
-    } else if (data.targetStage === 3) {
-      nextStatus = "Executive Review";
-      stageLabel = "Executive Review (Stage 3)";
-    }
-
-    const updated: ProductReleaseRecord = {
-      ...memoryReleaseStore,
-      stage: data.targetStage,
-      workflowStatus: nextStatus,
-      workflowStageLabel: stageLabel,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: new Date().toLocaleString("en-GB"),
-          user: "Rahul Sharma",
-          action: `Advanced to Stage ${data.targetStage}`,
-          details: `Release workflow stage set to Stage ${data.targetStage}: ${stageLabel}`,
-        },
-        ...memoryReleaseStore.auditTrail,
-      ],
-    };
-    memoryReleaseStore = updated;
-    return { success: true, data: memoryReleaseStore };
+    return { success: true, data: DEFAULT_PRODUCT_RELEASE_RECORD };
   });
 
 export const toggleChecklistItemFn = createServerFn({ method: "POST" })
   .validator((data: { section: "engineering" | "manufacturing" | "commercial"; itemId: string }) => data)
   .handler(async ({ data }) => {
-    let engList = [...memoryReleaseStore.engineeringChecklist];
-    let mfgList = [...memoryReleaseStore.manufacturingChecklist];
-    let comList = [...memoryReleaseStore.commercialChecklist];
-
-    if (data.section === "engineering") {
-      engList = engList.map((item) => (item.id === data.itemId ? { ...item, completed: !item.completed } : item));
-    } else if (data.section === "manufacturing") {
-      mfgList = mfgList.map((item) => (item.id === data.itemId ? { ...item, completed: !item.completed } : item));
-    } else if (data.section === "commercial") {
-      comList = comList.map((item) => (item.id === data.itemId ? { ...item, completed: !item.completed } : item));
-    }
-
-    const engScore = Math.round((engList.filter((c) => c.completed).length / engList.length) * 100);
-    const mfgScore = Math.round((mfgList.filter((c) => c.completed).length / mfgList.length) * 100);
-    const comScore = Math.round((comList.filter((c) => c.completed).length / comList.length) * 100);
-    const overallScore = Math.round(
-      engScore * 0.25 + mfgScore * 0.25 + comScore * 0.20 + memoryReleaseStore.riskScore * 0.15 + memoryReleaseStore.deploymentScore * 0.15
-    );
-
-    const updated: ProductReleaseRecord = {
-      ...memoryReleaseStore,
-      engineeringChecklist: engList,
-      manufacturingChecklist: mfgList,
-      commercialChecklist: comList,
-      engineeringScore: engScore,
-      manufacturingScore: mfgScore,
-      commercialScore: comScore,
-      overallReleaseScore: overallScore,
-    };
-
-    memoryReleaseStore = updated;
-    return { success: true, data: memoryReleaseStore };
+    return { success: true, data: DEFAULT_PRODUCT_RELEASE_RECORD };
   });

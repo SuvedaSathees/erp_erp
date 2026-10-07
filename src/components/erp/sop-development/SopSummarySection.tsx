@@ -73,27 +73,27 @@ export function SopSummarySection({
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/40 text-center">
-            <span className="text-[11px] font-semibold text-purple-700 dark:text-purple-300 block">
+          <div className="p-3.5 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/40 text-center">
+            <span className="text-[11px] font-semibold text-primary dark:text-blue-300 block">
               Training Score
             </span>
             <div className="relative my-2 inline-flex items-center justify-center">
-              <span className="text-2xl font-black text-purple-700 dark:text-purple-300 font-mono">
+              <span className="text-2xl font-black text-primary dark:text-blue-300 font-mono">
                 {trainingScore}
               </span>
-              <span className="text-[10px] text-purple-500 font-bold font-mono">/100</span>
+              <span className="text-[10px] text-blue-600 font-bold font-mono">/100</span>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-950/40 text-center">
-            <span className="text-[11px] font-semibold text-indigo-700 dark:text-indigo-300 block">
+          <div className="p-3.5 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/40 text-center">
+            <span className="text-[11px] font-semibold text-primary dark:text-blue-300 block">
               AI Doc Score
             </span>
             <div className="relative my-2 inline-flex items-center justify-center">
-              <span className="text-2xl font-black text-indigo-700 dark:text-indigo-300 font-mono">
+              <span className="text-2xl font-black text-primary dark:text-blue-300 font-mono">
                 {aiScore}
               </span>
-              <span className="text-[10px] text-indigo-500 font-bold font-mono">/100</span>
+              <span className="text-[10px] text-blue-600 font-bold font-mono">/100</span>
             </div>
           </div>
 

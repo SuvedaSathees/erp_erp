@@ -436,13 +436,13 @@ export function MaintenanceFormPage() {
           <div className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground font-medium">In Progress</span>
-              <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <PlayCircle className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-1">
-              <span className="text-2xl font-bold font-mono text-purple-600">24</span>
-              <span className="block text-[10px] text-purple-700 dark:text-purple-400 font-medium">
+              <span className="text-2xl font-bold font-mono text-primary">24</span>
+              <span className="block text-[10px] text-primary dark:text-blue-400 font-medium">
                 1.92% of Total
               </span>
             </div>
@@ -498,7 +498,7 @@ export function MaintenanceFormPage() {
                     <circle cx="50" cy="50" r="38" stroke="#2563eb" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="108.4" />
                     <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="181.9" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="200.3" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="200.3" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <span className="text-sm font-bold font-mono text-slate-900 dark:text-white">1,248</span>
@@ -520,8 +520,8 @@ export function MaintenanceFormPage() {
                     <span className="font-mono font-semibold text-amber-600">96</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> Predictive</span>
-                    <span className="font-mono font-semibold text-purple-600">86</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-blue-500" /> Predictive</span>
+                    <span className="font-mono font-semibold text-primary">86</span>
                   </div>
                 </div>
               </div>
@@ -558,8 +558,8 @@ export function MaintenanceFormPage() {
                   <span className="text-[8px] text-muted-foreground font-medium mt-0.5 truncate">Prog</span>
                 </div>
                 <div className="flex-1 flex flex-col items-center gap-0.5">
-                  <span className="text-[8.5px] font-bold font-mono text-purple-600">11</span>
-                  <div className="w-full bg-purple-500 rounded-t-sm" style={{ height: "7px" }} />
+                  <span className="text-[8.5px] font-bold font-mono text-primary">11</span>
+                  <div className="w-full bg-blue-500 rounded-t-sm" style={{ height: "7px" }} />
                   <span className="text-[8px] text-muted-foreground font-medium mt-0.5 truncate">Parts</span>
                 </div>
                 <div className="flex-1 flex flex-col items-center gap-0.5">
@@ -596,7 +596,7 @@ export function MaintenanceFormPage() {
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#2563eb" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="140.8" />
                     <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="205.8" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="225.6" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="225.6" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <span className="text-xs font-bold font-mono text-slate-900 dark:text-white">₹ 38.5L</span>
@@ -618,7 +618,7 @@ export function MaintenanceFormPage() {
                     <span className="font-mono font-semibold text-amber-600">₹ 5.3L</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> Others</span>
+                    <span className="flex items-center gap-1"><div className="h-1.5 w-1.5 rounded-full bg-blue-500" /> Others</span>
                     <span className="font-mono font-semibold text-muted-foreground">₹ 3.2L</span>
                   </div>
                 </div>
@@ -815,7 +815,7 @@ export function MaintenanceFormPage() {
                                 ? "bg-amber-50 text-amber-700 border-amber-200"
                                 : wo.status === "Completed"
                                 ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                : "bg-purple-50 text-purple-700 border-purple-200"
+                                : "bg-blue-50 text-primary border-blue-200"
                             )}
                           >
                             {wo.status}
@@ -1059,7 +1059,7 @@ export function MaintenanceFormPage() {
                 { name: "Electrical Fault", pct: 22, color: "bg-teal-500" },
                 { name: "Wear & Tear", pct: 18, color: "bg-emerald-500" },
                 { name: "Misalignment", pct: 12, color: "bg-cyan-500" },
-                { name: "Overheating", pct: 10, color: "bg-purple-500" },
+                { name: "Overheating", pct: 10, color: "bg-blue-500" },
                 { name: "Others", pct: 10, color: "bg-slate-500" },
               ].map((item) => (
                 <div key={item.name} className="space-y-0.5">
@@ -1128,7 +1128,7 @@ export function MaintenanceFormPage() {
                   {/* External: 13.8% */}
                   <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="205.8" />
                   {/* Others: 8.3% */}
-                  <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="225.6" />
+                  <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="225.6" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                   <span className="text-xs font-bold font-mono text-slate-900 dark:text-white">₹ 38.50 L</span>
@@ -1150,7 +1150,7 @@ export function MaintenanceFormPage() {
                   <span className="font-mono font-bold">13.8%</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-1.5"><div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> Others</span>
+                  <span className="flex items-center gap-1.5"><div className="h-1.5 w-1.5 rounded-full bg-blue-500" /> Others</span>
                   <span className="font-mono font-bold">8.3%</span>
                 </div>
               </div>
@@ -1186,7 +1186,7 @@ export function MaintenanceFormPage() {
                 <span>Predictive model suggests Compressor-01 service in 3 days.</span>
               </div>
               <div className="flex items-start gap-1">
-                <span className="text-purple-500">ℹ️</span>
+                <span className="text-blue-600">ℹ️</span>
                 <span>Spare part stock for Bearing 6205 is running low.</span>
               </div>
               <div className="flex items-start gap-1">

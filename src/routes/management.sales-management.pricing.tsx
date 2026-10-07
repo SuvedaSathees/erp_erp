@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { salesManagementService } from "@/services";
 import { toast } from "sonner";
 import {
   Tag,
@@ -61,7 +63,7 @@ const costBreakdownData = [
   { name: "Direct Assembly Labor", value: 10000, share: "9.5%", color: "#22C55E" },
   { name: "Manufacturing Overhead", value: 8000, share: "7.6%", color: "#0284C7" },
   { name: "Packaging & Logistics", value: 5000, share: "4.8%", color: "#F59E0B" },
-  { name: "Warranty & Reserves", value: 4000, share: "3.8%", color: "#6366F1" },
+  { name: "Warranty & Reserves", value: 4000, share: "3.8%", color: "#3B82F6" },
   { name: "Quality Certification", value: 3000, share: "2.9%", color: "#EC4899" },
 ];
 
@@ -120,6 +122,12 @@ const channelPricingMatrix = [
 ];
 
 export default function PricingComponent() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["sales", "priceLists"]],
+    queryFn: () => salesManagementService.fetchPriceLists(),
+  });
+
   const [selectedScenario, setSelectedScenario] = useState("base");
   const [stepperStages, setStepperStages] = useState(initialStepperStages);
   const [status, setStatus] = useState("In Commercial Review");

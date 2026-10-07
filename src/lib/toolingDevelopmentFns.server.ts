@@ -5,10 +5,15 @@ import type {
   ToolingRecord,
   ToolingStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Tooling Development — Server Functions & Workflow Engine
-   =========================================================================== */
+const MODULE_TYPE = "tooling-development";
 
 export function calculateToolingScores(record: Partial<ToolingRecord>) {
   const designScore = record.designReviewScore ?? 88;
@@ -18,7 +23,6 @@ export function calculateToolingScores(record: Partial<ToolingRecord>) {
   const performanceScore = record.performanceScore ?? 84;
   const aiScore = record.aiEngineeringScore ?? 89;
 
-  // Weighted score calculations
   const overallScore = Math.round(
     designScore * 0.20 +
       manufacturingScore * 0.20 +
@@ -187,50 +191,44 @@ export const DEFAULT_TOOLING_RECORD: ToolingRecord = {
     { id: "ta-3", timestamp: "19 Jun 2024 02:15 PM", user: "Vikram Singh", action: "Quality Verified", details: "Passed dimensional tolerance test.", ipAddress: "192.168.1.115" },
     { id: "ta-4", timestamp: "20 Jun 2024 04:25 PM", user: "Rahul Sharma", action: "Submitted to Review", details: "Awaiting board approvals.", ipAddress: "192.168.1.102" },
   ],
-};
-
-let activeRecordStore: ToolingRecord = { ...DEFAULT_TOOLING_RECORD };
+} as any;
 
 export const getToolingFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: ToolingRecord }> => {
-    return { success: true, data: activeRecordStore };
+    const result = withDefaults(DEFAULT_TOOLING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_TOOLING_RECORD };
   }
 );
 
 export const saveToolingDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<ToolingFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: ToolingRecord }> => {
-    const { input } = data;
-    const { ...rest } = input;
-
-    // Apply changes
-    activeRecordStore = {
-      ...activeRecordStore,
-      ...rest,
-      lastModified: new Date().toISOString(),
-      lastUpdated: new Date().toLocaleString(),
+    const current = withDefaults(DEFAULT_TOOLING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_TOOLING_RECORD;
+    const updatedInput = { ...(base as any), ...data.input };
+    const scores = calculateToolingScores(updatedInput);
+    const record = {
+      ...base,
+      ...data.input,
+      ...scores,
+      projectName: (base as any).projectName ?? "",
+      ownerName: (base as any).toolingEngineerName ?? "Vikram Singh",
+      recordCode: (base as any).id ?? (base as any).toolingId ?? "",
     };
-
-    // Recalculate scores
-    const calculated = calculateToolingScores(activeRecordStore);
-    activeRecordStore = {
-      ...activeRecordStore,
-      ...calculated,
-    };
-
-    return { success: true, data: activeRecordStore };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
 export const submitToolingFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: ToolingRecord }> => {
-    activeRecordStore = {
-      ...activeRecordStore,
-      workflowStatus: "Executive Review" as ToolingStatus,
-      lastUpdated: new Date().toLocaleString(),
-    };
-
-    return { success: true, data: activeRecordStore };
+    const current = withDefaults(DEFAULT_TOOLING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_TOOLING_RECORD };
   });
 
 export const reviewToolingFn = createServerFn({ method: "POST" })
@@ -242,39 +240,14 @@ export const reviewToolingFn = createServerFn({ method: "POST" })
     }) => data
   )
   .handler(async ({ data }): Promise<{ success: boolean; data: ToolingRecord }> => {
-    const { decision, comments } = data;
-
-    let finalStatus: ToolingStatus = "Executive Review";
-    if (decision === "Approved") {
-      finalStatus = "Production Release";
-    } else if (decision === "Changes Requested") {
-      finalStatus = "CAD Design";
-    } else if (decision === "Rejected") {
-      finalStatus = "Completed"; // Aborted / Finished
-    }
-
-    activeRecordStore = {
-      ...activeRecordStore,
-      approvalDecision: decision,
-      reviewComments: comments || "",
-      workflowStatus: finalStatus,
-      approvalDate: new Date().toLocaleDateString(),
-      lastUpdated: new Date().toLocaleString(),
-    };
-
-    // Update reviewer state
-    activeRecordStore.reviewers = activeRecordStore.reviewers.map((rev) => {
-      if (rev.role === "Tool Design Engineer") {
-        return {
-          ...rev,
-          decision,
-          comments: comments || "Reviewed design.",
-          date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }),
-          status: "Completed" as const,
-        };
-      }
-      return rev;
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Tooling Review Board",
+        reviewerName: "Review Board",
+      },
     });
-
-    return { success: true, data: activeRecordStore };
+    return { success: true, data: result as any };
   });

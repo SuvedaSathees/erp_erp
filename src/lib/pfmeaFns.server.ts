@@ -1,10 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
-import type {
-  PfmeaRecord,
-  PfmeaFormInput,
-  PfmeaFailureMode,
-  PfmeaApprovalDecision,
-} from "@/services/types";
+import type { PfmeaRecord, PfmeaFailureMode } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "pfmea";
 
 export const INITIAL_PFMEA_RECORD: PfmeaRecord = {
   id: "pfmea-rec-00078",
@@ -277,36 +282,34 @@ export const INITIAL_PFMEA_RECORD: PfmeaRecord = {
     { id: "log-pfmea-04", timestamp: "21 Jun 2024 04:45 PM", user: "Arun Kumar", action: "Recommended Actions", description: "Created 5 recommended actions to reduce welding and assembly RPN.", stage: "Stage 3 - Risk Mitigation" },
     { id: "log-pfmea-05", timestamp: "25 Jun 2024 05:00 PM", user: "Sankaran R.", action: "Executive Approval", description: "PFMEA Review Board approved risk mitigation plan.", stage: "Stage 4 - Executive Review" },
   ],
-};
-
-let currentPfmeaRecordState: PfmeaRecord = { ...INITIAL_PFMEA_RECORD };
+} as any;
 
 export const getPfmeaRecordFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: currentPfmeaRecordState };
+  const result = withDefaults(INITIAL_PFMEA_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
+  return { success: true, data: INITIAL_PFMEA_RECORD };
 });
 
 export const savePfmeaDraftFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { input: PfmeaFormInput })
+  .validator((data: unknown) => data as { input: any })
   .handler(async ({ data }) => {
-    currentPfmeaRecordState = {
-      ...currentPfmeaRecordState,
+    const record = {
       ...data.input,
-      lastModifiedBy: "Current User",
-      lastModifiedDate: new Date().toLocaleString(),
-      workflowStatus: "Draft",
+      projectName: data.input.pfmeaTitle ?? data.input.projectName ?? "",
+      ownerName: data.input.processOwner ?? data.input.ownerName ?? "",
+      recordCode: data.input.pfmeaId ?? data.input.id ?? "",
     };
-    return { success: true, data: currentPfmeaRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
 export const submitPfmeaFn = createServerFn({ method: "POST" }).handler(async () => {
-  currentPfmeaRecordState = {
-    ...currentPfmeaRecordState,
-    workflowStatus: "In Review",
-    workflowStage: "Review by PFMEA Board",
-    lastModifiedBy: "Current User",
-    lastModifiedDate: new Date().toLocaleString(),
-  };
-  return { success: true, data: currentPfmeaRecordState };
+  const current = withDefaults(INITIAL_PFMEA_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (current?.id) {
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    return { success: true, data: result };
+  }
+  return { success: true, data: INITIAL_PFMEA_RECORD };
 });
 
 export const addFailureModeFn = createServerFn({ method: "POST" })
@@ -317,12 +320,13 @@ export const addFailureModeFn = createServerFn({ method: "POST" })
       ...data,
       id: `fm-${Date.now()}`,
       rpnBefore,
+    } as any;
+    const current = withDefaults(INITIAL_PFMEA_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const currentData = current || INITIAL_PFMEA_RECORD;
+    const updatedRecord = {
+      ...currentData,
+      failureModes: [...(currentData.failureModes || []), newFm],
     };
-    const updatedFms = [...currentPfmeaRecordState.failureModes, newFm];
-    currentPfmeaRecordState = {
-      ...currentPfmeaRecordState,
-      failureModes: updatedFms,
-      lastModifiedDate: new Date().toLocaleString(),
-    };
-    return { success: true, data: currentPfmeaRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: updatedRecord } });
+    return { success: true, data: result };
   });

@@ -1,18 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Users, Plus, Shield } from "lucide-react";
 import { AppShell, PageHeader } from "@/components/erp/AppShell";
 import { ErpButton } from "@/components/erp/Button";
 import { KpiCard } from "@/components/erp/KpiCard";
 import { StatusBadge } from "@/components/erp/StatusBadge";
 import { DataTable, type Column } from "@/components/erp/DataTable";
-import { users } from "@/lib/mock-data";
+import { userService } from "@/services";
+import type { UserRecord } from "@/services/types";
 
 export const Route = createFileRoute("/users")({
   head: () => ({ meta: [{ title: "Users & Roles · Magnertia ERP" }] }),
   component: UsersPage,
 });
-
-type Row = (typeof users)[number];
 
 const ROLES = [
   "Super Admin",
@@ -24,9 +24,14 @@ const ROLES = [
 ];
 
 function UsersPage() {
+  const { data: users = [] } = useQuery({
+    queryKey: ["users", "list"],
+    queryFn: () => userService.fetchUsers(),
+  });
+
   const active = users.filter((u) => u.status === "Active").length;
 
-  const columns: Column<Row>[] = [
+  const columns: Column<UserRecord>[] = [
     {
       key: "name",
       header: "User",
@@ -57,7 +62,7 @@ function UsersPage() {
     {
       key: "last",
       header: "Last Active",
-      cell: (r) => <span className="text-muted-foreground">{r.lastActive}</span>,
+      cell: (r) => <span className="text-muted-foreground">{r.lastLogin}</span>,
     },
     { key: "status", header: "Status", cell: (r) => <StatusBadge status={r.status} /> },
   ];
@@ -121,7 +126,7 @@ function UsersPage() {
                 <span className="inline-flex items-center gap-1 rounded-md bg-accent/15 px-2 py-0.5 font-semibold text-primary">
                   <Shield className="h-3 w-3" /> {r.role}
                 </span>
-                <span className="text-muted-foreground">{r.lastActive}</span>
+                <span className="text-muted-foreground">{r.lastLogin}</span>
               </div>
             </>
           )}

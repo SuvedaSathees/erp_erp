@@ -1,5 +1,8 @@
 import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { crmManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { CrmManagementTabBar } from "@/components/erp/CrmManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -428,7 +431,7 @@ const RECENT_ACTIVITIES = [
     type: "Call",
     subject: "Initial Discussion",
     outcome: "Interested",
-    outcomeColor: "bg-purple-50 text-purple-700 border-purple-200",
+    outcomeColor: "bg-blue-50 text-primary border-blue-200",
     nextAction: "Schedule Demo",
     nextActionDate: "18 Apr 2024",
     assignedTo: "Rahul Sharma",
@@ -449,7 +452,38 @@ const RECENT_ACTIVITIES = [
 ];
 
 function ContactManagementPage() {
+  const contactsQuery = useQuery({
+    queryKey: ["crm", "contacts"],
+    queryFn: () => crmManagementService.fetchContacts(),
+  });
+
+  const queryClient = useQueryClient();
+
+  const createContactMutation = useMutation({
+    mutationFn: (input: any) => crmManagementService.createContact(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["crm"] });
+      toast.success("Contact created successfully");
+    },
+    onError: () => toast.error("Failed to create contact"),
+  });
+
+  const dbContacts: ContactRecord[] = (contactsQuery.data ?? []).map((c: any) => ({
+    ...INITIAL_CONTACTS[0],
+    id: c.id,
+    contactNumber: c.contactNumber ?? c.id,
+    firstName: c.firstName ?? "",
+    lastName: c.lastName ?? "",
+    preferredName: `${c.firstName ?? ""} ${c.lastName ?? ""}`.trim(),
+    primaryEmail: c.email ?? "",
+    mobile: c.phone ?? "",
+    designation: c.designation ?? "",
+    orgName: c.accountId ?? "",
+    status: "Active",
+    createdDate: new Date(c.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+  }));
   const [contacts, setContacts] = useState<ContactRecord[]>(INITIAL_CONTACTS);
+  const mergedContacts = dbContacts.length > 0 ? dbContacts : contacts;
   const [selectedContactId, setSelectedContactId] = useState<string>("CONT-0002458");
 
   // Dialog States
@@ -459,8 +493,8 @@ function ContactManagementPage() {
 
   // Active Contact Object
   const currentContact = useMemo(() => {
-    return contacts.find((c) => c.id === selectedContactId) || contacts[0];
-  }, [contacts, selectedContactId]);
+    return mergedContacts.find((c) => c.id === selectedContactId) || mergedContacts[0];
+  }, [mergedContacts, selectedContactId]);
 
   // Form State initialized from current Contact
   const [formState, setFormState] = useState<ContactRecord>(currentContact);
@@ -1114,7 +1148,7 @@ function ContactManagementPage() {
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-slate-600 font-medium">Linked Account</span>
-                          <span className="font-semibold text-purple-700">{formState.linkedAccount}</span>
+                          <span className="font-semibold text-primary">{formState.linkedAccount}</span>
                         </div>
                       </div>
                     </div>
@@ -1305,7 +1339,7 @@ function ContactManagementPage() {
                         onClick={() => showNotification("Opening Meeting Scheduler...")}
                         className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-center flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-slate-700 transition-all cursor-pointer"
                       >
-                        <Calendar className="h-4 w-4 text-purple-600" />
+                        <Calendar className="h-4 w-4 text-primary" />
                         <span>Schedule</span>
                       </button>
                     </div>

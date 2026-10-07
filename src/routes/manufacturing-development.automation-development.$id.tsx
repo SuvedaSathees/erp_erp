@@ -77,6 +77,7 @@ function AutomationDevelopmentDetailPage() {
   const sec7Ref = useRef<HTMLDivElement>(null);
   const sec8Ref = useRef<HTMLDivElement>(null);
   const sec9Ref = useRef<HTMLDivElement>(null);
+  const secAttachmentsRef = useRef<HTMLDivElement>(null);
 
   const { data: record, isLoading, refetch } = useQuery<AutomationDevelopment>({
     queryKey: ["automationDevelopmentRecord", id],
@@ -829,7 +830,7 @@ AI Health Score: ${record.aiAutomationHealthScore}/100
                 </div>
 
                 {/* Attachments Card Strip (with modal launcher) */}
-                <div>
+                <div ref={secAttachmentsRef}>
                   <AutomationAttachmentsCard attachments={record.attachments} />
                 </div>
               </div>

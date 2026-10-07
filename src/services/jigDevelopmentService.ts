@@ -1,5 +1,5 @@
+import { DEFAULT_JIG_RECORD } from "@/lib/jigDevelopmentMock";
 import {
-  DEFAULT_JIG_RECORD,
   getJigFn,
   reviewJigFn,
   saveJigDraftFn,

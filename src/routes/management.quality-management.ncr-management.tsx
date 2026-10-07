@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { qualityManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
@@ -24,6 +26,7 @@ import { NcrDispositionTab } from "@/components/erp/ncr/tabs/NcrDispositionTab";
 import { NcrAttachmentsTab } from "@/components/erp/ncr/tabs/NcrAttachmentsTab";
 import { NcrHistoryTab } from "@/components/erp/ncr/tabs/NcrHistoryTab";
 
+import { getNcrRecordFn } from "@/lib/ncrFns.server";
 import { INITIAL_NCR_RECORD } from "@/services/ncrService";
 import { NcrRecord } from "@/services/ncrTypes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -59,7 +62,19 @@ export const Route = createFileRoute(
 });
 
 export function NcrManagementPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["quality", "ncr"]],
+    queryFn: () => qualityManagementService.fetchNcrRecords(),
+  });
+
+  const { data: dbNcrRecord } = useQuery({
+    queryKey: ["ncr-form", "record"],
+    queryFn: () => getNcrRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<NcrRecord>(INITIAL_NCR_RECORD);
+  useEffect(() => { if (dbNcrRecord?.data) setRecord(dbNcrRecord.data); }, [dbNcrRecord]);
   const [activeStep, setActiveStep] = useState<number>(1);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);

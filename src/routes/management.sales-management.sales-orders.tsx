@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { salesManagementService } from "@/services";
 import {
   ShoppingCart,
   Printer,
@@ -114,10 +116,47 @@ const initialStepperSteps = [
 ];
 
 export default function SalesOrdersComponent() {
+  const ordersQuery = useQuery({
+    queryKey: ["sales", "orders"],
+    queryFn: () => salesManagementService.fetchSalesOrders(),
+  });
+
+  const queryClient = useQueryClient();
+
+  const createOrderMutation = useMutation({
+    mutationFn: (input: any) => salesManagementService.createSalesOrder(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sales"] });
+      toast.success("Sales order created successfully");
+    },
+    onError: () => toast.error("Failed to create sales order"),
+  });
+
+  const updateOrderStatusMutation = useMutation({
+    mutationFn: (input: any) => salesManagementService.updateSalesOrderStatus(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sales"] });
+      toast.success("Order status updated successfully");
+    },
+    onError: () => toast.error("Failed to update order status"),
+  });
+
+
   const [items, setItems] = useState(initialLineItems);
   const [stepperSteps, setStepperSteps] = useState(initialStepperSteps);
   const [orderStatus, setOrderStatus] = useState("Confirmed");
   const [orderNo, setOrderNo] = useState("SO-2026-00123");
+  const [dbApplied, setDbApplied] = useState(false);
+
+  useEffect(() => {
+    const list = ordersQuery.data as any[] | undefined;
+    if (list && list.length > 0 && !dbApplied) {
+      const so = list[0];
+      setOrderNo(so.orderNumber ?? orderNo);
+      setOrderStatus(so.status ?? orderStatus);
+      setDbApplied(true);
+    }
+  }, [ordersQuery.data, dbApplied]);
   const [searchItem, setSearchItem] = useState("");
 
   // Modals

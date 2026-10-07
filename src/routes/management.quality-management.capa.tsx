@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo , useEffect} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { qualityManagementService } from "@/services";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/erp/AppShell";
 import { QualityManagementTabBar } from "@/components/erp/QualityManagementTabBar";
@@ -14,6 +16,7 @@ import { CapaAiInsightsCard } from "@/components/erp/capa/CapaAiInsightsCard";
 import { CapaLinkedRecordsCard } from "@/components/erp/capa/CapaLinkedRecordsCard";
 import { CreateCapaModal } from "@/components/erp/capa/CreateCapaModal";
 
+import { getCapaRecordFn } from "@/lib/capaFns.server";
 import { INITIAL_CAPA_RECORD } from "@/services/capaService";
 import { CapaRecord, CapaActionItem } from "@/services/capaTypes";
 import { Button } from "@/components/ui/button";
@@ -36,7 +39,19 @@ export const Route = createFileRoute("/management/quality-management/capa")({
 });
 
 export function CapaPage() {
+  const queryClient = useQueryClient();
+  const { data: _dbData, isLoading: _dbLoading } = useQuery({
+    queryKey: [["quality", "capa"]],
+    queryFn: () => qualityManagementService.fetchCapaRecords(),
+  });
+
+  const { data: dbCapaRecord } = useQuery({
+    queryKey: ["capa-form", "record"],
+    queryFn: () => getCapaRecordFn({ data: {} }),
+  });
+
   const [record, setRecord] = useState<CapaRecord>(INITIAL_CAPA_RECORD);
+  useEffect(() => { if (dbCapaRecord?.data) setRecord(dbCapaRecord.data); }, [dbCapaRecord]);
   const [activeStep, setActiveStep] = useState<number>(5);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);

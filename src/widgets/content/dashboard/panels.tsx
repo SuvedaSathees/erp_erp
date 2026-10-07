@@ -26,7 +26,7 @@ import { CardHeader } from "@/components/erp/CardHeader";
 import { FilterButton } from "@/components/erp/FilterButton";
 import { StatDeltaLine } from "@/components/erp/StatCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatCurrency, formatSignedCurrency } from "@/lib/mock-data";
+import { formatCurrency, formatSignedCurrency } from "@/lib/format";
 import type { AgingReport, DashboardData, FinancialInsights } from "@/services/types";
 import { dashboardDataOptions } from "../../data/queries";
 

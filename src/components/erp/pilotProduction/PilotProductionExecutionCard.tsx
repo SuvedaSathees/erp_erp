@@ -55,7 +55,7 @@ export const PilotProductionExecutionCard: React.FC<PilotProductionExecutionCard
 
           <div className="flex justify-between items-center pt-1 border-t border-border/40 font-bold">
             <span className="text-foreground">OEE</span>
-            <span className="font-mono font-black text-purple-600 dark:text-purple-400 text-sm">{record.oee}%</span>
+            <span className="font-mono font-black text-primary dark:text-blue-400 text-sm">{record.oee}%</span>
           </div>
         </div>
       </div>

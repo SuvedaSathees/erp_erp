@@ -423,13 +423,13 @@ export function AssetLifecycleFormPage() {
           <div className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground font-medium">Mid-Life Overhaul Due</span>
-              <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <Wrench className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-1">
-              <span className="text-2xl font-bold font-mono text-purple-600">20</span>
-              <span className="block text-[10px] text-purple-700 dark:text-purple-400 font-medium">
+              <span className="text-2xl font-bold font-mono text-primary">20</span>
+              <span className="block text-[10px] text-primary dark:text-blue-400 font-medium">
                 Extending Life +5 Yrs
               </span>
             </div>
@@ -853,7 +853,7 @@ export function AssetLifecycleFormPage() {
                                 ? "bg-amber-50 text-amber-700 border-amber-200"
                                 : asset.stage === "Acquisition"
                                 ? "bg-blue-50 text-blue-700 border-blue-200"
-                                : "bg-purple-50 text-purple-700 border-purple-200"
+                                : "bg-blue-50 text-primary border-blue-200"
                             )}
                           >
                             {asset.stage}
@@ -1179,7 +1179,7 @@ export function AssetLifecycleFormPage() {
                   <circle cx="50" cy="50" r="38" stroke="#38bdf8" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="138" />
                   <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="180" />
                   <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="205" />
-                  <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="225" />
+                  <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="12" fill="transparent" strokeDasharray="238.76" strokeDashoffset="225" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                   <span className="text-xs font-bold font-mono text-slate-900 dark:text-white">428</span>
@@ -1205,7 +1205,7 @@ export function AssetLifecycleFormPage() {
                   <span className="font-mono font-bold">10%</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="flex items-center gap-1.5"><div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> IT Equipment</span>
+                  <span className="flex items-center gap-1.5"><div className="h-1.5 w-1.5 rounded-full bg-blue-500" /> IT Equipment</span>
                   <span className="font-mono font-bold">8%</span>
                 </div>
               </div>

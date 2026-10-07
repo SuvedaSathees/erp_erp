@@ -432,7 +432,7 @@ export function ModuleSummaryReport({ moduleId }: ModuleSummaryReportProps) {
                         "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold",
                         sub.status === "Completed" && "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
                         sub.status === "On Track" && "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-                        sub.status === "In Progress" && "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400",
+                        sub.status === "In Progress" && "bg-blue-500/10 text-primary dark:text-blue-400",
                         sub.status === "Needs Attention" && "bg-rose-500/10 text-rose-600 dark:text-rose-400",
                         sub.status === "Planned" && "bg-slate-500/10 text-slate-600 dark:text-slate-400",
                       )}

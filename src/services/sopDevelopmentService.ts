@@ -1,5 +1,5 @@
+import { DEFAULT_SOP_RECORD } from "@/lib/sopMock";
 import {
-  DEFAULT_SOP_RECORD,
   getSopFn,
   reviewSopFn,
   saveSopDraftFn,

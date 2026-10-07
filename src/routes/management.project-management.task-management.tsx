@@ -1,5 +1,7 @@
 import { useState, useRef, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { projectManagementService } from "@/services";
 import { AppShell } from "@/components/erp/AppShell";
 import { ProjectManagementTabBar } from "@/components/erp/ProjectManagementTabBar";
 import { cn } from "@/lib/utils";
@@ -174,7 +176,7 @@ export const INITIAL_TASKS: ProjectTaskItem[] = [
     wbsActivity: "2.2 / ACT-023",
     assignedTo: "Arun Kumar",
     assignedInitials: "AK",
-    assignedAvatarColor: "bg-indigo-600",
+    assignedAvatarColor: "bg-primary",
     priority: "High",
     plannedStart: "13 Sep 2026",
     plannedFinish: "15 Sep 2026",
@@ -324,7 +326,7 @@ export const INITIAL_TASKS: ProjectTaskItem[] = [
     wbsActivity: "4.0 / ACT-041",
     assignedTo: "PR-01",
     assignedInitials: "PR",
-    assignedAvatarColor: "bg-purple-700",
+    assignedAvatarColor: "bg-primary",
     priority: "High",
     plannedStart: "22 Sep 2026",
     plannedFinish: "25 Sep 2026",
@@ -635,6 +637,65 @@ export function TaskManagementFormPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const projectsQuery = useQuery({
+    queryKey: ["projects"],
+    queryFn: () => projectManagementService.fetchProjects(),
+  });
+
+  const queryClient = useQueryClient();
+
+  const createTaskMutation = useMutation({
+    mutationFn: (input: any) => projectManagementService.createProjectTask(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Task created successfully");
+    },
+    onError: () => toast.error("Failed to create task"),
+  });
+
+  const updateTaskMutation = useMutation({
+    mutationFn: (input: any) => projectManagementService.updateProjectTask(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Task updated successfully");
+    },
+    onError: () => toast.error("Failed to update task"),
+  });
+
+  const firstProjectId = (projectsQuery.data as any)?.[0]?.id;
+
+  const tasksQuery = useQuery({
+    queryKey: ["project-tasks", firstProjectId],
+    queryFn: () => projectManagementService.fetchProjectTasks(firstProjectId!),
+    enabled: !!firstProjectId,
+  });
+
+  const dbTasks: ProjectTaskItem[] = (tasksQuery.data ?? []).map((t: any) => ({
+    ...INITIAL_TASKS[0],
+    id: t.id,
+    code: t.taskCode,
+    name: t.title,
+    wbsActivity: "-",
+    assignedTo: t.assignee?.fullName ?? t.assigneeName ?? "-",
+    assignedInitials: (t.assignee?.fullName ?? t.assigneeName ?? "?").split(" ").map((w: string) => w[0]).join(""),
+    assignedAvatarColor: "bg-blue-600",
+    priority: t.priority ?? "Medium",
+    plannedStart: t.startDate ? new Date(t.startDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "-",
+    plannedFinish: t.dueDate ? new Date(t.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "-",
+    progressPct: t.progressPct ?? 0,
+    status: t.status ?? "Not Started",
+    type: "Task",
+    estimatedHours: t.estimatedHours ?? 0,
+    actualHours: t.actualHours ?? 0,
+    owner: t.assignee?.fullName ?? t.assigneeName ?? "-",
+    milestone: t.milestone?.name ?? "-",
+    description: t.description ?? "",
+    acceptanceCriteria: [],
+    deliverable: "-",
+  }));
+
+  const mergedTasks = dbTasks.length > 0 ? dbTasks : INITIAL_TASKS;
+
   const [tasks, setTasks] = useState<ProjectTaskItem[]>(INITIAL_TASKS);
   const [selectedTask, setSelectedTask] = useState<ProjectTaskItem>(INITIAL_TASKS[0]);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -696,7 +757,7 @@ export function TaskManagementFormPage() {
 
   // Filtered and Sorted Tasks
   const filteredTasks = useMemo(() => {
-    return tasks
+    return mergedTasks
       .filter((t) => {
         const matchesSearch =
           !searchQuery ||
@@ -719,7 +780,7 @@ export function TaskManagementFormPage() {
         }
         return sortAsc ? a.code.localeCompare(b.code) : b.code.localeCompare(a.code);
       });
-  }, [tasks, searchQuery, filterStatus, filterPriority, filterType, filterAssigned, filterWbs, sortField, sortAsc]);
+  }, [mergedTasks, searchQuery, filterStatus, filterPriority, filterType, filterAssigned, filterWbs, sortField, sortAsc]);
 
   const totalPages = Math.max(1, Math.ceil(filteredTasks.length / pageSize));
   const paginatedTasks = useMemo(() => {
@@ -1399,8 +1460,8 @@ ${tasks
               className={cn(
                 "bg-white dark:bg-slate-900 border rounded-xl p-3.5 shadow-2xs flex items-center justify-between cursor-pointer transition-all",
                 filterStatus === "Not Started"
-                  ? "ring-2 ring-purple-500 border-purple-500 bg-purple-50/50 dark:bg-purple-950/20"
-                  : "border-border/80 hover:border-purple-400 hover:shadow-xs",
+                  ? "ring-2 ring-primary border-primary bg-blue-50/50 dark:bg-blue-950/20"
+                  : "border-border/80 hover:border-blue-400 hover:shadow-xs",
               )}
             >
               <div>
@@ -1410,13 +1471,13 @@ ${tasks
                 <span className="text-xl font-bold font-mono text-slate-900 dark:text-white mt-0.5 block">
                   {tasks.filter((t) => t.status === "Not Started").length}
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold block mt-1">
+                <span className="text-[10px] text-primary dark:text-blue-400 font-semibold block mt-1">
                   {tasks.length > 0
                     ? `${((tasks.filter((t) => t.status === "Not Started").length / tasks.length) * 100).toFixed(1)}% of Total`
                     : "0%"}
                 </span>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <Clock className="h-5 w-5" />
               </div>
             </div>

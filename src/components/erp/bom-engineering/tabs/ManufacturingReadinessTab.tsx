@@ -69,7 +69,7 @@ export const ManufacturingReadinessTab: React.FC<ManufacturingReadinessTabProps>
 
         <div className="bg-card p-4 rounded-lg border border-border space-y-3">
           <div className="flex items-center gap-2 font-bold text-foreground pb-2 border-b border-border">
-            <Wrench className="w-4 h-4 text-purple-500" /> Tooling & Equipment Requirements
+            <Wrench className="w-4 h-4 text-blue-600" /> Tooling & Equipment Requirements
           </div>
           <div className="space-y-1">
             {record.toolingRequirements.map((tool, idx) => (

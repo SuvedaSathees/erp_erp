@@ -11,7 +11,7 @@ interface StandardSegment {
 const STANDARDS: StandardSegment[] = [
   { name: "ISO 9001:2015 QMS", percentage: 50, color: "#2563eb", count: 21 },
   { name: "IATF 16949:2016 Auto", percentage: 25, color: "#059669", count: 11 },
-  { name: "ISO 14001:2015 EHS", percentage: 15, color: "#9333ea", count: 6 },
+  { name: "ISO 14001:2015 EHS", percentage: 15, color: "#0A3C75", count: 6 },
   { name: "ISO 45001:2018 Safety", percentage: 10, color: "#d97706", count: 4 },
 ];
 

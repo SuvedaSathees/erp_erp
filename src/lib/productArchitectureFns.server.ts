@@ -4,111 +4,46 @@ import type {
   ProductArchitectureFormInput,
   ProductArchitectureRecord,
   ProductArchitectureStage,
-  ProductArchitectureStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Product Architecture — Server Functions & Workflow Engine
-   ---------------------------------------------------------------------------
-   Manages the 4-stage Product Architecture lifecycle:
-     Stage 1: Architecture Definition (Vision, boundaries, principles, AI readiness)
-     Stage 2: HW & SW Architecture (Controllers, sensors, firmware, APIs, AI optimization)
-     Stage 3: Security & Integration (Cybersecurity, risk score, reliability, AI risk)
-     Stage 4: Executive Review (Decision: Approved / Approved with Conditions / Revision Required / Rejected)
-
-   Upon 'Approved' decision:
-     - Auto-creates / links downstream System Design project (e.g. SYS-2024-0092)
-       and surfaces its ID to proceed to Detailed Engineering Design.
-   =========================================================================== */
+const MODULE_TYPE = "product-architecture";
 
 export function calculateProductArchitectureScores(input: Partial<ProductArchitectureFormInput>) {
-  // 1. Functional Coverage (0-100)
   const componentsCount = input.systemComponents ? input.systemComponents.split(",").length : 4;
   const functionalCoverage = Math.min(100, Math.max(70, Math.round(72 + componentsCount * 4)));
-
-  // 2. Technical Readiness (0-100)
   const hwSwPresent = (input.hardwarePlatform ? 15 : 0) + (input.softwarePlatform ? 15 : 0) + (input.processingUnit ? 10 : 0);
   const technicalReadiness = Math.min(100, Math.max(70, Math.round(55 + hwSwPresent * 0.7)));
-
-  // 3. Security Readiness (0-100)
   const securityRiskScore = input.securityRiskScore ?? 92;
   const securityReadiness = Math.min(100, Math.max(65, Math.round(securityRiskScore * 0.95 + 4)));
-
-  // 4. Integration Readiness (0-100)
   const protocolsCount = input.communicationProtocols?.length || 4;
   const standardsCount = input.standardsCompliance?.length || 4;
   const integrationReadiness = Math.min(100, Math.max(68, Math.round(60 + protocolsCount * 3.5 + standardsCount * 3)));
-
-  // 5. Performance Score (0-100)
   const performanceScore = input.performanceScore ?? 88;
-
-  // Overall Architecture Score (/100)
   const overallArchitectureScore = Math.round(
-    functionalCoverage * 0.25 +
-      technicalReadiness * 0.25 +
-      securityReadiness * 0.2 +
-      integrationReadiness * 0.15 +
-      performanceScore * 0.15
+    functionalCoverage * 0.25 + technicalReadiness * 0.25 + securityReadiness * 0.2 + integrationReadiness * 0.15 + performanceScore * 0.15
   );
-
-  // AI Quality Sub-scores
   const aiArchitectureQuality = Math.min(99, Math.max(75, Math.round(overallArchitectureScore * 0.98 + 3)));
   const aiScalabilityScore = Math.min(98, Math.max(72, Math.round(overallArchitectureScore * 0.96 + 3)));
   const aiSecurityAssessment = Math.min(99, Math.max(78, Math.round(securityReadiness * 0.98 + 2)));
-  const aiOverallArchitectureScore = Math.round(
-    aiArchitectureQuality * 0.4 + aiScalabilityScore * 0.3 + aiSecurityAssessment * 0.3
-  );
-
-  // Derived Key Highlights Checklist (dynamic from input data)
-  const highlights: string[] = [];
-
-  if (input.architectureStyle) {
-    highlights.push(`${input.architectureStyle} based scalable architecture`);
-  } else {
-    highlights.push("Microservices based scalable architecture");
-  }
-
-  if (input.edgeComputing) {
-    highlights.push("Edge + Cloud hybrid deployment");
-  } else if (input.cloudIntegration) {
-    highlights.push(`Cloud integrated with ${input.cloudIntegration.split(",")[0] || "AWS IoT"}`);
-  } else {
-    highlights.push("Edge + Cloud hybrid deployment");
-  }
-
-  if (input.standardsCompliance && input.standardsCompliance.length > 0) {
-    highlights.push(`Compliant with ${input.standardsCompliance.slice(0, 2).join(", ")}`);
-  } else {
-    highlights.push("Compliant with IEC 61851, OCPP 1.6J");
-  }
-
-  if (input.securityArchitecture || input.encryptionStandard) {
-    highlights.push(
-      `${input.securityArchitecture || "Security by Design"} with ${input.encryptionStandard || "end-to-end encryption"}`
-    );
-  } else {
-    highlights.push("Security by Design with end-to-end encryption");
-  }
+  const aiOverallArchitectureScore = Math.round(aiArchitectureQuality * 0.4 + aiScalabilityScore * 0.3 + aiSecurityAssessment * 0.3);
 
   return {
-    summary: {
-      overallArchitectureScore,
-      functionalCoverage,
-      technicalReadiness,
-      securityReadiness,
-      integrationReadiness,
-      performanceScore,
-    },
+    summary: { overallArchitectureScore, functionalCoverage, technicalReadiness, securityReadiness, integrationReadiness, performanceScore },
     aiAssessment: {
-      aiOverallArchitectureScore,
-      aiArchitectureQuality,
-      aiScalabilityScore,
-      aiSecurityAssessment,
+      aiOverallArchitectureScore, aiArchitectureQuality, aiScalabilityScore, aiSecurityAssessment,
       aiTechnologyRecommendation: input.aiAssessment?.aiTechnologyRecommendation || "Use Edge AI for Anomaly Detection",
       aiIntegrationAssessment: input.aiAssessment?.aiIntegrationAssessment || "Seamless with Cloud & ERP",
       aiRiskAnalysis: input.aiAssessment?.aiRiskAnalysis || "Low Risk",
     },
-    keyHighlights: highlights,
+    keyHighlights: ["Microservices based scalable architecture", "Edge + Cloud hybrid deployment", "Compliant with IEC 61851, OCPP 1.6J", "Security by Design with end-to-end encryption"],
   };
 }
 
@@ -231,251 +166,81 @@ const INITIAL_INPUT: ProductArchitectureFormInput = {
   approvalDate: new Date().toISOString().split("T")[0],
 };
 
-let currentRecord: ProductArchitectureRecord = {
+const currentRecordDefault: ProductArchitectureRecord = {
   id: "pa-rec-0017",
   architectureId: "PA-2024-0017",
   formCode: "PA-2024-25",
-  architectureName: INITIAL_INPUT.architectureName,
-  architectureVersion: INITIAL_INPUT.architectureVersion,
+  architectureName: "Smart EV Charger Architecture",
+  architectureVersion: "v1.0",
   status: "Under Review",
   currentStage: "executive_review",
   currentStageLabel: "Architecture Review",
   createdOn: "20 Apr 2024 10:15 AM",
-
   linkedPrdId: "PRD-2024-0017",
   linkedPrdTitle: "Smart EV Charger Pro PRD",
   linkedProductId: "prd-1001",
   linkedProductName: "Smart EV Charger Pro",
   linkedRoadmapId: "PRM-2024-0017",
   linkedRoadmapName: "EV Charger Roadmap 2024-27",
-
-  businessUnit: INITIAL_INPUT.businessUnit,
-  systemArchitectId: INITIAL_INPUT.systemArchitectId,
-  systemArchitectName: INITIAL_INPUT.systemArchitectName,
-  systemArchitectAvatar: INITIAL_INPUT.systemArchitectAvatar || "",
+  businessUnit: "Smart Mobility Division",
+  systemArchitectId: "usr-101",
+  systemArchitectName: "Rohit Verma",
+  systemArchitectAvatar: "",
   lastUpdated: "18 Jun 2024 04:25 PM",
-
   dateCreated: "20 Apr 2024 10:15 AM",
   lastModified: "18 Jun 2024 04:25 PM",
   version: "v1.0",
-
-  stages: [
-    { stage: "architecture_definition", label: "Stage 1: Architecture Definition", completed: true, active: false, completedAt: "25 Apr 2024" },
-    { stage: "hardware_software_architecture", label: "Stage 2: HW & SW Architecture", completed: true, active: false, completedAt: "10 May 2024" },
-    { stage: "security_integration", label: "Stage 3: Security & Integration", completed: true, active: false, completedAt: "01 Jun 2024" },
-    { stage: "executive_review", label: "Stage 4: Executive Review", completed: false, active: true },
-  ],
-
+  stages: [],
   input: INITIAL_INPUT,
-  ...calculateProductArchitectureScores(INITIAL_INPUT),
-
+  ...calculateProductArchitectureScores({}),
   linkedSystemDesignId: null,
+  auditTrail: [],
+} as any;
 
-  auditTrail: [
-    { id: "aud-1", timestamp: "20 Apr 2024 10:15 AM", user: "Rohit Verma", action: "Record Created", details: "Architecture record created from approved PRD-2024-0017." },
-    { id: "aud-2", timestamp: "25 Apr 2024 02:30 PM", user: "Rohit Verma", action: "Stage 1 Completed", details: "Architecture definition and principles finalized. AI Readiness score computed." },
-    { id: "aud-3", timestamp: "10 May 2024 11:15 AM", user: "Rohit Verma", action: "Stage 2 Completed", details: "Hardware and Software architecture modules validated." },
-    { id: "aud-4", timestamp: "01 Jun 2024 05:00 PM", user: "Priya Nair", action: "Stage 3 Completed", details: "Cybersecurity controls and risk scores verified." },
-    { id: "aud-5", timestamp: "18 Jun 2024 04:25 PM", user: "Rohit Verma", action: "Submitted for Review", details: "Product Architecture submitted to Executive Architecture Review Board." },
-  ],
-};
-
-// 1. Get Record
 export const getProductArchitectureFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: currentRecord };
+  const result = withDefaults(currentRecordDefault, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
+  return { success: true, data: currentRecordDefault };
 });
 
-// 2. Save Draft
 export const saveProductArchitectureDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: ProductArchitectureFormInput }) => data)
   .handler(async ({ data }) => {
-    const scores = calculateProductArchitectureScores(data.input);
-    const now = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-
-    currentRecord = {
-      ...currentRecord,
-      architectureName: data.input.architectureName || currentRecord.architectureName,
-      architectureVersion: data.input.architectureVersion || currentRecord.architectureVersion,
-      businessUnit: data.input.businessUnit || currentRecord.businessUnit,
-      systemArchitectName: data.input.systemArchitectName || currentRecord.systemArchitectName,
-      lastUpdated: now,
-      lastModified: now,
-      input: data.input,
-      ...scores,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: now,
-          user: data.input.systemArchitectName || "Rohit Verma",
-          action: "Saved Draft",
-          details: "Architecture specification draft saved.",
-        },
-        ...currentRecord.auditTrail,
-      ],
+    const record = {
+      ...data.input,
+      id: data.id,
+      projectName: data.input.architectureName ?? "",
+      ownerName: data.input.systemArchitectName ?? "",
     };
-
-    return { success: true, data: currentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
-// 3. Advance Stage
 export const advanceProductArchitectureStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: ProductArchitectureStage }) => data)
   .handler(async ({ data }) => {
-    const now = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-
-    let statusLabel: ProductArchitectureStatus = "Architecture Definition";
-    let stageLabel = "Stage 1: Architecture Definition";
-
-    if (data.targetStage === "hardware_software_architecture") {
-      statusLabel = "HW & SW Architecture";
-      stageLabel = "Stage 2: HW & SW Architecture";
-    } else if (data.targetStage === "security_integration") {
-      statusLabel = "Security & Integration";
-      stageLabel = "Stage 3: Security & Integration";
-    } else if (data.targetStage === "executive_review") {
-      statusLabel = "Under Review";
-      stageLabel = "Stage 4: Executive Review";
-    }
-
-    const updatedStages = currentRecord.stages.map((s) => {
-      if (s.stage === data.targetStage) {
-        return { ...s, active: true, completed: false };
-      }
-      return { ...s, active: false };
-    });
-
-    currentRecord = {
-      ...currentRecord,
-      status: statusLabel,
-      currentStage: data.targetStage,
-      currentStageLabel: stageLabel,
-      lastUpdated: now,
-      lastModified: now,
-      stages: updatedStages,
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: now,
-          user: currentRecord.systemArchitectName,
-          action: "Stage Advanced",
-          details: `Advanced workflow stage to ${stageLabel}.`,
-        },
-        ...currentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentRecord };
+    return { success: true, data: currentRecordDefault };
   });
 
-// 4. Submit for Review
 export const submitProductArchitectureFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
-  .handler(async () => {
-    const now = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-
-    currentRecord = {
-      ...currentRecord,
-      status: "Under Review",
-      currentStage: "executive_review",
-      currentStageLabel: "Architecture Review Board",
-      lastUpdated: now,
-      lastModified: now,
-      stages: currentRecord.stages.map((s) =>
-        s.stage === "executive_review" ? { ...s, active: true, completed: false } : { ...s, active: false, completed: true }
-      ),
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: now,
-          user: currentRecord.systemArchitectName,
-          action: "Submitted for Review",
-          details: "Architecture record submitted to Executive Board for final approval decision.",
-        },
-        ...currentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentRecord };
+  .handler(async ({ data }) => {
+    const id = data || currentRecordDefault.id;
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    return { success: true, data: result };
   });
 
-// 5. Review Decision & System Design Hand-off
 export const reviewProductArchitectureFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: ProductArchitectureApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: ProductArchitectureApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }) => {
-    const now = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-
-    let newStatus: ProductArchitectureStatus = "Under Review";
-    let systemDesignId: string | null = currentRecord.linkedSystemDesignId || null;
-
-    if (data.decision === "approved") {
-      newStatus = "Approved";
-      // Auto-create / link downstream System Design project as specified in sequence diagram
-      if (!systemDesignId) {
-        systemDesignId = "SYS-2024-0092";
-      }
-    } else if (data.decision === "approved_with_conditions") {
-      newStatus = "Approved with Conditions";
-    } else if (data.decision === "revision_required") {
-      newStatus = "Revision Required";
-    } else if (data.decision === "rejected") {
-      newStatus = "Rejected";
-    }
-
-    const updatedReviewers = currentRecord.input.reviewers.map((r) => {
-      if (r.role === "CTO" || r.role === "System Architect") {
-        return {
-          ...r,
-          decision:
-            data.decision === "approved"
-              ? ("Approved" as const)
-              : data.decision === "revision_required"
-              ? ("Revision Required" as const)
-              : data.decision === "rejected"
-              ? ("Rejected" as const)
-              : ("Approved" as const),
-          status: "Completed",
-          date: now.split(" ")[0],
-        };
-      }
-      return r;
-    });
-
-    currentRecord = {
-      ...currentRecord,
-      status: newStatus,
-      approvalDecision: data.decision,
-      approvalDate: now.split(" ")[0],
-      reviewComments: data.comments || currentRecord.reviewComments,
-      linkedSystemDesignId: systemDesignId,
-      lastUpdated: now,
-      lastModified: now,
-      input: {
-        ...currentRecord.input,
-        reviewers: updatedReviewers,
-        approvalDecision: data.decision,
-        reviewComments: data.comments || currentRecord.input.reviewComments,
-        approvalDate: now.split(" ")[0],
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Executive Review Board",
+        reviewerName: "Executive Review Board",
       },
-      auditTrail: [
-        {
-          id: `aud-${Date.now()}`,
-          timestamp: now,
-          user: "Executive Review Board",
-          action: `Decision: ${newStatus}`,
-          details:
-            data.decision === "approved"
-              ? `Product Architecture approved. System Design project ${systemDesignId} created and linked.`
-              : `Review decision rendered: ${newStatus}. Comments: ${data.comments || "None"}.`,
-        },
-        ...currentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentRecord };
+    });
+    return { success: true, data: result };
   });

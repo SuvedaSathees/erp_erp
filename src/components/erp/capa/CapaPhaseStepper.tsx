@@ -47,7 +47,7 @@ export function CapaPhaseStepper({
                   className={cn(
                     "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-all",
                     isActive
-                      ? "bg-purple-600 text-white shadow-xs ring-4 ring-purple-100 dark:ring-purple-950"
+                      ? "bg-primary text-white shadow-xs ring-4 ring-blue-100 dark:ring-blue-950"
                       : isCompleted
                       ? "bg-blue-600 text-white"
                       : "bg-muted text-muted-foreground border border-border group-hover:border-muted-foreground/50"
@@ -72,7 +72,7 @@ export function CapaPhaseStepper({
                     className={cn(
                       "text-[11px] font-medium whitespace-nowrap",
                       isActive
-                        ? "text-purple-600 dark:text-purple-400 font-semibold"
+                        ? "text-primary dark:text-blue-400 font-semibold"
                         : isCompleted
                         ? "text-emerald-600 dark:text-emerald-400 font-semibold"
                         : "text-muted-foreground/70"

@@ -1,5 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { RoboticsIntegration } from "@/lib/robotics-integration/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "robotics-integration";
 
 export const MOCK_ROBOTICS_RECORD_35: RoboticsIntegration = {
   id: "RIP-2024-00035",
@@ -188,31 +196,34 @@ export const MOCK_ROBOTICS_RECORD_35: RoboticsIntegration = {
     { id: "at-r-03", timestamp: "11 Jun 2024 10:45 AM", user: "Neha Reddy", action: "SAT Completed", description: "Site Acceptance Test executed on Welding Line-03." },
     { id: "at-r-04", timestamp: "17 Jun 2024 03:45 PM", user: "Rahul Sharma", action: "Submitted for Approval", description: "Submitted package for executive review." },
   ],
-};
-
-let mockRoboticsDatabase: Record<string, RoboticsIntegration> = {
-  "RIP-2024-00035": MOCK_ROBOTICS_RECORD_35,
-};
+} as any;
 
 export const getRoboticsIntegrationFn = createServerFn({ method: "GET" })
-  .validator((data?: { id?: string }) => data)
-  .handler(async ({ data }) => {
-    const id = data?.id || "RIP-2024-00035";
-    const record = mockRoboticsDatabase[id] || MOCK_ROBOTICS_RECORD_35;
-    return { success: true, data: record };
+  .validator((data: { id: string }) => data)
+  .handler(async ({ data }): Promise<{ success: boolean; data: RoboticsIntegration }> => {
+    const result = withDefaults(MOCK_ROBOTICS_RECORD_35, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: MOCK_ROBOTICS_RECORD_35 };
   });
 
 export const listRoboticsIntegrationFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: Object.values(mockRoboticsDatabase) };
+  const results = await listDevelopmentRecordsFn({ data: { moduleType: MODULE_TYPE } });
+  if (results.length > 0) return { success: true, data: results.map((r: any) => withDefaults(MOCK_ROBOTICS_RECORD_35, r)) };
+  return { success: true, data: [MOCK_ROBOTICS_RECORD_35] };
 });
 
 export const saveRoboticsIntegrationFn = createServerFn({ method: "POST" })
-  .validator((data: { record: RoboticsIntegration }) => data)
-  .handler(async ({ data }) => {
-    const updated = {
+  .validator((data: { record: Partial<RoboticsIntegration> }) => data)
+  .handler(async ({ data }): Promise<{ success: boolean; data: RoboticsIntegration }> => {
+    const current = withDefaults(MOCK_ROBOTICS_RECORD_35, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? MOCK_ROBOTICS_RECORD_35;
+    const record = {
+      ...base,
       ...data.record,
-      lastUpdated: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      projectName: (data.record as any).roboticsProjectTitle ?? (base as any).roboticsProjectTitle ?? "",
+      ownerName: (data.record as any).roboticsEngineer ?? (base as any).roboticsEngineer ?? "Vikram Singh",
+      recordCode: (base as any).id ?? "",
     };
-    mockRoboticsDatabase[updated.id] = updated;
-    return { success: true, data: updated };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });

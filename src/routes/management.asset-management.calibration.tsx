@@ -452,13 +452,13 @@ export function CalibrationFormPage() {
           <div className="bg-white dark:bg-slate-900 border border-border/80 rounded-xl p-3.5 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground font-medium">Failed</span>
-              <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <XCircle className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-1">
-              <span className="text-2xl font-bold font-mono text-purple-600">5</span>
-              <span className="block text-[10px] text-purple-700 dark:text-purple-400 font-medium">
+              <span className="text-2xl font-bold font-mono text-primary">5</span>
+              <span className="block text-[10px] text-primary dark:text-blue-400 font-medium">
                 0.73% of Total
               </span>
             </div>
@@ -499,7 +499,7 @@ export function CalibrationFormPage() {
                     <circle cx="50" cy="50" r="38" stroke="#10b981" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="0" />
                     <circle cx="50" cy="50" r="38" stroke="#f59e0b" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="25.1" />
                     <circle cx="50" cy="50" r="38" stroke="#ef4444" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="8.3" />
-                    <circle cx="50" cy="50" r="38" stroke="#8b5cf6" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="1.7" />
+                    <circle cx="50" cy="50" r="38" stroke="#0A3C75" strokeWidth="10" fill="transparent" strokeDasharray="238.76" strokeDashoffset="1.7" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <span className="text-sm font-bold font-mono text-emerald-600">89.5%</span>
@@ -528,9 +528,9 @@ export function CalibrationFormPage() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300">
-                      <div className="h-1.5 w-1.5 rounded-full bg-purple-500" /> Out of Spec
+                      <div className="h-1.5 w-1.5 rounded-full bg-blue-500" /> Out of Spec
                     </span>
-                    <span className="font-mono font-semibold text-purple-600">5</span>
+                    <span className="font-mono font-semibold text-primary">5</span>
                   </div>
                 </div>
               </div>
@@ -1162,8 +1162,8 @@ export function CalibrationFormPage() {
                 { name: "Quality", count: "186 (99%)", max: 250, pct: 74, color: "bg-blue-600" },
                 { name: "Production", count: "214 (98%)", max: 250, pct: 85, color: "bg-teal-500" },
                 { name: "Maintenance", count: "82 (94%)", max: 250, pct: 33, color: "bg-emerald-500" },
-                { name: "Electrical", count: "96 (97%)", max: 250, pct: 38, color: "bg-indigo-600" },
-                { name: "R&D", count: "32 (100%)", max: 250, pct: 13, color: "bg-purple-600" },
+                { name: "Electrical", count: "96 (97%)", max: 250, pct: 38, color: "bg-primary" },
+                { name: "R&D", count: "32 (100%)", max: 250, pct: 13, color: "bg-primary" },
                 { name: "Other", count: "74 (97%)", max: 250, pct: 30, color: "bg-slate-500" },
               ].map((d) => (
                 <div key={d.name} className="space-y-0.5">
@@ -1204,12 +1204,12 @@ export function CalibrationFormPage() {
                 <svg className="h-full w-full overflow-visible" viewBox="0 0 200 60">
                   <defs>
                     <linearGradient id="calibGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.3" />
-                      <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.0" />
+                      <stop offset="0%" stopColor="#0A3C75" stopOpacity="0.3" />
+                      <stop offset="100%" stopColor="#0A3C75" stopOpacity="0.0" />
                     </linearGradient>
                   </defs>
                   <polygon points="10,48 50,44 90,38 130,42 170,36 190,20 190,55 10,55" fill="url(#calibGrad)" />
-                  <polyline points="10,48 50,44 90,38 130,42 170,36 190,20" fill="none" stroke="#8b5cf6" strokeWidth="2" />
+                  <polyline points="10,48 50,44 90,38 130,42 170,36 190,20" fill="none" stroke="#0A3C75" strokeWidth="2" />
                 </svg>
               </div>
 

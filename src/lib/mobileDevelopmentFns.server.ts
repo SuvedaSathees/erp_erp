@@ -6,36 +6,22 @@ import type {
   MobileDevelopmentStage,
   MobileDevelopmentStatus,
 } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
-/* ===========================================================================
-   Mobile App Development — Server Functions & Workflow Engine
-   ---------------------------------------------------------------------------
-   Manages the 4-stage Mobile App Development lifecycle:
-     Stage 1: Mobile Architecture & UI/UX (MVVM pattern, Flutter 3.19, Material 3 UI & offline storage design)
-     Stage 2: Application Development (feature implementation, device APIs, push notifications, auth & REST/GraphQL integration)
-     Stage 3: Testing & Deployment (automated CI/CD build, AAB/IPA generation, device testing & store readiness)
-     Stage 4: Review & Release (Review Board decision: Approved / Approved with Conditions / Revision Required / Rejected)
-
-   Upon 'Approved' decision:
-     - Marks Google Play & Apple App Store internal statuses as 'Ready for Release' / 'Published'
-     - Auto-creates & links downstream Mobile Operations & Support engagement (MO-2024-0089)
-       and surfaces its ID to proceed to Production.
-   =========================================================================== */
+const MODULE_TYPE = "mobile-development";
 
 export function calculateMobileDevelopmentScores(input: Partial<MobileDevelopmentFormInput>) {
-  // 1. Development Progress (0-100)
   const developmentProgress = 88;
-
-  // 2. UI Readiness (0-100)
   const uiReadiness = input.uiReadinessScore ?? 92;
-
-  // 3. Performance Readiness (0-100)
   const performanceReadiness = 87;
-
-  // 4. Store Readiness (0-100)
   const storeReadiness = input.deviceIntegrationScore ?? 85;
 
-  // Overall Mobile Score (/100)
   const overallMobileScore = Math.round(
     developmentProgress * 0.25 +
       uiReadiness * 0.25 +
@@ -43,7 +29,6 @@ export function calculateMobileDevelopmentScores(input: Partial<MobileDevelopmen
       storeReadiness * 0.25
   );
 
-  // AI Assessment Sub-scores (single source of truth with Panel 9)
   const aiCodeQualityScore = 89;
   const aiUiReview = uiReadiness;
   const aiPerformanceAnalysis = performanceReadiness;
@@ -52,7 +37,6 @@ export function calculateMobileDevelopmentScores(input: Partial<MobileDevelopmen
   const aiUxSuggestions = 90;
   const aiOverallMobileScore = overallMobileScore;
 
-  // Key Highlights dynamic list
   const highlights: string[] = [];
   highlights.push("Cross platform support (Android & iOS)");
   highlights.push("Offline mode with auto sync");
@@ -308,7 +292,7 @@ const DEFAULT_MOBILE_DEVELOPMENT_INPUT: MobileDevelopmentFormInput = {
   approvalDate: "2024-06-20",
 };
 
-let currentMobileDevelopmentRecord: MobileDevelopmentRecord = {
+const DEFAULT_MOCK_RECORD: MobileDevelopmentRecord = {
   id: "mad-rec-2024-0017",
   mobileId: "MAD-2024-0017",
   formCode: "MAF-2024-25",
@@ -410,230 +394,86 @@ let currentMobileDevelopmentRecord: MobileDevelopmentRecord = {
       status: "Under Review",
     },
   ],
-};
+} as any;
 
-/** Get current Mobile Development Record */
 export const getMobileDevelopmentFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
-    return { success: true, data: currentMobileDevelopmentRecord };
+    const result = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result as any };
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   }
 );
 
-/** Save Draft */
 export const saveMobileDevelopmentDraftFn = createServerFn({ method: "POST" })
   .validator((data: { id?: string; input: Partial<MobileDevelopmentFormInput> }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
-    const updatedInput = { ...currentMobileDevelopmentRecord.input, ...data.input };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base = current ?? DEFAULT_MOCK_RECORD;
+    const updatedInput = { ...(base as any).input, ...data.input };
     const scores = calculateMobileDevelopmentScores(updatedInput);
-
-    currentMobileDevelopmentRecord = {
-      ...currentMobileDevelopmentRecord,
+    const record = {
+      ...base,
       input: updatedInput,
       ...scores,
-      lastUpdated: new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      lastModified: new Date().toISOString(),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rahul Sharma",
-          event: "Saved draft updates to Mobile App Development Form",
-          stage: currentMobileDevelopmentRecord.currentStage,
-          status: currentMobileDevelopmentRecord.status,
-        },
-        ...currentMobileDevelopmentRecord.auditTrail,
-      ],
+      projectName: (base as any).mobileProjectName ?? "",
+      ownerName: (base as any).mobileArchitectName ?? "Rahul Sharma",
+      recordCode: (base as any).id ?? (base as any).mobileId ?? "",
     };
-
-    return { success: true, data: currentMobileDevelopmentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Advance Stage */
 export const advanceMobileDevelopmentStageFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; targetStage: MobileDevelopmentStage }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
-    const stageMap: Record<MobileDevelopmentStage, { label: string; stageNumber: number }> = {
-      mobile_architecture_uiux: {
-        label: "Stage 1: Mobile Architecture & UI/UX",
-        stageNumber: 1,
-      },
-      application_development: {
-        label: "Stage 2: Application Development",
-        stageNumber: 2,
-      },
-      testing_deployment: {
-        label: "Stage 3: Testing & Deployment",
-        stageNumber: 3,
-      },
-      review_release: {
-        label: "Stage 4: Review & Release",
-        stageNumber: 4,
-      },
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    const base: any = current ?? DEFAULT_MOCK_RECORD;
+    const stageMap: Record<string, { label: string; stageNumber: number }> = {
+      mobile_architecture_uiux: { label: "Stage 1: Mobile Architecture & UI/UX", stageNumber: 1 },
+      application_development: { label: "Stage 2: Application Development", stageNumber: 2 },
+      testing_deployment: { label: "Stage 3: Testing & Deployment", stageNumber: 3 },
+      review_release: { label: "Stage 4: Review & Release", stageNumber: 4 },
     };
-
     const target = stageMap[data.targetStage];
-
-    currentMobileDevelopmentRecord = {
-      ...currentMobileDevelopmentRecord,
+    const record = {
+      ...base,
       currentStage: data.targetStage,
       currentStageLabel: target.label,
-      stages: currentMobileDevelopmentRecord.stages.map((stg) => {
+      stages: (base.stages ?? []).map((stg: any) => {
         if (stg.stageNumber < target.stageNumber) return { ...stg, status: "completed" };
         if (stg.stageNumber === target.stageNumber) return { ...stg, status: "in_progress" };
         return { ...stg, status: "pending" };
       }),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rahul Sharma",
-          event: `Advanced to ${target.label}`,
-          stage: data.targetStage,
-          status: currentMobileDevelopmentRecord.status,
-        },
-        ...currentMobileDevelopmentRecord.auditTrail,
-      ],
+      projectName: base.mobileProjectName ?? "",
+      ownerName: base.mobileArchitectName ?? "Rahul Sharma",
+      recordCode: base.id ?? base.mobileId ?? "",
     };
-
-    return { success: true, data: currentMobileDevelopmentRecord };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result as any };
   });
 
-/** Submit for Review */
 export const submitMobileDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async (): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
-    currentMobileDevelopmentRecord = {
-      ...currentMobileDevelopmentRecord,
-      status: "Under Review",
-      currentStage: "review_release",
-      currentStageLabel: "Stage 4: Review & Release",
-      stages: currentMobileDevelopmentRecord.stages.map((stg) =>
-        stg.id === "review_release" ? { ...stg, status: "in_progress" } : { ...stg, status: "completed" }
-      ),
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Rahul Sharma",
-          event: "Submitted Mobile Application for Stage 4 Mobile App Review Board",
-          stage: "review_release",
-          status: "Under Review",
-        },
-        ...currentMobileDevelopmentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentMobileDevelopmentRecord };
+    const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (current?.id) {
+      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      return { success: true, data: result as any };
+    }
+    return { success: true, data: DEFAULT_MOCK_RECORD };
   });
 
-/** Review Board Decision */
 export const reviewMobileDevelopmentFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      id: string;
-      decision: MobileDevelopmentApprovalDecision;
-      comments?: string;
-    }) => data
-  )
+  .validator((data: { id: string; decision: MobileDevelopmentApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
-    let newStatus: MobileDevelopmentStatus = "Under Review";
-    let linkedMobileOpsId: string | null = currentMobileDevelopmentRecord.linkedMobileOperationsId ?? null;
-    let eventMessage = "";
-
-    if (data.decision === "Approved") {
-      newStatus = "Approved";
-      linkedMobileOpsId = "MO-2024-0089";
-      eventMessage = "Review Board Approved Mobile Application. Marked Google Play & Apple App Store as Published. Auto-created downstream Mobile Operations & Support engagement MO-2024-0089. Mobile Architect notified: 'Proceed to Production'.";
-    } else if (data.decision === "Approved with Conditions") {
-      newStatus = "Approved with Conditions";
-      eventMessage = "Review Board Approved with Conditions. Developer notified: 'Improve Mobile Application'. Record remains editable.";
-    } else if (data.decision === "Revision Required") {
-      newStatus = "Revision Required";
-      eventMessage = "Review Board requested revisions. Developer notified: 'Reassess UI, Performance & Security'. Returned to Testing & Deployment stage.";
-    } else if (data.decision === "Rejected") {
-      newStatus = "Rejected";
-      eventMessage = "Review Board Rejected Mobile Application. Project archived. Developer notified: 'Close Mobile Development'.";
-    }
-
-    const updatedReviewers = currentMobileDevelopmentRecord.input.reviewers.map((rev) => {
-      if (rev.role === "Mobile Architect" || rev.role === "Software Architect") {
-        return {
-          ...rev,
-          decision: data.decision === "Approved" || data.decision === "Approved with Conditions" ? ("Approved" as const) : ("Rejected" as const),
-          status: data.decision,
-          date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-        };
-      }
-      return rev;
-    });
-
-    currentMobileDevelopmentRecord = {
-      ...currentMobileDevelopmentRecord,
-      status: newStatus,
-      approvalDecision: data.decision,
-      approvalDate: new Date().toLocaleDateString("en-CA"),
-      reviewComments: data.comments || "",
-      linkedMobileOperationsId: linkedMobileOpsId,
-      stages: currentMobileDevelopmentRecord.stages.map((stg) => {
-        if (data.decision === "Approved" || data.decision === "Approved with Conditions") {
-          return { ...stg, status: "completed" };
-        }
-        if (data.decision === "Revision Required" && stg.id === "review_release") {
-          return { ...stg, status: "pending" };
-        }
-        return stg;
-      }),
-      currentStage:
-        data.decision === "Revision Required"
-          ? "testing_deployment"
-          : "review_release",
-      input: {
-        ...currentMobileDevelopmentRecord.input,
-        approvalDecision: data.decision,
-        reviewComments: data.comments || "",
-        approvalDate: new Date().toLocaleDateString("en-CA"),
-        googlePlayStatus: data.decision === "Approved" ? "Published" : currentMobileDevelopmentRecord.input.googlePlayStatus,
-        appleAppStoreStatus: data.decision === "Approved" ? "Published" : currentMobileDevelopmentRecord.input.appleAppStoreStatus,
-        reviewers: updatedReviewers,
+    const result = await reviewDevelopmentFn({
+      data: {
+        id: data.id,
+        decision: data.decision,
+        comments: data.comments,
+        reviewerRole: "Mobile App Review Board",
+        reviewerName: "Review Board",
       },
-      auditTrail: [
-        {
-          at: new Date().toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          actor: "Lead Mobile Architect (Review Board)",
-          event: eventMessage,
-          stage: currentMobileDevelopmentRecord.currentStage,
-          status: newStatus,
-        },
-        ...currentMobileDevelopmentRecord.auditTrail,
-      ],
-    };
-
-    return { success: true, data: currentMobileDevelopmentRecord };
+    });
+    return { success: true, data: result as any };
   });

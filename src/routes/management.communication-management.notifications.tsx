@@ -4,6 +4,8 @@
 
 import React, { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getCommunicationManagementRecordFn } from "@/lib/communicationManagementFns.server";
 import {
   Bell,
   Mail,
@@ -88,6 +90,11 @@ const NOTIFICATIONS_TREND = [
 ];
 
 function NotificationsManagementPage() {
+  const { data: dbRecord } = useQuery({
+    queryKey: ["communication-management", "record"],
+    queryFn: () => getCommunicationManagementRecordFn({ data: {} }),
+  });
+
   const [activeTab, setActiveTab] = useState<string>("register");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [typeFilter, setTypeFilter] = useState<string>("all");

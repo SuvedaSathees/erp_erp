@@ -413,7 +413,7 @@ function BranchManagementPage() {
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Compliance Score</span>
                   <div className="text-xl font-bold font-mono text-foreground">96.8%</div>
-                  <p className="text-[10px] text-purple-600 font-medium">Statutory audited</p>
+                  <p className="text-[10px] text-primary font-medium">Statutory audited</p>
                 </div>
                 <div className="rounded-xl border border-border bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground">Annual Revenue Target</span>
@@ -559,7 +559,7 @@ function BranchManagementPage() {
                 <div className="p-3.5 rounded-lg border border-border bg-muted/15 space-y-1">
                   <span className="text-muted-foreground block text-[11px]">On-Time Order Dispatch SLA</span>
                   <div className="text-lg font-bold font-mono text-foreground">98.4%</div>
-                  <span className="text-[10px] text-purple-600">Exceeds 95% SLA benchmark</span>
+                  <span className="text-[10px] text-primary">Exceeds 95% SLA benchmark</span>
                 </div>
               </div>
             </div>
@@ -766,7 +766,7 @@ function BranchManagementPage() {
             MAICW: <span className="text-blue-500 font-bold">M</span> (Mandatory) |{" "}
             <span className="text-amber-500 font-bold">A</span> (Auto) |{" "}
             <span className="text-emerald-500 font-bold">I</span> (Informational) |{" "}
-            <span className="text-purple-500 font-bold">C</span> (Calculated) |{" "}
+            <span className="text-blue-600 font-bold">C</span> (Calculated) |{" "}
             <span className="text-rose-500 font-bold">W</span> (Workflow)
           </div>
           <div>

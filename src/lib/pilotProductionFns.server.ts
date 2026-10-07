@@ -1,6 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { PilotProductionRecord } from "@/lib/pilot-production/types";
-import { calculateReadinessScore, calculateOverallPilotReadiness, calculateRecommendation } from "./pilot-production/scoring";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "pilot-production";
 
 export const MOCK_PILOT_RECORD_78: PilotProductionRecord = {
   id: "PILOT-2024-00078",
@@ -151,31 +160,31 @@ export const MOCK_PILOT_RECORD_78: PilotProductionRecord = {
     { id: "at-03", timestamp: "15 Jun 2024 06:45 PM", user: "Priya Nair", action: "Execution Completed", description: "Recorded 982 actual units produced." },
     { id: "at-04", timestamp: "17 Jun 2024 02:00 PM", user: "Neha Reddy", action: "Quality Verified", description: "Final inspection passed; FPY 96.4%." },
   ],
-};
-
-let mockPilotDatabase: Record<string, PilotProductionRecord> = {
-  "PILOT-2024-00078": MOCK_PILOT_RECORD_78,
-};
+} as any;
 
 export const getPilotProductionRecordFn = createServerFn({ method: "GET" })
   .validator((data?: { id?: string }) => data)
-  .handler(async ({ data }) => {
-    const id = data?.id || "PILOT-2024-00078";
-    const record = mockPilotDatabase[id] || MOCK_PILOT_RECORD_78;
-    return { success: true, data: record };
+  .handler(async () => {
+    const result = withDefaults(MOCK_PILOT_RECORD_78, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+    if (result) return { success: true, data: result };
+    return { success: true, data: MOCK_PILOT_RECORD_78 };
   });
 
 export const listPilotProductionRecordsFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: Object.values(mockPilotDatabase) };
+  const results = await listDevelopmentRecordsFn({ data: { moduleType: MODULE_TYPE } });
+  if (results && results.length > 0) return { success: true, data: results.map((r: any) => withDefaults(MOCK_PILOT_RECORD_78, r)) };
+  return { success: true, data: [MOCK_PILOT_RECORD_78] };
 });
 
 export const savePilotProductionDraftFn = createServerFn({ method: "POST" })
   .validator((data: { record: PilotProductionRecord }) => data)
   .handler(async ({ data }) => {
-    const updated = {
+    const record = {
       ...data.record,
-      lastUpdated: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      projectName: data.record.pilotBatchTitle ?? (data.record as any).projectName ?? "",
+      ownerName: data.record.processOwner ?? (data.record as any).ownerName ?? "",
+      recordCode: data.record.id ?? "",
     };
-    mockPilotDatabase[updated.id] = updated;
-    return { success: true, data: updated };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });

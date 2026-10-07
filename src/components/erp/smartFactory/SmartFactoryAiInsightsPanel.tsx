@@ -25,7 +25,7 @@ export const SmartFactoryAiInsightsPanel: React.FC<SmartFactoryAiInsightsPanelPr
     },
     {
       icon: Zap,
-      color: "text-purple-600 bg-purple-50 dark:bg-purple-950 dark:text-purple-400",
+      color: "text-primary bg-blue-50 dark:bg-blue-950 dark:text-blue-400",
       title: "Energy Optimization",
       description: "Potential energy savings of ₹ 12,40,000 annually.",
     },

@@ -1,10 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
-import type {
-  ApqpRecord,
-  ApqpFormInput,
-  ApqpApprovalDecision,
-  ApqpRecommendation,
-} from "@/services/types";
+import type { ApqpRecord } from "@/services/types";
+import {
+  getDevelopmentRecordFn,
+  listDevelopmentRecordsFn,
+  saveDevelopmentDraftFn,
+  submitDevelopmentFn,
+  reviewDevelopmentFn,
+} from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
+
+const MODULE_TYPE = "apqp";
 
 export const INITIAL_APQP_RECORD: ApqpRecord = {
   id: "apqp-rec-00056",
@@ -200,34 +205,32 @@ export const INITIAL_APQP_RECORD: ApqpRecord = {
     { id: "act-03", timestamp: "1d ago", user: "Arun Kumar", action: "Supplier Audit Updated", description: "Supplier audit score updated to 92/100", timeAgo: "1d ago" },
     { id: "act-04", timestamp: "1d ago", user: "Rahul Sharma", action: "Phase 3 Progress", description: "APQP Phase 3 progress updated to 65%", timeAgo: "1d ago" },
   ],
-};
-
-let currentApqpRecordState: ApqpRecord = { ...INITIAL_APQP_RECORD };
+} as any;
 
 export const getApqpRecordFn = createServerFn({ method: "GET" }).handler(async () => {
-  return { success: true, data: currentApqpRecordState };
+  const result = withDefaults(INITIAL_APQP_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (result) return { success: true, data: result };
+  return { success: true, data: INITIAL_APQP_RECORD };
 });
 
 export const saveApqpDraftFn = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data as { input: ApqpFormInput })
+  .validator((data: unknown) => data as { input: any })
   .handler(async ({ data }) => {
-    currentApqpRecordState = {
-      ...currentApqpRecordState,
+    const record = {
       ...data.input,
-      lastModifiedBy: "Current User",
-      lastModifiedDate: new Date().toLocaleString(),
-      workflowStatus: "Draft",
+      projectName: data.input.apqpProjectName ?? data.input.projectName ?? "",
+      ownerName: data.input.projectManager ?? data.input.ownerName ?? "",
+      recordCode: data.input.apqpId ?? data.input.id ?? "",
     };
-    return { success: true, data: currentApqpRecordState };
+    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    return { success: true, data: result };
   });
 
 export const submitApqpFn = createServerFn({ method: "POST" }).handler(async () => {
-  currentApqpRecordState = {
-    ...currentApqpRecordState,
-    workflowStatus: "In Review",
-    workflowStage: "Review by APQP Board",
-    lastModifiedBy: "Current User",
-    lastModifiedDate: new Date().toLocaleString(),
-  };
-  return { success: true, data: currentApqpRecordState };
+  const current = withDefaults(INITIAL_APQP_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
+  if (current?.id) {
+    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    return { success: true, data: result };
+  }
+  return { success: true, data: INITIAL_APQP_RECORD };
 });

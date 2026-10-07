@@ -161,7 +161,7 @@ const DEPARTMENT_HEADCOUNT_PIE = [
   { name: "Finance", value: 11, percentage: "8.8%", color: "#EC4899" },
 ];
 
-export default function PayrollManagementPage() {
+function PayrollManagementPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["hrm", "payroll"]],

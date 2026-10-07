@@ -298,7 +298,7 @@ const INITIAL_APPROVALS: GRApprovalStep[] = [
   { level: 3, approver: "Sunil Deshmukh", role: "Procurement Manager", status: "Pending" },
 ];
 
-export function GoodsReceiptPage() {
+function GoodsReceiptPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["procurement", "goodsReceipts"]],
@@ -1126,4 +1126,3 @@ export function GoodsReceiptPage() {
   );
 }
 
-export default GoodsReceiptPage;

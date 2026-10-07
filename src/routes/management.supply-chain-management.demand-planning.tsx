@@ -1730,4 +1730,3 @@ function DemandPlanningPage() {
   );
 }
 
-export default DemandPlanningPage;

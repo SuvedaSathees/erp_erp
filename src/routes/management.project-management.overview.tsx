@@ -22,7 +22,7 @@ export const Route = createFileRoute("/management/project-management/overview")(
  * Its KPI cards, charts, risk registers, milestones, and AI planning insights
  * are driven by the ERP widget management system with drag-and-drop customization.
  */
-export function ProjectManagementOverviewPage() {
+function ProjectManagementOverviewPage() {
   return (
     <AppShell
       title="Project Overview"
@@ -35,7 +35,6 @@ export function ProjectManagementOverviewPage() {
   );
 }
 
-export default ProjectManagementOverviewPage;
 
 function OverviewSkeleton() {
   return (

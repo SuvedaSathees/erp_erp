@@ -41,7 +41,7 @@ const REPORT_TEMPLATES = [
   { id: 6, title: "AI Executive Briefing & Variance Narrative", type: "Decision Intelligence", period: "Real-Time", format: "PDF", status: "Ready" },
 ];
 
-export function ExecutiveReportsPage() {
+function ExecutiveReportsPage() {
   const [selectedFormat, setSelectedFormat] = useState("All Formats");
 
   const handleDownload = (title: string) => {

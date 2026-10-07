@@ -44,7 +44,7 @@ export const Route = createFileRoute(
   component: IncomingInspectionPage,
 });
 
-export function IncomingInspectionPage() {
+function IncomingInspectionPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: ["quality", "inspections"],

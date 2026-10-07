@@ -258,7 +258,7 @@ const CONNECTORS_LIST = [
   { name: "dbt Transformation Core", type: "Transform Engine", status: "Healthy", lag: "0 errors", nodes: 4 },
 ];
 
-export function EtlPipelinesPage() {
+function EtlPipelinesPage() {
   const [activeTab, setActiveTab] = useState<"orchestration" | "pipelines" | "connectors" | "dbt" | "quarantine">("orchestration");
   const [pipelines, setPipelines] = useState<PipelineRecord[]>(INITIAL_PIPELINES);
   const [searchQuery, setSearchQuery] = useState("");

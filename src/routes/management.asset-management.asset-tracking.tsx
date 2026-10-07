@@ -123,7 +123,7 @@ const INITIAL_TRACKED_ASSETS: TrackedAsset[] = Array.from({ length: 428 }, (_, i
   };
 });
 
-export function AssetTrackingDashboardPage() {
+function AssetTrackingDashboardPage() {
   const [assets, setAssets] = useState<TrackedAsset[]>(INITIAL_TRACKED_ASSETS);
   const [activeAsset, setActiveAsset] = useState<TrackedAsset>(INITIAL_TRACKED_ASSETS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All 428");
@@ -1536,4 +1536,3 @@ export function AssetTrackingDashboardPage() {
   );
 }
 
-export default AssetTrackingDashboardPage;

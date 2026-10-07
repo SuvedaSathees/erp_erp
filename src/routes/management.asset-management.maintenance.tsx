@@ -155,7 +155,7 @@ const INITIAL_REQUESTS: MaintenanceRequestItem[] = [
   { id: "REQ-2026-0127", asset: "Chiller Unit", department: "HVAC Facilities", priority: "Low", date: "30 Aug 2026" },
 ];
 
-export function MaintenanceFormPage() {
+function MaintenanceFormPage() {
   const [workOrders, setWorkOrders] = useState<WorkOrderItem[]>(INITIAL_WORK_ORDERS);
   const [activeWO, setActiveWO] = useState<WorkOrderItem>(INITIAL_WORK_ORDERS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All 42");
@@ -1444,4 +1444,3 @@ export function MaintenanceFormPage() {
   );
 }
 
-export default MaintenanceFormPage;

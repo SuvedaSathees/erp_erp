@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ProductionEngineeringNewPage } from "@/routes/development.research-innovation.production-engineering.new";
+import { ProductionEngineeringNewPage } from "@/pages/development.research-innovation.production-engineering.new";
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 
 export const Route = createFileRoute("/development/manufacturing-development/production-engineering/")({

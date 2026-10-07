@@ -108,7 +108,7 @@ const CUSTOMER_SEGMENTS_DATA = [
   { name: "Others", value: 2, count: 25, color: "#8b5cf6" },
 ];
 
-export function MarketResearchManagementPage() {
+function MarketResearchManagementPage() {
   const [activeTab, setActiveTab] = useState("studies");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
 
@@ -565,4 +565,3 @@ export function MarketResearchManagementPage() {
   );
 }
 
-export default MarketResearchManagementPage;

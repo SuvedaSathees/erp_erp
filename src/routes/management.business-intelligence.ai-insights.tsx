@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AiInsightsPage } from "@/routes/development.digital-development.ai-insights";
+import { AiInsightsPage } from "@/pages/development.digital-development.ai-insights";
 
 export const Route = createFileRoute(
   "/management/business-intelligence/ai-insights"

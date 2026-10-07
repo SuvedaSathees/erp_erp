@@ -1316,4 +1316,3 @@ function InventoryPage() {
   );
 }
 
-export default InventoryPage;

@@ -138,7 +138,7 @@ const INITIAL_PM_PLANS: PMPlanItem[] = Array.from({ length: 86 }, (_, i) => {
   };
 });
 
-export function PreventiveMaintenanceFormPage() {
+function PreventiveMaintenanceFormPage() {
   const [pmPlans, setPmPlans] = useState<PMPlanItem[]>(INITIAL_PM_PLANS);
   const [activePlan, setActivePlan] = useState<PMPlanItem>(INITIAL_PM_PLANS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All 682");
@@ -1392,4 +1392,3 @@ export function PreventiveMaintenanceFormPage() {
   );
 }
 
-export default PreventiveMaintenanceFormPage;

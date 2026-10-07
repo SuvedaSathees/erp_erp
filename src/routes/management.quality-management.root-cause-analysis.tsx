@@ -51,7 +51,7 @@ export const Route = createFileRoute(
   component: RootCauseAnalysisPage,
 });
 
-export function RootCauseAnalysisPage() {
+function RootCauseAnalysisPage() {
   const { data: dbRecord } = useQuery({
     queryKey: ["rca", "record"],
     queryFn: () => getRcaRecordFn({ data: {} }),

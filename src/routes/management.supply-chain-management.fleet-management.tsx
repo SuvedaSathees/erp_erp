@@ -1666,4 +1666,3 @@ function FleetPage() {
   );
 }
 
-export default FleetPage;

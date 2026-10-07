@@ -214,7 +214,7 @@ const STAGES_PIPELINE = [
   { id: "probation", name: "Probation & Review", status: "Pending", date: "90-Day Target", icon: Shield, state: "pending" },
 ];
 
-export default function OnboardingManagementPage() {
+function OnboardingManagementPage() {
   const [activeTab, setActiveTab] = useState<string>("pre-joining");
   const [master, setMaster] = useState<OnboardingMaster>(INITIAL_MASTER);
 

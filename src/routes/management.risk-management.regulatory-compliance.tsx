@@ -143,7 +143,7 @@ const SUBMODULE_TABS = [
   { id: "reports", label: "Reports" },
 ];
 
-export function RegulatoryCompliancePage() {
+function RegulatoryCompliancePage() {
   const { toast } = useToast();
 
   // Prisma-backed query with inline fallback

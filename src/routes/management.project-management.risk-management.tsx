@@ -94,7 +94,7 @@ export interface RiskItem {
   progress: number;
 }
 
-export const INITIAL_RISKS: RiskItem[] = [
+const INITIAL_RISKS: RiskItem[] = [
   {
     id: "R-001",
     title: "Critical controller supplier delay",
@@ -470,7 +470,7 @@ export const Route = createFileRoute("/management/project-management/risk-manage
   component: RiskManagementFormPage,
 });
 
-export function RiskManagementFormPage() {
+function RiskManagementFormPage() {
   const [risks, setRisks] = useState<RiskItem[]>(INITIAL_RISKS);
   const [selectedRisk, setSelectedRisk] = useState<RiskItem>(INITIAL_RISKS[0]);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -2222,4 +2222,3 @@ ${risks
   );
 }
 
-export default RiskManagementFormPage;

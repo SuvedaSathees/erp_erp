@@ -46,7 +46,7 @@ export const Route = createFileRoute("/management/risk-management/reports")({
   component: RiskManagementReportPage,
 });
 
-export function RiskManagementReportPage() {
+function RiskManagementReportPage() {
   // --- Prisma-backed query with inline fallback ---
   const { data: dbList } = useQuery({
     queryKey: ["enterprise-risk", "list"],
@@ -420,4 +420,3 @@ export function RiskManagementReportPage() {
   );
 }
 
-export default RiskManagementReportPage;

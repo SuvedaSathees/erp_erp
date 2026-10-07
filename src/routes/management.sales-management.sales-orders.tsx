@@ -115,7 +115,7 @@ const initialStepperSteps = [
   { id: 7, title: "Closure", status: "pending" },
 ];
 
-export default function SalesOrdersComponent() {
+function SalesOrdersComponent() {
   const ordersQuery = useQuery({
     queryKey: ["sales", "orders"],
     queryFn: () => salesManagementService.fetchSalesOrders(),

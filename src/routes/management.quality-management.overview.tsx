@@ -28,7 +28,7 @@ export const Route = createFileRoute(
  * Its KPI cards, charts, lifecycle pipelines, incidents ledger, and AI quality intelligence
  * are driven by the ERP widget management system with drag-and-drop customization.
  */
-export function QualityDashboardOverviewPage() {
+function QualityDashboardOverviewPage() {
   const [showNewIncidentModal, setShowNewIncidentModal] = useState(false);
   const [newIncident, setNewIncident] = useState({
     title: "",
@@ -223,4 +223,3 @@ function OverviewSkeleton() {
   );
 }
 
-export default QualityDashboardOverviewPage;

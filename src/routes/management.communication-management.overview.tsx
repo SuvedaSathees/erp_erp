@@ -57,4 +57,3 @@ function OverviewSkeleton() {
   );
 }
 
-export default CommunicationOverviewPage;

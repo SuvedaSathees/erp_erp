@@ -209,7 +209,7 @@ const KPI_ROWS = [
   { kpi: "Engagement Score", actual: "82%", target: "> 80%", variance: "+2%", status: "green" },
 ];
 
-export function HrAnalyticsPage() {
+function HrAnalyticsPage() {
   const [activeTab, setActiveTab] = useState<string>("workforce");
 
   return (
@@ -851,5 +851,4 @@ export function HrAnalyticsPage() {
   );
 }
 
-export default HrAnalyticsPage;
 

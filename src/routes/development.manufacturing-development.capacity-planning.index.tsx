@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CapacityPlanningNewPage } from "@/routes/development.research-innovation.capacity-planning.new";
+import { CapacityPlanningNewPage } from "@/pages/development.research-innovation.capacity-planning.new";
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 
 export const Route = createFileRoute("/development/manufacturing-development/capacity-planning/")({

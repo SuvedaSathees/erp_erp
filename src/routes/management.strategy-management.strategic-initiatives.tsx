@@ -54,7 +54,7 @@ export const Route = createFileRoute("/management/strategy-management/strategic-
   component: StrategicInitiativesPage,
 });
 
-export function StrategicInitiativesPage() {
+function StrategicInitiativesPage() {
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [aiQuery, setAiQuery] = useState("");

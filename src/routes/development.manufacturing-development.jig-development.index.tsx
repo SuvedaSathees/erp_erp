@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { JigDevelopmentNewPage } from "@/routes/development.research-innovation.jig-development.new";
+import { JigDevelopmentNewPage } from "@/pages/development.research-innovation.jig-development.new";
 import { ManufacturingDevelopmentTabBar } from "@/components/erp/ManufacturingDevelopmentTabBar";
 
 export const Route = createFileRoute("/development/manufacturing-development/jig-development/")({

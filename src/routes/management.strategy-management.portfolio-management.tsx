@@ -106,7 +106,7 @@ const BUDGET_VS_ACTUAL = [
   { name: "Q4", planned: 25, actual: 20 },
 ];
 
-export function PortfolioManagementPage() {
+function PortfolioManagementPage() {
   const [currentLifecycle, setCurrentLifecycle] = useState(5); // Allocate
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");

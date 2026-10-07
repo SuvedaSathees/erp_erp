@@ -50,7 +50,7 @@ export const Route = createFileRoute(
   component: AuditManagementPage,
 });
 
-export function AuditManagementPage() {
+function AuditManagementPage() {
   const { data: dbRecord } = useQuery({
     queryKey: ["quality-audit", "record"],
     queryFn: () => getAuditRecordFn({ data: {} }),

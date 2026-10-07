@@ -202,7 +202,7 @@ const INITIAL_DOCUMENTS: PaymentDocument[] = [
   { id: 5, name: "TDS Certificate - May 2026.pdf", size: "98 KB", date: "01 Jun 2026" },
 ];
 
-export function VendorPaymentPage() {
+function VendorPaymentPage() {
   // Navigation & Active Tab
   const [activeTab, setActiveTab] = useState<string>("allocations");
 
@@ -1217,4 +1217,3 @@ export function VendorPaymentPage() {
   );
 }
 
-export default VendorPaymentPage;

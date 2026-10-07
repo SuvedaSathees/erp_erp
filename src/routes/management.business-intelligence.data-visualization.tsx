@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DataVisualizationPage } from "@/routes/development.digital-development.data-visualization";
+import { DataVisualizationPage } from "@/pages/development.digital-development.data-visualization";
 
 export const Route = createFileRoute(
   "/management/business-intelligence/data-visualization"

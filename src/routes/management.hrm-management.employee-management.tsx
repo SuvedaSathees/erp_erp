@@ -202,7 +202,7 @@ const ASSIGNED_ASSETS = [
   { name: "Workstation", type: "Equipment", assetNumber: "AST-WS-045", issuedOn: "01 Aug 2023", status: "Issued" },
 ];
 
-export default function EmployeeManagementPage() {
+function EmployeeManagementPage() {
   const employeesQuery = useQuery({
     queryKey: ["hrm", "employees"],
     queryFn: () => hrmManagementService.fetchEmployees(),

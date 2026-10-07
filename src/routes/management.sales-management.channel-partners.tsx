@@ -133,7 +133,7 @@ const initialStepperStages = [
   { id: 7, title: "Active Operations", status: "current" },
 ];
 
-export default function ChannelPartnersComponent() {
+function ChannelPartnersComponent() {
   const [products, setProducts] = useState(initialPartnerProducts);
   const [stepperStages, setStepperStages] = useState(initialStepperStages);
   const [version, setVersion] = useState("v1.0");

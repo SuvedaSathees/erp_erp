@@ -80,7 +80,7 @@ export interface ResourceAllocationItem {
   priority: "Critical" | "High" | "Medium" | "Low";
 }
 
-export const INITIAL_ALLOCATIONS: ResourceAllocationItem[] = [
+const INITIAL_ALLOCATIONS: ResourceAllocationItem[] = [
   {
     id: "alloc-1",
     code: "AL-2026-0215",
@@ -436,7 +436,7 @@ export const Route = createFileRoute("/management/project-management/resource-al
   component: ResourceAllocationFormPage,
 });
 
-export function ResourceAllocationFormPage() {
+function ResourceAllocationFormPage() {
   const navigate = useNavigate();
   const [allocations, setAllocations] = useState<ResourceAllocationItem[]>(INITIAL_ALLOCATIONS);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -2485,4 +2485,3 @@ ${allocations
   );
 }
 
-export default ResourceAllocationFormPage;

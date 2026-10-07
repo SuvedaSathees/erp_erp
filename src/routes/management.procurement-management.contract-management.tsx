@@ -190,7 +190,7 @@ const INITIAL_DOCS: ContractDoc[] = [
   { id: 3, name: "Legal_Review_Report.pdf", version: "1.0", uploadedOn: "20 May 2026", status: "Approved" },
 ];
 
-export function ContractManagementPage() {
+function ContractManagementPage() {
   // Navigation & Active Tab
   const [activeTab, setActiveTab] = useState<string>("scope");
 
@@ -1072,4 +1072,3 @@ export function ContractManagementPage() {
   );
 }
 
-export default ContractManagementPage;

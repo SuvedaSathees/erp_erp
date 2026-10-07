@@ -147,7 +147,7 @@ const INTERNAL_SUBMODULE_TABS = [
   { id: "reports", label: "Reports" },
 ];
 
-export function InternalCompliancePage() {
+function InternalCompliancePage() {
   const { toast } = useToast();
 
   // Prisma-backed query with inline fallback

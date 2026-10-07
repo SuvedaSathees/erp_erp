@@ -84,7 +84,7 @@ const DIGITAL_TABS = [
   { id: "cro", label: "Landing Pages & CRO" },
 ];
 
-export function DigitalMarketingManagementPage() {
+function DigitalMarketingManagementPage() {
   const [activeTab, setActiveTab] = useState("seo");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
 
@@ -729,4 +729,3 @@ export function DigitalMarketingManagementPage() {
   );
 }
 
-export default DigitalMarketingManagementPage;

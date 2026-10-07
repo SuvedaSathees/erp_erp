@@ -76,7 +76,7 @@ const EVENT_TABS = [
   { id: "feedback", label: "Attendee Feedback" },
 ];
 
-export function EventsManagementPage() {
+function EventsManagementPage() {
   const [activeTab, setActiveTab] = useState("agenda");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
 
@@ -569,4 +569,3 @@ export function EventsManagementPage() {
   );
 }
 
-export default EventsManagementPage;

@@ -172,7 +172,7 @@ const CAREER_REVIEWS = [
   { date: "15 Mar 2023", reviewer: "Arun Kumar", readiness: "50%", recommendation: "Build technical depth" },
 ];
 
-export function CareerDevelopmentPage() {
+function CareerDevelopmentPage() {
   const [activeTab, setActiveTab] = useState<string>("path");
 
   // Modals
@@ -1227,4 +1227,3 @@ function GitCommitIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export default CareerDevelopmentPage;

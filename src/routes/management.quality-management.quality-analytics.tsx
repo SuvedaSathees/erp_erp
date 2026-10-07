@@ -40,7 +40,7 @@ export const Route = createFileRoute(
   component: QualityAnalyticsPage,
 });
 
-export function QualityAnalyticsPage() {
+function QualityAnalyticsPage() {
   const { data: dbRecord } = useQuery({
     queryKey: ["quality-analytics", "record"],
     queryFn: () => getQualityAnalyticsRecordFn({ data: {} }),
@@ -217,4 +217,3 @@ export function QualityAnalyticsPage() {
   );
 }
 
-export default QualityAnalyticsPage;

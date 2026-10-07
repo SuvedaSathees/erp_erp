@@ -1708,4 +1708,3 @@ function ReverseLogisticsPage() {
   );
 }
 
-export default ReverseLogisticsPage;

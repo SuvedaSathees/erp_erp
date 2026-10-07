@@ -87,7 +87,7 @@ const REVENUE_MONTHLY_DATA = [
   { month: "Sep 2026", revenue: 2.0, leads: 1280 },
 ];
 
-export function MarketingAnalyticsPage() {
+function MarketingAnalyticsPage() {
   const [activeTab, setActiveTab] = useState("attribution");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
 
@@ -412,4 +412,3 @@ export function MarketingAnalyticsPage() {
   );
 }
 
-export default MarketingAnalyticsPage;

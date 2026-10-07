@@ -168,7 +168,7 @@ const UTILIZATION_TREND = [
   { month: "Mar", amount: 14.8 },
 ];
 
-export function EmployeeWelfarePage() {
+function EmployeeWelfarePage() {
   const [activeTab, setActiveTab] = useState<string>("details");
 
   // Modals
@@ -1073,5 +1073,4 @@ export function EmployeeWelfarePage() {
   );
 }
 
-export default EmployeeWelfarePage;
 

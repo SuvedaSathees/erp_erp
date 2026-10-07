@@ -142,7 +142,7 @@ const INITIAL_EXPENSES: ExpenseItem[] = [
   { id: 6, date: "25 May 2024", category: "Courier & Logistics", description: "Expedited Legal Contract Document Dispatch", merchant: "BlueDart Express", amount: 650.0, eligible: 500.0, disallowed: 150.0, receiptStatus: "Partial" },
 ];
 
-export function ExpenseClaimsPage() {
+function ExpenseClaimsPage() {
   const [activeTab, setActiveTab] = useState<string>("expenses");
   const [expenses, setExpenses] = useState<ExpenseItem[]>(INITIAL_EXPENSES);
 

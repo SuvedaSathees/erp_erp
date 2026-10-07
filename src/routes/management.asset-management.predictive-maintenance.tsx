@@ -153,7 +153,7 @@ const HIGH_RISK_LIST = [
   { asset: "Hydraulic Press 200T", id: "EQ-PRS-00021", mode: "Hydraulic Leak", prob: "35%", rul: "26 Days", color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
 ];
 
-export function PredictiveMaintenanceFormPage() {
+function PredictiveMaintenanceFormPage() {
   const [predictions, setPredictions] = useState<PredictionItem[]>(INITIAL_PREDICTIONS);
   const [activeItem, setActiveItem] = useState<PredictionItem>(INITIAL_PREDICTIONS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All (64)");
@@ -1418,4 +1418,3 @@ export function PredictiveMaintenanceFormPage() {
   );
 }
 
-export default PredictiveMaintenanceFormPage;

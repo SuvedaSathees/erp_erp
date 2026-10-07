@@ -111,7 +111,7 @@ export const Route = createFileRoute(
   }),
 });
 
-export function ComplianceRiskPage() {
+function ComplianceRiskPage() {
   const { toast } = useToast();
 
   // --- Prisma-backed queries with inline fallback ---
@@ -2846,5 +2846,4 @@ export function ComplianceRiskPage() {
   );
 }
 
-export default ComplianceRiskPage;
 

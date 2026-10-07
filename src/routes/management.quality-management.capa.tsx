@@ -38,7 +38,7 @@ export const Route = createFileRoute("/management/quality-management/capa")({
   component: CapaPage,
 });
 
-export function CapaPage() {
+function CapaPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["quality", "capa"]],

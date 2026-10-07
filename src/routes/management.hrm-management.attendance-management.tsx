@@ -150,7 +150,7 @@ const ATTENDANCE_DONUT = [
   { name: "Shortfall", value: 0.0, color: "#EF4444" },
 ];
 
-export default function AttendanceManagementPage() {
+function AttendanceManagementPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: ["hrm", "attendance"],

@@ -85,7 +85,7 @@ export const Route = createFileRoute("/management/project-management/project-ana
   component: ProjectAnalyticsFormPage,
 });
 
-export function ProjectAnalyticsFormPage() {
+function ProjectAnalyticsFormPage() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeKpi, setActiveKpi] = useState<string | null>(null);
@@ -1512,4 +1512,3 @@ Generated: ${new Date().toLocaleString()}
   );
 }
 
-export default ProjectAnalyticsFormPage;

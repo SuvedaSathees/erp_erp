@@ -43,7 +43,7 @@ export const Route = createFileRoute(
   component: CompliancePage,
 });
 
-export function CompliancePage() {
+function CompliancePage() {
   const { data: dbRecord } = useQuery({
     queryKey: ["quality-compliance", "record"],
     queryFn: () => getComplianceRecordFn({ data: {} }),
@@ -338,4 +338,3 @@ export function CompliancePage() {
   );
 }
 
-export default CompliancePage;

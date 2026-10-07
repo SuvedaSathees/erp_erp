@@ -94,7 +94,7 @@ const BUDGET_VS_ACTUAL_DATA = [
   { category: "Operations", planned: 22, actual: 20 },
 ];
 
-export function BusinessPlanningPage() {
+function BusinessPlanningPage() {
   const [currentStage, setCurrentStage] = useState(1);
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("EV Charging Infrastructure");

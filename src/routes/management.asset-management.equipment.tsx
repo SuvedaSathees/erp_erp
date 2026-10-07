@@ -165,7 +165,7 @@ const INITIAL_EQUIPMENT: EquipmentItem[] = Array.from({ length: 186 }, (_, i) =>
   };
 });
 
-export function EquipmentFormPage() {
+function EquipmentFormPage() {
   const navigate = useNavigate();
   const [equipmentList, setEquipmentList] = useState<EquipmentItem[]>(INITIAL_EQUIPMENT);
   const [activeItem, setActiveItem] = useState<EquipmentItem>(INITIAL_EQUIPMENT[0]);
@@ -1770,4 +1770,3 @@ export function EquipmentFormPage() {
   );
 }
 
-export default EquipmentFormPage;

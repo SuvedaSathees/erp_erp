@@ -50,7 +50,7 @@ export const Route = createFileRoute("/management/strategy-management/balanced-s
   component: BalancedScorecardPage,
 });
 
-export function BalancedScorecardPage() {
+function BalancedScorecardPage() {
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [aiTab, setAiTab] = useState("Chat");

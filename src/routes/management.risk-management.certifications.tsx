@@ -98,7 +98,7 @@ export const Route = createFileRoute("/management/risk-management/certifications
   component: CertificationsManagementPage,
 });
 
-export default function CertificationsManagementPage() {
+function CertificationsManagementPage() {
   // Navigation tabs state
   const [activeTab, setActiveTab] = useState<
     | "overview"

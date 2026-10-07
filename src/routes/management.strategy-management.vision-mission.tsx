@@ -65,7 +65,7 @@ export const Route = createFileRoute("/management/strategy-management/vision-mis
   component: VisionMissionPage,
 });
 
-export function VisionMissionPage() {
+function VisionMissionPage() {
   const [selectedBu, setSelectedBu] = useState("All Business Units");
   const [dateRange, setDateRange] = useState("01 Sep 2026 - 30 Sep 2026");
 

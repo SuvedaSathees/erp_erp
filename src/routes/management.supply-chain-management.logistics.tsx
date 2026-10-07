@@ -159,7 +159,7 @@ const SHIPMENT_ITEMS: ShipmentItem[] = [
   { code: "MAT-1006", name: "Control Panel", qty: 10, uom: "Nos", weight: 800.0, volume: 3.5, status: "Loaded" },
 ];
 
-export function LogisticsPage() {
+function LogisticsPage() {
   // Shipment Details State
   const [shipmentNumber, setShipmentNumber] = useState("SHP-2026-001248");
   const [logisticsType, setLogisticsType] = useState("Outbound Logistics");
@@ -1135,4 +1135,3 @@ export function LogisticsPage() {
   );
 }
 
-export default LogisticsPage;

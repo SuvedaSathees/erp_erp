@@ -253,7 +253,7 @@ const INITIAL_COMPARISON_DOCS = [
   { id: 4, name: "Tender_Committee_Sanction_Minutes.pdf", type: "Approval Sanction", size: "620 KB", uploadedBy: "Vikas Jain", date: "18 May 2026" },
 ];
 
-export function VendorComparisonPage() {
+function VendorComparisonPage() {
   // Navigation & Tabs
   const [activeTab, setActiveTab] = useState<string>("itemComparison");
 
@@ -1361,4 +1361,3 @@ function CreditCardIcon(props: any) {
   );
 }
 
-export default VendorComparisonPage;

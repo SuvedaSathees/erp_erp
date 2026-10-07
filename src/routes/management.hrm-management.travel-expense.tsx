@@ -149,7 +149,7 @@ const TOP_EXPENSES = [
   { category: "Other", date: "-", amount: "500", status: "Estimated" },
 ];
 
-export function TravelManagementPage() {
+function TravelManagementPage() {
   const [activeTab, setActiveTab] = useState<string>("itinerary");
 
   // Modals
@@ -1343,5 +1343,4 @@ export function TravelManagementPage() {
   );
 }
 
-export default TravelManagementPage;
 

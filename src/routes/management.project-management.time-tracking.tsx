@@ -79,7 +79,7 @@ export interface TimeEntryItem {
   notes?: string;
 }
 
-export const INITIAL_TIME_ENTRIES: TimeEntryItem[] = [
+const INITIAL_TIME_ENTRIES: TimeEntryItem[] = [
   {
     id: "te-1",
     date: "01 Sep 2026",
@@ -420,7 +420,7 @@ export const Route = createFileRoute("/management/project-management/time-tracki
   component: TimeTrackingFormPage,
 });
 
-export function TimeTrackingFormPage() {
+function TimeTrackingFormPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["projects", "timeEntries"]],
@@ -2664,5 +2664,4 @@ ${entries
   );
 }
 
-export default TimeTrackingFormPage;
 

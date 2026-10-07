@@ -98,7 +98,7 @@ export interface IssueItem {
   relatedRisk: string;
 }
 
-export const INITIAL_ISSUES: IssueItem[] = [
+const INITIAL_ISSUES: IssueItem[] = [
   {
     id: "I-001",
     title: "Controller delivery delayed",
@@ -494,7 +494,7 @@ export const Route = createFileRoute("/management/project-management/issue-manag
   component: IssueManagementFormPage,
 });
 
-export function IssueManagementFormPage() {
+function IssueManagementFormPage() {
   const [issues, setIssues] = useState<IssueItem[]>(INITIAL_ISSUES);
   const [selectedIssue, setSelectedIssue] = useState<IssueItem>(INITIAL_ISSUES[0]);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -2417,4 +2417,3 @@ ${issues
   );
 }
 
-export default IssueManagementFormPage;

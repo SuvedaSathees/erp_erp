@@ -121,7 +121,7 @@ const channelPricingMatrix = [
   { channel: "Government / GeM Portal", discFromMSRP: "15%", unitPrice: "₹1,27,500", partnerMargin: "Rate Contract" },
 ];
 
-export default function PricingComponent() {
+function PricingComponent() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["sales", "priceLists"]],

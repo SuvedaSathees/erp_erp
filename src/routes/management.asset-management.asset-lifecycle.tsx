@@ -140,7 +140,7 @@ const INITIAL_ASSETS: AssetLifecycleItem[] = Array.from({ length: 428 }, (_, i) 
   };
 });
 
-export function AssetLifecycleFormPage() {
+function AssetLifecycleFormPage() {
   const [assets, setAssets] = useState<AssetLifecycleItem[]>(INITIAL_ASSETS);
   const [activeAsset, setActiveAsset] = useState<AssetLifecycleItem>(INITIAL_ASSETS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All 428");
@@ -1496,4 +1496,3 @@ export function AssetLifecycleFormPage() {
   );
 }
 
-export default AssetLifecycleFormPage;

@@ -179,7 +179,7 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
   );
 }
 
-export function RevenueModelDevelopmentPage() {
+function RevenueModelDevelopmentPage() {
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["revenue-model"],
     queryFn: revenueModelService.fetchRecord,
@@ -1485,4 +1485,3 @@ function RevenueModelDevelopmentPageForm() {
   );
 }
 
-export default RevenueModelDevelopmentPage;

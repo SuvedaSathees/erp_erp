@@ -294,7 +294,7 @@ const INITIAL_CLARIFICATIONS: VendorClarification[] = [
   },
 ];
 
-export function VendorQuotationPage() {
+function VendorQuotationPage() {
   // Navigation & Tabs
   const [activeTab, setActiveTab] = useState<string>("lineItems");
 
@@ -1409,4 +1409,3 @@ export function VendorQuotationPage() {
   );
 }
 
-export default VendorQuotationPage;

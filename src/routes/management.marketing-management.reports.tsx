@@ -29,4 +29,3 @@ function MarketingManagementReportPage() {
   );
 }
 
-export default MarketingManagementReportPage;

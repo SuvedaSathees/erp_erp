@@ -91,7 +91,7 @@ export interface WbsBudgetRegisterItem {
   children?: WbsBudgetChildItem[];
 }
 
-export const INITIAL_WBS_BUDGETS: WbsBudgetRegisterItem[] = [
+const INITIAL_WBS_BUDGETS: WbsBudgetRegisterItem[] = [
   {
     code: "1.0",
     desc: "Project Management",
@@ -373,7 +373,7 @@ export const Route = createFileRoute("/management/project-management/budget-cont
   component: BudgetControlFormPage,
 });
 
-export function BudgetControlFormPage() {
+function BudgetControlFormPage() {
   const [wbsBudgets, setWbsBudgets] = useState<WbsBudgetRegisterItem[]>(INITIAL_WBS_BUDGETS);
   const [expandedCodes, setExpandedCodes] = useState<Set<string>>(new Set(["2.0"]));
   const [isFavorite, setIsFavorite] = useState(false);
@@ -2740,4 +2740,3 @@ ${wbsBudgets
   );
 }
 
-export default BudgetControlFormPage;

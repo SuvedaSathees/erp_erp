@@ -91,7 +91,7 @@ export interface ProjectTaskItem {
   deliverable: string;
 }
 
-export const INITIAL_TASKS: ProjectTaskItem[] = [
+const INITIAL_TASKS: ProjectTaskItem[] = [
   {
     id: "task-1",
     code: "T-023",
@@ -633,7 +633,7 @@ export const Route = createFileRoute("/management/project-management/task-manage
   component: TaskManagementFormPage,
 });
 
-export function TaskManagementFormPage() {
+function TaskManagementFormPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -645,7 +645,7 @@ export function TaskManagementFormPage() {
   const queryClient = useQueryClient();
 
   const createTaskMutation = useMutation({
-    mutationFn: (input: any) => projectManagementService.createProjectTask(input),
+    mutationFn: (input: any) => projectManagementService.createTask(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["project"] });
       toast.success("Task created successfully");
@@ -654,7 +654,7 @@ export function TaskManagementFormPage() {
   });
 
   const updateTaskMutation = useMutation({
-    mutationFn: (input: any) => projectManagementService.updateProjectTask(input),
+    mutationFn: (input: any) => projectManagementService.updateTask(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["project"] });
       toast.success("Task updated successfully");
@@ -2940,5 +2940,4 @@ ${tasks
   );
 }
 
-export default TaskManagementFormPage;
 

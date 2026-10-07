@@ -84,7 +84,7 @@ export const Route = createFileRoute("/management/project-management/wbs")({
   component: WbsFormPage,
 });
 
-export function WbsFormPage() {
+function WbsFormPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -1779,5 +1779,4 @@ Deliverables: ${selectedWbs.deliverables.map((d) => d.name).join(", ")}`;
   );
 }
 
-export default WbsFormPage;
 

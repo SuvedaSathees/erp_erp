@@ -191,7 +191,7 @@ const INITIAL_ASSETS: FixedAsset[] = Array.from({ length: 428 }, (_, i) => {
   };
 });
 
-export function FixedAssetsFormPage() {
+function FixedAssetsFormPage() {
   const [assets, setAssets] = useState<FixedAsset[]>(INITIAL_ASSETS);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -1786,4 +1786,3 @@ export function FixedAssetsFormPage() {
   );
 }
 
-export default FixedAssetsFormPage;

@@ -127,7 +127,7 @@ const initialStepperStages = [
   { id: 6, title: "Payroll Payout", status: "pending" },
 ];
 
-export default function SalesCommissionComponent() {
+function SalesCommissionComponent() {
   const [transactions, setTransactions] = useState(initialTransactions);
   const [stepperStages, setStepperStages] = useState(initialStepperStages);
   const [version, setVersion] = useState("v1.0");

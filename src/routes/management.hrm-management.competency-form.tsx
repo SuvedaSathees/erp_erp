@@ -176,7 +176,7 @@ const COMPETENCY_HISTORY = [
   { date: "15 Jun 2023", type: "Initial Assessment", rating: "3.2 / 5", score: "64%", assessor: "Arun Kumar", comments: "Solid technical knowledge, leadership development required." },
 ];
 
-export function CompetencyFormPage() {
+function CompetencyFormPage() {
   const [activeTab, setActiveTab] = useState<string>("overview");
 
   // Modals
@@ -1235,4 +1235,3 @@ export function CompetencyFormPage() {
   );
 }
 
-export default CompetencyFormPage;

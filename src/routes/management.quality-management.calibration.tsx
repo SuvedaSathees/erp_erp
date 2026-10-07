@@ -54,7 +54,7 @@ export const Route = createFileRoute(
   component: CalibrationPage,
 });
 
-export function CalibrationPage() {
+function CalibrationPage() {
   const { data: dbRecord } = useQuery({
     queryKey: ["calibration", "record"],
     queryFn: () => getCalibrationRecordFn({ data: {} }),

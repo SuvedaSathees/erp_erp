@@ -116,7 +116,7 @@ export const Route = createFileRoute("/management/risk-management/project-risk")
   component: ProjectRiskPage,
 });
 
-export function ProjectRiskPage() {
+function ProjectRiskPage() {
   // --- Prisma-backed queries with inline fallback ---
   const { data: dbRecord } = useQuery({
     queryKey: ["project-risk", "record"],
@@ -1902,4 +1902,3 @@ export function ProjectRiskPage() {
   );
 }
 
-export default ProjectRiskPage;

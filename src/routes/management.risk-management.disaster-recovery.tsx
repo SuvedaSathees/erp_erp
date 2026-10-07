@@ -108,7 +108,7 @@ export const Route = createFileRoute(
   }),
 });
 
-export function DisasterRecoveryPage() {
+function DisasterRecoveryPage() {
   const { toast } = useToast();
 
   const { data: dbRecord } = useQuery({
@@ -2778,5 +2778,4 @@ export function DisasterRecoveryPage() {
   );
 }
 
-export default DisasterRecoveryPage;
 

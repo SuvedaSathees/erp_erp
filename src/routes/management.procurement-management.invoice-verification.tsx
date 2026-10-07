@@ -212,7 +212,7 @@ const INITIAL_DOCUMENTS: IVDocument[] = [
   { id: 6, name: "Quality Report_QC-000421.pdf", size: "110 KB", date: "05 Jun 2026" },
 ];
 
-export function InvoiceVerificationPage() {
+function InvoiceVerificationPage() {
   // Navigation & Active Tab
   const [activeTab, setActiveTab] = useState<string>("lineMatching");
 
@@ -1316,4 +1316,3 @@ export function InvoiceVerificationPage() {
   );
 }
 
-export default InvoiceVerificationPage;

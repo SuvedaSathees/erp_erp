@@ -70,7 +70,7 @@ const SOCIAL_TABS = [
   { id: "listening", label: "Social Listening & Sentiment" },
 ];
 
-export function SocialMediaManagementPage() {
+function SocialMediaManagementPage() {
   const [activeTab, setActiveTab] = useState("calendar");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
@@ -684,4 +684,3 @@ export function SocialMediaManagementPage() {
   );
 }
 
-export default SocialMediaManagementPage;

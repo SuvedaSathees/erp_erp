@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CybersecurityEngineeringNewPage } from "@/routes/development.research-innovation.cybersecurity-engineering.new";
+import { CybersecurityEngineeringNewPage } from "@/pages/development.research-innovation.cybersecurity-engineering.new";
 import { ProductDevelopmentTabBar } from "@/components/erp/ProductDevelopmentTabBar";
 
 export const Route = createFileRoute(

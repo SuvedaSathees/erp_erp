@@ -87,7 +87,7 @@ const PERFORMANCE_TREND_DATA = [
   { quarter: "Q4 (Jan-Mar)", goal: 4.4, kpi: 4.0, competency: 4.2, overall: 4.2 },
 ];
 
-export function PerformanceManagementPage() {
+function PerformanceManagementPage() {
   const [currentStage, setCurrentStage] = useState(4); // Manager Review
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [reviewType, setReviewType] = useState("Annual Review");

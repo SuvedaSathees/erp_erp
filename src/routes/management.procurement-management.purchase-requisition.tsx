@@ -473,7 +473,7 @@ const INITIAL_AMENDMENTS: AmendmentItem[] = [
   },
 ];
 
-export function PurchaseRequisitionPage() {
+function PurchaseRequisitionPage() {
   // Navigation & Sub-tabs
   const [activeTab, setActiveTab] = useState<string>("lineItems");
 

@@ -239,7 +239,7 @@ const INITIAL_CAP_TICKETS: CAPTicket[] = [
   },
 ];
 
-export function VendorEvaluationPage() {
+function VendorEvaluationPage() {
   // Navigation & Active Tab
   const [activeTab, setActiveTab] = useState<string>("scorecard");
 
@@ -1054,4 +1054,3 @@ export function VendorEvaluationPage() {
   );
 }
 
-export default VendorEvaluationPage;

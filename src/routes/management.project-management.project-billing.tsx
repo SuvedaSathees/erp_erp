@@ -84,7 +84,7 @@ export interface BillingItem {
   receivedAmount: number;
 }
 
-export const INITIAL_BILLINGS: BillingItem[] = [
+const INITIAL_BILLINGS: BillingItem[] = [
   {
     id: "PB-2026-0001",
     code: "PB-001",
@@ -352,7 +352,7 @@ export const Route = createFileRoute("/management/project-management/project-bil
   component: ProjectBillingFormPage,
 });
 
-export function ProjectBillingFormPage() {
+function ProjectBillingFormPage() {
   const [billings, setBillings] = useState<BillingItem[]>(INITIAL_BILLINGS);
   const [selectedBilling, setSelectedBilling] = useState<BillingItem>(INITIAL_BILLINGS[3]);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -2301,4 +2301,3 @@ ${billings
   );
 }
 
-export default ProjectBillingFormPage;

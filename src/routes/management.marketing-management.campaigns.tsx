@@ -76,7 +76,7 @@ const CAMPAIGN_TABS = [
   { id: "workflow", label: "Launch Workflow" },
 ];
 
-export function CampaignsManagementPage() {
+function CampaignsManagementPage() {
   const [activeTab, setActiveTab] = useState("campaign-master");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
   const [checklist, setChecklist] = useState<Record<string, boolean>>({
@@ -609,4 +609,3 @@ export function CampaignsManagementPage() {
   );
 }
 
-export default CampaignsManagementPage;

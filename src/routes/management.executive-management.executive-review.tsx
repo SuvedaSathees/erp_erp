@@ -112,7 +112,7 @@ const KPI_CATEGORY_DATA = [
   { category: "Sustainability", target: 70, actual: 68 },
 ];
 
-export function ExecutiveReviewPage() {
+function ExecutiveReviewPage() {
   const [currentStage, setCurrentStage] = useState(4); // Executive Review
   const [period, setPeriod] = useState("Q3 FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");

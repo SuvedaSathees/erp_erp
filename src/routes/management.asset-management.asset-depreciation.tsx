@@ -137,7 +137,7 @@ const INITIAL_DEPRECIATION_ITEMS: DepreciationItem[] = Array.from({ length: 428 
   };
 });
 
-export function AssetDepreciationFormPage() {
+function AssetDepreciationFormPage() {
   const [items, setItems] = useState<DepreciationItem[]>(INITIAL_DEPRECIATION_ITEMS);
   const [activeItem, setActiveItem] = useState<DepreciationItem>(INITIAL_DEPRECIATION_ITEMS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All 428");
@@ -1431,4 +1431,3 @@ export function AssetDepreciationFormPage() {
   );
 }
 
-export default AssetDepreciationFormPage;

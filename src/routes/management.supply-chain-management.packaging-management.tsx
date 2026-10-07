@@ -1740,4 +1740,3 @@ function PackagingPage() {
   );
 }
 
-export default PackagingPage;

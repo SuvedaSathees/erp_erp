@@ -1085,7 +1085,7 @@ const INITIAL_DOCS: DocumentItem[] = [
 ];
 
 // Main Component
-export default function WorkforcePlanningPage() {
+function WorkforcePlanningPage() {
   const [activeTab, setActiveTab] = useState<string>("demand");
   const [master, setMaster] = useState<MasterPlan>(INITIAL_MASTER);
   const [demandList, setDemandList] = useState<DemandForecastItem[]>(INITIAL_DEMAND_FORECAST);

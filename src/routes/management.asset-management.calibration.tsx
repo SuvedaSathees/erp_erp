@@ -152,7 +152,7 @@ const INITIAL_CALIBRATIONS: CalibrationItem[] = Array.from({ length: 86 }, (_, i
   };
 });
 
-export function CalibrationFormPage() {
+function CalibrationFormPage() {
   const [calibrations, setCalibrations] = useState<CalibrationItem[]>(INITIAL_CALIBRATIONS);
   const [activeCalib, setActiveCalib] = useState<CalibrationItem>(INITIAL_CALIBRATIONS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -1553,4 +1553,3 @@ export function CalibrationFormPage() {
   );
 }
 
-export default CalibrationFormPage;

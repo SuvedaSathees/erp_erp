@@ -56,7 +56,7 @@ export const Route = createFileRoute("/management/strategy-management/kpi-manage
   component: KpiManagementPage,
 });
 
-export function KpiManagementPage() {
+function KpiManagementPage() {
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [execTab, setExecTab] = useState("Strategic");

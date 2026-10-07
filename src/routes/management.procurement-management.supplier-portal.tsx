@@ -137,7 +137,7 @@ const INITIAL_POS: SupplierPO[] = [
   { poNumber: "PO-2026-00418", poDate: "18 Aug 2026", buyer: "Magnertia Manufacturing Ltd.", totalValue: 1180000.0, deliverBy: "05 Sep 2026", orderStatus: "Accepted" },
 ];
 
-export function SupplierPortalPage() {
+function SupplierPortalPage() {
   // Navigation & Active Sub-Menu
   const [activeTab, setActiveTab] = useState<string>("dashboard");
 
@@ -1408,4 +1408,3 @@ export function SupplierPortalPage() {
   );
 }
 
-export default SupplierPortalPage;

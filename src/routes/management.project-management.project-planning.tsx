@@ -83,7 +83,7 @@ export const Route = createFileRoute("/management/project-management/project-pla
   component: ProjectPlanningPage,
 });
 
-export function ProjectPlanningPage() {
+function ProjectPlanningPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["projects"]],
@@ -1439,4 +1439,3 @@ ${record.wbsList.map((w) => `${w.code} ${w.name} (${w.weightage}% weightage) - $
   );
 }
 
-export default ProjectPlanningPage;

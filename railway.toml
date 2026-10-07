@@ -2,7 +2,8 @@
 buildCommand = "npm run build"
 
 [deploy]
-startCommand = "npm run start"
+# Run node directly (no npm/bun wrapper process) with a capped heap to keep memory billing low.
+startCommand = "node --max-old-space-size=256 .output/server/index.mjs"
 healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"

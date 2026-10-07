@@ -956,7 +956,7 @@ const INITIAL_NEGOTIATIONS: RFQNegotiation[] = [
   },
 ];
 
-export function RfqQuotationPage() {
+function RfqQuotationPage() {
   // Navigation & Sub-tabs
   const [activeTab, setActiveTab] = useState<string>("lineItems");
 

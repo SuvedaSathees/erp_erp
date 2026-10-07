@@ -149,7 +149,7 @@ const CLEARANCE_ITEMS = [
   { name: "Security Clearance", status: "Pending" },
 ];
 
-export function ExitManagementPage() {
+function ExitManagementPage() {
   const [activeTab, setActiveTab] = useState<string>("overview");
 
   // Modals
@@ -1021,5 +1021,4 @@ export function ExitManagementPage() {
   );
 }
 
-export default ExitManagementPage;
 

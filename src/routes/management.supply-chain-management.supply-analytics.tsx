@@ -1414,4 +1414,3 @@ function SupplyAnalyticsPage() {
   );
 }
 
-export default SupplyAnalyticsPage;

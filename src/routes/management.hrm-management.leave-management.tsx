@@ -145,7 +145,7 @@ const LEAVE_BALANCES = [
   { type: "Maternity Leave", entitlement: 90.0, taken: 0.0, balance: 90.0 },
 ];
 
-export default function LeaveManagementPage() {
+function LeaveManagementPage() {
   const [activeTab, setActiveTab] = useState<string>("request");
   const leaveQuery = useQuery({
     queryKey: ["hrm", "leave-requests"],

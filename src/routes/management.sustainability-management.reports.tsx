@@ -395,7 +395,7 @@ const SHARED_LOGS_DATA = [
   },
 ];
 
-export function SustainabilityReportsPage() {
+function SustainabilityReportsPage() {
   const [activeTab, setActiveTab] = useState<
     "reports" | "favorites" | "recent" | "shared" | "scheduled"
   >("reports");

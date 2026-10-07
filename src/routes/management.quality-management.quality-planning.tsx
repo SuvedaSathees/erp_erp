@@ -40,7 +40,7 @@ export const Route = createFileRoute(
   component: QualityPlanningPage,
 });
 
-export function QualityPlanningPage() {
+function QualityPlanningPage() {
   const [record, setRecord] = useState<ApqpRecord>(INITIAL_APQP_RECORD);
   const [activeStep, setActiveStep] = useState<number>(3);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");

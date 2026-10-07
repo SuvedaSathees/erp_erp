@@ -362,7 +362,7 @@ const DOCK_RECORDS: DockRecord[] = [
    Component Definition
    =========================================================================== */
 
-export function WarehousePage() {
+function WarehousePage() {
 
 
   // Selected Warehouse State
@@ -1477,4 +1477,3 @@ export function WarehousePage() {
   );
 }
 
-export default WarehousePage;

@@ -120,7 +120,7 @@ const initialStepperStages = [
   { id: 7, title: "Active", status: "current" },
 ];
 
-export default function ContractsComponent() {
+function ContractsComponent() {
   const [lines, setLines] = useState(initialContractLines);
   const [stepperStages, setStepperStages] = useState(initialStepperStages);
   const [version, setVersion] = useState("v1.0");

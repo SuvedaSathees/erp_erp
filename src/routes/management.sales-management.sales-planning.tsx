@@ -147,7 +147,7 @@ const STEPPER_STAGES = [
   { id: 6, name: "Monitor", status: "Pending" },
 ];
 
-export default function SalesPlanningPage() {
+function SalesPlanningPage() {
   const [planStatus, setPlanStatus] = useState<"Draft" | "Review" | "Approved" | "Released">("Draft");
   const [isEditObjectivesOpen, setIsEditObjectivesOpen] = useState(false);
   const [isEditScopeOpen, setIsEditScopeOpen] = useState(false);

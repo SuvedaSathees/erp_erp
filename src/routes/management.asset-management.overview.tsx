@@ -56,4 +56,3 @@ function OverviewSkeleton() {
   );
 }
 
-export default AssetManagementOverview;

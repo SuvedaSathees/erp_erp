@@ -70,7 +70,7 @@ export interface ComplianceReportDefinition {
   lastGenerated: string;
 }
 
-export const COMPLIANCE_REPORTS_CATALOG: ComplianceReportDefinition[] = [
+const COMPLIANCE_REPORTS_CATALOG: ComplianceReportDefinition[] = [
   {
     id: "REP-CMP-01",
     name: "Master Regulatory Compliance Register Audit",
@@ -231,7 +231,7 @@ export const Route = createFileRoute("/management/risk-management/compliance-rep
   component: ComplianceReportsPage,
 });
 
-export function ComplianceReportsPage() {
+function ComplianceReportsPage() {
   const [selectedReportId, setSelectedReportId] = useState<string>("REP-CMP-01");
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
@@ -813,4 +813,3 @@ export function ComplianceReportsPage() {
   );
 }
 
-export default ComplianceReportsPage;

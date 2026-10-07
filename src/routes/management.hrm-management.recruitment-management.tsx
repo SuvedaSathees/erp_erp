@@ -392,7 +392,7 @@ const RECENT_ACTIVITIES: RecentActivityItem[] = [
   },
 ];
 
-export default function RecruitmentManagementPage() {
+function RecruitmentManagementPage() {
   const [activeTab, setActiveTab] = useState<string>("requisition");
   const [master, setMaster] = useState<RecruitmentMaster>(INITIAL_MASTER);
   const [candidates, setCandidates] = useState<CandidateApplication[]>(INITIAL_CANDIDATES);

@@ -97,7 +97,7 @@ export const Route = createFileRoute("/management/risk-management/iso-compliance
   component: ISOComplianceManagementPage,
 });
 
-export default function ISOComplianceManagementPage() {
+function ISOComplianceManagementPage() {
   // Navigation tabs state
   const [activeTab, setActiveTab] = useState<
     | "overview"

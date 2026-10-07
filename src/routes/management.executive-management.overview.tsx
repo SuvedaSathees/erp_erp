@@ -71,7 +71,7 @@ const REVENUE_BY_STREAM = [
   { name: "Others", value: 3, color: "#64748b" },
 ];
 
-export function ExecutiveOverviewPage() {
+function ExecutiveOverviewPage() {
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
 

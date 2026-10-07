@@ -284,7 +284,7 @@ const INITIAL_PO_DOCUMENTS = [
   { id: 4, name: "Technical_Specifications_SpecSheet.pdf", type: "Technical Spec", size: "820 KB", date: "18 May 2026", user: "Rahul Sharma" },
 ];
 
-export function PurchaseOrderPage() {
+function PurchaseOrderPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["procurement", "purchaseOrders"]],
@@ -1281,4 +1281,3 @@ export function PurchaseOrderPage() {
   );
 }
 
-export default PurchaseOrderPage;

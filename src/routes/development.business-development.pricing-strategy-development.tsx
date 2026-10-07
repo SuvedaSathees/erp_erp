@@ -178,7 +178,7 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
   );
 }
 
-export function PricingStrategyDevelopmentPage() {
+function PricingStrategyDevelopmentPage() {
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["pricing-strategy"],
     queryFn: pricingStrategyService.fetchRecord,
@@ -1491,4 +1491,3 @@ function PricingStrategyDevelopmentPageForm() {
   );
 }
 
-export default PricingStrategyDevelopmentPage;

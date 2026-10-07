@@ -72,7 +72,7 @@ const TABS = [
   { id: "swot", label: "SWOT & Battlecards" },
 ];
 
-export function CompetitorAnalysisPage() {
+function CompetitorAnalysisPage() {
   const [activeTab, setActiveTab] = useState("benchmarks");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
 
@@ -363,4 +363,3 @@ export function CompetitorAnalysisPage() {
   );
 }
 
-export default CompetitorAnalysisPage;

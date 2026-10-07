@@ -221,7 +221,7 @@ const topCustomers = [
   { name: "KSRTC Electric Depot Phase-1", segment: "State Transit Undertaking", revenue: "₹28.0 L", units: 18, status: "Pending PO" },
 ];
 
-export default function SalesAnalyticsComponent() {
+function SalesAnalyticsComponent() {
   const [filterPeriod, setFilterPeriod] = useState("FY 2026-27");
   const [stepperStages, setStepperStages] = useState(initialStepperStages);
   const [version, setVersion] = useState("v2.1");

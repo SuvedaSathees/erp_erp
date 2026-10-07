@@ -143,7 +143,7 @@ const INITIAL_TOOLS: ToolItem[] = Array.from({ length: 120 }, (_, i) => {
   };
 });
 
-export function ToolManagementFormPage() {
+function ToolManagementFormPage() {
   const [tools, setTools] = useState<ToolItem[]>(INITIAL_TOOLS);
   const [activeTool, setActiveTool] = useState<ToolItem>(INITIAL_TOOLS[1]); // Default to Digital Caliper
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -1574,4 +1574,3 @@ export function ToolManagementFormPage() {
   );
 }
 
-export default ToolManagementFormPage;

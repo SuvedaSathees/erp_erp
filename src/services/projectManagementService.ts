@@ -21,11 +21,11 @@ export async function fetchProjectById(id: string) {
 }
 
 export async function fetchProjectTasks(projectId: string) {
-  return getProjectTasksFn(projectId);
+  return getProjectTasksFn({ data: projectId });
 }
 
 export async function fetchMilestones(projectId: string) {
-  return getMilestonesFn(projectId);
+  return getMilestonesFn({ data: projectId });
 }
 
 export async function fetchTimeEntries() {

@@ -289,7 +289,7 @@ const initialTerritoriesData: Record<string, {
   },
 };
 
-export default function TerritoryManagementComponent() {
+function TerritoryManagementComponent() {
   const [selectedSubTerritory, setSelectedSubTerritory] = useState("TN");
   const [territories, setTerritories] = useState(initialTerritoriesData);
   const [stepperStages, setStepperStages] = useState(initialStepperStages);

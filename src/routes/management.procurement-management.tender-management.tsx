@@ -639,7 +639,7 @@ const INITIAL_DOCUMENTS: TenderDocument[] = [
   },
 ];
 
-export function TenderManagementPage() {
+function TenderManagementPage() {
   // Navigation & Active Tab
   const [activeTab, setActiveTab] = useState<string>("scope");
 
@@ -1600,4 +1600,3 @@ export function TenderManagementPage() {
   );
 }
 
-export default TenderManagementPage;

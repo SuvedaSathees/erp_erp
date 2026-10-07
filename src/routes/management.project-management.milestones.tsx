@@ -86,7 +86,7 @@ export interface ProjectMilestone {
   };
 }
 
-export const INITIAL_MILESTONES: ProjectMilestone[] = [
+const INITIAL_MILESTONES: ProjectMilestone[] = [
   {
     code: "M-001",
     name: "Project Kickoff",
@@ -526,7 +526,7 @@ export const Route = createFileRoute("/management/project-management/milestones"
   component: ProjectMilestonesFormPage,
 });
 
-export function ProjectMilestonesFormPage() {
+function ProjectMilestonesFormPage() {
   const navigate = useNavigate();
   const [milestones, setMilestones] = useState<ProjectMilestone[]>(INITIAL_MILESTONES);
   const [selectedMilestoneCode, setSelectedMilestoneCode] = useState<string>("M-003");
@@ -1995,5 +1995,4 @@ ${milestones
   );
 }
 
-export default ProjectMilestonesFormPage;
 

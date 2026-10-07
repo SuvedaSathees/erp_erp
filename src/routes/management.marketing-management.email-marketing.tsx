@@ -91,7 +91,7 @@ const EMAIL_TABS = [
   { id: "drips", label: "Drip Automations" },
 ];
 
-export function EmailMarketingManagementPage() {
+function EmailMarketingManagementPage() {
   const [activeTab, setActiveTab] = useState("broadcasts");
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
   const [showComposerModal, setShowComposerModal] = useState(false);
@@ -714,4 +714,3 @@ export function EmailMarketingManagementPage() {
   );
 }
 
-export default EmailMarketingManagementPage;

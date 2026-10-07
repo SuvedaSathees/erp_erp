@@ -262,7 +262,7 @@ const SOURCE_BAR_DATA = [
    Component Definition
    =========================================================================== */
 
-export function MaterialPlanningPage() {
+function MaterialPlanningPage() {
   // Header State
   const [planNumber, setPlanNumber] = useState("MP-2026-000184");
   const [planName, setPlanName] = useState("Monthly Material Plan - Apr 2026");
@@ -1266,4 +1266,3 @@ export function MaterialPlanningPage() {
   );
 }
 
-export default MaterialPlanningPage;

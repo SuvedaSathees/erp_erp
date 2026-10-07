@@ -61,7 +61,7 @@ export const Route = createFileRoute(
   component: NcrManagementPage,
 });
 
-export function NcrManagementPage() {
+function NcrManagementPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["quality", "ncr"]],

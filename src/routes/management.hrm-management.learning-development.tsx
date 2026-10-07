@@ -138,7 +138,7 @@ const SKILLS_IMPROVEMENT = [
   { skill: "Drafting Standards", before: 55, after: 90 },
 ];
 
-export function LearningDevelopmentPage() {
+function LearningDevelopmentPage() {
   const [activeTab, setActiveTab] = useState<string>("schedule");
 
   // Modals
@@ -1110,4 +1110,3 @@ export function LearningDevelopmentPage() {
   );
 }
 
-export default LearningDevelopmentPage;

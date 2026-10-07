@@ -1,11 +1,8 @@
-import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "./prisma.server";
 import { toApiShape, fromApiShape } from "./developmentTransform";
 import { calculateScores } from "./developmentScores";
 
-export const getDevelopmentRecordFn = createServerFn({ method: "GET" })
-  .validator((data: { moduleType: string; id?: string }) => data)
-  .handler(async ({ data }) => {
+export async function getDevelopmentRecordFn({ data }: { data: { moduleType: string; id?: string } }) {
     const where: any = { moduleType: data.moduleType };
     if (data.id) where.id = data.id;
 
@@ -19,13 +16,9 @@ export const getDevelopmentRecordFn = createServerFn({ method: "GET" })
     });
 
     return toApiShape(record);
-  });
+}
 
-export const listDevelopmentRecordsFn = createServerFn({ method: "GET" })
-  .validator(
-    (data: { moduleType: string; status?: string; limit?: number; offset?: number }) => data
-  )
-  .handler(async ({ data }) => {
+export async function listDevelopmentRecordsFn({ data }: { data: { moduleType: string; status?: string; limit?: number; offset?: number } }) {
     const where: any = { moduleType: data.moduleType };
     if (data.status) where.workflowStatus = data.status;
 
@@ -42,11 +35,9 @@ export const listDevelopmentRecordsFn = createServerFn({ method: "GET" })
     });
 
     return records.map(toApiShape);
-  });
+}
 
-export const saveDevelopmentDraftFn = createServerFn({ method: "POST" })
-  .validator((data: { moduleType: string; record: any }) => data)
-  .handler(async ({ data }) => {
+export async function saveDevelopmentDraftFn({ data }: { data: { moduleType: string; record: any } }) {
     const { moduleType, record } = data;
     const parsed = fromApiShape(record, moduleType);
     const scores = calculateScores(moduleType, parsed.formData);
@@ -121,11 +112,9 @@ export const saveDevelopmentDraftFn = createServerFn({ method: "POST" })
     });
 
     return toApiShape(saved);
-  });
+}
 
-export const submitDevelopmentFn = createServerFn({ method: "POST" })
-  .validator((data: { moduleType: string; id: string }) => data)
-  .handler(async ({ data }) => {
+export async function submitDevelopmentFn({ data }: { data: { moduleType: string; id: string } }) {
     const record = await prisma.developmentRecord.update({
       where: { id: data.id },
       data: { workflowStatus: "In Review" },
@@ -148,13 +137,9 @@ export const submitDevelopmentFn = createServerFn({ method: "POST" })
     });
 
     return toApiShape(record);
-  });
+}
 
-export const reviewDevelopmentFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: { id: string; decision: string; comments?: string; reviewerRole: string; reviewerName: string }) => data
-  )
-  .handler(async ({ data }) => {
+export async function reviewDevelopmentFn({ data }: { data: { id: string; decision: string; comments?: string; reviewerRole: string; reviewerName: string } }) {
     await prisma.developmentApproval.create({
       data: {
         recordId: data.id,
@@ -196,4 +181,4 @@ export const reviewDevelopmentFn = createServerFn({ method: "POST" })
     });
 
     return toApiShape(record);
-  });
+}

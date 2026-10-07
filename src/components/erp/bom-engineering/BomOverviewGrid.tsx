@@ -203,7 +203,7 @@ export const BomOverviewGrid: React.FC<BomOverviewGridProps> = ({
           <div className="p-4 rounded-lg bg-slate-900 text-slate-100 font-mono text-xs max-h-72 overflow-y-auto space-y-2">
             <p className="text-emerald-400 font-bold">=== BOM ENGINEERING SPECIFICATION ===</p>
             <p>BOM Ref: {record.bomId} ({record.bomNumber})</p>
-            <p>Product: {record.product} (Rev {record.version.toFixed(1)})</p>
+            <p>Product: {record.product} (Rev {Number(record.version).toFixed(1)})</p>
             <div className="mt-3 p-3 rounded bg-slate-800/80 text-slate-300 font-sans text-xs space-y-1.5">
               {activeModal === "material" && (
                 <>

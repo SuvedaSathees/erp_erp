@@ -12,6 +12,7 @@ import {
   submitDevelopmentFn,
   reviewDevelopmentFn,
 } from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
 const MODULE_TYPE = "product-strategy";
 
@@ -60,6 +61,73 @@ export function calculateProductStrategyScores(input: Partial<ProductStrategyFor
 
 const initialCalculated = calculateProductStrategyScores({});
 
+const INITIAL_INPUT: ProductStrategyFormInput = {
+  strategyName: "Smart EV Charger Pro Strategy 2024-2027",
+  linkedProductId: "prd-1001",
+  linkedProductName: "Smart EV Charger Pro",
+  linkedCommercializationId: "cmp-0015",
+  linkedCommercializationCode: "CMP-2024-0015",
+  linkedBusinessPlanId: "bp-0002",
+  linkedBusinessPlanCode: "BP-2024-0002",
+  strategyPeriodStart: "2024-04-01",
+  strategyPeriodEnd: "2027-03-31",
+  businessUnit: "Smart EV Infrastructure",
+  productManagerId: "usr-104",
+  productManagerName: "Vikram Sharma",
+
+  // Section 1: Product Vision
+  productVision: "To establish Magnertia as the premier provider of intelligent, ultra-fast commercial EV charging infrastructure in South Asia, enabling seamless fleet transition and grid stability.",
+  missionStatement: "Deliver ultra-reliable 240kW dual-dispenser charging stations integrated with AI cloud load balancing and microgrid solar compatibility.",
+  strategicObjectives: "1. Capture 28% market share in commercial EV fleet charging by FY27.\n2. Achieve 42.5% gross margin on hardware + software suite.\n3. Deploy 1,500 active charge points across key logistics corridors.",
+  valueProposition: "Sub-15 minute rapid charging with 99.8% uptime SLA, AI dynamic price optimization, and zero-downtime modular power stack replacement.",
+  targetCustomers: ["EV Fleet Operators", "Commercial Hubs", "Highway Service Plazas", "Logistics & Delivery Hubs", "Government Operators"],
+
+  // Section 2: Market Strategy
+  marketSegments: ["Fleet Management (B2B)", "Commercial Real Estate", "Municipal Mobility", "Highway Corridors"],
+  customerPersonas: "Fleet Manager: Needs maximum vehicle uptime & low TCO.\nFacility Manager: Requires load control without upgrading building transformer.\nEV Owner: Expects instant plug-and-charge authorization.\nGovernment Operator: Focuses on ESG compliance and public access tariffs.",
+  customerJourney: "Discovery via Commercialization Portal → Site Assessment & Power Budgeting → Modular Deployment → Continuous Cloud Analytics & Automated Dispatch.",
+
+  // Section 3: Product Portfolio Strategy
+  productCategory: "EV Charging Infrastructure",
+  productLine: "Ultra-Fast Commercial Series",
+  growthPotential: 4.5,
+  portfolioRole: "Core Flagship Growth Engine",
+  productLifecycleStage: "Development & Scaling",
+  portfolioPriority: "P1 - Critical Priority",
+
+  // Section 4: Innovation Strategy
+  emergingTechnologies: ["AI & Machine Learning", "IoT Cloud Telemetry", "Edge Computing", "V2G Grid Balancing", "Gallium Nitride Power Semiconductors"],
+  aiBasedInnovations: "Predictive thermal management and AI dynamic load-shedding algorithm to optimize peak-hour electricity grid draw by up to 34%.",
+  energyStrategy: ["Solar Microgrid Direct DC Coupling", "Battery Energy Storage Integration", "Peak Shaving Automation"],
+  esgAlignment: 4.8,
+
+  // Section 5: Business Strategy
+  businessModel: "B2B Enterprise + Hardware-as-a-Service (HaaS)",
+  revenueModel: "Direct Station Sales + Recurring SaaS Management Fee (₹1,500/month/port) + CPO Charging Session Margin.",
+  keyPartnerships: ["State Electricity DISCOMs", "Logistics Fleet Chains", "Battery Cell Suppliers", "National Highway Authority"],
+  competitivePositioning: 4.6,
+  marketOpportunitySize: 1250000000,
+
+  // Section 6: Financial Strategy
+  investmentBudget3Y: 185000000,
+  developmentCost: 45000000,
+  revenueForecast: 680000000,
+  grossMargin: 42.5,
+  breakevenPeriodMonths: 18,
+  roiYears: 2.4,
+  pricingStrategy: "Tiered hardware pricing (₹14.5L standard station) with bundled 3-year AI fleet telemetry license and guaranteed 4-hour SLA dispatch.",
+
+  // Section 7: Risk & Compliance
+  technicalRisk: 2,
+  marketRisk: 2,
+  financialRisk: 3,
+  regulatoryRisk: 2,
+  cybersecurityRisk: 1,
+  mitigationStrategy: "ISO 27001 end-to-end telemetry encryption; dual-sourced silicon carbide power modules; pre-negotiated DISCOM interconnect approvals.",
+  complianceStatus: "Compliant & Pre-Certified",
+  complianceComment: "ARAI & CE safety certifications completed; OCPP 2.0.1 interoperability validated.",
+};
+
 let DEFAULT_PRODUCT_STRATEGY_RECORD: ProductStrategyRecord = {
   id: "ps-record-0017",
   strategyId: "PS-2024-0017",
@@ -83,7 +151,7 @@ let DEFAULT_PRODUCT_STRATEGY_RECORD: ProductStrategyRecord = {
   dateCreated: "2024-04-01",
   lastModified: new Date().toISOString().split("T")[0],
   stages: [],
-  input: {} as any,
+  input: INITIAL_INPUT,
   aiAssessment: initialCalculated.aiAssessment,
   sidebarSummary: initialCalculated.sidebarSummary,
   keyMetrics: initialCalculated.keyMetrics,
@@ -95,7 +163,7 @@ let DEFAULT_PRODUCT_STRATEGY_RECORD: ProductStrategyRecord = {
 } as any;
 
 export const getProductStrategyFn = createServerFn({ method: "GET" }).handler(async () => {
-  const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+  const result = withDefaults(DEFAULT_PRODUCT_STRATEGY_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   if (result) return { success: true, data: result };
   return { success: true, data: DEFAULT_PRODUCT_STRATEGY_RECORD };
 });

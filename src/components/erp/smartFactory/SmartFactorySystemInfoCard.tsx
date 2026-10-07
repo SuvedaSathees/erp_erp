@@ -40,7 +40,7 @@ export const SmartFactorySystemInfoCard: React.FC<SmartFactorySystemInfoCardProp
             </CardTitle>
           </div>
           <Badge variant="outline" className="text-xs font-bold">
-            v{record.version.toFixed(1)}
+            v{Number(record.version).toFixed(1)}
           </Badge>
         </div>
       </CardHeader>
@@ -92,7 +92,7 @@ export const SmartFactorySystemInfoCard: React.FC<SmartFactorySystemInfoCardProp
               Version
               <MaicwBadge type="A" tooltip="Auto-incremented" />
             </span>
-            <span className="font-bold text-foreground">v{record.version.toFixed(1)}</span>
+            <span className="font-bold text-foreground">v{Number(record.version).toFixed(1)}</span>
           </div>
         </div>
 

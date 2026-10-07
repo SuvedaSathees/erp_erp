@@ -12,6 +12,7 @@ import {
   submitDevelopmentFn,
   reviewDevelopmentFn,
 } from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
 const MODULE_TYPE = "product-roadmap";
 
@@ -51,6 +52,97 @@ export function calculateProductRoadmapScores(input: Partial<ProductRoadmapFormI
 
 const initialCalculated = calculateProductRoadmapScores({});
 
+const INITIAL_INPUT: ProductRoadmapFormInput = {
+  roadmapName: "Smart EV Charger Pro Product Roadmap (2024-2027)",
+  linkedStrategyId: "PS-2024-0017",
+  linkedStrategyName: "Smart EV Charger Pro Strategy 2024-2027",
+  linkedProductId: "prd-1001",
+  linkedProductName: "Smart EV Charger Pro",
+  productLine: "Ultra-Fast Commercial Series",
+  businessUnit: "Smart EV Infrastructure",
+  productManagerId: "usr-104",
+  productManagerName: "Vikram Sharma",
+  roadmapPeriodStart: "2024-04-01",
+  roadmapPeriodEnd: "2027-03-31",
+
+  // Panel 1: Vision Alignment (inherited from Product Strategy PS-2024-0017)
+  productVision: "To establish Magnertia as the premier provider of intelligent, ultra-fast commercial EV charging infrastructure in South Asia, enabling seamless fleet transition and grid stability.",
+  targetMarket: ["EV Fleet Operators", "Commercial Hubs", "Highway Service Plazas", "Logistics & Delivery Hubs", "Government Operators"],
+  valueProposition: "Sub-15 minute rapid charging with 99.8% uptime SLA, AI dynamic price optimization, and zero-downtime modular power stack replacement.",
+  strategicAlignmentScore: 92,
+
+  // Panel 2 & 3: Releases (Single source of truth)
+  releases: [
+    { id: "rel-01", version: "v2.1", releaseName: "AC Charger Core Upgrade", targetDate: "2024-06-30", startMonthIdx: 0, durationMonths: 3, status: "completed", priority: "P1 - Critical", color: "#10B981" },
+    { id: "rel-02", version: "v2.2", releaseName: "240kW DC Fast Charger Stack", targetDate: "2024-11-15", startMonthIdx: 3, durationMonths: 5, status: "in_progress", priority: "P1 - Critical", color: "#0A3C75" },
+    { id: "rel-03", version: "v2.3", releaseName: "Wireless RFID & Plug-and-Charge", targetDate: "2025-03-31", startMonthIdx: 8, durationMonths: 4, status: "upcoming", priority: "P2 - High", color: "#F59E0B" },
+    { id: "rel-04", version: "v3.0", releaseName: "V2G Bi-Directional Grid Integration", targetDate: "2025-09-30", startMonthIdx: 12, durationMonths: 6, status: "planned", priority: "P2 - High", color: "#8B5CF6" },
+  ],
+
+  // Panel 4: Top Features
+  features: [
+    { id: "feat-01", featureName: "Dynamic Load Balancing Engine", category: "AI Telemetry", valueStars: 5, priority: "P1", status: "in_progress" },
+    { id: "feat-02", featureName: "OCPP 2.0.1 Interoperability Stack", category: "Core Firmware", valueStars: 5, priority: "P1", status: "completed" },
+    { id: "feat-03", featureName: "Modular Liquid-Cooled Dispenser", category: "Hardware", valueStars: 4, priority: "P2", status: "in_progress" },
+    { id: "feat-04", featureName: "Fleet Billing & Subscription SaaS", category: "Cloud Platform", valueStars: 4, priority: "P2", status: "planned" },
+  ],
+
+  // Panel 5: Technology Roadmap
+  techInitiatives: [
+    { id: "tech-01", initiative: "Silicon Carbide (SiC) Power Module", area: "Power Electronics", readiness: "High", timeline: "2024 - 2025" },
+    { id: "tech-02", initiative: "Edge AI Thermal Predictive Dispatch", area: "Embedded AI", readiness: "Medium", timeline: "2024 - 2026" },
+    { id: "tech-03", initiative: "Solar Microgrid Direct DC Coupling", area: "Energy Storage", readiness: "High", timeline: "2025 - 2027" },
+  ],
+
+  // Panel 6: Resource & Budget Metrics
+  devBudget: 45000000,
+  rdBudget: 28000000,
+  plannedInvestment: 185000000,
+  budgetUtilizationPct: 82.4,
+  resourceBudgetHistory: [
+    { year: "FY24", budgetPlanned: 35000000, budgetUtilized: 34200000, utilizationPct: 97.7 },
+    { year: "FY25", budgetPlanned: 45000000, budgetUtilized: 37100000, utilizationPct: 82.4 },
+    { year: "FY26", budgetPlanned: 55000000, budgetUtilized: 0, utilizationPct: 0 },
+  ],
+
+  // Panel 7: Milestones & Dependencies
+  milestones: [
+    { id: "ms-01", milestoneName: "Alpha Prototype Verification & DISCOM Pilot", targetDate: "2024-09-15", dependency: "SiC Power Module Validation", status: "completed" },
+    { id: "ms-02", milestoneName: "OCPP 2.0.1 Cloud Integration & Beta Trial", targetDate: "2024-11-15", dependency: "v2.2 DC Stack Release", status: "in_progress" },
+    { id: "ms-03", milestoneName: "Commercial Manufacturing Release (150 Units)", targetDate: "2025-03-31", dependency: "ARAI Safety Certification", status: "pending" },
+  ],
+
+  // Panel 8: Risk Management
+  risks: {
+    strategicRisk: 2,
+    technicalRisk: 2,
+    marketRisk: 3,
+    financialRisk: 2,
+    overallScore: 32,
+    mitigationStrategy: "Dual-sourced power modules; DISCOM pre-certification liaison; SLA guarantee insurance for 99.8% uptime.",
+  },
+
+  // Panel 9: Attachments
+  attachments: [
+    { id: "att-01", name: "Product_Strategy.pdf", size: "4.2 MB", type: "pdf", uploadedAt: "2024-04-20" },
+    { id: "att-02", name: "Roadmap_Presentation.pptx", size: "12.8 MB", type: "pptx", uploadedAt: "2024-04-22" },
+    { id: "att-03", name: "Release_Plan.xlsx", size: "1.8 MB", type: "xlsx", uploadedAt: "2024-04-25" },
+    { id: "att-04", name: "Budget_Plan.xlsx", size: "2.4 MB", type: "xlsx", uploadedAt: "2024-04-26" },
+  ],
+
+  // Panel 10: Review & Approval Matrix
+  reviewers: [
+    { id: "rev-01", role: "Product Manager", name: "Vikram Sharma", decision: "Approved", status: "Verified", date: "2024-04-20" },
+    { id: "rev-02", role: "Engineering Manager", name: "Dr. Rajesh Kumar", decision: "Approved", status: "Verified", date: "2024-04-21" },
+    { id: "rev-03", role: "Marketing Director", name: "Priya Nair", decision: "Approved", status: "Verified", date: "2024-04-22" },
+    { id: "rev-04", role: "CTO", name: "Dr. Aris Thorne", decision: "Approved", status: "Verified", date: "2024-04-24" },
+    { id: "rev-05", role: "CEO", name: "Srinivas Rao", decision: "Pending", status: "Under Review", date: undefined },
+  ],
+  approvalDecision: null,
+  reviewComments: "Comprehensive roadmap alignment with Product Strategy PS-2024-0017. Hardware timeline is achievable.",
+  approvalDate: "2024-04-28",
+};
+
 let DEFAULT_PRODUCT_ROADMAP_RECORD: ProductRoadmapRecord = {
   id: "prm-record-0017",
   roadmapId: "PRM-2024-0017",
@@ -74,7 +166,7 @@ let DEFAULT_PRODUCT_ROADMAP_RECORD: ProductRoadmapRecord = {
   lastModified: new Date().toISOString().split("T")[0],
   version: "v1.4",
   stages: [],
-  input: {} as any,
+  input: INITIAL_INPUT,
   aiInsights: initialCalculated.aiInsights,
   sidebarSummary: initialCalculated.sidebarSummary,
   businessImpact: initialCalculated.businessImpact,
@@ -86,7 +178,7 @@ let DEFAULT_PRODUCT_ROADMAP_RECORD: ProductRoadmapRecord = {
 } as any;
 
 export const getProductRoadmapFn = createServerFn({ method: "GET" }).handler(async () => {
-  const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+  const result = withDefaults(DEFAULT_PRODUCT_ROADMAP_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   if (result) return { success: true, data: result };
   return { success: true, data: DEFAULT_PRODUCT_ROADMAP_RECORD };
 });

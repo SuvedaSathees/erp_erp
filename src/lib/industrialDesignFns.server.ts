@@ -73,42 +73,161 @@ export function calculateIndustrialDesignScores(input: Partial<IndustrialDesignF
   };
 }
 
+const INITIAL_INPUT: IndustrialDesignFormInput = {
+  designProjectName: "Smart EV Charger - Industrial Design",
+  designVersion: "v1.0",
+  businessUnit: "Smart Mobility Division",
+  industrialDesignerId: "usr-101",
+  industrialDesignerName: "Rohit Verma",
+  industrialDesignerAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80",
+
+  // Panel 1: Design Overview
+  productName: "Smart EV Charger",
+  designObjective: "Create a modern, user-friendly and durable charging station with premium aesthetics.",
+  designVision: "Deliver a smart, safe and future-ready charging experience with strong brand identity.",
+  productCategory: "EV Charging Station",
+  targetUsers: ["EV Owners", "Fleet Operators", "Public Users"],
+  designLanguage: "Modern Industrial",
+  designStatus: "In Progress",
+  productRenderUrl: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&auto=format&fit=crop&q=80",
+
+  // Panel 2: Form Factor & Ergonomics
+  formFactor: "Floor Standing",
+  dimensions: "1600 (H) x 600 (W) x 350 (D) mm",
+  weightTarget: "95 kg",
+  ergonomicConsiderations: "Easy cable handling, user friendly interface at eye-level, rounded edges for safety.",
+  accessibilityFeatures: "Wheelchair accessible height, braille labels, anti-slip base.",
+  humanFactorsAssessment: "Optimized for average user height and interaction comfort.",
+  ergonomicScore: 86,
+
+  // Panel 3: Aesthetics & Branding
+  productStyle: "Contemporary",
+  colorPalette: ["#0F172A", "#2563EB", "#E2E8F0", "#10B981"],
+  surfaceFinish: "Matte + Powder Coated",
+  brandIdentityAlignment: "High alignment with Magnertia brand. Clean, futuristic and premium look.",
+  logoPlacement: "Front top & both side panels",
+  uiDisplayIntegration: '7" Touchscreen display with LED status indicator.',
+  visualAppealScore: 88,
+
+  // Panel 4: Material Selection
+  primaryMaterial: "Aluminum Alloy",
+  secondaryMaterials: "Polycarbonate, ABS, Tempered Glass",
+  materialGrade: "AL-6061 / PC-ABS",
+  sustainabilityRatingStars: 4,
+  recyclabilityPercent: 85,
+  environmentalCompliance: ["RoHS", "REACH", "ISO 14001"],
+  materialCost: "₹ 4,850.00",
+
+  // Panel 5: Manufacturing Considerations
+  manufacturingProcess: ["Sheet Metal", "CNC Machining", "Powder Coating"],
+  assemblyMethod: "Modular Assembly",
+  dfmAssessment: "Designed for manufacturability, standard components, minimal part count.",
+  dfaAssessment: "Easy assembly with snap-fit and minimal fasteners.",
+  toolingRequirements: "Mold for plastic parts, Bending dies, Jigs & Fixtures.",
+  manufacturingConstraints: "Powder coating oven size limitation.",
+  manufacturabilityScore: 85,
+
+  // Panel 6: Prototype & Validation
+  prototypeType: "Functional Prototype",
+  prototypeStatusBadge: "Prototype Built",
+  userTestingResults: "Positive feedback on usability, interface and build quality.",
+  designValidation: "Validated for form, fit, function and aesthetics.",
+  identifiedImprovements: "Cable holder redesign, UI contrast improvement.",
+  designIterationNumber: 2,
+  validationScore: 84,
+
+  // Panel 7: Sustainability & Compliance
+  ecoDesignStrategy: "Use of recyclable materials, modular design, low power consumption.",
+  carbonFootprintEstimate: "120 kg CO₂e",
+  energyEfficiencyStars: 5,
+  packagingDesign: "Recyclable corrugated packaging with minimal plastic.",
+  regulatoryStandards: ["IEC 61851", "ISO 15118", "CE"],
+  sustainabilityNotes: "Designed for 10+ years life cycle with easy serviceability.",
+  complianceScore: 86,
+
+  // Panel 8: AI Industrial Design Assessment
+  aiAssessment: {
+    aiOverallDesignScore: 88,
+    aiDesignQualityScore: 90,
+    aiErgonomicAssessment: "Ergonomically optimized for global users.",
+    aiMaterialRecommendation: "Aluminum Alloy for durability & heat dissipation.",
+    aiManufacturingSuggestions: "Reduce part count, optimize sheet thickness.",
+    aiSustainabilityAnalysis: "High recyclability and low environmental impact.",
+    aiCostOptimization: "Potential cost saving of 8-10%.",
+  },
+
+  // Panel 9: Attachments
+  attachments: [
+    { id: "att-1", name: "Concept_Sketches.pdf", size: "2.4 MB", type: "pdf", uploadedAt: "18 Jun 2024" },
+    { id: "att-2", name: "3D_Model.step", size: "18.5 MB", type: "step", uploadedAt: "18 Jun 2024" },
+    { id: "att-3", name: "CAD_Render_View.png", size: "3.2 MB", type: "png", uploadedAt: "18 Jun 2024" },
+    { id: "att-4", name: "Material_Datasheet.pdf", size: "1.8 MB", type: "pdf", uploadedAt: "18 Jun 2024" },
+    { id: "att-5", name: "Ergonomic_Analysis.pdf", size: "2.1 MB", type: "pdf", uploadedAt: "18 Jun 2024" },
+    { id: "att-6", name: "Prototype_Photos.zip", size: "12.4 MB", type: "zip", uploadedAt: "18 Jun 2024" },
+    { id: "att-7", name: "User_Test_Report.pdf", size: "3.7 MB", type: "pdf", uploadedAt: "18 Jun 2024" },
+    { id: "att-8", name: "Design_Review_Report.pdf", size: "1.9 MB", type: "pdf", uploadedAt: "18 Jun 2024" },
+  ],
+
+  // Panel 10: Review & Approval
+  reviewers: [
+    { id: "rev-1", role: "Industrial Designer", person: "Rohit Verma", decision: "Approved", status: "Approved", date: "18 Jun 2024" },
+    { id: "rev-2", role: "Product Manager", person: "Neha Sharma", decision: "Approved", status: "Approved", date: "18 Jun 2024" },
+    { id: "rev-3", role: "Mechanical Lead", person: "Vikram Singh", decision: "Approved", status: "Approved", date: "19 Jun 2024" },
+    { id: "rev-4", role: "Manufacturing Manager", person: "Arun Nair", decision: "Pending", status: "Pending", date: "-" },
+    { id: "rev-5", role: "Quality Manager", person: "Pooja Iyer", decision: "Pending", status: "Pending", date: "-" },
+    { id: "rev-6", role: "CTO", person: "Dr. Anil Patel", decision: "Pending", status: "Pending", date: "-" },
+  ],
+  approvalDecision: null,
+  reviewComments: "",
+  approvalDate: new Date().toISOString().split("T")[0],
+};
+
 const DEFAULT_MOCK_RECORD: IndustrialDesignRecord = {
   id: "id-rec-0017",
   designId: "ID-2024-0017",
   formCode: "IDF-2024-25",
-  designProjectName: "Smart EV Charger - Industrial Design",
-  designVersion: "v1.0",
-  status: "Under Review" as any,
+  designProjectName: INITIAL_INPUT.designProjectName,
+  designVersion: INITIAL_INPUT.designVersion,
+  status: "Under Review",
   currentStage: "executive_review",
   currentStageLabel: "Design Review",
   createdOn: "18 Jun 2024 10:15 AM",
+
   linkedArchitectureId: "PA-2024-0017",
   linkedArchitectureTitle: "Smart EV Charger Architecture",
   linkedProductId: "prd-1001",
   linkedProductName: "Smart EV Charger Pro",
   linkedPrdId: "PRD-2024-0017",
   linkedPrdTitle: "Smart EV Charger Pro PRD",
-  businessUnit: "Smart Mobility Division",
-  industrialDesignerId: "usr-101",
-  industrialDesignerName: "Rohit Verma",
-  industrialDesignerAvatar: "",
+
+  businessUnit: INITIAL_INPUT.businessUnit,
+  industrialDesignerId: INITIAL_INPUT.industrialDesignerId,
+  industrialDesignerName: INITIAL_INPUT.industrialDesignerName,
+  industrialDesignerAvatar: INITIAL_INPUT.industrialDesignerAvatar || "",
   lastUpdated: "20 Jun 2024 04:25 PM",
+
   dateCreated: "18 Jun 2024 10:15 AM",
   lastModified: "20 Jun 2024 04:25 PM",
   version: "v1.0",
+
   stages: [
     { stage: "concept_design", label: "Stage 1: Concept Design", completed: true, active: false, completedAt: "22 Jun 2024" },
     { stage: "material_manufacturing_design", label: "Stage 2: Material & Mfg Design", completed: true, active: false, completedAt: "05 Jul 2024" },
     { stage: "prototype_validation", label: "Stage 3: Prototype Validation", completed: true, active: false, completedAt: "15 Jul 2024" },
     { stage: "executive_review", label: "Stage 4: Executive Review", completed: false, active: true },
   ],
-  input: {} as any,
-  ...calculateIndustrialDesignScores({}),
+
+  input: INITIAL_INPUT,
+  ...calculateIndustrialDesignScores(INITIAL_INPUT),
+
   linkedMechanicalDesignId: null,
+
   auditTrail: [
-    { id: "aud-1", timestamp: "18 Jun 2024 10:15 AM", user: "Rohit Verma", action: "Record Created", details: "Industrial Design record created." },
-    { id: "aud-2", timestamp: "20 Jun 2024 04:25 PM", user: "Rohit Verma", action: "Submitted for Review", details: "Submitted to Executive Design Board." },
+    { id: "aud-1", timestamp: "18 Jun 2024 10:15 AM", user: "Rohit Verma", action: "Record Created", details: "Industrial Design record created from approved PA-2024-0017." },
+    { id: "aud-2", timestamp: "22 Jun 2024 02:30 PM", user: "Rohit Verma", action: "Stage 1 Completed", details: "Concept design & ergonomic factors finalized." },
+    { id: "aud-3", timestamp: "05 Jul 2024 11:15 AM", user: "Rohit Verma", action: "Stage 2 Completed", details: "Materials AL-6061 and DFM/DFA validated." },
+    { id: "aud-4", timestamp: "15 Jul 2024 05:00 PM", user: "Pooja Iyer", action: "Stage 3 Completed", details: "Functional prototype tested with positive feedback." },
+    { id: "aud-5", timestamp: "20 Jun 2024 04:25 PM", user: "Rohit Verma", action: "Submitted for Review", details: "Industrial Design submitted to Executive Design Board." },
   ],
 } as any;
 

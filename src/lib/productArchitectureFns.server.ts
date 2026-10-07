@@ -12,6 +12,7 @@ import {
   submitDevelopmentFn,
   reviewDevelopmentFn,
 } from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
 const MODULE_TYPE = "product-architecture";
 
@@ -46,6 +47,125 @@ export function calculateProductArchitectureScores(input: Partial<ProductArchite
   };
 }
 
+const INITIAL_INPUT: ProductArchitectureFormInput = {
+  architectureName: "Smart EV Charger Architecture",
+  architectureVersion: "v1.0",
+  businessUnit: "Smart Mobility Division",
+  systemArchitectId: "usr-101",
+  systemArchitectName: "Rohit Verma",
+  systemArchitectAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80",
+
+  // Panel 1: Product Architecture Overview
+  productName: "Smart EV Charger Pro",
+  architectureVision: "Build a safe, intelligent, connected and scalable EV charging platform with high reliability and efficiency.",
+  architectureObjective: "Create a modular architecture that enables smart charging, remote management, and future scalability.",
+  architectureScope: "AC & DC charging, Payment, User Management, Monitoring, Analytics, OTA Updates.",
+  designPrinciples: ["Modularity", "Scalability", "Security by Design", "Reliability", "High Performance", "Future Ready"],
+  architectureStyle: "Microservices Architecture",
+  overallDiagramName: "Overall_Architecture_v1.0.png",
+  overallDiagramSize: "2.4 MB",
+
+  // Panel 2: System Architecture
+  systemName: "Smart EV Charging System",
+  systemComponents: "Charging Unit, Control Unit, Communication Unit, User Interface, Cloud Platform",
+  subsystems: "Power Subsystem, Control Subsystem, Communication Subsystem, User Subsystem, Safety Subsystem",
+  functionalBlocks: "EV Interface, Power Conversion, Control & Monitoring, Communications, Payment, Analytics",
+  externalInterfaces: "OCPP 1.6J, Payment Gateway, Grid Gateway",
+  internalInterfaces: "CAN, UART, SPI, I2C, Ethernet, Wi-Fi",
+  architectureStatusBadge: "Defined",
+  systemDiagramUrl: "/diagrams/system_architecture.png",
+
+  // Panel 3: Hardware Architecture
+  hardwarePlatform: "ARM Cortex Based Controller",
+  processingUnit: "STM32H7 Series MCU",
+  sensors: ["Current Sensor", "Voltage Sensor", "Temp Sensor"],
+  actuators: ["Relay", "Contactor", "Cooling Fan"],
+  powerElectronics: "AC-DC PFC, DC-DC, Isolated Power Module",
+  communicationInterfaces: ["Ethernet", "Wi-Fi", "4G LTE", "CAN", "RS485"],
+  hardwareConstraints: "Operating Temp: -20°C to 70°C, IP65, EMI/EMC Compliant",
+
+  // Panel 4: Software Architecture
+  softwarePlatform: "Embedded Linux",
+  operatingSystem: "Yocto Linux",
+  firmwareComponents: "Bootloader, Device Drivers, BSP, RTOS",
+  middleware: "Mosquitto MQTT, Nginx, Node-RED",
+  applicationModules: "Charging Control, User Management, Payment, Monitoring, Analytics, OTA Topics",
+  apisAndServices: "RESTful APIs, WebSocket, MQTT Topics",
+  softwareConstraints: "Memory: 512MB, Storage: 8GB, Real-time Control",
+
+  // Panel 5: Data & Communication Architecture
+  dataFlow: "Device -> Edge -> Cloud -> Analytics -> App",
+  dataSources: "Charger, EV, User App, Payment Gateway, Sensors",
+  databaseTechnology: "PostgreSQL (Cloud)",
+  communicationProtocols: ["OCPP 1.6J", "MQTT", "HTTPS", "WebSocket"],
+  cloudIntegration: "AWS IoT Core, AWS Lambda, S3, RDS, CloudWatch",
+  edgeComputing: true,
+  dataSecurity: "TLS 1.3, AES-256, Secure Boot, Data Encryption",
+
+  // Panel 6: Integration & Interoperability
+  externalSystems: "EV, Payment Gateway, Utility, Fleet System",
+  erpIntegration: "Magnertia ERP, CRM, Billing, Inventory",
+  apiGateway: "Kong API Gateway",
+  thirdPartyServices: "Stripe, Twilio, Google Maps, Email Service",
+  standardsCompliance: ["IEC 61851", "ISO 15118", "OCPP 1.6J", "RoHS"],
+  integrationRisks: "Network dependency, 3rd party API downtime",
+  integrationStrategy: "Loose coupling, API-first, Event-driven",
+
+  // Panel 7: Security & Compliance Architecture
+  securityArchitecture: "Defense in Depth",
+  authenticationMethod: "OAuth 2.0 + JWT",
+  authorizationModel: "Role-Based Access Control (RBAC)",
+  encryptionStandard: "AES-256 + TLS 1.3",
+  regulatoryCompliance: ["IEC 61851", "ISO 27001", "GDPR"],
+  cybersecurityControls: "Secure Boot, Firewall, IDS/IPS, OTA Signed Updates, Penetration Testing",
+  securityRiskScore: 92,
+
+  // Panel 8: Scalability & Performance
+  expectedUsersDevices: "100,000+ Users / 50,000+ Chargers",
+  throughput: "10,000 Messages / Sec",
+  latencyTarget: "< 200 ms",
+  availabilityTarget: "99.95 %",
+  scalabilityStrategy: "Microservices, Auto Scaling, Load Balancer",
+  disasterRecoveryPlan: "Multi-AZ Deployment, Daily Backup, Failover",
+  performanceScore: 88,
+
+  // Panel 9: AI Architecture Assessment
+  aiAssessment: {
+    aiOverallArchitectureScore: 89,
+    aiArchitectureQuality: 89,
+    aiScalabilityScore: 87,
+    aiSecurityAssessment: 90,
+    aiTechnologyRecommendation: "Use Edge AI for Anomaly Detection",
+    aiIntegrationAssessment: "Seamless with Cloud & ERP",
+    aiRiskAnalysis: "Low Risk",
+  },
+
+  // Panel 10: Attachments
+  attachments: [
+    { id: "att-1", name: "Architecture_Diagram.png", size: "2.4 MB", type: "png", uploadedAt: "18 Jun 2024" },
+    { id: "att-2", name: "Hardware_Architecture.pdf", size: "2.1 MB", type: "pdf", uploadedAt: "18 Jun 2024" },
+    { id: "att-3", name: "Block_Diagram.pdf", size: "1.8 MB", type: "pdf", uploadedAt: "18 Jun 2024" },
+    { id: "att-4", name: "Software_Architecture.pdf", size: "3.3 MB", type: "pdf", uploadedAt: "18 Jun 2024" },
+    { id: "att-5", name: "ICD_Document.pdf", size: "1.2 MB", type: "pdf", uploadedAt: "18 Jun 2024" },
+    { id: "att-6", name: "Network_Diagram.png", size: "1.5 MB", type: "png", uploadedAt: "18 Jun 2024" },
+    { id: "att-7", name: "Data_Flow_Diagram.pdf", size: "1.6 MB", type: "pdf", uploadedAt: "18 Jun 2024" },
+    { id: "att-8", name: "Compliance_Documents.zip", size: "3.4 MB", type: "zip", uploadedAt: "18 Jun 2024" },
+  ],
+
+  // Panel 11: Review & Approval
+  reviewers: [
+    { id: "rev-1", role: "System Architect", person: "Rohit Verma", decision: "Approved", status: "Approved", date: "18 Jun 2024" },
+    { id: "rev-2", role: "Product Owner", person: "Neha Sharma", decision: "Approved", status: "Approved", date: "18 Jun 2024" },
+    { id: "rev-3", role: "Engineering Manager", person: "Vikram Singh", decision: "Approved", status: "Approved", date: "19 Jun 2024" },
+    { id: "rev-4", role: "Security Lead", person: "Priya Nair", decision: "Pending", status: "Pending", date: "-" },
+    { id: "rev-5", role: "QA Manager", person: "Arun Nair", decision: "Pending", status: "Pending", date: "-" },
+    { id: "rev-6", role: "CTO", person: "Dr. Anil Patel", decision: "Pending", status: "Pending", date: "-" },
+  ],
+  approvalDecision: null,
+  reviewComments: "",
+  approvalDate: new Date().toISOString().split("T")[0],
+};
+
 const currentRecordDefault: ProductArchitectureRecord = {
   id: "pa-rec-0017",
   architectureId: "PA-2024-0017",
@@ -71,14 +191,14 @@ const currentRecordDefault: ProductArchitectureRecord = {
   lastModified: "18 Jun 2024 04:25 PM",
   version: "v1.0",
   stages: [],
-  input: {} as any,
+  input: INITIAL_INPUT,
   ...calculateProductArchitectureScores({}),
   linkedSystemDesignId: null,
   auditTrail: [],
 } as any;
 
 export const getProductArchitectureFn = createServerFn({ method: "GET" }).handler(async () => {
-  const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
+  const result = withDefaults(currentRecordDefault, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   if (result) return { success: true, data: result };
   return { success: true, data: currentRecordDefault };
 });

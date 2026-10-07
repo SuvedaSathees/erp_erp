@@ -198,6 +198,17 @@ export function getPageIdFromPathname(pathname: string): WidgetPageId | null {
   if (pathname.startsWith("/management/sustainability-management/recycling-management")) return "sustainability-recycling-management";
   if (pathname.startsWith("/management/sustainability-management/environmental-compliance")) return "sustainability-environmental-compliance";
   if (pathname.startsWith("/management/sustainability-management/sustainability-reporting")) return "sustainability-reporting";
+  if (pathname.startsWith("/management/security-management/overview")) return "security-overview";
+  if (pathname.startsWith("/management/security-management/access-control")) return "security-access-control";
+  if (pathname.startsWith("/management/security-management/identity-management")) return "security-identity-management";
+  if (pathname.startsWith("/management/security-management/cybersecurity")) return "security-cybersecurity";
+  if (pathname.startsWith("/management/security-management/information-security")) return "security-information-security";
+  if (pathname.startsWith("/management/security-management/physical-security")) return "security-physical-security";
+  if (pathname.startsWith("/management/security-management/reports")) return "security-reports";
+  if (pathname.startsWith("/management/business-intelligence/overview")) return "bi-overview";
+  if (pathname.startsWith("/management/business-intelligence/reports")) return "bi-reports";
+  if (pathname.startsWith("/management/strategy-management/overview")) return "strategy-overview";
+  if (pathname.startsWith("/management/strategy-management/reports")) return "strategy-reports";
   return null;
 }
 
@@ -510,6 +521,9 @@ export function KPIWidgetCard({
   }, [prefs, widgetId]);
 
   const targetOverviewPageId: WidgetPageId = useMemo(() => {
+    if (pageId && pageId.startsWith("strategy-")) return "strategy-overview";
+    if (pageId && pageId.startsWith("bi-")) return "bi-overview";
+    if (pageId && pageId.startsWith("security-")) return "security-overview";
     if (pageId && pageId.startsWith("sustainability-")) return "sustainability-overview";
     if (pageId && pageId.startsWith("communication-")) return "communication-overview";
     if (pageId && pageId.startsWith("knowledge-")) return "knowledge-overview";
@@ -517,6 +531,9 @@ export function KPIWidgetCard({
   }, [pageId]);
 
   const targetOverviewLabel = useMemo(() => {
+    if (targetOverviewPageId === "strategy-overview") return "Strategy Management Overview";
+    if (targetOverviewPageId === "bi-overview") return "Business Intelligence Overview";
+    if (targetOverviewPageId === "security-overview") return "Security Overview";
     if (targetOverviewPageId === "sustainability-overview") return "Sustainability Overview";
     if (targetOverviewPageId === "communication-overview") return "Communication Overview";
     if (targetOverviewPageId === "knowledge-overview") return "Knowledge Overview";

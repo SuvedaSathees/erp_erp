@@ -20,6 +20,9 @@ import { COMPLIANCE_WIDGETS } from "./content/compliance";
 import { KNOWLEDGE_WIDGETS } from "./content/knowledge";
 import { COMMUNICATION_WIDGETS } from "./content/communication";
 import { SUSTAINABILITY_WIDGETS } from "./content/sustainability";
+import { SECURITY_WIDGETS } from "./content/security";
+import { BI_WIDGETS } from "./content/bi";
+import { STRATEGY_WIDGETS } from "./content/strategy";
 
 /* ===========================================================================
    Widget registry
@@ -53,6 +56,9 @@ const ALL_DEFINITIONS: WidgetDefinition[] = [
   ...KNOWLEDGE_WIDGETS,
   ...COMMUNICATION_WIDGETS,
   ...SUSTAINABILITY_WIDGETS,
+  ...SECURITY_WIDGETS,
+  ...BI_WIDGETS,
+  ...STRATEGY_WIDGETS,
   // Future modules append here: ...INVENTORY_WIDGETS, ...FLEET_WIDGETS, ...
 ];
 
@@ -68,7 +74,12 @@ export function getWidgetDef(widgetId: string): WidgetDefinition | undefined {
 
 /** Access control: does this role have permission to see this widget? */
 export function roleAllows(def: WidgetDefinition, role: WidgetRole): boolean {
-  return def.roles === "all" || def.roles.includes(role);
+  if (!def) return false;
+  if (!def.roles || def.roles === "all") return true;
+  if (Array.isArray(def.roles)) {
+    return role ? def.roles.includes(role) : true;
+  }
+  return true;
 }
 
 /** Every widget the given role may use — the Widget Library's source list.

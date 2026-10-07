@@ -537,31 +537,33 @@ export const DEFAULT_LAYOUTS: Record<WidgetPageId, WidgetInstance[]> = {
   ],
 
   "sustainability-overview": [
-    // Row 1: 5 KPI Widgets (Matching 5-col grid from Image 2: 12/60 each)
-    { ...base, id: "sust-kpi-ghg", widgetId: "kpi.sustainability.ghg-emissions", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
-    { ...base, id: "sust-kpi-esg-scorecard", widgetId: "kpi.sustainability.esg-scorecard", size: "sm", pinned: true, spanOverride: { xl: 12, lg: 2, md: 3 } },
-    { ...base, id: "sust-kpi-energy", widgetId: "kpi.sustainability.energy-consumption", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
-    { ...base, id: "sust-kpi-water", widgetId: "kpi.sustainability.water-consumption", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
-    { ...base, id: "sust-kpi-waste", widgetId: "kpi.sustainability.waste-generated", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    // Tier 1: 10 KPI Widgets (2 neat rows of 5 cards, 12/60 each = 60 cols)
+    { ...base, id: "sust-kpi-ghg", widgetId: "kpi.sustainability.ghg-emissions", size: "sm" },
+    { ...base, id: "sust-kpi-esg-scorecard", widgetId: "kpi.sustainability.esg-scorecard", size: "sm", pinned: true },
+    { ...base, id: "sust-kpi-energy", widgetId: "kpi.sustainability.energy-consumption", size: "sm" },
+    { ...base, id: "sust-kpi-water", widgetId: "kpi.sustainability.water-consumption", size: "sm" },
+    { ...base, id: "sust-kpi-waste", widgetId: "kpi.sustainability.waste-generated", size: "sm" },
 
-    // Row 2: 5 KPI Widgets
-    { ...base, id: "sust-kpi-recycling", widgetId: "kpi.sustainability.recycling-rate", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
-    { ...base, id: "sust-kpi-carbon-intensity", widgetId: "kpi.sustainability.carbon-intensity", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
-    { ...base, id: "sust-kpi-compliance", widgetId: "kpi.sustainability.environmental-compliance", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
-    { ...base, id: "sust-kpi-initiatives", widgetId: "kpi.sustainability.esg-initiatives", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
-    { ...base, id: "sust-kpi-reporting", widgetId: "kpi.sustainability.statutory-reporting", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sust-kpi-recycling", widgetId: "kpi.sustainability.recycling-rate", size: "sm" },
+    { ...base, id: "sust-kpi-carbon-intensity", widgetId: "kpi.sustainability.carbon-intensity", size: "sm" },
+    { ...base, id: "sust-kpi-compliance", widgetId: "kpi.sustainability.environmental-compliance", size: "sm" },
+    { ...base, id: "sust-kpi-initiatives", widgetId: "kpi.sustainability.esg-initiatives", size: "sm" },
+    { ...base, id: "sust-kpi-reporting", widgetId: "kpi.sustainability.statutory-reporting", size: "sm" },
 
-    // Row 3: Dual Analytical Panels matching Image 2
+    // Tier 2: Decarbonization Trend (40 cols) + Health Summary (20 cols) = 60 cols
     { ...base, id: "sust-panel-decarbonization", widgetId: "panel.sustainability.decarbonization-trend", size: "xl" },
     { ...base, id: "sust-panel-health-summary", widgetId: "panel.sustainability.health-summary", size: "md" },
 
-    // Row 4: Facility Matrix & Compliance Permits
-    { ...base, id: "sust-panel-facility-matrix", widgetId: "panel.sustainability.facility-matrix", size: "xl" },
+    // Tier 3: Permits & Filings (20 cols) + Facility Matrix (40 cols) = 60 cols
     { ...base, id: "sust-panel-permits", widgetId: "panel.sustainability.compliance-permits", size: "md" },
+    { ...base, id: "sust-panel-facility-matrix", widgetId: "panel.sustainability.facility-matrix", size: "xl" },
 
-    // Row 5: AI Copilot & Initiatives Ledger
-    { ...base, id: "sust-panel-ai", widgetId: "panel.sustainability.ai-copilot", size: "md" },
+    // Tier 4: ESG Action Ledger (40 cols) + Environmental Alerts & Forecast (20 cols) = 60 cols
     { ...base, id: "sust-panel-ledger", widgetId: "panel.sustainability.initiatives-ledger", size: "xl" },
+    { ...base, id: "sust-panel-alerts", widgetId: "panel.sustainability.system-alerts", size: "md" },
+
+    // Tier 5: Full-Width AI Decarbonization Command Center (60 cols)
+    { ...base, id: "sust-panel-ai", widgetId: "panel.sustainability.ai-copilot", size: "full" },
   ],
   "sustainability-esg": [],
   "sustainability-carbon-footprint": [],
@@ -571,6 +573,101 @@ export const DEFAULT_LAYOUTS: Record<WidgetPageId, WidgetInstance[]> = {
   "sustainability-recycling-management": [],
   "sustainability-environmental-compliance": [],
   "sustainability-reporting": [],
+
+  "security-overview": [
+    // Row 1: 5 KPI Widgets (12/60 each)
+    { ...base, id: "sec-kpi-total-identities", widgetId: "kpi.security.total-identities", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sec-kpi-active-users", widgetId: "kpi.security.active-users", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sec-kpi-protected-assets", widgetId: "kpi.security.protected-assets", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sec-kpi-cctv-online", widgetId: "kpi.security.cctv-online", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sec-kpi-open-incidents", widgetId: "kpi.security.open-incidents", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+
+    // Row 2: 5 KPI Widgets
+    { ...base, id: "sec-kpi-critical-vulns", widgetId: "kpi.security.critical-vulnerabilities", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sec-kpi-mfa-adoption", widgetId: "kpi.security.mfa-adoption", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sec-kpi-patch-compliance", widgetId: "kpi.security.patch-compliance", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sec-kpi-sod-conflicts", widgetId: "kpi.security.sod-conflicts", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+    { ...base, id: "sec-kpi-information-assets", widgetId: "kpi.security.information-assets", size: "sm", spanOverride: { xl: 12, lg: 2, md: 3 } },
+
+    // Row 3: Threat Trend & Incident Status
+    { ...base, id: "sec-panel-threat-trend", widgetId: "panel.security.threat-trend", size: "xl" },
+    { ...base, id: "sec-panel-incident-status", widgetId: "panel.security.incident-status", size: "md" },
+
+    // Row 4: Risk Heatmap & Facilities Posture
+    { ...base, id: "sec-panel-facility-matrix", widgetId: "panel.security.facility-matrix", size: "xl" },
+    { ...base, id: "sec-panel-risk-heatmap", widgetId: "panel.security.risk-heatmap", size: "md" },
+
+    // Row 5: Compliance Frameworks & AI Intelligence
+    { ...base, id: "sec-panel-compliance-status", widgetId: "panel.security.compliance-status", size: "md" },
+    { ...base, id: "sec-panel-ai-intelligence", widgetId: "panel.security.ai-intelligence", size: "xl" },
+  ],
+  "security-access-control": [],
+  "security-identity-management": [],
+  "security-cybersecurity": [],
+  "security-information-security": [],
+  "security-physical-security": [],
+  "security-reports": [],
+
+  "bi-overview": [
+    // Tier 1: 10 Strategic KPI cards (2 rows of 5 cards, 12/60 each = 60 cols)
+    { ...base, id: "bi-kpi-rev", widgetId: "bi.kpi.total-revenue", size: "sm" },
+    { ...base, id: "bi-kpi-cash", widgetId: "bi.kpi.cash-balance", size: "sm" },
+    { ...base, id: "bi-kpi-margin", widgetId: "bi.kpi.gross-margin", size: "sm" },
+    { ...base, id: "bi-kpi-ebitda", widgetId: "bi.kpi.ebitda-margin", size: "sm" },
+    { ...base, id: "bi-kpi-pipe", widgetId: "bi.kpi.sales-pipeline", size: "sm" },
+
+    { ...base, id: "bi-kpi-cust", widgetId: "bi.kpi.active-customers", size: "sm" },
+    { ...base, id: "bi-kpi-oee", widgetId: "bi.kpi.production-oee", size: "sm" },
+    { ...base, id: "bi-kpi-sec", widgetId: "bi.kpi.open-incidents", size: "sm" },
+    { ...base, id: "bi-kpi-risk", widgetId: "bi.kpi.critical-risks", size: "sm" },
+    { ...base, id: "bi-kpi-pipeline-health", widgetId: "bi.kpi.data-pipeline-health", size: "sm" },
+
+    // Tier 2: Revenue & Margin Progression (40 cols) + Product Mix Donut (20 cols) = 60 cols
+    { ...base, id: "bi-panel-trend", widgetId: "bi.panel.revenue-profit-trend", size: "xl" },
+    { ...base, id: "bi-panel-product", widgetId: "bi.panel.revenue-by-product", size: "md" },
+
+    // Tier 3: Sales Conversion Funnel (20 cols) + Manufacturing & SCM Telemetry (40 cols) = 60 cols
+    { ...base, id: "bi-panel-pipeline", widgetId: "bi.panel.sales-pipeline", size: "md" },
+    { ...base, id: "bi-panel-mfg", widgetId: "bi.panel.manufacturing-performance", size: "xl" },
+
+    // Tier 4: Strategic Operations & Executive Ledger (40 cols) + Executive Risk & Forecast (20 cols) = 60 cols
+    { ...base, id: "bi-panel-actions", widgetId: "bi.panel.management-actions", size: "xl" },
+    { ...base, id: "bi-panel-alerts", widgetId: "bi.panel.risk-heatmap", size: "md" },
+
+    // Tier 5: Full-Width AI Executive Decision & Intelligence Command Center (60 cols)
+    { ...base, id: "bi-panel-ai", widgetId: "bi.panel.ai-intelligence", size: "full" },
+  ],
+  "bi-reports": [],
+
+  "strategy-overview": [
+    // Tier 1: 10 Strategic KPI cards (2 rows of 5 cards, 12/60 each = 60 cols)
+    { ...base, id: "strat-kpi-vm", widgetId: "strategy.kpi.vision-mission-version", size: "sm" },
+    { ...base, id: "strat-kpi-themes", widgetId: "strategy.kpi.strategic-themes", size: "sm" },
+    { ...base, id: "strat-kpi-obj", widgetId: "strategy.kpi.strategic-objectives", size: "sm" },
+    { ...base, id: "strat-kpi-okrs", widgetId: "strategy.kpi.active-okrs", size: "sm" },
+    { ...base, id: "strat-kpi-kpis", widgetId: "strategy.kpi.monitored-kpis", size: "sm" },
+
+    { ...base, id: "strat-kpi-bsc", widgetId: "strategy.kpi.bsc-score", size: "sm" },
+    { ...base, id: "strat-kpi-init", widgetId: "strategy.kpi.strategic-initiatives", size: "sm" },
+    { ...base, id: "strat-kpi-invest", widgetId: "strategy.kpi.total-investment", size: "sm" },
+    { ...base, id: "strat-kpi-benefits", widgetId: "strategy.kpi.expected-benefits", size: "sm" },
+    { ...base, id: "strat-kpi-align", widgetId: "strategy.kpi.overall-alignment", size: "sm" },
+
+    // Tier 2: Strategic Execution Alignment Chain (Full width = 60 cols)
+    { ...base, id: "strat-panel-flow", widgetId: "strategy.panel.alignment-flow", size: "full" },
+
+    // Tier 3: OKR Progress Trajectory (40 cols) + Perspective Performance (20 cols) = 60 cols
+    { ...base, id: "strat-panel-traj", widgetId: "strategy.panel.progress-trajectory", size: "xl" },
+    { ...base, id: "strat-panel-persp", widgetId: "strategy.panel.perspectives-performance", size: "md" },
+
+    // Tier 4: Priority Initiatives Table (40 cols) + Portfolio Distribution Donut (20 cols) = 60 cols
+    { ...base, id: "strat-panel-table", widgetId: "strategy.panel.initiatives-table", size: "xl" },
+    { ...base, id: "strat-panel-port", widgetId: "strategy.panel.portfolio-health", size: "md" },
+
+    // Tier 5: AI Strategic Intelligence Assistant (Full width = 60 cols)
+    { ...base, id: "strat-panel-ai", widgetId: "strategy.panel.ai-assistant", size: "full" },
+  ],
+  "strategy-reports": [],
 };
 
 /** Display metadata for each widget surface. */
@@ -617,6 +714,20 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
   "sustainability-recycling-management": { label: "Recycling Management", route: "/management/sustainability-management/recycling-management" },
   "sustainability-environmental-compliance": { label: "Environmental Compliance", route: "/management/sustainability-management/environmental-compliance" },
   "sustainability-reporting": { label: "Sustainability Reporting", route: "/management/sustainability-management/sustainability-reporting" },
+  "security-overview": { label: "Security Overview", route: "/management/security-management/overview" },
+  "security-access-control": { label: "Access Control", route: "/management/security-management/access-control" },
+  "security-identity-management": { label: "Identity Management", route: "/management/security-management/identity-management" },
+  "security-cybersecurity": { label: "Cybersecurity", route: "/management/security-management/cybersecurity" },
+  "security-information-security": { label: "Information Security", route: "/management/security-management/information-security" },
+  "security-physical-security": { label: "Physical Security", route: "/management/security-management/physical-security" },
+  "security-visitor-management": { label: "Visitor Management", route: "/management/security-management/visitor-management" },
+  "security-surveillance": { label: "Surveillance", route: "/management/security-management/surveillance" },
+  "security-security-audit": { label: "Security Audit", route: "/management/security-management/security-audit" },
+  "security-reports": { label: "Security Reports", route: "/management/security-management/reports" },
+  "bi-overview": { label: "Business Intelligence Overview", route: "/management/business-intelligence/overview" },
+  "bi-reports": { label: "Business Intelligence Reports", route: "/management/business-intelligence/reports" },
+  "strategy-overview": { label: "Strategy Management Overview", route: "/management/strategy-management/overview" },
+  "strategy-reports": { label: "Strategy Management Reports", route: "/management/strategy-management/reports" },
 };
 
 /**
@@ -625,7 +736,12 @@ export const PAGE_META: Record<WidgetPageId, { label: string; route: string }> =
  */
 export const PLACEABLE_PAGES: WidgetPageId[] = [
   "dashboard",
+  "strategy-overview",
+  "strategy-reports",
+  "bi-overview",
+  "bi-reports",
   "finance-overview",
+  "security-overview",
   "sustainability-overview",
   "crm-overview",
   "hrm-overview",

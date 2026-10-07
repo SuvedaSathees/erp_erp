@@ -298,113 +298,319 @@ export const CompliancePermitsWidget = memo(function CompliancePermitsWidget() {
 /* ===========================================================================
    5. AI ESG & Decarbonization Copilot
    =========================================================================== */
-export const AiCopilotWidget = memo(function AiCopilotWidget() {
+function AiScoreBall({
+  label,
+  value,
+  unit = "%",
+}: {
+  label: string;
+  value: number;
+  unit?: string;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center rounded-xl border border-border/40 bg-muted/20 p-4">
+      <span className="font-display text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+        {value}{unit}
+      </span>
+      <span className="mt-1 text-center text-[10px] font-semibold text-muted-foreground">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+export const AiCopilotWidget = memo(function AiCopilotWidget({ size }: { size?: string }) {
   const { data, isLoading } = useQuery(sustainabilityOverviewOptions);
   if (isLoading || !data) return <Skeleton className="h-[300px] rounded-xl" />;
 
-  return (
-    <div className="card-soft p-5 h-full flex flex-col justify-between">
-      <div>
-        <div className="flex items-center justify-between border-b border-border/60 pb-3">
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
-              <Sparkles className="h-4 w-4" />
+  const isCompact = size === "md" || size === "sm";
+
+  if (isCompact) {
+    return (
+      <div className="card-soft p-5 h-full flex flex-col justify-between">
+        <div>
+          <div className="flex items-center justify-between border-b border-border/60 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-foreground">AI ESG & Decarbonization Copilot</h3>
+                <p className="text-xs text-muted-foreground">{data.aiAdvisor.subtitle}</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-sm font-bold text-foreground">AI ESG & Decarbonization Copilot</h3>
-              <p className="text-xs text-muted-foreground">{data.aiAdvisor.subtitle}</p>
-            </div>
+            <span className="text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+              {data.aiAdvisor.status}
+            </span>
           </div>
-          <span className="text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-            {data.aiAdvisor.status}
-          </span>
+
+          <div className="mt-4 space-y-3">
+            {data.aiAdvisor.insights.map((item) => (
+              <div
+                key={item.id}
+                className="p-3 rounded-lg border border-border/60 bg-muted/20 hover:bg-muted/50 transition-colors"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-bold text-foreground">{item.title}</span>
+                  <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                    {item.savingEstimate}
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">{item.detail}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="mt-4 space-y-3">
+        <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground">
+          <span>Autonomous ISO 14064 AI Reasoning</span>
+          <button className="text-primary hover:underline font-semibold cursor-pointer">
+            Apply Suggested Actions
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Full-width view matching Finance Overview's AI Financial Intelligence Center
+  return (
+    <div className="card-soft p-5">
+      <div className="mb-4 flex items-center justify-between border-b border-border/40 pb-2">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-5 w-5 animate-pulse text-emerald-600 dark:text-emerald-400" />
+          <div>
+            <h3 className="font-display text-[15px] font-semibold text-foreground">
+              AI ESG & Decarbonization Intelligence Center
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Autonomous ISO 14064 GHG audit, energy optimization, and statutory compliance checks.
+            </p>
+          </div>
+        </div>
+        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+          <Sparkles className="h-3.5 w-3.5" /> Core Engine Active
+        </span>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-5">
+        <AiScoreBall label="ESG Scorecard" value={92} />
+        <AiScoreBall label="Decarbonization Index" value={88} />
+        <AiScoreBall label="Renewable Energy Mix" value={48} />
+        <AiScoreBall label="Compliance Health" value={98} />
+        <AiScoreBall label="Landfill Diversion" value={83} />
+      </div>
+
+      <div className="mt-5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4 text-[13px] leading-relaxed text-foreground">
+        <div className="flex items-center justify-between mb-2">
+          <strong className="font-bold text-emerald-700 dark:text-emerald-400">
+            Autonomous Decarbonization AI Analytics Recommendations:
+          </strong>
+          <button className="text-xs font-semibold text-primary hover:underline cursor-pointer">
+            Apply Optimization Plan
+          </button>
+        </div>
+        <div className="space-y-1.5 text-xs text-muted-foreground">
           {data.aiAdvisor.insights.map((item) => (
-            <div
-              key={item.id}
-              className="p-3 rounded-lg border border-border/60 bg-muted/20 hover:bg-muted/50 transition-colors"
-            >
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-bold text-foreground">{item.title}</span>
-                <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                  {item.savingEstimate}
-                </span>
+            <div key={item.id} className="flex items-start gap-2">
+              <span className="text-emerald-600 font-bold shrink-0">•</span>
+              <div>
+                <span className="font-semibold text-foreground">{item.title}:</span> {item.detail}{" "}
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">({item.savingEstimate})</span>
               </div>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">{item.detail}</p>
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground">
-        <span>Autonomous ISO 14064 AI Reasoning</span>
-        <button className="text-primary hover:underline font-semibold cursor-pointer">
-          Apply Suggested Actions
-        </button>
       </div>
     </div>
   );
 });
 
 /* ===========================================================================
-   6. ESG Initiatives & Milestone Ledger
+   6. ESG Initiatives & Milestone Ledger (Interactive Multi-Tab)
    =========================================================================== */
+const SUST_LEDGER_TABS = [
+  { id: "initiatives", label: "ESG Initiatives" },
+  { id: "audits", label: "Energy Audits" },
+  { id: "circular", label: "Water & Circular Waste" },
+  { id: "statutory", label: "Statutory Filings" },
+] as const;
+
 export const InitiativesLedgerWidget = memo(function InitiativesLedgerWidget() {
   const { data, isLoading } = useQuery(sustainabilityOverviewOptions);
+  const [activeTab, setActiveTab] = useState<"initiatives" | "audits" | "circular" | "statutory">("initiatives");
   if (isLoading || !data) return <Skeleton className="h-[300px] rounded-xl" />;
 
   return (
     <div className="card-soft p-5 h-full flex flex-col justify-between">
       <div>
-        <div className="flex items-center justify-between border-b border-border/60 pb-3">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-border/40 pb-2">
           <div>
-            <h3 className="text-sm font-bold text-foreground">ESG Action Initiatives & Audit Ledger</h3>
-            <p className="text-xs text-muted-foreground mt-0.5">Corporate strategic sustainability projects in flight</p>
+            <h3 className="font-display text-[15px] font-semibold text-foreground">
+              ESG Action Initiatives & Audit Ledger
+            </h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Decarbonization projects, ISO 50001 energy audits, circular waste streams, and statutory approvals
+            </p>
           </div>
-          <span className="text-xs font-semibold text-muted-foreground">
-            {data.initiativesLedger.length} Active Initiatives
-          </span>
+          <div className="flex flex-wrap gap-1 rounded-lg border border-border/60 bg-muted/40 p-0.5">
+            {SUST_LEDGER_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`rounded-md px-2.5 py-1 text-xs font-semibold transition-all ${
+                  activeTab === tab.id
+                    ? "bg-white text-foreground shadow-xs dark:bg-card"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-xs text-left">
-            <thead>
-              <tr className="border-b border-border/60 text-muted-foreground">
-                <th className="pb-2 font-semibold">Code</th>
-                <th className="pb-2 font-semibold">Title</th>
-                <th className="pb-2 font-semibold">Pillar</th>
-                <th className="pb-2 font-semibold">Owner</th>
-                <th className="pb-2 font-semibold">Target</th>
-                <th className="pb-2 font-semibold text-right">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/40">
-              {data.initiativesLedger.map((init) => (
-                <tr key={init.id} className="hover:bg-muted/30">
-                  <td className="py-2.5 font-mono text-[11px] font-bold text-foreground">{init.code}</td>
-                  <td className="py-2.5 font-medium text-foreground">{init.title}</td>
-                  <td className="py-2.5 text-muted-foreground">{init.pillar}</td>
-                  <td className="py-2.5 text-muted-foreground">{init.owner}</td>
-                  <td className="py-2.5 text-muted-foreground">{init.targetCompletion}</td>
-                  <td className="py-2.5 text-right font-semibold">
-                    <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full ${
-                        init.status === "Completed"
-                          ? "bg-emerald-50 text-emerald-700"
-                          : init.status === "Under Audit"
-                          ? "bg-purple-50 text-purple-700"
-                          : "bg-blue-50 text-blue-700"
-                      }`}
-                    >
-                      {init.status} ({init.progress}%)
-                    </span>
-                  </td>
+        <div className="min-h-[220px] overflow-x-auto">
+          {activeTab === "initiatives" && (
+            <table className="w-full text-xs text-left">
+              <thead>
+                <tr className="border-b border-border/60 pb-2 text-[10px] font-bold uppercase text-muted-foreground">
+                  <th className="py-2">Code</th>
+                  <th className="py-2">Title</th>
+                  <th className="py-2">Pillar</th>
+                  <th className="py-2">Owner</th>
+                  <th className="py-2">Target</th>
+                  <th className="py-2 text-right">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-border/40">
+                {data.initiativesLedger.map((init) => (
+                  <tr key={init.id} className="hover:bg-muted/10">
+                    <td className="py-2.5 font-mono text-[11px] font-bold text-foreground">{init.code}</td>
+                    <td className="py-2.5 font-medium text-foreground">{init.title}</td>
+                    <td className="py-2.5 text-muted-foreground">{init.pillar}</td>
+                    <td className="py-2.5 text-muted-foreground">{init.owner}</td>
+                    <td className="py-2.5 text-muted-foreground">{init.targetCompletion}</td>
+                    <td className="py-2.5 text-right font-semibold">
+                      <span
+                        className={`text-[10px] px-2 py-0.5 rounded-full ${
+                          init.status === "Completed"
+                            ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300"
+                            : init.status === "Under Audit"
+                            ? "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300"
+                            : "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                        }`}
+                      >
+                        {init.status} ({init.progress}%)
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "audits" && (
+            <table className="w-full text-xs text-left">
+              <thead>
+                <tr className="border-b border-border/60 pb-2 text-[10px] font-bold uppercase text-muted-foreground">
+                  <th className="py-2">Facility / Site</th>
+                  <th className="py-2">Standard</th>
+                  <th className="py-2">Auditor Body</th>
+                  <th className="py-2">Audit Date</th>
+                  <th className="py-2 text-right">Performance Score</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/40">
+                <tr className="hover:bg-muted/10">
+                  <td className="py-2.5 font-semibold text-foreground">Namakkal Gigafactory 1</td>
+                  <td className="py-2.5 text-muted-foreground">ISO 50001:2018 Energy Mgmt</td>
+                  <td className="py-2.5 text-muted-foreground">Bureau Veritas</td>
+                  <td className="py-2.5 text-muted-foreground">15 Aug 2026</td>
+                  <td className="py-2.5 text-right font-bold text-emerald-600">96.4% (Grade A)</td>
+                </tr>
+                <tr className="hover:bg-muted/10">
+                  <td className="py-2.5 font-semibold text-foreground">Coimbatore Battery Tech Lab</td>
+                  <td className="py-2.5 text-muted-foreground">ISO 14001:2015 Environmental</td>
+                  <td className="py-2.5 text-muted-foreground">TÜV SÜD India</td>
+                  <td className="py-2.5 text-muted-foreground">22 Jul 2026</td>
+                  <td className="py-2.5 text-right font-bold text-emerald-600">94.8% (Grade A)</td>
+                </tr>
+                <tr className="hover:bg-muted/10">
+                  <td className="py-2.5 font-semibold text-foreground">Hosur Machining Center</td>
+                  <td className="py-2.5 text-muted-foreground">BEE Star Energy Audit</td>
+                  <td className="py-2.5 text-muted-foreground">BEE Accredited Lead Auditor</td>
+                  <td className="py-2.5 text-muted-foreground">05 Sep 2026</td>
+                  <td className="py-2.5 text-right font-bold text-primary">91.2% (Grade B+)</td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "circular" && (
+            <table className="w-full text-xs text-left">
+              <thead>
+                <tr className="border-b border-border/60 pb-2 text-[10px] font-bold uppercase text-muted-foreground">
+                  <th className="py-2">Waste Stream</th>
+                  <th className="py-2">Category</th>
+                  <th className="py-2">Volume (MT/mo)</th>
+                  <th className="py-2">Authorized Recycler</th>
+                  <th className="py-2 text-right">Diversion Rate</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/40">
+                <tr className="hover:bg-muted/10">
+                  <td className="py-2.5 font-semibold text-foreground">Scrap Lithium Cells</td>
+                  <td className="py-2.5 text-muted-foreground">Hazardous E-Waste</td>
+                  <td className="py-2.5 text-muted-foreground">4.8 MT</td>
+                  <td className="py-2.5 text-muted-foreground">Attero Circular Solutions</td>
+                  <td className="py-2.5 text-right font-bold text-emerald-600">98.5% Recovered</td>
+                </tr>
+                <tr className="hover:bg-muted/10">
+                  <td className="py-2.5 font-semibold text-foreground">Industrial Aluminum Swarf</td>
+                  <td className="py-2.5 text-muted-foreground">Non-Hazardous Metal</td>
+                  <td className="py-2.5 text-muted-foreground">18.2 MT</td>
+                  <td className="py-2.5 text-muted-foreground">Hindalco Closed Loop</td>
+                  <td className="py-2.5 text-right font-bold text-emerald-600">100.0% Recycled</td>
+                </tr>
+                <tr className="hover:bg-muted/10">
+                  <td className="py-2.5 font-semibold text-foreground">Treated STP Process Water</td>
+                  <td className="py-2.5 text-muted-foreground">Campus Effluent</td>
+                  <td className="py-2.5 text-muted-foreground">42.0 kL</td>
+                  <td className="py-2.5 text-muted-foreground">In-House Membrane Bioreactor</td>
+                  <td className="py-2.5 text-right font-bold text-teal-600">88.4% Reused</td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "statutory" && (
+            <table className="w-full text-xs text-left">
+              <thead>
+                <tr className="border-b border-border/60 pb-2 text-[10px] font-bold uppercase text-muted-foreground">
+                  <th className="py-2">Statutory Approval</th>
+                  <th className="py-2">Regulatory Authority</th>
+                  <th className="py-2">Issuance Date</th>
+                  <th className="py-2">Expiry Date</th>
+                  <th className="py-2 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/40">
+                {data.permitsStatus.map((p) => (
+                  <tr key={p.id} className="hover:bg-muted/10">
+                    <td className="py-2.5 font-semibold text-foreground">{p.permitName}</td>
+                    <td className="py-2.5 text-muted-foreground">{p.agency} ({p.facility})</td>
+                    <td className="py-2.5 text-muted-foreground">01 Apr 2025</td>
+                    <td className="py-2.5 text-muted-foreground">{p.expiryDate}</td>
+                    <td className="py-2.5 text-right">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                        {p.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
@@ -420,6 +626,98 @@ export const InitiativesLedgerWidget = memo(function InitiativesLedgerWidget() {
   );
 });
 
+/* ===========================================================================
+   7. Real-Time Environmental Alerts & Warnings
+   =========================================================================== */
+function SustAlertRow({
+  type,
+  title,
+  desc,
+}: {
+  type: "warning" | "info" | "success" | "destructive";
+  title: string;
+  desc: string;
+}) {
+  const border =
+    type === "warning"
+      ? "border-l-warning"
+      : type === "info"
+        ? "border-l-primary"
+        : type === "destructive"
+          ? "border-l-destructive"
+          : "border-l-success";
+  return (
+    <div className={`rounded-r-lg border border-border border-l-4 ${border} bg-muted/30 p-2.5`}>
+      <p className="text-xs font-semibold text-foreground">{title}</p>
+      <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">{desc}</p>
+    </div>
+  );
+}
+
+function SustPredictionRow({
+  month,
+  abatement,
+  source,
+}: {
+  month: string;
+  abatement: string;
+  source: string;
+}) {
+  return (
+    <div className="flex items-center justify-between border-b border-border/40 pb-2 text-xs">
+      <div>
+        <span className="font-semibold text-foreground">{month}</span>
+        <span className="block text-[10px] text-muted-foreground">{source}</span>
+      </div>
+      <div className="flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400">
+        <ArrowUpRight className="h-3 w-3" />
+        <span>{abatement}</span>
+      </div>
+    </div>
+  );
+}
+
+export const SustainabilityAlertsWidget = memo(function SustainabilityAlertsWidget() {
+  return (
+    <div className="card-soft p-5 h-full flex flex-col justify-between">
+      <div>
+        <div className="flex items-center justify-between border-b border-border/60 pb-3">
+          <h3 className="text-sm font-bold text-foreground">Environmental Alerts & Regulatory Warnings</h3>
+          <AlertTriangle className="h-4 w-4 text-amber-500" />
+        </div>
+        <div className="mt-3 space-y-2.5">
+          <SustAlertRow
+            type="warning"
+            title="Boiler Flue Gas Scrubber Watch"
+            desc="Particulate sensor at Gigafactory 1 reading 82 mg/Nm³. Scheduled filter swap due in 48 hours."
+          />
+          <SustAlertRow
+            type="info"
+            title="BRSR Statutory Filing Horizon"
+            desc="SEBI Core FY25 ESG disclosure audit documentation is 94% compiled. Third-party review on track."
+          />
+          <SustAlertRow
+            type="success"
+            title="Zero Waste to Landfill Renewal"
+            desc="Namakkal Campus diversion audit certified at 98.2%. Bureau Veritas renewal approved."
+          />
+        </div>
+      </div>
+
+      <div className="mt-4 border-t border-border/60 pt-3">
+        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-foreground">
+          3-Month Carbon Abatement Prediction
+        </h4>
+        <div className="space-y-1.5">
+          <SustPredictionRow month="April 2026" abatement="520 tCO2e / mo" source="Rooftop Solar Phase 2 Sync" />
+          <SustPredictionRow month="May 2026" abatement="680 tCO2e / mo" source="Wind Open Access PPA Activation" />
+          <SustPredictionRow month="June 2026" abatement="410 tCO2e / mo" source="Furnace Waste Heat Recovery" />
+        </div>
+      </div>
+    </div>
+  );
+});
+
 export const SUSTAINABILITY_PANEL_WIDGETS: WidgetDefinition[] = [
   {
     id: "panel.sustainability.decarbonization-trend",
@@ -427,7 +725,7 @@ export const SUSTAINABILITY_PANEL_WIDGETS: WidgetDefinition[] = [
     description: "Monthly GHG emissions trajectory vs. renewable power mix",
     category: "chart",
     tags: ["chart", "sustainability"],
-    defaultSize: "lg",
+    defaultSize: "xl",
     supportedSizes: ["md", "lg", "xl"],
     roles: "all",
     sourceRoute: "/management/sustainability-management/carbon-footprint",
@@ -451,7 +749,7 @@ export const SUSTAINABILITY_PANEL_WIDGETS: WidgetDefinition[] = [
     description: "Facility breakdown of power, GHG, water, and compliance",
     category: "table",
     tags: ["table", "sustainability"],
-    defaultSize: "lg",
+    defaultSize: "xl",
     supportedSizes: ["md", "lg", "xl"],
     roles: "all",
     sourceRoute: "/management/sustainability-management/overview",
@@ -470,27 +768,39 @@ export const SUSTAINABILITY_PANEL_WIDGETS: WidgetDefinition[] = [
     component: CompliancePermitsWidget,
   },
   {
-    id: "panel.sustainability.ai-copilot",
-    title: "AI ESG & Decarbonization Copilot",
-    description: "Autonomous reasoning for emission abatement & cost savings",
-    category: "summary",
-    tags: ["summary", "sustainability"],
-    defaultSize: "md",
-    supportedSizes: ["sm", "md", "lg"],
-    roles: "all",
-    sourceRoute: "/management/sustainability-management/overview",
-    component: AiCopilotWidget,
-  },
-  {
     id: "panel.sustainability.initiatives-ledger",
-    title: "ESG Action Initiatives Ledger",
-    description: "Active corporate ESG initiatives and milestone deliverables",
+    title: "ESG Action Initiatives & Audit Ledger",
+    description: "Active corporate ESG initiatives, energy audits, and statutory milestones",
     category: "table",
     tags: ["table", "sustainability"],
-    defaultSize: "lg",
+    defaultSize: "xl",
     supportedSizes: ["md", "lg", "xl"],
     roles: "all",
     sourceRoute: "/management/sustainability-management/esg",
     component: InitiativesLedgerWidget,
+  },
+  {
+    id: "panel.sustainability.system-alerts",
+    title: "Environmental Alerts & Regulatory Warnings",
+    description: "Live environmental alerts and 3-month carbon abatement predictions",
+    category: "list",
+    tags: ["list", "sustainability", "alerts"],
+    defaultSize: "md",
+    supportedSizes: ["sm", "md", "lg"],
+    roles: "all",
+    sourceRoute: "/management/sustainability-management/overview",
+    component: SustainabilityAlertsWidget,
+  },
+  {
+    id: "panel.sustainability.ai-copilot",
+    title: "AI ESG & Decarbonization Intelligence Center",
+    description: "Autonomous reasoning for emission abatement & statutory compliance filings",
+    category: "ai",
+    tags: ["summary", "sustainability", "ai"],
+    defaultSize: "full",
+    supportedSizes: ["md", "lg", "xl", "full"],
+    roles: "all",
+    sourceRoute: "/management/sustainability-management/overview",
+    component: AiCopilotWidget,
   },
 ];

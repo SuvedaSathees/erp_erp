@@ -51,10 +51,14 @@ function OverviewSkeleton() {
         <Skeleton className="h-[350px] rounded-xl" />
       </div>
       <div className="grid gap-6 lg:grid-cols-3">
+        <Skeleton className="h-[350px] rounded-xl" />
+        <Skeleton className="h-[350px] rounded-xl lg:col-span-2" />
+      </div>
+      <div className="grid gap-6 lg:grid-cols-3">
         <Skeleton className="h-[350px] rounded-xl lg:col-span-2" />
         <Skeleton className="h-[350px] rounded-xl" />
       </div>
-      <Skeleton className="h-[240px] rounded-xl" />
+      <Skeleton className="h-[220px] rounded-xl" />
     </div>
   );
 }

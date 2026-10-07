@@ -32,7 +32,20 @@ export function effectiveInstances(
   prefs: WidgetPreferencesDoc,
   pageId: WidgetPageId,
 ): WidgetInstance[] {
-  const instances = prefs.pages[pageId]?.instances ?? getDefaultLayout(pageId);
+  const saved = prefs.pages[pageId]?.instances;
+  const isOutdatedBi =
+    pageId === "bi-overview" &&
+    saved &&
+    saved.some((i) => (i.id === "bi-panel-trend" && i.size !== "xl") || (i.id === "bi-panel-ai" && i.size !== "full"));
+  const isOutdatedSust =
+    pageId === "sustainability-overview" &&
+    saved &&
+    saved.some((i) => i.id === "sust-panel-ledger" && i.size === "full");
+  const isOutdatedBiReports =
+    pageId === "bi-reports" &&
+    saved &&
+    saved.some((i) => i.id === "bi-rep-total");
+  const instances = isOutdatedBi || isOutdatedSust || isOutdatedBiReports || !saved ? getDefaultLayout(pageId) : saved;
   return instances
     .filter(
       (inst) =>

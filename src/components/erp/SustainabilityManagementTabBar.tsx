@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TAB_BASE =
-  "shrink-0 whitespace-nowrap border-b-2 border-transparent bg-transparent px-3.5 pb-2.5 pt-1 text-[13px] font-semibold text-muted-foreground shadow-none transition-all hover:text-foreground focus-visible:outline-none cursor-pointer";
+  "shrink-0 whitespace-nowrap border-b-2 border-transparent bg-transparent px-3 pb-2 pt-1 text-[12.5px] font-semibold text-muted-foreground shadow-none transition-all hover:text-foreground focus-visible:outline-none cursor-pointer";
 const TAB_ACTIVE = "border-primary text-primary hover:text-primary font-bold";
 
 export const SUSTAINABILITY_MANAGEMENT_TABS = [

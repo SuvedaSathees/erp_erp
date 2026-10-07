@@ -915,12 +915,129 @@
             }
           ],
           "updatedAt": "2026-09-09T11:59:43.527Z"
+        },
+        "bd-overview": {
+          "instances": [
+            {
+              "theme": "default",
+              "pinned": true,
+              "id": "bd-ovw-deal-velocity",
+              "widgetId": "kpi.bd.deal-velocity",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": true,
+              "id": "bd-ovw-pipeline-val",
+              "widgetId": "kpi.bd.pipeline-value",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-active-deals",
+              "widgetId": "kpi.bd.active-deals",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-closed-ytd",
+              "widgetId": "kpi.bd.closed-ytd",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-win-rate",
+              "widgetId": "kpi.bd.win-rate",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-partner-eco",
+              "widgetId": "kpi.bd.partner-ecosystem",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-expansion",
+              "widgetId": "kpi.bd.expansion-markets",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-avg-deal",
+              "widgetId": "kpi.bd.avg-deal-size",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-open-rfps",
+              "widgetId": "kpi.bd.open-rfps",
+              "size": "sm"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-pipeline-trend",
+              "widgetId": "chart.bd.pipeline-trend",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-funnel",
+              "widgetId": "list.bd.deal-funnel",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-partner-dist",
+              "widgetId": "list.bd.partner-distribution",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-revenue-curve",
+              "widgetId": "chart.bd.revenue-curve",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-ops-ledger",
+              "widgetId": "table.bd.operations-ledger",
+              "size": "xl"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-alerts",
+              "widgetId": "insight.bd-alerts",
+              "size": "md"
+            },
+            {
+              "theme": "default",
+              "pinned": false,
+              "id": "bd-ovw-ai",
+              "widgetId": "ai.bd-intelligence",
+              "size": "full"
+            }
+          ],
+          "updatedAt": "2026-10-07T10:22:09.048Z"
         }
       },
       "favorites": [],
       "recentlyUsed": [],
       "templates": [],
-      "updatedAt": "2026-09-09T11:59:43.541Z"
+      "updatedAt": "2026-10-07T10:22:16.871Z"
     }
   ]
 }

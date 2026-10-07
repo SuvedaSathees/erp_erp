@@ -73,6 +73,9 @@ export const WidgetShell = memo(function WidgetShell({
   const activePage = useMemo(() => pageId ?? "dashboard", [pageId]);
 
   const targetOverviewPageId: WidgetPageId = useMemo(() => {
+    if (activePage.startsWith("strategy-")) return "strategy-overview";
+    if (activePage.startsWith("bi-")) return "bi-overview";
+    if (activePage.startsWith("security-")) return "security-overview";
     if (activePage.startsWith("sustainability-")) return "sustainability-overview";
     if (activePage.startsWith("communication-")) return "communication-overview";
     if (activePage.startsWith("knowledge-")) return "knowledge-overview";
@@ -80,6 +83,9 @@ export const WidgetShell = memo(function WidgetShell({
   }, [activePage]);
 
   const targetOverviewLabel = useMemo(() => {
+    if (targetOverviewPageId === "strategy-overview") return "Strategy Management Overview";
+    if (targetOverviewPageId === "bi-overview") return "Business Intelligence Overview";
+    if (targetOverviewPageId === "security-overview") return "Security Overview";
     if (targetOverviewPageId === "sustainability-overview") return "Sustainability Overview";
     if (targetOverviewPageId === "communication-overview") return "Communication Overview";
     if (targetOverviewPageId === "knowledge-overview") return "Knowledge Overview";

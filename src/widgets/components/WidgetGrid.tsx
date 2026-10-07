@@ -33,7 +33,7 @@ export const WidgetGrid = memo(function WidgetGrid({
     <div className={cn("widget-grid", className)}>
       {instances.map((instance) => {
         const def = getWidgetDef(instance.widgetId);
-        if (!def) return null;
+        if (!def || !def.component) return null;
         const Content = def.component;
         return (
           <WidgetContextMenu

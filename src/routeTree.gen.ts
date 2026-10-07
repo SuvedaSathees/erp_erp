@@ -31,12 +31,16 @@ import { Route as ManufacturingDevelopmentMassProductionReadinessIndexRouteImpor
 import { Route as ManufacturingDevelopmentLeanManufacturingIndexRouteImport } from './routes/manufacturing-development.lean-manufacturing.index'
 import { Route as ManufacturingDevelopmentAutomationDevelopmentIndexRouteImport } from './routes/manufacturing-development.automation-development.index'
 import { Route as ManagementSustainabilityManagementIndexRouteImport } from './routes/management.sustainability-management.index'
+import { Route as ManagementStrategyManagementIndexRouteImport } from './routes/management.strategy-management.index'
+import { Route as ManagementSecurityManagementIndexRouteImport } from './routes/management.security-management.index'
 import { Route as ManagementQualityManagementIndexRouteImport } from './routes/management.quality-management.index'
 import { Route as ManagementKnowledgeManagementIndexRouteImport } from './routes/management.knowledge-management.index'
 import { Route as ManagementCommunicationManagementIndexRouteImport } from './routes/management.communication-management.index'
+import { Route as ManagementBusinessIntelligenceIndexRouteImport } from './routes/management.business-intelligence.index'
 import { Route as DevelopmentResearchInnovationIndexRouteImport } from './routes/development.research-innovation.index'
 import { Route as DevelopmentProductDevelopmentIndexRouteImport } from './routes/development.product-development.index'
 import { Route as DevelopmentManufacturingDevelopmentIndexRouteImport } from './routes/development.manufacturing-development.index'
+import { Route as DevelopmentDigitalDevelopmentIndexRouteImport } from './routes/development.digital-development.index'
 import { Route as DevelopmentBusinessDevelopmentIndexRouteImport } from './routes/development.business-development.index'
 import { Route as ManufacturingDevelopmentRoboticsIntegrationNewRouteImport } from './routes/manufacturing-development.robotics-integration.new'
 import { Route as ManufacturingDevelopmentRoboticsIntegrationIdRouteImport } from './routes/manufacturing-development.robotics-integration.$id'
@@ -73,6 +77,26 @@ import { Route as ManagementSupplyChainManagementFleetManagementRouteImport } fr
 import { Route as ManagementSupplyChainManagementDistributionRouteImport } from './routes/management.supply-chain-management.distribution'
 import { Route as ManagementSupplyChainManagementDispatchManagementRouteImport } from './routes/management.supply-chain-management.dispatch-management'
 import { Route as ManagementSupplyChainManagementDemandPlanningRouteImport } from './routes/management.supply-chain-management.demand-planning'
+import { Route as ManagementStrategyManagementVisionMissionRouteImport } from './routes/management.strategy-management.vision-mission'
+import { Route as ManagementStrategyManagementStrategicInitiativesRouteImport } from './routes/management.strategy-management.strategic-initiatives'
+import { Route as ManagementStrategyManagementReportsRouteImport } from './routes/management.strategy-management.reports'
+import { Route as ManagementStrategyManagementPortfolioManagementRouteImport } from './routes/management.strategy-management.portfolio-management'
+import { Route as ManagementStrategyManagementOverviewRouteImport } from './routes/management.strategy-management.overview'
+import { Route as ManagementStrategyManagementOkrManagementRouteImport } from './routes/management.strategy-management.okr-management'
+import { Route as ManagementStrategyManagementKpiManagementRouteImport } from './routes/management.strategy-management.kpi-management'
+import { Route as ManagementStrategyManagementCorporateGovernanceRouteImport } from './routes/management.strategy-management.corporate-governance'
+import { Route as ManagementStrategyManagementBusinessPlanningRouteImport } from './routes/management.strategy-management.business-planning'
+import { Route as ManagementStrategyManagementBalancedScorecardRouteImport } from './routes/management.strategy-management.balanced-scorecard'
+import { Route as ManagementSecurityManagementVisitorManagementRouteImport } from './routes/management.security-management.visitor-management'
+import { Route as ManagementSecurityManagementSurveillanceRouteImport } from './routes/management.security-management.surveillance'
+import { Route as ManagementSecurityManagementSecurityAuditRouteImport } from './routes/management.security-management.security-audit'
+import { Route as ManagementSecurityManagementReportsRouteImport } from './routes/management.security-management.reports'
+import { Route as ManagementSecurityManagementPhysicalSecurityRouteImport } from './routes/management.security-management.physical-security'
+import { Route as ManagementSecurityManagementOverviewRouteImport } from './routes/management.security-management.overview'
+import { Route as ManagementSecurityManagementInformationSecurityRouteImport } from './routes/management.security-management.information-security'
+import { Route as ManagementSecurityManagementIdentityManagementRouteImport } from './routes/management.security-management.identity-management'
+import { Route as ManagementSecurityManagementCybersecurityRouteImport } from './routes/management.security-management.cybersecurity'
+import { Route as ManagementSecurityManagementAccessControlRouteImport } from './routes/management.security-management.access-control'
 import { Route as ManagementSalesManagementTerritoryManagementRouteImport } from './routes/management.sales-management.territory-management'
 import { Route as ManagementSalesManagementSalesPlanningRouteImport } from './routes/management.sales-management.sales-planning'
 import { Route as ManagementSalesManagementSalesOrdersRouteImport } from './routes/management.sales-management.sales-orders'
@@ -208,6 +232,9 @@ import { Route as ManagementFinanceCashBankRouteImport } from './routes/manageme
 import { Route as ManagementFinanceBudgetingRouteImport } from './routes/management.finance.budgeting'
 import { Route as ManagementFinanceAuditRouteImport } from './routes/management.finance.audit'
 import { Route as ManagementFinanceAssetsRouteImport } from './routes/management.finance.assets'
+import { Route as ManagementExecutiveManagementReportsRouteImport } from './routes/management.executive-management.reports'
+import { Route as ManagementExecutiveManagementOverviewRouteImport } from './routes/management.executive-management.overview'
+import { Route as ManagementExecutiveManagementExecutiveReviewRouteImport } from './routes/management.executive-management.executive-review'
 import { Route as ManagementCrmManagementSalesPipelineManagementRouteImport } from './routes/management.crm-management.sales-pipeline-management'
 import { Route as ManagementCrmManagementReportsRouteImport } from './routes/management.crm-management.reports'
 import { Route as ManagementCrmManagementQuotationsManagementRouteImport } from './routes/management.crm-management.quotations-management'
@@ -232,6 +259,16 @@ import { Route as ManagementCommunicationManagementEmailRouteImport } from './ro
 import { Route as ManagementCommunicationManagementCollaborationWorkspaceRouteImport } from './routes/management.communication-management.collaboration-workspace'
 import { Route as ManagementCommunicationManagementChatRouteImport } from './routes/management.communication-management.chat'
 import { Route as ManagementCommunicationManagementAnnouncementsRouteImport } from './routes/management.communication-management.announcements'
+import { Route as ManagementBusinessIntelligenceReportsRouteImport } from './routes/management.business-intelligence.reports'
+import { Route as ManagementBusinessIntelligencePredictiveAnalyticsRouteImport } from './routes/management.business-intelligence.predictive-analytics'
+import { Route as ManagementBusinessIntelligenceOverviewRouteImport } from './routes/management.business-intelligence.overview'
+import { Route as ManagementBusinessIntelligenceKpiMonitoringRouteImport } from './routes/management.business-intelligence.kpi-monitoring'
+import { Route as ManagementBusinessIntelligenceExecutiveDashboardRouteImport } from './routes/management.business-intelligence.executive-dashboard'
+import { Route as ManagementBusinessIntelligenceEtlPipelinesRouteImport } from './routes/management.business-intelligence.etl-pipelines'
+import { Route as ManagementBusinessIntelligenceDecisionSupportRouteImport } from './routes/management.business-intelligence.decision-support'
+import { Route as ManagementBusinessIntelligenceDataWarehouseDevelopmentRouteImport } from './routes/management.business-intelligence.data-warehouse-development'
+import { Route as ManagementBusinessIntelligenceDataVisualizationRouteImport } from './routes/management.business-intelligence.data-visualization'
+import { Route as ManagementBusinessIntelligenceAiInsightsRouteImport } from './routes/management.business-intelligence.ai-insights'
 import { Route as ManagementAssetManagementToolManagementRouteImport } from './routes/management.asset-management.tool-management'
 import { Route as ManagementAssetManagementReportsRouteImport } from './routes/management.asset-management.reports'
 import { Route as ManagementAssetManagementPreventiveMaintenanceRouteImport } from './routes/management.asset-management.preventive-maintenance'
@@ -288,6 +325,10 @@ import { Route as DevelopmentProductDevelopmentApiDevelopmentRouteImport } from 
 import { Route as DevelopmentProductDevelopmentAiModelDevelopmentRouteImport } from './routes/development.product-development.ai-model-development'
 import { Route as DevelopmentManufacturingDevelopmentReportsRouteImport } from './routes/development.manufacturing-development.reports'
 import { Route as DevelopmentManufacturingDevelopmentOverviewRouteImport } from './routes/development.manufacturing-development.overview'
+import { Route as DevelopmentDigitalDevelopmentPredictiveAnalyticsRouteImport } from './routes/development.digital-development.predictive-analytics'
+import { Route as DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRouteImport } from './routes/development.digital-development.data-warehouse-development'
+import { Route as DevelopmentDigitalDevelopmentDataVisualizationRouteImport } from './routes/development.digital-development.data-visualization'
+import { Route as DevelopmentDigitalDevelopmentAiInsightsRouteImport } from './routes/development.digital-development.ai-insights'
 import { Route as DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRouteImport } from './routes/development.business-development.vendor-ecosystem-development'
 import { Route as DevelopmentBusinessDevelopmentValuePropositionDevelopmentRouteImport } from './routes/development.business-development.value-proposition-development'
 import { Route as DevelopmentBusinessDevelopmentSalesChannelDevelopmentRouteImport } from './routes/development.business-development.sales-channel-development'
@@ -584,6 +625,18 @@ const ManagementSustainabilityManagementIndexRoute =
     path: '/management/sustainability-management/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ManagementStrategyManagementIndexRoute =
+  ManagementStrategyManagementIndexRouteImport.update({
+    id: '/management/strategy-management/',
+    path: '/management/strategy-management/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementIndexRoute =
+  ManagementSecurityManagementIndexRouteImport.update({
+    id: '/management/security-management/',
+    path: '/management/security-management/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementQualityManagementIndexRoute =
   ManagementQualityManagementIndexRouteImport.update({
     id: '/management/quality-management/',
@@ -600,6 +653,12 @@ const ManagementCommunicationManagementIndexRoute =
   ManagementCommunicationManagementIndexRouteImport.update({
     id: '/management/communication-management/',
     path: '/management/communication-management/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligenceIndexRoute =
+  ManagementBusinessIntelligenceIndexRouteImport.update({
+    id: '/management/business-intelligence/',
+    path: '/management/business-intelligence/',
     getParentRoute: () => rootRouteImport,
   } as any)
 const DevelopmentResearchInnovationIndexRoute =
@@ -619,6 +678,12 @@ const DevelopmentManufacturingDevelopmentIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => DevelopmentManufacturingDevelopmentRoute,
+  } as any)
+const DevelopmentDigitalDevelopmentIndexRoute =
+  DevelopmentDigitalDevelopmentIndexRouteImport.update({
+    id: '/digital-development/',
+    path: '/digital-development/',
+    getParentRoute: () => DevelopmentRoute,
   } as any)
 const DevelopmentBusinessDevelopmentIndexRoute =
   DevelopmentBusinessDevelopmentIndexRouteImport.update({
@@ -834,6 +899,126 @@ const ManagementSupplyChainManagementDemandPlanningRoute =
   ManagementSupplyChainManagementDemandPlanningRouteImport.update({
     id: '/management/supply-chain-management/demand-planning',
     path: '/management/supply-chain-management/demand-planning',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementStrategyManagementVisionMissionRoute =
+  ManagementStrategyManagementVisionMissionRouteImport.update({
+    id: '/management/strategy-management/vision-mission',
+    path: '/management/strategy-management/vision-mission',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementStrategyManagementStrategicInitiativesRoute =
+  ManagementStrategyManagementStrategicInitiativesRouteImport.update({
+    id: '/management/strategy-management/strategic-initiatives',
+    path: '/management/strategy-management/strategic-initiatives',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementStrategyManagementReportsRoute =
+  ManagementStrategyManagementReportsRouteImport.update({
+    id: '/management/strategy-management/reports',
+    path: '/management/strategy-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementStrategyManagementPortfolioManagementRoute =
+  ManagementStrategyManagementPortfolioManagementRouteImport.update({
+    id: '/management/strategy-management/portfolio-management',
+    path: '/management/strategy-management/portfolio-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementStrategyManagementOverviewRoute =
+  ManagementStrategyManagementOverviewRouteImport.update({
+    id: '/management/strategy-management/overview',
+    path: '/management/strategy-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementStrategyManagementOkrManagementRoute =
+  ManagementStrategyManagementOkrManagementRouteImport.update({
+    id: '/management/strategy-management/okr-management',
+    path: '/management/strategy-management/okr-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementStrategyManagementKpiManagementRoute =
+  ManagementStrategyManagementKpiManagementRouteImport.update({
+    id: '/management/strategy-management/kpi-management',
+    path: '/management/strategy-management/kpi-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementStrategyManagementCorporateGovernanceRoute =
+  ManagementStrategyManagementCorporateGovernanceRouteImport.update({
+    id: '/management/strategy-management/corporate-governance',
+    path: '/management/strategy-management/corporate-governance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementStrategyManagementBusinessPlanningRoute =
+  ManagementStrategyManagementBusinessPlanningRouteImport.update({
+    id: '/management/strategy-management/business-planning',
+    path: '/management/strategy-management/business-planning',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementStrategyManagementBalancedScorecardRoute =
+  ManagementStrategyManagementBalancedScorecardRouteImport.update({
+    id: '/management/strategy-management/balanced-scorecard',
+    path: '/management/strategy-management/balanced-scorecard',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementVisitorManagementRoute =
+  ManagementSecurityManagementVisitorManagementRouteImport.update({
+    id: '/management/security-management/visitor-management',
+    path: '/management/security-management/visitor-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementSurveillanceRoute =
+  ManagementSecurityManagementSurveillanceRouteImport.update({
+    id: '/management/security-management/surveillance',
+    path: '/management/security-management/surveillance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementSecurityAuditRoute =
+  ManagementSecurityManagementSecurityAuditRouteImport.update({
+    id: '/management/security-management/security-audit',
+    path: '/management/security-management/security-audit',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementReportsRoute =
+  ManagementSecurityManagementReportsRouteImport.update({
+    id: '/management/security-management/reports',
+    path: '/management/security-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementPhysicalSecurityRoute =
+  ManagementSecurityManagementPhysicalSecurityRouteImport.update({
+    id: '/management/security-management/physical-security',
+    path: '/management/security-management/physical-security',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementOverviewRoute =
+  ManagementSecurityManagementOverviewRouteImport.update({
+    id: '/management/security-management/overview',
+    path: '/management/security-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementInformationSecurityRoute =
+  ManagementSecurityManagementInformationSecurityRouteImport.update({
+    id: '/management/security-management/information-security',
+    path: '/management/security-management/information-security',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementIdentityManagementRoute =
+  ManagementSecurityManagementIdentityManagementRouteImport.update({
+    id: '/management/security-management/identity-management',
+    path: '/management/security-management/identity-management',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementCybersecurityRoute =
+  ManagementSecurityManagementCybersecurityRouteImport.update({
+    id: '/management/security-management/cybersecurity',
+    path: '/management/security-management/cybersecurity',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementSecurityManagementAccessControlRoute =
+  ManagementSecurityManagementAccessControlRouteImport.update({
+    id: '/management/security-management/access-control',
+    path: '/management/security-management/access-control',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementSalesManagementTerritoryManagementRoute =
@@ -1641,6 +1826,24 @@ const ManagementFinanceAssetsRoute = ManagementFinanceAssetsRouteImport.update({
   path: '/management/finance/assets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ManagementExecutiveManagementReportsRoute =
+  ManagementExecutiveManagementReportsRouteImport.update({
+    id: '/management/executive-management/reports',
+    path: '/management/executive-management/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementExecutiveManagementOverviewRoute =
+  ManagementExecutiveManagementOverviewRouteImport.update({
+    id: '/management/executive-management/overview',
+    path: '/management/executive-management/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementExecutiveManagementExecutiveReviewRoute =
+  ManagementExecutiveManagementExecutiveReviewRouteImport.update({
+    id: '/management/executive-management/executive-review',
+    path: '/management/executive-management/executive-review',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ManagementCrmManagementSalesPipelineManagementRoute =
   ManagementCrmManagementSalesPipelineManagementRouteImport.update({
     id: '/management/crm-management/sales-pipeline-management',
@@ -1783,6 +1986,66 @@ const ManagementCommunicationManagementAnnouncementsRoute =
   ManagementCommunicationManagementAnnouncementsRouteImport.update({
     id: '/management/communication-management/announcements',
     path: '/management/communication-management/announcements',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligenceReportsRoute =
+  ManagementBusinessIntelligenceReportsRouteImport.update({
+    id: '/management/business-intelligence/reports',
+    path: '/management/business-intelligence/reports',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligencePredictiveAnalyticsRoute =
+  ManagementBusinessIntelligencePredictiveAnalyticsRouteImport.update({
+    id: '/management/business-intelligence/predictive-analytics',
+    path: '/management/business-intelligence/predictive-analytics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligenceOverviewRoute =
+  ManagementBusinessIntelligenceOverviewRouteImport.update({
+    id: '/management/business-intelligence/overview',
+    path: '/management/business-intelligence/overview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligenceKpiMonitoringRoute =
+  ManagementBusinessIntelligenceKpiMonitoringRouteImport.update({
+    id: '/management/business-intelligence/kpi-monitoring',
+    path: '/management/business-intelligence/kpi-monitoring',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligenceExecutiveDashboardRoute =
+  ManagementBusinessIntelligenceExecutiveDashboardRouteImport.update({
+    id: '/management/business-intelligence/executive-dashboard',
+    path: '/management/business-intelligence/executive-dashboard',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligenceEtlPipelinesRoute =
+  ManagementBusinessIntelligenceEtlPipelinesRouteImport.update({
+    id: '/management/business-intelligence/etl-pipelines',
+    path: '/management/business-intelligence/etl-pipelines',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligenceDecisionSupportRoute =
+  ManagementBusinessIntelligenceDecisionSupportRouteImport.update({
+    id: '/management/business-intelligence/decision-support',
+    path: '/management/business-intelligence/decision-support',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligenceDataWarehouseDevelopmentRoute =
+  ManagementBusinessIntelligenceDataWarehouseDevelopmentRouteImport.update({
+    id: '/management/business-intelligence/data-warehouse-development',
+    path: '/management/business-intelligence/data-warehouse-development',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligenceDataVisualizationRoute =
+  ManagementBusinessIntelligenceDataVisualizationRouteImport.update({
+    id: '/management/business-intelligence/data-visualization',
+    path: '/management/business-intelligence/data-visualization',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ManagementBusinessIntelligenceAiInsightsRoute =
+  ManagementBusinessIntelligenceAiInsightsRouteImport.update({
+    id: '/management/business-intelligence/ai-insights',
+    path: '/management/business-intelligence/ai-insights',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ManagementAssetManagementToolManagementRoute =
@@ -2122,6 +2385,30 @@ const DevelopmentManufacturingDevelopmentOverviewRoute =
     id: '/overview',
     path: '/overview',
     getParentRoute: () => DevelopmentManufacturingDevelopmentRoute,
+  } as any)
+const DevelopmentDigitalDevelopmentPredictiveAnalyticsRoute =
+  DevelopmentDigitalDevelopmentPredictiveAnalyticsRouteImport.update({
+    id: '/digital-development/predictive-analytics',
+    path: '/digital-development/predictive-analytics',
+    getParentRoute: () => DevelopmentRoute,
+  } as any)
+const DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRoute =
+  DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRouteImport.update({
+    id: '/digital-development/data-warehouse-development',
+    path: '/digital-development/data-warehouse-development',
+    getParentRoute: () => DevelopmentRoute,
+  } as any)
+const DevelopmentDigitalDevelopmentDataVisualizationRoute =
+  DevelopmentDigitalDevelopmentDataVisualizationRouteImport.update({
+    id: '/digital-development/data-visualization',
+    path: '/digital-development/data-visualization',
+    getParentRoute: () => DevelopmentRoute,
+  } as any)
+const DevelopmentDigitalDevelopmentAiInsightsRoute =
+  DevelopmentDigitalDevelopmentAiInsightsRouteImport.update({
+    id: '/digital-development/ai-insights',
+    path: '/digital-development/ai-insights',
+    getParentRoute: () => DevelopmentRoute,
   } as any)
 const DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute =
   DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRouteImport.update({
@@ -3255,6 +3542,10 @@ export interface FileRoutesByFullPath {
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
   '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
+  '/development/digital-development/ai-insights': typeof DevelopmentDigitalDevelopmentAiInsightsRoute
+  '/development/digital-development/data-visualization': typeof DevelopmentDigitalDevelopmentDataVisualizationRoute
+  '/development/digital-development/data-warehouse-development': typeof DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRoute
+  '/development/digital-development/predictive-analytics': typeof DevelopmentDigitalDevelopmentPredictiveAnalyticsRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/manufacturing-development/reports': typeof DevelopmentManufacturingDevelopmentReportsRoute
   '/development/product-development/ai-model-development': typeof DevelopmentProductDevelopmentAiModelDevelopmentRoute
@@ -3311,6 +3602,16 @@ export interface FileRoutesByFullPath {
   '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
   '/management/asset-management/reports': typeof ManagementAssetManagementReportsRoute
   '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
+  '/management/business-intelligence/ai-insights': typeof ManagementBusinessIntelligenceAiInsightsRoute
+  '/management/business-intelligence/data-visualization': typeof ManagementBusinessIntelligenceDataVisualizationRoute
+  '/management/business-intelligence/data-warehouse-development': typeof ManagementBusinessIntelligenceDataWarehouseDevelopmentRoute
+  '/management/business-intelligence/decision-support': typeof ManagementBusinessIntelligenceDecisionSupportRoute
+  '/management/business-intelligence/etl-pipelines': typeof ManagementBusinessIntelligenceEtlPipelinesRoute
+  '/management/business-intelligence/executive-dashboard': typeof ManagementBusinessIntelligenceExecutiveDashboardRoute
+  '/management/business-intelligence/kpi-monitoring': typeof ManagementBusinessIntelligenceKpiMonitoringRoute
+  '/management/business-intelligence/overview': typeof ManagementBusinessIntelligenceOverviewRoute
+  '/management/business-intelligence/predictive-analytics': typeof ManagementBusinessIntelligencePredictiveAnalyticsRoute
+  '/management/business-intelligence/reports': typeof ManagementBusinessIntelligenceReportsRoute
   '/management/communication-management/announcements': typeof ManagementCommunicationManagementAnnouncementsRoute
   '/management/communication-management/chat': typeof ManagementCommunicationManagementChatRoute
   '/management/communication-management/collaboration-workspace': typeof ManagementCommunicationManagementCollaborationWorkspaceRoute
@@ -3335,6 +3636,9 @@ export interface FileRoutesByFullPath {
   '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
   '/management/crm-management/reports': typeof ManagementCrmManagementReportsRoute
   '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
+  '/management/executive-management/executive-review': typeof ManagementExecutiveManagementExecutiveReviewRoute
+  '/management/executive-management/overview': typeof ManagementExecutiveManagementOverviewRoute
+  '/management/executive-management/reports': typeof ManagementExecutiveManagementReportsRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
   '/management/finance/budgeting': typeof ManagementFinanceBudgetingRoute
@@ -3470,6 +3774,26 @@ export interface FileRoutesByFullPath {
   '/management/sales-management/sales-orders': typeof ManagementSalesManagementSalesOrdersRoute
   '/management/sales-management/sales-planning': typeof ManagementSalesManagementSalesPlanningRoute
   '/management/sales-management/territory-management': typeof ManagementSalesManagementTerritoryManagementRoute
+  '/management/security-management/access-control': typeof ManagementSecurityManagementAccessControlRoute
+  '/management/security-management/cybersecurity': typeof ManagementSecurityManagementCybersecurityRoute
+  '/management/security-management/identity-management': typeof ManagementSecurityManagementIdentityManagementRoute
+  '/management/security-management/information-security': typeof ManagementSecurityManagementInformationSecurityRoute
+  '/management/security-management/overview': typeof ManagementSecurityManagementOverviewRoute
+  '/management/security-management/physical-security': typeof ManagementSecurityManagementPhysicalSecurityRoute
+  '/management/security-management/reports': typeof ManagementSecurityManagementReportsRoute
+  '/management/security-management/security-audit': typeof ManagementSecurityManagementSecurityAuditRoute
+  '/management/security-management/surveillance': typeof ManagementSecurityManagementSurveillanceRoute
+  '/management/security-management/visitor-management': typeof ManagementSecurityManagementVisitorManagementRoute
+  '/management/strategy-management/balanced-scorecard': typeof ManagementStrategyManagementBalancedScorecardRoute
+  '/management/strategy-management/business-planning': typeof ManagementStrategyManagementBusinessPlanningRoute
+  '/management/strategy-management/corporate-governance': typeof ManagementStrategyManagementCorporateGovernanceRoute
+  '/management/strategy-management/kpi-management': typeof ManagementStrategyManagementKpiManagementRoute
+  '/management/strategy-management/okr-management': typeof ManagementStrategyManagementOkrManagementRoute
+  '/management/strategy-management/overview': typeof ManagementStrategyManagementOverviewRoute
+  '/management/strategy-management/portfolio-management': typeof ManagementStrategyManagementPortfolioManagementRoute
+  '/management/strategy-management/reports': typeof ManagementStrategyManagementReportsRoute
+  '/management/strategy-management/strategic-initiatives': typeof ManagementStrategyManagementStrategicInitiativesRoute
+  '/management/strategy-management/vision-mission': typeof ManagementStrategyManagementVisionMissionRoute
   '/management/supply-chain-management/demand-planning': typeof ManagementSupplyChainManagementDemandPlanningRoute
   '/management/supply-chain-management/dispatch-management': typeof ManagementSupplyChainManagementDispatchManagementRoute
   '/management/supply-chain-management/distribution': typeof ManagementSupplyChainManagementDistributionRoute
@@ -3506,12 +3830,16 @@ export interface FileRoutesByFullPath {
   '/manufacturing-development/robotics-integration/$id': typeof ManufacturingDevelopmentRoboticsIntegrationIdRoute
   '/manufacturing-development/robotics-integration/new': typeof ManufacturingDevelopmentRoboticsIntegrationNewRoute
   '/development/business-development/': typeof DevelopmentBusinessDevelopmentIndexRoute
+  '/development/digital-development/': typeof DevelopmentDigitalDevelopmentIndexRoute
   '/development/manufacturing-development/': typeof DevelopmentManufacturingDevelopmentIndexRoute
   '/development/product-development/': typeof DevelopmentProductDevelopmentIndexRoute
   '/development/research-innovation/': typeof DevelopmentResearchInnovationIndexRoute
+  '/management/business-intelligence/': typeof ManagementBusinessIntelligenceIndexRoute
   '/management/communication-management/': typeof ManagementCommunicationManagementIndexRoute
   '/management/knowledge-management/': typeof ManagementKnowledgeManagementIndexRoute
   '/management/quality-management/': typeof ManagementQualityManagementIndexRoute
+  '/management/security-management/': typeof ManagementSecurityManagementIndexRoute
+  '/management/strategy-management/': typeof ManagementStrategyManagementIndexRoute
   '/management/sustainability-management/': typeof ManagementSustainabilityManagementIndexRoute
   '/manufacturing-development/automation-development/': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing/': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
@@ -3706,6 +4034,10 @@ export interface FileRoutesByTo {
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
   '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
+  '/development/digital-development/ai-insights': typeof DevelopmentDigitalDevelopmentAiInsightsRoute
+  '/development/digital-development/data-visualization': typeof DevelopmentDigitalDevelopmentDataVisualizationRoute
+  '/development/digital-development/data-warehouse-development': typeof DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRoute
+  '/development/digital-development/predictive-analytics': typeof DevelopmentDigitalDevelopmentPredictiveAnalyticsRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/manufacturing-development/reports': typeof DevelopmentManufacturingDevelopmentReportsRoute
   '/development/product-development/ai-model-development': typeof DevelopmentProductDevelopmentAiModelDevelopmentRoute
@@ -3760,6 +4092,16 @@ export interface FileRoutesByTo {
   '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
   '/management/asset-management/reports': typeof ManagementAssetManagementReportsRoute
   '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
+  '/management/business-intelligence/ai-insights': typeof ManagementBusinessIntelligenceAiInsightsRoute
+  '/management/business-intelligence/data-visualization': typeof ManagementBusinessIntelligenceDataVisualizationRoute
+  '/management/business-intelligence/data-warehouse-development': typeof ManagementBusinessIntelligenceDataWarehouseDevelopmentRoute
+  '/management/business-intelligence/decision-support': typeof ManagementBusinessIntelligenceDecisionSupportRoute
+  '/management/business-intelligence/etl-pipelines': typeof ManagementBusinessIntelligenceEtlPipelinesRoute
+  '/management/business-intelligence/executive-dashboard': typeof ManagementBusinessIntelligenceExecutiveDashboardRoute
+  '/management/business-intelligence/kpi-monitoring': typeof ManagementBusinessIntelligenceKpiMonitoringRoute
+  '/management/business-intelligence/overview': typeof ManagementBusinessIntelligenceOverviewRoute
+  '/management/business-intelligence/predictive-analytics': typeof ManagementBusinessIntelligencePredictiveAnalyticsRoute
+  '/management/business-intelligence/reports': typeof ManagementBusinessIntelligenceReportsRoute
   '/management/communication-management/announcements': typeof ManagementCommunicationManagementAnnouncementsRoute
   '/management/communication-management/chat': typeof ManagementCommunicationManagementChatRoute
   '/management/communication-management/collaboration-workspace': typeof ManagementCommunicationManagementCollaborationWorkspaceRoute
@@ -3784,6 +4126,9 @@ export interface FileRoutesByTo {
   '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
   '/management/crm-management/reports': typeof ManagementCrmManagementReportsRoute
   '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
+  '/management/executive-management/executive-review': typeof ManagementExecutiveManagementExecutiveReviewRoute
+  '/management/executive-management/overview': typeof ManagementExecutiveManagementOverviewRoute
+  '/management/executive-management/reports': typeof ManagementExecutiveManagementReportsRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
   '/management/finance/budgeting': typeof ManagementFinanceBudgetingRoute
@@ -3919,6 +4264,26 @@ export interface FileRoutesByTo {
   '/management/sales-management/sales-orders': typeof ManagementSalesManagementSalesOrdersRoute
   '/management/sales-management/sales-planning': typeof ManagementSalesManagementSalesPlanningRoute
   '/management/sales-management/territory-management': typeof ManagementSalesManagementTerritoryManagementRoute
+  '/management/security-management/access-control': typeof ManagementSecurityManagementAccessControlRoute
+  '/management/security-management/cybersecurity': typeof ManagementSecurityManagementCybersecurityRoute
+  '/management/security-management/identity-management': typeof ManagementSecurityManagementIdentityManagementRoute
+  '/management/security-management/information-security': typeof ManagementSecurityManagementInformationSecurityRoute
+  '/management/security-management/overview': typeof ManagementSecurityManagementOverviewRoute
+  '/management/security-management/physical-security': typeof ManagementSecurityManagementPhysicalSecurityRoute
+  '/management/security-management/reports': typeof ManagementSecurityManagementReportsRoute
+  '/management/security-management/security-audit': typeof ManagementSecurityManagementSecurityAuditRoute
+  '/management/security-management/surveillance': typeof ManagementSecurityManagementSurveillanceRoute
+  '/management/security-management/visitor-management': typeof ManagementSecurityManagementVisitorManagementRoute
+  '/management/strategy-management/balanced-scorecard': typeof ManagementStrategyManagementBalancedScorecardRoute
+  '/management/strategy-management/business-planning': typeof ManagementStrategyManagementBusinessPlanningRoute
+  '/management/strategy-management/corporate-governance': typeof ManagementStrategyManagementCorporateGovernanceRoute
+  '/management/strategy-management/kpi-management': typeof ManagementStrategyManagementKpiManagementRoute
+  '/management/strategy-management/okr-management': typeof ManagementStrategyManagementOkrManagementRoute
+  '/management/strategy-management/overview': typeof ManagementStrategyManagementOverviewRoute
+  '/management/strategy-management/portfolio-management': typeof ManagementStrategyManagementPortfolioManagementRoute
+  '/management/strategy-management/reports': typeof ManagementStrategyManagementReportsRoute
+  '/management/strategy-management/strategic-initiatives': typeof ManagementStrategyManagementStrategicInitiativesRoute
+  '/management/strategy-management/vision-mission': typeof ManagementStrategyManagementVisionMissionRoute
   '/management/supply-chain-management/demand-planning': typeof ManagementSupplyChainManagementDemandPlanningRoute
   '/management/supply-chain-management/dispatch-management': typeof ManagementSupplyChainManagementDispatchManagementRoute
   '/management/supply-chain-management/distribution': typeof ManagementSupplyChainManagementDistributionRoute
@@ -3955,12 +4320,16 @@ export interface FileRoutesByTo {
   '/manufacturing-development/robotics-integration/$id': typeof ManufacturingDevelopmentRoboticsIntegrationIdRoute
   '/manufacturing-development/robotics-integration/new': typeof ManufacturingDevelopmentRoboticsIntegrationNewRoute
   '/development/business-development': typeof DevelopmentBusinessDevelopmentIndexRoute
+  '/development/digital-development': typeof DevelopmentDigitalDevelopmentIndexRoute
   '/development/manufacturing-development': typeof DevelopmentManufacturingDevelopmentIndexRoute
   '/development/product-development': typeof DevelopmentProductDevelopmentIndexRoute
   '/development/research-innovation': typeof DevelopmentResearchInnovationIndexRoute
+  '/management/business-intelligence': typeof ManagementBusinessIntelligenceIndexRoute
   '/management/communication-management': typeof ManagementCommunicationManagementIndexRoute
   '/management/knowledge-management': typeof ManagementKnowledgeManagementIndexRoute
   '/management/quality-management': typeof ManagementQualityManagementIndexRoute
+  '/management/security-management': typeof ManagementSecurityManagementIndexRoute
+  '/management/strategy-management': typeof ManagementStrategyManagementIndexRoute
   '/management/sustainability-management': typeof ManagementSustainabilityManagementIndexRoute
   '/manufacturing-development/automation-development': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
@@ -4161,6 +4530,10 @@ export interface FileRoutesById {
   '/development/business-development/sales-channel-development': typeof DevelopmentBusinessDevelopmentSalesChannelDevelopmentRoute
   '/development/business-development/value-proposition-development': typeof DevelopmentBusinessDevelopmentValuePropositionDevelopmentRoute
   '/development/business-development/vendor-ecosystem-development': typeof DevelopmentBusinessDevelopmentVendorEcosystemDevelopmentRoute
+  '/development/digital-development/ai-insights': typeof DevelopmentDigitalDevelopmentAiInsightsRoute
+  '/development/digital-development/data-visualization': typeof DevelopmentDigitalDevelopmentDataVisualizationRoute
+  '/development/digital-development/data-warehouse-development': typeof DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRoute
+  '/development/digital-development/predictive-analytics': typeof DevelopmentDigitalDevelopmentPredictiveAnalyticsRoute
   '/development/manufacturing-development/overview': typeof DevelopmentManufacturingDevelopmentOverviewRoute
   '/development/manufacturing-development/reports': typeof DevelopmentManufacturingDevelopmentReportsRoute
   '/development/product-development/ai-model-development': typeof DevelopmentProductDevelopmentAiModelDevelopmentRoute
@@ -4217,6 +4590,16 @@ export interface FileRoutesById {
   '/management/asset-management/preventive-maintenance': typeof ManagementAssetManagementPreventiveMaintenanceRoute
   '/management/asset-management/reports': typeof ManagementAssetManagementReportsRoute
   '/management/asset-management/tool-management': typeof ManagementAssetManagementToolManagementRoute
+  '/management/business-intelligence/ai-insights': typeof ManagementBusinessIntelligenceAiInsightsRoute
+  '/management/business-intelligence/data-visualization': typeof ManagementBusinessIntelligenceDataVisualizationRoute
+  '/management/business-intelligence/data-warehouse-development': typeof ManagementBusinessIntelligenceDataWarehouseDevelopmentRoute
+  '/management/business-intelligence/decision-support': typeof ManagementBusinessIntelligenceDecisionSupportRoute
+  '/management/business-intelligence/etl-pipelines': typeof ManagementBusinessIntelligenceEtlPipelinesRoute
+  '/management/business-intelligence/executive-dashboard': typeof ManagementBusinessIntelligenceExecutiveDashboardRoute
+  '/management/business-intelligence/kpi-monitoring': typeof ManagementBusinessIntelligenceKpiMonitoringRoute
+  '/management/business-intelligence/overview': typeof ManagementBusinessIntelligenceOverviewRoute
+  '/management/business-intelligence/predictive-analytics': typeof ManagementBusinessIntelligencePredictiveAnalyticsRoute
+  '/management/business-intelligence/reports': typeof ManagementBusinessIntelligenceReportsRoute
   '/management/communication-management/announcements': typeof ManagementCommunicationManagementAnnouncementsRoute
   '/management/communication-management/chat': typeof ManagementCommunicationManagementChatRoute
   '/management/communication-management/collaboration-workspace': typeof ManagementCommunicationManagementCollaborationWorkspaceRoute
@@ -4241,6 +4624,9 @@ export interface FileRoutesById {
   '/management/crm-management/quotations-management': typeof ManagementCrmManagementQuotationsManagementRoute
   '/management/crm-management/reports': typeof ManagementCrmManagementReportsRoute
   '/management/crm-management/sales-pipeline-management': typeof ManagementCrmManagementSalesPipelineManagementRoute
+  '/management/executive-management/executive-review': typeof ManagementExecutiveManagementExecutiveReviewRoute
+  '/management/executive-management/overview': typeof ManagementExecutiveManagementOverviewRoute
+  '/management/executive-management/reports': typeof ManagementExecutiveManagementReportsRoute
   '/management/finance/assets': typeof ManagementFinanceAssetsRoute
   '/management/finance/audit': typeof ManagementFinanceAuditRoute
   '/management/finance/budgeting': typeof ManagementFinanceBudgetingRoute
@@ -4376,6 +4762,26 @@ export interface FileRoutesById {
   '/management/sales-management/sales-orders': typeof ManagementSalesManagementSalesOrdersRoute
   '/management/sales-management/sales-planning': typeof ManagementSalesManagementSalesPlanningRoute
   '/management/sales-management/territory-management': typeof ManagementSalesManagementTerritoryManagementRoute
+  '/management/security-management/access-control': typeof ManagementSecurityManagementAccessControlRoute
+  '/management/security-management/cybersecurity': typeof ManagementSecurityManagementCybersecurityRoute
+  '/management/security-management/identity-management': typeof ManagementSecurityManagementIdentityManagementRoute
+  '/management/security-management/information-security': typeof ManagementSecurityManagementInformationSecurityRoute
+  '/management/security-management/overview': typeof ManagementSecurityManagementOverviewRoute
+  '/management/security-management/physical-security': typeof ManagementSecurityManagementPhysicalSecurityRoute
+  '/management/security-management/reports': typeof ManagementSecurityManagementReportsRoute
+  '/management/security-management/security-audit': typeof ManagementSecurityManagementSecurityAuditRoute
+  '/management/security-management/surveillance': typeof ManagementSecurityManagementSurveillanceRoute
+  '/management/security-management/visitor-management': typeof ManagementSecurityManagementVisitorManagementRoute
+  '/management/strategy-management/balanced-scorecard': typeof ManagementStrategyManagementBalancedScorecardRoute
+  '/management/strategy-management/business-planning': typeof ManagementStrategyManagementBusinessPlanningRoute
+  '/management/strategy-management/corporate-governance': typeof ManagementStrategyManagementCorporateGovernanceRoute
+  '/management/strategy-management/kpi-management': typeof ManagementStrategyManagementKpiManagementRoute
+  '/management/strategy-management/okr-management': typeof ManagementStrategyManagementOkrManagementRoute
+  '/management/strategy-management/overview': typeof ManagementStrategyManagementOverviewRoute
+  '/management/strategy-management/portfolio-management': typeof ManagementStrategyManagementPortfolioManagementRoute
+  '/management/strategy-management/reports': typeof ManagementStrategyManagementReportsRoute
+  '/management/strategy-management/strategic-initiatives': typeof ManagementStrategyManagementStrategicInitiativesRoute
+  '/management/strategy-management/vision-mission': typeof ManagementStrategyManagementVisionMissionRoute
   '/management/supply-chain-management/demand-planning': typeof ManagementSupplyChainManagementDemandPlanningRoute
   '/management/supply-chain-management/dispatch-management': typeof ManagementSupplyChainManagementDispatchManagementRoute
   '/management/supply-chain-management/distribution': typeof ManagementSupplyChainManagementDistributionRoute
@@ -4412,12 +4818,16 @@ export interface FileRoutesById {
   '/manufacturing-development/robotics-integration/$id': typeof ManufacturingDevelopmentRoboticsIntegrationIdRoute
   '/manufacturing-development/robotics-integration/new': typeof ManufacturingDevelopmentRoboticsIntegrationNewRoute
   '/development/business-development/': typeof DevelopmentBusinessDevelopmentIndexRoute
+  '/development/digital-development/': typeof DevelopmentDigitalDevelopmentIndexRoute
   '/development/manufacturing-development/': typeof DevelopmentManufacturingDevelopmentIndexRoute
   '/development/product-development/': typeof DevelopmentProductDevelopmentIndexRoute
   '/development/research-innovation/': typeof DevelopmentResearchInnovationIndexRoute
+  '/management/business-intelligence/': typeof ManagementBusinessIntelligenceIndexRoute
   '/management/communication-management/': typeof ManagementCommunicationManagementIndexRoute
   '/management/knowledge-management/': typeof ManagementKnowledgeManagementIndexRoute
   '/management/quality-management/': typeof ManagementQualityManagementIndexRoute
+  '/management/security-management/': typeof ManagementSecurityManagementIndexRoute
+  '/management/strategy-management/': typeof ManagementStrategyManagementIndexRoute
   '/management/sustainability-management/': typeof ManagementSustainabilityManagementIndexRoute
   '/manufacturing-development/automation-development/': typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   '/manufacturing-development/lean-manufacturing/': typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
@@ -4619,6 +5029,10 @@ export interface FileRouteTypes {
     | '/development/business-development/sales-channel-development'
     | '/development/business-development/value-proposition-development'
     | '/development/business-development/vendor-ecosystem-development'
+    | '/development/digital-development/ai-insights'
+    | '/development/digital-development/data-visualization'
+    | '/development/digital-development/data-warehouse-development'
+    | '/development/digital-development/predictive-analytics'
     | '/development/manufacturing-development/overview'
     | '/development/manufacturing-development/reports'
     | '/development/product-development/ai-model-development'
@@ -4675,6 +5089,16 @@ export interface FileRouteTypes {
     | '/management/asset-management/preventive-maintenance'
     | '/management/asset-management/reports'
     | '/management/asset-management/tool-management'
+    | '/management/business-intelligence/ai-insights'
+    | '/management/business-intelligence/data-visualization'
+    | '/management/business-intelligence/data-warehouse-development'
+    | '/management/business-intelligence/decision-support'
+    | '/management/business-intelligence/etl-pipelines'
+    | '/management/business-intelligence/executive-dashboard'
+    | '/management/business-intelligence/kpi-monitoring'
+    | '/management/business-intelligence/overview'
+    | '/management/business-intelligence/predictive-analytics'
+    | '/management/business-intelligence/reports'
     | '/management/communication-management/announcements'
     | '/management/communication-management/chat'
     | '/management/communication-management/collaboration-workspace'
@@ -4699,6 +5123,9 @@ export interface FileRouteTypes {
     | '/management/crm-management/quotations-management'
     | '/management/crm-management/reports'
     | '/management/crm-management/sales-pipeline-management'
+    | '/management/executive-management/executive-review'
+    | '/management/executive-management/overview'
+    | '/management/executive-management/reports'
     | '/management/finance/assets'
     | '/management/finance/audit'
     | '/management/finance/budgeting'
@@ -4834,6 +5261,26 @@ export interface FileRouteTypes {
     | '/management/sales-management/sales-orders'
     | '/management/sales-management/sales-planning'
     | '/management/sales-management/territory-management'
+    | '/management/security-management/access-control'
+    | '/management/security-management/cybersecurity'
+    | '/management/security-management/identity-management'
+    | '/management/security-management/information-security'
+    | '/management/security-management/overview'
+    | '/management/security-management/physical-security'
+    | '/management/security-management/reports'
+    | '/management/security-management/security-audit'
+    | '/management/security-management/surveillance'
+    | '/management/security-management/visitor-management'
+    | '/management/strategy-management/balanced-scorecard'
+    | '/management/strategy-management/business-planning'
+    | '/management/strategy-management/corporate-governance'
+    | '/management/strategy-management/kpi-management'
+    | '/management/strategy-management/okr-management'
+    | '/management/strategy-management/overview'
+    | '/management/strategy-management/portfolio-management'
+    | '/management/strategy-management/reports'
+    | '/management/strategy-management/strategic-initiatives'
+    | '/management/strategy-management/vision-mission'
     | '/management/supply-chain-management/demand-planning'
     | '/management/supply-chain-management/dispatch-management'
     | '/management/supply-chain-management/distribution'
@@ -4870,12 +5317,16 @@ export interface FileRouteTypes {
     | '/manufacturing-development/robotics-integration/$id'
     | '/manufacturing-development/robotics-integration/new'
     | '/development/business-development/'
+    | '/development/digital-development/'
     | '/development/manufacturing-development/'
     | '/development/product-development/'
     | '/development/research-innovation/'
+    | '/management/business-intelligence/'
     | '/management/communication-management/'
     | '/management/knowledge-management/'
     | '/management/quality-management/'
+    | '/management/security-management/'
+    | '/management/strategy-management/'
     | '/management/sustainability-management/'
     | '/manufacturing-development/automation-development/'
     | '/manufacturing-development/lean-manufacturing/'
@@ -5070,6 +5521,10 @@ export interface FileRouteTypes {
     | '/development/business-development/sales-channel-development'
     | '/development/business-development/value-proposition-development'
     | '/development/business-development/vendor-ecosystem-development'
+    | '/development/digital-development/ai-insights'
+    | '/development/digital-development/data-visualization'
+    | '/development/digital-development/data-warehouse-development'
+    | '/development/digital-development/predictive-analytics'
     | '/development/manufacturing-development/overview'
     | '/development/manufacturing-development/reports'
     | '/development/product-development/ai-model-development'
@@ -5124,6 +5579,16 @@ export interface FileRouteTypes {
     | '/management/asset-management/preventive-maintenance'
     | '/management/asset-management/reports'
     | '/management/asset-management/tool-management'
+    | '/management/business-intelligence/ai-insights'
+    | '/management/business-intelligence/data-visualization'
+    | '/management/business-intelligence/data-warehouse-development'
+    | '/management/business-intelligence/decision-support'
+    | '/management/business-intelligence/etl-pipelines'
+    | '/management/business-intelligence/executive-dashboard'
+    | '/management/business-intelligence/kpi-monitoring'
+    | '/management/business-intelligence/overview'
+    | '/management/business-intelligence/predictive-analytics'
+    | '/management/business-intelligence/reports'
     | '/management/communication-management/announcements'
     | '/management/communication-management/chat'
     | '/management/communication-management/collaboration-workspace'
@@ -5148,6 +5613,9 @@ export interface FileRouteTypes {
     | '/management/crm-management/quotations-management'
     | '/management/crm-management/reports'
     | '/management/crm-management/sales-pipeline-management'
+    | '/management/executive-management/executive-review'
+    | '/management/executive-management/overview'
+    | '/management/executive-management/reports'
     | '/management/finance/assets'
     | '/management/finance/audit'
     | '/management/finance/budgeting'
@@ -5283,6 +5751,26 @@ export interface FileRouteTypes {
     | '/management/sales-management/sales-orders'
     | '/management/sales-management/sales-planning'
     | '/management/sales-management/territory-management'
+    | '/management/security-management/access-control'
+    | '/management/security-management/cybersecurity'
+    | '/management/security-management/identity-management'
+    | '/management/security-management/information-security'
+    | '/management/security-management/overview'
+    | '/management/security-management/physical-security'
+    | '/management/security-management/reports'
+    | '/management/security-management/security-audit'
+    | '/management/security-management/surveillance'
+    | '/management/security-management/visitor-management'
+    | '/management/strategy-management/balanced-scorecard'
+    | '/management/strategy-management/business-planning'
+    | '/management/strategy-management/corporate-governance'
+    | '/management/strategy-management/kpi-management'
+    | '/management/strategy-management/okr-management'
+    | '/management/strategy-management/overview'
+    | '/management/strategy-management/portfolio-management'
+    | '/management/strategy-management/reports'
+    | '/management/strategy-management/strategic-initiatives'
+    | '/management/strategy-management/vision-mission'
     | '/management/supply-chain-management/demand-planning'
     | '/management/supply-chain-management/dispatch-management'
     | '/management/supply-chain-management/distribution'
@@ -5319,12 +5807,16 @@ export interface FileRouteTypes {
     | '/manufacturing-development/robotics-integration/$id'
     | '/manufacturing-development/robotics-integration/new'
     | '/development/business-development'
+    | '/development/digital-development'
     | '/development/manufacturing-development'
     | '/development/product-development'
     | '/development/research-innovation'
+    | '/management/business-intelligence'
     | '/management/communication-management'
     | '/management/knowledge-management'
     | '/management/quality-management'
+    | '/management/security-management'
+    | '/management/strategy-management'
     | '/management/sustainability-management'
     | '/manufacturing-development/automation-development'
     | '/manufacturing-development/lean-manufacturing'
@@ -5524,6 +6016,10 @@ export interface FileRouteTypes {
     | '/development/business-development/sales-channel-development'
     | '/development/business-development/value-proposition-development'
     | '/development/business-development/vendor-ecosystem-development'
+    | '/development/digital-development/ai-insights'
+    | '/development/digital-development/data-visualization'
+    | '/development/digital-development/data-warehouse-development'
+    | '/development/digital-development/predictive-analytics'
     | '/development/manufacturing-development/overview'
     | '/development/manufacturing-development/reports'
     | '/development/product-development/ai-model-development'
@@ -5580,6 +6076,16 @@ export interface FileRouteTypes {
     | '/management/asset-management/preventive-maintenance'
     | '/management/asset-management/reports'
     | '/management/asset-management/tool-management'
+    | '/management/business-intelligence/ai-insights'
+    | '/management/business-intelligence/data-visualization'
+    | '/management/business-intelligence/data-warehouse-development'
+    | '/management/business-intelligence/decision-support'
+    | '/management/business-intelligence/etl-pipelines'
+    | '/management/business-intelligence/executive-dashboard'
+    | '/management/business-intelligence/kpi-monitoring'
+    | '/management/business-intelligence/overview'
+    | '/management/business-intelligence/predictive-analytics'
+    | '/management/business-intelligence/reports'
     | '/management/communication-management/announcements'
     | '/management/communication-management/chat'
     | '/management/communication-management/collaboration-workspace'
@@ -5604,6 +6110,9 @@ export interface FileRouteTypes {
     | '/management/crm-management/quotations-management'
     | '/management/crm-management/reports'
     | '/management/crm-management/sales-pipeline-management'
+    | '/management/executive-management/executive-review'
+    | '/management/executive-management/overview'
+    | '/management/executive-management/reports'
     | '/management/finance/assets'
     | '/management/finance/audit'
     | '/management/finance/budgeting'
@@ -5739,6 +6248,26 @@ export interface FileRouteTypes {
     | '/management/sales-management/sales-orders'
     | '/management/sales-management/sales-planning'
     | '/management/sales-management/territory-management'
+    | '/management/security-management/access-control'
+    | '/management/security-management/cybersecurity'
+    | '/management/security-management/identity-management'
+    | '/management/security-management/information-security'
+    | '/management/security-management/overview'
+    | '/management/security-management/physical-security'
+    | '/management/security-management/reports'
+    | '/management/security-management/security-audit'
+    | '/management/security-management/surveillance'
+    | '/management/security-management/visitor-management'
+    | '/management/strategy-management/balanced-scorecard'
+    | '/management/strategy-management/business-planning'
+    | '/management/strategy-management/corporate-governance'
+    | '/management/strategy-management/kpi-management'
+    | '/management/strategy-management/okr-management'
+    | '/management/strategy-management/overview'
+    | '/management/strategy-management/portfolio-management'
+    | '/management/strategy-management/reports'
+    | '/management/strategy-management/strategic-initiatives'
+    | '/management/strategy-management/vision-mission'
     | '/management/supply-chain-management/demand-planning'
     | '/management/supply-chain-management/dispatch-management'
     | '/management/supply-chain-management/distribution'
@@ -5775,12 +6304,16 @@ export interface FileRouteTypes {
     | '/manufacturing-development/robotics-integration/$id'
     | '/manufacturing-development/robotics-integration/new'
     | '/development/business-development/'
+    | '/development/digital-development/'
     | '/development/manufacturing-development/'
     | '/development/product-development/'
     | '/development/research-innovation/'
+    | '/management/business-intelligence/'
     | '/management/communication-management/'
     | '/management/knowledge-management/'
     | '/management/quality-management/'
+    | '/management/security-management/'
+    | '/management/strategy-management/'
     | '/management/sustainability-management/'
     | '/manufacturing-development/automation-development/'
     | '/manufacturing-development/lean-manufacturing/'
@@ -5976,6 +6509,16 @@ export interface RootRouteChildren {
   ManagementAssetManagementPreventiveMaintenanceRoute: typeof ManagementAssetManagementPreventiveMaintenanceRoute
   ManagementAssetManagementReportsRoute: typeof ManagementAssetManagementReportsRoute
   ManagementAssetManagementToolManagementRoute: typeof ManagementAssetManagementToolManagementRoute
+  ManagementBusinessIntelligenceAiInsightsRoute: typeof ManagementBusinessIntelligenceAiInsightsRoute
+  ManagementBusinessIntelligenceDataVisualizationRoute: typeof ManagementBusinessIntelligenceDataVisualizationRoute
+  ManagementBusinessIntelligenceDataWarehouseDevelopmentRoute: typeof ManagementBusinessIntelligenceDataWarehouseDevelopmentRoute
+  ManagementBusinessIntelligenceDecisionSupportRoute: typeof ManagementBusinessIntelligenceDecisionSupportRoute
+  ManagementBusinessIntelligenceEtlPipelinesRoute: typeof ManagementBusinessIntelligenceEtlPipelinesRoute
+  ManagementBusinessIntelligenceExecutiveDashboardRoute: typeof ManagementBusinessIntelligenceExecutiveDashboardRoute
+  ManagementBusinessIntelligenceKpiMonitoringRoute: typeof ManagementBusinessIntelligenceKpiMonitoringRoute
+  ManagementBusinessIntelligenceOverviewRoute: typeof ManagementBusinessIntelligenceOverviewRoute
+  ManagementBusinessIntelligencePredictiveAnalyticsRoute: typeof ManagementBusinessIntelligencePredictiveAnalyticsRoute
+  ManagementBusinessIntelligenceReportsRoute: typeof ManagementBusinessIntelligenceReportsRoute
   ManagementCommunicationManagementAnnouncementsRoute: typeof ManagementCommunicationManagementAnnouncementsRoute
   ManagementCommunicationManagementChatRoute: typeof ManagementCommunicationManagementChatRoute
   ManagementCommunicationManagementCollaborationWorkspaceRoute: typeof ManagementCommunicationManagementCollaborationWorkspaceRoute
@@ -6000,6 +6543,9 @@ export interface RootRouteChildren {
   ManagementCrmManagementQuotationsManagementRoute: typeof ManagementCrmManagementQuotationsManagementRoute
   ManagementCrmManagementReportsRoute: typeof ManagementCrmManagementReportsRoute
   ManagementCrmManagementSalesPipelineManagementRoute: typeof ManagementCrmManagementSalesPipelineManagementRoute
+  ManagementExecutiveManagementExecutiveReviewRoute: typeof ManagementExecutiveManagementExecutiveReviewRoute
+  ManagementExecutiveManagementOverviewRoute: typeof ManagementExecutiveManagementOverviewRoute
+  ManagementExecutiveManagementReportsRoute: typeof ManagementExecutiveManagementReportsRoute
   ManagementFinanceAssetsRoute: typeof ManagementFinanceAssetsRoute
   ManagementFinanceAuditRoute: typeof ManagementFinanceAuditRoute
   ManagementFinanceBudgetingRoute: typeof ManagementFinanceBudgetingRoute
@@ -6135,6 +6681,26 @@ export interface RootRouteChildren {
   ManagementSalesManagementSalesOrdersRoute: typeof ManagementSalesManagementSalesOrdersRoute
   ManagementSalesManagementSalesPlanningRoute: typeof ManagementSalesManagementSalesPlanningRoute
   ManagementSalesManagementTerritoryManagementRoute: typeof ManagementSalesManagementTerritoryManagementRoute
+  ManagementSecurityManagementAccessControlRoute: typeof ManagementSecurityManagementAccessControlRoute
+  ManagementSecurityManagementCybersecurityRoute: typeof ManagementSecurityManagementCybersecurityRoute
+  ManagementSecurityManagementIdentityManagementRoute: typeof ManagementSecurityManagementIdentityManagementRoute
+  ManagementSecurityManagementInformationSecurityRoute: typeof ManagementSecurityManagementInformationSecurityRoute
+  ManagementSecurityManagementOverviewRoute: typeof ManagementSecurityManagementOverviewRoute
+  ManagementSecurityManagementPhysicalSecurityRoute: typeof ManagementSecurityManagementPhysicalSecurityRoute
+  ManagementSecurityManagementReportsRoute: typeof ManagementSecurityManagementReportsRoute
+  ManagementSecurityManagementSecurityAuditRoute: typeof ManagementSecurityManagementSecurityAuditRoute
+  ManagementSecurityManagementSurveillanceRoute: typeof ManagementSecurityManagementSurveillanceRoute
+  ManagementSecurityManagementVisitorManagementRoute: typeof ManagementSecurityManagementVisitorManagementRoute
+  ManagementStrategyManagementBalancedScorecardRoute: typeof ManagementStrategyManagementBalancedScorecardRoute
+  ManagementStrategyManagementBusinessPlanningRoute: typeof ManagementStrategyManagementBusinessPlanningRoute
+  ManagementStrategyManagementCorporateGovernanceRoute: typeof ManagementStrategyManagementCorporateGovernanceRoute
+  ManagementStrategyManagementKpiManagementRoute: typeof ManagementStrategyManagementKpiManagementRoute
+  ManagementStrategyManagementOkrManagementRoute: typeof ManagementStrategyManagementOkrManagementRoute
+  ManagementStrategyManagementOverviewRoute: typeof ManagementStrategyManagementOverviewRoute
+  ManagementStrategyManagementPortfolioManagementRoute: typeof ManagementStrategyManagementPortfolioManagementRoute
+  ManagementStrategyManagementReportsRoute: typeof ManagementStrategyManagementReportsRoute
+  ManagementStrategyManagementStrategicInitiativesRoute: typeof ManagementStrategyManagementStrategicInitiativesRoute
+  ManagementStrategyManagementVisionMissionRoute: typeof ManagementStrategyManagementVisionMissionRoute
   ManagementSupplyChainManagementDemandPlanningRoute: typeof ManagementSupplyChainManagementDemandPlanningRoute
   ManagementSupplyChainManagementDispatchManagementRoute: typeof ManagementSupplyChainManagementDispatchManagementRoute
   ManagementSupplyChainManagementDistributionRoute: typeof ManagementSupplyChainManagementDistributionRoute
@@ -6170,9 +6736,12 @@ export interface RootRouteChildren {
   ManufacturingDevelopmentPilotProductionNewRoute: typeof ManufacturingDevelopmentPilotProductionNewRoute
   ManufacturingDevelopmentRoboticsIntegrationIdRoute: typeof ManufacturingDevelopmentRoboticsIntegrationIdRoute
   ManufacturingDevelopmentRoboticsIntegrationNewRoute: typeof ManufacturingDevelopmentRoboticsIntegrationNewRoute
+  ManagementBusinessIntelligenceIndexRoute: typeof ManagementBusinessIntelligenceIndexRoute
   ManagementCommunicationManagementIndexRoute: typeof ManagementCommunicationManagementIndexRoute
   ManagementKnowledgeManagementIndexRoute: typeof ManagementKnowledgeManagementIndexRoute
   ManagementQualityManagementIndexRoute: typeof ManagementQualityManagementIndexRoute
+  ManagementSecurityManagementIndexRoute: typeof ManagementSecurityManagementIndexRoute
+  ManagementStrategyManagementIndexRoute: typeof ManagementStrategyManagementIndexRoute
   ManagementSustainabilityManagementIndexRoute: typeof ManagementSustainabilityManagementIndexRoute
   ManufacturingDevelopmentAutomationDevelopmentIndexRoute: typeof ManufacturingDevelopmentAutomationDevelopmentIndexRoute
   ManufacturingDevelopmentLeanManufacturingIndexRoute: typeof ManufacturingDevelopmentLeanManufacturingIndexRoute
@@ -6337,6 +6906,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementSustainabilityManagementIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/strategy-management/': {
+      id: '/management/strategy-management/'
+      path: '/management/strategy-management'
+      fullPath: '/management/strategy-management/'
+      preLoaderRoute: typeof ManagementStrategyManagementIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/': {
+      id: '/management/security-management/'
+      path: '/management/security-management'
+      fullPath: '/management/security-management/'
+      preLoaderRoute: typeof ManagementSecurityManagementIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/quality-management/': {
       id: '/management/quality-management/'
       path: '/management/quality-management'
@@ -6356,6 +6939,13 @@ declare module '@tanstack/react-router' {
       path: '/management/communication-management'
       fullPath: '/management/communication-management/'
       preLoaderRoute: typeof ManagementCommunicationManagementIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/': {
+      id: '/management/business-intelligence/'
+      path: '/management/business-intelligence'
+      fullPath: '/management/business-intelligence/'
+      preLoaderRoute: typeof ManagementBusinessIntelligenceIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/development/research-innovation/': {
@@ -6378,6 +6968,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/development/manufacturing-development/'
       preLoaderRoute: typeof DevelopmentManufacturingDevelopmentIndexRouteImport
       parentRoute: typeof DevelopmentManufacturingDevelopmentRoute
+    }
+    '/development/digital-development/': {
+      id: '/development/digital-development/'
+      path: '/digital-development'
+      fullPath: '/development/digital-development/'
+      preLoaderRoute: typeof DevelopmentDigitalDevelopmentIndexRouteImport
+      parentRoute: typeof DevelopmentRoute
     }
     '/development/business-development/': {
       id: '/development/business-development/'
@@ -6629,6 +7226,146 @@ declare module '@tanstack/react-router' {
       path: '/management/supply-chain-management/demand-planning'
       fullPath: '/management/supply-chain-management/demand-planning'
       preLoaderRoute: typeof ManagementSupplyChainManagementDemandPlanningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/strategy-management/vision-mission': {
+      id: '/management/strategy-management/vision-mission'
+      path: '/management/strategy-management/vision-mission'
+      fullPath: '/management/strategy-management/vision-mission'
+      preLoaderRoute: typeof ManagementStrategyManagementVisionMissionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/strategy-management/strategic-initiatives': {
+      id: '/management/strategy-management/strategic-initiatives'
+      path: '/management/strategy-management/strategic-initiatives'
+      fullPath: '/management/strategy-management/strategic-initiatives'
+      preLoaderRoute: typeof ManagementStrategyManagementStrategicInitiativesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/strategy-management/reports': {
+      id: '/management/strategy-management/reports'
+      path: '/management/strategy-management/reports'
+      fullPath: '/management/strategy-management/reports'
+      preLoaderRoute: typeof ManagementStrategyManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/strategy-management/portfolio-management': {
+      id: '/management/strategy-management/portfolio-management'
+      path: '/management/strategy-management/portfolio-management'
+      fullPath: '/management/strategy-management/portfolio-management'
+      preLoaderRoute: typeof ManagementStrategyManagementPortfolioManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/strategy-management/overview': {
+      id: '/management/strategy-management/overview'
+      path: '/management/strategy-management/overview'
+      fullPath: '/management/strategy-management/overview'
+      preLoaderRoute: typeof ManagementStrategyManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/strategy-management/okr-management': {
+      id: '/management/strategy-management/okr-management'
+      path: '/management/strategy-management/okr-management'
+      fullPath: '/management/strategy-management/okr-management'
+      preLoaderRoute: typeof ManagementStrategyManagementOkrManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/strategy-management/kpi-management': {
+      id: '/management/strategy-management/kpi-management'
+      path: '/management/strategy-management/kpi-management'
+      fullPath: '/management/strategy-management/kpi-management'
+      preLoaderRoute: typeof ManagementStrategyManagementKpiManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/strategy-management/corporate-governance': {
+      id: '/management/strategy-management/corporate-governance'
+      path: '/management/strategy-management/corporate-governance'
+      fullPath: '/management/strategy-management/corporate-governance'
+      preLoaderRoute: typeof ManagementStrategyManagementCorporateGovernanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/strategy-management/business-planning': {
+      id: '/management/strategy-management/business-planning'
+      path: '/management/strategy-management/business-planning'
+      fullPath: '/management/strategy-management/business-planning'
+      preLoaderRoute: typeof ManagementStrategyManagementBusinessPlanningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/strategy-management/balanced-scorecard': {
+      id: '/management/strategy-management/balanced-scorecard'
+      path: '/management/strategy-management/balanced-scorecard'
+      fullPath: '/management/strategy-management/balanced-scorecard'
+      preLoaderRoute: typeof ManagementStrategyManagementBalancedScorecardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/visitor-management': {
+      id: '/management/security-management/visitor-management'
+      path: '/management/security-management/visitor-management'
+      fullPath: '/management/security-management/visitor-management'
+      preLoaderRoute: typeof ManagementSecurityManagementVisitorManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/surveillance': {
+      id: '/management/security-management/surveillance'
+      path: '/management/security-management/surveillance'
+      fullPath: '/management/security-management/surveillance'
+      preLoaderRoute: typeof ManagementSecurityManagementSurveillanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/security-audit': {
+      id: '/management/security-management/security-audit'
+      path: '/management/security-management/security-audit'
+      fullPath: '/management/security-management/security-audit'
+      preLoaderRoute: typeof ManagementSecurityManagementSecurityAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/reports': {
+      id: '/management/security-management/reports'
+      path: '/management/security-management/reports'
+      fullPath: '/management/security-management/reports'
+      preLoaderRoute: typeof ManagementSecurityManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/physical-security': {
+      id: '/management/security-management/physical-security'
+      path: '/management/security-management/physical-security'
+      fullPath: '/management/security-management/physical-security'
+      preLoaderRoute: typeof ManagementSecurityManagementPhysicalSecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/overview': {
+      id: '/management/security-management/overview'
+      path: '/management/security-management/overview'
+      fullPath: '/management/security-management/overview'
+      preLoaderRoute: typeof ManagementSecurityManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/information-security': {
+      id: '/management/security-management/information-security'
+      path: '/management/security-management/information-security'
+      fullPath: '/management/security-management/information-security'
+      preLoaderRoute: typeof ManagementSecurityManagementInformationSecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/identity-management': {
+      id: '/management/security-management/identity-management'
+      path: '/management/security-management/identity-management'
+      fullPath: '/management/security-management/identity-management'
+      preLoaderRoute: typeof ManagementSecurityManagementIdentityManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/cybersecurity': {
+      id: '/management/security-management/cybersecurity'
+      path: '/management/security-management/cybersecurity'
+      fullPath: '/management/security-management/cybersecurity'
+      preLoaderRoute: typeof ManagementSecurityManagementCybersecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/security-management/access-control': {
+      id: '/management/security-management/access-control'
+      path: '/management/security-management/access-control'
+      fullPath: '/management/security-management/access-control'
+      preLoaderRoute: typeof ManagementSecurityManagementAccessControlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/sales-management/territory-management': {
@@ -7576,6 +8313,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementFinanceAssetsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/management/executive-management/reports': {
+      id: '/management/executive-management/reports'
+      path: '/management/executive-management/reports'
+      fullPath: '/management/executive-management/reports'
+      preLoaderRoute: typeof ManagementExecutiveManagementReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/executive-management/overview': {
+      id: '/management/executive-management/overview'
+      path: '/management/executive-management/overview'
+      fullPath: '/management/executive-management/overview'
+      preLoaderRoute: typeof ManagementExecutiveManagementOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/executive-management/executive-review': {
+      id: '/management/executive-management/executive-review'
+      path: '/management/executive-management/executive-review'
+      fullPath: '/management/executive-management/executive-review'
+      preLoaderRoute: typeof ManagementExecutiveManagementExecutiveReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/management/crm-management/sales-pipeline-management': {
       id: '/management/crm-management/sales-pipeline-management'
       path: '/management/crm-management/sales-pipeline-management'
@@ -7742,6 +8500,76 @@ declare module '@tanstack/react-router' {
       path: '/management/communication-management/announcements'
       fullPath: '/management/communication-management/announcements'
       preLoaderRoute: typeof ManagementCommunicationManagementAnnouncementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/reports': {
+      id: '/management/business-intelligence/reports'
+      path: '/management/business-intelligence/reports'
+      fullPath: '/management/business-intelligence/reports'
+      preLoaderRoute: typeof ManagementBusinessIntelligenceReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/predictive-analytics': {
+      id: '/management/business-intelligence/predictive-analytics'
+      path: '/management/business-intelligence/predictive-analytics'
+      fullPath: '/management/business-intelligence/predictive-analytics'
+      preLoaderRoute: typeof ManagementBusinessIntelligencePredictiveAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/overview': {
+      id: '/management/business-intelligence/overview'
+      path: '/management/business-intelligence/overview'
+      fullPath: '/management/business-intelligence/overview'
+      preLoaderRoute: typeof ManagementBusinessIntelligenceOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/kpi-monitoring': {
+      id: '/management/business-intelligence/kpi-monitoring'
+      path: '/management/business-intelligence/kpi-monitoring'
+      fullPath: '/management/business-intelligence/kpi-monitoring'
+      preLoaderRoute: typeof ManagementBusinessIntelligenceKpiMonitoringRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/executive-dashboard': {
+      id: '/management/business-intelligence/executive-dashboard'
+      path: '/management/business-intelligence/executive-dashboard'
+      fullPath: '/management/business-intelligence/executive-dashboard'
+      preLoaderRoute: typeof ManagementBusinessIntelligenceExecutiveDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/etl-pipelines': {
+      id: '/management/business-intelligence/etl-pipelines'
+      path: '/management/business-intelligence/etl-pipelines'
+      fullPath: '/management/business-intelligence/etl-pipelines'
+      preLoaderRoute: typeof ManagementBusinessIntelligenceEtlPipelinesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/decision-support': {
+      id: '/management/business-intelligence/decision-support'
+      path: '/management/business-intelligence/decision-support'
+      fullPath: '/management/business-intelligence/decision-support'
+      preLoaderRoute: typeof ManagementBusinessIntelligenceDecisionSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/data-warehouse-development': {
+      id: '/management/business-intelligence/data-warehouse-development'
+      path: '/management/business-intelligence/data-warehouse-development'
+      fullPath: '/management/business-intelligence/data-warehouse-development'
+      preLoaderRoute: typeof ManagementBusinessIntelligenceDataWarehouseDevelopmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/data-visualization': {
+      id: '/management/business-intelligence/data-visualization'
+      path: '/management/business-intelligence/data-visualization'
+      fullPath: '/management/business-intelligence/data-visualization'
+      preLoaderRoute: typeof ManagementBusinessIntelligenceDataVisualizationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management/business-intelligence/ai-insights': {
+      id: '/management/business-intelligence/ai-insights'
+      path: '/management/business-intelligence/ai-insights'
+      fullPath: '/management/business-intelligence/ai-insights'
+      preLoaderRoute: typeof ManagementBusinessIntelligenceAiInsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management/asset-management/tool-management': {
@@ -8135,6 +8963,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/development/manufacturing-development/overview'
       preLoaderRoute: typeof DevelopmentManufacturingDevelopmentOverviewRouteImport
       parentRoute: typeof DevelopmentManufacturingDevelopmentRoute
+    }
+    '/development/digital-development/predictive-analytics': {
+      id: '/development/digital-development/predictive-analytics'
+      path: '/digital-development/predictive-analytics'
+      fullPath: '/development/digital-development/predictive-analytics'
+      preLoaderRoute: typeof DevelopmentDigitalDevelopmentPredictiveAnalyticsRouteImport
+      parentRoute: typeof DevelopmentRoute
+    }
+    '/development/digital-development/data-warehouse-development': {
+      id: '/development/digital-development/data-warehouse-development'
+      path: '/digital-development/data-warehouse-development'
+      fullPath: '/development/digital-development/data-warehouse-development'
+      preLoaderRoute: typeof DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRouteImport
+      parentRoute: typeof DevelopmentRoute
+    }
+    '/development/digital-development/data-visualization': {
+      id: '/development/digital-development/data-visualization'
+      path: '/digital-development/data-visualization'
+      fullPath: '/development/digital-development/data-visualization'
+      preLoaderRoute: typeof DevelopmentDigitalDevelopmentDataVisualizationRouteImport
+      parentRoute: typeof DevelopmentRoute
+    }
+    '/development/digital-development/ai-insights': {
+      id: '/development/digital-development/ai-insights'
+      path: '/digital-development/ai-insights'
+      fullPath: '/development/digital-development/ai-insights'
+      preLoaderRoute: typeof DevelopmentDigitalDevelopmentAiInsightsRouteImport
+      parentRoute: typeof DevelopmentRoute
     }
     '/development/business-development/vendor-ecosystem-development': {
       id: '/development/business-development/vendor-ecosystem-development'
@@ -10042,6 +10898,11 @@ interface DevelopmentRouteChildren {
   DevelopmentProductDevelopmentRoute: typeof DevelopmentProductDevelopmentRouteWithChildren
   DevelopmentResearchInnovationRoute: typeof DevelopmentResearchInnovationRouteWithChildren
   DevelopmentIndexRoute: typeof DevelopmentIndexRoute
+  DevelopmentDigitalDevelopmentAiInsightsRoute: typeof DevelopmentDigitalDevelopmentAiInsightsRoute
+  DevelopmentDigitalDevelopmentDataVisualizationRoute: typeof DevelopmentDigitalDevelopmentDataVisualizationRoute
+  DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRoute: typeof DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRoute
+  DevelopmentDigitalDevelopmentPredictiveAnalyticsRoute: typeof DevelopmentDigitalDevelopmentPredictiveAnalyticsRoute
+  DevelopmentDigitalDevelopmentIndexRoute: typeof DevelopmentDigitalDevelopmentIndexRoute
   DevelopmentIpDevelopmentPatentManagementNewRoute: typeof DevelopmentIpDevelopmentPatentManagementNewRoute
   DevelopmentIpDevelopmentPatentManagementIndexRoute: typeof DevelopmentIpDevelopmentPatentManagementIndexRoute
 }
@@ -10056,6 +10917,16 @@ const DevelopmentRouteChildren: DevelopmentRouteChildren = {
   DevelopmentResearchInnovationRoute:
     DevelopmentResearchInnovationRouteWithChildren,
   DevelopmentIndexRoute: DevelopmentIndexRoute,
+  DevelopmentDigitalDevelopmentAiInsightsRoute:
+    DevelopmentDigitalDevelopmentAiInsightsRoute,
+  DevelopmentDigitalDevelopmentDataVisualizationRoute:
+    DevelopmentDigitalDevelopmentDataVisualizationRoute,
+  DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRoute:
+    DevelopmentDigitalDevelopmentDataWarehouseDevelopmentRoute,
+  DevelopmentDigitalDevelopmentPredictiveAnalyticsRoute:
+    DevelopmentDigitalDevelopmentPredictiveAnalyticsRoute,
+  DevelopmentDigitalDevelopmentIndexRoute:
+    DevelopmentDigitalDevelopmentIndexRoute,
   DevelopmentIpDevelopmentPatentManagementNewRoute:
     DevelopmentIpDevelopmentPatentManagementNewRoute,
   DevelopmentIpDevelopmentPatentManagementIndexRoute:
@@ -10164,6 +11035,26 @@ const rootRouteChildren: RootRouteChildren = {
   ManagementAssetManagementReportsRoute: ManagementAssetManagementReportsRoute,
   ManagementAssetManagementToolManagementRoute:
     ManagementAssetManagementToolManagementRoute,
+  ManagementBusinessIntelligenceAiInsightsRoute:
+    ManagementBusinessIntelligenceAiInsightsRoute,
+  ManagementBusinessIntelligenceDataVisualizationRoute:
+    ManagementBusinessIntelligenceDataVisualizationRoute,
+  ManagementBusinessIntelligenceDataWarehouseDevelopmentRoute:
+    ManagementBusinessIntelligenceDataWarehouseDevelopmentRoute,
+  ManagementBusinessIntelligenceDecisionSupportRoute:
+    ManagementBusinessIntelligenceDecisionSupportRoute,
+  ManagementBusinessIntelligenceEtlPipelinesRoute:
+    ManagementBusinessIntelligenceEtlPipelinesRoute,
+  ManagementBusinessIntelligenceExecutiveDashboardRoute:
+    ManagementBusinessIntelligenceExecutiveDashboardRoute,
+  ManagementBusinessIntelligenceKpiMonitoringRoute:
+    ManagementBusinessIntelligenceKpiMonitoringRoute,
+  ManagementBusinessIntelligenceOverviewRoute:
+    ManagementBusinessIntelligenceOverviewRoute,
+  ManagementBusinessIntelligencePredictiveAnalyticsRoute:
+    ManagementBusinessIntelligencePredictiveAnalyticsRoute,
+  ManagementBusinessIntelligenceReportsRoute:
+    ManagementBusinessIntelligenceReportsRoute,
   ManagementCommunicationManagementAnnouncementsRoute:
     ManagementCommunicationManagementAnnouncementsRoute,
   ManagementCommunicationManagementChatRoute:
@@ -10209,6 +11100,12 @@ const rootRouteChildren: RootRouteChildren = {
   ManagementCrmManagementReportsRoute: ManagementCrmManagementReportsRoute,
   ManagementCrmManagementSalesPipelineManagementRoute:
     ManagementCrmManagementSalesPipelineManagementRoute,
+  ManagementExecutiveManagementExecutiveReviewRoute:
+    ManagementExecutiveManagementExecutiveReviewRoute,
+  ManagementExecutiveManagementOverviewRoute:
+    ManagementExecutiveManagementOverviewRoute,
+  ManagementExecutiveManagementReportsRoute:
+    ManagementExecutiveManagementReportsRoute,
   ManagementFinanceAssetsRoute: ManagementFinanceAssetsRoute,
   ManagementFinanceAuditRoute: ManagementFinanceAuditRoute,
   ManagementFinanceBudgetingRoute: ManagementFinanceBudgetingRoute,
@@ -10456,6 +11353,46 @@ const rootRouteChildren: RootRouteChildren = {
     ManagementSalesManagementSalesPlanningRoute,
   ManagementSalesManagementTerritoryManagementRoute:
     ManagementSalesManagementTerritoryManagementRoute,
+  ManagementSecurityManagementAccessControlRoute:
+    ManagementSecurityManagementAccessControlRoute,
+  ManagementSecurityManagementCybersecurityRoute:
+    ManagementSecurityManagementCybersecurityRoute,
+  ManagementSecurityManagementIdentityManagementRoute:
+    ManagementSecurityManagementIdentityManagementRoute,
+  ManagementSecurityManagementInformationSecurityRoute:
+    ManagementSecurityManagementInformationSecurityRoute,
+  ManagementSecurityManagementOverviewRoute:
+    ManagementSecurityManagementOverviewRoute,
+  ManagementSecurityManagementPhysicalSecurityRoute:
+    ManagementSecurityManagementPhysicalSecurityRoute,
+  ManagementSecurityManagementReportsRoute:
+    ManagementSecurityManagementReportsRoute,
+  ManagementSecurityManagementSecurityAuditRoute:
+    ManagementSecurityManagementSecurityAuditRoute,
+  ManagementSecurityManagementSurveillanceRoute:
+    ManagementSecurityManagementSurveillanceRoute,
+  ManagementSecurityManagementVisitorManagementRoute:
+    ManagementSecurityManagementVisitorManagementRoute,
+  ManagementStrategyManagementBalancedScorecardRoute:
+    ManagementStrategyManagementBalancedScorecardRoute,
+  ManagementStrategyManagementBusinessPlanningRoute:
+    ManagementStrategyManagementBusinessPlanningRoute,
+  ManagementStrategyManagementCorporateGovernanceRoute:
+    ManagementStrategyManagementCorporateGovernanceRoute,
+  ManagementStrategyManagementKpiManagementRoute:
+    ManagementStrategyManagementKpiManagementRoute,
+  ManagementStrategyManagementOkrManagementRoute:
+    ManagementStrategyManagementOkrManagementRoute,
+  ManagementStrategyManagementOverviewRoute:
+    ManagementStrategyManagementOverviewRoute,
+  ManagementStrategyManagementPortfolioManagementRoute:
+    ManagementStrategyManagementPortfolioManagementRoute,
+  ManagementStrategyManagementReportsRoute:
+    ManagementStrategyManagementReportsRoute,
+  ManagementStrategyManagementStrategicInitiativesRoute:
+    ManagementStrategyManagementStrategicInitiativesRoute,
+  ManagementStrategyManagementVisionMissionRoute:
+    ManagementStrategyManagementVisionMissionRoute,
   ManagementSupplyChainManagementDemandPlanningRoute:
     ManagementSupplyChainManagementDemandPlanningRoute,
   ManagementSupplyChainManagementDispatchManagementRoute:
@@ -10526,11 +11463,17 @@ const rootRouteChildren: RootRouteChildren = {
     ManufacturingDevelopmentRoboticsIntegrationIdRoute,
   ManufacturingDevelopmentRoboticsIntegrationNewRoute:
     ManufacturingDevelopmentRoboticsIntegrationNewRoute,
+  ManagementBusinessIntelligenceIndexRoute:
+    ManagementBusinessIntelligenceIndexRoute,
   ManagementCommunicationManagementIndexRoute:
     ManagementCommunicationManagementIndexRoute,
   ManagementKnowledgeManagementIndexRoute:
     ManagementKnowledgeManagementIndexRoute,
   ManagementQualityManagementIndexRoute: ManagementQualityManagementIndexRoute,
+  ManagementSecurityManagementIndexRoute:
+    ManagementSecurityManagementIndexRoute,
+  ManagementStrategyManagementIndexRoute:
+    ManagementStrategyManagementIndexRoute,
   ManagementSustainabilityManagementIndexRoute:
     ManagementSustainabilityManagementIndexRoute,
   ManufacturingDevelopmentAutomationDevelopmentIndexRoute:

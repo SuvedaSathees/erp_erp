@@ -48,7 +48,10 @@ export type WidgetCategory =
   | "supply-chain"
   | "risk"
   | "communication"
-  | "sustainability";
+  | "sustainability"
+  | "security"
+  | "bi"
+  | "strategy";
 
 /**
  * Simulated roles for access control. There is no auth system yet — identity is
@@ -118,7 +121,24 @@ export type WidgetPageId =
   | "sustainability-waste-management"
   | "sustainability-recycling-management"
   | "sustainability-environmental-compliance"
-  | "sustainability-reporting";
+  | "sustainability-reporting"
+  // Security Management Overview & Submodules
+  | "security-overview"
+  | "security-access-control"
+  | "security-identity-management"
+  | "security-cybersecurity"
+  | "security-information-security"
+  | "security-physical-security"
+  | "security-visitor-management"
+  | "security-surveillance"
+  | "security-security-audit"
+  | "security-reports"
+  // Business Intelligence Management Overview & Reports
+  | "bi-overview"
+  | "bi-reports"
+  // Strategy Management Overview & Reports
+  | "strategy-overview"
+  | "strategy-reports";
 
 /** Grid spans per breakpoint tier, expressed in that tier's column count. */
 export type WidgetSpan = {

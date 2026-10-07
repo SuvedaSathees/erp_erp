@@ -85,7 +85,7 @@ export function SortableWidget({
     [def, instance.id, instance.size, instance.spanOverride, onDraftChange],
   );
 
-  if (!def) return null;
+  if (!def || !def.component) return null;
   const Content = def.component;
 
   return (

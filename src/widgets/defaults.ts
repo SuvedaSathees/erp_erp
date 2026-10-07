@@ -640,31 +640,30 @@ export const DEFAULT_LAYOUTS: Record<WidgetPageId, WidgetInstance[]> = {
   "bi-reports": [],
 
   "strategy-overview": [
-    // Tier 1: 10 Strategic KPI cards (2 rows of 5 cards, 12/60 each = 60 cols)
+    // Tier 1: 9 Strategic KPI cards (sm = 12/60 each)
     { ...base, id: "strat-kpi-vm", widgetId: "strategy.kpi.vision-mission-version", size: "sm" },
     { ...base, id: "strat-kpi-themes", widgetId: "strategy.kpi.strategic-themes", size: "sm" },
     { ...base, id: "strat-kpi-obj", widgetId: "strategy.kpi.strategic-objectives", size: "sm" },
     { ...base, id: "strat-kpi-okrs", widgetId: "strategy.kpi.active-okrs", size: "sm" },
     { ...base, id: "strat-kpi-kpis", widgetId: "strategy.kpi.monitored-kpis", size: "sm" },
-
     { ...base, id: "strat-kpi-bsc", widgetId: "strategy.kpi.bsc-score", size: "sm" },
     { ...base, id: "strat-kpi-init", widgetId: "strategy.kpi.strategic-initiatives", size: "sm" },
     { ...base, id: "strat-kpi-invest", widgetId: "strategy.kpi.total-investment", size: "sm" },
     { ...base, id: "strat-kpi-benefits", widgetId: "strategy.kpi.expected-benefits", size: "sm" },
-    { ...base, id: "strat-kpi-align", widgetId: "strategy.kpi.overall-alignment", size: "sm" },
 
-    // Tier 2: Strategic Execution Alignment Chain (Full width = 60 cols)
-    { ...base, id: "strat-panel-flow", widgetId: "strategy.panel.alignment-flow", size: "full" },
-
-    // Tier 3: OKR Progress Trajectory (40 cols) + Perspective Performance (20 cols) = 60 cols
+    // Tier 2: Strategic Progress Trajectory (2 of 3) + Scorecard Perspectives (1 of 3)
     { ...base, id: "strat-panel-traj", widgetId: "strategy.panel.progress-trajectory", size: "xl" },
     { ...base, id: "strat-panel-persp", widgetId: "strategy.panel.perspectives-performance", size: "md" },
 
-    // Tier 4: Priority Initiatives Table (40 cols) + Portfolio Distribution Donut (20 cols) = 60 cols
-    { ...base, id: "strat-panel-table", widgetId: "strategy.panel.initiatives-table", size: "xl" },
+    // Tier 3: Initiative Portfolio Health (1 of 3) + Strategic Alignment Flow (2 of 3)
     { ...base, id: "strat-panel-port", widgetId: "strategy.panel.portfolio-health", size: "md" },
+    { ...base, id: "strat-panel-flow", widgetId: "strategy.panel.alignment-flow", size: "xl" },
 
-    // Tier 5: AI Strategic Intelligence Assistant (Full width = 60 cols)
+    // Tier 4: Strategic Operations Ledger (2 of 3) + Strategic Alerts & Forecast (1 of 3)
+    { ...base, id: "strat-panel-table", widgetId: "strategy.panel.initiatives-table", size: "xl" },
+    { ...base, id: "strat-panel-alerts", widgetId: "strategy.panel.alerts", size: "md" },
+
+    // Tier 5: Full-Width AI Strategic Intelligence & Decision Center (60 cols)
     { ...base, id: "strat-panel-ai", widgetId: "strategy.panel.ai-assistant", size: "full" },
   ],
   "strategy-reports": [],

@@ -107,7 +107,7 @@ export function KpiManagementPage() {
   return (
     <AppShell
       title="KPI Management"
-      breadcrumb="Management > Strategy > KPI Management"
+      breadcrumb="Management"
       description="Define. Measure. Monitor. Improve Performance."
       tabs={<StrategyManagementTabBar />}
     >

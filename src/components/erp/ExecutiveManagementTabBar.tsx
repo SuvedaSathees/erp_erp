@@ -142,7 +142,6 @@ export function ExecutiveManagementTabBar() {
           "flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth py-1 w-full",
           isDragging ? "cursor-grabbing select-none" : "cursor-grab"
         )}
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {EXECUTIVE_MANAGEMENT_TABS.map((tab) => {
           const isActive = pathname === tab.to || pathname.startsWith(tab.to + "/");

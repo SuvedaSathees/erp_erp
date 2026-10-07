@@ -103,7 +103,7 @@ export function OkrManagementPage() {
   return (
     <AppShell
       title="OKR Management"
-      breadcrumb="Management > Strategy > OKR Management"
+      breadcrumb="Management"
       description="Align Strategy. Set Objectives. Track Progress. Achieve Outcomes."
       tabs={<StrategyManagementTabBar />}
     >

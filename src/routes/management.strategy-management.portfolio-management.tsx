@@ -85,6 +85,27 @@ const LIFECYCLE_STAGES = [
   { id: 11, name: "Improve" },
 ];
 
+const COMPOSITION_DATA = [
+  { name: "Initiatives", value: 12, color: "#3b82f6" },
+  { name: "Projects", value: 8, color: "#10b981" },
+  { name: "Products", value: 5, color: "#8b5cf6" },
+  { name: "Programs", value: 3, color: "#f59e0b" },
+];
+
+const CATEGORY_INVESTMENTS = [
+  { category: "Infrastructure & Charging", amount: 45, pct: 38 },
+  { category: "Manufacturing & Robotics", amount: 35, pct: 29 },
+  { category: "Digital & IoT Cloud", amount: 22, pct: 18 },
+  { category: "Market Expansion", amount: 18, pct: 15 },
+];
+
+const BUDGET_VS_ACTUAL = [
+  { name: "Q1", planned: 28, actual: 26 },
+  { name: "Q2", planned: 32, actual: 30 },
+  { name: "Q3", planned: 35, actual: 31 },
+  { name: "Q4", planned: 25, actual: 20 },
+];
+
 export function PortfolioManagementPage() {
   const [currentLifecycle, setCurrentLifecycle] = useState(5); // Allocate
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
@@ -201,7 +222,7 @@ export function PortfolioManagementPage() {
   return (
     <AppShell
       title="Portfolio Management"
-      breadcrumb="Management > Strategy > Portfolio Management"
+      breadcrumb="Management"
       description="Manage Investments. Align with Strategy. Deliver Value."
       tabs={<StrategyManagementTabBar />}
     >
@@ -268,8 +289,8 @@ export function PortfolioManagementPage() {
         <StrategyScoreBanner moduleName="Portfolio" />
 
         {/* Portfolio Lifecycle Stepper (11 Stages) */}
-        <div className="bg-card border rounded-xl p-3.5 shadow-2xs">
-          <div className="flex items-center justify-between mb-3 px-1">
+        <div className="bg-card border rounded-xl p-3 shadow-2xs overflow-x-auto no-scrollbar">
+          <div className="flex items-center justify-between mb-2 px-1">
             <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Portfolio Lifecycle
             </span>
@@ -281,43 +302,48 @@ export function PortfolioManagementPage() {
               View Workflow
             </button>
           </div>
-          <div className="flex flex-wrap items-center gap-2 px-1">
+          <div className="flex items-center justify-between min-w-[850px] px-2">
             {LIFECYCLE_STAGES.map((st, idx) => {
               const isActive = currentLifecycle === st.id;
               const isPast = currentLifecycle > st.id;
               return (
-                <div key={st.id} className="flex items-center gap-2">
+                <div key={st.id} className="flex items-center flex-1 last:flex-none">
                   <button
                     type="button"
                     onClick={() => {
                       setCurrentLifecycle(st.id);
                       toast.info(`Portfolio stage shifted to: ${st.name}`);
                     }}
-                    className={cn(
-                      "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer",
-                      isActive
-                        ? "bg-blue-600 text-white shadow-xs font-semibold"
-                        : isPast
-                        ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
-                        : "bg-muted/60 text-muted-foreground hover:bg-muted"
-                    )}
+                    className="flex items-center gap-1.5 cursor-pointer group focus:outline-none"
                   >
                     <div
                       className={cn(
-                        "h-4 w-4 rounded-full text-[10px] font-bold flex items-center justify-center",
+                        "h-6 w-6 rounded-full text-[11px] font-bold flex items-center justify-center transition-all",
                         isActive
-                          ? "bg-white text-blue-600"
+                          ? "bg-blue-600 text-white ring-4 ring-blue-600/20"
                           : isPast
                           ? "bg-emerald-500 text-white"
-                          : "bg-muted-foreground/20 text-muted-foreground"
+                          : "bg-muted text-muted-foreground group-hover:bg-muted/80"
                       )}
                     >
-                      {isPast ? <Check className="h-2.5 w-2.5" /> : st.id}
+                      {isPast ? <Check className="h-3 w-3" /> : st.id}
                     </div>
-                    <span>{st.name}</span>
+                    <span
+                      className={cn(
+                        "text-[11px] font-semibold transition-colors",
+                        isActive ? "text-blue-600" : isPast ? "text-foreground" : "text-muted-foreground"
+                      )}
+                    >
+                      {st.name}
+                    </span>
                   </button>
                   {idx < LIFECYCLE_STAGES.length - 1 && (
-                    <ChevronRight className="h-3 w-3 text-muted-foreground/40 shrink-0" />
+                    <div
+                      className={cn(
+                        "h-0.5 flex-1 mx-2 rounded transition-all",
+                        isPast ? "bg-emerald-500" : "bg-border"
+                      )}
+                    />
                   )}
                 </div>
               );
@@ -767,7 +793,6 @@ export function PortfolioManagementPage() {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Modal: Add Investment */}
       {isInvestModalOpen && (

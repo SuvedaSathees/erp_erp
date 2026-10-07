@@ -106,7 +106,7 @@ export function StrategicInitiativesPage() {
   return (
     <AppShell
       title="Strategic Initiatives"
-      breadcrumb="Management > Strategy > Strategic Initiatives"
+      breadcrumb="Management"
       description="Turn Strategy into Action. Create Value. Achieve Outcomes."
       tabs={<StrategyManagementTabBar />}
     >

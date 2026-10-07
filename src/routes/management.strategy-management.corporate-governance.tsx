@@ -48,6 +48,20 @@ export const Route = createFileRoute("/management/strategy-management/corporate-
   component: CorporateGovernancePage,
 });
 
+const BOARD_COMPOSITION = [
+  { name: "Executive Directors", value: 3, percentage: 37.5, color: "#3b82f6" },
+  { name: "Independent Directors", value: 3, percentage: 37.5, color: "#10b981" },
+  { name: "Nominee Directors", value: 1, percentage: 12.5, color: "#8b5cf6" },
+  { name: "Women Directors", value: 1, percentage: 12.5, color: "#f59e0b" },
+];
+
+const SHAREHOLDING_DATA = [
+  { name: "Promoters", value: 52, color: "#3b82f6" },
+  { name: "Institutional Investors", value: 24, color: "#10b981" },
+  { name: "Public & Retail", value: 16, color: "#f59e0b" },
+  { name: "Employees / ESOP", value: 8, color: "#8b5cf6" },
+];
+
 export function CorporateGovernancePage() {
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [entity, setEntity] = useState("Magnertia Private Limited");
@@ -108,7 +122,7 @@ export function CorporateGovernancePage() {
   return (
     <AppShell
       title="Corporate Governance"
-      breadcrumb="Management > Strategy > Corporate Governance"
+      breadcrumb="Management"
       description="Ensure transparency, accountability and sustainable growth."
       tabs={<StrategyManagementTabBar />}
     >
@@ -482,7 +496,6 @@ export function CorporateGovernancePage() {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Modal: Add Governance Record */}
       {isRecordModalOpen && (

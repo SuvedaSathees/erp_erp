@@ -22,8 +22,8 @@ function StrategyOverviewPage() {
   return (
     <AppShell
       title="Strategy Overview"
-      breadcrumb="Management > Strategy > Overview"
-      description="Executive strategy command center, purpose-to-impact alignment, OKR execution velocity, balanced scorecards, and portfolio governance."
+      breadcrumb="Management"
+      description="High-level strategic intelligence, enterprise OKRs, balanced scorecards, and portfolio governance."
       tabs={<StrategyManagementTabBar />}
     >
       <WidgetPage pageId="strategy-overview" skeleton={<OverviewSkeleton />} />
@@ -35,14 +35,17 @@ function OverviewSkeleton() {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <Skeleton key={i} className="h-[104px] rounded-xl" />
+        {Array.from({ length: 9 }).map((_, i) => (
+          <Skeleton key={i} className="h-[100px] rounded-xl" />
         ))}
       </div>
-      <Skeleton className="h-[200px] rounded-xl" />
       <div className="grid gap-6 lg:grid-cols-3">
         <Skeleton className="h-[350px] rounded-xl lg:col-span-2" />
         <Skeleton className="h-[350px] rounded-xl" />
+      </div>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Skeleton className="h-[350px] rounded-xl" />
+        <Skeleton className="h-[350px] rounded-xl lg:col-span-2" />
       </div>
       <div className="grid gap-6 lg:grid-cols-3">
         <Skeleton className="h-[350px] rounded-xl lg:col-span-2" />

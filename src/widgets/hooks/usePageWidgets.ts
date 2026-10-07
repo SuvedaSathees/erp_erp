@@ -45,7 +45,11 @@ export function effectiveInstances(
     pageId === "bi-reports" &&
     saved &&
     saved.some((i) => i.id === "bi-rep-total");
-  const instances = isOutdatedBi || isOutdatedSust || isOutdatedBiReports || !saved ? getDefaultLayout(pageId) : saved;
+  const isOutdatedStrat =
+    pageId === "strategy-overview" &&
+    saved &&
+    saved.some((i) => (i.id === "strat-panel-flow" && i.size === "full") || !saved.some((s) => s.id === "strat-panel-alerts"));
+  const instances = isOutdatedBi || isOutdatedSust || isOutdatedBiReports || isOutdatedStrat || !saved ? getDefaultLayout(pageId) : saved;
   return instances
     .filter(
       (inst) =>

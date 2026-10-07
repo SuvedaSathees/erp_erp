@@ -17,8 +17,6 @@ export const STRATEGY_MANAGEMENT_TABS = [
   { to: "/management/strategy-management/business-planning", label: "Business Planning" },
   { to: "/management/strategy-management/portfolio-management", label: "Portfolio Management" },
   { to: "/management/strategy-management/corporate-governance", label: "Corporate Governance" },
-  { to: "/management/hrm-management/performance-management", label: "Performance Management" },
-  { to: "/management/executive-management/executive-review", label: "Executive Review" },
   { to: "/management/strategy-management/reports", label: "Reports" },
 ];
 
@@ -142,7 +140,6 @@ export function StrategyManagementTabBar() {
           "flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth py-1 w-full",
           isDragging ? "cursor-grabbing select-none" : "cursor-grab",
         )}
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {STRATEGY_MANAGEMENT_TABS.map((tab) => {
           const isActive = pathname === tab.to || pathname.startsWith(tab.to + "/");

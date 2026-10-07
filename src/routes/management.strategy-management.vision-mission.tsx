@@ -105,7 +105,7 @@ export function VisionMissionPage() {
   return (
     <AppShell
       title="Vision & Mission"
-      breadcrumb="Management > Strategy > Vision & Mission"
+      breadcrumb="Management"
       description="Our Purpose. Our Direction. Our Impact. Strategic foundation connecting purpose, vision, mission, core values, and executive governance."
       tabs={<StrategyManagementTabBar />}
     >

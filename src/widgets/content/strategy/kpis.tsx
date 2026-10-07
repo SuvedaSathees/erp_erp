@@ -95,8 +95,8 @@ export const BalancedScorecardScoreWidget = memo(function BalancedScorecardScore
   return (
     <StatCard
       label="Balanced Scorecard"
-      value="72% Score"
-      delta={{ label: "+8% vs Q2", direction: "up", tone: "positive" }}
+      value="82.4% Score"
+      delta={{ label: "+4.1% MoM Improvement", direction: "up", tone: "positive" }}
       captionTone="positive"
       icon={<Award className="h-5 w-5" />}
       iconBg="bg-purple-50 dark:bg-purple-950/40"

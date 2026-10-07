@@ -84,7 +84,7 @@ export function BalancedScorecardPage() {
   return (
     <AppShell
       title="Balanced Scorecard"
-      breadcrumb="Management > Strategy > Balanced Scorecard"
+      breadcrumb="Management"
       description="Translate Strategy into Measurable Performance."
       tabs={<StrategyManagementTabBar />}
     >

@@ -238,44 +238,49 @@ export function PerformanceManagementPage() {
         </div>
 
         {/* 9 Stages Stepper */}
-        <div className="bg-card border rounded-xl p-3.5 shadow-2xs">
-          <div className="flex flex-wrap items-center gap-2 px-1">
+        <div className="bg-card border rounded-xl p-3 shadow-2xs overflow-x-auto no-scrollbar">
+          <div className="flex items-center justify-between min-w-[800px] px-2">
             {PERFORMANCE_STAGES.map((st, idx) => {
               const isActive = currentStage === st.id;
               const isPast = currentStage > st.id;
               return (
-                <div key={st.id} className="flex items-center gap-2">
+                <div key={st.id} className="flex items-center flex-1 last:flex-none">
                   <button
                     type="button"
                     onClick={() => {
                       setCurrentStage(st.id);
                       toast.info(`Review step: ${st.name}`);
                     }}
-                    className={cn(
-                      "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer",
-                      isActive
-                        ? "bg-blue-600 text-white shadow-xs font-semibold"
-                        : isPast
-                        ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
-                        : "bg-muted/60 text-muted-foreground hover:bg-muted"
-                    )}
+                    className="flex items-center gap-1.5 cursor-pointer group focus:outline-none"
                   >
                     <div
                       className={cn(
-                        "h-4 w-4 rounded-full text-[10px] font-bold flex items-center justify-center",
+                        "h-6 w-6 rounded-full text-[11px] font-bold flex items-center justify-center transition-all",
                         isActive
-                          ? "bg-white text-blue-600"
+                          ? "bg-blue-600 text-white ring-4 ring-blue-600/20"
                           : isPast
                           ? "bg-emerald-500 text-white"
-                          : "bg-muted-foreground/20 text-muted-foreground"
+                          : "bg-muted text-muted-foreground group-hover:bg-muted/80"
                       )}
                     >
-                      {isPast ? <Check className="h-2.5 w-2.5" /> : st.id}
+                      {isPast ? <Check className="h-3 w-3" /> : st.id}
                     </div>
-                    <span>{st.name}</span>
+                    <span
+                      className={cn(
+                        "text-[11px] font-semibold transition-colors",
+                        isActive ? "text-blue-600" : isPast ? "text-foreground" : "text-muted-foreground"
+                      )}
+                    >
+                      {st.name}
+                    </span>
                   </button>
                   {idx < PERFORMANCE_STAGES.length - 1 && (
-                    <ChevronRight className="h-3 w-3 text-muted-foreground/40 shrink-0" />
+                    <div
+                      className={cn(
+                        "h-0.5 flex-1 mx-2 rounded transition-all",
+                        isPast ? "bg-emerald-500" : "bg-border"
+                      )}
+                    />
                   )}
                 </div>
               );

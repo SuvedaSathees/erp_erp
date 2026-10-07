@@ -6,7 +6,7 @@ import { ModuleSummaryReport } from "@/components/erp/reports/ModuleSummaryRepor
 export const Route = createFileRoute("/management/strategy-management/reports")({
   head: () => ({
     meta: [
-      { title: "Strategy Management Report · Magnertia ERP" },
+      { title: "Reports · Strategy Management · Magnertia ERP" },
       {
         name: "description",
         content:
@@ -20,8 +20,8 @@ export const Route = createFileRoute("/management/strategy-management/reports")(
 function StrategyManagementReportPage() {
   return (
     <AppShell
-      title="Strategy Management Report"
-      breadcrumb="Management > Strategy > Report"
+      title="Reports"
+      breadcrumb="Management"
       description="Consolidated strategic report, balanced scorecard execution trajectory, OKR achievement health, and initiative portfolio delivery."
       tabs={<StrategyManagementTabBar />}
     >

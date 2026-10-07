@@ -236,139 +236,12 @@ export function PerformanceManagementPage() {
             </button>
           </div>
         </div>
-
-<<<<<<< HEAD
         {/* 9 Stages Stepper */}
         <div className="bg-card border rounded-xl p-3 shadow-2xs overflow-x-auto no-scrollbar">
           <div className="flex items-center justify-between min-w-[800px] px-2">
             {PERFORMANCE_STAGES.map((st, idx) => {
               const isActive = currentStage === st.id;
               const isPast = currentStage > st.id;
-=======
-        {/* 1. Performance Cycle Header & Key Metrics (Clean enterprise layout, no profile photos, no stars) */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 space-y-5">
-          {/* Top Cycle Metadata Strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
-            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
-              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Performance Cycle</span>
-              <div className="font-bold text-slate-900 text-sm truncate">FY 2023-24 Annual</div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
-              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Review Type</span>
-              <div className="font-bold text-slate-900 text-sm truncate">Annual Appraisal</div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
-              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Review Period</span>
-              <div className="font-semibold text-slate-900 text-sm truncate">01 Apr 2023 - 31 Mar 2024</div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
-              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Lead Evaluator</span>
-              <div className="font-semibold text-slate-900 text-sm truncate">Arun Kumar (Lead)</div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-0.5">
-              <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Due Date</span>
-              <div className="font-bold text-rose-600 text-sm truncate">30 Apr 2024</div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-amber-50/60 border border-amber-200/80 space-y-0.5">
-              <span className="text-[10px] text-amber-800 font-semibold uppercase tracking-wider">Cycle Status</span>
-              <div className="font-bold text-amber-700 text-sm truncate">In Progress</div>
-            </div>
-          </div>
-
-          {/* 6 Key Performance Metric Badges Strip */}
-          <div className="pt-3 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
-            {/* 1. Overall Rating */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-amber-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="p-2 rounded-lg bg-amber-100 text-amber-600">
-                <Award className="h-4 w-4 text-amber-600" />
-              </div>
-              <div>
-                <div className="text-[10px] text-muted-foreground font-semibold">Overall Rating</div>
-                <div className="text-sm font-extrabold text-slate-900 font-mono">4.2 / 5</div>
-                <div className="text-[9px] text-amber-700 font-semibold">Very Good</div>
-              </div>
-            </div>
-
-            {/* 2. Goal Achievement */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-emerald-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
-                <Target className="h-4 w-4" />
-              </div>
-              <div>
-                <div className="text-[10px] text-muted-foreground font-semibold">Goal Achievement</div>
-                <div className="text-sm font-extrabold text-emerald-700 font-mono">91%</div>
-                <div className="text-[9px] text-emerald-700 font-semibold">Excellent</div>
-              </div>
-            </div>
-
-            {/* 3. KPI Achievement */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-blue-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
-                <BarChart3 className="h-4 w-4" />
-              </div>
-              <div>
-                <div className="text-[10px] text-muted-foreground font-semibold">KPI Achievement</div>
-                <div className="text-sm font-extrabold text-blue-700 font-mono">88%</div>
-                <div className="text-[9px] text-blue-700 font-semibold">Very Good</div>
-              </div>
-            </div>
-
-            {/* 4. Competency Score */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-blue-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="p-2 rounded-lg bg-blue-100 text-primary">
-                <Award className="h-4 w-4" />
-              </div>
-              <div>
-                <div className="text-[10px] text-muted-foreground font-semibold">Competency Score</div>
-                <div className="text-sm font-extrabold text-primary font-mono">4.1 / 5</div>
-                <div className="text-[9px] text-primary font-semibold">Good</div>
-              </div>
-            </div>
-
-            {/* 5. 360° Feedback */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-cyan-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="p-2 rounded-lg bg-cyan-100 text-cyan-600">
-                <Users className="h-4 w-4" />
-              </div>
-              <div>
-                <div className="text-[10px] text-muted-foreground font-semibold">360° Feedback</div>
-                <div className="text-sm font-extrabold text-cyan-700 font-mono">4.0 / 5</div>
-                <div className="text-[9px] text-cyan-700 font-semibold">Good</div>
-              </div>
-            </div>
-
-            {/* 6. Potential Rating */}
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-blue-50/30 flex items-center gap-2.5 shadow-2xs">
-              <div className="p-2 rounded-lg bg-blue-100 text-primary">
-                <Rocket className="h-4 w-4" />
-              </div>
-              <div>
-                <div className="text-[10px] text-muted-foreground font-semibold">Potential Rating</div>
-                <div className="text-sm font-extrabold text-primary">High</div>
-                <div className="text-[9px] text-primary font-semibold">Leadership Path</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Sub-Tabs Bar (Matching screenshot) */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-1.5">
-          <div className="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth">
-            {[
-              { id: "goals", label: "Goals & KPIs", icon: Target },
-              { id: "competencies", label: "Competencies", icon: Award },
-              { id: "360", label: "360° Feedback", icon: Users },
-              { id: "reviews", label: "Reviews & Appraisal", icon: FileText },
-              { id: "development", label: "Development Plan", icon: BrainCircuit },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id;
->>>>>>> ac285434ee2c09fc2060dde404df38cc4bf8aeac
               return (
                 <div key={st.id} className="flex items-center flex-1 last:flex-none">
                   <button
@@ -430,103 +303,17 @@ export function PerformanceManagementPage() {
                     High Performer
                   </span>
                 </div>
-<<<<<<< HEAD
                 <div className="text-xs text-muted-foreground mt-0.5">
                   Senior Mechanical Engineer • R&D | Coimbatore
                 </div>
                 <div className="text-[11px] text-muted-foreground mt-0.5 flex gap-3">
                   <span>Manager: <strong className="text-foreground">M. Prakash</strong></span>
                   <span>Join Date: <strong className="text-foreground">12 Jan 2023</strong></span>
-=======
-                <Link
-                  to="/management/hrm-management/competency-form"
-                  className="font-bold text-blue-700 hover:text-blue-900 underline shrink-0 ml-2"
-                >
-                  Go to Competency Form &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Tab 3: 360° Feedback */}
-        {activeTab === "360" && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
-              {/* Multi-Rater Breakdown */}
-              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <Users className="h-4 w-4 text-primary" />
-                    360° Multi-Rater Score Breakdown
-                  </h4>
-                  <span className="font-mono text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                    Weighted Average: 4.2 / 5
-                  </span>
-                </div>
-
-                <div className="space-y-3 text-xs">
-                  {[
-                    { role: "Self Assessment", score: "4.3 / 5", weight: "10%", desc: "Accurate self-awareness of technical depth." },
-                    { role: "Manager (Arun Kumar)", score: "4.1 / 5", weight: "40%", desc: "Strong technical delivery, high ownership." },
-                    { role: "Peers (4 Reviewers)", score: "4.4 / 5", weight: "25%", desc: "Extremely collaborative and helpful." },
-                    { role: "Direct Reports (3 Reviewers)", score: "4.2 / 5", weight: "15%", desc: "Approachable, clear architectural guidance." },
-                    { role: "Customer / Stakeholder", score: "4.0 / 5", weight: "10%", desc: "Prompt issue resolution and support." },
-                  ].map((r) => (
-                    <div key={r.role} className="p-3 rounded-lg border border-slate-100 bg-slate-50/60 flex items-center justify-between">
-                      <div>
-                        <div className="font-bold text-slate-900">{r.role} <span className="text-[10px] text-muted-foreground font-normal">({r.weight})</span></div>
-                        <div className="text-[11px] text-slate-600 mt-0.5">{r.desc}</div>
-                      </div>
-                      <div className="font-mono font-extrabold text-sm text-slate-900">{r.score}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsFeedbackModalOpen(true)}
-                  className="w-full py-2 rounded-lg bg-blue-50 text-primary hover:bg-blue-100 border border-blue-200 font-semibold text-xs transition cursor-pointer"
-                >
-                  + Request More 360° Peer Feedback
-                </button>
-              </div>
-
-              {/* Qualitative Feedback */}
-              <div className="lg:col-span-6 bg-white rounded-xl border border-slate-200/90 p-5 shadow-2xs space-y-4 flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <h4 className="text-sm font-bold text-slate-900">Key Peer Comments & Feedback</h4>
-                </div>
-
-                <div className="space-y-3 text-xs">
-                  <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-100 space-y-1">
-                    <div className="font-bold text-emerald-900 flex items-center gap-1.5">
-                      <ThumbsUp className="h-3.5 w-3.5 text-emerald-600" />
-                      Strengths & Commendations
-                    </div>
-                    <p className="text-[11px] text-emerald-800 leading-relaxed">
-                      "Sankar is the go-to engineer for complex mechanical FEA simulations. Highly disciplined, meets project milestones ahead of schedule, and fosters great team morale."
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100 space-y-1">
-                    <div className="font-bold text-amber-900 flex items-center gap-1.5">
-                      <ThumbsDown className="h-3.5 w-3.5 text-amber-600" />
-                      Growth & Improvement Areas
-                    </div>
-                    <p className="text-[11px] text-amber-800 leading-relaxed">
-                      "Can delegate routine module designs more aggressively to junior engineers to free up capacity for strategic cross-functional product roadmapping."
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Feedback Status: <strong>Calibrated & Verified</strong></span>
-                  <span>Cycle: <strong>FY 2023-24</strong></span>
->>>>>>> ac285434ee2c09fc2060dde404df38cc4bf8aeac
                 </div>
               </div>
             </div>
+
+
 
             {/* Middle: Cycle details */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs border-y lg:border-y-0 lg:border-x py-3 lg:py-0 px-0 lg:px-4">
@@ -576,28 +363,12 @@ export function PerformanceManagementPage() {
         <StrategyScoreBanner moduleName="Performance" />
 
         <div className="space-y-5">
-
-<<<<<<< HEAD
             {/* Middle Row: Goals & KRAs Table + KPI Achievement Table */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
               {/* Goals & KRAs (7 cols) */}
               <div className="lg:col-span-7 bg-card border rounded-xl p-4 shadow-2xs">
                 <div className="flex items-center justify-between border-b pb-2 mb-3">
                   <h4 className="font-bold text-sm text-foreground">Goals & KRAs ({goals.length})</h4>
-=======
-                  <div className="p-3 rounded-lg border border-slate-100 bg-slate-50/60 space-y-1.5">
-                    <div className="flex justify-between font-semibold">
-                      <span>Core Values & Adherence (10% Weightage)</span>
-                      <span className="font-mono font-bold text-primary">88% (4.4 / 5)</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full" style={{ width: "88%" }} />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
->>>>>>> ac285434ee2c09fc2060dde404df38cc4bf8aeac
                   <button
                     type="button"
                     onClick={() => setIsGoalModalOpen(true)}
@@ -900,24 +671,12 @@ export function PerformanceManagementPage() {
         </div>
       )}
 
-<<<<<<< HEAD
       {/* Modal: Add Action */}
       {isActionModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-card border rounded-2xl w-full max-w-md p-5 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b pb-2">
               <h3 className="font-bold text-sm text-foreground">Assign Action Item</h3>
-=======
-      {/* Modal: Request 360 Feedback */}
-      {isFeedbackModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Users className="h-4 w-4 text-primary" />
-                Request 360° Peer Feedback
-              </h3>
->>>>>>> ac285434ee2c09fc2060dde404df38cc4bf8aeac
               <button
                 type="button"
                 onClick={() => setIsActionModalOpen(false)}
@@ -960,11 +719,7 @@ export function PerformanceManagementPage() {
                 </button>
                 <button
                   type="submit"
-<<<<<<< HEAD
                   className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs cursor-pointer"
-=======
-                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary font-semibold cursor-pointer"
->>>>>>> ac285434ee2c09fc2060dde404df38cc4bf8aeac
                 >
                   Save Action
                 </button>

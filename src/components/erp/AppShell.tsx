@@ -273,17 +273,6 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/research-innovation/reports", label: "Report" },
             ],
           },
-          {
-            kind: "leaf",
-            to: "/development/ip-development/patent-management",
-            matchPrefix: "/development/ip-development",
-            label: "IP & Patents",
-            icon: Stamp,
-            subItems: [
-              { to: "/development/ip-development/patent-management", label: "Patent Register" },
-              { to: "/development/ip-development/patent-management/new", label: "Patent Management Form" },
-            ],
-          },
         ],
       },
       {

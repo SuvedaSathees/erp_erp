@@ -9,15 +9,6 @@ const TAB_ACTIVE = "border-primary text-primary hover:text-primary font-bold";
 
 export const EXECUTIVE_MANAGEMENT_TABS = [
   { to: "/management/executive-management/overview", label: "Overview" },
-  { to: "/management/strategy-management/vision-mission", label: "Vision & Mission" },
-  { to: "/management/strategy-management/okr-management", label: "OKR Management" },
-  { to: "/management/strategy-management/kpi-management", label: "KPI Management" },
-  { to: "/management/strategy-management/balanced-scorecard", label: "Balanced Scorecard" },
-  { to: "/management/strategy-management/strategic-initiatives", label: "Strategic Initiatives" },
-  { to: "/management/strategy-management/business-planning", label: "Business Planning" },
-  { to: "/management/strategy-management/portfolio-management", label: "Portfolio Management" },
-  { to: "/management/strategy-management/corporate-governance", label: "Corporate Governance" },
-  { to: "/management/hrm-management/performance-management", label: "Performance Management" },
   { to: "/management/executive-management/executive-review", label: "Executive Review" },
   { to: "/management/executive-management/reports", label: "Reports" },
 ];

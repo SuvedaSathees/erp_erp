@@ -43,7 +43,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/management/executive-management/overview")({
   head: () => ({
     meta: [
-      { title: "Strategy Overview · Magnertia ERP" },
+      { title: "Executive Overview · Magnertia ERP" },
       {
         name: "description",
         content:
@@ -77,8 +77,8 @@ export function ExecutiveOverviewPage() {
 
   return (
     <AppShell
-      title="Strategy Overview"
-      breadcrumb="Management > Strategy > Overview"
+      title="Executive Overview"
+      breadcrumb="Management > Executive > Overview"
       description="Executive Decision Intelligence Command Center: Strategy, Financials, Operations, Decisions & Accountable Action Tracking."
       tabs={<ExecutiveManagementTabBar />}
     >
@@ -91,7 +91,7 @@ export function ExecutiveOverviewPage() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-foreground">Strategy Overview</h1>
+                <h1 className="text-xl font-bold tracking-tight text-foreground">Executive Overview</h1>
                 <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
                   Leadership Active
                 </span>

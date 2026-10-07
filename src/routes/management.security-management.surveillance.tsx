@@ -59,6 +59,7 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute(
   "/management/security-management/surveillance"
 )({
@@ -107,7 +108,10 @@ const CAMERA_HEALTH_DATA = [
   { name: "Maintenance", value: 3, color: "#f59e0b" },
 ];
 
+const PAGE_DATASET = { EVENT_TREND_DATA, ZONE_STATUS_DATA };
+
 function SurveillanceManagementPage() {
+  const { EVENT_TREND_DATA, ZONE_STATUS_DATA } = useModuleDataset("security-management.surveillance", "Surveillance Management", PAGE_DATASET);
   const [cameras, setCameras] = useState<SurveillanceCamera[]>(mockSurveillanceCameras);
   const [selectedCamera, setSelectedCamera] = useState<SurveillanceCamera>(
     mockSurveillanceCameras[3] || mockSurveillanceCameras[0] // CAM-PRK-04 default

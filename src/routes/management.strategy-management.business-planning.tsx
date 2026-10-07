@@ -52,6 +52,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/strategy-management/business-planning")({
   head: () => ({
     meta: [
@@ -94,7 +95,10 @@ const BUDGET_VS_ACTUAL_DATA = [
   { category: "Operations", planned: 22, actual: 20 },
 ];
 
+const PAGE_DATASET = { PLANNING_STAGES, FORECAST_DATA, BUDGET_VS_ACTUAL_DATA };
+
 function BusinessPlanningPage() {
+  const { PLANNING_STAGES, FORECAST_DATA, BUDGET_VS_ACTUAL_DATA } = useModuleDataset("strategy-management.business-planning", "Business Planning", PAGE_DATASET);
   const [currentStage, setCurrentStage] = useState(1);
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("EV Charging Infrastructure");

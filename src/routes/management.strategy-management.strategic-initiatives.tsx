@@ -40,6 +40,7 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/strategy-management/strategic-initiatives")({
   head: () => ({
     meta: [
@@ -54,47 +55,54 @@ export const Route = createFileRoute("/management/strategy-management/strategic-
   component: StrategicInitiativesPage,
 });
 
+const portfolioDonutData = [
+  { name: "In Progress", value: 16, percentage: 62, color: "#3b82f6" },
+  { name: "At Risk", value: 4, percentage: 15, color: "#f59e0b" },
+  { name: "On Hold", value: 2, percentage: 8, color: "#ef4444" },
+  { name: "Completed", value: 4, percentage: 15, color: "#10b981" },
+];
+
+const themeWiseData = [
+  { name: "Growth & Expansion", count: 7 },
+  { name: "Innovation & Tech", count: 5 },
+  { name: "Operational Excellence", count: 4 },
+  { name: "Customer Experience", count: 3 },
+  { name: "Sustainability & ESG", count: 3 },
+  { name: "Risk & Compliance", count: 2 },
+  { name: "People & Capability", count: 2 },
+];
+
+const budgetVsActualData = [
+  { quarter: "Q1", budget: 8.5, actual: 6.2 },
+  { quarter: "Q2", budget: 12.0, actual: 10.8 },
+  { quarter: "Q3", budget: 15.0, actual: 13.5 },
+  { quarter: "Q4", budget: 13.0, actual: 6.5 },
+];
+
+const benefitsDonutData = [
+  { name: "Revenue Growth", value: 40, color: "#3b82f6" },
+  { name: "Cost Savings", value: 25, color: "#10b981" },
+  { name: "Operational Efficiency", value: 15, color: "#f59e0b" },
+  { name: "Customer Value", value: 10, color: "#06b6d4" },
+  { name: "Sustainability / ESG", value: 10, color: "#14b8a6" },
+];
+
+const PAGE_DATASET = { portfolioDonutData, themeWiseData, budgetVsActualData, benefitsDonutData };
+
 function StrategicInitiativesPage() {
+  const { portfolioDonutData, themeWiseData, budgetVsActualData, benefitsDonutData } = useModuleDataset("strategy-management.strategic-initiatives", "Strategic Initiatives", PAGE_DATASET);
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [aiQuery, setAiQuery] = useState("");
   const [ganttRange, setGanttRange] = useState("1 Year");
 
   // Portfolio Overview Donut Data
-  const portfolioDonutData = [
-    { name: "In Progress", value: 16, percentage: 62, color: "#3b82f6" },
-    { name: "At Risk", value: 4, percentage: 15, color: "#f59e0b" },
-    { name: "On Hold", value: 2, percentage: 8, color: "#ef4444" },
-    { name: "Completed", value: 4, percentage: 15, color: "#10b981" },
-  ];
 
   // Strategic Theme-wise Initiatives Bar Data
-  const themeWiseData = [
-    { name: "Growth & Expansion", count: 7 },
-    { name: "Innovation & Tech", count: 5 },
-    { name: "Operational Excellence", count: 4 },
-    { name: "Customer Experience", count: 3 },
-    { name: "Sustainability & ESG", count: 3 },
-    { name: "Risk & Compliance", count: 2 },
-    { name: "People & Capability", count: 2 },
-  ];
 
   // Budget vs Actual Bar Data (₹ Cr)
-  const budgetVsActualData = [
-    { quarter: "Q1", budget: 8.5, actual: 6.2 },
-    { quarter: "Q2", budget: 12.0, actual: 10.8 },
-    { quarter: "Q3", budget: 15.0, actual: 13.5 },
-    { quarter: "Q4", budget: 13.0, actual: 6.5 },
-  ];
 
   // Expected Benefits Donut Data (₹72.3 Cr)
-  const benefitsDonutData = [
-    { name: "Revenue Growth", value: 40, color: "#3b82f6" },
-    { name: "Cost Savings", value: 25, color: "#10b981" },
-    { name: "Operational Efficiency", value: 15, color: "#f59e0b" },
-    { name: "Customer Value", value: 10, color: "#06b6d4" },
-    { name: "Sustainability / ESG", value: 10, color: "#14b8a6" },
-  ];
 
   const handleAskAI = (promptText?: string) => {
     const text = promptText || aiQuery;

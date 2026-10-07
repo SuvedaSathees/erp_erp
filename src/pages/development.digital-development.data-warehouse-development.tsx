@@ -2,7 +2,7 @@
 // Development → Digital Development → Data Platform Development → Data Warehouse Development
 // Data Warehouse Development Form — MAICW Classification & Platform Studio
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Database,
@@ -57,6 +57,7 @@ import {
 } from "@/services/dataWarehouseService";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 const DW_TABS = [
   "Overview",
   "Project Details",
@@ -72,6 +73,35 @@ const DW_TABS = [
   "Analytics",
 ] as const;
 
+const volumeData = [
+  { month: "Jan", volume: 3.2 },
+  { month: "Feb", volume: 4.5 },
+  { month: "Mar", volume: 5.8 },
+  { month: "Apr", volume: 7.1 },
+  { month: "May", volume: 8.6 },
+  { month: "Jun", volume: 9.9 },
+  { month: "Jul", volume: 10.8 },
+  { month: "Aug", volume: 11.5 },
+  { month: "Sep", volume: 12.6 },
+];
+
+const pipelinePieData = [
+  { name: "Successful", value: 24, percent: "85.7%", color: "#10B981" },
+  { name: "Failed", value: 2, percent: "7.1%", color: "#EF4444" },
+  { name: "Running", value: 2, percent: "7.1%", color: "#3B82F6" },
+];
+
+const qualityMetrics = [
+  { name: "Completeness", score: "98.1%" },
+  { name: "Accuracy", score: "95.4%" },
+  { name: "Consistency", score: "96.8%" },
+  { name: "Validity", score: "94.7%" },
+  { name: "Uniqueness", score: "98.9%" },
+  { name: "Timeliness", score: "93.4%" },
+];
+
+const PAGE_DATASET = { DW_MILESTONES, DW_RECENT_PIPELINES, DW_TOP_SOURCES, volumeData, pipelinePieData, qualityMetrics };
+
 export function DataWarehouseDevelopmentPage({
   breadcrumb = "Management > Business Intelligence Management > Data Warehouse Development",
   tabs,
@@ -79,6 +109,7 @@ export function DataWarehouseDevelopmentPage({
   breadcrumb?: string;
   tabs?: React.ReactNode;
 } = {}) {
+  const { DW_MILESTONES, DW_RECENT_PIPELINES, DW_TOP_SOURCES, volumeData, pipelinePieData, qualityMetrics } = useModuleDataset("digital-development.data-warehouse-development", "Data Warehouse Development", PAGE_DATASET);
   const [activeTab, setActiveTab] = useState<string>("Overview");
   const [selectedEnv, setSelectedEnv] = useState("All Environments");
   const [aiTab, setAiTab] = useState<"insights" | "recs">("insights");
@@ -89,6 +120,7 @@ export function DataWarehouseDevelopmentPage({
   const [showSourcesModal, setShowSourcesModal] = useState(false);
 
   const [pipelines, setPipelines] = useState(DW_RECENT_PIPELINES);
+  useEffect(() => { setPipelines(DW_RECENT_PIPELINES); }, [DW_RECENT_PIPELINES]);
   const [newProject, setNewProject] = useState({
     name: "",
     source: "ERP (PostgreSQL)",
@@ -128,34 +160,10 @@ export function DataWarehouseDevelopmentPage({
   };
 
   // Volume trend data (Jan-Sep)
-  const volumeData = [
-    { month: "Jan", volume: 3.2 },
-    { month: "Feb", volume: 4.5 },
-    { month: "Mar", volume: 5.8 },
-    { month: "Apr", volume: 7.1 },
-    { month: "May", volume: 8.6 },
-    { month: "Jun", volume: 9.9 },
-    { month: "Jul", volume: 10.8 },
-    { month: "Aug", volume: 11.5 },
-    { month: "Sep", volume: 12.6 },
-  ];
 
   // Pipeline Execution Pie Data
-  const pipelinePieData = [
-    { name: "Successful", value: 24, percent: "85.7%", color: "#10B981" },
-    { name: "Failed", value: 2, percent: "7.1%", color: "#EF4444" },
-    { name: "Running", value: 2, percent: "7.1%", color: "#3B82F6" },
-  ];
 
   // Data Quality Metrics
-  const qualityMetrics = [
-    { name: "Completeness", score: "98.1%" },
-    { name: "Accuracy", score: "95.4%" },
-    { name: "Consistency", score: "96.8%" },
-    { name: "Validity", score: "94.7%" },
-    { name: "Uniqueness", score: "98.9%" },
-    { name: "Timeliness", score: "93.4%" },
-  ];
 
   return (
     <AppShell

@@ -56,6 +56,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/strategy-management/portfolio-management")({
   head: () => ({
     meta: [
@@ -106,7 +107,10 @@ const BUDGET_VS_ACTUAL = [
   { name: "Q4", planned: 25, actual: 20 },
 ];
 
+const PAGE_DATASET = { LIFECYCLE_STAGES, COMPOSITION_DATA, CATEGORY_INVESTMENTS, BUDGET_VS_ACTUAL };
+
 function PortfolioManagementPage() {
+  const { LIFECYCLE_STAGES, COMPOSITION_DATA, CATEGORY_INVESTMENTS, BUDGET_VS_ACTUAL } = useModuleDataset("strategy-management.portfolio-management", "Portfolio Management", PAGE_DATASET);
   const [currentLifecycle, setCurrentLifecycle] = useState(5); // Allocate
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");

@@ -2,7 +2,7 @@
 // Management → Business Intelligence Management → Decision Support
 // Decision Support Form — MAICW Classification & Executive Decision Studio
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   FileText,
@@ -59,6 +59,7 @@ import {
 } from "@/services/decisionSupportService";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute(
   "/management/business-intelligence/decision-support"
 )({
@@ -85,12 +86,38 @@ const DECISION_TABS = [
   "Outcome",
 ] as const;
 
+const impactData = [
+  { metric: "Revenue (₹ Cr)", current: 15, optionA: 32, optionB: 28.5, optionC: 20 },
+  { metric: "Cost (₹ Cr)", current: 10, optionA: 18, optionB: 12, optionC: 6 },
+  { metric: "Payback (Yrs)", current: 4, optionA: 3.5, optionB: 2.5, optionC: 3.0 },
+  { metric: "ROI (%)", current: 18, optionA: 28, optionB: 35, optionC: 30 },
+];
+
+const forecastDemandData = [
+  { month: "Jan", historical: 20000, forecast: null, upper: null, lower: null },
+  { month: "Feb", historical: 24000, forecast: null, upper: null, lower: null },
+  { month: "Mar", historical: 26000, forecast: null, upper: null, lower: null },
+  { month: "Apr", historical: 31000, forecast: null, upper: null, lower: null },
+  { month: "May", historical: 35000, forecast: null, upper: null, lower: null },
+  { month: "Jun", historical: 39000, forecast: null, upper: null, lower: null },
+  { month: "Jul", historical: 41000, forecast: 41000, upper: 44000, lower: 38000 },
+  { month: "Aug", historical: null, forecast: 46000, upper: 51000, lower: 42000 },
+  { month: "Sep", historical: null, forecast: 52000, upper: 58000, lower: 47000 },
+  { month: "Oct", historical: null, forecast: 59000, upper: 66000, lower: 53000 },
+  { month: "Nov", historical: null, forecast: 65000, upper: 73000, lower: 58000 },
+  { month: "Dec", historical: null, forecast: 71000, upper: 80000, lower: 63000 },
+];
+
+const PAGE_DATASET = { DSS_KPIS, DSS_RECENT_DECISIONS, DSS_OPTIONS, DSS_RISKS, DSS_ACTIONS, impactData, forecastDemandData };
+
 function DecisionSupportPage() {
+  const { DSS_KPIS, DSS_RECENT_DECISIONS, DSS_OPTIONS, DSS_RISKS, DSS_ACTIONS, impactData, forecastDemandData } = useModuleDataset("business-intelligence.decision-support", "Decision Support", PAGE_DATASET);
   const [selectedBu, setSelectedBu] = useState("All Business Units");
   const [dateRange, setDateRange] = useState("01 Sep 2026 - 30 Sep 2026");
   const [activeDecisionTab, setActiveDecisionTab] = useState<string>("Overview");
   const [selectedDecision, setSelectedDecision] = useState<DecisionRecord>(DSS_RECENT_DECISIONS[0]);
   const [dssList, setDssList] = useState<DecisionRecord[]>(DSS_RECENT_DECISIONS);
+  useEffect(() => { setDssList(DSS_RECENT_DECISIONS); }, [DSS_RECENT_DECISIONS]);
   const [showNewModal, setShowNewModal] = useState(false);
   const [newTopic, setNewTopic] = useState("");
   const [newArea, setNewArea] = useState("Operations");
@@ -141,28 +168,8 @@ function DecisionSupportPage() {
   };
 
   // Decision Impact Analysis (Bar Chart)
-  const impactData = [
-    { metric: "Revenue (₹ Cr)", current: 15, optionA: 32, optionB: 28.5, optionC: 20 },
-    { metric: "Cost (₹ Cr)", current: 10, optionA: 18, optionB: 12, optionC: 6 },
-    { metric: "Payback (Yrs)", current: 4, optionA: 3.5, optionB: 2.5, optionC: 3.0 },
-    { metric: "ROI (%)", current: 18, optionA: 28, optionB: 35, optionC: 30 },
-  ];
 
   // 12-Month EV Demand Forecast (Jan-Dec)
-  const forecastDemandData = [
-    { month: "Jan", historical: 20000, forecast: null, upper: null, lower: null },
-    { month: "Feb", historical: 24000, forecast: null, upper: null, lower: null },
-    { month: "Mar", historical: 26000, forecast: null, upper: null, lower: null },
-    { month: "Apr", historical: 31000, forecast: null, upper: null, lower: null },
-    { month: "May", historical: 35000, forecast: null, upper: null, lower: null },
-    { month: "Jun", historical: 39000, forecast: null, upper: null, lower: null },
-    { month: "Jul", historical: 41000, forecast: 41000, upper: 44000, lower: 38000 },
-    { month: "Aug", historical: null, forecast: 46000, upper: 51000, lower: 42000 },
-    { month: "Sep", historical: null, forecast: 52000, upper: 58000, lower: 47000 },
-    { month: "Oct", historical: null, forecast: 59000, upper: 66000, lower: 53000 },
-    { month: "Nov", historical: null, forecast: 65000, upper: 73000, lower: 58000 },
-    { month: "Dec", historical: null, forecast: 71000, upper: 80000, lower: 63000 },
-  ];
 
   return (
     <AppShell

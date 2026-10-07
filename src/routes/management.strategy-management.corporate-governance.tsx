@@ -34,6 +34,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/strategy-management/corporate-governance")({
   head: () => ({
     meta: [
@@ -62,7 +63,10 @@ const SHAREHOLDING_DATA = [
   { name: "Employees / ESOP", value: 8, color: "#8b5cf6" },
 ];
 
+const PAGE_DATASET = { BOARD_COMPOSITION, SHAREHOLDING_DATA };
+
 function CorporateGovernancePage() {
+  const { BOARD_COMPOSITION, SHAREHOLDING_DATA } = useModuleDataset("strategy-management.corporate-governance", "Corporate Governance", PAGE_DATASET);
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [entity, setEntity] = useState("Magnertia Private Limited");
   const [currentMaturityStage, setCurrentMaturityStage] = useState(3); // Independent Directors

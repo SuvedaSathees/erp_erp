@@ -56,6 +56,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/executive-management/executive-review")({
   head: () => ({
     meta: [
@@ -112,7 +113,10 @@ const KPI_CATEGORY_DATA = [
   { category: "Sustainability", target: 70, actual: 68 },
 ];
 
+const PAGE_DATASET = { REVIEW_PROCESS_STAGES, FINANCIAL_QUARTERLY_DATA, REVENUE_SEGMENT_DATA, KPI_CATEGORY_DATA };
+
 function ExecutiveReviewPage() {
+  const { REVIEW_PROCESS_STAGES, FINANCIAL_QUARTERLY_DATA, REVENUE_SEGMENT_DATA, KPI_CATEGORY_DATA } = useModuleDataset("executive-management.executive-review", "Executive Review", PAGE_DATASET);
   const [currentStage, setCurrentStage] = useState(4); // Executive Review
   const [period, setPeriod] = useState("Q3 FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");

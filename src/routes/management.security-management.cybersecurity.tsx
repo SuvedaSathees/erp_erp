@@ -52,6 +52,7 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/security-management/cybersecurity")({
   head: () => ({
     meta: [
@@ -107,7 +108,10 @@ const INCIDENT_STATUS_DATA = [
   { name: "Closed", count: 1, color: "#64748B" },
 ];
 
+const PAGE_DATASET = { SECURITY_TREND_DATA, ASSETS_BY_TYPE, VULN_SEVERITY, INCIDENT_STATUS_DATA };
+
 function CybersecurityPage() {
+  const { SECURITY_TREND_DATA, ASSETS_BY_TYPE, VULN_SEVERITY, INCIDENT_STATUS_DATA } = useModuleDataset("security-management.cybersecurity", "Cybersecurity Management", PAGE_DATASET);
   const [record, setRecord] = useState<CybersecurityRecord>(mockCybersecurityRecord);
   const [recordType, setRecordType] = useState<"Asset" | "Vulnerability" | "Incident" | "Risk">("Asset");
   const [showNewRecordModal, setShowNewRecordModal] = useState(false);

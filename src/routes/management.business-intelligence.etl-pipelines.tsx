@@ -2,7 +2,7 @@
 // Submodule 8: ETL & Data Pipelines
 // Management → Business Intelligence Management → ETL & Data Pipelines
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Workflow,
@@ -57,6 +57,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute(
   "/management/business-intelligence/etl-pipelines"
 )({
@@ -258,9 +259,13 @@ const CONNECTORS_LIST = [
   { name: "dbt Transformation Core", type: "Transform Engine", status: "Healthy", lag: "0 errors", nodes: 4 },
 ];
 
+const PAGE_DATASET = { INITIAL_PIPELINES, HOURLY_THROUGHPUT_DATA, CONNECTORS_LIST };
+
 function EtlPipelinesPage() {
+  const { INITIAL_PIPELINES, HOURLY_THROUGHPUT_DATA, CONNECTORS_LIST } = useModuleDataset("business-intelligence.etl-pipelines", "ETL & Data Pipelines", PAGE_DATASET);
   const [activeTab, setActiveTab] = useState<"orchestration" | "pipelines" | "connectors" | "dbt" | "quarantine">("orchestration");
   const [pipelines, setPipelines] = useState<PipelineRecord[]>(INITIAL_PIPELINES);
+  useEffect(() => { setPipelines(INITIAL_PIPELINES); }, [INITIAL_PIPELINES]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("All Statuses");
   const [dateRange, setDateRange] = useState("01 Sep 2026 - 30 Sep 2026");

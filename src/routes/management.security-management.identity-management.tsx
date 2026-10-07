@@ -53,6 +53,7 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/security-management/identity-management")({
   head: () => ({
     meta: [
@@ -87,7 +88,10 @@ const IDENTITY_STATUS_BARS = [
   { status: "Deactivated", count: 7, color: "#EF4444" },
 ];
 
+const PAGE_DATASET = { IDENTITY_TYPES_PIE, IDENTITY_STATUS_BARS };
+
 function IdentityManagementPage() {
+  const { IDENTITY_TYPES_PIE, IDENTITY_STATUS_BARS } = useModuleDataset("security-management.identity-management", "Identity Management", PAGE_DATASET);
   const [profile, setProfile] = useState<IdentityProfile>(mockIdentityProfile);
   const [showNewIdentityModal, setShowNewIdentityModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);

@@ -57,6 +57,7 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute(
   "/management/security-management/visitor-management"
 )({
@@ -133,7 +134,10 @@ const BADGE_DISTRIBUTION = [
   { name: "Others", value: 2 },
 ];
 
+const PAGE_DATASET = { PURPOSE_DATA, FACILITY_VISITOR_DATA, VISITOR_TREND_DATA };
+
 function VisitorManagementPage() {
+  const { PURPOSE_DATA, FACILITY_VISITOR_DATA, VISITOR_TREND_DATA } = useModuleDataset("security-management.visitor-management", "Visitor Management", PAGE_DATASET);
   const [visitors, setVisitors] = useState<VisitorRecord[]>(mockTodayVisitors);
   const [visitorFilterTab, setVisitorFilterTab] = useState<
     "All" | "Expected" | "Checked-In" | "On-Site" | "Checked-Out"

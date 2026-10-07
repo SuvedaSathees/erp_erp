@@ -42,6 +42,7 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/strategy-management/kpi-management")({
   head: () => ({
     meta: [
@@ -56,46 +57,52 @@ export const Route = createFileRoute("/management/strategy-management/kpi-manage
   component: KpiManagementPage,
 });
 
+const performanceTrend = [
+  { month: "Jan", actual: 52, target: 60, prevYear: 45 },
+  { month: "Feb", actual: 58, target: 64, prevYear: 49 },
+  { month: "Mar", actual: 65, target: 70, prevYear: 55 },
+  { month: "Apr", actual: 72, target: 75, prevYear: 60 },
+  { month: "May", actual: 78, target: 80, prevYear: 65 },
+  { month: "Jun", actual: 82, target: 85, prevYear: 70 },
+  { month: "Jul", actual: 85, target: 88, prevYear: 72 },
+  { month: "Aug", actual: 89, target: 92, prevYear: 76 },
+  { month: "Sep", actual: 94, target: 96, prevYear: 80 },
+];
+
+const kpiStatusData = [
+  { name: "On Target", value: 142, percentage: 76, color: "#10b981" },
+  { name: "Warning", value: 24, percentage: 13, color: "#f59e0b" },
+  { name: "Critical", value: 8, percentage: 4, color: "#ef4444" },
+  { name: "Not Started", value: 6, percentage: 3, color: "#3b82f6" },
+  { name: "Data Pending", value: 6, percentage: 4, color: "#8b5cf6" },
+];
+
+const trendBarData = [
+  { month: "Jan", actual: 18, target: 25, forecast: 20 },
+  { month: "Feb", actual: 22, target: 28, forecast: 24 },
+  { month: "Mar", actual: 26, target: 32, forecast: 28 },
+  { month: "Apr", actual: 28, target: 36, forecast: 32 },
+  { month: "May", actual: 30, target: 40, forecast: 36 },
+  { month: "Jun", actual: 31, target: 44, forecast: 40 },
+  { month: "Jul", actual: 32, target: 46, forecast: 42 },
+  { month: "Aug", actual: 33, target: 48, forecast: 45 },
+  { month: "Sep", actual: 32.4, target: 50, forecast: 48 },
+];
+
+const PAGE_DATASET = { performanceTrend, kpiStatusData, trendBarData };
+
 function KpiManagementPage() {
+  const { performanceTrend, kpiStatusData, trendBarData } = useModuleDataset("strategy-management.kpi-management", "KPI Management", PAGE_DATASET);
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [execTab, setExecTab] = useState("Strategic");
   const [aiQuery, setAiQuery] = useState("");
 
   // 1. Line Chart Data: KPI Performance Overview
-  const performanceTrend = [
-    { month: "Jan", actual: 52, target: 60, prevYear: 45 },
-    { month: "Feb", actual: 58, target: 64, prevYear: 49 },
-    { month: "Mar", actual: 65, target: 70, prevYear: 55 },
-    { month: "Apr", actual: 72, target: 75, prevYear: 60 },
-    { month: "May", actual: 78, target: 80, prevYear: 65 },
-    { month: "Jun", actual: 82, target: 85, prevYear: 70 },
-    { month: "Jul", actual: 85, target: 88, prevYear: 72 },
-    { month: "Aug", actual: 89, target: 92, prevYear: 76 },
-    { month: "Sep", actual: 94, target: 96, prevYear: 80 },
-  ];
 
   // 2. Donut Data: KPI Status Distribution (186 KPIs)
-  const kpiStatusData = [
-    { name: "On Target", value: 142, percentage: 76, color: "#10b981" },
-    { name: "Warning", value: 24, percentage: 13, color: "#f59e0b" },
-    { name: "Critical", value: 8, percentage: 4, color: "#ef4444" },
-    { name: "Not Started", value: 6, percentage: 3, color: "#3b82f6" },
-    { name: "Data Pending", value: 6, percentage: 4, color: "#8b5cf6" },
-  ];
 
   // 3. Bar Chart Data: KPI Trend Analysis (Revenue ₹ Cr)
-  const trendBarData = [
-    { month: "Jan", actual: 18, target: 25, forecast: 20 },
-    { month: "Feb", actual: 22, target: 28, forecast: 24 },
-    { month: "Mar", actual: 26, target: 32, forecast: 28 },
-    { month: "Apr", actual: 28, target: 36, forecast: 32 },
-    { month: "May", actual: 30, target: 40, forecast: 36 },
-    { month: "Jun", actual: 31, target: 44, forecast: 40 },
-    { month: "Jul", actual: 32, target: 46, forecast: 42 },
-    { month: "Aug", actual: 33, target: 48, forecast: 45 },
-    { month: "Sep", actual: 32.4, target: 50, forecast: 48 },
-  ];
 
   const handleAskAI = (promptText?: string) => {
     const text = promptText || aiQuery;

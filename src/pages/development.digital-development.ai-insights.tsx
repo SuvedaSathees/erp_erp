@@ -2,7 +2,7 @@
 // Development → Digital Development → Data Platform Development → Analytics Platform Development → AI Insights
 // AI Insights Form — MAICW Classification & Cognitive Intelligence Center
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 
 import {
   Lightbulb,
@@ -60,6 +60,7 @@ import {
 } from "@/services/aiInsightsService";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 const AI_TABS = [
   "Dashboard",
   "Use Cases",
@@ -74,6 +75,52 @@ const AI_TABS = [
   "Configuration",
 ] as const;
 
+const trendData = [
+  { month: "Jan", generated: 38, highImpact: 8, critical: 2 },
+  { month: "Feb", generated: 45, highImpact: 11, critical: 3 },
+  { month: "Mar", generated: 52, highImpact: 14, critical: 2 },
+  { month: "Apr", generated: 60, highImpact: 16, critical: 4 },
+  { month: "May", generated: 68, highImpact: 19, critical: 3 },
+  { month: "Jun", generated: 74, highImpact: 22, critical: 5 },
+  { month: "Jul", generated: 82, highImpact: 26, critical: 4 },
+  { month: "Aug", generated: 90, highImpact: 31, critical: 6 },
+  { month: "Sep", generated: 98, highImpact: 36, critical: 5 },
+];
+
+const domainData = [
+  { name: "Operations", value: 24, color: "#3B82F6" },
+  { name: "Finance", value: 16, color: "#10B981" },
+  { name: "Sales", value: 14, color: "#F59E0B" },
+  { name: "Supply Chain", value: 12, color: "#06B6D4" },
+  { name: "Customer", value: 10, color: "#EC4899" },
+  { name: "Manufacturing", value: 8, color: "#8B5CF6" },
+  { name: "Quality", value: 6, color: "#14B8A6" },
+  { name: "Product", value: 6, color: "#F97316" },
+  { name: "HR", value: 5, color: "#6366F1" },
+];
+
+const impactData = [
+  { name: "Critical", value: 6, color: "#EF4444" },
+  { name: "High", value: 18, color: "#F97316" },
+  { name: "Medium", value: 48, color: "#3B82F6" },
+  { name: "Low", value: 20, color: "#10B981" },
+  { name: "Informational", value: 8, color: "#64748B" },
+];
+
+const aiAccuracyTrend = [
+  { month: "Jan", accuracy: 89.2, resolved: 32 },
+  { month: "Feb", accuracy: 91.5, resolved: 41 },
+  { month: "Mar", accuracy: 92.8, resolved: 49 },
+  { month: "Apr", accuracy: 94.1, resolved: 58 },
+  { month: "May", accuracy: 95.4, resolved: 65 },
+  { month: "Jun", accuracy: 96.2, resolved: 71 },
+  { month: "Jul", accuracy: 96.8, resolved: 79 },
+  { month: "Aug", accuracy: 97.4, resolved: 86 },
+  { month: "Sep", accuracy: 98.2, resolved: 94 },
+];
+
+const PAGE_DATASET = { AI_INSIGHT_KPIS, AI_TOP_INSIGHTS, AI_ANOMALIES, AI_MODELS_MONITORING, AI_RECENT_REQUESTS, trendData, domainData, impactData, aiAccuracyTrend };
+
 export function AiInsightsPage({
   breadcrumb = "Management > Business Intelligence Management > AI Insights",
   tabs,
@@ -81,6 +128,7 @@ export function AiInsightsPage({
   breadcrumb?: string;
   tabs?: React.ReactNode;
 } = {}) {
+  const { AI_INSIGHT_KPIS, AI_TOP_INSIGHTS, AI_ANOMALIES, AI_MODELS_MONITORING, AI_RECENT_REQUESTS, trendData, domainData, impactData, aiAccuracyTrend } = useModuleDataset("digital-development.ai-insights", "AI Insights", PAGE_DATASET);
   const [activeTab, setActiveTab] = useState<string>("Dashboard");
   const [selectedBu, setSelectedBu] = useState("All Business Units");
   const [dateRange, setDateRange] = useState("01 Sep 2026 - 30 Sep 2026");
@@ -96,6 +144,7 @@ export function AiInsightsPage({
   const [newDomain, setNewDomain] = useState("Operations");
   const [newImpact, setNewImpact] = useState<"High" | "Medium" | "Critical">("High");
   const [insightsList, setInsightsList] = useState<AiTopInsight[]>(AI_TOP_INSIGHTS);
+  useEffect(() => { setInsightsList(AI_TOP_INSIGHTS); }, [AI_TOP_INSIGHTS]);
 
   const showToast = (msg: string) => {
     setToastMsg(msg);
@@ -147,52 +196,12 @@ export function AiInsightsPage({
   };
 
   // Stacked Bar Data: Insights Trend (Jan-Sep)
-  const trendData = [
-    { month: "Jan", generated: 38, highImpact: 8, critical: 2 },
-    { month: "Feb", generated: 45, highImpact: 11, critical: 3 },
-    { month: "Mar", generated: 52, highImpact: 14, critical: 2 },
-    { month: "Apr", generated: 60, highImpact: 16, critical: 4 },
-    { month: "May", generated: 68, highImpact: 19, critical: 3 },
-    { month: "Jun", generated: 74, highImpact: 22, critical: 5 },
-    { month: "Jul", generated: 82, highImpact: 26, critical: 4 },
-    { month: "Aug", generated: 90, highImpact: 31, critical: 6 },
-    { month: "Sep", generated: 98, highImpact: 36, critical: 5 },
-  ];
 
   // Domain Distribution (Donut)
-  const domainData = [
-    { name: "Operations", value: 24, color: "#3B82F6" },
-    { name: "Finance", value: 16, color: "#10B981" },
-    { name: "Sales", value: 14, color: "#F59E0B" },
-    { name: "Supply Chain", value: 12, color: "#06B6D4" },
-    { name: "Customer", value: 10, color: "#EC4899" },
-    { name: "Manufacturing", value: 8, color: "#8B5CF6" },
-    { name: "Quality", value: 6, color: "#14B8A6" },
-    { name: "Product", value: 6, color: "#F97316" },
-    { name: "HR", value: 5, color: "#6366F1" },
-  ];
 
   // Impact Distribution (Donut)
-  const impactData = [
-    { name: "Critical", value: 6, color: "#EF4444" },
-    { name: "High", value: 18, color: "#F97316" },
-    { name: "Medium", value: 48, color: "#3B82F6" },
-    { name: "Low", value: 20, color: "#10B981" },
-    { name: "Informational", value: 8, color: "#64748B" },
-  ];
 
   // AI Accuracy & Cognitive Resolution Trend (Jan-Sep)
-  const aiAccuracyTrend = [
-    { month: "Jan", accuracy: 89.2, resolved: 32 },
-    { month: "Feb", accuracy: 91.5, resolved: 41 },
-    { month: "Mar", accuracy: 92.8, resolved: 49 },
-    { month: "Apr", accuracy: 94.1, resolved: 58 },
-    { month: "May", accuracy: 95.4, resolved: 65 },
-    { month: "Jun", accuracy: 96.2, resolved: 71 },
-    { month: "Jul", accuracy: 96.8, resolved: 79 },
-    { month: "Aug", accuracy: 97.4, resolved: 86 },
-    { month: "Sep", accuracy: 98.2, resolved: 94 },
-  ];
 
   const filteredInsights = useMemo(() => {
     if (!searchQuery.trim()) return insightsList;

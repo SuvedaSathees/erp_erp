@@ -40,6 +40,7 @@ import {
 } from "@/services/securityManagementService";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/security-management/reports")({
   component: SecurityReportsPage,
 });
@@ -53,7 +54,10 @@ const SUBMODULE_CATEGORIES = [
   "Physical Security",
 ] as const;
 
+const PAGE_DATASET = { CONTROLLED_SECURITY_REPORTS, SUBMODULE_CATEGORIES };
+
 function SecurityReportsPage() {
+  const { CONTROLLED_SECURITY_REPORTS, SUBMODULE_CATEGORIES } = useModuleDataset("security-management.reports", "Security Reports", PAGE_DATASET);
   const [reports, setReports] = useState<ControlledSecurityReport[]>(
     CONTROLLED_SECURITY_REPORTS
   );

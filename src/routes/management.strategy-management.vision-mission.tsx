@@ -51,6 +51,7 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/strategy-management/vision-mission")({
   head: () => ({
     meta: [
@@ -65,42 +66,48 @@ export const Route = createFileRoute("/management/strategy-management/vision-mis
   component: VisionMissionPage,
 });
 
+const alignmentData = [
+  { name: "Vision Alignment", value: 85, color: "#3b82f6" },
+  { name: "Mission Alignment", value: 78, color: "#10b981" },
+  { name: "Values Alignment", value: 70, color: "#f59e0b" },
+  { name: "Theme Alignment", value: 68, color: "#ef4444" },
+  { name: "Objective Alignment", value: 62, color: "#8b5cf6" },
+  { name: "Stakeholder Alignment", value: 75, color: "#06b6d4" },
+];
+
+const objectivesProgressData = [
+  { theme: "Growth", target: 80, actual: 65 },
+  { theme: "Innovation", target: 75, actual: 70 },
+  { theme: "Customer", target: 70, actual: 60 },
+  { theme: "Operations", target: 68, actual: 55 },
+  { theme: "Sustainability", target: 70, actual: 60 },
+  { theme: "Digital", target: 75, actual: 70 },
+  { theme: "People", target: 65, actual: 50 },
+];
+
+const stakeholdersData = [
+  { group: "Customers", rate: 88, color: "bg-blue-500" },
+  { group: "Employees", rate: 82, color: "bg-indigo-500" },
+  { group: "Investors", rate: 76, color: "bg-emerald-500" },
+  { group: "Suppliers", rate: 70, color: "bg-amber-500" },
+  { group: "Government", rate: 65, color: "bg-cyan-500" },
+  { group: "Communities", rate: 72, color: "bg-teal-500" },
+  { group: "Environment", rate: 68, color: "bg-green-600" },
+  { group: "Industry", rate: 60, color: "bg-purple-500" },
+];
+
+const PAGE_DATASET = { alignmentData, objectivesProgressData, stakeholdersData };
+
 function VisionMissionPage() {
+  const { alignmentData, objectivesProgressData, stakeholdersData } = useModuleDataset("strategy-management.vision-mission", "Vision & Mission", PAGE_DATASET);
   const [selectedBu, setSelectedBu] = useState("All Business Units");
   const [dateRange, setDateRange] = useState("01 Sep 2026 - 30 Sep 2026");
 
   // Alignment Donut Data
-  const alignmentData = [
-    { name: "Vision Alignment", value: 85, color: "#3b82f6" },
-    { name: "Mission Alignment", value: 78, color: "#10b981" },
-    { name: "Values Alignment", value: 70, color: "#f59e0b" },
-    { name: "Theme Alignment", value: 68, color: "#ef4444" },
-    { name: "Objective Alignment", value: 62, color: "#8b5cf6" },
-    { name: "Stakeholder Alignment", value: 75, color: "#06b6d4" },
-  ];
 
   // Strategic Objectives Bar Data
-  const objectivesProgressData = [
-    { theme: "Growth", target: 80, actual: 65 },
-    { theme: "Innovation", target: 75, actual: 70 },
-    { theme: "Customer", target: 70, actual: 60 },
-    { theme: "Operations", target: 68, actual: 55 },
-    { theme: "Sustainability", target: 70, actual: 60 },
-    { theme: "Digital", target: 75, actual: 70 },
-    { theme: "People", target: 65, actual: 50 },
-  ];
 
   // Stakeholders data
-  const stakeholdersData = [
-    { group: "Customers", rate: 88, color: "bg-blue-500" },
-    { group: "Employees", rate: 82, color: "bg-indigo-500" },
-    { group: "Investors", rate: 76, color: "bg-emerald-500" },
-    { group: "Suppliers", rate: 70, color: "bg-amber-500" },
-    { group: "Government", rate: 65, color: "bg-cyan-500" },
-    { group: "Communities", rate: 72, color: "bg-teal-500" },
-    { group: "Environment", rate: 68, color: "bg-green-600" },
-    { group: "Industry", rate: 60, color: "bg-purple-500" },
-  ];
 
   return (
     <AppShell

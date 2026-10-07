@@ -18,6 +18,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/executive-management/reports")({
   head: () => ({
     meta: [
@@ -41,7 +42,10 @@ const REPORT_TEMPLATES = [
   { id: 6, title: "AI Executive Briefing & Variance Narrative", type: "Decision Intelligence", period: "Real-Time", format: "PDF", status: "Ready" },
 ];
 
+const PAGE_DATASET = { REPORT_TEMPLATES };
+
 function ExecutiveReportsPage() {
+  const { REPORT_TEMPLATES } = useModuleDataset("executive-management.reports", "Strategy Reports", PAGE_DATASET);
   const [selectedFormat, setSelectedFormat] = useState("All Formats");
 
   const handleDownload = (title: string) => {

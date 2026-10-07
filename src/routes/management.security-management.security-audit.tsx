@@ -61,6 +61,7 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute(
   "/management/security-management/security-audit"
 )({
@@ -115,7 +116,10 @@ const COMPLIANCE_TREND_DATA = [
   { month: "Sep", completion: 91, evidence: 86 },
 ];
 
+const PAGE_DATASET = { AUDIT_STATUS_BY_TYPE, FINDINGS_SEVERITY_DATA, COMPLIANCE_TREND_DATA };
+
 function SecurityAuditPage() {
+  const { AUDIT_STATUS_BY_TYPE, FINDINGS_SEVERITY_DATA, COMPLIANCE_TREND_DATA } = useModuleDataset("security-management.security-audit", "Security Audit", PAGE_DATASET);
   const [facilityFilter, setFacilityFilter] = useState("All Facilities");
   const [searchQuery, setSearchQuery] = useState("");
 

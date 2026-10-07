@@ -55,6 +55,7 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/security-management/information-security")({
   head: () => ({
     meta: [
@@ -111,7 +112,10 @@ const INCIDENT_TREND = [
   { month: "Sep", incidents: 5, resolved: 7 },
 ];
 
+const PAGE_DATASET = { ASSETS_BY_TYPE_DATA, CLASSIFICATION_BARS, LIFECYCLE_PIE_DATA, INCIDENT_TREND };
+
 function InformationSecurityPage() {
+  const { ASSETS_BY_TYPE_DATA, CLASSIFICATION_BARS, LIFECYCLE_PIE_DATA, INCIDENT_TREND } = useModuleDataset("security-management.information-security", "Information Security", PAGE_DATASET);
   const [formData, setFormData] = useState<InformationSecurityMaster>(mockInformationSecurityRecord);
   const [showAssetModal, setShowAssetModal] = useState(false);
 

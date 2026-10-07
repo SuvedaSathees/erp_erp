@@ -54,6 +54,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute(
   "/management/business-intelligence/executive-dashboard"
 )({
@@ -71,7 +72,10 @@ export const Route = createFileRoute(
 });
 
 
+const PAGE_DATASET = { BI_OVERVIEW_DATA };
+
 function ExecutiveDashboardPage() {
+  const { BI_OVERVIEW_DATA } = useModuleDataset("business-intelligence.executive-dashboard", "Executive Dashboard", PAGE_DATASET);
   const [selectedFacility, setSelectedFacility] = useState("All Facilities");
   const [dateRange, setDateRange] = useState("01 Sep 2026 - 30 Sep 2026");
   const [aiTab, setAiTab] = useState<"insights" | "recommendations" | "forecast">("insights");

@@ -55,6 +55,7 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/security-management/access-control")({
   head: () => ({
     meta: [
@@ -94,7 +95,10 @@ const ROLES_PIE_DATA = [
   { name: "Others", value: 8, color: "#94A3B8" },
 ];
 
+const PAGE_DATASET = { ACCESS_TREND_DATA, ROLES_PIE_DATA };
+
 function AccessControlPage() {
+  const { ACCESS_TREND_DATA, ROLES_PIE_DATA } = useModuleDataset("security-management.access-control", "Access Control", PAGE_DATASET);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showEditMasterModal, setShowEditMasterModal] = useState(false);
   const [masterRecord, setMasterRecord] = useState<AccessControlRecord>(mockAccessControlMaster);

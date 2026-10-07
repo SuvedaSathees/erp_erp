@@ -55,6 +55,7 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/security-management/physical-security")({
   head: () => ({
     meta: [
@@ -102,7 +103,10 @@ const PATROL_COMPLIANCE_DATA = [
   { day: "28 Sep", scheduled: 24, completed: 23, compliance: 97.2 },
 ];
 
+const PAGE_DATASET = { ACCESS_ACTIVITY_7DAYS, INCIDENT_STATUS_DATA, CCTV_HEALTH_DATA, PATROL_COMPLIANCE_DATA };
+
 function PhysicalSecurityPage() {
+  const { ACCESS_ACTIVITY_7DAYS, INCIDENT_STATUS_DATA, CCTV_HEALTH_DATA, PATROL_COMPLIANCE_DATA } = useModuleDataset("security-management.physical-security", "Physical Security", PAGE_DATASET);
   const [formData, setFormData] = useState<PhysicalSecurityMaster>(mockPhysicalSecurityRecord);
   const [showFacilityModal, setShowFacilityModal] = useState(false);
 

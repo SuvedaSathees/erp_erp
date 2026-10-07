@@ -41,6 +41,7 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/strategy-management/okr-management")({
   head: () => ({
     meta: [
@@ -55,43 +56,49 @@ export const Route = createFileRoute("/management/strategy-management/okr-manage
   component: OkrManagementPage,
 });
 
+const progressTrend = [
+  { month: "Jan", planned: 20, actual: 18, target: 22 },
+  { month: "Feb", planned: 32, actual: 28, target: 35 },
+  { month: "Mar", planned: 45, actual: 40, target: 48 },
+  { month: "Apr", planned: 55, actual: 52, target: 60 },
+  { month: "May", planned: 68, actual: 64, target: 72 },
+  { month: "Jun", planned: 78, actual: 72, target: 80 },
+  { month: "Jul", planned: 85, actual: 80, target: 88 },
+  { month: "Aug", planned: 92, actual: 84, target: 94 },
+  { month: "Sep", planned: 100, actual: 86, target: 100 },
+];
+
+const statusData = [
+  { name: "On Track", value: 18, percentage: 56, color: "#10b981" },
+  { name: "At Risk", value: 7, percentage: 22, color: "#f59e0b" },
+  { name: "Off Track", value: 5, percentage: 16, color: "#ef4444" },
+  { name: "Completed", value: 2, percentage: 6, color: "#3b82f6" },
+];
+
+const deptPerformanceData = [
+  { dept: "Mgmt", onTrack: 4, atRisk: 1, offTrack: 0, completed: 2 },
+  { dept: "Product", onTrack: 5, atRisk: 2, offTrack: 1, completed: 3 },
+  { dept: "Engg", onTrack: 6, atRisk: 1, offTrack: 1, completed: 4 },
+  { dept: "Mfg", onTrack: 3, atRisk: 3, offTrack: 2, completed: 1 },
+  { dept: "Sales", onTrack: 4, atRisk: 2, offTrack: 1, completed: 2 },
+  { dept: "Finance", onTrack: 3, atRisk: 1, offTrack: 0, completed: 3 },
+  { dept: "HR", onTrack: 4, atRisk: 0, offTrack: 0, completed: 2 },
+  { dept: "Operations", onTrack: 5, atRisk: 2, offTrack: 1, completed: 2 },
+];
+
+const PAGE_DATASET = { progressTrend, statusData, deptPerformanceData };
+
 function OkrManagementPage() {
+  const { progressTrend, statusData, deptPerformanceData } = useModuleDataset("strategy-management.okr-management", "OKR Management", PAGE_DATASET);
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [aiQuery, setAiQuery] = useState("");
 
   // OKR Progress Line Chart Data
-  const progressTrend = [
-    { month: "Jan", planned: 20, actual: 18, target: 22 },
-    { month: "Feb", planned: 32, actual: 28, target: 35 },
-    { month: "Mar", planned: 45, actual: 40, target: 48 },
-    { month: "Apr", planned: 55, actual: 52, target: 60 },
-    { month: "May", planned: 68, actual: 64, target: 72 },
-    { month: "Jun", planned: 78, actual: 72, target: 80 },
-    { month: "Jul", planned: 85, actual: 80, target: 88 },
-    { month: "Aug", planned: 92, actual: 84, target: 94 },
-    { month: "Sep", planned: 100, actual: 86, target: 100 },
-  ];
 
   // OKR Status Distribution Donut Data
-  const statusData = [
-    { name: "On Track", value: 18, percentage: 56, color: "#10b981" },
-    { name: "At Risk", value: 7, percentage: 22, color: "#f59e0b" },
-    { name: "Off Track", value: 5, percentage: 16, color: "#ef4444" },
-    { name: "Completed", value: 2, percentage: 6, color: "#3b82f6" },
-  ];
 
   // Department Performance Stacked Bar Data
-  const deptPerformanceData = [
-    { dept: "Mgmt", onTrack: 4, atRisk: 1, offTrack: 0, completed: 2 },
-    { dept: "Product", onTrack: 5, atRisk: 2, offTrack: 1, completed: 3 },
-    { dept: "Engg", onTrack: 6, atRisk: 1, offTrack: 1, completed: 4 },
-    { dept: "Mfg", onTrack: 3, atRisk: 3, offTrack: 2, completed: 1 },
-    { dept: "Sales", onTrack: 4, atRisk: 2, offTrack: 1, completed: 2 },
-    { dept: "Finance", onTrack: 3, atRisk: 1, offTrack: 0, completed: 3 },
-    { dept: "HR", onTrack: 4, atRisk: 0, offTrack: 0, completed: 2 },
-    { dept: "Operations", onTrack: 5, atRisk: 2, offTrack: 1, completed: 2 },
-  ];
 
   const handleAskAI = (promptText?: string) => {
     const text = promptText || aiQuery;

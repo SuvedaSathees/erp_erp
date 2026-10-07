@@ -2,7 +2,7 @@
 // Development → Digital Development → Data Platform Development → Analytics Platform Development → Predictive Analytics
 // Predictive Analytics Form — MAICW Classification & Intelligence Engine
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Target,
@@ -59,6 +59,7 @@ import {
 } from "@/services/predictiveAnalyticsService";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 const PREDICTIVE_TABS = [
   "Dashboard",
   "Use Cases",
@@ -72,6 +73,30 @@ const PREDICTIVE_TABS = [
   "Reports",
 ] as const;
 
+const forecastData = [
+  { day: "Sep 1", historical: 4200, predicted: null, lower: null, upper: null },
+  { day: "Sep 5", historical: 4900, predicted: null, lower: null, upper: null },
+  { day: "Sep 10", historical: 4600, predicted: null, lower: null, upper: null },
+  { day: "Sep 15", historical: 6200, predicted: null, lower: null, upper: null },
+  { day: "Sep 20", historical: 5800, predicted: 5800, lower: 5500, upper: 6100 },
+  { day: "Sep 22", historical: null, predicted: 6400, lower: 5900, upper: 6900 },
+  { day: "Sep 25", historical: null, predicted: 7100, lower: 6400, upper: 7800 },
+  { day: "Sep 28", historical: null, predicted: 7500, lower: 6700, upper: 8300 },
+  { day: "Sep 30", historical: null, predicted: 7900, lower: 6900, upper: 8800 },
+];
+
+const comparisonData = [
+  { day: "Sep 1", actual: 4100, predicted: 4200, range: [3900, 4400] },
+  { day: "Sep 5", actual: 4850, predicted: 4900, range: [4600, 5100] },
+  { day: "Sep 10", actual: 4500, predicted: 4600, range: [4300, 4800] },
+  { day: "Sep 15", actual: 6100, predicted: 6200, range: [5800, 6500] },
+  { day: "Sep 20", actual: 5750, predicted: 5800, range: [5400, 6100] },
+  { day: "Sep 25", actual: 6950, predicted: 7100, range: [6500, 7600] },
+  { day: "Sep 30", actual: 7800, predicted: 7900, range: [7100, 8500] },
+];
+
+const PAGE_DATASET = { PREDICTIVE_USE_CASES, PREDICTIVE_RECENT_PREDICTIONS, PREDICTIVE_ALERTS, PREDICTIVE_FEATURE_IMPORTANCE, forecastData, comparisonData };
+
 export function PredictiveAnalyticsPage({
   breadcrumb = "Management > Business Intelligence Management > Predictive Analytics",
   tabs,
@@ -79,14 +104,18 @@ export function PredictiveAnalyticsPage({
   breadcrumb?: string;
   tabs?: React.ReactNode;
 } = {}) {
+  const { PREDICTIVE_USE_CASES, PREDICTIVE_RECENT_PREDICTIONS, PREDICTIVE_ALERTS, PREDICTIVE_FEATURE_IMPORTANCE, forecastData, comparisonData } = useModuleDataset("digital-development.predictive-analytics", "Predictive Analytics", PAGE_DATASET);
   const [activeTab, setActiveTab] = useState<string>("Dashboard");
   const [selectedBu, setSelectedBu] = useState("All Business Units");
   const [selectedModel, setSelectedModel] = useState("EV Charging Demand Model");
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   const [useCases, setUseCases] = useState(PREDICTIVE_USE_CASES);
+  useEffect(() => { setUseCases(PREDICTIVE_USE_CASES); }, [PREDICTIVE_USE_CASES]);
   const [predictions, setPredictions] = useState(PREDICTIVE_RECENT_PREDICTIONS);
+  useEffect(() => { setPredictions(PREDICTIVE_RECENT_PREDICTIONS); }, [PREDICTIVE_RECENT_PREDICTIONS]);
   const [alerts, setAlerts] = useState(PREDICTIVE_ALERTS);
+  useEffect(() => { setAlerts(PREDICTIVE_ALERTS); }, [PREDICTIVE_ALERTS]);
 
   const [showNewUseCaseModal, setShowNewUseCaseModal] = useState(false);
   const [showEditParamsModal, setShowEditParamsModal] = useState(false);
@@ -148,28 +177,8 @@ export function PredictiveAnalyticsPage({
   };
 
   // 30-Day EV Charging Demand Forecast Data (Sep 1 to Sep 30)
-  const forecastData = [
-    { day: "Sep 1", historical: 4200, predicted: null, lower: null, upper: null },
-    { day: "Sep 5", historical: 4900, predicted: null, lower: null, upper: null },
-    { day: "Sep 10", historical: 4600, predicted: null, lower: null, upper: null },
-    { day: "Sep 15", historical: 6200, predicted: null, lower: null, upper: null },
-    { day: "Sep 20", historical: 5800, predicted: 5800, lower: 5500, upper: 6100 },
-    { day: "Sep 22", historical: null, predicted: 6400, lower: 5900, upper: 6900 },
-    { day: "Sep 25", historical: null, predicted: 7100, lower: 6400, upper: 7800 },
-    { day: "Sep 28", historical: null, predicted: 7500, lower: 6700, upper: 8300 },
-    { day: "Sep 30", historical: null, predicted: 7900, lower: 6900, upper: 8800 },
-  ];
 
   // Actual vs Predicted Demand Comparison
-  const comparisonData = [
-    { day: "Sep 1", actual: 4100, predicted: 4200, range: [3900, 4400] },
-    { day: "Sep 5", actual: 4850, predicted: 4900, range: [4600, 5100] },
-    { day: "Sep 10", actual: 4500, predicted: 4600, range: [4300, 4800] },
-    { day: "Sep 15", actual: 6100, predicted: 6200, range: [5800, 6500] },
-    { day: "Sep 20", actual: 5750, predicted: 5800, range: [5400, 6100] },
-    { day: "Sep 25", actual: 6950, predicted: 7100, range: [6500, 7600] },
-    { day: "Sep 30", actual: 7800, predicted: 7900, range: [7100, 8500] },
-  ];
 
   return (
     <AppShell

@@ -36,6 +36,7 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/strategy-management/balanced-scorecard")({
   head: () => ({
     meta: [
@@ -50,30 +51,35 @@ export const Route = createFileRoute("/management/strategy-management/balanced-s
   component: BalancedScorecardPage,
 });
 
+const perspectives = [
+  { name: "Financial", ach: 82, weight: 25, color: "bg-emerald-500" },
+  { name: "Customer", ach: 76, weight: 20, color: "bg-blue-500" },
+  { name: "Internal Process", ach: 68, weight: 20, color: "bg-amber-500" },
+  { name: "Learning & Growth", ach: 62, weight: 15, color: "bg-purple-500" },
+  { name: "Innovation & Technology", ach: 58, weight: 10, color: "bg-rose-500" },
+  { name: "Risk, Security & Compliance", ach: 72, weight: 5, color: "bg-cyan-500" },
+  { name: "Sustainability & ESG", ach: 65, weight: 5, color: "bg-teal-500" },
+];
+
+const trendData = [
+  { period: "Q4 2025", score: 58 },
+  { period: "Q1 2026", score: 64 },
+  { period: "Q2 2026", score: 67 },
+  { period: "Q3 2026", score: 72 },
+];
+
+const PAGE_DATASET = { perspectives, trendData };
+
 function BalancedScorecardPage() {
+  const { perspectives, trendData } = useModuleDataset("strategy-management.balanced-scorecard", "Balanced Scorecard", PAGE_DATASET);
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [aiTab, setAiTab] = useState("Chat");
   const [aiQuery, setAiQuery] = useState("");
 
   // Perspective Performance Data
-  const perspectives = [
-    { name: "Financial", ach: 82, weight: 25, color: "bg-emerald-500" },
-    { name: "Customer", ach: 76, weight: 20, color: "bg-blue-500" },
-    { name: "Internal Process", ach: 68, weight: 20, color: "bg-amber-500" },
-    { name: "Learning & Growth", ach: 62, weight: 15, color: "bg-purple-500" },
-    { name: "Innovation & Technology", ach: 58, weight: 10, color: "bg-rose-500" },
-    { name: "Risk, Security & Compliance", ach: 72, weight: 5, color: "bg-cyan-500" },
-    { name: "Sustainability & ESG", ach: 65, weight: 5, color: "bg-teal-500" },
-  ];
 
   // Scorecard Trend Data
-  const trendData = [
-    { period: "Q4 2025", score: 58 },
-    { period: "Q1 2026", score: 64 },
-    { period: "Q2 2026", score: 67 },
-    { period: "Q3 2026", score: 72 },
-  ];
 
   const handleAskAI = () => {
     if (!aiQuery.trim()) return;

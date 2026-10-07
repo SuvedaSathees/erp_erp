@@ -2,7 +2,7 @@
 // Development → Digital Development → Data Platform Development → Analytics Platform Development → Data Visualization
 // Data Visualization Form — MAICW Classification & Visualization Studio
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   BarChart2,
@@ -59,6 +59,7 @@ import {
 } from "@/services/dataVisualizationService";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 const DV_TABS = [
   "Dashboard",
   "Visualization Library",
@@ -96,6 +97,39 @@ const CHART_TYPES = [
   { name: "KPI Card", id: "kpi" },
 ];
 
+const trendData = [
+  { month: "Jan", ac: 1600, dcFast: 800, wireless: 200 },
+  { month: "Feb", ac: 1800, dcFast: 950, wireless: 250 },
+  { month: "Mar", ac: 1750, dcFast: 1100, wireless: 300 },
+  { month: "Apr", ac: 1900, dcFast: 1250, wireless: 320 },
+  { month: "May", ac: 2050, dcFast: 1400, wireless: 380 },
+  { month: "Jun", ac: 2200, dcFast: 1550, wireless: 420 },
+  { month: "Jul", ac: 2100, dcFast: 1680, wireless: 490 },
+  { month: "Aug", ac: 2350, dcFast: 1800, wireless: 540 },
+  { month: "Sep", ac: 2500, dcFast: 1950, wireless: 600 },
+];
+
+const revenueModelData = [
+  { name: "Charging-as-a-Service", value: 42, color: "#3B82F6" },
+  { name: "Hardware Sales", value: 24, color: "#10B981" },
+  { name: "Franchise Royalty", value: 16, color: "#F59E0B" },
+  { name: "AMC", value: 10, color: "#EC4899" },
+  { name: "Advertising", value: 6, color: "#8B5CF6" },
+  { name: "Others", value: 2, color: "#64748B" },
+];
+
+const dailyDistributionData = [
+  { day: "Mon", ac: 1200, dcFast: 900, wireless: 250 },
+  { day: "Tue", ac: 1350, dcFast: 1050, wireless: 280 },
+  { day: "Wed", ac: 1500, dcFast: 1150, wireless: 310 },
+  { day: "Thu", ac: 1600, dcFast: 1250, wireless: 350 },
+  { day: "Fri", ac: 1900, dcFast: 1500, wireless: 420 },
+  { day: "Sat", ac: 2200, dcFast: 1800, wireless: 550 },
+  { day: "Sun", ac: 2400, dcFast: 2000, wireless: 600 },
+];
+
+const PAGE_DATASET = { DV_KPIS, DV_CATALOG_ITEMS, CHART_TYPES, trendData, revenueModelData, dailyDistributionData };
+
 export function DataVisualizationPage({
   breadcrumb = "Management > Business Intelligence Management > Data Visualization",
   tabs,
@@ -103,6 +137,7 @@ export function DataVisualizationPage({
   breadcrumb?: string;
   tabs?: React.ReactNode;
 } = {}) {
+  const { DV_KPIS, DV_CATALOG_ITEMS, CHART_TYPES, trendData, revenueModelData, dailyDistributionData } = useModuleDataset("digital-development.data-visualization", "Data Visualization", PAGE_DATASET);
   const [activeTab, setActiveTab] = useState<string>("Dashboard");
   const [selectedBu, setSelectedBu] = useState("All Business Units");
   const [selectedChartType, setSelectedChartType] = useState("line");
@@ -114,6 +149,7 @@ export function DataVisualizationPage({
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [showNewModal, setShowNewModal] = useState(false);
   const [catalog, setCatalog] = useState<VisualizationCatalogItem[]>(DV_CATALOG_ITEMS);
+  useEffect(() => { setCatalog(DV_CATALOG_ITEMS); }, [DV_CATALOG_ITEMS]);
 
   // Checkbox dimension states
   const [selectedDims, setSelectedDims] = useState<Record<string, boolean>>({
@@ -143,38 +179,10 @@ export function DataVisualizationPage({
   };
 
   // Sessions Trend multi-line data
-  const trendData = [
-    { month: "Jan", ac: 1600, dcFast: 800, wireless: 200 },
-    { month: "Feb", ac: 1800, dcFast: 950, wireless: 250 },
-    { month: "Mar", ac: 1750, dcFast: 1100, wireless: 300 },
-    { month: "Apr", ac: 1900, dcFast: 1250, wireless: 320 },
-    { month: "May", ac: 2050, dcFast: 1400, wireless: 380 },
-    { month: "Jun", ac: 2200, dcFast: 1550, wireless: 420 },
-    { month: "Jul", ac: 2100, dcFast: 1680, wireless: 490 },
-    { month: "Aug", ac: 2350, dcFast: 1800, wireless: 540 },
-    { month: "Sep", ac: 2500, dcFast: 1950, wireless: 600 },
-  ];
 
   // Revenue by Business Model (Donut)
-  const revenueModelData = [
-    { name: "Charging-as-a-Service", value: 42, color: "#3B82F6" },
-    { name: "Hardware Sales", value: 24, color: "#10B981" },
-    { name: "Franchise Royalty", value: 16, color: "#F59E0B" },
-    { name: "AMC", value: 10, color: "#EC4899" },
-    { name: "Advertising", value: 6, color: "#8B5CF6" },
-    { name: "Others", value: 2, color: "#64748B" },
-  ];
 
   // Daily Distribution Stacked Bar Data
-  const dailyDistributionData = [
-    { day: "Mon", ac: 1200, dcFast: 900, wireless: 250 },
-    { day: "Tue", ac: 1350, dcFast: 1050, wireless: 280 },
-    { day: "Wed", ac: 1500, dcFast: 1150, wireless: 310 },
-    { day: "Thu", ac: 1600, dcFast: 1250, wireless: 350 },
-    { day: "Fri", ac: 1900, dcFast: 1500, wireless: 420 },
-    { day: "Sat", ac: 2200, dcFast: 1800, wireless: 550 },
-    { day: "Sun", ac: 2400, dcFast: 2000, wireless: 600 },
-  ];
 
   return (
     <AppShell

@@ -32,6 +32,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 import { AppShell } from "@/components/erp/AppShell";
 import { SalesManagementTabBar } from "@/components/erp/SalesManagementTabBar";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute(
   "/management/sales-management/pricing"
@@ -158,7 +159,7 @@ function PricingComponent() {
   const sim = simulationScenarios[selectedScenario];
 
   const handlePrint = () => {
-    toast.success("Generating formal Price List PDF document for export/printing...");
+    void exportPageReport("Price List", "pdf");
     window.print();
   };
 

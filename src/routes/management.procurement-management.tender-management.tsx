@@ -66,6 +66,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { openPageFiles, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/procurement-management/tender-management")({
   head: () => ({
@@ -660,13 +662,9 @@ function TenderManagementPage() {
   const [showPrintModal, setShowPrintModal] = useState<boolean>(false);
 
   // Handlers
-  const handleSaveDraft = () => {
-    toast.success("Tender details saved as draft.");
-  };
+  const handleSaveDraft = () => { void savePageState("Tender details saved as draft", { message: "Tender details saved as draft." }); };
 
-  const handleSubmitForApproval = () => {
-    toast.success("Tender submitted for Tender Committee & Management approval!");
-  };
+  const handleSubmitForApproval = () => { void savePageState("Tender submitted for Tender Committee & Management approval", { kind: "request", message: "Tender submitted for Tender Committee & Management approval. Recorded in the activity log." }); };
 
   const handlePublishTender = () => {
     setTenderMaster((prev) => ({ ...prev, tenderStatus: "Bid Submission" }));
@@ -1121,7 +1119,7 @@ function TenderManagementPage() {
 
                 <button
                   type="button"
-                  onClick={() => toast.success("Tender CS exported to Excel.")}
+                  onClick={() => void exportPageReport("Tender CS", "xlsx")}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted cursor-pointer"
                 >
                   <FileSpreadsheet className="h-3.5 w-3.5" /> Export CS
@@ -1285,7 +1283,7 @@ function TenderManagementPage() {
 
                 <button
                   type="button"
-                  onClick={() => toast.success("Document uploaded successfully.")}
+                  onClick={() => openPageFiles("Tender Documents")}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary/90 cursor-pointer"
                 >
                   <Upload className="h-3.5 w-3.5" /> Upload Document
@@ -1319,7 +1317,7 @@ function TenderManagementPage() {
                         <td className="py-3 px-3 text-right">
                           <button
                             type="button"
-                            onClick={() => toast.info(`Downloading ${doc.name}...`)}
+                            onClick={() => void downloadAttachment(doc)}
                             className="text-primary hover:underline font-semibold cursor-pointer"
                           >
                             Download

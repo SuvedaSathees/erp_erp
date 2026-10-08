@@ -51,6 +51,7 @@ import { cn } from "@/lib/utils";
 import { chartColor } from "@/lib/chartColors";
 import type { WidgetContentProps, WidgetDefinition } from "../../types";
 import { PRODUCT_DEVELOPMENT_TABS, PRODUCT_DEV_MODULE_META } from "@/components/erp/ProductDevelopmentTabBar";
+import { logPageAction } from "@/lib/pageActions";
 
 /* ===========================================================================
    1. Sprint Velocity & Engineering Story Points Delivered (2 of 3 cols - size "xl")
@@ -723,7 +724,7 @@ export const PdAiIntelligenceWidget = memo(function PdAiIntelligenceWidget() {
           </strong>
           <button
             type="button"
-            onClick={() => toast.success("Autonomous Verification Actions synchronized across digital thread!")}
+            onClick={() => void logPageAction("Autonomous Verification Actions requested")}
             className="rounded bg-primary px-2.5 py-1 text-[11px] font-bold text-primary-foreground hover:bg-primary/90 transition cursor-pointer"
           >
             Synchronize Digital Thread Actions

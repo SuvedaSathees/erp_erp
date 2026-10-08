@@ -70,6 +70,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { savePageState } from "@/lib/pageActions";
 
 // Vendor Payment & Disbursement Governance Module · Magnertia ERP
 export const Route = createFileRoute("/management/procurement-management/vendor-payment")({
@@ -246,13 +247,9 @@ function VendorPaymentPage() {
   });
 
   // Actions
-  const handleSaveDraft = () => {
-    toast.success("Vendor payment draft saved.");
-  };
+  const handleSaveDraft = () => { void savePageState("Vendor payment draft saved", { message: "Vendor payment draft saved." }); };
 
-  const handleSubmitApproval = () => {
-    toast.success("Payment submitted to authorized signatory.");
-  };
+  const handleSubmitApproval = () => { void savePageState("Payment submitted to authorized signatory", { kind: "request", message: "Payment submitted to authorized signatory. Recorded in the activity log." }); };
 
   const handleProcessPayment = () => {
     setShowProcessModal(true);

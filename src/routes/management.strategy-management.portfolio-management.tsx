@@ -57,6 +57,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { openPageViewer } from "@/lib/pageActions";
 export const Route = createFileRoute("/management/strategy-management/portfolio-management")({
   head: () => ({
     meta: [
@@ -302,7 +303,7 @@ function PortfolioManagementPage() {
             </span>
             <button
               type="button"
-              onClick={() => toast.info("Opening full lifecycle governance workflow")}
+              onClick={(e) => openPageViewer("Opening full lifecycle governance workflow", e.currentTarget)}
               className="text-xs text-blue-600 hover:underline font-semibold cursor-pointer"
             >
               View Workflow

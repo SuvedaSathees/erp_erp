@@ -2,6 +2,7 @@ import React from "react";
 import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCard";
 import { ComplianceRecord } from "@/services/complianceTypes";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
 
 interface ComplianceHeaderProps {
   record: ComplianceRecord;
@@ -82,7 +83,7 @@ export function ComplianceHeader({
       onExportCsv={downloadComplianceCsv}
       onExportExcel={() => {
         downloadComplianceCsv();
-        toast.success(`Generated Excel-compatible compliance ledger (.csv)`);
+        void exportPageReport("Compliance Ledger", "csv");
       }}
       onExportPdf={onPrint}
       reports={[
@@ -95,11 +96,11 @@ export function ComplianceHeader({
         },
         {
           label: "Mandatory Evidence Register Dossier",
-          onClick: () => toast.info("Exporting Mandatory Evidence Register Dossier..."),
+          onClick: () => void exportPageReport("Mandatory Evidence Register Dossier", "pdf"),
         },
         {
           label: "Clause Gap & Risk Assessment Summary",
-          onClick: () => toast.info("Opening Clause Gap Analysis Report..."),
+          onClick: () => void exportPageReport("Clause Gap Analysis Report", "pdf", "page"),
         },
       ]}
       primaryAction={{

@@ -64,6 +64,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { emailPageReport, savePageState } from "@/lib/pageActions";
 
 export interface TimeEntryItem {
   id: string;
@@ -783,9 +784,7 @@ ${entries
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Timesheet report emailed to stakeholders.");
-                  }}
+                  onClick={() => { void emailPageReport("Timesheet Report"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -816,9 +815,7 @@ ${entries
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Time tracking entries saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("Time tracking entries saved", { message: "Time tracking entries saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />

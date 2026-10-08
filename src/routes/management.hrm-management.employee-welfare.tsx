@@ -121,6 +121,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { toast } from "sonner";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { openPageFiles, openQuickActions, openPageForm, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/employee-welfare")({
   head: () => ({
@@ -176,11 +178,7 @@ function EmployeeWelfarePage() {
   const [isFollowUpModalOpen, setIsFollowUpModalOpen] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
 
-  const handleSubmitForApproval = () => {
-    toast.success("Welfare Request WEL-2024-00521 submitted for review", {
-      description: "Forwarded to Welfare Committee & Finance for final sign-off.",
-    });
-  };
+  const handleSubmitForApproval = () => { void savePageState("Welfare Request WEL-2024-00521 submitted for review", { kind: "request", message: "Welfare Request WEL-2024-00521 submitted for review. Recorded in the activity log." }); };
 
   return (
     <AppShell
@@ -212,7 +210,7 @@ function EmployeeWelfarePage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("Importing welfare records...")}
+                onClick={() => openPageFiles("Import welfare records", ".csv,.xlsx,.xls")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Upload className="h-3.5 w-3.5 text-blue-600" />
@@ -220,7 +218,7 @@ function EmployeeWelfarePage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Welfare report exported")}
+                onClick={() => void exportPageReport("Welfare Report", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
@@ -229,7 +227,7 @@ function EmployeeWelfarePage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("More welfare tools opened")}
+                onClick={(e) => openQuickActions(e)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 More
@@ -411,7 +409,7 @@ function EmployeeWelfarePage() {
                     <h5 className="text-xs font-bold text-slate-800">Attached Medical Documents (3)</h5>
                     <button
                       type="button"
-                      onClick={() => toast.info("Request additional documents")}
+                      onClick={() => openPageForm("Request Additional Documents", "documents", "Send Request")}
                       className="text-[11px] text-primary font-semibold hover:underline cursor-pointer"
                     >
                       + Request More Docs
@@ -431,7 +429,7 @@ function EmployeeWelfarePage() {
                         </div>
                         <button
                           type="button"
-                          onClick={() => toast.success(`Downloading ${d.file}`)}
+                          onClick={() => void downloadAttachment(d)}
                           className="text-primary hover:text-blue-700 p-1 cursor-pointer"
                         >
                           <Download className="h-4 w-4" />

@@ -68,6 +68,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { emailPageReport, savePageState, openPageViewer } from "@/lib/pageActions";
 
 export interface IssueItem {
   id: string;
@@ -778,9 +779,7 @@ ${issues
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Issue register emailed to stakeholders.");
-                  }}
+                  onClick={() => { void emailPageReport("Issue Register"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -811,9 +810,7 @@ ${issues
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Issue register saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("Issue register saved", { message: "Issue register saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />
@@ -1790,7 +1787,7 @@ ${issues
                   ].map((a) => (
                     <div
                       key={a.range}
-                      onClick={() => toast.info(`Filtered for ${a.range} aging band.`)}
+                      onClick={(e) => openPageViewer(`Issues aging ${a.range}`, e.currentTarget)}
                       className="flex justify-between items-center p-1 rounded hover:bg-muted/40 cursor-pointer transition-colors"
                       title={`Filter by ${a.range}`}
                     >

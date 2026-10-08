@@ -44,6 +44,7 @@ import {
 import { AppShell } from "@/components/erp/AppShell";
 import { SalesManagementTabBar } from "@/components/erp/SalesManagementTabBar";
 import { cn } from "@/lib/utils";
+import { logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/sales-management/channel-partners"
@@ -622,7 +623,7 @@ function ChannelPartnersComponent() {
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button
-                  onClick={() => toast.success("Incentive Statement #INS-2026-Q1 issued to VoltPlus Mobility. Transferred ₹3,40,000 via RTGS.")}
+                  onClick={() => void logPageAction("Incentive Statement #INS-2026-Q1 issued to VoltPlus Mobility (payout to be released by Finance)")}
                   className="w-full flex items-center justify-between p-2.5 rounded-lg border border-slate-200 hover:border-emerald-600 hover:bg-slate-50 transition text-xs font-semibold text-slate-800 cursor-pointer"
                 >
                   <span className="flex items-center gap-2">

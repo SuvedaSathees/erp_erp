@@ -109,6 +109,8 @@ import {
   Tooltip as RechartsTooltip,
 } from "recharts";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
+import { openPageFiles, openQuickActions, openPageHistory, openPageViewer, logPageAction, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/career-development")({
   head: () => ({
@@ -180,11 +182,7 @@ function CareerDevelopmentPage() {
   const [isMilestoneModalOpen, setIsMilestoneModalOpen] = useState(false);
   const [isAspirationModalOpen, setIsAspirationModalOpen] = useState(false);
 
-  const handleSubmitForReview = () => {
-    toast.success("Career Development Plan submitted for review", {
-      description: "CDP-2024-00025 forwarded to Reporting Manager & HR Leadership.",
-    });
-  };
+  const handleSubmitForReview = () => { void savePageState("Career Development Plan submitted for review", { kind: "request", message: "Career Development Plan submitted for review. Recorded in the activity log." }); };
 
   return (
     <AppShell
@@ -216,7 +214,7 @@ function CareerDevelopmentPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("Importing career plan history...")}
+                onClick={() => openPageFiles("Import career plan history", ".csv,.xlsx,.xls")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Upload className="h-3.5 w-3.5 text-blue-600" />
@@ -224,7 +222,7 @@ function CareerDevelopmentPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Career roadmap exported")}
+                onClick={() => void exportPageReport("Career Roadmap", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
@@ -233,7 +231,7 @@ function CareerDevelopmentPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("More career options opened")}
+                onClick={(e) => openQuickActions(e)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 More
@@ -734,7 +732,7 @@ function CareerDevelopmentPage() {
                   ))}
                 </div>
 
-                <button onClick={() => toast.info("Full review history")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer text-center pt-1 border-t border-slate-100">
+                <button onClick={() => openPageHistory("Full Review History")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer text-center pt-1 border-t border-slate-100">
                   View Review History →
                 </button>
               </div>
@@ -784,7 +782,7 @@ function CareerDevelopmentPage() {
                   </div>
                 </div>
 
-                <button onClick={() => toast.info("Succession planning dashboard")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
+                <button onClick={(e) => openPageViewer("Succession planning dashboard", e.currentTarget)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
                   View Succession Planning →
                 </button>
               </div>
@@ -834,7 +832,7 @@ function CareerDevelopmentPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.info("Mentoring session requested")}
+                    onClick={() => void logPageAction("Mentoring session requested")}
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-amber-600 hover:bg-amber-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <Users className="h-3 w-3 text-amber-600" />
@@ -852,7 +850,7 @@ function CareerDevelopmentPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.info("Upload career documents dialog")}
+                    onClick={() => openPageFiles("Career Documents")}
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-cyan-600 hover:bg-cyan-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <Paperclip className="h-3 w-3 text-cyan-600" />
@@ -861,7 +859,7 @@ function CareerDevelopmentPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.success("Career progression report generated")}
+                    onClick={() => void exportPageReport("Career Progression Report", "pdf", "page")}
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-rose-600 hover:bg-rose-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <FileSpreadsheet className="h-3 w-3 text-rose-600" />

@@ -60,6 +60,7 @@ import { usePersistentState } from "@/services/moduleDatasetService";
 import { SubmissionsPanel, makeSubmission, type Submission } from "@/components/erp/SubmissionsPanel";
 import { readFieldsNear } from "@/lib/formCapture";
 import { exportRecords, recordToRows } from "@/lib/recordExport";
+import { savePageForm, openPageViewer } from "@/lib/pageActions";
 export const Route = createFileRoute("/management/security-management/physical-security")({
   head: () => ({
     meta: [
@@ -560,7 +561,7 @@ function PhysicalSecurityPage() {
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => toast.success("Physical Security details saved")}
+                onClick={(e) => savePageForm("Physical Security details saved", e.currentTarget)}
                 className="rounded-xl bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 flex items-center gap-1.5"
               >
                 <Save className="h-3.5 w-3.5" /> Save
@@ -721,7 +722,7 @@ function PhysicalSecurityPage() {
                 <p className="font-bold text-xs">Plant 2, Coimbatore, Tamil Nadu, India</p>
                 <span className="text-[10px] text-sky-300 block">Manufacturing & Battery Storage Yard</span>
                 <button
-                  onClick={() => toast.info("Facility blueprint viewer opened")}
+                  onClick={(e) => openPageViewer("Facility blueprint viewer opened", e.currentTarget)}
                   className="text-[10px] text-sky-400 underline cursor-pointer"
                 >
                   Upload / Change Blueprint

@@ -26,6 +26,7 @@ import { MarketingManagementTabBar } from "@/components/erp/MarketingManagementT
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { savePageState, logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/marketing-management/events"
@@ -80,23 +81,11 @@ function EventsManagementPage() {
   const [activeTab, setActiveTab] = useState("agenda");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
 
-  const handleSave = () => {
-    toast.success("Event Master Saved", {
-      description: "EVT-2026-009 (Autonomous EV Charging Summit 2026) updated successfully.",
-    });
-  };
+  const handleSave = () => { void savePageState("Event Master saved", { message: "Event Master saved." }); };
 
-  const handleSendInvitation = () => {
-    toast.info("Invitation Dispatch Triggered", {
-      description: "Dispatched VIP & Delegate invitations to 800 pre-registered contacts.",
-    });
-  };
+  const handleSendInvitation = () => { void logPageAction("Event invitations requested for 800 contacts", { message: "Invitation request recorded. Sending isn't connected yet, so nothing was sent." }); };
 
-  const handlePublishEvent = () => {
-    toast.success("Event Published & Live!", {
-      description: "Public registration portal, CRM sync, and ticketing gates activated.",
-    });
-  };
+  const handlePublishEvent = () => { void logPageAction("Event publish approved (EVT-2026-009)", { message: "Event publish approval recorded. The public registration portal isn't connected yet." }); };
 
   return (
     <AppShell

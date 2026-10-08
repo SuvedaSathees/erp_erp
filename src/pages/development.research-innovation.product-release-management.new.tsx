@@ -84,6 +84,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 /* ===========================================================================
    Browser File Download Helper
@@ -520,7 +522,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
 ====================================================================`;
 
     triggerBrowserDownload(`${rec.releaseId}_release_dossier.txt`, content, "text/plain;charset=utf-8");
-    toast.success("Release Dossier downloaded successfully!");
+    void exportPageReport("Release Dossier", "pdf");
   };
 
   // Action: Export Milestone Timeline CSV
@@ -532,7 +534,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
     ];
     const csvContent = csvRows.map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
     triggerBrowserDownload(`${rec.releaseId}_milestone_timeline.csv`, csvContent, "text/csv;charset=utf-8");
-    toast.success("Exported release timeline to CSV!");
+    void exportPageReport("Release Timeline", "csv");
   };
 
   if (isLoading && !serverRecord && !localRecord) {
@@ -689,9 +691,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                         <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => {
-                          toast.success("Expedited review reminder dispatched to Executive Release Board.");
-                        }}
+                        onClick={() => { void logPageAction("Expedited review reminder requested for Executive Release Board"); }}
                         className="cursor-pointer"
                       >
                         <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
@@ -1659,7 +1659,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                               att.name,
                               `=======================================================\nDOCUMENT: ${att.name}\nTYPE: ${att.type}\nSIZE: ${att.size}\nSECURITY HASH SHA-256: 7e2f1c8b3d9a4e5f6a7b8c9d0e1f2a3b\nRELEASE PLAN: ${rec.releaseId} • ${rec.releaseName}\n=======================================================`
                             );
-                            toast.success(`Downloaded ${att.name}`);
+                            void downloadAttachment(att);
                           }}
                           className="p-1 text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer"
                           title="Download Attachment"
@@ -2011,7 +2011,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                     selectedAttachment.name,
                     `=======================================================\nDOCUMENT: ${selectedAttachment.name}\nINTEGRITY SHA-256: 7e2f1c8b3d9a4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f\nRELEASE: ${rec.releaseId} (${rec.releaseVersion})\n=======================================================`
                   );
-                  toast.success(`Downloading ${selectedAttachment.name}`);
+                  void downloadAttachment(selectedAttachment);
                 }
               }}
               className="gap-1 text-xs cursor-pointer"
@@ -2053,7 +2053,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   `${rec.releaseId}_release_notes.txt`,
                   `# Release Notes - ${rec.productName} ${rec.releaseVersion}\n- Full support for OCPP 2.0.1 protocol\n- Upgraded thermal management & IP65 enclosure protection\n- Enhanced mobile app remote scheduling & 4G smart metering`
                 );
-                toast.success("Downloaded Release Notes (.TXT)!");
+                void exportPageReport("Release Notes", "txt");
               }}
               className="gap-1 cursor-pointer"
             >
@@ -2186,7 +2186,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   `=======================================================\nRELEASE PACKAGE ARCHIVE\nRELEASE: ${rec.releaseId} (${rec.releaseName})\nVERSION: ${rec.releaseVersion}\nCONTENTS: Engineering, Manufacturing, Commercial & Risk Artifacts\nINTEGRITY SHA-256: 7e2f1c8b3d9a4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f\n=======================================================`,
                   "application/zip"
                 );
-                toast.success("Downloading Release Package (94.7 MB)...");
+                void exportPageReport("Release Package Manifest", "pdf");
                 setShowReleasePackageModal(false);
               }}
             >
@@ -2223,7 +2223,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   `${rec.releaseId}_ai_analysis_report.txt`,
                   `=======================================================\nAI RELEASE INTELLIGENCE REPORT: ${rec.productName}\nSCORE: ${rec.aiReleaseScore}/100\nREADINESS: ${rec.aiReleaseReadinessReview}\nRECOMMENDATION: ${rec.aiLaunchRecommendation}\nIMPROVEMENTS: ${rec.aiImprovementSuggestions}\n=======================================================`
                 );
-                toast.success("Downloaded AI Analysis Report!");
+                void exportPageReport("AI Analysis Report", "pdf");
               }}
               className="gap-1 cursor-pointer"
             >
@@ -2269,7 +2269,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   `${rec.releaseId}_risk_report.txt`,
                   `=======================================================\nRISK & COMPLIANCE REPORT: ${rec.productName}\nRISK READINESS SCORE: ${rec.riskScore}/100\nOPEN RISKS: ${rec.openRisksCount}\nCRITICAL RISKS: ${rec.criticalRisksCount}\nCAPA CLOSED: YES\nREGULATORY APPROVAL: YES\nWARRANTY: YES\n=======================================================`
                 );
-                toast.success("Downloaded Risk Report!");
+                void exportPageReport("Risk Report", "pdf");
               }}
               className="gap-1 cursor-pointer"
             >

@@ -69,6 +69,7 @@ import { company } from "@/lib/companyConfig";
 import { formatCurrency } from "@/lib/format";
 import { profitabilityService, loadProfitabilityDashboard } from "@/services";
 import type { ProfitabilityRecord, CostAllocationRule, DashboardQuery } from "@/services/types";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/finance/profitability")({
   head: () => ({
@@ -332,7 +333,7 @@ function ProfitabilityAnalysisPage() {
                   <ErpButton
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Exporting profitability CSV...")}
+                    onClick={() => void exportPageReport("Profitability Report", "csv")}
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Export</span>

@@ -59,6 +59,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { logPageAction, openPageViewer } from "@/lib/pageActions";
+import { exportPageReport } from "@/lib/recordExport";
 // HMR verified: all Lucide icons defined
 
 export const Route = createFileRoute("/management/asset-management/preventive-maintenance")({
@@ -317,13 +319,13 @@ function PreventiveMaintenanceFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Opening PM Compliance Audit...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("PM Compliance Audit", "pdf", "page")}>
                     PM Compliance Audit
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Overdue PM Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Overdue PM Report", "pdf", "page")}>
                     Overdue PM Report
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening PM vs Breakdown Analysis...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("PM Vs Breakdown Analysis", "pdf", "page")}>
                     PM vs Breakdown Analysis
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -354,7 +356,7 @@ function PreventiveMaintenanceFormPage() {
                   <DropdownMenuItem onClick={() => setIsWOOpen(true)}>
                     Generate PM Work Order
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("AI PM Interval Optimization Engine triggered")}>
+                  <DropdownMenuItem onClick={() => void logPageAction("AI PM Interval Optimization Engine requested")}>
                     AI Interval Optimization
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => { window.print(); }}>
@@ -615,7 +617,7 @@ function PreventiveMaintenanceFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening master preventive schedule")}
+                onClick={(e) => openPageViewer("Opening master preventive schedule", e.currentTarget)}
                 className="text-[9.5px] text-primary font-bold hover:underline cursor-pointer"
               >
                 Schedule &rarr;
@@ -688,7 +690,7 @@ function PreventiveMaintenanceFormPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Displaying all 10 schedule columns")}
+                    onClick={(e) => openPageViewer("Displaying all 10 schedule columns", e.currentTarget)}
                     className="h-8 text-xs gap-1 cursor-pointer"
                   >
                     <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -881,7 +883,7 @@ function PreventiveMaintenanceFormPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info(`PM QR Tag: ${activePlan.id}`)}
+                onClick={(e) => openPageViewer(`PM QR Tag: ${activePlan.id}`, e.currentTarget)}
                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
                 title="QR Tag"
               >
@@ -1127,7 +1129,7 @@ function PreventiveMaintenanceFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Viewing all AI Preventive Maintenance alerts")}
+                onClick={(e) => openPageViewer("Viewing all AI Preventive Maintenance alerts", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;

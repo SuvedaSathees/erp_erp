@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { exportVisibleTables } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 export interface SustainabilityReportItem {
   label: string;
@@ -187,11 +188,11 @@ export function SustainabilitySubmoduleHeader({
           },
           {
             label: "Statutory Auditor Verification Sign-Off",
-            onClick: () => toast.success("Auditor verification ledger signed."),
+            onClick: () => void logPageAction("Auditor verification ledger signed"),
           },
           {
             label: "Trigger Decarbonization Review",
-            onClick: () => toast.info("Review initiated with ESG Board."),
+            onClick: () => void logPageAction("Review requested with ESG Board"),
           },
         ];
 

@@ -82,6 +82,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { logPageAction, refreshPageData } from "@/lib/pageActions";
 
 /* ===========================================================================
    Browser Download Helper
@@ -524,7 +526,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
 ====================================================================`;
 
     triggerBrowserDownload(`${rec.iotDevelopmentId}_iot_dossier.txt`, content, "text/plain;charset=utf-8");
-    toast.success("IoT Dossier downloaded successfully!");
+    void exportPageReport("IoT Dossier", "pdf");
   };
 
   // Action: Export Device Fleet CSV
@@ -539,7 +541,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
     ];
     const csvContent = csvRows.map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
     triggerBrowserDownload(`${rec.iotDevelopmentId}_fleet_devices.csv`, csvContent, "text/csv;charset=utf-8");
-    toast.success("Exported device fleet data to CSV!");
+    void exportPageReport("Device Fleet Data", "csv");
   };
 
   if (isLoading || !rec) {
@@ -674,9 +676,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                         <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => {
-                          toast.success("Expedited review reminder dispatched to IoT Review Board.");
-                        }}
+                        onClick={() => { void logPageAction("Expedited review reminder requested for IoT Review Board"); }}
                         className="cursor-pointer"
                       >
                         <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
@@ -1544,7 +1544,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                               att.name,
                               `=======================================================\nATTACHMENT: ${att.name}\nTYPE: ${att.type}\nSIZE: ${att.size}\nSECURITY HASH SHA-256: 7f8a9b1c2d3e4f5a6b7c8d9e0f1a2b3c\nPROJECT: ${rec.iotProjectName} (${rec.iotDevelopmentId})\n=======================================================`
                             );
-                            toast.success(`Downloaded ${att.name}`);
+                            void downloadAttachment(att);
                           }}
                           className="p-1 text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer"
                           title="Download Attachment"
@@ -1912,7 +1912,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
                     selectedAttachment.name,
                     `=======================================================\nDOCUMENT: ${selectedAttachment.name}\nINTEGRITY SHA-256: 7f8a9b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a\nSOURCE: Magnertia EV Edge Gateway CA\nPROJECT: ${rec.iotProjectName}\n=======================================================`
                   );
-                  toast.success(`Downloading ${selectedAttachment.name}`);
+                  void downloadAttachment(selectedAttachment);
                 }
               }}
               className="gap-1 text-xs cursor-pointer"
@@ -1963,9 +1963,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
             <Button
               size="sm"
               variant="outline"
-              onClick={() => {
-                toast.success("Broadcasted ping to 1,240 edge nodes. 100% response rate!");
-              }}
+              onClick={() => { void logPageAction("Edge node ping requested (1,240 nodes)"); }}
               className="gap-1 cursor-pointer"
             >
               <RefreshCw className="h-3.5 w-3.5" /> Ping Fleet
@@ -2001,7 +1999,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
             <Button
               size="sm"
               variant="outline"
-              onClick={() => toast.success("Broker ping: 18ms latency. TLS handshake OK!")}
+              onClick={() => void logPageAction("MQTT broker connectivity check requested")}
               className="cursor-pointer"
             >
               Test Broker Ping
@@ -2041,7 +2039,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
             <Button
               size="sm"
               variant="outline"
-              onClick={() => toast.success("Certificate audit finished: 0 vulnerabilities found!")}
+              onClick={() => void logPageAction("Device certificate audit requested")}
               className="cursor-pointer"
             >
               Run Certificate Audit
@@ -2078,7 +2076,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.name}: 
             <Button
               size="sm"
               variant="outline"
-              onClick={() => toast.success("Digital Twin state refreshed from live stream!")}
+              onClick={() => void refreshPageData("Digital twin state")}
               className="cursor-pointer"
             >
               Sync Digital Twin

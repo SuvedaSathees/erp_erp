@@ -96,6 +96,8 @@ import type {
   MobileDevelopmentRecord,
   MobileDevelopmentStage,
 } from "@/services/types";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { openPageViewer } from "@/lib/pageActions";
 
 export function MobileAppFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <MobileDevelopmentNewPage {...props} />;
@@ -498,7 +500,7 @@ export function MobileDevelopmentNewPage({
             </div>
             <Button
               size="sm"
-              onClick={() => toast.info("Navigating to Mobile Operations...")}
+              onClick={(e) => openPageViewer("Navigating to Mobile Operations", e.currentTarget)}
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
             >
               View Mobile Operations
@@ -930,7 +932,7 @@ export function MobileDevelopmentNewPage({
                         <span className="font-mono text-muted-foreground block">{formInput.androidPackageName} • {formInput.androidPackageSize}</span>
                         <span className="text-[11px] text-emerald-600 font-semibold block">Google Play: {formInput.googlePlayStatus}</span>
                       </div>
-                      <Button size="sm" variant="outline" onClick={() => toast.success(`Downloading ${formInput.androidPackageName}...`)}>
+                      <Button size="sm" variant="outline" onClick={() => void downloadAttachment({ name: formInput.androidPackageName, size: formInput.androidPackageSize, type: "Android Package (AAB)", googlePlay: formInput.googlePlayStatus })}>
                         <Download className="h-4 w-4 mr-1.5" /> Download AAB
                       </Button>
                     </div>
@@ -941,7 +943,7 @@ export function MobileDevelopmentNewPage({
                         <span className="font-mono text-muted-foreground block">{formInput.iosPackageName} • {formInput.iosPackageSize}</span>
                         <span className="text-[11px] text-amber-600 font-semibold block">App Store: {formInput.appleAppStoreStatus}</span>
                       </div>
-                      <Button size="sm" variant="outline" onClick={() => toast.success(`Downloading ${formInput.iosPackageName}...`)}>
+                      <Button size="sm" variant="outline" onClick={() => void downloadAttachment({ name: formInput.iosPackageName, size: formInput.iosPackageSize, type: "iOS Package (IPA)", appStore: formInput.appleAppStoreStatus })}>
                         <Download className="h-4 w-4 mr-1.5" /> Download IPA
                       </Button>
                     </div>
@@ -1069,7 +1071,7 @@ export function MobileDevelopmentNewPage({
                       </div>
                       <button
                         type="button"
-                        onClick={() => toast.info(`Downloading ${att.name}...`)}
+                        onClick={() => void downloadAttachment(att)}
                         className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
                         title="Download file"
                       >
@@ -1296,7 +1298,7 @@ export function MobileDevelopmentNewPage({
               <Button variant="outline" onClick={() => setReportModalOpen(false)}>
                 Close
               </Button>
-              <Button onClick={() => { toast.success("Downloaded Mobile_App_Executive_Report.pdf"); setReportModalOpen(false); }}>
+              <Button onClick={() => { void exportPageReport("Mobile App Executive Report", "pdf"); setReportModalOpen(false); }}>
                 <Download className="h-4 w-4 mr-1.5" /> Download PDF Report
               </Button>
             </DialogFooter>

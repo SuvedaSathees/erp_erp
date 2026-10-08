@@ -63,6 +63,7 @@ import { useModuleDataset } from "@/services/moduleDatasetService";
 import { usePersistentState } from "@/services/moduleDatasetService";
 import { QuickCreateDialog } from "@/components/erp/QuickCreateDialog";
 import { exportRecords } from "@/lib/recordExport";
+import { openPageViewer, logPageAction, toggleFullscreen, openPageFiles } from "@/lib/pageActions";
 export const Route = createFileRoute(
   "/management/security-management/surveillance"
 )({
@@ -321,7 +322,7 @@ function SurveillanceManagementPage() {
             <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
               <span>96 Fixed, Thermal & PTZ units monitored</span>
               <button
-                onClick={() => toast.info("Opening interactive CAD floor plan view")}
+                onClick={(e) => openPageViewer("Opening interactive CAD floor plan view", e.currentTarget)}
                 className="text-blue-600 font-semibold hover:underline"
               >
                 Expand CAD Map →
@@ -377,7 +378,7 @@ function SurveillanceManagementPage() {
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-xs font-bold text-slate-900">Recent Surveillance Alerts</h3>
               <button
-                onClick={() => toast.info("Opening complete alarms & events ledger")}
+                onClick={(e) => openPageViewer("Opening complete alarms & events ledger", e.currentTarget)}
                 className="text-[11px] text-blue-600 font-semibold hover:underline"
               >
                 View All
@@ -481,7 +482,7 @@ function SurveillanceManagementPage() {
             <div className="mt-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
               <span>NVR Redundancy: <strong>RAID 6 Active</strong></span>
               <button
-                onClick={() => toast.success("Storage diagnostics report verified.")}
+                onClick={() => void logPageAction("Storage diagnostics review recorded")}
                 className="text-blue-600 font-semibold hover:underline"
               >
                 Disk Health →
@@ -536,7 +537,7 @@ function SurveillanceManagementPage() {
                 </div>
 
                 <button
-                  onClick={() => toast.info("Full screen control room mode activated.")}
+                  onClick={() => toggleFullscreen()}
                   className="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white"
                   title="Fullscreen"
                 >
@@ -643,7 +644,7 @@ function SurveillanceManagementPage() {
                   className="h-full w-full object-cover"
                 />
                 <button
-                  onClick={() => toast.info("Camera snapshot uploaded to evidence ledger.")}
+                  onClick={() => openPageFiles("Evidence Snapshot", "image/*")}
                   className="absolute bottom-2 right-2 bg-slate-900/80 hover:bg-slate-900 text-white text-[10px] font-semibold px-2 py-1 rounded backdrop-blur-xs shadow"
                 >
                   Change Image

@@ -64,6 +64,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { savePageState, logPageAction } from "@/lib/pageActions";
 
 type MAICW = "M" | "A" | "I" | "C" | "W";
 
@@ -143,15 +144,9 @@ export function LeadGenerationPage() {
     status: "Active",
   });
 
-  const handleSave = () => {
-    toast.success("Lead Generation LG-2026-001 saved successfully!", {
-      description: "Omnichannel lead parameters and SLA rules updated.",
-    });
-  };
+  const handleSave = () => { void savePageState("Lead Generation LG-2026-001 saved", { message: "Lead Generation LG-2026-001 saved." }); };
 
-  const handleClone = () => {
-    toast.info("Cloning LG-2026-001 into new draft record...");
-  };
+  const handleClone = () => { void logPageAction("LG-2026-001 cloned into a new draft"); };
 
   return (
     <AppShell
@@ -354,9 +349,7 @@ export function LeadGenerationPage() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => {
-                                toast.success(`Lead ${row.id} assigned to ${row.sdr} for immediate follow-up!`);
-                              }}
+                              onClick={() => { void logPageAction(`Lead ${row.id} assigned to ${row.sdr} for follow-up`); }}
                               className="h-7 px-2 text-[11px] text-primary hover:bg-primary/10"
                             >
                               Route SDR

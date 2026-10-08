@@ -70,6 +70,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { savePageState } from "@/lib/pageActions";
 
 // Invoice Verification & 3-Way Match Module · Procurement Management
 export const Route = createFileRoute("/management/procurement-management/invoice-verification")({
@@ -260,9 +261,7 @@ function InvoiceVerificationPage() {
   });
 
   // Actions
-  const handleSaveDraft = () => {
-    toast.success("Invoice verification draft saved.");
-  };
+  const handleSaveDraft = () => { void savePageState("Invoice verification draft saved", { message: "Invoice verification draft saved." }); };
 
   const handleRunMatch = () => {
     setShowMatchModal(true);

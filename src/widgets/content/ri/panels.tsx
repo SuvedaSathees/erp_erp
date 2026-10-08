@@ -54,6 +54,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { chartColor } from "@/lib/chartColors";
 import type { WidgetContentProps, WidgetDefinition } from "../../types";
+import { logPageAction } from "@/lib/pageActions";
 
 /* ===========================================================================
    1. Innovation Velocity & Gate Approvals Horizon (2 of 3 cols - size "xl")
@@ -708,7 +709,7 @@ export const RiAiIntelligenceWidget = memo(function RiAiIntelligenceWidget() {
           </strong>
           <button
             type="button"
-            onClick={() => toast.success("Autonomous Innovation Multipliers executed across R&D streams!")}
+            onClick={() => void logPageAction("Autonomous Innovation Multipliers requested")}
             className="rounded bg-primary px-2.5 py-1 text-[11px] font-bold text-primary-foreground hover:bg-primary/90 transition cursor-pointer"
           >
             Execute Autonomous R&D Actions

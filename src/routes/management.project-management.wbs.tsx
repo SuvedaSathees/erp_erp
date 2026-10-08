@@ -69,6 +69,7 @@ import {
   type WbsActivity,
   type WbsDeliverable,
 } from "@/services/projectPlanningService";
+import { savePageState, emailPageReport } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/project-management/wbs")({
   head: () => ({
@@ -498,9 +499,7 @@ Deliverables: ${selectedWbs.deliverables.map((d) => d.name).join(", ")}`;
     });
   };
 
-  const handleSaveNotes = () => {
-    toast.success(`Engineering notes saved for WBS ${selectedWbs.code}`);
-  };
+  const handleSaveNotes = () => { void savePageState(`Engineering notes saved for WBS ${selectedWbs.code}`, { message: `Engineering notes saved for WBS ${selectedWbs.code}.` }); };
 
   return (
     <AppShell
@@ -558,9 +557,7 @@ Deliverables: ${selectedWbs.deliverables.map((d) => d.name).join(", ")}`;
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("WBS report emailed to stakeholders.");
-                  }}
+                  onClick={() => { void emailPageReport("WBS Report"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -591,9 +588,7 @@ Deliverables: ${selectedWbs.deliverables.map((d) => d.name).join(", ")}`;
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("WBS baseline saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("WBS baseline saved", { message: "WBS baseline saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />

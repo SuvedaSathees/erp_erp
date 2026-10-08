@@ -68,6 +68,7 @@ import type {
   DashboardQuery,
   CostCenterHierarchyNode,
 } from "@/services/types";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/finance/cost-centers")({
   head: () => ({
@@ -429,7 +430,7 @@ function CostCentersPage() {
                   <ErpButton
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Exporting cost centers report Excel...")}
+                    onClick={() => void exportPageReport("Cost Centers Report", "xlsx")}
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Export</span>
@@ -928,7 +929,7 @@ function CostCentersPage() {
                         <ErpButton
                           size="sm"
                           variant="outline"
-                          onClick={() => toast.info("Downloading Allocation Report...")}
+                          onClick={() => void exportPageReport("Allocation Report", "pdf")}
                         >
                           Download
                         </ErpButton>
@@ -949,7 +950,7 @@ function CostCentersPage() {
                         <ErpButton
                           size="sm"
                           variant="outline"
-                          onClick={() => toast.info("Downloading Variance Summary...")}
+                          onClick={() => void exportPageReport("Variance Summary", "pdf")}
                         >
                           Download
                         </ErpButton>

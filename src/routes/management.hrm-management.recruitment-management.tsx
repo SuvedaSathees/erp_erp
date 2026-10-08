@@ -70,6 +70,8 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { toast } from "sonner";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { savePageForm, logPageAction, openPageForm, openPageFiles, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/recruitment-management")({
   head: () => ({
@@ -406,11 +408,7 @@ function RecruitmentManagementPage() {
   const [newCanExp, setNewCanExp] = useState("4 Years");
   const [newCanSource, setNewCanSource] = useState("LinkedIn");
 
-  const handleSaveRecruitment = () => {
-    toast.success(`Recruitment Record ${master.recruitmentNumber} saved successfully`, {
-      description: "Hiring parameters, requisition status and candidate stages updated.",
-    });
-  };
+  const handleSaveRecruitment = () => { void savePageState(`Recruitment Record ${master.recruitmentNumber} saved`, { message: `Recruitment Record ${master.recruitmentNumber} saved.` }); };
 
   const handleStatusProgress = (newStatus: RecruitmentStatusType) => {
     setMaster((prev) => ({ ...prev, recruitmentStatus: newStatus }));
@@ -450,9 +448,7 @@ function RecruitmentManagementPage() {
   };
 
   const handleExportData = (type: "excel" | "pdf") => {
-    toast.success(`Recruitment report exported as ${type.toUpperCase()}`, {
-      description: `Downloaded REC-2024-00056_${new Date().toISOString().slice(0, 10)}.${type === "excel" ? "xlsx" : "pdf"}`,
-    });
+    void exportPageReport("Recruitment Report REC-2024-00056", type === "excel" ? "xlsx" : "pdf");
   };
 
   const STATUS_WORKFLOW_STEPS: RecruitmentStatusType[] = [
@@ -891,7 +887,7 @@ function RecruitmentManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Job description updated")}
+                onClick={(e) => savePageForm("Job description updated", e.currentTarget)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <Edit className="h-3.5 w-3.5" />
@@ -947,7 +943,7 @@ function RecruitmentManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Job posting published to LinkedIn and Careers Portal")}
+                onClick={() => void logPageAction("Job posting approved for LinkedIn and Careers Portal", { message: "Job posting approval recorded. Posting to LinkedIn isn't connected yet." })}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -1086,7 +1082,7 @@ function RecruitmentManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.info("Interview scheduler dialog launched")}
+                onClick={() => openPageForm("Schedule Interview", "interview", "Schedule")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -1200,7 +1196,7 @@ function RecruitmentManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("File uploaded successfully")}
+                onClick={() => openPageFiles("Candidate Documents")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -1224,7 +1220,7 @@ function RecruitmentManagementPage() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => toast.success(`Downloading ${doc.name}`)}
+                    onClick={() => void downloadAttachment(doc)}
                     className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline cursor-pointer"
                   >
                     <Download className="h-3.5 w-3.5" />

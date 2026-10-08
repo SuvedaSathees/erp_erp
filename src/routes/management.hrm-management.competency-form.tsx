@@ -108,6 +108,8 @@ import {
   Tooltip as RechartsTooltip,
 } from "recharts";
 import { toast } from "sonner";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { openPageFiles, openQuickActions, openPageViewer, logPageAction, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/competency-form")({
   head: () => ({
@@ -184,11 +186,7 @@ function CompetencyFormPage() {
   const [isEvidenceModalOpen, setIsEvidenceModalOpen] = useState(false);
   const [isDevPlanModalOpen, setIsDevPlanModalOpen] = useState(false);
 
-  const handleSubmitForReview = () => {
-    toast.success("Competency Assessment submitted for review", {
-      description: "CA-2024-00025 forwarded to Reporting Manager and HR Calibration.",
-    });
-  };
+  const handleSubmitForReview = () => { void savePageState("Competency Assessment submitted for review", { kind: "request", message: "Competency Assessment submitted for review. Recorded in the activity log." }); };
 
   return (
     <AppShell
@@ -220,7 +218,7 @@ function CompetencyFormPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("Importing competency records...")}
+                onClick={() => openPageFiles("Import competency records", ".csv,.xlsx,.xls")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Upload className="h-3.5 w-3.5 text-blue-600" />
@@ -228,7 +226,7 @@ function CompetencyFormPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Competency scorecard exported")}
+                onClick={() => void exportPageReport("Competency Scorecard", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
@@ -237,7 +235,7 @@ function CompetencyFormPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("More competency tools opened")}
+                onClick={(e) => openQuickActions(e)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 More
@@ -689,7 +687,7 @@ function CompetencyFormPage() {
               <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Assessment Documents</h4>
-                  <button onClick={() => toast.info("Viewing all documents")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
+                  <button onClick={(e) => openPageViewer("Viewing all documents", e.currentTarget)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
                     View All →
                   </button>
                 </div>
@@ -708,7 +706,7 @@ function CompetencyFormPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => toast.success(`Downloading ${doc.name}`)}
+                        onClick={() => void downloadAttachment(doc)}
                         className="text-primary hover:text-blue-700 p-0.5 cursor-pointer"
                       >
                         <Download className="h-3.5 w-3.5" />
@@ -787,7 +785,7 @@ function CompetencyFormPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.success("Competency scorecard PDF generated")}
+                    onClick={() => void exportPageReport("Competency Scorecard", "pdf")}
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-emerald-600 hover:bg-emerald-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <FileSpreadsheet className="h-3 w-3 text-emerald-600" />
@@ -982,7 +980,7 @@ function CompetencyFormPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.success("New development goal added.")}
+                  onClick={() => void logPageAction("New development goal added")}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary/90 transition shadow-xs cursor-pointer"
                 >
                   <Plus className="h-3.5 w-3.5" /> Add Goal

@@ -58,6 +58,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/procurement-management/overview")({
   head: () => ({
@@ -386,7 +387,7 @@ function ProcurementOverviewPage() {
                 <div className="pt-1 flex justify-end">
                   <button
                     type="button"
-                    onClick={() => toast.success("Notification pings sent to HODs.")}
+                    onClick={() => void logPageAction("HOD notification requested")}
                     className="text-[11px] font-bold text-rose-700 dark:text-rose-300 hover:underline cursor-pointer"
                   >
                     Dispatch Reminders →
@@ -623,7 +624,7 @@ function ProcurementOverviewPage() {
 
             <button
               type="button"
-              onClick={() => toast.success("AI Procurement optimization recommendations executed.")}
+              onClick={() => void logPageAction("AI procurement optimization recommendations accepted")}
               className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary py-2 text-xs font-bold text-primary-foreground shadow-xs hover:bg-primary/90 transition-all cursor-pointer mt-2"
             >
               <Zap className="h-3.5 w-3.5" /> Execute AI Savings (₹ 18.4L)

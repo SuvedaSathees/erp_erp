@@ -86,6 +86,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { openPageViewer, logPageAction } from "@/lib/pageActions";
 
 export function ProductDocumentationFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <ProductDocumentationPage {...props} />;
@@ -536,9 +538,7 @@ export function ProductDocumentationPage({
                       <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => {
-                        toast.success("Expedited review reminder dispatched to Documentation Review Board.");
-                      }}
+                      onClick={() => { void logPageAction("Expedited review reminder requested for Documentation Review Board"); }}
                       className="cursor-pointer"
                     >
                       <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
@@ -611,7 +611,7 @@ export function ProductDocumentationPage({
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => {
-                    toast.success("Exporting Summary PDF...");
+                    void exportPageReport("Documentation Summary", "pdf");
                     window.print();
                   }} className="gap-2 cursor-pointer">
                     <Printer className="h-4 w-4 text-slate-600" />
@@ -964,7 +964,7 @@ export function ProductDocumentationPage({
                                       doc.name,
                                       `=======================================================\nDOCUMENT: ${doc.name}\nVERSION: ${doc.version}\nSTREAM: Engineering Documentation\nPRODUCT: ${rec.productName}\nINTEGRITY SHA-256: 7a9e102f89b456da87ec1209fb342e67a41289de6b2019f8564\nSTATUS: Active & Verified\n=======================================================`
                                     );
-                                    toast.success(`Downloading ${doc.name}`);
+                                    void downloadAttachment(doc);
                                   }}
                                   className="text-slate-500 hover:text-blue-600 transition-colors p-1 cursor-pointer"
                                   title="Download File"
@@ -1039,7 +1039,7 @@ export function ProductDocumentationPage({
                                       doc.name,
                                       `=======================================================\nDOCUMENT: ${doc.name}\nVERSION: ${doc.version}\nSTREAM: Manufacturing Documentation\nPRODUCT: ${rec.productName}\nINTEGRITY SHA-256: 7a9e102f89b456da87ec1209fb342e67a41289de6b2019f8564\nSTATUS: Active & Verified\n=======================================================`
                                     );
-                                    toast.success(`Downloading ${doc.name}`);
+                                    void downloadAttachment(doc);
                                   }}
                                   className="text-slate-500 hover:text-blue-600 transition-colors p-1 cursor-pointer"
                                   title="Download File"
@@ -1114,7 +1114,7 @@ export function ProductDocumentationPage({
                                       doc.name,
                                       `=======================================================\nDOCUMENT: ${doc.name}\nVERSION: ${doc.version}\nSTREAM: Quality & Compliance Documentation\nPRODUCT: ${rec.productName}\nINTEGRITY SHA-256: 7a9e102f89b456da87ec1209fb342e67a41289de6b2019f8564\nSTATUS: Active & Verified\n=======================================================`
                                     );
-                                    toast.success(`Downloading ${doc.name}`);
+                                    void downloadAttachment(doc);
                                   }}
                                   className="text-slate-500 hover:text-blue-600 transition-colors p-1 cursor-pointer"
                                   title="Download File"
@@ -1189,7 +1189,7 @@ export function ProductDocumentationPage({
                                       doc.name,
                                       `=======================================================\nDOCUMENT: ${doc.name}\nVERSION: ${doc.version}\nSTREAM: Customer Documentation\nPRODUCT: ${rec.productName}\nINTEGRITY SHA-256: 7a9e102f89b456da87ec1209fb342e67a41289de6b2019f8564\nSTATUS: Active & Verified\n=======================================================`
                                     );
-                                    toast.success(`Downloading ${doc.name}`);
+                                    void downloadAttachment(doc);
                                   }}
                                   className="text-slate-500 hover:text-blue-600 transition-colors p-1 cursor-pointer"
                                   title="Download File"
@@ -1265,7 +1265,7 @@ export function ProductDocumentationPage({
                                 onChange={(e) => setFormData((prev) => ({ ...prev, ecr: e.target.value }))}
                                 className="h-8 text-xs font-mono text-blue-600"
                               />
-                              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => toast.info(`Opening ECR record: ${rec.ecr}`)}>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={(e) => openPageViewer(`Opening ECR record: ${rec.ecr}`, e.currentTarget)}>
                                 <ExternalLink className="h-3.5 w-3.5 text-blue-600" />
                               </Button>
                             </div>
@@ -1280,7 +1280,7 @@ export function ProductDocumentationPage({
                                 onChange={(e) => setFormData((prev) => ({ ...prev, eco: e.target.value }))}
                                 className="h-8 text-xs font-mono text-blue-600"
                               />
-                              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => toast.info(`Opening ECO record: ${rec.eco}`)}>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={(e) => openPageViewer(`Opening ECO record: ${rec.eco}`, e.currentTarget)}>
                                 <ExternalLink className="h-3.5 w-3.5 text-blue-600" />
                               </Button>
                             </div>
@@ -1547,7 +1547,7 @@ export function ProductDocumentationPage({
                                   att.name,
                                   `=======================================================\nATTACHMENT: ${att.name}\nTYPE: ${att.type}\nSIZE: ${att.size}\nDOCUMENT RECORD: ${rec.documentationId}\nPRODUCT: ${rec.productName}\nINTEGRITY SHA-256: 4f8b92c10a8d76ef32a19e830c239d48291a0c847d9b23e4\nSTATUS: Attached to Master Dossier\n=======================================================`
                                 );
-                                toast.success(`Downloading ${att.name}`);
+                                void downloadAttachment(att);
                               }}
                               className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
                               title="Download Attachment"
@@ -2004,7 +2004,7 @@ export function ProductDocumentationPage({
               size="sm"
               className="bg-emerald-600 text-white"
               onClick={() => {
-                toast.success("Downloading Release Package DOC-2024-0087_v1.2.0.zip...");
+                void exportPageReport("Release Package DOC-2024-0087 v1.2.0 Manifest", "pdf");
                 setShowReleasePackageModal(false);
               }}
             >
@@ -2113,7 +2113,7 @@ export function ProductDocumentationPage({
                 <p className="font-bold text-slate-800 dark:text-slate-200">v1.1.0 (Prototype Baseline)</p>
                 <p className="text-[11px] text-muted-foreground">Published 10 May 2024 • R1 Revision</p>
               </div>
-              <Button size="sm" variant="ghost" onClick={() => toast.info("Viewing v1.1.0 snapshot")}>
+              <Button size="sm" variant="ghost" onClick={(e) => openPageViewer("Viewing v1.1.0 snapshot", e.currentTarget)}>
                 View
               </Button>
             </div>
@@ -2200,7 +2200,7 @@ export function ProductDocumentationPage({
                     selectedDocument.name,
                     `DOCUMENT: ${selectedDocument.name}\nTYPE: ${selectedDocument.type}\nPRODUCT: ${rec.productName}\nSTATUS: Verified Master Dossier\n=======================================================`
                   );
-                  toast.success(`Downloaded ${selectedDocument.name}`);
+                  void downloadAttachment(selectedDocument);
                 }}
               >
                 <Download className="h-4 w-4" /> Download Original

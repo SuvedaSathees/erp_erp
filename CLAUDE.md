@@ -197,7 +197,19 @@ export async function apiRequest<T>(endpoint: string, mockResolver: () => T): Pr
 
 ### 4.5 Stub vs. Build Convention
 *   **Build what the sequence diagram specifies**: If a button (e.g., "+ New Invoice" in Accounts Payable) has a corresponding sequence flow (`Create Vendor Invoice -> Save Invoice -> Insert Record`), build the complete Dialog form, mutation handler, and cache invalidation.
-*   **Stub what has no defined backend flow**: If a button (e.g., "+ New Transaction" in general transactions list) has no defined sequence diagram flow, render the UI with an intentional disabled state or informational toast (`toast.info("Create workflow scheduled for Phase 2")`).
+*   **No backend flow yet? Use the shared page actions, not a toast**: Buttons without a defined flow must still do something real. Never add a toast that claims an export, email, upload or save happened when it didn't. Use:
+    *   `src/lib/recordExport.ts`: `exportRecords(title, rows, fmt)` for data you have, `exportPageReport(title?, fmt, scope?)` for what's on screen (an open dialog, or the page with `"page"`), `downloadAttachment(att)` for documents.
+    *   `src/lib/pageActions.ts` (dialogs rendered by `<PageActionsHost>` in `__root.tsx`):
+        *   `openPageViewer(label, e.currentTarget)`: full-size view of a section.
+        *   `openPageForm(title, fields | preset)`: request form saved to the page's activity log.
+        *   `openPageFiles(label, accept?)`: real upload, stored per page.
+        *   `openPageHistory(title)`: activity log / audit trail.
+        *   `openQuickActions(e)`: "More" menu.
+        *   `savePageState(action)`: Save / Submit; the form is restored on reload.
+        *   `logPageAction(action)`: record an action honestly.
+        *   `emailPageReport(title, to?)`: PDF plus mail app.
+        *   `goToPage(path)`: navigate to another module page.
+    *   Activity, files and saved forms live in the `page:<path>` module dataset.
 
 ---
 

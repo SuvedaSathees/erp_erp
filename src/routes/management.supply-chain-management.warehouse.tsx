@@ -116,6 +116,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
+import { openPageForm, refreshPageData } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/supply-chain-management/warehouse")({
   head: () => ({
@@ -444,7 +446,7 @@ function WarehousePage() {
             <Button
               size="sm"
               variant="outline"
-              onClick={() => toast.success("Warehouse edit mode enabled.")}
+              onClick={() => openPageForm("Edit Warehouse")}
               className="h-8 gap-1.5 font-medium text-xs"
             >
               <Edit className="h-3.5 w-3.5 text-muted-foreground" />
@@ -489,7 +491,7 @@ function WarehousePage() {
                 <DropdownMenuItem onClick={() => window.print()} className="gap-2 text-xs cursor-pointer">
                   <Printer className="h-3.5 w-3.5 text-muted-foreground" /> Print Warehouse Card
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.success("Warehouse Layout & Heatmap exported to PDF")} className="gap-2 text-xs cursor-pointer">
+                <DropdownMenuItem onClick={() => void exportPageReport("Warehouse Layout & Heatmap", "pdf")} className="gap-2 text-xs cursor-pointer">
                   <Download className="h-3.5 w-3.5 text-muted-foreground" /> Export Capacity Report
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -668,7 +670,7 @@ function WarehousePage() {
                 <h3 className="font-semibold text-base text-foreground tracking-tight">Warehouse Capacity</h3>
                 <button
                   type="button"
-                  onClick={() => toast.info("Capacity metrics refreshed from IoT load sensors.")}
+                  onClick={() => void refreshPageData("Capacity metrics")}
                   className="text-xs text-primary font-medium flex items-center gap-1 hover:underline"
                 >
                   <span>View Details</span>

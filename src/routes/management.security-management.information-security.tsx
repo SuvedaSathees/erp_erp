@@ -60,6 +60,7 @@ import { usePersistentState } from "@/services/moduleDatasetService";
 import { SubmissionsPanel, makeSubmission, type Submission } from "@/components/erp/SubmissionsPanel";
 import { readFieldsNear } from "@/lib/formCapture";
 import { exportRecords, recordToRows } from "@/lib/recordExport";
+import { savePageForm } from "@/lib/pageActions";
 export const Route = createFileRoute("/management/security-management/information-security")({
   head: () => ({
     meta: [
@@ -712,7 +713,7 @@ function InformationSecurityPage() {
                 </div>
                 <div className="pt-2 flex items-center justify-end gap-2">
                   <button
-                    onClick={() => toast.success("Draft saved")}
+                    onClick={(e) => savePageForm("Draft saved", e.currentTarget)}
                     className="rounded-lg border border-border px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-muted"
                   >
                     Save Draft

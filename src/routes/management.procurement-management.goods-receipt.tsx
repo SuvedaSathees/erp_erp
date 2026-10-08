@@ -74,6 +74,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { savePageState } from "@/lib/pageActions";
 
 // Goods Receipt (GRN) Module · Procurement Management
 export const Route = createFileRoute("/management/procurement-management/goods-receipt")({
@@ -329,13 +330,9 @@ function GoodsReceiptPage() {
   });
 
   // Actions
-  const handleSaveDraft = () => {
-    toast.success("Goods receipt draft saved.");
-  };
+  const handleSaveDraft = () => { void savePageState("Goods receipt draft saved", { message: "Goods receipt draft saved." }); };
 
-  const handleReceiveGoods = () => {
-    toast.success("Physical inward verified. Quality inspection initiated.");
-  };
+  const handleReceiveGoods = () => { void savePageState("Goods received — quality inspection requested", { kind: "request", message: "Goods received — quality inspection requested. Recorded in the activity log." }); };
 
   const handleGenerateGrn = () => {
     setShowGrnModal(true);

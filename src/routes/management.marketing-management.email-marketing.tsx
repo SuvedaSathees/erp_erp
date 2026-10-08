@@ -41,6 +41,7 @@ import { MarketingManagementTabBar } from "@/components/erp/MarketingManagementT
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { logPageAction, openPageForm, savePageState, emailPageReport } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/marketing-management/email-marketing"
@@ -103,23 +104,11 @@ function EmailMarketingManagementPage() {
   const [campaignType, setCampaignType] = useState("Lead Generation");
   const [productService, setProductService] = useState("Autonomous W-EVSE 150kW");
 
-  const handleSave = () => {
-    toast.success("Email Campaign Saved", {
-      description: "EM-2026-001 updated in master marketing records with full MAICW classification.",
-    });
-  };
+  const handleSave = () => { void savePageState("Email Campaign saved", { message: "Email Campaign saved." }); };
 
-  const handleSendTest = () => {
-    toast.info("Test Email Dispatched", {
-      description: "Preview version sent to admin@magnertia.com with DKIM signature.",
-    });
-  };
+  const handleSendTest = () => { void emailPageReport("Email Campaign Test Preview"); };
 
-  const handleScheduleSend = () => {
-    toast.success("Email Campaign Scheduled & Broadcasting", {
-      description: "Delivery queue activated for 12,500 recipients across validated segments.",
-    });
-  };
+  const handleScheduleSend = () => { void logPageAction("Email campaign send scheduled (12,500 recipients)", { message: "Email campaign schedule recorded. Sending isn't connected yet, so nothing was sent." }); };
 
   return (
     <AppShell
@@ -280,7 +269,7 @@ function EmailMarketingManagementPage() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => toast.info(`Broadcast ${row.id} cloned into new draft.`)}
+                              onClick={() => void logPageAction(`Broadcast ${row.id} cloned into new draft`)}
                               className="h-7 px-2 text-[11px]"
                             >
                               <Copy className="h-3 w-3" />
@@ -433,7 +422,7 @@ function EmailMarketingManagementPage() {
                   </h2>
                   <p className="text-xs text-muted-foreground">Standardized brand-approved templates with modular drag-and-drop components.</p>
                 </div>
-                <Button size="sm" onClick={() => toast.success("Template Editor Initialized")} className="h-8 gap-1 text-xs">
+                <Button size="sm" onClick={() => openPageForm("New Email Template", "template", "Save Template")} className="h-8 gap-1 text-xs">
                   <Plus className="h-3.5 w-3.5" /> Design New Template
                 </Button>
               </div>

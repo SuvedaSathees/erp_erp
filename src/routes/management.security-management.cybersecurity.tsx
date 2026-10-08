@@ -57,6 +57,7 @@ import { usePersistentState } from "@/services/moduleDatasetService";
 import { SubmissionsPanel, makeSubmission, type Submission } from "@/components/erp/SubmissionsPanel";
 import { readFieldsNear } from "@/lib/formCapture";
 import { exportRecords, recordToRows } from "@/lib/recordExport";
+import { savePageForm } from "@/lib/pageActions";
 export const Route = createFileRoute("/management/security-management/cybersecurity")({
   head: () => ({
     meta: [
@@ -241,7 +242,7 @@ function CybersecurityPage() {
             <div className="flex items-center justify-between pb-2 border-b border-border">
               <h3 className="font-display text-sm font-bold text-foreground">Cybersecurity Record</h3>
               <button
-                onClick={() => toast.success("Record CYB-2026-001 updated")}
+                onClick={(e) => savePageForm("Record CYB-2026-001 updated", e.currentTarget)}
                 className="flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground hover:bg-primary/90 cursor-pointer"
               >
                 <Save className="h-3 w-3" /> Save

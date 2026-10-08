@@ -58,6 +58,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { exportRecords, recordToRows, exportPageReport } from "@/lib/recordExport";
+import { logPageAction, openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/asset-management/asset-lifecycle")({
   head: () => ({
@@ -320,13 +322,13 @@ function AssetLifecycleFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Opening Asset Lifecycle Stage Audit...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Asset Lifecycle Stage Audit", "pdf", "page")}>
                     Lifecycle Stage Audit
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Depreciation & NBV Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Depreciation & NBV Report", "pdf", "page")}>
                     Depreciation & NBV
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Physical Verification Log...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Physical Verification Log", "pdf", "page")}>
                     Verification Status Report
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -357,7 +359,7 @@ function AssetLifecycleFormPage() {
                   <DropdownMenuItem onClick={() => setIsVerifyOpen(true)}>
                     Physical Verification
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Impairment Assessment Review initiated")}>
+                  <DropdownMenuItem onClick={() => void logPageAction("Impairment Assessment Review initiated")}>
                     Impairment Assessment
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => { window.print(); }}>
@@ -693,7 +695,7 @@ function AssetLifecycleFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening master asset lifecycle calendar")}
+                onClick={(e) => openPageViewer("Opening master asset lifecycle calendar", e.currentTarget)}
                 className="text-[9.5px] text-primary font-bold hover:underline cursor-pointer"
               >
                 Calendar &rarr;
@@ -760,7 +762,7 @@ function AssetLifecycleFormPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Displaying all 11 lifecycle register columns")}
+                    onClick={(e) => openPageViewer("Displaying all 11 lifecycle register columns", e.currentTarget)}
                     className="h-8 text-xs gap-1 cursor-pointer"
                   >
                     <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -893,7 +895,7 @@ function AssetLifecycleFormPage() {
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setActiveAsset(asset);
-                                toast.success(`Exporting Lifecycle Card for ${asset.id}`);
+                                void exportRecords(`Lifecycle Card ${asset.id}`, recordToRows(asset), "pdf");
                               }}
                               className="p-1 rounded hover:text-emerald-600 hover:bg-muted cursor-pointer transition-colors"
                               title="Export Record"
@@ -953,7 +955,7 @@ function AssetLifecycleFormPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => toast.info(`Asset Tag QR: ${activeAsset.id}`)}
+                  onClick={(e) => openPageViewer(`Asset Tag QR: ${activeAsset.id}`, e.currentTarget)}
                   className="p-1 rounded hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
                   title="QR Tag"
                 >
@@ -1255,7 +1257,7 @@ function AssetLifecycleFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening all AI lifecycle insights")}
+                onClick={(e) => openPageViewer("Opening all AI lifecycle insights", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;

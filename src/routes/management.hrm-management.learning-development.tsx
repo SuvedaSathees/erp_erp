@@ -106,6 +106,8 @@ import {
   Tooltip as RechartsTooltip,
 } from "recharts";
 import { toast } from "sonner";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { openPageFiles, openQuickActions, logPageAction, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/learning-development")({
   head: () => ({
@@ -146,11 +148,7 @@ function LearningDevelopmentPage() {
   const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false);
   const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false);
 
-  const handleSubmitForApproval = () => {
-    toast.success("Training Program TRN-2024-00087 submitted for approval", {
-      description: "Nomination list and budget forwarded to HR & Department Head.",
-    });
-  };
+  const handleSubmitForApproval = () => { void savePageState("Training Program TRN-2024-00087 submitted for approval", { kind: "request", message: "Training Program TRN-2024-00087 submitted for approval. Recorded in the activity log." }); };
 
   return (
     <AppShell
@@ -182,7 +180,7 @@ function LearningDevelopmentPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("Importing participant data...")}
+                onClick={() => openPageFiles("Import participant data", ".csv,.xlsx,.xls")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Upload className="h-3.5 w-3.5 text-blue-600" />
@@ -190,7 +188,7 @@ function LearningDevelopmentPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Training report exported")}
+                onClick={() => void exportPageReport("Training Report", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
@@ -199,7 +197,7 @@ function LearningDevelopmentPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("More training tools opened")}
+                onClick={(e) => openQuickActions(e)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 More
@@ -811,7 +809,7 @@ function LearningDevelopmentPage() {
 
                 <button
                   type="button"
-                  onClick={() => toast.success("Effectiveness report synthesized and saved")}
+                  onClick={() => void exportPageReport("Training Effectiveness Report", "pdf", "page")}
                   className="w-full py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold text-xs transition cursor-pointer"
                 >
                   Save Effectiveness Report
@@ -832,7 +830,7 @@ function LearningDevelopmentPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.success("Batch certificates generated and dispatched")}
+                  onClick={() => void logPageAction("Batch certificate generation requested")}
                   className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition cursor-pointer flex items-center gap-1.5"
                 >
                   <Award className="h-3.5 w-3.5" />
@@ -868,7 +866,7 @@ function LearningDevelopmentPage() {
                         <td className="py-3 px-3 text-right">
                           <button
                             type="button"
-                            onClick={() => toast.success(`Downloading certificate ${cert.id}`)}
+                            onClick={() => void downloadAttachment(cert)}
                             className="inline-flex items-center gap-1 text-primary hover:text-blue-700 font-semibold cursor-pointer"
                           >
                             <Download className="h-3.5 w-3.5" /> Download

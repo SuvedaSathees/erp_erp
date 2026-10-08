@@ -62,6 +62,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { logPageAction, emailPageReport, savePageState } from "@/lib/pageActions";
 
 export interface ProjectMilestone {
   code: string;
@@ -733,9 +734,7 @@ ${milestones
     );
   };
 
-  const handleRecalculateCriticalPath = () => {
-    toast.success("Critical path recalculated: M-003, M-004, M-005, M-008, M-009 on zero float path.");
-  };
+  const handleRecalculateCriticalPath = () => { void logPageAction("Critical path recalculation requested"); };
 
   return (
     <AppShell
@@ -784,9 +783,7 @@ ${milestones
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Milestone schedule report emailed to stakeholders.");
-                  }}
+                  onClick={() => { void emailPageReport("Milestone Schedule Report"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -823,9 +820,7 @@ ${milestones
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Milestones baseline saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("Milestones baseline saved", { message: "Milestones baseline saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />

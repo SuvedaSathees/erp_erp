@@ -88,6 +88,8 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { AppShell } from "@/components/erp/AppShell";
 import { cn } from "@/lib/utils";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 export function AiModelFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <AiModelDevelopmentNewPage {...props} />;
@@ -560,7 +562,7 @@ export function AiModelDevelopmentNewPage({
   const handleExportConfusionMatrix = () => {
     const csv = `Actual \\ Predicted,Low Demand,Med Demand,High Demand\nLow Demand,812,32,6\nMed Demand,41,489,28\nHigh Demand,7,25,525\n`;
     triggerBrowserDownload("confusion_matrix_ev_demand.csv", csv, "text/csv");
-    toast.success("Confusion matrix exported as CSV!");
+    void exportPageReport("Confusion Matrix", "csv");
   };
 
   // Export Model Card JSON
@@ -595,7 +597,7 @@ export function AiModelDevelopmentNewPage({
       JSON.stringify(modelCardData, null, 2),
       "application/json",
     );
-    toast.success("Model Card exported successfully!");
+    void exportPageReport("Model Card", "pdf");
   };
 
   // Add Feature
@@ -891,9 +893,7 @@ export function AiModelDevelopmentNewPage({
                         <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => {
-                          toast.success("Expedited review reminder dispatched to AI Architecture Review Board.");
-                        }}
+                        onClick={() => { void logPageAction("Expedited review reminder requested for AI Architecture Review Board"); }}
                         className="cursor-pointer"
                       >
                         <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
@@ -1717,9 +1717,7 @@ export function AiModelDevelopmentNewPage({
                     <Button
                       size="sm"
                       variant="default"
-                      onClick={() => {
-                        toast.success("Redeployment triggered across Kubernetes cluster.");
-                      }}
+                      onClick={() => { void logPageAction("Model redeployment requested"); }}
                       className="gap-1 shrink-0 text-xs h-7 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                     >
                       <RefreshCw className="h-3 w-3" />
@@ -1787,7 +1785,7 @@ export function AiModelDevelopmentNewPage({
                           onClick={() => {
                             const sampleContent = `# ${att.name}\n\nDocument Type: ${att.type}\nAuthor: ${att.uploadedBy}\nDate: ${att.date}\n\nThis is the authentic document export for ${att.name} under AI Model Development AIMD-2024-0018.`;
                             triggerBrowserDownload(att.name.replace(".pdf", ".txt"), sampleContent);
-                            toast.success(`Downloading ${att.name}`);
+                            void downloadAttachment(att);
                           }}
                         >
                           <Download className="h-3.5 w-3.5 text-slate-500" />
@@ -2164,7 +2162,7 @@ export function AiModelDevelopmentNewPage({
                     JSON.stringify({ model: "AIMD-2024-0018", status: "Certified", date: new Date().toISOString() }, null, 2),
                     "application/json",
                   );
-                  toast.success("Governance certificate downloaded.");
+                  void exportPageReport("Governance Certificate", "pdf");
                 }}
                 className="h-8 text-xs font-semibold gap-1"
               >
@@ -2216,7 +2214,7 @@ export function AiModelDevelopmentNewPage({
                   if (selectedAttachment) {
                     const sampleContent = `# ${selectedAttachment.name}\n\nDocument Type: ${selectedAttachment.type}\nAuthor: ${selectedAttachment.uploadedBy}\nDate: ${selectedAttachment.date}\n\nThis is the authentic document export for ${selectedAttachment.name} under AI Model Development AIMD-2024-0018.`;
                     triggerBrowserDownload(selectedAttachment.name.replace(".pdf", ".txt"), sampleContent);
-                    toast.success(`Downloading ${selectedAttachment.name}`);
+                    void downloadAttachment(selectedAttachment);
                   }
                 }}
                 className="h-8 text-xs font-semibold gap-1.5"

@@ -37,6 +37,8 @@ import {
 import { AppShell } from "@/components/erp/AppShell";
 import { SalesManagementTabBar } from "@/components/erp/SalesManagementTabBar";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
+import { emailPageReport } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/sales-management/sales-orders"
@@ -183,7 +185,7 @@ function SalesOrdersComponent() {
   const grandTotal = totalTaxableWithFreight + cgst + sgst;
 
   const handlePrint = () => {
-    toast.success("Preparing Sales Order PDF document for print/dispatch...");
+    void exportPageReport("Sales Order", "pdf");
     window.print();
   };
 
@@ -242,9 +244,7 @@ function SalesOrdersComponent() {
     toast.info("Line item removed from Sales Order.");
   };
 
-  const handleSendConfirmation = () => {
-    toast.success("Sales Order Confirmation & Proforma emailed to karthik.selvam@si-evmobility.com");
-  };
+  const handleSendConfirmation = () => { void emailPageReport("Sales Order Confirmation & Proforma", "karthik.selvam@si-evmobility.com"); };
 
   const handleCreatePickList = () => {
     setStepperSteps((prev) =>

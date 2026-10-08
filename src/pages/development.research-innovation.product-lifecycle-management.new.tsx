@@ -84,6 +84,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
 
 /* ===========================================================================
    Browser Download Helper
@@ -532,7 +533,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
 ====================================================================`;
 
     triggerBrowserDownload(`${rec.plmId}_plm_dossier.txt`, content, "text/plain;charset=utf-8");
-    toast.success("PLM Dossier downloaded successfully!");
+    void exportPageReport("PLM Dossier", "pdf");
   };
 
   // Action: Export Lifecycle Stage Timeline CSV
@@ -544,7 +545,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
     ];
     const csvContent = csvRows.map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
     triggerBrowserDownload(`${rec.plmId}_milestone_timeline.csv`, csvContent, "text/csv;charset=utf-8");
-    toast.success("Exported milestone timeline to CSV!");
+    void exportPageReport("Milestone Timeline", "csv");
   };
 
   if (isLoading || !rec) {
@@ -1604,7 +1605,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                               att.name,
                               `=======================================================\nDOCUMENT: ${att.name}\nTYPE: ${att.type}\nSIZE: ${att.size}\nSECURITY HASH SHA-256: 4f7b2c9a1d8e3f6a5b2c7d1e0f9a8b4c\nPRODUCT BASELINE: ${rec.configurationBaseline}\nPROJECT: ${rec.plmProjectName} (${rec.plmId})\n=======================================================`
                             );
-                            toast.success(`Downloaded ${att.name}`);
+                            void downloadAttachment(att);
                           }}
                           className="p-1 text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer"
                           title="Download Attachment"
@@ -1977,7 +1978,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                     selectedAttachment.name,
                     `=======================================================\nDOCUMENT: ${selectedAttachment.name}\nINTEGRITY SHA-256: 4f7b2c9a1d8e3f6a5b2c7d1e0f9a8b4c2e6d1a9b8c7d6e5f4a3b2c1d0e9f8a7b\nBASELINE: ${rec.configurationBaseline}\nPROJECT: ${rec.plmProjectName} (${rec.plmId})\n=======================================================`
                   );
-                  toast.success(`Downloading ${selectedAttachment.name}`);
+                  void downloadAttachment(selectedAttachment);
                 }
               }}
               className="gap-1 text-xs cursor-pointer"
@@ -2152,7 +2153,7 @@ ${rec.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.person}
                   "ai_lifecycle_assessment_report.txt",
                   `=======================================================\nAI LIFECYCLE REPORT: ${rec.productName}\nSCORE: ${rec.aiLifecycleScore}/100\nPREDICTED LIFESPAN: 5.2 Years\nRELIABILITY: ${rec.aiReliabilityForecast}\nRECOMMENDATIONS: ${rec.aiImprovementSuggestions}\n=======================================================`
                 );
-                toast.success("Downloaded AI Lifecycle Report!");
+                void exportPageReport("AI Lifecycle Report", "pdf");
               }}
               className="gap-1 cursor-pointer"
             >

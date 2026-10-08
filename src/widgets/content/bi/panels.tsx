@@ -60,6 +60,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { exportPageReport } from "@/lib/recordExport";
+import { goToPage } from "@/lib/pageActions";
 
 // Shared Alert & Prediction rows matching Finance Overview standard
 function AlertRow({
@@ -525,14 +527,14 @@ export const BiRevenueByProductWidget = memo(function BiRevenueByProductWidget(_
           <div className="flex items-center justify-between pt-2">
             <div className="flex items-center gap-2">
               <button
-                onClick={() => toast.success("Exported product breakdown to CSV (.csv)")}
+                onClick={() => void exportPageReport("Product Breakdown", "csv")}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors cursor-pointer"
               >
                 <Download className="h-3.5 w-3.5 text-muted-foreground" />
                 <span>Export CSV</span>
               </button>
               <button
-                onClick={() => toast.success("Exported board presentation pack (.xlsx)")}
+                onClick={() => void exportPageReport("Board Presentation Pack", "xlsx")}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors cursor-pointer"
               >
                 <Download className="h-3.5 w-3.5 text-muted-foreground" />
@@ -621,7 +623,7 @@ export const BiSalesPipelineWidget = memo(function BiSalesPipelineWidget(_props:
       <div className="border-t border-border/40 pt-3 flex items-center justify-between text-xs text-muted-foreground">
         <span>Weighted Forecast: <strong className="text-foreground font-semibold">₹14.2 Cr</strong> ({totalDeals} deals)</span>
         <button
-          onClick={() => toast.info("Opening CRM Pipeline deals...")}
+          onClick={() => goToPage("/management/crm-management/sales-pipeline-management")}
           className="font-semibold text-primary shrink-0 hover:underline cursor-pointer"
         >
           Manage CRM Deals →

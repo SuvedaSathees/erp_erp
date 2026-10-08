@@ -26,6 +26,7 @@ import { MarketingManagementTabBar } from "@/components/erp/MarketingManagementT
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { savePageState, logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/marketing-management/campaigns"
@@ -98,23 +99,11 @@ function CampaignsManagementPage() {
     setChecklist((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleSaveDraft = () => {
-    toast.success("Campaign draft saved successfully", {
-      description: "CMP-2026-001 revision v1.0 synchronized to master ledger.",
-    });
-  };
+  const handleSaveDraft = () => { void savePageState("Campaign draft saved", { message: "Campaign draft saved." }); };
 
-  const handleSubmitApproval = () => {
-    toast.success("Submitted for Management Review", {
-      description: "Approval notifications dispatched to Marketing Head & Finance Controller.",
-    });
-  };
+  const handleSubmitApproval = () => { void savePageState("Submitted for Management Review", { kind: "request", message: "Submitted for Management Review. Recorded in the activity log." }); };
 
-  const handleLaunchCampaign = () => {
-    toast.success("Campaign is Active & Live", {
-      description: "All digital channels, tracking UTMs, and CRM attribution pipelines active.",
-    });
-  };
+  const handleLaunchCampaign = () => { void logPageAction("Campaign launch approved (CMP-2026-001)", { message: "Campaign launch recorded. Publishing to ad channels isn't connected yet." }); };
 
   return (
     <AppShell

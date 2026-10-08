@@ -23,6 +23,7 @@ import { MarketingManagementTabBar } from "@/components/erp/MarketingManagementT
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { logPageAction, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/marketing-management/competitor-analysis"
@@ -76,11 +77,7 @@ function CompetitorAnalysisPage() {
   const [activeTab, setActiveTab] = useState("benchmarks");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
 
-  const handleSave = () => {
-    toast.success("Competitor Analysis CA-2026-001 Saved", {
-      description: "Benchmarks and pricing models updated with latest market intelligence.",
-    });
-  };
+  const handleSave = () => { void savePageState("Competitor Analysis CA-2026-001 saved", { message: "Competitor Analysis CA-2026-001 saved." }); };
 
   return (
     <AppShell
@@ -133,7 +130,7 @@ function CompetitorAnalysisPage() {
               </Button>
               <Button
                 size="sm"
-                onClick={() => toast.info("Battlecard dossier shared with Enterprise Sales Squad.")}
+                onClick={() => void logPageAction("Battlecard dossier share requested for Enterprise Sales Squad")}
                 className="gap-1.5 text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
               >
                 <Share2 className="h-3.5 w-3.5" /> Share Battlecard

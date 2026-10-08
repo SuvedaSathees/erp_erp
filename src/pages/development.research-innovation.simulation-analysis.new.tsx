@@ -96,6 +96,8 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { AppShell } from "@/components/erp/AppShell";
 import { cn } from "@/lib/utils";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 /* ===========================================================================
    Helper: Browser File Download Generator
@@ -528,7 +530,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
       content,
       "text/plain;charset=utf-8"
     );
-    toast.success("Simulation dossier downloaded successfully!");
+    void exportPageReport("Simulation Dossier", "pdf");
   };
 
   if (isLoading || !record) {
@@ -649,9 +651,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                       <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => {
-                        toast.success("Expedited review reminder dispatched to CAE Review Board.");
-                      }}
+                      onClick={() => { void logPageAction("Expedited review reminder requested for CAE Review Board"); }}
                       className="cursor-pointer"
                     >
                       <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
@@ -1270,7 +1270,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                               att.name,
                               `=======================================================\nDOCUMENT: ${att.name}\nCATEGORY: CAE Simulation & FEA Structural Output\nUPLOADED BY: ${att.uploadedBy}\nINTEGRITY SHA-256: 7d14ac28b94f509e25ca671c890aef43\nSTATUS: Validated & Verified\nPROJECT: ${record.simulationProjectName}\n=======================================================`
                             );
-                            toast.success(`Downloaded ${att.name}`);
+                            void downloadAttachment(att);
                           }}
                           title="Download File"
                         >
@@ -1570,7 +1570,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 variant="outline"
                 onClick={() => {
                   triggerBrowserDownload("mesh_diagnostics_report.json", JSON.stringify(record.modelPrepConfig, null, 2), "application/json");
-                  toast.success("Downloaded mesh_diagnostics_report.json");
+                  void exportPageReport("Mesh Diagnostics Report", "json");
                 }}
                 className="gap-1 text-xs cursor-pointer"
               >
@@ -1635,7 +1635,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 variant="outline"
                 onClick={() => {
                   triggerBrowserDownload("fea_stress_summary.json", JSON.stringify(record.resultsConfig, null, 2), "application/json");
-                  toast.success("Downloaded fea_stress_summary.json");
+                  void exportPageReport("FEA Stress Summary", "json");
                 }}
                 className="gap-1 text-xs cursor-pointer"
               >
@@ -1793,7 +1793,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                       selectedAttachment.name,
                       `=======================================================\nDOCUMENT: ${selectedAttachment.name}\nINTEGRITY SHA-256: 7d14ac28b94f509e25ca671c890aef43b12389e1a87b5c3290b\nCLASSIFICATION: Confidential Automotive Engineering Data\nPROJECT: ${record.simulationProjectName}\n=======================================================`
                     );
-                    toast.success(`Downloading ${selectedAttachment.name}`);
+                    void downloadAttachment(selectedAttachment);
                   }
                 }}
                 className="gap-1 text-xs cursor-pointer"

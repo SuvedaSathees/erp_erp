@@ -63,6 +63,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { emailPageReport, savePageState, openPageFiles } from "@/lib/pageActions";
 
 export interface WbsBudgetChildItem {
   code: string;
@@ -712,9 +713,7 @@ ${wbsBudgets
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Budget control report emailed to stakeholders.");
-                  }}
+                  onClick={() => { void emailPageReport("Budget Control Report"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -745,9 +744,7 @@ ${wbsBudgets
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Budget baseline saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("Budget baseline saved", { message: "Budget baseline saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />
@@ -2504,7 +2501,7 @@ ${wbsBudgets
                 size="sm"
                 onClick={() => {
                   setIsImportOpen(false);
-                  toast.success("Imported 7 baseline budget heads from external SAP export.");
+                  openPageFiles("Import Budget Baseline", ".csv,.xlsx,.xls");
                 }}
                 className="bg-primary text-white font-semibold"
               >

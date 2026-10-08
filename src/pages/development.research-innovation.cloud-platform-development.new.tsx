@@ -102,6 +102,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { AppShell } from "@/components/erp/AppShell";
 import { cn } from "@/lib/utils";
+import { downloadAttachment } from "@/lib/recordExport";
 
 /* ===========================================================================
    Circular Score Gauge Component
@@ -859,7 +860,7 @@ export function CloudPlatformDevelopmentNewPage({
                       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setSelectedAttachment(att)}>
                         <Eye className="h-3.5 w-3.5 text-slate-500" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => toast.success(`Downloading ${att.name}`)}>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => void downloadAttachment(att)}>
                         <Download className="h-3.5 w-3.5 text-slate-500" />
                       </Button>
                     </div>

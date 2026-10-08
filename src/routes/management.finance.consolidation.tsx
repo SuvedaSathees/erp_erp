@@ -81,6 +81,7 @@ import type {
   IntercompanyTransaction,
   EntityValidationResult,
 } from "@/services/types";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/finance/consolidation")({
   head: () => ({
@@ -394,7 +395,7 @@ function ConsolidationPage() {
                   <ErpButton
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Exporting consolidation details...")}
+                    onClick={() => void exportPageReport("Consolidation Details", "pdf")}
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Export</span>
@@ -1362,7 +1363,7 @@ function ConsolidationPage() {
             </ErpButton>
             <ErpButton
               onClick={() => {
-                toast.success(`${reportType} audit report successfully exported and printed.`);
+                void exportPageReport(`${reportType} Audit Report`, "pdf");
                 setReportOpen(false);
               }}
             >

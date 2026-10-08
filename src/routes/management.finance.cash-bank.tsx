@@ -85,6 +85,7 @@ import type {
   DashboardQuery,
   ReconciliationStatus,
 } from "@/services/types";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/finance/cash-bank")({
   head: () => ({
@@ -469,7 +470,7 @@ function CashBankPage() {
                   <ErpButton
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Exporting report...")}
+                    onClick={() => void exportPageReport(undefined, "pdf")}
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Export</span>

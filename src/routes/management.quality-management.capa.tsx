@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Layers, SlidersHorizontal, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/quality-management/capa")({
   head: () => ({
@@ -99,9 +100,7 @@ function CapaPage() {
     }));
   };
 
-  const handleSave = () => {
-    toast.success(`CAPA record ${record.capaNumber} saved as draft`);
-  };
+  const handleSave = () => { void savePageState(`CAPA record ${record.capaNumber} saved as draft`, { message: `CAPA record ${record.capaNumber} saved as draft.` }); };
 
   const handleSubmitForVerification = () => {
     setRecord((prev) => ({ ...prev, status: "Effectiveness Verification" }));

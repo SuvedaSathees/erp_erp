@@ -93,6 +93,8 @@ import type {
   ElectronicsDesignRecord,
   ElectronicsDesignStage,
 } from "@/services/types";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { openPageViewer } from "@/lib/pageActions";
 
 export function ElectronicsDesignFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <ElectronicsDesignNewPage {...props} />;
@@ -498,7 +500,7 @@ export function ElectronicsDesignNewPage({
             </div>
             <Button
               size="sm"
-              onClick={() => toast.info("Navigating to PCB Layout Design (PCB-2024-0017)...")}
+              onClick={(e) => openPageViewer("Navigating to PCB Layout Design (PCB-2024-0017)", e.currentTarget)}
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
             >
               Proceed to PCB Layout
@@ -1169,7 +1171,7 @@ export function ElectronicsDesignNewPage({
                       </div>
                       <button
                         type="button"
-                        onClick={() => toast.info(`Downloading ${att.name}...`)}
+                        onClick={() => void downloadAttachment(att)}
                         className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
                         title="Download file"
                       >
@@ -1396,7 +1398,7 @@ export function ElectronicsDesignNewPage({
               <Button variant="outline" onClick={() => setReportModalOpen(false)}>
                 Close
               </Button>
-              <Button onClick={() => { toast.success("Downloaded Electronics_Design_Report.pdf"); setReportModalOpen(false); }}>
+              <Button onClick={() => { void exportPageReport("Electronics Design Report", "pdf"); setReportModalOpen(false); }}>
                 <Download className="h-4 w-4 mr-1.5" /> Download PDF Report
               </Button>
             </DialogFooter>

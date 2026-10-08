@@ -3,15 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CalendarClock, ShieldCheck, Award, FileCheck2, ExternalLink, Download } from "lucide-react";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 export function ComplianceContinuousMonitoringCard() {
   const handleDownloadDossier = () => {
-    toast.success("Downloading Continuous Surveillance Audit Dossier (TR-QMS-2024-8891)");
+    void exportPageReport("Continuous Surveillance Audit Dossier (TR-QMS-2024-8891)", "pdf");
   };
 
-  const handleScheduleCheck = () => {
-    toast.info("Pre-Surveillance internal audit scheduled for 15-Oct-2026");
-  };
+  const handleScheduleCheck = () => { void logPageAction("Pre-surveillance internal audit scheduled for 15-Oct-2026"); };
 
   return (
     <Card className="shadow-xs border-border/80 overflow-hidden min-w-0">

@@ -106,6 +106,8 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { AppShell } from "@/components/erp/AppShell";
 import { cn } from "@/lib/utils";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 /* ===========================================================================
    Helper: Browser File Download Generator
@@ -548,7 +550,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
       content,
       "text/plain;charset=utf-8"
     );
-    toast.success("Cybersecurity dossier downloaded successfully!");
+    void exportPageReport("Cybersecurity Dossier", "pdf");
   };
 
   // Filter helper: Determines if a section card should be shown based on activeTab
@@ -674,9 +676,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                       <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => {
-                        toast.success("Expedited review reminder dispatched to Cybersecurity Engineering Board.");
-                      }}
+                      onClick={() => { void logPageAction("Expedited review reminder requested for Cybersecurity Engineering Board"); }}
                       className="cursor-pointer"
                     >
                       <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
@@ -1397,7 +1397,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                               att.name,
                               `=======================================================\nDOCUMENT: ${att.name}\nCATEGORY: Security Audit / Penetration Baseline\nUPLOADED BY: ${att.uploadedBy}\nINTEGRITY SHA-256: 8f4a18e26bc8f15d9a2468ac73ef0b2210\nSTATUS: Cryptographically Verified & Approved\nPROJECT: ${record.securityProjectName}\n=======================================================`
                             );
-                            toast.success(`Downloaded ${att.name}`);
+                            void downloadAttachment(att);
                           }}
                           title="Download File"
                         >
@@ -1698,7 +1698,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                 variant="outline"
                 onClick={() => {
                   triggerBrowserDownload("stride_risk_matrix.json", JSON.stringify(record.threatModelConfig, null, 2), "application/json");
-                  toast.success("Downloaded stride_risk_matrix.json");
+                  void exportPageReport("STRIDE Risk Matrix", "json");
                 }}
                 className="gap-1.5 text-xs cursor-pointer"
               >
@@ -1777,9 +1777,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => {
-                  toast.success("Triggered SOAR Automated IP Containment Playbook!");
-                }}
+                onClick={() => { void logPageAction("SOAR IP containment playbook requested"); }}
                 className="gap-1 text-xs cursor-pointer"
               >
                 <Zap className="h-3.5 w-3.5 text-amber-500" />
@@ -1864,7 +1862,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                       selectedAttachment.name,
                       `=======================================================\nDOCUMENT: ${selectedAttachment.name}\nINTEGRITY SHA-256: 9b2d8f76a14e4b52c03d7e8293f18b45c71a34d6e9021873fb2a8c14e9512f47\nCLASSIFICATION: Restricted Engineering Confidential\nPROJECT: ${record.securityProjectName}\n=======================================================`
                     );
-                    toast.success(`Downloading ${selectedAttachment.name}`);
+                    void downloadAttachment(selectedAttachment);
                   }
                 }}
                 className="gap-1 text-xs cursor-pointer"

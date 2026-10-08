@@ -26,6 +26,8 @@ import { ComplianceRecord, ComplianceObligationItem, ComplianceEvidenceItem } fr
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Layers, Eye } from "lucide-react";
+import { exportPageReport } from "@/lib/recordExport";
+import { savePageState, logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/quality-management/compliance",
@@ -115,9 +117,7 @@ function CompliancePage() {
     }));
   };
 
-  const handleSave = () => {
-    toast.success(`Compliance record ${record.complianceNumber} draft saved successfully`);
-  };
+  const handleSave = () => { void savePageState(`Compliance record ${record.complianceNumber} draft saved`, { message: `Compliance record ${record.complianceNumber} draft saved.` }); };
 
   const handleSubmitAssessment = () => {
     setRecord((prev) => ({ ...prev, workflowStatus: "Approved", complianceStatus: "Compliant" }));
@@ -130,16 +130,12 @@ function CompliancePage() {
   };
 
   const handleExportComplianceReport = () => {
-    toast.success("ISO 9001:2015 Clause Compliance Audit Report exported (PDF)");
+    void exportPageReport("ISO 9001:2015 Clause Compliance Audit Report", "pdf");
   };
 
-  const handleInitiateAudit = () => {
-    toast.info("Internal Audit scheduled for Clause 8.5.1 verification");
-  };
+  const handleInitiateAudit = () => { void logPageAction("Internal audit scheduled for Clause 8.5.1 verification"); };
 
-  const handleRaiseGapNcr = () => {
-    toast.warning("NCR initiated for environmental compliance gap in Line 2");
-  };
+  const handleRaiseGapNcr = () => { void logPageAction("NCR raised for environmental compliance gap in Line 2"); };
 
   return (
     <AppShell

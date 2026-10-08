@@ -65,6 +65,7 @@ import { useModuleDataset } from "@/services/moduleDatasetService";
 import { usePersistentState } from "@/services/moduleDatasetService";
 import { SubmissionsPanel, makeSubmission, type Submission } from "@/components/erp/SubmissionsPanel";
 import { exportRecords, recordToRows } from "@/lib/recordExport";
+import { openQuickActions, openPageForm, logPageAction } from "@/lib/pageActions";
 export const Route = createFileRoute(
   "/management/security-management/security-audit"
 )({
@@ -169,9 +170,7 @@ function SecurityAuditPage() {
     setAiQuestion("");
   };
 
-  const handleGenerateFinding = () => {
-    toast.success("AI Draft Finding generated: Access Review Overdue (ISO 27001 A.9.2.5). Added to Findings ledger.");
-  };
+  const handleGenerateFinding = () => { void logPageAction("AI draft finding requested: Access Review Overdue (ISO 27001 A.9.2.5)"); };
 
   const handleCreateAudit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -549,7 +548,7 @@ function SecurityAuditPage() {
                 Submit for Review
               </button>
               <button
-                onClick={() => toast.info("Audit Actions: Export Dossier, Transfer Lead, Request Extension")}
+                onClick={(e) => openQuickActions(e)}
                 className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-white"
               >
                 More Actions ▾
@@ -791,7 +790,7 @@ function SecurityAuditPage() {
                     </div>
                   </div>
                   <button
-                    onClick={() => toast.info("Opening Add Scope Item dialog...")}
+                    onClick={() => openPageForm("Add Scope Item", "scopeItem", "Add")}
                     className="text-xs font-bold text-blue-600 hover:underline"
                   >
                     + Add Scope Item
@@ -837,7 +836,7 @@ function SecurityAuditPage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-bold text-slate-900">Audit Team Assignments</h3>
                   <button
-                    onClick={() => toast.info("Assigning team auditor...")}
+                    onClick={() => openPageForm("Assign Team Auditor")}
                     className="text-xs font-bold text-blue-600 hover:underline"
                   >
                     + Add Team Member

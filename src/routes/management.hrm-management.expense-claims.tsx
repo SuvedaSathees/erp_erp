@@ -104,6 +104,8 @@ import {
   StickyNote,
 } from "lucide-react";
 import { toast } from "sonner";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { openPageFiles, openQuickActions, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/expense-claims")({
   head: () => ({
@@ -151,11 +153,7 @@ function ExpenseClaimsPage() {
   const [isUploadReceiptModalOpen, setIsUploadReceiptModalOpen] = useState(false);
   const [isAddNoteModalOpen, setIsAddNoteModalOpen] = useState(false);
 
-  const handleSubmitClaim = () => {
-    toast.success("Expense Claim EXP-2024-00482 submitted successfully", {
-      description: "Claim submitted for final Finance review & settlement approval.",
-    });
-  };
+  const handleSubmitClaim = () => { void savePageState("Expense Claim EXP-2024-00482 submitted", { kind: "request", message: "Expense Claim EXP-2024-00482 submitted. Recorded in the activity log." }); };
 
   const totalClaimed = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   const totalEligible = expenses.reduce((acc, curr) => acc + curr.eligible, 0);
@@ -193,7 +191,7 @@ function ExpenseClaimsPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("Importing expenses from corporate card...")}
+                onClick={() => openPageFiles("Import expenses (corporate card)", ".csv,.xlsx,.xls")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Upload className="h-3.5 w-3.5 text-blue-600" />
@@ -201,7 +199,7 @@ function ExpenseClaimsPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Expense statement exported")}
+                onClick={() => void exportPageReport("Expense Statement", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
@@ -210,7 +208,7 @@ function ExpenseClaimsPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("More expense options opened")}
+                onClick={(e) => openQuickActions(e)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 More
@@ -578,7 +576,7 @@ function ExpenseClaimsPage() {
                         <td className="py-3 px-3 text-right whitespace-nowrap">
                           <button
                             type="button"
-                            onClick={() => toast.success(`Downloading ${rc.name}`)}
+                            onClick={() => void downloadAttachment(rc)}
                             className="p-1 rounded-md text-primary hover:bg-primary/10 transition cursor-pointer"
                           >
                             <Download className="h-4 w-4" />

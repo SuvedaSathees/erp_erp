@@ -67,6 +67,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { downloadAttachment } from "@/lib/recordExport";
+import { openPageForm, emailPageReport, savePageState } from "@/lib/pageActions";
 
 export interface ProjectTaskItem {
   id: string;
@@ -1136,9 +1138,7 @@ ${tasks
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Task execution report emailed to stakeholders.");
-                  }}
+                  onClick={() => { void emailPageReport("Task Execution Report"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -1169,9 +1169,7 @@ ${tasks
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Tasks saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("Tasks saved", { message: "Tasks saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />
@@ -2161,7 +2159,7 @@ ${tasks
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => toast.info("Create subtask form opened")}
+                        onClick={() => openPageForm("Create Subtask", "subtask", "Create")}
                         className="h-7 text-xs gap-1 cursor-pointer"
                       >
                         <Plus className="h-3 w-3" /> Add Subtask
@@ -2297,7 +2295,7 @@ ${tasks
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => toast.success(`Downloading ${doc.name}`)}
+                          onClick={() => void downloadAttachment(doc)}
                           className="h-7 text-xs text-primary cursor-pointer hover:underline"
                         >
                           <Download className="h-3 w-3 mr-1" /> Download

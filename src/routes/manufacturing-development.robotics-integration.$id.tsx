@@ -42,6 +42,8 @@ import { RoboticsReviewTable } from "@/components/robotics-integration/RoboticsR
 import { RoboticsSummaryCard } from "@/components/robotics-integration/RoboticsSummaryCard";
 import { RoboticsAttachmentsCard } from "@/components/robotics-integration/RoboticsAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { openPageFiles, openPageHistory } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/manufacturing-development/robotics-integration/$id")({
   head: () => ({
@@ -219,7 +221,7 @@ function RoboticsIntegrationDetailPage() {
         <div className="flex items-center justify-between p-2 rounded bg-muted/30 border border-dashed border-border/80 text-xs">
           <span className="text-[11px] text-muted-foreground">{label} (Not Uploaded)</span>
           <button
-            onClick={() => toast.info(`Upload ${label}...`)}
+            onClick={() => openPageFiles(`Upload ${label}`)}
             className="text-[10px] font-bold text-blue-600 hover:underline"
           >
             Upload
@@ -240,7 +242,7 @@ function RoboticsIntegrationDetailPage() {
           </div>
         </div>
         <button
-          onClick={() => toast.success(`Downloading ${file.filename}...`)}
+          onClick={() => void downloadAttachment(file)}
           className="p-1 text-muted-foreground hover:text-foreground rounded"
           title="Download"
         >
@@ -264,7 +266,7 @@ function RoboticsIntegrationDetailPage() {
             {chip.name} <ExternalLink className="w-3 h-3" />
           </a>
           <button
-            onClick={() => toast.success(`Downloading spec sheet for ${chip.name}...`)}
+            onClick={() => void downloadAttachment(chip)}
             className="p-1.5 bg-background border border-input rounded hover:bg-accent text-foreground transition-colors"
             title="Download Spec Sheet PDF"
           >
@@ -285,7 +287,7 @@ function RoboticsIntegrationDetailPage() {
             onSaveDraft={handleSaveDraft}
             onSubmitForApproval={handleSubmitForApproval}
             onDuplicate={() => toast.info("Record duplicated")}
-            onExportPdf={() => toast.info("Exporting PDF report...")}
+            onExportPdf={() => void exportPageReport(undefined, "pdf")}
             onPrint={() => window.print()}
             onArchive={() => toast.warning("Record archived")}
             onCloneVariant={() => toast.success("Cloned as Variant Robotics Cell!")}
@@ -804,19 +806,19 @@ function RoboticsIntegrationDetailPage() {
 
                 {/* History Links Row (4 separate links) */}
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs font-semibold text-muted-foreground border-t border-border">
-                  <button onClick={() => toast.info("Opening Audit Trail drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Audit Trail")} className="hover:text-foreground hover:underline">
                     Audit Trail
                   </button>
                   <span>·</span>
-                  <button onClick={() => toast.info("Opening Activity History drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Activity History")} className="hover:text-foreground hover:underline">
                     Activity History
                   </button>
                   <span>·</span>
-                  <button onClick={() => toast.info("Opening Change History drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Change History")} className="hover:text-foreground hover:underline">
                     Change History
                   </button>
                   <span>·</span>
-                  <button onClick={() => toast.info("Opening Workflow History drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Workflow History")} className="hover:text-foreground hover:underline">
                     Workflow History
                   </button>
                 </div>

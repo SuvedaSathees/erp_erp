@@ -91,6 +91,8 @@ import type {
   TestingAuditEntry,
   TestingStatus,
 } from "@/services/types";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 /* ===========================================================================
    Helper: Browser File Download Generator
@@ -526,7 +528,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
       content,
       "text/plain;charset=utf-8"
     );
-    toast.success("Testing dossier downloaded successfully!");
+    void exportPageReport("Testing Dossier", "pdf");
   };
 
   // Action: Export Test Results as CSV
@@ -542,7 +544,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
     ];
     const csvContent = csvRows.map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
     triggerBrowserDownload(`${record.testingValidationId}_test_runs.csv`, csvContent, "text/csv;charset=utf-8");
-    toast.success("Exported test runs to CSV!");
+    void exportPageReport("Test Runs", "csv");
   };
 
   if (isLoading || !record) {
@@ -662,9 +664,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                       <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => {
-                        toast.success("Expedited review reminder dispatched to QA Review Board.");
-                      }}
+                      onClick={() => { void logPageAction("Expedited review reminder requested for QA Review Board"); }}
                       className="cursor-pointer"
                     >
                       <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
@@ -1432,7 +1432,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                               att.name,
                               `=======================================================\nDOCUMENT: ${att.name}\nCATEGORY: Testing & Validation Laboratory Certificate\nUPLOADED BY: ${att.uploadedBy}\nINTEGRITY SHA-256: 3c9e102f89b456da87ec1209fb342e67\nSTATUS: Certified & Accredited\nPROJECT: ${record.testProjectName}\n=======================================================`
                             );
-                            toast.success(`Downloaded ${att.name}`);
+                            void downloadAttachment(att);
                           }}
                           title="Download File"
                         >
@@ -1674,7 +1674,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                     cutoffMs: 18.2,
                     status: "PASS",
                   }, null, 2), "application/json");
-                  toast.success("Exported oscilloscope waveform trace!");
+                  void exportPageReport("Oscilloscope Waveform Trace", "pdf");
                 }}
                 className="gap-1 text-xs cursor-pointer"
               >
@@ -1853,7 +1853,7 @@ ${record.reviewers.map((r, i) => `${i + 1}. [${r.decision}] ${r.role} - ${r.pers
                       selectedAttachment.name,
                       `=======================================================\nDOCUMENT: ${selectedAttachment.name}\nINTEGRITY SHA-256: 3c9e102f89b456da87ec1209fb342e67a41289de6b2019f8564\nLABORATORY: Magnertia EV Accreditation Center (ISO 17025)\nPROJECT: ${record.testProjectName}\n=======================================================`
                     );
-                    toast.success(`Downloading ${selectedAttachment.name}`);
+                    void downloadAttachment(selectedAttachment);
                   }
                 }}
                 className="gap-1 text-xs cursor-pointer"

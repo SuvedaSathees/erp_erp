@@ -56,6 +56,8 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { exportRecords, recordToRows, exportPageReport } from "@/lib/recordExport";
+import { openPageViewer } from "@/lib/pageActions";
 
 export interface ComplianceReportDefinition {
   id: string;
@@ -521,7 +523,7 @@ function ComplianceReportsPage() {
                         className="h-7 text-xs flex-1 gap-1"
                         onClick={(e) => {
                           e.stopPropagation();
-                          toast.success(`Generating fresh PDF for ${report.id}`);
+                          void exportRecords(`${report.id} ${report.name}`, recordToRows(report), "pdf");
                         }}
                       >
                         <Download className="h-3 w-3" /> Generate
@@ -679,7 +681,7 @@ function ComplianceReportsPage() {
                             size="sm"
                             variant="ghost"
                             className="h-7 text-xs text-primary hover:underline"
-                            onClick={() => toast.success(`Viewing live records for ${row.name}`)}
+                            onClick={(e) => openPageViewer(`Viewing live records for ${row.name}`, e.currentTarget)}
                           >
                             Inspect
                           </Button>
@@ -756,8 +758,8 @@ function ComplianceReportsPage() {
             <Button
               size="sm"
               onClick={() => {
+                void exportPageReport(`${selectedReport.id} Controlled Report`, "pdf");
                 setIsPreviewModalOpen(false);
-                toast.success(`PDF generated for ${selectedReport.id}`);
               }}
             >
               <Download className="h-3.5 w-3.5 mr-1" /> Download Controlled PDF

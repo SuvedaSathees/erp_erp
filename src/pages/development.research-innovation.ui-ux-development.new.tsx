@@ -93,6 +93,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/components/erp/AppShell";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 /* ===========================================================================
    Browser File Download Helper
@@ -198,11 +200,7 @@ export function UiUxDevelopmentNewPage({
         description: `Project baseline ${updated.uiUxProjectName} (${updated.designVersion}) persisted.`,
       });
     },
-    onError: () => {
-      toast.success("Draft saved locally!", {
-        description: "Local storage synchronized.",
-      });
-    },
+    onError: () => { toast.error("Couldn't save the draft. Please try again."); },
   });
 
   const submitReviewMutation = useMutation({
@@ -322,7 +320,7 @@ export function UiUxDevelopmentNewPage({
   const handleDownloadDoc = (doc: { label: string; filename: string; size?: string }) => {
     const content = `UI/UX SPECIFICATION ARTIFACT\n\nTitle: ${doc.label}\nFile: ${doc.filename}\nSize: ${doc.size || "Standard"}\nProject: ${record.uiUxProjectName} (${record.uiUxDevelopmentId})\nDesign System: ${record.designSystemVersion || "Magnertia Design System (v3.2)"}\nStatus: Approved Engineering Baseline v2.1.0\nExport Date: ${new Date().toISOString()}`;
     triggerBrowserDownload((doc.filename || "uiux_spec").replace(/\.[^/.]+$/, "") + ".txt", content, "text/plain");
-    toast.success(`Downloaded ${doc.filename}`);
+    void downloadAttachment(doc);
   };
 
   const handleExportReport = () => {
@@ -365,7 +363,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
 =====================================================`;
 
     triggerBrowserDownload(`${record.uiUxDevelopmentId}_UI_UX_Specification.txt`, content, "text/plain");
-    toast.success("UI/UX specification dossier exported and downloaded successfully!");
+    void exportPageReport("UI/UX Specification Dossier", "pdf");
   };
 
   const handleExportTokensJson = () => {
@@ -417,7 +415,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
       },
     };
     triggerBrowserDownload("magnertia_design_tokens_v3.2.json", JSON.stringify(tokens, null, 2), "application/json");
-    toast.success("Design tokens exported as JSON!");
+    void exportPageReport("Design Tokens", "json");
   };
 
   const handleAddPainPoint = (e: React.FormEvent) => {
@@ -681,7 +679,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                         <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => toast.success("Expedited review reminder sent to stakeholders & CTO.")}
+                        onClick={() => void logPageAction("Expedited review reminder requested for stakeholders & CTO")}
                         className="cursor-pointer"
                       >
                         <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
@@ -1179,7 +1177,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => toast.success("Applied touch padding fix (44px target) to design tokens!")}
+                  onClick={() => void logPageAction("Applied touch padding fix (44px target) to design tokens")}
                   className="h-6 text-[11px] text-primary shrink-0 hover:bg-primary/10 cursor-pointer"
                 >
                   Apply
@@ -1193,7 +1191,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => toast.success("Offline charger status pill enabled in sitemap components.")}
+                  onClick={() => void logPageAction("Offline charger status pill enabled in sitemap components")}
                   className="h-6 text-[11px] text-primary shrink-0 hover:bg-primary/10 cursor-pointer"
                 >
                   Apply
@@ -1224,7 +1222,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => toast.success("ARIA live-region aria-live='polite' configured on SoC meter.")}
+                  onClick={() => void logPageAction("ARIA live-region aria-live='polite' configured on SoC meter")}
                   className="h-6 text-[11px] text-primary shrink-0 hover:bg-primary/10 cursor-pointer"
                 >
                   Verify
@@ -1457,9 +1455,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => {
-                    toast.success("Sitemap hierarchy validated against WCAG navigation guidelines. 0 orphaned nodes.");
-                  }}
+                  onClick={() => { void logPageAction("Sitemap WCAG navigation validation requested"); }}
                   className="h-8 text-xs cursor-pointer font-semibold"
                 >
                   Validate IA
@@ -1643,7 +1639,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => toast.success("WCAG 2.2 AA accessibility audit re-run: 100% compliant across contrast, focus rings, keyboard trap, and ARIA.")}
+                      onClick={() => void logPageAction("WCAG 2.2 AA accessibility audit re-run requested")}
                       className="h-6 text-[10px] gap-1 cursor-pointer font-semibold"
                     >
                       <RefreshCw className="h-3 w-3" /> Re-audit
@@ -2452,7 +2448,7 @@ ${(record.reviewers || []).map((r) => `${r.role}: ${r.person} - ${r.decision} ($
               ))}
             </div>
             <DialogFooter className="gap-2">
-              <Button size="sm" variant="outline" onClick={() => toast.success("Wireframe package exported to PDF!")}>
+              <Button size="sm" variant="outline" onClick={() => void exportPageReport("Wireframe Package", "pdf")}>
                 <Download className="w-3.5 h-3.5 mr-1" /> Export Blueprints
               </Button>
               <Button size="sm" onClick={() => setIsBlueprintsModalOpen(false)}>Close</Button>

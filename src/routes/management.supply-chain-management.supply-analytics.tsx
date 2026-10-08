@@ -152,6 +152,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
+import { openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/supply-chain-management/supply-analytics")({
   head: () => ({
@@ -825,7 +827,7 @@ function SupplyAnalyticsPage() {
                   </div>
 
                   <div className="pt-2 text-right">
-                    <Button variant="link" className="text-xs text-blue-600 h-auto p-0 font-medium" onClick={() => toast.info("Viewing all supply risks")}>
+                    <Button variant="link" className="text-xs text-blue-600 h-auto p-0 font-medium" onClick={(e) => openPageViewer("Viewing all supply risks", e.currentTarget)}>
                       View All Risks →
                     </Button>
                   </div>
@@ -886,7 +888,7 @@ function SupplyAnalyticsPage() {
                   </div>
 
                   <div className="pt-2 text-right">
-                    <Button variant="link" className="text-xs text-blue-600 h-auto p-0 font-medium" onClick={() => toast.info("Full supply gap analysis report displayed")}>
+                    <Button variant="link" className="text-xs text-blue-600 h-auto p-0 font-medium" onClick={(e) => openPageViewer("Full supply gap analysis report displayed", e.currentTarget)}>
                       View Full Supply Gap Report →
                     </Button>
                   </div>
@@ -940,7 +942,7 @@ function SupplyAnalyticsPage() {
                   </div>
 
                   <div className="pt-2 text-right">
-                    <Button variant="link" className="text-xs text-blue-600 h-auto p-0 font-medium" onClick={() => toast.info("Displaying supplier scorecard metrics")}>
+                    <Button variant="link" className="text-xs text-blue-600 h-auto p-0 font-medium" onClick={(e) => openPageViewer("Displaying supplier scorecard metrics", e.currentTarget)}>
                       View Supplier Scorecard →
                     </Button>
                   </div>
@@ -995,7 +997,7 @@ function SupplyAnalyticsPage() {
                   </div>
 
                   <div className="pt-2 text-right">
-                    <Button variant="link" className="text-xs text-blue-600 h-auto p-0 font-medium" onClick={() => toast.info("Displaying inventory health analytics")}>
+                    <Button variant="link" className="text-xs text-blue-600 h-auto p-0 font-medium" onClick={(e) => openPageViewer("Displaying inventory health analytics", e.currentTarget)}>
                       View Inventory Analytics →
                     </Button>
                   </div>
@@ -1038,7 +1040,7 @@ function SupplyAnalyticsPage() {
                   </div>
 
                   <div className="pt-2 text-right">
-                    <Button variant="link" className="text-xs text-blue-600 h-auto p-0 font-medium" onClick={() => toast.info("Displaying all AI supply chain recommendations")}>
+                    <Button variant="link" className="text-xs text-blue-600 h-auto p-0 font-medium" onClick={(e) => openPageViewer("Displaying all AI supply chain recommendations", e.currentTarget)}>
                       View All AI Insights →
                     </Button>
                   </div>
@@ -1171,7 +1173,7 @@ function SupplyAnalyticsPage() {
 
                     <div className="grid grid-cols-4 gap-2 py-1">
                       <button
-                        onClick={() => toast.info("Viewing Supply Overview")}
+                        onClick={(e) => openPageViewer("Viewing Supply Overview", e.currentTarget)}
                         className="p-1.5 rounded-lg border border-border/60 hover:bg-muted/40 transition-colors flex flex-col items-center justify-center text-center gap-1"
                       >
                         <BarChart3 className="h-4 w-4 text-blue-600" />
@@ -1404,7 +1406,7 @@ function SupplyAnalyticsPage() {
           </div>
           <DialogFooter>
             <Button size="sm" variant="outline" onClick={() => setShowExportModal(false)}>Cancel</Button>
-            <Button size="sm" onClick={() => { toast.success("Supply Analytics Dossier exported!"); setShowExportModal(false); }}>
+            <Button size="sm" onClick={() => { void exportPageReport("Supply Analytics Dossier", "pdf"); setShowExportModal(false); }}>
               Download Package
             </Button>
           </DialogFooter>

@@ -58,6 +58,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { logPageAction, openPageViewer, openPageHistory } from "@/lib/pageActions";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/asset-management/asset-tracking")({
   head: () => ({
@@ -302,13 +304,13 @@ function AssetTrackingDashboardPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Opening Asset Movement History Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Asset Movement History Report", "pdf", "page")}>
                     Movement History
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Location Mismatch Exceptions...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Location Mismatch Exceptions", "pdf", "page")}>
                     Location Exceptions
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Custodian Acknowledgement Log...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Custodian Acknowledgement Log", "pdf", "page")}>
                     Custodian Log
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -339,7 +341,7 @@ function AssetTrackingDashboardPage() {
                   <DropdownMenuItem onClick={() => setIsExceptionOpen(true)}>
                     Investigate Exceptions
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Batch Physical Verification started")}>
+                  <DropdownMenuItem onClick={() => void logPageAction("Batch Physical Verification started")}>
                     Batch Verification
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => { window.print(); }}>
@@ -657,7 +659,7 @@ function AssetTrackingDashboardPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening all tracking alerts")}
+                onClick={(e) => openPageViewer("Opening all tracking alerts", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -750,7 +752,7 @@ function AssetTrackingDashboardPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Displaying all 10 tracking columns")}
+                    onClick={(e) => openPageViewer("Displaying all 10 tracking columns", e.currentTarget)}
                     className="h-8 text-xs gap-1 cursor-pointer"
                   >
                     <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -1075,7 +1077,7 @@ function AssetTrackingDashboardPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening full movement audit trail")}
+                onClick={() => openPageHistory("Full Movement Audit Trail")}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1138,7 +1140,7 @@ function AssetTrackingDashboardPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Switching to interactive GIS map layout")}
+                onClick={(e) => openPageViewer("Switching to interactive GIS map layout", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View Map &rarr;
@@ -1203,7 +1205,7 @@ function AssetTrackingDashboardPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening departmental allocation")}
+                onClick={(e) => openPageViewer("Opening departmental allocation", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1271,7 +1273,7 @@ function AssetTrackingDashboardPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening AI tracking intelligence")}
+                onClick={(e) => openPageViewer("Opening AI tracking intelligence", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;

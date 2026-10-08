@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
 
 export interface CommunicationSubmoduleHeaderProps {
   icon: LucideIcon;
@@ -169,7 +170,7 @@ export function CommunicationSubmoduleHeader({
                     type="button"
                     onClick={() => {
                       setShowMoreActions(false);
-                      toast.success("Communication audit trail exported.");
+                      void exportPageReport("Communication Audit Trail", "pdf");
                     }}
                     className="w-full px-3.5 py-2 text-left hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center gap-2 cursor-pointer font-medium"
                   >

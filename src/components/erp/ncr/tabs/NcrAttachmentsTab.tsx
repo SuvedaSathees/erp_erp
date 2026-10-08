@@ -2,6 +2,8 @@ import { FileText, Download, Eye, UploadCloud, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NcrRecord } from "@/services/ncrTypes";
 import { toast } from "sonner";
+import { downloadAttachment } from "@/lib/recordExport";
+import { openPageFiles } from "@/lib/pageActions";
 
 interface NcrAttachmentsTabProps {
   record: NcrRecord;
@@ -57,7 +59,7 @@ export function NcrAttachmentsTab({ record }: NcrAttachmentsTabProps) {
 
         <Button
           size="sm"
-          onClick={() => toast.info("Select files to upload to NCR repository")}
+          onClick={() => openPageFiles("NCR Attachments")}
           className="h-8 text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold"
         >
           <UploadCloud className="h-3.5 w-3.5 mr-1" />
@@ -92,7 +94,7 @@ export function NcrAttachmentsTab({ record }: NcrAttachmentsTabProps) {
                   <div className="flex items-center justify-end gap-1.5">
                     <button
                       type="button"
-                      onClick={() => toast.info(`Viewing ${doc.name}`)}
+                      onClick={() => void downloadAttachment(doc)}
                       className="p-1 hover:bg-muted rounded text-blue-600"
                       title="Preview"
                     >
@@ -100,7 +102,7 @@ export function NcrAttachmentsTab({ record }: NcrAttachmentsTabProps) {
                     </button>
                     <button
                       type="button"
-                      onClick={() => toast.success(`Downloading ${doc.name}`)}
+                      onClick={() => void downloadAttachment(doc)}
                       className="p-1 hover:bg-muted rounded text-muted-foreground hover:text-foreground"
                       title="Download"
                     >

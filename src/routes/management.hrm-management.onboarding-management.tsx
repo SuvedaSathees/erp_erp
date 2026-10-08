@@ -79,6 +79,8 @@ import {
   ClipboardList,
 } from "lucide-react";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
+import { openPageFiles, savePageForm, logPageAction, openPageForm, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/onboarding-management")({
   head: () => ({
@@ -218,16 +220,10 @@ function OnboardingManagementPage() {
   const [activeTab, setActiveTab] = useState<string>("pre-joining");
   const [master, setMaster] = useState<OnboardingMaster>(INITIAL_MASTER);
 
-  const handleSave = () => {
-    toast.success(`Onboarding Record ${master.onboardingNumber} saved successfully`, {
-      description: "Milestones, IT provisioning, and task updates saved to central database.",
-    });
-  };
+  const handleSave = () => { void savePageState(`Onboarding Record ${master.onboardingNumber} saved`, { message: `Onboarding Record ${master.onboardingNumber} saved.` }); };
 
   const handleExportData = (type: "excel" | "pdf") => {
-    toast.success(`Onboarding record exported as ${type.toUpperCase()}`, {
-      description: `Downloaded ONB-2024-00125_${new Date().toISOString().slice(0, 10)}.${type === "excel" ? "xlsx" : "pdf"}`,
-    });
+    void exportPageReport("Onboarding Record ONB-2024-00125", type === "excel" ? "xlsx" : "pdf");
   };
 
   return (
@@ -503,7 +499,7 @@ function OnboardingManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Document upload dialog launched")}
+                onClick={() => openPageFiles("Onboarding Documents")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -557,7 +553,7 @@ function OnboardingManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Asset allocation request submitted to IT")}
+                onClick={(e) => savePageForm("Asset allocation request submitted to IT", e.currentTarget)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -692,7 +688,7 @@ function OnboardingManagementPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.success("1-on-1 check-in meeting scheduled with Buddy")}
+                  onClick={() => void logPageAction("1-on-1 check-in meeting scheduled with Buddy")}
                   className="w-full py-2 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition shadow-xs cursor-pointer text-center"
                 >
                   Schedule 1-on-1 Sync
@@ -744,7 +740,7 @@ function OnboardingManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Probation review form initiated")}
+                onClick={() => openPageForm("Probation Review", "probation")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <Plus className="h-3.5 w-3.5" />

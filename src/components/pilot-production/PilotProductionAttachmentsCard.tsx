@@ -3,6 +3,7 @@ import { FileText, Download, Link2, Upload, AlertCircle } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import type { AttachmentItem } from "@/lib/pilot-production/types";
 import { toast } from "sonner";
+import { showPageFiles } from "@/lib/pageActions";
 
 interface PilotProductionAttachmentsCardProps {
   attachments: AttachmentItem[];
@@ -125,7 +126,7 @@ export const PilotProductionAttachmentsCard: React.FC<PilotProductionAttachments
 
         <div className="border-t border-border pt-2 text-right">
           <button
-            onClick={() => toast.info("Opening Attachments Drawer...")}
+            onClick={() => showPageFiles()}
             className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
           >
             View All Attachments →

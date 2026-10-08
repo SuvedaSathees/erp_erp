@@ -69,6 +69,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { openPageForm, savePageState } from "@/lib/pageActions";
 
 // Contract Management Module · Procurement Management
 export const Route = createFileRoute("/management/procurement-management/contract-management")({
@@ -215,9 +216,7 @@ function ContractManagementPage() {
   });
 
   // Actions
-  const handleSaveDraft = () => {
-    toast.success("Contract record draft saved.");
-  };
+  const handleSaveDraft = () => { void savePageState("Contract record draft saved", { message: "Contract record draft saved." }); };
 
   const handleSubmitReview = () => {
     setShowReviewModal(true);
@@ -548,7 +547,7 @@ function ContractManagementPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.info("Add milestone...")}
+                  onClick={() => openPageForm("Add Milestone", "milestone", "Add Milestone")}
                   className="rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 cursor-pointer"
                 >
                   + Add Milestone
@@ -673,7 +672,7 @@ function ContractManagementPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.info("New amendment draft...")}
+                  onClick={() => openPageForm("New Amendment Draft", "amendment", "Save Draft")}
                   className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 cursor-pointer"
                 >
                   + Create Amendment

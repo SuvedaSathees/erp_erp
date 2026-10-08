@@ -88,6 +88,8 @@ import type {
   SoftwareDevelopmentRecord,
   SoftwareDevelopmentStage,
 } from "@/services/types";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { openPageViewer, logPageAction } from "@/lib/pageActions";
 
 export function SoftwareDevelopmentFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <SoftwareDevelopmentNewPage {...props} />;
@@ -863,7 +865,7 @@ export function SoftwareDevelopmentNewPage({
                     <span className="text-muted-foreground block font-semibold mb-1">Database Schema</span>
                     <button
                       type="button"
-                      onClick={() => toast.info("Opening ER Diagram editor...")}
+                      onClick={(e) => openPageViewer("Opening ER Diagram editor", e.currentTarget)}
                       className="text-xs font-bold text-primary hover:underline flex items-center gap-1.5 pt-2"
                     >
                       {formInput.databaseSchemaLink} &rarr;
@@ -1170,7 +1172,7 @@ export function SoftwareDevelopmentNewPage({
                       </div>
                       <button
                         type="button"
-                        onClick={() => toast.info(`Downloading ${att.name}...`)}
+                        onClick={() => void downloadAttachment(att)}
                         className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
                         title="Download file"
                       >
@@ -1404,7 +1406,7 @@ export function SoftwareDevelopmentNewPage({
               <Button variant="outline" onClick={() => setReportModalOpen(false)}>
                 Close
               </Button>
-              <Button onClick={() => { toast.success("Downloaded Software_Development_Report.pdf"); setReportModalOpen(false); }}>
+              <Button onClick={() => { void exportPageReport("Software Development Report", "pdf"); setReportModalOpen(false); }}>
                 <Download className="h-4 w-4 mr-1.5" /> Download PDF Report
               </Button>
             </DialogFooter>
@@ -1426,7 +1428,7 @@ export function SoftwareDevelopmentNewPage({
                 Ingress Controller routing via Kong API Gateway, gRPC inter-service communication, Kafka event bus for async messaging, and Prometheus observability.
               </p>
               <div className="flex gap-2 mt-2">
-                <Button size="sm" onClick={() => toast.success("Service mesh topology validated.")} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button size="sm" onClick={() => void logPageAction("Service mesh topology validation requested")} className="bg-emerald-600 hover:bg-emerald-700 text-white">
                   <CheckCircle2 className="h-4 w-4 mr-1.5 text-emerald-200" /> Validate Topology
                 </Button>
               </div>

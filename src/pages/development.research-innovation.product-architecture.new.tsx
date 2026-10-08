@@ -92,6 +92,8 @@ import type {
   ProductArchitectureRecord,
   ProductArchitectureStage,
 } from "@/services/types";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { openPageViewer } from "@/lib/pageActions";
 
 export function ProductArchitectureFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <ProductArchitectureNewPage {...props} />;
@@ -473,7 +475,7 @@ export function ProductArchitectureNewPage({
             </div>
             <Button
               size="sm"
-              onClick={() => toast.info("Navigating to System Design (SYS-2024-0012)...")}
+              onClick={(e) => openPageViewer("Navigating to System Design (SYS-2024-0012)", e.currentTarget)}
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
             >
               Proceed to System Design
@@ -1166,7 +1168,7 @@ export function ProductArchitectureNewPage({
                       </div>
                       <button
                         type="button"
-                        onClick={() => toast.info(`Downloading ${att.name}...`)}
+                        onClick={() => void downloadAttachment(att)}
                         className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
                         title="Download file"
                       >
@@ -1393,7 +1395,7 @@ export function ProductArchitectureNewPage({
               <Button variant="outline" onClick={() => setReportModalOpen(false)}>
                 Close
               </Button>
-              <Button onClick={() => { toast.success("Downloaded Product_Architecture_Report.pdf"); setReportModalOpen(false); }}>
+              <Button onClick={() => { void exportPageReport("Product Architecture Report", "pdf"); setReportModalOpen(false); }}>
                 <Download className="h-4 w-4 mr-1.5" /> Download PDF Report
               </Button>
             </DialogFooter>

@@ -53,6 +53,8 @@ import {
   Cell,
   Legend,
 } from "recharts";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { openPageForm, refreshPageData, logPageAction, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/sales-management/sales-planning")({
   head: () => ({
@@ -166,9 +168,7 @@ function SalesPlanningPage() {
     strategicPriorities: "Govt. tenders, enterprise sales, dealer network, exports.",
   });
 
-  const handleSaveDraft = () => {
-    toast.success("Sales Plan SP-2026-2027-001 draft saved successfully!");
-  };
+  const handleSaveDraft = () => { void savePageState("Sales Plan SP-2026-2027-001 draft saved", { message: "Sales Plan SP-2026-2027-001 draft saved." }); };
 
   const handleSubmitForApproval = () => {
     setIsSubmitApprovalOpen(true);
@@ -235,7 +235,7 @@ function SalesPlanningPage() {
                   <div className="absolute right-0 mt-1 w-48 bg-white border border-border rounded-xl shadow-lg py-1.5 z-20 text-xs text-slate-700">
                     <button
                       onClick={() => {
-                        toast.info("Exporting Sales Plan to PDF...");
+                        void exportPageReport("Sales Plan", "pdf");
                         setMoreActionsOpen(false);
                       }}
                       className="w-full text-left px-3 py-2 hover:bg-muted flex items-center gap-2 cursor-pointer"
@@ -244,7 +244,7 @@ function SalesPlanningPage() {
                     </button>
                     <button
                       onClick={() => {
-                        toast.info("Exporting Sales Plan to Excel...");
+                        void exportPageReport("Sales Plan", "xlsx");
                         setMoreActionsOpen(false);
                       }}
                       className="w-full text-left px-3 py-2 hover:bg-muted flex items-center gap-2 cursor-pointer"
@@ -594,7 +594,7 @@ function SalesPlanningPage() {
                   <p className="text-xs text-muted-foreground">Core performance benchmarks mapped across revenue, volume, margin, and market penetration.</p>
                 </div>
                 <button
-                  onClick={() => toast.info("Edit Targets modal opened.")}
+                  onClick={() => openPageForm("Edit Sales Targets")}
                   className="text-xs text-primary font-medium flex items-center gap-1 hover:underline cursor-pointer"
                 >
                   <Edit className="h-3 w-3" /> Edit Targets
@@ -831,7 +831,7 @@ function SalesPlanningPage() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
-                    onClick={() => toast.success("AI Diagnostics refreshed with latest ERP orders.")}
+                    onClick={() => void refreshPageData("AI diagnostics")}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-colors cursor-pointer"
                   >
                     <RefreshCw className="h-3 w-3 text-primary" /> Refresh AI Signals
@@ -1044,7 +1044,7 @@ function SalesPlanningPage() {
                 <p className="text-xs text-muted-foreground">Machine learning & statistical models combined with CRM Pipeline and Customer Forecasts.</p>
               </div>
               <button
-                onClick={() => toast.success("AI Forecast recalculation triggered successfully.")}
+                onClick={() => void logPageAction("AI Forecast recalculation requested")}
                 className="px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary/90 flex items-center gap-1.5 cursor-pointer"
               >
                 <Sparkles className="h-3.5 w-3.5" /> Re-run AI Forecast
@@ -1274,7 +1274,7 @@ function SalesPlanningPage() {
                 <p className="text-xs text-muted-foreground">Comprehensive budget expenditure heads, headcount readiness, CAC, and ROI metrics.</p>
               </div>
               <button
-                onClick={() => toast.info("Sales Budget editing drawer opened.")}
+                onClick={() => openPageForm("Edit Sales Budget")}
                 className="text-xs text-primary font-medium flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <Edit className="h-3 w-3" /> Edit Budget
@@ -1397,7 +1397,7 @@ function SalesPlanningPage() {
                   <p className="font-semibold text-slate-900">FY26_Sales_Strategy.pdf</p>
                   <p className="text-[10px] text-muted-foreground">3.2 MB • Approved</p>
                 </div>
-                <button onClick={() => toast.info("Downloading file...")} className="p-1.5 hover:bg-slate-100 rounded text-primary">
+                <button onClick={() => void downloadAttachment({ name: "FY26_Sales_Strategy.pdf", size: "3.2 MB", status: "Approved" }, "Sales Plan")} className="p-1.5 hover:bg-slate-100 rounded text-primary">
                   <Download className="h-4 w-4" />
                 </button>
               </div>
@@ -1406,7 +1406,7 @@ function SalesPlanningPage() {
                   <p className="font-semibold text-slate-900">Territory_Allocation_Matrix.xlsx</p>
                   <p className="text-[10px] text-muted-foreground">1.8 MB • V1.0</p>
                 </div>
-                <button onClick={() => toast.info("Downloading file...")} className="p-1.5 hover:bg-slate-100 rounded text-primary">
+                <button onClick={() => void downloadAttachment({ name: "Territory_Allocation_Matrix.xlsx", size: "1.8 MB", version: "V1.0" }, "Sales Plan")} className="p-1.5 hover:bg-slate-100 rounded text-primary">
                   <Download className="h-4 w-4" />
                 </button>
               </div>

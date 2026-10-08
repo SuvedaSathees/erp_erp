@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/development/manufacturing-development/six-sigma-projects/")({
   component: SixSigmaProjectsPage,
@@ -326,7 +327,7 @@ ${projects
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => toast.success("DMAIC project portfolio status updated")}
+                onClick={() => void logPageAction("DMAIC project portfolio status updated")}
                 className="gap-1.5 border-border hover:bg-muted text-xs font-semibold"
               >
                 Save Draft

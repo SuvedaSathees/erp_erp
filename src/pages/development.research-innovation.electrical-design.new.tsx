@@ -94,6 +94,8 @@ import type {
   ElectricalDesignRecord,
   ElectricalDesignStage,
 } from "@/services/types";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { goToPage } from "@/lib/pageActions";
 
 export function ElectricalDesignFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <ElectricalDesignNewPage {...props} />;
@@ -499,7 +501,7 @@ export function ElectricalDesignNewPage({
             </div>
             <Button
               size="sm"
-              onClick={() => toast.info("Navigating to Prototype Manufacturing...")}
+              onClick={() => goToPage("/development/research-innovation/prototype-development")}
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
             >
               Proceed to Manufacturing
@@ -1174,7 +1176,7 @@ export function ElectricalDesignNewPage({
                       </div>
                       <button
                         type="button"
-                        onClick={() => toast.info(`Downloading ${att.name}...`)}
+                        onClick={() => void downloadAttachment(att)}
                         className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
                         title="Download file"
                       >
@@ -1401,7 +1403,7 @@ export function ElectricalDesignNewPage({
               <Button variant="outline" onClick={() => setReportModalOpen(false)}>
                 Close
               </Button>
-              <Button onClick={() => { toast.success("Downloaded Electrical_Design_Report.pdf"); setReportModalOpen(false); }}>
+              <Button onClick={() => { void exportPageReport("Electrical Design Report", "pdf"); setReportModalOpen(false); }}>
                 <Download className="h-4 w-4 mr-1.5" /> Download PDF Report
               </Button>
             </DialogFooter>

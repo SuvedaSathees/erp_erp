@@ -97,6 +97,8 @@ import type {
   IndustrialDesignRecord,
   IndustrialDesignStage,
 } from "@/services/types";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { goToPage } from "@/lib/pageActions";
 
 export function IndustrialDesignFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <IndustrialDesignNewPage {...props} />;
@@ -478,7 +480,7 @@ export function IndustrialDesignNewPage({
             </div>
             <Button
               size="sm"
-              onClick={() => toast.info("Navigating to Mechanical Design (MECH-2024-0042)...")}
+              onClick={() => goToPage("/development/research-innovation/mechanical-design")}
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
             >
               Proceed to Mechanical Design
@@ -1024,7 +1026,7 @@ export function IndustrialDesignNewPage({
                       </div>
                       <button
                         type="button"
-                        onClick={() => toast.info(`Downloading ${att.name}...`)}
+                        onClick={() => void downloadAttachment(att)}
                         className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
                         title="Download file"
                       >
@@ -1251,7 +1253,7 @@ export function IndustrialDesignNewPage({
               <Button variant="outline" onClick={() => setReportModalOpen(false)}>
                 Close
               </Button>
-              <Button onClick={() => { toast.success("Downloaded Industrial_Design_Report.pdf"); setReportModalOpen(false); }}>
+              <Button onClick={() => { void exportPageReport("Industrial Design Report", "pdf"); setReportModalOpen(false); }}>
                 <Download className="h-4 w-4 mr-1.5" /> Download PDF Report
               </Button>
             </DialogFooter>

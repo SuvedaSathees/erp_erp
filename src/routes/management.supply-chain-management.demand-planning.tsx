@@ -86,6 +86,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/supply-chain-management/demand-planning")({
   head: () => ({
@@ -1427,7 +1428,7 @@ function DemandPlanningPage() {
                   <span>Showing {adjustments.length} demand overrides</span>
                   <button
                     type="button"
-                    onClick={() => toast.info("Showing recent demand adjustments log with statistical baseline.")}
+                    onClick={(e) => openPageViewer("Showing recent demand adjustments log with statistical baseline.", e.currentTarget)}
                     className="font-semibold text-primary hover:underline inline-flex items-center gap-1"
                   >
                     View All Adjustments <ArrowRight className="h-3 w-3" />
@@ -1486,7 +1487,7 @@ function DemandPlanningPage() {
                   <span>Action priority: High</span>
                   <button
                     type="button"
-                    onClick={() => toast.info("Task management console opened")}
+                    onClick={(e) => openPageViewer("Task management console opened", e.currentTarget)}
                     className="font-semibold text-primary hover:underline"
                   >
                     View All Tasks →

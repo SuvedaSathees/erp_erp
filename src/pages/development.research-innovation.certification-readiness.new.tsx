@@ -96,6 +96,8 @@ import type {
   CertificationReviewer,
   CertificationAuditEntry,
 } from "@/services/types";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 export function CertificationReadinessFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <CertificationReadinessNewPage {...props} />;
@@ -665,13 +667,7 @@ export function CertificationReadinessNewPage({
   };
 
   const handleExportPdf = () => {
-    toast.loading("Generating PDF Certification Dossier...", { id: "pdf-gen" });
-    setTimeout(() => {
-      toast.success("Readiness PDF Dossier generated!", {
-        id: "pdf-gen",
-        description: "Ready for audit and laboratory review.",
-      });
-    }, 800);
+    void exportPageReport("Certification Readiness Dossier", "pdf");
   };
 
   const chartData = [
@@ -761,9 +757,7 @@ export function CertificationReadinessNewPage({
                             <UserCheck className="mr-2 h-4 w-4 text-emerald-600" /> Record Review Decision
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => {
-                              toast.success("Expedited review reminder dispatched to Compliance Review Board.");
-                            }}
+                            onClick={() => { void logPageAction("Expedited review reminder requested for Compliance Review Board"); }}
                             className="cursor-pointer"
                           >
                             <Send className="mr-2 h-4 w-4 text-primary" /> Send Review Reminder
@@ -1152,7 +1146,7 @@ export function CertificationReadinessNewPage({
                                 doc.file,
                                 `=======================================================\nDOCUMENT: ${doc.name}\nFILE: ${doc.file}\nSIZE: ${doc.size}\nRECORD: ${safeRecord.certificationReadinessId}\nPRODUCT: ${safeRecord.linkedProductId}\nSTATUS: Verified for Laboratory Submission\n=======================================================`
                               );
-                              toast.success(`Downloading ${doc.file}`);
+                              void downloadAttachment(doc);
                             }}
                             className="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
                             title="Download Document"
@@ -1694,7 +1688,7 @@ export function CertificationReadinessNewPage({
                               att.name,
                               `=======================================================\nATTACHMENT: ${att.name}\nTYPE: ${att.type}\nSIZE: ${att.size}\nRECORD: ${safeRecord.certificationReadinessId}\nPRODUCT: ${safeRecord.linkedProductId}\nSTATUS: Verified Master Dossier\n=======================================================`
                             );
-                            toast.success(`Downloading ${att.name}`);
+                            void downloadAttachment(att);
                           }}
                           className="p-1 text-slate-500 hover:text-blue-600 transition-colors shrink-0 cursor-pointer"
                           title="Download Attachment"
@@ -2207,7 +2201,7 @@ export function CertificationReadinessNewPage({
                       selectedDocPreview.file || selectedDocPreview.name,
                       `DOCUMENT: ${selectedDocPreview.name}\nRECORD: ${safeRecord.certificationReadinessId}\nPRODUCT: ${safeRecord.linkedProductId}\nSTATUS: Verified Dossier\n=======================================================`
                     );
-                    toast.success(`Downloaded ${selectedDocPreview.name}`);
+                    void downloadAttachment(selectedDocPreview);
                   }}
                 >
                   <Download className="h-3.5 w-3.5" /> Download File

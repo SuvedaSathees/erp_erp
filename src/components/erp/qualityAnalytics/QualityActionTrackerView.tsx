@@ -4,6 +4,7 @@ import { CheckSquare, Clock, Plus, ExternalLink } from "lucide-react";
 import { QualityActionItem } from "@/services/qualityAnalyticsTypes";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { openPageForm } from "@/lib/pageActions";
 
 interface QualityActionTrackerViewProps {
   actions: QualityActionItem[];
@@ -19,7 +20,7 @@ export function QualityActionTrackerView({ actions }: QualityActionTrackerViewPr
         </CardTitle>
         <Button
           size="sm"
-          onClick={() => toast.info("New Quality Action creation dialog opened")}
+          onClick={() => openPageForm("New Quality Action")}
           className="h-8 text-xs font-semibold bg-primary text-primary-foreground flex items-center gap-1"
         >
           <Plus className="w-3.5 h-3.5" />

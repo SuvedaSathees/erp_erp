@@ -44,6 +44,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AppShell } from "@/components/erp/AppShell";
+import { openPageFiles } from "@/lib/pageActions";
 
 export function ProductionEngineeringNewPage({
   breadcrumb,
@@ -783,7 +784,7 @@ ${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.decision} (${r.date 
             </CardHeader>
             <CardContent className="space-y-4">
               <div
-                onClick={() => toast.info("Opening file upload selector...")}
+                onClick={() => openPageFiles("Attachments")}
                 className="border-2 border-dashed border-border/80 hover:border-primary/50 rounded-xl p-5 text-center bg-slate-50/50 dark:bg-slate-800/30 transition-colors cursor-pointer"
               >
                 <Upload className="h-6 w-6 mx-auto text-muted-foreground mb-1" />

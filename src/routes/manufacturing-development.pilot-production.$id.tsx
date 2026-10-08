@@ -26,6 +26,7 @@ import { PilotProductionReviewTable } from "@/components/pilot-production/PilotP
 import { PilotProductionSummaryCard } from "@/components/pilot-production/PilotProductionSummaryCard";
 import { PilotProductionAttachmentsCard } from "@/components/pilot-production/PilotProductionAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import { openPageHistory } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/manufacturing-development/pilot-production/$id")({
   head: () => ({
@@ -792,19 +793,19 @@ Approval Comments: ${record.reviewComments || "N/A"}
 
                 {/* History Links Row (4 separate links per late house style) */}
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs font-semibold text-muted-foreground border-t border-border">
-                  <button onClick={() => toast.info("Opening Audit Trail drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Audit Trail")} className="hover:text-foreground hover:underline">
                     Audit Trail
                   </button>
                   <span>·</span>
-                  <button onClick={() => toast.info("Opening Activity History drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Activity History")} className="hover:text-foreground hover:underline">
                     Activity History
                   </button>
                   <span>·</span>
-                  <button onClick={() => toast.info("Opening Change History drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Change History")} className="hover:text-foreground hover:underline">
                     Change History
                   </button>
                   <span>·</span>
-                  <button onClick={() => toast.info("Opening Workflow History drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Workflow History")} className="hover:text-foreground hover:underline">
                     Workflow History
                   </button>
                 </div>

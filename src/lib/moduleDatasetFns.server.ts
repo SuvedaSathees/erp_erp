@@ -77,3 +77,52 @@ export const seedModuleDatasetFn = createServerFn({ method: "POST" })
     });
     return JSON.stringify(row.formData);
   });
+
+/** Append one item to a list field of a module dataset (e.g. a page's activity log or uploaded files). */
+export const appendModuleDatasetItemFn = createServerFn({ method: "POST" })
+  .validator((d: { key: string; title: string; field: string; json: string; limit?: number; unique?: boolean }) => d)
+  .handler(async ({ data: { key, title, field, json, limit, unique } }): Promise<string> => {
+    const item = JSON.parse(json);
+    const existing = await prisma.developmentRecord.findUnique({
+      where: { recordCode: code(key) },
+      select: { formData: true },
+    });
+    const stored = (existing?.formData as Record<string, unknown>) ?? {};
+    const list = Array.isArray(stored[field]) ? (stored[field] as unknown[]) : [];
+    if (unique && list.some((x) => JSON.stringify(x) === json)) return JSON.stringify(list);
+    const next = [item, ...list].slice(0, limit ?? 500);
+    const formData = { ...stored, [field]: next };
+    await prisma.developmentRecord.upsert({
+      where: { recordCode: code(key) },
+      update: { formData: formData as object },
+      create: {
+        moduleType: code(key),
+        recordCode: code(key),
+        formCode: key,
+        projectName: title,
+        ownerName: "System",
+        workflowStatus: "Active",
+        formData: formData as object,
+      },
+    });
+    return JSON.stringify(next);
+  });
+
+/** Remove the item with the given id from a list field of a module dataset. */
+export const removeModuleDatasetItemFn = createServerFn({ method: "POST" })
+  .validator((d: { key: string; field: string; id: string }) => d)
+  .handler(async ({ data: { key, field, id } }): Promise<string> => {
+    const existing = await prisma.developmentRecord.findUnique({
+      where: { recordCode: code(key) },
+      select: { formData: true },
+    });
+    if (!existing) return "[]";
+    const stored = (existing.formData as Record<string, unknown>) ?? {};
+    const list = Array.isArray(stored[field]) ? (stored[field] as { id?: string }[]) : [];
+    const next = list.filter((x) => x?.id !== id);
+    await prisma.developmentRecord.update({
+      where: { recordCode: code(key) },
+      data: { formData: { ...stored, [field]: next } as object },
+    });
+    return JSON.stringify(next);
+  });

@@ -48,6 +48,8 @@ import type {
   TransactionStatus,
   TransactionUpdate,
 } from "@/services/types";
+import { exportPageReport, exportRecords, recordToRows } from "@/lib/recordExport";
+import { openPageForm, openQuickActions, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/transactions")({
   head: () => ({ meta: [{ title: "Transactions · Magnertia" }] }),
@@ -120,13 +122,16 @@ function TransactionsPage() {
 
   const viewInvoiceMutation = useMutation({
     mutationFn: (ref: string) => reportingEngineService.generateInvoiceDocument(QUERY, ref),
-    onSuccess: (result) => toast.success(`Invoice generated: ${result.fileName}`),
+    onSuccess: (_result, ref) => {
+      const row = listQuery.data?.rows.find((r) => r.ref === ref) ?? (detailQuery.data?.ref === ref ? detailQuery.data : undefined);
+      void exportRecords(`Invoice ${ref}`, recordToRows(row ?? { ref }), "pdf");
+    },
   });
 
   const exportMutation = useMutation({
     mutationFn: (format: "csv" | "xlsx" | "pdf") =>
       reportingEngineService.generateExport(QUERY, format),
-    onSuccess: (result) => toast.success(`Export ready: ${result.fileName}`),
+    onSuccess: (result, format) => void exportPageReport(result.fileName.replace(/\.\w+$/, "").replace(/_/g, " "), format, "page"),
   });
 
   function updateFilters(patch: Partial<TransactionFilters>) {
@@ -148,7 +153,14 @@ function TransactionsPage() {
       topbarActions={
         <ErpButton
           onClick={() =>
-            toast.info("Creating transactions isn't wired up yet — coming in a future release.")
+            openPageForm("New Transaction", [
+              { name: "date", label: "Date", type: "date", required: true },
+              { name: "type", label: "Type", type: "select", options: ["Receipt", "Payment", "Journal", "Transfer"] },
+              { name: "account", label: "Account / party", required: true },
+              { name: "amount", label: "Amount (₹)", type: "number", required: true },
+              { name: "reference", label: "Reference" },
+              { name: "narration", label: "Narration", type: "textarea" },
+            ], "Save Transaction")
           }
         >
           <Plus className="h-4 w-4" />
@@ -224,7 +236,7 @@ function TransactionsPage() {
           </DropdownMenuContent>
         </DropdownMenu>
         <button
-          onClick={() => toast.info("More actions are coming in a future release.")}
+          onClick={(e) => openQuickActions(e)}
           className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50"
         >
           More Actions
@@ -270,7 +282,7 @@ function TransactionsPage() {
               Clear All
             </button>
             <button
-              onClick={() => toast.info("Saved views are coming in a future release.")}
+              onClick={() => void savePageState("Saved view (current filters)", { message: "View saved. These filters will be applied next time you open Transactions." })}
               className="text-[12px] font-medium text-muted-foreground hover:underline"
             >
               Save View

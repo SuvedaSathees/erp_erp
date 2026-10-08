@@ -103,6 +103,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
+import { openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/supply-chain-management/inventory")({
   head: () => ({
@@ -458,7 +460,7 @@ function InventoryPage() {
                 <DropdownMenuItem onClick={() => window.print()} className="gap-2 text-xs cursor-pointer">
                   <Printer className="h-3.5 w-3.5 text-muted-foreground" /> Print Stock Card
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.success("Stock sheet exported to CSV")} className="gap-2 text-xs cursor-pointer">
+                <DropdownMenuItem onClick={() => void exportPageReport("Stock Sheet", "csv")} className="gap-2 text-xs cursor-pointer">
                   <Download className="h-3.5 w-3.5 text-muted-foreground" /> Export Stock Ledger
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -904,7 +906,7 @@ function InventoryPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => toast.info("Showing real-time synced stock movements ledger.")}
+                      onClick={(e) => openPageViewer("Stock Movements Ledger", e.currentTarget)}
                       className="h-7 text-xs"
                     >
                       View All Movements

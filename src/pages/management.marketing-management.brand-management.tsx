@@ -18,6 +18,7 @@ import { MarketingManagementTabBar } from "@/components/erp/MarketingManagementT
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { savePageState } from "@/lib/pageActions";
 
 export const TABS = [
   { id: "identity", label: "Brand Identity & Colors" },
@@ -32,17 +33,9 @@ export function BrandingManagementPage() {
   const [activeTab, setActiveTab] = useState<TabId>("identity");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
 
-  const handleSave = () => {
-    toast.success("Brand Record Saved", {
-      description: "BR-2026-001 synchronized across all marketing channels and asset stores.",
-    });
-  };
+  const handleSave = () => { void savePageState("Brand Record saved", { message: "Brand Record saved." }); };
 
-  const handleSubmitApproval = () => {
-    toast.success("Submitted for Brand Governance Approval", {
-      description: "Dossier dispatched to Chief Marketing Officer and Brand Governance Board.",
-    });
-  };
+  const handleSubmitApproval = () => { void savePageState("Submitted for Brand Governance Approval", { kind: "request", message: "Submitted for Brand Governance Approval. Recorded in the activity log." }); };
 
   return (
     <AppShell

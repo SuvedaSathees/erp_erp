@@ -61,6 +61,8 @@ import {
   Zap,
 } from "lucide-react";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
+import { savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/workforce-planning")({
   head: () => ({
@@ -1114,11 +1116,7 @@ function WorkforcePlanningPage() {
   const [newDemandForecast, setNewDemandForecast] = useState("15");
   const [newDemandGrowth, setNewDemandGrowth] = useState("50");
 
-  const handleSavePlan = () => {
-    toast.success("Workforce Plan WFPL-2024-0001 saved successfully", {
-      description: "All changes across 16 sub-dimensions synchronized to central ERP database.",
-    });
-  };
+  const handleSavePlan = () => { void savePageState("Workforce Plan WFPL-2024-0001 saved", { message: "Workforce Plan WFPL-2024-0001 saved." }); };
 
   const handleStatusProgress = (newStatus: PlanStatusType) => {
     setMaster((prev) => ({ ...prev, status: newStatus }));
@@ -1181,9 +1179,7 @@ function WorkforcePlanningPage() {
   };
 
   const handleExportData = (type: "excel" | "pdf") => {
-    toast.success(`Workforce Plan exported as ${type.toUpperCase()}`, {
-      description: `Downloaded WFPL-2024-0001_${new Date().toISOString().slice(0, 10)}.${type === "excel" ? "xlsx" : "pdf"}`,
-    });
+    void exportPageReport("Workforce Plan WFPL-2024-0001", type === "excel" ? "xlsx" : "pdf");
   };
 
   const formatCurrency = (val: number) => {

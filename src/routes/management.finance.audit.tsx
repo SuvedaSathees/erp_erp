@@ -83,6 +83,7 @@ import type {
   ConfigurationLogEntry,
   DashboardQuery,
 } from "@/services/types";
+import { exportPageReport, formatFrom } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/finance/audit")({
   head: () => ({
@@ -157,7 +158,7 @@ function AuditTrailPage() {
 
   const handleExportSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(`Audit logs successfully compiled and exported in ${exportFormat} format.`);
+    void exportPageReport("Audit Logs", formatFrom(exportFormat), "page");
     setExportOpen(false);
   };
 

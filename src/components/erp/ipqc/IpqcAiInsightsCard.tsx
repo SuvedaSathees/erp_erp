@@ -9,6 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
 
 interface IpqcAiInsightsCardProps {
   insights: string[];
@@ -120,8 +121,8 @@ export const IpqcAiInsightsCard: React.FC<IpqcAiInsightsCardProps> = ({
             <Button
               size="sm"
               onClick={() => {
+                void exportPageReport("IPQC AI Telemetry Diagnostics", "pdf");
                 setIsModalOpen(false);
-                toast.success("Exported AI telemetry parameters to station log");
               }}
               className="text-xs bg-primary hover:bg-primary text-white font-semibold"
             >

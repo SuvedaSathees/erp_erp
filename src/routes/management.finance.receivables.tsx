@@ -77,6 +77,8 @@ import type {
   ReceivableInvoiceStatus,
   ReceivableTrendPoint,
 } from "@/services/types";
+import { exportPageReport, exportRecords } from "@/lib/recordExport";
+import { goToPage, openQuickActions } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/finance/receivables")({
   head: () => ({ meta: [{ title: "Accounts Receivable · Magnertia" }] }),
@@ -215,10 +217,12 @@ function AccountsReceivablePage() {
   });
 
   const statementMutation = useMutation({
-    mutationFn: (customer: string) =>
-      reportingEngineService.generateCustomerStatement(QUERY, customer),
-    onSuccess: (result) => {
-      toast.success(`Statement ready: ${result.fileName}`);
+    mutationFn: async (customer: string) => {
+      const res = await accountsReceivableService.retrieveInvoiceList(QUERY, { search: customer, status: "All", page: 1, pageSize: 500 });
+      return { customer, rows: res.rows.filter((r) => r.customer === customer) };
+    },
+    onSuccess: ({ customer, rows }) => {
+      void exportRecords(`Customer Statement - ${customer}`, rows, "pdf");
       setStatementOpen(false);
     },
   });
@@ -226,7 +230,7 @@ function AccountsReceivablePage() {
   const exportMutation = useMutation({
     mutationFn: (format: "csv" | "xlsx" | "pdf") =>
       reportingEngineService.generateAccountsReceivableExport(QUERY, format),
-    onSuccess: (result) => toast.success(`Export ready: ${result.fileName}`),
+    onSuccess: (result, format) => void exportPageReport(result.fileName.replace(/\.\w+$/, "").replace(/_/g, " "), format, "page"),
   });
 
   function updateFilters(patch: Partial<ReceivableInvoiceFilters>) {
@@ -422,7 +426,7 @@ function AccountsReceivablePage() {
               </DropdownMenuContent>
             </DropdownMenu>
             <button
-              onClick={() => toast.info("More actions are coming in a future release.")}
+              onClick={(e) => openQuickActions(e)}
               className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50"
             >
               More Actions
@@ -547,7 +551,7 @@ function AccountsReceivablePage() {
         <QuickActionsBar
           onNewInvoice={() => setCreateOpen(true)}
           onReceivePayment={() => setPaymentInvoiceNo("")}
-          onCustomerList={() => toast.info("Customer list is coming in a future release.")}
+          onCustomerList={() => goToPage("/management/crm-management/account-management")}
           onStatementOfAccount={() => setStatementOpen(true)}
           onSendReminder={() => toast.info("Select an invoice from the table to send a reminder.")}
           onCreditMemo={() => setCreditMemoOpen(true)}

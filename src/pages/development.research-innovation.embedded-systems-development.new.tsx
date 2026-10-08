@@ -94,6 +94,8 @@ import type {
   EmbeddedDevelopmentRecord,
   EmbeddedDevelopmentStage,
 } from "@/services/types";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { goToPage } from "@/lib/pageActions";
 
 export function EmbeddedSystemsFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <EmbeddedDevelopmentNewPage {...props} />;
@@ -503,7 +505,7 @@ export function EmbeddedDevelopmentNewPage({
             </div>
             <Button
               size="sm"
-              onClick={() => toast.info("Navigating to Firmware Development (FWD-2024-0017)...")}
+              onClick={() => goToPage("/development/research-innovation/firmware-development")}
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
             >
               Proceed to Firmware Development
@@ -1125,7 +1127,7 @@ export function EmbeddedDevelopmentNewPage({
                       </div>
                       <button
                         type="button"
-                        onClick={() => toast.info(`Downloading ${att.name}...`)}
+                        onClick={() => void downloadAttachment(att)}
                         className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
                         title="Download file"
                       >
@@ -1352,7 +1354,7 @@ export function EmbeddedDevelopmentNewPage({
               <Button variant="outline" onClick={() => setReportModalOpen(false)}>
                 Close
               </Button>
-              <Button onClick={() => { toast.success("Downloaded Embedded_Systems_Report.pdf"); setReportModalOpen(false); }}>
+              <Button onClick={() => { void exportPageReport("Embedded Systems Report", "pdf"); setReportModalOpen(false); }}>
                 <Download className="h-4 w-4 mr-1.5" /> Download PDF Report
               </Button>
             </DialogFooter>

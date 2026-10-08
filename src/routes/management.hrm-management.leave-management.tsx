@@ -91,6 +91,8 @@ import {
   Landmark,
 } from "lucide-react";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
+import { openPageForm, openQuickActions, savePageForm } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/leave-management")({
   head: () => ({
@@ -234,7 +236,7 @@ function LeaveManagementPage() {
             <div className="flex items-center flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => toast.info("New Leave Request form active")}
+                onClick={() => openPageForm("New Leave Request", "leave", "Submit Request")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition shadow-xs cursor-pointer"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -242,7 +244,7 @@ function LeaveManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Leave summary exported to Excel")}
+                onClick={() => void exportPageReport("Leave Summary", "xlsx")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
@@ -251,7 +253,7 @@ function LeaveManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("More leave options")}
+                onClick={(e) => openQuickActions(e)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 More
@@ -259,7 +261,7 @@ function LeaveManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Leave record saved")}
+                onClick={(e) => savePageForm("Leave record saved", e.currentTarget)}
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
               >
                 <Save className="h-3.5 w-3.5" />
@@ -586,7 +588,7 @@ function LeaveManagementPage() {
                   <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
                     <button
                       type="button"
-                      onClick={() => toast.info("Leave request saved as Draft")}
+                      onClick={(e) => savePageForm("Leave request saved as Draft", e.currentTarget)}
                       className="px-4 py-2 text-xs font-semibold rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition cursor-pointer"
                     >
                       Save as Draft
@@ -874,7 +876,7 @@ function LeaveManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Leave policy & accrual rules exported")}
+                onClick={() => void exportPageReport("Leave Policy & Accrual Rules", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <Download className="h-3.5 w-3.5" />
@@ -1045,7 +1047,7 @@ function LeaveManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Encashment request submitted to Payroll")}
+                onClick={(e) => savePageForm("Encashment request submitted to Payroll", e.currentTarget)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer shadow-xs"
               >
                 <Plus className="h-3.5 w-3.5" />

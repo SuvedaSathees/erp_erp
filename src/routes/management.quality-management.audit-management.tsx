@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/quality-management/audit-management",
@@ -185,9 +186,7 @@ function AuditManagementPage() {
     toast.success(`Switched active audit dossier to ${newPartial.auditNumber}`);
   };
 
-  const handleSave = () => {
-    toast.success(`Audit record ${record.auditNumber} draft saved successfully`);
-  };
+  const handleSave = () => { void savePageState(`Audit record ${record.auditNumber} draft saved`, { message: `Audit record ${record.auditNumber} draft saved.` }); };
 
   const handleSubmitAudit = () => {
     setRecord((prev) => ({ ...prev, auditStatus: "Completed", workflowStatus: "Completed" }));

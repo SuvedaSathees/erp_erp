@@ -20,6 +20,7 @@ import { MarketingManagementTabBar } from "@/components/erp/MarketingManagementT
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { openPageForm, logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/marketing-management/social-media"
@@ -76,23 +77,11 @@ function SocialMediaManagementPage() {
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [dateRange] = useState("01 Sep 2026 - 30 Sep 2026");
 
-  const handleNewPost = () => {
-    toast.success("Post Composer Opened", {
-      description: "Drafting multi-platform post across LinkedIn, X, Instagram, and YouTube.",
-    });
-  };
+  const handleNewPost = () => { openPageForm("New Social Post", "post", "Save Post"); };
 
-  const handleSchedulePost = () => {
-    toast.info("Scheduler Activated", {
-      description: "Auto-optimal posting time set to 11:30 AM IST.",
-    });
-  };
+  const handleSchedulePost = () => { openPageForm("Schedule Post", "schedule", "Schedule"); };
 
-  const handleGenerateAI = () => {
-    toast.success("AI Social Intelligence Engine Generated 5 Creatives", {
-      description: "Optimized hooks and hashtags for autonomous EV charging fleets.",
-    });
-  };
+  const handleGenerateAI = () => { void logPageAction("AI creative generation requested"); };
 
   return (
     <AppShell

@@ -34,6 +34,7 @@ import { MarketingManagementTabBar } from "@/components/erp/MarketingManagementT
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { savePageState, logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/marketing-management/digital-marketing"
@@ -94,23 +95,11 @@ function DigitalMarketingManagementPage() {
   const [utmMedium, setUtmMedium] = useState("cpc");
   const [utmCampaign, setUtmCampaign] = useState("autonomous-charging-fy26");
 
-  const handleSave = () => {
-    toast.success("Digital Marketing Strategy Saved", {
-      description: "Draft records and budget allocations updated in ERP.",
-    });
-  };
+  const handleSave = () => { void savePageState("Digital Marketing Strategy saved", { message: "Digital Marketing Strategy saved." }); };
 
-  const handleSubmitApproval = () => {
-    toast.success("Submitted for Management Review", {
-      description: "Approval routed to Marketing Director & Finance Controller.",
-    });
-  };
+  const handleSubmitApproval = () => { void savePageState("Submitted for Management Review", { kind: "request", message: "Submitted for Management Review. Recorded in the activity log." }); };
 
-  const handleLaunch = () => {
-    toast.success("Digital Campaign Launched & Live", {
-      description: "All tracking pixels, UTM pipelines, and CRM integrations are broadcasting.",
-    });
-  };
+  const handleLaunch = () => { void logPageAction("Digital campaign launch approved", { message: "Campaign launch recorded. Publishing to ad channels isn't connected yet." }); };
 
   return (
     <AppShell

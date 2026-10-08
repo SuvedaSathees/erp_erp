@@ -108,6 +108,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { toast } from "sonner";
+import { exportPageReport, exportRecords, recordToRows } from "@/lib/recordExport";
+import { openPageFiles, openQuickActions, refreshPageData, logPageAction, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/payroll-management")({
   head: () => ({
@@ -172,11 +174,7 @@ function PayrollManagementPage() {
   const [isProcessModalOpen, setIsProcessModalOpen] = useState(false);
   const [isAdvanceModalOpen, setIsAdvanceModalOpen] = useState(false);
 
-  const handleApprovePayroll = () => {
-    toast.success("April 2024 Payroll approved successfully", {
-      description: "Payroll locked for 125 employees. Bank payment file and payslips generated.",
-    });
-  };
+  const handleApprovePayroll = () => { void savePageState("April 2024 Payroll approved", { kind: "request", message: "April 2024 Payroll approved. Recorded in the activity log." }); };
 
   return (
     <AppShell
@@ -208,7 +206,7 @@ function PayrollManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("Import attendance & leave data dialog opened")}
+                onClick={() => openPageFiles("Import Attendance & Leave Data", ".csv,.xlsx,.xls")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Upload className="h-3.5 w-3.5 text-blue-600" />
@@ -216,7 +214,7 @@ function PayrollManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Payroll Register downloaded as XLSX")}
+                onClick={() => void exportPageReport("Payroll Register", "xlsx")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
@@ -225,7 +223,7 @@ function PayrollManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("More payroll tools opened")}
+                onClick={(e) => openQuickActions(e)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 More
@@ -767,7 +765,7 @@ function PayrollManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Statutory Challans exported for EPFO & ESIC portals")}
+                onClick={() => void exportPageReport("Statutory Challans (EPFO & ESIC)", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <Download className="h-3.5 w-3.5" />
@@ -815,7 +813,7 @@ function PayrollManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Attendance synced successfully with Biometric Punch DB")}
+                onClick={() => void refreshPageData("Attendance data")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
@@ -860,7 +858,7 @@ function PayrollManagementPage() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => toast.success("Batch payslips emailed to all 125 employees")}
+                  onClick={() => void logPageAction("Payslip email batch requested for 125 employees", { message: "Payslip email batch recorded. Email sending isn't connected yet, so nothing was emailed." })}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-xs"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -868,7 +866,7 @@ function PayrollManagementPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => toast.success("Downloading zip archive of all May 2024 payslips")}
+                  onClick={() => void exportPageReport("May 2024 Payslips Register", "pdf")}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
                 >
                   <Download className="h-3.5 w-3.5" />
@@ -906,7 +904,7 @@ function PayrollManagementPage() {
                       <td className="py-3 px-3 text-center">
                         <button
                           type="button"
-                          onClick={() => toast.success(`Payslip downloaded for ${emp.name}`)}
+                          onClick={() => void exportRecords(`Payslip - ${emp.name}`, recordToRows(emp), "pdf")}
                           className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline cursor-pointer"
                         >
                           <Download className="h-3.5 w-3.5" />
@@ -936,7 +934,7 @@ function PayrollManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Bank NEFT/RTGS payment batch file generated")}
+                onClick={() => void exportPageReport("Bank NEFT-RTGS Payment Batch", "csv", "page")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer shadow-xs"
               >
                 <CreditCard className="h-3.5 w-3.5" />

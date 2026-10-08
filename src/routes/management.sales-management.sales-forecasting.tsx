@@ -43,6 +43,8 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { exportPageReport } from "@/lib/recordExport";
+import { savePageForm, discardPageChanges, openPageViewer, openPageFiles } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/sales-management/sales-forecasting")({
   head: () => ({
@@ -220,7 +222,7 @@ function SalesForecastingPage() {
 
             <div className="flex items-center gap-2 shrink-0 flex-nowrap">
               <button
-                onClick={() => toast.success("Forecast draft saved to ERP database.")}
+                onClick={(e) => savePageForm("Forecast draft saved", e.currentTarget)}
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-border bg-white text-slate-700 hover:bg-muted cursor-pointer"
               >
                 <Save className="h-3.5 w-3.5" /> Save Draft
@@ -364,7 +366,7 @@ function SalesForecastingPage() {
                 <div>
                   <div className="flex items-center justify-between pb-2 border-b border-border/60">
                     <h3 className="text-sm font-bold font-display text-slate-900">Filter & Dimension Selection</h3>
-                    <button onClick={() => toast.info("Filters reset.")} className="text-[11px] text-muted-foreground hover:text-slate-800">
+                    <button onClick={() => discardPageChanges()} className="text-[11px] text-muted-foreground hover:text-slate-800">
                       Reset
                     </button>
                   </div>
@@ -388,7 +390,7 @@ function SalesForecastingPage() {
                   </div>
                 </div>
                 <button
-                  onClick={() => toast.info("Opening advanced dimension filter...")}
+                  onClick={(e) => openPageViewer("Opening advanced dimension filter", e.currentTarget)}
                   className="text-primary text-xs font-semibold text-center hover:underline pt-2 border-t border-border"
                 >
                   Advanced Filters ▽
@@ -667,13 +669,13 @@ function SalesForecastingPage() {
                       ⚡ Run AI Forecast
                     </button>
                     <button
-                      onClick={() => toast.success("Imported 12 customer commitments from CRM!")}
+                      onClick={() => openPageFiles("Import Customer Commitments", ".csv,.xlsx,.xls")}
                       className="p-2 rounded-lg border border-slate-200 bg-slate-50 text-left font-semibold text-slate-700 hover:bg-slate-100 cursor-pointer"
                     >
                       📥 Import CRM FC
                     </button>
                     <button
-                      onClick={() => toast.success("Exporting Forecast SF-2026-09-001 to XLSX...")}
+                      onClick={() => void exportPageReport("Forecast SF-2026-09-001", "xlsx")}
                       className="p-2 rounded-lg border border-slate-200 bg-slate-50 text-left font-semibold text-slate-700 hover:bg-slate-100 cursor-pointer"
                     >
                       📊 Export to Excel

@@ -59,7 +59,8 @@ import {
 } from "@/services/decisionSupportService";
 import { cn } from "@/lib/utils";
 
-import { useModuleDataset } from "@/services/moduleDatasetService";
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
 export const Route = createFileRoute(
   "/management/business-intelligence/decision-support"
 )({
@@ -116,8 +117,7 @@ function DecisionSupportPage() {
   const [dateRange, setDateRange] = useState("01 Sep 2026 - 30 Sep 2026");
   const [activeDecisionTab, setActiveDecisionTab] = useState<string>("Overview");
   const [selectedDecision, setSelectedDecision] = useState<DecisionRecord>(DSS_RECENT_DECISIONS[0]);
-  const [dssList, setDssList] = useState<DecisionRecord[]>(DSS_RECENT_DECISIONS);
-  useEffect(() => { setDssList(DSS_RECENT_DECISIONS); }, [DSS_RECENT_DECISIONS]);
+  const [dssList, setDssList] = usePersistentState<DecisionRecord[]>("business-intelligence.decision-support", "Decision Support", "DSS_RECENT_DECISIONS", DSS_RECENT_DECISIONS);
   const [showNewModal, setShowNewModal] = useState(false);
   const [newTopic, setNewTopic] = useState("");
   const [newArea, setNewArea] = useState("Operations");
@@ -200,10 +200,9 @@ function DecisionSupportPage() {
             setDateRange(r);
             showToast(`Decision date window updated: ${r}`);
           }}
-          onRefresh={() => showToast("Decision scenarios and simulations refreshed.")}
-          onExportCsv={() => showToast("Exported decisions registry to CSV (.csv)")}
-          onExportExcel={() => showToast("Exported scenario matrix to Excel (.xlsx)")}
-          onExportPdf={() => showToast("Generated Executive Decision Dossier (.pdf)")}
+          onExportCsv={() => exportRecords("Decision Register", dssList, "csv")}
+          onExportExcel={() => exportRecords("Decision Register", dssList, "xlsx")}
+          onExportPdf={() => exportRecords("Decision Register", dssList, "pdf")}
         />
 
         {/* 7-Gauge Circular Score Banner matching Image 3 */}

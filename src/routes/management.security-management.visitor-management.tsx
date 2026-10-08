@@ -58,6 +58,8 @@ import {
 import { toast } from "sonner";
 
 import { useModuleDataset } from "@/services/moduleDatasetService";
+import { usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
 export const Route = createFileRoute(
   "/management/security-management/visitor-management"
 )({
@@ -138,7 +140,7 @@ const PAGE_DATASET = { PURPOSE_DATA, FACILITY_VISITOR_DATA, VISITOR_TREND_DATA }
 
 function VisitorManagementPage() {
   const { PURPOSE_DATA, FACILITY_VISITOR_DATA, VISITOR_TREND_DATA } = useModuleDataset("security-management.visitor-management", "Visitor Management", PAGE_DATASET);
-  const [visitors, setVisitors] = useState<VisitorRecord[]>(mockTodayVisitors);
+  const [visitors, setVisitors] = usePersistentState<VisitorRecord[]>("security-management.visitor-management", "Visitor Management", "visitors", mockTodayVisitors);
   const [visitorFilterTab, setVisitorFilterTab] = useState<
     "All" | "Expected" | "Checked-In" | "On-Site" | "Checked-Out"
   >("All");
@@ -212,7 +214,26 @@ function VisitorManagementPage() {
       setCheckInStep(checkInStep + 1);
       toast.info(`Proceeded to Step ${checkInStep + 1}`);
     } else {
-      toast.success(`Check-In Completed! Badge VIS-084 issued to ${walkinName}.`);
+      const badgeNo = `VIS-${String(visitors.length + 1).padStart(3, "0")}`;
+      setVisitors((prev) => [
+        {
+          ...prev[0],
+          id: `vis-${Date.now()}`,
+          name: walkinName,
+          organization: walkinOrg,
+          purpose: walkinPurpose,
+          host: walkinHost,
+          facility: walkinFacility,
+          visitDate: new Date().toISOString().slice(0, 10),
+          time: new Date().toTimeString().slice(0, 5),
+          status: "Checked-In",
+          badgeNo,
+          idType: selectedIdType,
+          escortRequired,
+        } as VisitorRecord,
+        ...prev,
+      ]);
+      toast.success(`Check-in completed. Badge ${badgeNo} issued to ${walkinName}.`);
       setCheckInStep(1);
     }
   };
@@ -242,7 +263,7 @@ function VisitorManagementPage() {
           bannerQuote="Ensuring seamless hospitality with zero-trust physical security across all Magnertia corporate, factory, and R&D facilities."
           primaryActionLabel="+ New Visitor Request"
           onPrimaryAction={() => setShowNewRequestModal(true)}
-          onGenerateReport={() => toast.success("Exporting Daily Visitor Activity Report...")}
+          onGenerateReport={() => exportRecords("Visitor Activity Report", visitors, "pdf")}
           onMoreActions={(act) => toast.info(`Action: ${act}`)}
         />
 

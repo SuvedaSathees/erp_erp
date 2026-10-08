@@ -57,7 +57,8 @@ import {
 } from "@/services/dataWarehouseService";
 import { cn } from "@/lib/utils";
 
-import { useModuleDataset } from "@/services/moduleDatasetService";
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
 const DW_TABS = [
   "Overview",
   "Project Details",
@@ -119,8 +120,7 @@ export function DataWarehouseDevelopmentPage({
   const [showPipelinesModal, setShowPipelinesModal] = useState(false);
   const [showSourcesModal, setShowSourcesModal] = useState(false);
 
-  const [pipelines, setPipelines] = useState(DW_RECENT_PIPELINES);
-  useEffect(() => { setPipelines(DW_RECENT_PIPELINES); }, [DW_RECENT_PIPELINES]);
+  const [pipelines, setPipelines] = usePersistentState("digital-development.data-warehouse-development", "Data Warehouse Development", "DW_RECENT_PIPELINES", DW_RECENT_PIPELINES);
   const [newProject, setNewProject] = useState({
     name: "",
     source: "ERP (PostgreSQL)",
@@ -182,10 +182,9 @@ export function DataWarehouseDevelopmentPage({
           subtitle="Enterprise lakehouse architecture, multi-source ingestion, dimensional star schemas, ETL/ELT pipelines, and data governance."
           primaryActionLabel="+ New Warehouse Project"
           onPrimaryAction={() => setShowNewProjectModal(true)}
-          onRefresh={() => showToast("Warehouse pipeline health and schema telemetry refreshed.")}
-          onExportCsv={() => showToast("Exported pipeline registry to CSV (.csv)")}
-          onExportExcel={() => showToast("Exported schema dictionary to Excel (.xlsx)")}
-          onExportPdf={() => showToast("Generated Lakehouse Architecture Blueprint (.pdf)")}
+          onExportCsv={() => exportRecords("Data Warehouse Pipelines", pipelines, "csv")}
+          onExportExcel={() => exportRecords("Data Warehouse Pipelines", pipelines, "xlsx")}
+          onExportPdf={() => exportRecords("Data Warehouse Pipelines", pipelines, "pdf")}
         />
 
         {/* 7-Gauge Circular Score Banner matching Image 3 */}

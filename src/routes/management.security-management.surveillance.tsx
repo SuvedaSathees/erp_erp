@@ -60,6 +60,9 @@ import {
 import { toast } from "sonner";
 
 import { useModuleDataset } from "@/services/moduleDatasetService";
+import { usePersistentState } from "@/services/moduleDatasetService";
+import { QuickCreateDialog } from "@/components/erp/QuickCreateDialog";
+import { exportRecords } from "@/lib/recordExport";
 export const Route = createFileRoute(
   "/management/security-management/surveillance"
 )({
@@ -112,7 +115,8 @@ const PAGE_DATASET = { EVENT_TREND_DATA, ZONE_STATUS_DATA };
 
 function SurveillanceManagementPage() {
   const { EVENT_TREND_DATA, ZONE_STATUS_DATA } = useModuleDataset("security-management.surveillance", "Surveillance Management", PAGE_DATASET);
-  const [cameras, setCameras] = useState<SurveillanceCamera[]>(mockSurveillanceCameras);
+  const [newCameraOpen, setNewCameraOpen] = useState(false);
+  const [cameras, setCameras] = usePersistentState<SurveillanceCamera[]>("security-management.surveillance", "Surveillance Management", "cameras", mockSurveillanceCameras);
   const [selectedCamera, setSelectedCamera] = useState<SurveillanceCamera>(
     mockSurveillanceCameras[3] || mockSurveillanceCameras[0] // CAM-PRK-04 default
   );
@@ -185,8 +189,8 @@ function SurveillanceManagementPage() {
           slogan="Monitor. Detect. Respond. Secure Facilities."
           bannerQuote="Integrated real-time video intelligence and automated tamper alerts protecting Coimbatore, Namakkal, and remote charging hubs."
           primaryActionLabel="+ Add Camera Device"
-          onPrimaryAction={() => toast.info("Opening New Camera Commissioning wizard...")}
-          onGenerateReport={() => toast.success("Exporting CCTV Uptime & Incident Log (PDF)...")}
+          onPrimaryAction={() => setNewCameraOpen(true)}
+          onGenerateReport={() => exportRecords("CCTV Camera Register", cameras.map(({ liveImage, ...c }) => c), "pdf")}
           onMoreActions={(act) => toast.info(`Action: ${act}`)}
         />
 
@@ -813,6 +817,46 @@ function SurveillanceManagementPage() {
           </div>
         </div>
       </div>
+      <QuickCreateDialog
+        open={newCameraOpen}
+        onOpenChange={setNewCameraOpen}
+        title="Commission New Camera"
+        description="Registers the camera in the CCTV Master Register."
+        submitLabel="Commission Camera"
+        fields={[
+          { name: "cameraName", label: "Camera name", required: true, placeholder: "e.g. Gate 3 Entry" },
+          { name: "zone", label: "Zone", required: true, placeholder: "e.g. Perimeter" },
+          { name: "cameraType", label: "Camera type", type: "select", options: ["Fixed IP Camera", "PTZ Camera", "Thermal Camera", "Panoramic"] },
+          { name: "criticality", label: "Criticality", type: "select", options: ["High", "Critical", "Medium", "Low"] },
+          { name: "manufacturer", label: "Manufacturer", required: true, placeholder: "e.g. Hikvision" },
+          { name: "model", label: "Model", required: true, placeholder: "e.g. DS-2CD2143G2" },
+          { name: "ipAddress", label: "IP address", placeholder: "e.g. 10.20.4.31" },
+          { name: "securityClassification", label: "Classification", type: "select", options: ["Internal", "Confidential", "Restricted"] },
+        ]}
+        onSubmit={(v) => {
+          const base = cameras[0];
+          const n = cameras.length + 1;
+          const cam = {
+            ...base,
+            id: `cam-${Date.now()}`,
+            cameraCode: `CAM-${String(n).padStart(3, "0")}`,
+            cameraName: String(v.cameraName),
+            zone: String(v.zone),
+            cameraType: v.cameraType as typeof base.cameraType,
+            criticality: v.criticality as typeof base.criticality,
+            manufacturer: String(v.manufacturer),
+            model: String(v.model),
+            ipAddress: String(v.ipAddress || "—"),
+            serialNumber: "Pending",
+            macAddress: "Pending",
+            status: "Online" as const,
+            installationDate: new Date().toISOString().slice(0, 10),
+            securityClassification: v.securityClassification as typeof base.securityClassification,
+          };
+          setCameras((prev) => [...prev, cam]);
+          toast.success(`Camera ${cam.cameraCode} (${cam.cameraName}) commissioned in the Master Register`);
+        }}
+      />
     </AppShell>
   );
 }

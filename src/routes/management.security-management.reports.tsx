@@ -40,7 +40,8 @@ import {
 } from "@/services/securityManagementService";
 import { cn } from "@/lib/utils";
 
-import { useModuleDataset } from "@/services/moduleDatasetService";
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
 export const Route = createFileRoute("/management/security-management/reports")({
   component: SecurityReportsPage,
 });
@@ -58,9 +59,7 @@ const PAGE_DATASET = { CONTROLLED_SECURITY_REPORTS, SUBMODULE_CATEGORIES };
 
 function SecurityReportsPage() {
   const { CONTROLLED_SECURITY_REPORTS, SUBMODULE_CATEGORIES } = useModuleDataset("security-management.reports", "Security Reports", PAGE_DATASET);
-  const [reports, setReports] = useState<ControlledSecurityReport[]>(
-    CONTROLLED_SECURITY_REPORTS
-  );
+  const [reports, setReports] = usePersistentState<ControlledSecurityReport[]>("security-management.reports", "Security Reports", "CONTROLLED_SECURITY_REPORTS", CONTROLLED_SECURITY_REPORTS);
   const [selectedSubmodule, setSelectedSubmodule] = useState<string>("All Security Reports");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("All");
@@ -182,7 +181,7 @@ function SecurityReportsPage() {
           bannerQuote="Every access, identity, threat and physical event is continuously verified, recorded, and certified across the Magnertia ecosystem."
           primaryActionLabel="+ Register Report Template"
           onPrimaryAction={() => setShowCreateModal(true)}
-          onGenerateReport={() => showToast("Exporting Master Security Governance Dossier (PDF)...")}
+          onGenerateReport={() => exportRecords("Security Reports Register", reports, "pdf")}
           onMoreActions={(action) => showToast(`Executing action: ${action}`)}
         />
 

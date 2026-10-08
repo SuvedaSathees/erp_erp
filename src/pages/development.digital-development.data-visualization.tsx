@@ -59,7 +59,8 @@ import {
 } from "@/services/dataVisualizationService";
 import { cn } from "@/lib/utils";
 
-import { useModuleDataset } from "@/services/moduleDatasetService";
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
 const DV_TABS = [
   "Dashboard",
   "Visualization Library",
@@ -148,8 +149,7 @@ export function DataVisualizationPage({
   const [enableDrillDown, setEnableDrillDown] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [showNewModal, setShowNewModal] = useState(false);
-  const [catalog, setCatalog] = useState<VisualizationCatalogItem[]>(DV_CATALOG_ITEMS);
-  useEffect(() => { setCatalog(DV_CATALOG_ITEMS); }, [DV_CATALOG_ITEMS]);
+  const [catalog, setCatalog] = usePersistentState<VisualizationCatalogItem[]>("digital-development.data-visualization", "Data Visualization", "DV_CATALOG_ITEMS", DV_CATALOG_ITEMS);
 
   // Checkbox dimension states
   const [selectedDims, setSelectedDims] = useState<Record<string, boolean>>({
@@ -220,10 +220,9 @@ export function DataVisualizationPage({
             setCatalog([item, ...catalog]);
             showToast(`New visualization "${item.name}" registered.`);
           }}
-          onRefresh={() => showToast("Visualization rendering engine and datasets refreshed.")}
-          onExportCsv={() => showToast("Exported chart catalog to CSV (.csv)")}
-          onExportExcel={() => showToast("Exported dashboard layout specs to Excel (.xlsx)")}
-          onExportPdf={() => showToast("Exported high-res vector dashboard (.pdf)")}
+          onExportCsv={() => exportRecords("Visualization Catalog", catalog, "csv")}
+          onExportExcel={() => exportRecords("Visualization Catalog", catalog, "xlsx")}
+          onExportPdf={() => exportRecords("Visualization Catalog", catalog, "pdf")}
         />
 
         {/* 7-Gauge Circular Score Banner matching Image 3 */}

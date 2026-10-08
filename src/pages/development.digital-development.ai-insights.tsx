@@ -60,7 +60,8 @@ import {
 } from "@/services/aiInsightsService";
 import { cn } from "@/lib/utils";
 
-import { useModuleDataset } from "@/services/moduleDatasetService";
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
 const AI_TABS = [
   "Dashboard",
   "Use Cases",
@@ -143,8 +144,7 @@ export function AiInsightsPage({
   const [newTitle, setNewTitle] = useState("");
   const [newDomain, setNewDomain] = useState("Operations");
   const [newImpact, setNewImpact] = useState<"High" | "Medium" | "Critical">("High");
-  const [insightsList, setInsightsList] = useState<AiTopInsight[]>(AI_TOP_INSIGHTS);
-  useEffect(() => { setInsightsList(AI_TOP_INSIGHTS); }, [AI_TOP_INSIGHTS]);
+  const [insightsList, setInsightsList] = usePersistentState<AiTopInsight[]>("digital-development.ai-insights", "AI Insights", "AI_TOP_INSIGHTS", AI_TOP_INSIGHTS);
 
   const showToast = (msg: string) => {
     setToastMsg(msg);
@@ -236,10 +236,9 @@ export function AiInsightsPage({
           subtitle="Enterprise cognitive intelligence engine, explainable root-cause discovery, automated anomaly detection, and prescriptive decisions."
           primaryActionLabel="+ New AI Insight"
           onPrimaryAction={() => setShowNewModal(true)}
-          onRefresh={() => showToast("AI models, observations, and anomalies refreshed.")}
-          onExportCsv={() => showToast("Exported AI insights to CSV (.csv)")}
-          onExportExcel={() => showToast("Exported cognitive registry to Excel (.xlsx)")}
-          onExportPdf={() => showToast("Generated AI Executive Intelligence Dossier (.pdf)")}
+          onExportCsv={() => exportRecords("AI Insights", insightsList, "csv")}
+          onExportExcel={() => exportRecords("AI Insights", insightsList, "xlsx")}
+          onExportPdf={() => exportRecords("AI Insights", insightsList, "pdf")}
         />
 
         {/* 7-Gauge Circular Score Banner matching Image 3 */}

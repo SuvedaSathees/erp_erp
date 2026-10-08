@@ -53,6 +53,10 @@ import {
 import { toast } from "sonner";
 
 import { useModuleDataset } from "@/services/moduleDatasetService";
+import { usePersistentState } from "@/services/moduleDatasetService";
+import { SubmissionsPanel, makeSubmission, type Submission } from "@/components/erp/SubmissionsPanel";
+import { readFieldsNear } from "@/lib/formCapture";
+import { exportRecords, recordToRows } from "@/lib/recordExport";
 export const Route = createFileRoute("/management/security-management/cybersecurity")({
   head: () => ({
     meta: [
@@ -112,7 +116,8 @@ const PAGE_DATASET = { SECURITY_TREND_DATA, ASSETS_BY_TYPE, VULN_SEVERITY, INCID
 
 function CybersecurityPage() {
   const { SECURITY_TREND_DATA, ASSETS_BY_TYPE, VULN_SEVERITY, INCIDENT_STATUS_DATA } = useModuleDataset("security-management.cybersecurity", "Cybersecurity Management", PAGE_DATASET);
-  const [record, setRecord] = useState<CybersecurityRecord>(mockCybersecurityRecord);
+  const [record, setRecord] = usePersistentState<CybersecurityRecord>("security-management.cybersecurity", "Cybersecurity Management", "record", mockCybersecurityRecord);
+  const [submissions, setSubmissions] = usePersistentState<Submission[]>("security-management.cybersecurity", "Cybersecurity Management", "submissions", []);
   const [recordType, setRecordType] = useState<"Asset" | "Vulnerability" | "Incident" | "Risk">("Asset");
   const [showNewRecordModal, setShowNewRecordModal] = useState(false);
 
@@ -134,8 +139,10 @@ function CybersecurityPage() {
           bannerQuote="Secure People. Secure Systems. Secure Tomorrow."
           primaryActionLabel="+ New Security Record"
           onPrimaryAction={() => setShowNewRecordModal(true)}
-          onGenerateReport={() => toast.success("Cybersecurity Posture Report exported")}
+          onGenerateReport={() => exportRecords("Cybersecurity Management Report", recordToRows(record), "pdf")}
         />
+
+        <SubmissionsPanel title="Registered Cybersecurity Records" items={submissions} />
 
         {/* Executive 7-Gauge Circular Score Banner matching Screenshot */}
         <ProductScoreBanner submoduleKey="cybersecurity" />
@@ -873,9 +880,11 @@ function CybersecurityPage() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
                     setShowNewRecordModal(false);
-                    toast.success("Cybersecurity Asset record registered & enrolled in SIEM monitoring");
+                    const sub = makeSubmission(submissions, "CYB", readFieldsNear(e.currentTarget));
+                    setSubmissions((prev) => [sub, ...prev]);
+                    toast.success(`Record ${sub.code} registered & enrolled in SIEM monitoring`);
                   }}
                   className="rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
                 >

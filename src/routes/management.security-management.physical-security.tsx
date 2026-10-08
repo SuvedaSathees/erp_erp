@@ -56,6 +56,10 @@ import {
 import { toast } from "sonner";
 
 import { useModuleDataset } from "@/services/moduleDatasetService";
+import { usePersistentState } from "@/services/moduleDatasetService";
+import { SubmissionsPanel, makeSubmission, type Submission } from "@/components/erp/SubmissionsPanel";
+import { readFieldsNear } from "@/lib/formCapture";
+import { exportRecords, recordToRows } from "@/lib/recordExport";
 export const Route = createFileRoute("/management/security-management/physical-security")({
   head: () => ({
     meta: [
@@ -107,7 +111,8 @@ const PAGE_DATASET = { ACCESS_ACTIVITY_7DAYS, INCIDENT_STATUS_DATA, CCTV_HEALTH_
 
 function PhysicalSecurityPage() {
   const { ACCESS_ACTIVITY_7DAYS, INCIDENT_STATUS_DATA, CCTV_HEALTH_DATA, PATROL_COMPLIANCE_DATA } = useModuleDataset("security-management.physical-security", "Physical Security", PAGE_DATASET);
-  const [formData, setFormData] = useState<PhysicalSecurityMaster>(mockPhysicalSecurityRecord);
+  const [formData, setFormData] = usePersistentState<PhysicalSecurityMaster>("security-management.physical-security", "Physical Security", "formData", mockPhysicalSecurityRecord);
+  const [submissions, setSubmissions] = usePersistentState<Submission[]>("security-management.physical-security", "Physical Security", "submissions", []);
   const [showFacilityModal, setShowFacilityModal] = useState(false);
 
   return (
@@ -128,8 +133,10 @@ function PhysicalSecurityPage() {
           bannerQuote="Secure People. Secure Facilities. Secure Assets. A Safer Tomorrow."
           primaryActionLabel="+ New Facility"
           onPrimaryAction={() => setShowFacilityModal(true)}
-          onGenerateReport={() => toast.success("Physical Security Master Audit Report exported")}
+          onGenerateReport={() => exportRecords("Physical Security Report", recordToRows(formData), "pdf")}
         />
+
+        <SubmissionsPanel title="Registered Facilities" items={submissions} />
 
         {/* Executive 7-Gauge Circular Score Banner matching Screenshot */}
         <ProductScoreBanner submoduleKey="physical-security" />
@@ -559,7 +566,10 @@ function PhysicalSecurityPage() {
                 <Save className="h-3.5 w-3.5" /> Save
               </button>
               <button
-                onClick={() => toast.info("Submitted for Security Manager approval")}
+                onClick={() => {
+                  setFormData((prev) => ({ ...prev, securityStatus: "Under Review" }));
+                  toast.success("Submitted for Security Manager approval");
+                }}
                 className="rounded-xl border border-border bg-muted/30 px-3.5 py-1.5 text-xs font-semibold text-foreground hover:bg-muted"
               >
                 Submit for Approval
@@ -847,9 +857,11 @@ function PhysicalSecurityPage() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
                     setShowFacilityModal(false);
-                    toast.success("New Facility registered in Physical Security Master");
+                    const sub = makeSubmission(submissions, "FAC", readFieldsNear(e.currentTarget));
+                    setSubmissions((prev) => [sub, ...prev]);
+                    toast.success(`Facility ${sub.code} registered in the Physical Security Master`);
                   }}
                   className="rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
                 >

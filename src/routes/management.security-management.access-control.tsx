@@ -56,6 +56,10 @@ import {
 import { toast } from "sonner";
 
 import { useModuleDataset } from "@/services/moduleDatasetService";
+import { usePersistentState } from "@/services/moduleDatasetService";
+import { SubmissionsPanel, makeSubmission, type Submission } from "@/components/erp/SubmissionsPanel";
+import { readFieldsNear } from "@/lib/formCapture";
+import { exportRecords, recordToRows } from "@/lib/recordExport";
 export const Route = createFileRoute("/management/security-management/access-control")({
   head: () => ({
     meta: [
@@ -101,7 +105,8 @@ function AccessControlPage() {
   const { ACCESS_TREND_DATA, ROLES_PIE_DATA } = useModuleDataset("security-management.access-control", "Access Control", PAGE_DATASET);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showEditMasterModal, setShowEditMasterModal] = useState(false);
-  const [masterRecord, setMasterRecord] = useState<AccessControlRecord>(mockAccessControlMaster);
+  const [masterRecord, setMasterRecord] = usePersistentState<AccessControlRecord>("security-management.access-control", "Access Control", "masterRecord", mockAccessControlMaster);
+  const [submissions, setSubmissions] = usePersistentState<Submission[]>("security-management.access-control", "Access Control", "submissions", []);
 
   return (
     <AppShell
@@ -121,8 +126,10 @@ function AccessControlPage() {
           bannerQuote="Secure Access. Stronger Governance. A Safer Tomorrow."
           primaryActionLabel="+ New Access Request"
           onPrimaryAction={() => setShowRequestModal(true)}
-          onGenerateReport={() => toast.success("Access Control Master Audit Report exported")}
+          onGenerateReport={() => exportRecords("Access Control Report", recordToRows(masterRecord), "pdf")}
         />
+
+        <SubmissionsPanel title="Submitted Access Requests" items={submissions} />
 
         {/* Executive 7-Gauge Circular Score Banner matching Screenshot */}
         <ProductScoreBanner submoduleKey="access-control" />
@@ -804,9 +811,11 @@ function AccessControlPage() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
                     setShowRequestModal(false);
-                    toast.success("Access request REQ-2026-185 submitted for Manager & SoD review");
+                    const sub = makeSubmission(submissions, "REQ", readFieldsNear(e.currentTarget));
+                    setSubmissions((prev) => [sub, ...prev]);
+                    toast.success(`Access request ${sub.code} submitted for Manager & SoD review`);
                   }}
                   className="rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
                 >

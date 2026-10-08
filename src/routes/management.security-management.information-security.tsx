@@ -56,6 +56,10 @@ import {
 import { toast } from "sonner";
 
 import { useModuleDataset } from "@/services/moduleDatasetService";
+import { usePersistentState } from "@/services/moduleDatasetService";
+import { SubmissionsPanel, makeSubmission, type Submission } from "@/components/erp/SubmissionsPanel";
+import { readFieldsNear } from "@/lib/formCapture";
+import { exportRecords, recordToRows } from "@/lib/recordExport";
 export const Route = createFileRoute("/management/security-management/information-security")({
   head: () => ({
     meta: [
@@ -116,7 +120,8 @@ const PAGE_DATASET = { ASSETS_BY_TYPE_DATA, CLASSIFICATION_BARS, LIFECYCLE_PIE_D
 
 function InformationSecurityPage() {
   const { ASSETS_BY_TYPE_DATA, CLASSIFICATION_BARS, LIFECYCLE_PIE_DATA, INCIDENT_TREND } = useModuleDataset("security-management.information-security", "Information Security", PAGE_DATASET);
-  const [formData, setFormData] = useState<InformationSecurityMaster>(mockInformationSecurityRecord);
+  const [formData, setFormData] = usePersistentState<InformationSecurityMaster>("security-management.information-security", "Information Security", "formData", mockInformationSecurityRecord);
+  const [submissions, setSubmissions] = usePersistentState<Submission[]>("security-management.information-security", "Information Security", "submissions", []);
   const [showAssetModal, setShowAssetModal] = useState(false);
 
   return (
@@ -137,8 +142,10 @@ function InformationSecurityPage() {
           bannerQuote="Secure Information. Enable Trust. Drive Innovation."
           primaryActionLabel="+ New Information Asset"
           onPrimaryAction={() => setShowAssetModal(true)}
-          onGenerateReport={() => toast.success("Information Asset Master Register exported")}
+          onGenerateReport={() => exportRecords("Information Security Report", recordToRows(formData), "pdf")}
         />
+
+        <SubmissionsPanel title="Registered Information Assets" items={submissions} />
 
         {/* Executive 7-Gauge Circular Score Banner matching Screenshot */}
         <ProductScoreBanner submoduleKey="information-security" />
@@ -705,13 +712,16 @@ function InformationSecurityPage() {
                 </div>
                 <div className="pt-2 flex items-center justify-end gap-2">
                   <button
-                    onClick={() => toast.info("Draft saved")}
+                    onClick={() => toast.success("Draft saved")}
                     className="rounded-lg border border-border px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-muted"
                   >
                     Save Draft
                   </button>
                   <button
-                    onClick={() => toast.success("Submitted for annual ISMS audit review")}
+                    onClick={() => {
+                      setFormData((prev) => ({ ...prev, status: "Under Review" }));
+                      toast.success("Submitted for annual ISMS audit review");
+                    }}
                     className="rounded-lg bg-primary px-3 py-1 text-[11px] font-semibold text-primary-foreground hover:bg-primary/90"
                   >
                     Submit
@@ -903,9 +913,11 @@ function InformationSecurityPage() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
                     setShowAssetModal(false);
-                    toast.success("Information Asset registered in ISMS Master Register");
+                    const sub = makeSubmission(submissions, "ISA", readFieldsNear(e.currentTarget));
+                    setSubmissions((prev) => [sub, ...prev]);
+                    toast.success(`Information asset ${sub.code} registered in the ISMS Master Register`);
                   }}
                   className="rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
                 >

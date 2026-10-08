@@ -59,7 +59,8 @@ import {
 } from "@/services/predictiveAnalyticsService";
 import { cn } from "@/lib/utils";
 
-import { useModuleDataset } from "@/services/moduleDatasetService";
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
 const PREDICTIVE_TABS = [
   "Dashboard",
   "Use Cases",
@@ -110,12 +111,9 @@ export function PredictiveAnalyticsPage({
   const [selectedModel, setSelectedModel] = useState("EV Charging Demand Model");
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
-  const [useCases, setUseCases] = useState(PREDICTIVE_USE_CASES);
-  useEffect(() => { setUseCases(PREDICTIVE_USE_CASES); }, [PREDICTIVE_USE_CASES]);
-  const [predictions, setPredictions] = useState(PREDICTIVE_RECENT_PREDICTIONS);
-  useEffect(() => { setPredictions(PREDICTIVE_RECENT_PREDICTIONS); }, [PREDICTIVE_RECENT_PREDICTIONS]);
-  const [alerts, setAlerts] = useState(PREDICTIVE_ALERTS);
-  useEffect(() => { setAlerts(PREDICTIVE_ALERTS); }, [PREDICTIVE_ALERTS]);
+  const [useCases, setUseCases] = usePersistentState("digital-development.predictive-analytics", "Predictive Analytics", "PREDICTIVE_USE_CASES", PREDICTIVE_USE_CASES);
+  const [predictions, setPredictions] = usePersistentState("digital-development.predictive-analytics", "Predictive Analytics", "PREDICTIVE_RECENT_PREDICTIONS", PREDICTIVE_RECENT_PREDICTIONS);
+  const [alerts, setAlerts] = usePersistentState("digital-development.predictive-analytics", "Predictive Analytics", "PREDICTIVE_ALERTS", PREDICTIVE_ALERTS);
 
   const [showNewUseCaseModal, setShowNewUseCaseModal] = useState(false);
   const [showEditParamsModal, setShowEditParamsModal] = useState(false);
@@ -197,10 +195,9 @@ export function PredictiveAnalyticsPage({
           subtitle="Enterprise predictive intelligence engine, machine learning model registry, demand forecasting, and drift telemetry."
           primaryActionLabel="+ New Use Case"
           onPrimaryAction={() => setShowNewUseCaseModal(true)}
-          onRefresh={() => showToast("Inference metrics and model drift telemetry refreshed.")}
-          onExportCsv={() => showToast("Exported model inferences to CSV (.csv)")}
-          onExportExcel={() => showToast("Exported feature store registry to Excel (.xlsx)")}
-          onExportPdf={() => showToast("Generated Predictive Intelligence Whitepaper (.pdf)")}
+          onExportCsv={() => exportRecords("Predictive Use Cases", useCases, "csv")}
+          onExportExcel={() => exportRecords("Predictive Use Cases", useCases, "xlsx")}
+          onExportPdf={() => exportRecords("Predictive Use Cases", useCases, "pdf")}
         />
 
         {/* 7-Gauge Circular Score Banner matching Image 3 */}

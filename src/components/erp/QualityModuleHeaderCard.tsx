@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { exportVisibleTables } from "@/lib/recordExport";
 
 export interface QualityReportItem {
   label: string;
@@ -80,7 +81,7 @@ export function QualityModuleHeaderCard({
     if (onExportCsv) {
       onExportCsv();
     } else {
-      toast.success(`Exported ${title} to CSV (.csv)`);
+      void exportVisibleTables(title, "csv");
     }
   };
 
@@ -88,7 +89,7 @@ export function QualityModuleHeaderCard({
     if (onExportExcel) {
       onExportExcel();
     } else {
-      toast.success(`Exported ${title} to Excel (.xlsx)`);
+      void exportVisibleTables(title, "xlsx");
     }
   };
 
@@ -96,7 +97,7 @@ export function QualityModuleHeaderCard({
     if (onExportPdf) {
       onExportPdf();
     } else {
-      toast.success(`Exported ${title} to PDF (.pdf)`);
+      void exportVisibleTables(title, "pdf");
     }
   };
 

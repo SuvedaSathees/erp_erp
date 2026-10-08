@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { exportVisibleTables } from "@/lib/recordExport";
 
 export interface SecurityReportItem {
   label: string;
@@ -98,11 +100,13 @@ export function SecuritySubmoduleHeader({
     toast.success(`Selected date window: ${label}`);
   };
 
+  const queryClient = useQueryClient();
+
   const handleDefaultRefresh = () => {
     if (onRefresh) {
       onRefresh();
     } else {
-      toast.info(`Refreshed telemetry & logs for ${title}`);
+      void queryClient.invalidateQueries().then(() => toast.success(`${title} data refreshed`));
     }
   };
 
@@ -110,7 +114,7 @@ export function SecuritySubmoduleHeader({
     if (onExportCsv) {
       onExportCsv();
     } else {
-      toast.success(`Exported ${title} log to CSV (.csv)`);
+      void exportVisibleTables(title, "csv");
     }
   };
 
@@ -118,7 +122,7 @@ export function SecuritySubmoduleHeader({
     if (onExportExcel) {
       onExportExcel();
     } else {
-      toast.success(`Exported ${title} register to Excel (.xlsx)`);
+      void exportVisibleTables(title, "xlsx");
     }
   };
 
@@ -126,7 +130,7 @@ export function SecuritySubmoduleHeader({
     if (onExportPdf) {
       onExportPdf();
     } else {
-      toast.success(`Generated official ${title} dossier (.pdf)`);
+      void exportVisibleTables(title, "pdf");
     }
   };
 

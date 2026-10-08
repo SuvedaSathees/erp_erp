@@ -42,7 +42,8 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
-import { useModuleDataset } from "@/services/moduleDatasetService";
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { QuickCreateDialog } from "@/components/erp/QuickCreateDialog";
 export const Route = createFileRoute("/management/strategy-management/kpi-management")({
   head: () => ({
     meta: [
@@ -89,10 +90,21 @@ const trendBarData = [
   { month: "Sep", actual: 32.4, target: 50, forecast: 48 },
 ];
 
-const PAGE_DATASET = { performanceTrend, kpiStatusData, trendBarData };
+const KPI_REGISTER = [
+  { id: 1, name: "Revenue Growth", cat: "Financial", act: "12%", tgt: "20%", var: "-8%", st: "Critical" },
+  { id: 2, name: "Manufacturing OEE", cat: "Operations", act: "68%", tgt: "85%", var: "-17%", st: "At Risk" },
+  { id: 3, name: "Customer Acquisition", cat: "Commercial", act: "450", tgt: "600", var: "-25%", st: "At Risk" },
+  { id: 4, name: "Project Delivery (OTD)", cat: "Projects", act: "72%", tgt: "95%", var: "-23%", st: "Critical" },
+  { id: 5, name: "Energy Consumption", cat: "Sustainability", act: "18%", tgt: "15%", var: "+3%", st: "At Risk" },
+];
+
+const PAGE_DATASET = { performanceTrend, kpiStatusData, trendBarData, kpis: KPI_REGISTER };
 
 function KpiManagementPage() {
   const { performanceTrend, kpiStatusData, trendBarData } = useModuleDataset("strategy-management.kpi-management", "KPI Management", PAGE_DATASET);
+  const [kpis, setKpis] = usePersistentState("strategy-management.kpi-management", "KPI Management", "kpis", KPI_REGISTER);
+  const [newKpisOpen, setNewKpisOpen] = useState(false);
+  const [showAllKpis, setShowAllKpis] = useState(false);
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [execTab, setExecTab] = useState("Strategic");
@@ -168,7 +180,7 @@ function KpiManagementPage() {
             </div>
 
             <button
-              onClick={() => toast.success("Opening New KPI Definition Form")}
+              onClick={() => setNewKpisOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -351,7 +363,7 @@ function KpiManagementPage() {
           <div className="rounded-xl border bg-card p-4 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-sm text-foreground">Top 5 Critical / At-Risk KPIs</h3>
-              <span className="text-xs text-primary font-semibold hover:underline cursor-pointer">View All</span>
+              <button type="button" onClick={() => setShowAllKpis((v) => !v)} className="text-xs text-primary font-semibold hover:underline cursor-pointer">{showAllKpis ? "Show Less" : `View All (${kpis.length})`}</button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
@@ -367,13 +379,7 @@ function KpiManagementPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
-                  {[
-                    { id: 1, name: "Revenue Growth", cat: "Financial", act: "12%", tgt: "20%", var: "-8%", st: "Critical" },
-                    { id: 2, name: "Manufacturing OEE", cat: "Operations", act: "68%", tgt: "85%", var: "-17%", st: "At Risk" },
-                    { id: 3, name: "Customer Acquisition", cat: "Commercial", act: "450", tgt: "600", var: "-25%", st: "At Risk" },
-                    { id: 4, name: "Project Delivery (OTD)", cat: "Projects", act: "72%", tgt: "95%", var: "-23%", st: "Critical" },
-                    { id: 5, name: "Energy Consumption", cat: "Sustainability", act: "18%", tgt: "15%", var: "+3%", st: "At Risk" },
-                  ].map((row) => (
+                  {(showAllKpis ? kpis : kpis.slice(0, 5)).map((row) => (
                     <tr key={row.id}>
                       <td className="py-2 px-2.5 text-muted-foreground">{row.id}</td>
                       <td className="py-2 px-2.5 font-semibold text-foreground">{row.name}</td>
@@ -615,6 +621,28 @@ function KpiManagementPage() {
           </div>
         </div>
       </div>
+      <QuickCreateDialog
+        open={newKpisOpen}
+        onOpenChange={setNewKpisOpen}
+        title="New KPI"
+        description="Define a KPI to track against its target."
+        submitLabel="Create KPI"
+        fields={[
+          { name: "name", label: "KPI name", required: true, placeholder: "e.g. Charger Uptime" },
+          { name: "cat", label: "Category", type: "select", options: ["Financial", "Operations", "Commercial", "Projects", "Sustainability", "Strategic"] },
+          { name: "act", label: "Actual", required: true, placeholder: "e.g. 92%" },
+          { name: "tgt", label: "Target", required: true, placeholder: "e.g. 98%" },
+          { name: "var", label: "Variance", placeholder: "e.g. -6%" },
+          { name: "st", label: "Status", type: "select", options: ["At Risk", "Critical", "On Track"] },
+        ]}
+        onSubmit={(v) => {
+          setKpis((prev) => {
+            const nextId = Math.max(0, ...prev.map((r) => Number(r.id) || 0)) + 1;
+            return [...prev, { id: nextId, name: String(v.name), cat: String(v.cat), act: String(v.act), tgt: String(v.tgt), var: String(v.var || "—"), st: String(v.st) }];
+          });
+          toast.success(`KPI "${v.name}" created`);
+        }}
+      />
     </AppShell>
   );
 }

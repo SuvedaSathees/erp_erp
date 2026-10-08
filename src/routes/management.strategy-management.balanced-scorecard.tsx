@@ -36,7 +36,8 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
-import { useModuleDataset } from "@/services/moduleDatasetService";
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { QuickCreateDialog } from "@/components/erp/QuickCreateDialog";
 export const Route = createFileRoute("/management/strategy-management/balanced-scorecard")({
   head: () => ({
     meta: [
@@ -68,10 +69,21 @@ const trendData = [
   { period: "Q3 2026", score: 72 },
 ];
 
-const PAGE_DATASET = { perspectives, trendData };
+const SCORECARD_OBJECTIVES = [
+  { id: 1, name: "Increase Revenue by 15%", p: "Financial", prog: 82, st: "On Track" },
+  { id: 2, name: "Achieve OEE > 85%", p: "Internal Process", prog: 68, st: "At Risk" },
+  { id: 3, name: "Improve NPS to > 60", p: "Customer", prog: 76, st: "On Track" },
+  { id: 4, name: "Launch 3 New Products", p: "Innovation", prog: 58, st: "At Risk" },
+  { id: 5, name: "Reduce Carbon by 30%", p: "Sustainability", prog: 65, st: "On Track" },
+];
+
+const PAGE_DATASET = { perspectives, trendData, objectives: SCORECARD_OBJECTIVES };
 
 function BalancedScorecardPage() {
   const { perspectives, trendData } = useModuleDataset("strategy-management.balanced-scorecard", "Balanced Scorecard", PAGE_DATASET);
+  const [objectives, setObjectives] = usePersistentState("strategy-management.balanced-scorecard", "Balanced Scorecard", "objectives", SCORECARD_OBJECTIVES);
+  const [newObjectivesOpen, setNewObjectivesOpen] = useState(false);
+  const [showAllObjectives, setShowAllObjectives] = useState(false);
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [aiTab, setAiTab] = useState("Chat");
@@ -143,7 +155,7 @@ function BalancedScorecardPage() {
             </div>
 
             <button
-              onClick={() => toast.success("Opening New Scorecard Dialog")}
+              onClick={() => setNewObjectivesOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -442,7 +454,7 @@ function BalancedScorecardPage() {
           <div className="rounded-xl border bg-card p-4 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-sm text-foreground">Top Strategic Objectives</h3>
-              <span className="text-xs text-primary font-semibold hover:underline cursor-pointer">View All</span>
+              <button type="button" onClick={() => setShowAllObjectives((v) => !v)} className="text-xs text-primary font-semibold hover:underline cursor-pointer">{showAllObjectives ? "Show Less" : `View All (${objectives.length})`}</button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
@@ -456,13 +468,7 @@ function BalancedScorecardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
-                  {[
-                    { id: 1, name: "Increase Revenue by 15%", p: "Financial", prog: 82, st: "On Track" },
-                    { id: 2, name: "Achieve OEE > 85%", p: "Internal Process", prog: 68, st: "At Risk" },
-                    { id: 3, name: "Improve NPS to > 60", p: "Customer", prog: 76, st: "On Track" },
-                    { id: 4, name: "Launch 3 New Products", p: "Innovation", prog: 58, st: "At Risk" },
-                    { id: 5, name: "Reduce Carbon by 30%", p: "Sustainability", prog: 65, st: "On Track" },
-                  ].map((row) => (
+                  {(showAllObjectives ? objectives : objectives.slice(0, 5)).map((row) => (
                     <tr key={row.id}>
                       <td className="py-2 px-2 text-muted-foreground">{row.id}</td>
                       <td className="py-2 px-2 font-semibold text-foreground">{row.name}</td>
@@ -590,6 +596,26 @@ function BalancedScorecardPage() {
           </div>
         </div>
       </div>
+      <QuickCreateDialog
+        open={newObjectivesOpen}
+        onOpenChange={setNewObjectivesOpen}
+        title="New Scorecard Objective"
+        description="Add a strategic objective to the balanced scorecard."
+        submitLabel="Add Objective"
+        fields={[
+          { name: "name", label: "Objective", required: true, placeholder: "e.g. Reduce warranty claims by 20%" },
+          { name: "p", label: "Perspective", type: "select", options: ["Financial", "Customer", "Internal Process", "Learning & Growth", "Innovation", "Sustainability"] },
+          { name: "prog", label: "Progress (%)", type: "number", defaultValue: 0 },
+          { name: "st", label: "Status", type: "select", options: ["On Track", "At Risk"] },
+        ]}
+        onSubmit={(v) => {
+          setObjectives((prev) => {
+            const nextId = Math.max(0, ...prev.map((r) => Number(r.id) || 0)) + 1;
+            return [...prev, { id: nextId, name: String(v.name), p: String(v.p), prog: Math.min(100, Math.max(0, Number(v.prog))), st: String(v.st) }];
+          });
+          toast.success(`Objective "${v.name}" added to the scorecard`);
+        }}
+      />
     </AppShell>
   );
 }

@@ -58,7 +58,8 @@ import {
 } from "@/services/businessIntelligenceService";
 import { cn } from "@/lib/utils";
 
-import { useModuleDataset } from "@/services/moduleDatasetService";
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
 export const Route = createFileRoute(
   "/management/business-intelligence/kpi-monitoring"
 )({
@@ -158,8 +159,7 @@ function KpiMonitoringPage() {
   const [selectedKpi, setSelectedKpi] = useState<BiKpiMonitoringRecord>(
     BI_KPI_MONITORING_RECORDS[0]
   );
-  const [kpiList, setKpiList] = useState<BiKpiMonitoringRecord[]>(BI_KPI_MONITORING_RECORDS);
-  useEffect(() => { setKpiList(BI_KPI_MONITORING_RECORDS); }, [BI_KPI_MONITORING_RECORDS]);
+  const [kpiList, setKpiList] = usePersistentState<BiKpiMonitoringRecord[]>("business-intelligence.kpi-monitoring", "KPI Monitoring", "BI_KPI_MONITORING_RECORDS", BI_KPI_MONITORING_RECORDS);
   const [showAddModal, setShowAddModal] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
@@ -248,10 +248,9 @@ function KpiMonitoringPage() {
             setDateRange(r);
             showToast(`KPI date window updated: ${r}`);
           }}
-          onRefresh={() => showToast("KPI telemetry and threshold feeds refreshed.")}
-          onExportCsv={() => showToast("KPIs exported to CSV (.csv)")}
-          onExportExcel={() => showToast("KPI register exported to Excel (.xlsx)")}
-          onExportPdf={() => showToast("Generated official KPI performance dossier (.pdf)")}
+          onExportCsv={() => exportRecords("KPI Register", kpiList, "csv")}
+          onExportExcel={() => exportRecords("KPI Register", kpiList, "xlsx")}
+          onExportPdf={() => exportRecords("KPI Register", kpiList, "pdf")}
         />
 
         {/* 7-Gauge Circular Score Banner matching Image 3 */}

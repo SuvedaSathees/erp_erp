@@ -41,7 +41,9 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
-import { useModuleDataset } from "@/services/moduleDatasetService";
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { QuickCreateDialog } from "@/components/erp/QuickCreateDialog";
+import { TOP_OKRS } from "@/services/strategyManagementService";
 export const Route = createFileRoute("/management/strategy-management/okr-management")({
   head: () => ({
     meta: [
@@ -86,10 +88,15 @@ const deptPerformanceData = [
   { dept: "Operations", onTrack: 5, atRisk: 2, offTrack: 1, completed: 2 },
 ];
 
-const PAGE_DATASET = { progressTrend, statusData, deptPerformanceData };
+
+
+const PAGE_DATASET = { progressTrend, statusData, deptPerformanceData, okrs: TOP_OKRS };
 
 function OkrManagementPage() {
   const { progressTrend, statusData, deptPerformanceData } = useModuleDataset("strategy-management.okr-management", "OKR Management", PAGE_DATASET);
+  const [okrs, setOkrs] = usePersistentState("strategy-management.okr-management", "OKR Management", "okrs", TOP_OKRS);
+  const [newOkrOpen, setNewOkrOpen] = useState(false);
+  const [showAllOkrs, setShowAllOkrs] = useState(false);
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [aiQuery, setAiQuery] = useState("");
@@ -164,7 +171,7 @@ function OkrManagementPage() {
             </div>
 
             <button
-              onClick={() => toast.success("Opening Objective Creation Dialog")}
+              onClick={() => setNewOkrOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -351,7 +358,13 @@ function OkrManagementPage() {
           <div className="rounded-xl border bg-card p-4 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-sm text-foreground">Top OKRs by Progress</h3>
-              <span className="text-xs text-primary font-semibold hover:underline cursor-pointer">View All</span>
+              <button
+                type="button"
+                onClick={() => setShowAllOkrs((v) => !v)}
+                className="text-xs text-primary font-semibold hover:underline cursor-pointer"
+              >
+                {showAllOkrs ? "Show Top 5" : `View All (${okrs.length})`}
+              </button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
@@ -365,13 +378,7 @@ function OkrManagementPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
-                  {[
-                    { id: 1, title: "Expand EV Charging Network", bu: "Operations", prog: 92, st: "On Track" },
-                    { id: 2, title: "Launch Autonomous W-EVSE", bu: "Product", prog: 78, st: "On Track" },
-                    { id: 3, title: "Achieve ₹50 Cr Revenue", bu: "Finance", prog: 65, st: "At Risk" },
-                    { id: 4, title: "Scale Manufacturing Capacity", bu: "Manufacturing", prog: 52, st: "At Risk" },
-                    { id: 5, title: "Build Strategic Partnerships", bu: "Business Dev", prog: 38, st: "Off Track" },
-                  ].map((row) => (
+                  {(showAllOkrs ? okrs : [...okrs].sort((a, b) => b.prog - a.prog).slice(0, 5)).map((row) => (
                     <tr key={row.id}>
                       <td className="py-2 px-2 text-muted-foreground">{row.id}</td>
                       <td className="py-2 px-2 font-semibold text-foreground">{row.title}</td>
@@ -635,6 +642,32 @@ function OkrManagementPage() {
           </div>
         </div>
       </div>
+      <QuickCreateDialog
+        open={newOkrOpen}
+        onOpenChange={setNewOkrOpen}
+        title="New OKR"
+        description={`Add an objective to the ${cycle} cycle.`}
+        submitLabel="Create OKR"
+        fields={[
+          { name: "title", label: "Objective title", required: true, type: "textarea", placeholder: "e.g. Expand EV charging in Tier-2 cities" },
+          { name: "bu", label: "Business unit", type: "select", options: ["Operations", "Product", "Finance", "Manufacturing", "Business Dev", "Sales", "HR"] },
+          { name: "prog", label: "Current progress (%)", type: "number", defaultValue: 0 },
+          { name: "st", label: "Status", type: "select", options: ["On Track", "At Risk", "Off Track", "Completed"] },
+        ]}
+        onSubmit={(v) => {
+          setOkrs((prev) => [
+            ...prev,
+            {
+              id: Math.max(0, ...prev.map((o) => o.id)) + 1,
+              title: String(v.title),
+              bu: String(v.bu),
+              prog: Math.min(100, Math.max(0, Number(v.prog))),
+              st: String(v.st),
+            },
+          ]);
+          toast.success(`OKR "${v.title}" created`);
+        }}
+      />
     </AppShell>
   );
 }

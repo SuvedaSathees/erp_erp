@@ -3,7 +3,8 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/development/digital-development/")({
   beforeLoad: () => {
     throw redirect({
-      to: "/development/digital-development/data-warehouse-development",
+      to: "/development/business-development/overview",
+      replace: true,
     });
   },
 });

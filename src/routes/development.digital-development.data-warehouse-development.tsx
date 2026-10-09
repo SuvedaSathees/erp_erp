@@ -3,7 +3,7 @@
 // Data Warehouse Development Form — MAICW Classification & Platform Studio
 
 import React, { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import {
   Database,
   GitMerge,
@@ -60,17 +60,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute(
   "/development/digital-development/data-warehouse-development"
 )({
-  head: () => ({
-    meta: [
-      { title: "Data Warehouse Development · Magnertia ERP" },
-      {
-        name: "description",
-        content:
-          "Manage analytical data warehouse from requirements, sources, dimensional models, ETL/ELT pipelines, data governance, to high-performance BI serving.",
-      },
-    ],
-  }),
-  component: DataWarehouseDevelopmentPage,
+  beforeLoad: () => {
+    throw redirect({
+      to: "/development/business-development/overview",
+      replace: true,
+    });
+  },
 });
 
 const DW_TABS = [

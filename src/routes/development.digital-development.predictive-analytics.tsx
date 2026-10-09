@@ -3,7 +3,7 @@
 // Predictive Analytics Form — MAICW Classification & Intelligence Engine
 
 import React, { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import {
   Target,
   Cpu,
@@ -62,17 +62,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute(
   "/development/digital-development/predictive-analytics"
 )({
-  head: () => ({
-    meta: [
-      { title: "Predictive Analytics · Magnertia ERP" },
-      {
-        name: "description",
-        content:
-          "Turn enterprise data into high-accuracy machine learning predictions, forecast demand, detect anomalies, monitor model drift, and automate decisions.",
-      },
-    ],
-  }),
-  component: PredictiveAnalyticsPage,
+  beforeLoad: () => {
+    throw redirect({
+      to: "/development/business-development/overview",
+      replace: true,
+    });
+  },
 });
 
 const PREDICTIVE_TABS = [

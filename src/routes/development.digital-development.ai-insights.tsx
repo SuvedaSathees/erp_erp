@@ -3,7 +3,7 @@
 // AI Insights Form — MAICW Classification & Cognitive Intelligence Center
 
 import React, { useState, useMemo } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import {
   Lightbulb,
   Target,
@@ -63,17 +63,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute(
   "/development/digital-development/ai-insights"
 )({
-  head: () => ({
-    meta: [
-      { title: "AI Insights · Magnertia ERP" },
-      {
-        name: "description",
-        content:
-          "Convert ERP and telemetry data into AI-generated observations, explainable root-causes, anomaly detection, predictive recommendations, and action tracking.",
-      },
-    ],
-  }),
-  component: AiInsightsPage,
+  beforeLoad: () => {
+    throw redirect({
+      to: "/development/business-development/overview",
+      replace: true,
+    });
+  },
 });
 
 const AI_TABS = [

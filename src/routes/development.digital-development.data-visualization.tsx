@@ -3,7 +3,7 @@
 // Data Visualization Form — MAICW Classification & Visualization Studio
 
 import React, { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import {
   BarChart2,
   Layout,
@@ -62,17 +62,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute(
   "/development/digital-development/data-visualization"
 )({
-  head: () => ({
-    meta: [
-      { title: "Data Visualization · Magnertia ERP" },
-      {
-        name: "description",
-        content:
-          "Create, explore, customize, and share interactive visualizations, KPI scorecards, telemetry heatmaps, and executive dashboards.",
-      },
-    ],
-  }),
-  component: DataVisualizationPage,
+  beforeLoad: () => {
+    throw redirect({
+      to: "/development/business-development/overview",
+      replace: true,
+    });
+  },
 });
 
 const DV_TABS = [

@@ -63,7 +63,6 @@ import {
   Mail,
   Leaf,
   BarChart3,
-  Database,
   Binary,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -275,19 +274,6 @@ const NAV_GROUPS: GroupItem[] = [
               { to: "/development/research-innovation/product-architecture/new", label: "Product Architecture" },
               { to: "/development/research-innovation/ui-ux-development/new", label: "UI/UX Development" },
               { to: "/development/research-innovation/reports", label: "Report" },
-            ],
-          },
-          {
-            kind: "leaf",
-            to: "/development/digital-development/data-warehouse-development",
-            matchPrefix: "/development/digital-development",
-            label: "Digital Development",
-            icon: Database,
-            subItems: [
-              { to: "/development/digital-development/data-warehouse-development", label: "Data Warehouse Development" },
-              { to: "/development/digital-development/predictive-analytics", label: "Predictive Analytics" },
-              { to: "/development/digital-development/ai-insights", label: "AI Insights" },
-              { to: "/development/digital-development/data-visualization", label: "Data Visualization" },
             ],
           },
         ],

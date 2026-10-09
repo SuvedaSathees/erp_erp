@@ -76,6 +76,7 @@ import type {
   ReportCategory,
   DashboardQuery,
 } from "@/services/types";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/finance/reports")({
   head: () => ({
@@ -461,7 +462,7 @@ function ReportsPage() {
                   <ErpButton
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Exporting reporting logs...")}
+                    onClick={() => void exportPageReport("Reporting Logs", "pdf")}
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Export</span>
@@ -1305,7 +1306,7 @@ function ReportsPage() {
               </button>
 
               <button
-                onClick={() => toast.info("Export to Excel, PDF trigger...")}
+                onClick={() => void exportPageReport(undefined, "xlsx")}
                 className="p-3.5 rounded-xl border border-border bg-card hover:bg-muted/30 transition-all flex flex-col items-center justify-center gap-1.5"
               >
                 <Download className="h-4 w-4 text-primary" />
@@ -2103,14 +2104,14 @@ function ReportsPage() {
                   <ErpButton
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.success("PDF Download initiated")}
+                    onClick={() => void exportPageReport(undefined, "pdf")}
                   >
                     <Download className="mr-1 h-3.5 w-3.5" /> PDF
                   </ErpButton>
                   <ErpButton
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.success("Excel Spreadsheet download initiated")}
+                    onClick={() => void exportPageReport(undefined, "xlsx")}
                   >
                     <FileSpreadsheet className="mr-1 h-3.5 w-3.5" /> Excel
                   </ErpButton>

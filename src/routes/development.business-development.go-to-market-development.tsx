@@ -178,7 +178,7 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
   );
 }
 
-export function GtmDevelopmentPage() {
+function GtmDevelopmentPage() {
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["go-to-market"],
     queryFn: goToMarketService.fetchRecord,
@@ -1602,4 +1602,3 @@ function GtmDevelopmentPageForm() {
   );
 }
 
-export default GtmDevelopmentPage;

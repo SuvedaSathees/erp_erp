@@ -95,6 +95,8 @@ import {
   Cell,
   Tooltip as RechartsTooltip,
 } from "recharts";
+import { exportPageReport } from "@/lib/recordExport";
+import { openPageFiles, openQuickActions, savePageForm, openPageForm, openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/attendance-management")({
   head: () => ({
@@ -150,7 +152,7 @@ const ATTENDANCE_DONUT = [
   { name: "Shortfall", value: 0.0, color: "#EF4444" },
 ];
 
-export default function AttendanceManagementPage() {
+function AttendanceManagementPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: ["hrm", "attendance"],
@@ -221,7 +223,7 @@ export default function AttendanceManagementPage() {
             <div className="flex items-center flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => toast.info("Biometric Device / Excel Sync opened")}
+                onClick={() => openPageFiles("Attendance Import", ".csv,.xlsx,.xls")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Upload className="h-3.5 w-3.5 text-blue-600" />
@@ -229,7 +231,7 @@ export default function AttendanceManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Attendance report downloaded as XLSX")}
+                onClick={() => void exportPageReport("Attendance Report", "xlsx")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
@@ -237,7 +239,7 @@ export default function AttendanceManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("More actions opened")}
+                onClick={(e) => openQuickActions(e)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 More
@@ -245,7 +247,7 @@ export default function AttendanceManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Attendance record updated and saved")}
+                onClick={(e) => savePageForm("Attendance record updated and saved", e.currentTarget)}
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
               >
                 <Save className="h-3.5 w-3.5" />
@@ -871,7 +873,7 @@ export default function AttendanceManagementPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.info("Apply for Comp Off form opened")}
+                    onClick={() => openPageForm("Apply for Comp Off", "compOff", "Submit")}
                     className="flex items-center gap-2 p-2 rounded-lg border border-slate-200 hover:border-primary hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
                   >
                     <RefreshCw className="h-3.5 w-3.5 text-primary" />
@@ -880,7 +882,7 @@ export default function AttendanceManagementPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.info("Monthly attendance sheet preview")}
+                    onClick={(e) => openPageViewer("Monthly attendance sheet preview", e.currentTarget)}
                     className="flex items-center gap-2 p-2 rounded-lg border border-slate-200 hover:border-blue-600 hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[11px]"
                   >
                     <FileSpreadsheet className="h-3.5 w-3.5 text-blue-600" />
@@ -1029,7 +1031,7 @@ export default function AttendanceManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Comp Off request submitted")}
+                onClick={(e) => savePageForm("Comp Off request submitted", e.currentTarget)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer shadow-xs"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -1072,7 +1074,7 @@ export default function AttendanceManagementPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.success("Monthly attendance report downloaded")}
+                onClick={() => void exportPageReport("Monthly Attendance Report", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 cursor-pointer shadow-xs"
               >
                 <Download className="h-3.5 w-3.5" />

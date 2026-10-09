@@ -13,7 +13,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "start": "node .output/server/index.mjs"
+    "start": "node --max-old-space-size=256 .output/server/index.mjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

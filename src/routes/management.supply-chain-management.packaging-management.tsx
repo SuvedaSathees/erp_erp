@@ -141,6 +141,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { discardPageChanges, savePageForm, logPageAction, openPageForm, openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/supply-chain-management/packaging-management")({
   head: () => ({
@@ -339,7 +340,7 @@ function PackagingPage() {
               variant="outline"
               size="sm"
               className="h-8 text-xs font-medium"
-              onClick={() => toast.info("Draft reset")}
+              onClick={() => discardPageChanges()}
             >
               Cancel
             </Button>
@@ -347,7 +348,7 @@ function PackagingPage() {
               variant="outline"
               size="sm"
               className="h-8 text-xs font-medium"
-              onClick={() => toast.success("Draft saved to packaging backlog")}
+              onClick={(e) => savePageForm("Draft saved", e.currentTarget)}
             >
               <Download className="h-3.5 w-3.5 mr-1" />
               Save Draft
@@ -355,7 +356,7 @@ function PackagingPage() {
             <Button
               size="sm"
               className="h-8 text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
-              onClick={() => toast.success("Packaging order submitted for quality sign-off")}
+              onClick={(e) => savePageForm("Packaging order submitted for quality sign-off", e.currentTarget)}
             >
               <Send className="h-3.5 w-3.5 mr-1" />
               Submit
@@ -382,7 +383,7 @@ function PackagingPage() {
                   <ShieldCheck className="h-3.5 w-3.5 mr-2 text-emerald-600" />
                   QA Audit & Stamp
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.info("Running AI Eco-Packaging Optimization...")}>
+                <DropdownMenuItem onClick={() => void logPageAction("AI Eco-Packaging Optimization requested")}>
                   <Sparkles className="h-3.5 w-3.5 mr-2 text-indigo-500" />
                   AI Packaging Design
                 </DropdownMenuItem>
@@ -411,7 +412,7 @@ function PackagingPage() {
                     variant="ghost"
                     size="icon"
                     className="h-6 w-6"
-                    onClick={() => toast.info("Packaging Header edit mode active")}
+                    onClick={() => openPageForm("Edit Packaging Header")}
                   >
                     <Edit className="h-3 w-3 text-muted-foreground" />
                   </Button>
@@ -1306,7 +1307,7 @@ function PackagingPage() {
 
                   <div className="mt-3 pt-2.5 border-t border-border/50 flex justify-end">
                     <button
-                      onClick={() => toast.info("Viewing all packaging orders and batches")}
+                      onClick={(e) => openPageViewer("Viewing all packaging orders and batches", e.currentTarget)}
                       className="text-xs text-primary font-medium hover:underline flex items-center gap-1 group"
                     >
                       View All Orders <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -1740,4 +1741,3 @@ function PackagingPage() {
   );
 }
 
-export default PackagingPage;

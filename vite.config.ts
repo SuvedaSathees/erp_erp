@@ -102,6 +102,8 @@ export default defineConfig({
   },
   nitro: {
     preset: "node-server",
+    // Serve pre-built gzip/brotli assets: Railway bills egress before its edge compresses.
+    compressPublicAssets: { gzip: true, brotli: true },
   },
   vite: {
     plugins: [ssrTransportTimeoutPlugin()],

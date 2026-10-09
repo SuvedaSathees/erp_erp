@@ -95,7 +95,7 @@ export const Route = createFileRoute("/management/risk-management/licenses")({
   component: LicensesManagementPage,
 });
 
-export default function LicensesManagementPage() {
+function LicensesManagementPage() {
   // Navigation tabs state
   const [activeTab, setActiveTab] = useState<
     | "overview"

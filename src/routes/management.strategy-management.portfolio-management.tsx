@@ -56,6 +56,8 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { openPageViewer } from "@/lib/pageActions";
 export const Route = createFileRoute("/management/strategy-management/portfolio-management")({
   head: () => ({
     meta: [
@@ -106,14 +108,25 @@ const BUDGET_VS_ACTUAL = [
   { name: "Q4", planned: 25, actual: 20 },
 ];
 
-export function PortfolioManagementPage() {
-  const [currentLifecycle, setCurrentLifecycle] = useState(5); // Allocate
+const PORTFOLIO_INVESTMENTS = [
+    { id: 1, name: "Autonomous Charging Stations", type: "Initiative", amount: 45, benefit: 80, roi: 28, status: "In Progress" },
+    { id: 2, name: "Manufacturing Scale-up", type: "Project", amount: 25, benefit: 40, roi: 20, status: "In Progress" },
+    { id: 3, name: "Digital Platform & IoT", type: "Project", amount: 12, benefit: 25, roi: 32, status: "On Track" },
+    { id: 4, name: "Market Expansion (South India)", type: "Initiative", amount: 10, benefit: 18, roi: 25, status: "At Risk" },
+    { id: 5, name: "Product R&D (Gen 2)", type: "Project", amount: 8, benefit: 15, roi: 25, status: "On Track" },
+  ];
+
+const PAGE_DATASET = { LIFECYCLE_STAGES, COMPOSITION_DATA, CATEGORY_INVESTMENTS, BUDGET_VS_ACTUAL, investments: PORTFOLIO_INVESTMENTS };
+
+function PortfolioManagementPage() {
+  const { LIFECYCLE_STAGES, COMPOSITION_DATA, CATEGORY_INVESTMENTS, BUDGET_VS_ACTUAL } = useModuleDataset("strategy-management.portfolio-management", "Portfolio Management", PAGE_DATASET);
+  const [currentLifecycle, setCurrentLifecycle] = usePersistentState("strategy-management.portfolio-management", "Portfolio Management", "currentLifecycle", 5); // Allocate
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
-  const [portfolioStatus, setPortfolioStatus] = useState("In Progress");
+  const [portfolioStatus, setPortfolioStatus] = usePersistentState("strategy-management.portfolio-management", "Portfolio Management", "portfolioStatus", "In Progress");
 
   // Form Fields State
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = usePersistentState("strategy-management.portfolio-management", "Portfolio Management", "formData", {
     code: "PORT-2026-01",
     name: "EV Charging Infrastructure Portfolio",
     type: "Growth Portfolio",
@@ -135,13 +148,7 @@ export function PortfolioManagementPage() {
   });
 
   // Investments Live Table
-  const [investments, setInvestments] = useState([
-    { id: 1, name: "Autonomous Charging Stations", type: "Initiative", amount: 45, benefit: 80, roi: 28, status: "In Progress" },
-    { id: 2, name: "Manufacturing Scale-up", type: "Project", amount: 25, benefit: 40, roi: 20, status: "In Progress" },
-    { id: 3, name: "Digital Platform & IoT", type: "Project", amount: 12, benefit: 25, roi: 32, status: "On Track" },
-    { id: 4, name: "Market Expansion (South India)", type: "Initiative", amount: 10, benefit: 18, roi: 25, status: "At Risk" },
-    { id: 5, name: "Product R&D (Gen 2)", type: "Project", amount: 8, benefit: 15, roi: 25, status: "On Track" },
-  ]);
+  const [investments, setInvestments] = usePersistentState("strategy-management.portfolio-management", "Portfolio Management", "investments", PORTFOLIO_INVESTMENTS);
 
   // Risks Live Table
   const [risks] = useState([
@@ -296,7 +303,7 @@ export function PortfolioManagementPage() {
             </span>
             <button
               type="button"
-              onClick={() => toast.info("Opening full lifecycle governance workflow")}
+              onClick={(e) => openPageViewer("Opening full lifecycle governance workflow", e.currentTarget)}
               className="text-xs text-blue-600 hover:underline font-semibold cursor-pointer"
             >
               View Workflow

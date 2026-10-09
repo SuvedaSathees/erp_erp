@@ -47,6 +47,7 @@ import {
   type ComplianceObligationSummary,
   type ComplianceRemediationItem,
 } from "../../data/complianceQueries";
+import { openPageViewer } from "@/lib/pageActions";
 
 /* ===========================================================================
    Panel 1: Compliance Health & Filing Trend Chart
@@ -313,7 +314,7 @@ export const ComplianceObligationsPanel = memo(function ComplianceObligationsPan
                     size="sm"
                     variant="ghost"
                     className="h-7 px-2 text-xs hover:bg-primary/10 hover:text-primary"
-                    onClick={() => toast.success(`Viewing documentation for ${item.id} - ${item.actTitle}`)}
+                    onClick={(e) => openPageViewer(`Viewing documentation for ${item.id} - ${item.actTitle}`, e.currentTarget)}
                   >
                     Verify
                   </Button>
@@ -412,7 +413,7 @@ export const ComplianceFilingsPanel = memo(function ComplianceFilingsPanel() {
                   size="sm"
                   variant="outline"
                   className="h-7 text-xs px-2.5 shrink-0 font-medium hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer"
-                  onClick={() => toast.success(`Opening filing docket for ${filing.id}`)}
+                  onClick={(e) => openPageViewer(`Opening filing docket for ${filing.id}`, e.currentTarget)}
                 >
                   Manage
                 </Button>
@@ -633,7 +634,7 @@ export const ComplianceAiInsightsPanel = memo(function ComplianceAiInsightsPanel
               <span>Category: {insight.category}</span>
               <button
                 className="text-primary hover:underline font-semibold flex items-center gap-0.5"
-                onClick={() => toast.success(`Analyzing full statutory circular for "${insight.title}"`)}
+                onClick={(e) => openPageViewer(`Analyzing full statutory circular for "${insight.title}"`, e.currentTarget)}
               >
                 View Circular <ExternalLink className="h-3 w-3" />
               </button>

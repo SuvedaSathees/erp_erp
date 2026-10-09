@@ -65,6 +65,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { emailPageReport, savePageState } from "@/lib/pageActions";
 
 export interface RiskItem {
   id: string;
@@ -94,7 +95,7 @@ export interface RiskItem {
   progress: number;
 }
 
-export const INITIAL_RISKS: RiskItem[] = [
+const INITIAL_RISKS: RiskItem[] = [
   {
     id: "R-001",
     title: "Critical controller supplier delay",
@@ -470,7 +471,7 @@ export const Route = createFileRoute("/management/project-management/risk-manage
   component: RiskManagementFormPage,
 });
 
-export function RiskManagementFormPage() {
+function RiskManagementFormPage() {
   const [risks, setRisks] = useState<RiskItem[]>(INITIAL_RISKS);
   const [selectedRisk, setSelectedRisk] = useState<RiskItem>(INITIAL_RISKS[0]);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -761,9 +762,7 @@ ${risks
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Risk register emailed to stakeholders.");
-                  }}
+                  onClick={() => { void emailPageReport("Risk Register"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -794,9 +793,7 @@ ${risks
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Risk register saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("Risk register saved", { message: "Risk register saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />
@@ -2222,4 +2219,3 @@ ${risks
   );
 }
 
-export default RiskManagementFormPage;

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SimulationAnalysisNewPage } from "@/routes/development.research-innovation.simulation-analysis.new";
+import { SimulationAnalysisNewPage } from "@/pages/development.research-innovation.simulation-analysis.new";
 import { ProductDevelopmentTabBar } from "@/components/erp/ProductDevelopmentTabBar";
 
 export const Route = createFileRoute(

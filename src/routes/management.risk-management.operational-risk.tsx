@@ -111,7 +111,7 @@ export const Route = createFileRoute("/management/risk-management/operational-ri
   component: OperationalRiskPage,
 });
 
-export function OperationalRiskPage() {
+function OperationalRiskPage() {
   // --- Prisma-backed queries with inline fallback ---
   const { data: dbRecord } = useQuery({
     queryKey: ["operational-risk", "record"],
@@ -2217,4 +2217,3 @@ export function OperationalRiskPage() {
   );
 }
 
-export default OperationalRiskPage;

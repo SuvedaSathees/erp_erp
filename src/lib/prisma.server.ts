@@ -15,7 +15,8 @@ function decimalsToNumbers(value: unknown): unknown {
 }
 
 function createClient() {
-  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+  // Small pool with short idle timeout: fewer Postgres backends, and no idle traffic so App Sleeping can kick in.
+  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL, max: 5, idleTimeoutMillis: 10_000 });
   return new PrismaClient({ adapter }).$extends({
     query: {
       $allModels: {

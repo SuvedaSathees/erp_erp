@@ -68,6 +68,7 @@ import {
   type ProjectPlanningRecord,
   type WbsElement,
 } from "@/services/projectPlanningService";
+import { logPageAction, emailPageReport, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/project-management/project-planning")({
   head: () => ({
@@ -83,7 +84,7 @@ export const Route = createFileRoute("/management/project-management/project-pla
   component: ProjectPlanningPage,
 });
 
-export function ProjectPlanningPage() {
+function ProjectPlanningPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["projects"]],
@@ -327,9 +328,7 @@ ${record.wbsList.map((w) => `${w.code} ${w.name} (${w.weightage}% weightage) - $
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Project plan emailed to stakeholders.");
-                  }}
+                  onClick={() => { void emailPageReport("Project Plan"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -365,9 +364,7 @@ ${record.wbsList.map((w) => `${w.code} ${w.name} (${w.weightage}% weightage) - $
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Project plan saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("Project plan saved", { message: "Project plan saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />
@@ -1120,7 +1117,7 @@ ${record.wbsList.map((w) => `${w.code} ${w.name} (${w.weightage}% weightage) - $
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => toast.success("CPM schedule floats successfully validated against baseline V1.0")}
+                    onClick={() => void logPageAction("CPM schedule float validation against baseline V1.0 requested")}
                     className="h-7 text-[11px] text-muted-foreground hover:text-foreground cursor-pointer"
                   >
                     Validate Float Integrity
@@ -1439,4 +1436,3 @@ ${record.wbsList.map((w) => `${w.code} ${w.name} (${w.weightage}% weightage) - $
   );
 }
 
-export default ProjectPlanningPage;

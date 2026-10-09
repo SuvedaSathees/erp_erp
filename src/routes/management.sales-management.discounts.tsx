@@ -104,7 +104,7 @@ const initialPromoCampaigns = [
   { id: 3, campaign: "Fleet Partner Stocking Scheme", code: "FLEET-STOCK", discount: "4.0% Stocking", validity: "Pre-orders >50 chargers", budget: "₹30.0 L", status: "Active" },
 ];
 
-export default function DiscountsComponent() {
+function DiscountsComponent() {
   const [ruleSubTab, setRuleSubTab] = useState<"volume" | "channel" | "promo">("volume");
   const [approvalStatus, setApprovalStatus] = useState("Under Review");
   const [stepperStages, setStepperStages] = useState(initialStepperStages);

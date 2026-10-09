@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/select";
 import { NcrRecord } from "@/services/ncrTypes";
 import { toast } from "sonner";
+import { openPageForm } from "@/lib/pageActions";
 
 interface NcrIdentificationCardProps {
   record: NcrRecord;
@@ -115,7 +116,7 @@ export function NcrIdentificationCard({
               />
               <button
                 type="button"
-                onClick={() => toast.info("Barcode / QR Scanner ready for serial input")}
+                onClick={() => openPageForm("Enter Serial Number", "serial", "Save")}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-colors"
                 title="Scan Barcode / QR"
               >

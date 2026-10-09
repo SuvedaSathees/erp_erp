@@ -59,6 +59,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { logPageAction, openPageViewer } from "@/lib/pageActions";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/asset-management/asset-depreciation")({
   head: () => ({
@@ -137,7 +139,7 @@ const INITIAL_DEPRECIATION_ITEMS: DepreciationItem[] = Array.from({ length: 428 
   };
 });
 
-export function AssetDepreciationFormPage() {
+function AssetDepreciationFormPage() {
   const [items, setItems] = useState<DepreciationItem[]>(INITIAL_DEPRECIATION_ITEMS);
   const [activeItem, setActiveItem] = useState<DepreciationItem>(INITIAL_DEPRECIATION_ITEMS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All 428");
@@ -314,13 +316,13 @@ export function AssetDepreciationFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Opening Asset Depreciation Register...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Asset Depreciation Register", "pdf", "page")}>
                     Depreciation Schedule
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Depreciation by Asset Class...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Depreciation by Asset Class", "pdf", "page")}>
                     Asset Class Breakdown
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Impairment & Revaluation Audit...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Impairment & Revaluation Audit", "pdf", "page")}>
                     Impairment & Revaluation
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -351,7 +353,7 @@ export function AssetDepreciationFormPage() {
                   <DropdownMenuItem onClick={() => setIsJournalOpen(true)}>
                     View Depreciation Journal
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Useful Life Review initiated")}>
+                  <DropdownMenuItem onClick={() => void logPageAction("Useful Life Review initiated")}>
                     Useful Life Review
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => { window.print(); }}>
@@ -620,7 +622,7 @@ export function AssetDepreciationFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening master asset depreciation calendar")}
+                onClick={(e) => openPageViewer("Opening master asset depreciation calendar", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View Calendar &rarr;
@@ -721,7 +723,7 @@ export function AssetDepreciationFormPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Displaying all 11 depreciation columns")}
+                    onClick={(e) => openPageViewer("Displaying all 11 depreciation columns", e.currentTarget)}
                     className="h-8 text-xs gap-1 cursor-pointer"
                   >
                     <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -914,7 +916,7 @@ export function AssetDepreciationFormPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => toast.info(`Asset Tag QR: ${activeItem.id}`)}
+                  onClick={(e) => openPageViewer(`Asset Tag QR: ${activeItem.id}`, e.currentTarget)}
                   className="p-1 rounded hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
                   title="QR Tag"
                 >
@@ -1180,7 +1182,7 @@ export function AssetDepreciationFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening AI depreciation insights")}
+                onClick={(e) => openPageViewer("Opening AI depreciation insights", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1431,4 +1433,3 @@ export function AssetDepreciationFormPage() {
   );
 }
 
-export default AssetDepreciationFormPage;

@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { FileText, Download, Link2, Upload, X } from "lucide-react";
 import type { AttachmentItem } from "@/lib/robotics-integration/types";
 import { toast } from "sonner";
+import { downloadAttachment } from "@/lib/recordExport";
 
 interface RoboticsAttachmentsCardProps {
   attachments: AttachmentItem[];
@@ -62,7 +63,7 @@ export const RoboticsAttachmentsCard: React.FC<RoboticsAttachmentsCardProps> = (
                 </div>
 
                 <button
-                  onClick={() => toast.success(`Downloading ${item.filename}...`)}
+                  onClick={() => void downloadAttachment(item)}
                   className="p-1 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
                   aria-label={`Download ${item.filename}`}
                 >
@@ -131,7 +132,7 @@ export const RoboticsAttachmentsCard: React.FC<RoboticsAttachmentsCardProps> = (
                     </div>
                   </div>
                   <button
-                    onClick={() => toast.success(`Downloading ${item.filename}...`)}
+                    onClick={() => void downloadAttachment(item)}
                     className="px-3 py-1.5 bg-primary text-primary-foreground font-semibold rounded text-xs flex items-center gap-1.5 shadow"
                   >
                     <Download className="w-3.5 h-3.5" /> Download

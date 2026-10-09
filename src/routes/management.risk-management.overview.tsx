@@ -24,7 +24,7 @@ export const Route = createFileRoute("/management/risk-management/overview")({
  * velocity trend lines, KRIs, top risks, treatment actions, and AI insights are
  * fully customizable with drag-and-drop.
  */
-export function RiskManagementOverviewPage() {
+function RiskManagementOverviewPage() {
   return (
     <AppShell
       title="Risk Management Overview"
@@ -38,7 +38,6 @@ export function RiskManagementOverviewPage() {
   );
 }
 
-export default RiskManagementOverviewPage;
 
 function OverviewSkeleton() {
   return (

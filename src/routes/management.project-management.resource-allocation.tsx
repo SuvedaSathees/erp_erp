@@ -61,6 +61,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
+import { openPageForm, logPageAction, emailPageReport, savePageState, openPageFiles, openPageViewer } from "@/lib/pageActions";
 
 export interface ResourceAllocationItem {
   id: string;
@@ -80,7 +82,7 @@ export interface ResourceAllocationItem {
   priority: "Critical" | "High" | "Medium" | "Low";
 }
 
-export const INITIAL_ALLOCATIONS: ResourceAllocationItem[] = [
+const INITIAL_ALLOCATIONS: ResourceAllocationItem[] = [
   {
     id: "alloc-1",
     code: "AL-2026-0215",
@@ -436,7 +438,7 @@ export const Route = createFileRoute("/management/project-management/resource-al
   component: ResourceAllocationFormPage,
 });
 
-export function ResourceAllocationFormPage() {
+function ResourceAllocationFormPage() {
   const navigate = useNavigate();
   const [allocations, setAllocations] = useState<ResourceAllocationItem[]>(INITIAL_ALLOCATIONS);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -740,9 +742,7 @@ ${allocations
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Resource plan emailed to project leads.");
-                  }}
+                  onClick={() => { void emailPageReport("Resource Plan"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -773,9 +773,7 @@ ${allocations
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Resource allocations saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("Resource allocations saved", { message: "Resource allocations saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />
@@ -1428,7 +1426,7 @@ ${allocations
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Columns visible: All 14 standard allocation attributes.")}
+                    onClick={(e) => openPageViewer("Resource Allocations — all columns", e.currentTarget)}
                     className="h-8 text-xs gap-1 cursor-pointer"
                   >
                     <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -1810,7 +1808,7 @@ ${allocations
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.success("Rate card dossier exported to procurement register.")}
+                  onClick={() => void exportPageReport("Rate Card Dossier", "pdf")}
                   className="text-[11px] text-primary font-semibold hover:underline cursor-pointer block text-left pt-2 border-t border-border/40"
                 >
                   Download Rate Card Matrix →
@@ -1856,7 +1854,7 @@ ${allocations
                     </div>
                     <button
                       type="button"
-                      onClick={() => toast.info("Contractor request drafted: 1 field electrical technician.")}
+                      onClick={() => openPageForm("Contractor Request")}
                       className="text-[10px] text-amber-700 dark:text-amber-400 font-bold hover:underline pl-6 block cursor-pointer"
                     >
                       View Details →
@@ -1872,7 +1870,7 @@ ${allocations
                     </div>
                     <button
                       type="button"
-                      onClick={() => toast.info("Schedule updated: ACT-024 moved forward 2 days.")}
+                      onClick={() => void logPageAction("Schedule updated: ACT-024 moved forward 2 days")}
                       className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold hover:underline pl-6 block cursor-pointer"
                     >
                       View Details →
@@ -2364,7 +2362,7 @@ ${allocations
                 size="sm"
                 onClick={() => {
                   setIsImportOpen(false);
-                  toast.success("Loaded 12 new allocations from resource_roster.csv");
+                  openPageFiles("Import Resource Roster", ".csv,.xlsx,.xls");
                 }}
                 className="bg-primary text-white font-semibold"
               >
@@ -2485,4 +2483,3 @@ ${allocations
   );
 }
 
-export default ResourceAllocationFormPage;

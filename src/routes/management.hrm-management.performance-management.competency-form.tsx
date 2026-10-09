@@ -4,8 +4,7 @@ export const Route = createFileRoute("/management/hrm-management/performance-man
   component: RedirectToCompetencyForm,
 });
 
-export function RedirectToCompetencyForm() {
+function RedirectToCompetencyForm() {
   return <Navigate to="/management/hrm-management/competency-form" replace />;
 }
 
-export default RedirectToCompetencyForm;

@@ -58,6 +58,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { openPageViewer } from "@/lib/pageActions";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/asset-management/tool-management")({
   head: () => ({
@@ -143,7 +145,7 @@ const INITIAL_TOOLS: ToolItem[] = Array.from({ length: 120 }, (_, i) => {
   };
 });
 
-export function ToolManagementFormPage() {
+function ToolManagementFormPage() {
   const [tools, setTools] = useState<ToolItem[]>(INITIAL_TOOLS);
   const [activeTool, setActiveTool] = useState<ToolItem>(INITIAL_TOOLS[1]); // Default to Digital Caliper
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -343,13 +345,13 @@ export function ToolManagementFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Opening Tool Availability & Issue Log...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Tool Availability & Issue Log", "pdf", "page")}>
                     Tool Availability Log
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Calibration Compliance Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Calibration Compliance Report", "pdf", "page")}>
                     Calibration Compliance
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Tool Loss & Write-off Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Tool Loss & Write-off Report", "pdf", "page")}>
                     Loss & Write-off Report
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -721,7 +723,7 @@ export function ToolManagementFormPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Displaying all 10 tool register columns")}
+                    onClick={(e) => openPageViewer("Displaying all 10 tool register columns", e.currentTarget)}
                     className="h-8 text-xs gap-1 cursor-pointer"
                   >
                     <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -912,7 +914,7 @@ export function ToolManagementFormPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info(`Scanned Tool Barcode: ${activeTool.id}`)}
+                onClick={(e) => openPageViewer(`Scanned Tool Barcode: ${activeTool.id}`, e.currentTarget)}
                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
                 title="QR Barcode"
               >
@@ -1238,7 +1240,7 @@ export function ToolManagementFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Viewing all AI Tool Governance Insights")}
+                onClick={(e) => openPageViewer("Viewing all AI Tool Governance Insights", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1574,4 +1576,3 @@ export function ToolManagementFormPage() {
   );
 }
 
-export default ToolManagementFormPage;

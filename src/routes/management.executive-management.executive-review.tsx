@@ -56,6 +56,8 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { EXEC_ACTIONS, EXEC_DECISIONS } from "@/services/executiveManagementService";
 export const Route = createFileRoute("/management/executive-management/executive-review")({
   head: () => ({
     meta: [
@@ -112,14 +114,17 @@ const KPI_CATEGORY_DATA = [
   { category: "Sustainability", target: 70, actual: 68 },
 ];
 
-export function ExecutiveReviewPage() {
-  const [currentStage, setCurrentStage] = useState(4); // Executive Review
+const PAGE_DATASET = { REVIEW_PROCESS_STAGES, FINANCIAL_QUARTERLY_DATA, REVENUE_SEGMENT_DATA, KPI_CATEGORY_DATA, decisions: EXEC_DECISIONS, actions: EXEC_ACTIONS };
+
+function ExecutiveReviewPage() {
+  const { REVIEW_PROCESS_STAGES, FINANCIAL_QUARTERLY_DATA, REVENUE_SEGMENT_DATA, KPI_CATEGORY_DATA } = useModuleDataset("executive-management.executive-review", "Executive Review", PAGE_DATASET);
+  const [currentStage, setCurrentStage] = usePersistentState("executive-management.executive-review", "Executive Review", "currentStage", 4); // Executive Review
   const [period, setPeriod] = useState("Q3 FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
-  const [reviewStatus, setReviewStatus] = useState("Executive Review");
+  const [reviewStatus, setReviewStatus] = usePersistentState("executive-management.executive-review", "Executive Review", "reviewStatus", "Executive Review");
 
   // Review Master State
-  const [reviewData, setReviewData] = useState({
+  const [reviewData, setReviewData] = usePersistentState("executive-management.executive-review", "Executive Review", "reviewData", {
     reviewNumber: "ER-2026-03",
     reviewType: "Quarterly Business Review",
     periodLabel: "01 Oct 2026 - 31 Dec 2026",
@@ -129,22 +134,10 @@ export function ExecutiveReviewPage() {
   });
 
   // Decisions Live Table
-  const [decisions, setDecisions] = useState([
-    { id: 1, text: "Approve 3 new product launches", owner: "CTO", dueDate: "31 Jan 2027", status: "Approved" },
-    { id: 2, text: "Increase manufacturing capacity", owner: "COO", dueDate: "28 Feb 2027", status: "In Review" },
-    { id: 3, text: "Explore external funding (Series A)", owner: "CEO", dueDate: "15 Feb 2027", status: "Open" },
-    { id: 4, text: "Strengthen supply chain partners", owner: "COO", dueDate: "28 Feb 2027", status: "Open" },
-    { id: 5, text: "Implement cybersecurity upgrade", owner: "CIO", dueDate: "31 Mar 2027", status: "Planned" },
-  ]);
+  const [decisions, setDecisions] = usePersistentState("executive-management.executive-review", "Executive Review", "decisions", EXEC_DECISIONS);
 
   // Actions Live Table
-  const [actions, setActions] = useState([
-    { id: 1, text: "Finalize product launch plan", owner: "A. Khan", dueDate: "15 Jan 2027", progress: 80, status: "On Track" },
-    { id: 2, text: "Resolve supply chain delays", owner: "S. Ravi", dueDate: "31 Jan 2027", progress: 40, status: "At Risk" },
-    { id: 3, text: "Improve fleet customer onboarding", owner: "P. Nithya", dueDate: "20 Jan 2027", progress: 60, status: "On Track" },
-    { id: 4, text: "Close audit findings", owner: "R. Mani", dueDate: "31 Jan 2027", progress: 30, status: "Delayed" },
-    { id: 5, text: "Update sustainability roadmap", owner: "M. Priya", dueDate: "28 Feb 2027", progress: 20, status: "Open" },
-  ]);
+  const [actions, setActions] = usePersistentState("executive-management.executive-review", "Executive Review", "actions", EXEC_ACTIONS);
 
   // Modals
   const [isDecisionModalOpen, setIsDecisionModalOpen] = useState(false);

@@ -31,6 +31,8 @@ import { MarketingManagementTabBar } from "@/components/erp/MarketingManagementT
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
+import { refreshPageData } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/marketing-management/marketing-analytics"
@@ -87,7 +89,7 @@ const REVENUE_MONTHLY_DATA = [
   { month: "Sep 2026", revenue: 2.0, leads: 1280 },
 ];
 
-export function MarketingAnalyticsPage() {
+function MarketingAnalyticsPage() {
   const [activeTab, setActiveTab] = useState("attribution");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
 
@@ -135,14 +137,14 @@ export function MarketingAnalyticsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => toast.success("Analytics Cache Refreshed", { description: "Real-time CRM and pixel telemetry synced." })}
+                onClick={() => void refreshPageData("Analytics")}
                 className="gap-1.5 text-xs font-semibold shadow-xs"
               >
                 <Zap className="h-3.5 w-3.5 text-primary" /> Refresh Telemetry
               </Button>
               <Button
                 size="sm"
-                onClick={() => toast.info("Executive Analytics Report Exported", { description: "PDF brief dispatched to C-Suite distribution list." })}
+                onClick={() => void exportPageReport("Executive Analytics Report", "pdf")}
                 className="gap-1.5 text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
               >
                 <Share2 className="h-3.5 w-3.5" /> Export Executive Pack
@@ -412,4 +414,3 @@ export function MarketingAnalyticsPage() {
   );
 }
 
-export default MarketingAnalyticsPage;

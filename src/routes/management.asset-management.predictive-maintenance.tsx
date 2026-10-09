@@ -57,6 +57,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { logPageAction, openPageViewer } from "@/lib/pageActions";
+import { exportPageReport } from "@/lib/recordExport";
 // HMR verified: all Lucide icons defined
 
 export const Route = createFileRoute("/management/asset-management/predictive-maintenance")({
@@ -153,7 +155,7 @@ const HIGH_RISK_LIST = [
   { asset: "Hydraulic Press 200T", id: "EQ-PRS-00021", mode: "Hydraulic Leak", prob: "35%", rul: "26 Days", color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
 ];
 
-export function PredictiveMaintenanceFormPage() {
+function PredictiveMaintenanceFormPage() {
   const [predictions, setPredictions] = useState<PredictionItem[]>(INITIAL_PREDICTIONS);
   const [activeItem, setActiveItem] = useState<PredictionItem>(INITIAL_PREDICTIONS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All (64)");
@@ -333,13 +335,13 @@ export function PredictiveMaintenanceFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Opening RUL Forecast Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("RUL Forecast Report", "pdf", "page")}>
                     RUL Forecast Report
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Prediction Accuracy Audit...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Prediction Accuracy Audit", "pdf", "page")}>
                     Prediction Accuracy Audit
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Sensor Drift & Health Analytics...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Sensor Drift & Health Analytics", "pdf", "page")}>
                     Sensor Health & Drift
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -370,7 +372,7 @@ export function PredictiveMaintenanceFormPage() {
                   <DropdownMenuItem onClick={() => setIsWOOpen(true)}>
                     Generate Predictive WO
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.success("Triggered AI Neural Model Retrain Pipeline")}>
+                  <DropdownMenuItem onClick={() => void logPageAction("AI Neural Model Retrain Pipeline requested")}>
                     Trigger Model Retrain
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => { window.print(); }}>
@@ -635,7 +637,7 @@ export function PredictiveMaintenanceFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening high-risk asset backlog")}
+                onClick={(e) => openPageViewer("Opening high-risk asset backlog", e.currentTarget)}
                 className="text-[9.5px] text-primary font-bold hover:underline cursor-pointer"
               >
                 Backlog &rarr;
@@ -700,7 +702,7 @@ export function PredictiveMaintenanceFormPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Displaying all 12 prediction columns")}
+                    onClick={(e) => openPageViewer("Displaying all 12 prediction columns", e.currentTarget)}
                     className="h-8 text-xs gap-1 cursor-pointer"
                   >
                     <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -922,7 +924,7 @@ export function PredictiveMaintenanceFormPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info(`IoT Tag: ${activeItem.id}`)}
+                onClick={(e) => openPageViewer(`IoT Tag: ${activeItem.id}`, e.currentTarget)}
                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
                 title="Tag"
               >
@@ -1043,7 +1045,7 @@ export function PredictiveMaintenanceFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening sensor health inventory")}
+                onClick={(e) => openPageViewer("Opening sensor health inventory", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1078,7 +1080,7 @@ export function PredictiveMaintenanceFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening RUL distribution analysis")}
+                onClick={(e) => openPageViewer("Opening RUL distribution analysis", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1113,7 +1115,7 @@ export function PredictiveMaintenanceFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening anomaly trend line")}
+                onClick={(e) => openPageViewer("Opening anomaly trend line", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1169,7 +1171,7 @@ export function PredictiveMaintenanceFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening AI models library")}
+                onClick={(e) => openPageViewer("Opening AI models library", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1418,4 +1420,3 @@ export function PredictiveMaintenanceFormPage() {
   );
 }
 
-export default PredictiveMaintenanceFormPage;

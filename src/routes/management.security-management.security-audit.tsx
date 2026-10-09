@@ -61,6 +61,11 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
+import { usePersistentState } from "@/services/moduleDatasetService";
+import { SubmissionsPanel, makeSubmission, type Submission } from "@/components/erp/SubmissionsPanel";
+import { exportRecords, recordToRows } from "@/lib/recordExport";
+import { openQuickActions, openPageForm, logPageAction } from "@/lib/pageActions";
 export const Route = createFileRoute(
   "/management/security-management/security-audit"
 )({
@@ -115,27 +120,30 @@ const COMPLIANCE_TREND_DATA = [
   { month: "Sep", completion: 91, evidence: 86 },
 ];
 
+const PAGE_DATASET = { AUDIT_STATUS_BY_TYPE, FINDINGS_SEVERITY_DATA, COMPLIANCE_TREND_DATA };
+
 function SecurityAuditPage() {
+  const { AUDIT_STATUS_BY_TYPE, FINDINGS_SEVERITY_DATA, COMPLIANCE_TREND_DATA } = useModuleDataset("security-management.security-audit", "Security Audit", PAGE_DATASET);
   const [facilityFilter, setFacilityFilter] = useState("All Facilities");
   const [searchQuery, setSearchQuery] = useState("");
 
   // Workspace State
-  const [workspaceStep, setWorkspaceStep] = useState(4); // 4 = Audit Execution (In Progress)
+  const [workspaceStep, setWorkspaceStep] = usePersistentState("security-management.security-audit", "Security Audit", "workspaceStep", 4); // 4 = Audit Execution (In Progress)
   const [workspaceSection, setWorkspaceSection] = useState("Basic Details");
   const [scopeTab, setScopeTab] = useState<"Facilities" | "Departments" | "Systems" | "Processes">("Facilities");
   const [aiTab, setAiTab] = useState<"Insights" | "Recommendations">("Insights");
   const [aiQuestion, setAiQuestion] = useState("");
 
   // Audit Form State
-  const [auditRef, setAuditRef] = useState("SA-INF-2026-001");
-  const [auditType, setAuditType] = useState("Internal Audit");
-  const [auditArea, setAuditArea] = useState("Information Security");
-  const [facility, setFacility] = useState("HQ - Namakkal");
-  const [leadAuditor, setLeadAuditor] = useState("Ramesh S");
-  const [classification, setClassification] = useState("Confidential");
-  const [riskLevel, setRiskLevel] = useState("Medium");
-  const [status, setStatus] = useState("In Progress");
-  const [auditDesc, setAuditDesc] = useState(
+  const [auditRef, setAuditRef] = usePersistentState("security-management.security-audit", "Security Audit", "auditRef", "SA-INF-2026-001");
+  const [auditType, setAuditType] = usePersistentState("security-management.security-audit", "Security Audit", "auditType", "Internal Audit");
+  const [auditArea, setAuditArea] = usePersistentState("security-management.security-audit", "Security Audit", "auditArea", "Information Security");
+  const [facility, setFacility] = usePersistentState("security-management.security-audit", "Security Audit", "facility", "HQ - Namakkal");
+  const [leadAuditor, setLeadAuditor] = usePersistentState("security-management.security-audit", "Security Audit", "leadAuditor", "Ramesh S");
+  const [classification, setClassification] = usePersistentState("security-management.security-audit", "Security Audit", "classification", "Confidential");
+  const [riskLevel, setRiskLevel] = usePersistentState("security-management.security-audit", "Security Audit", "riskLevel", "Medium");
+  const [status, setStatus] = usePersistentState("security-management.security-audit", "Security Audit", "status", "In Progress");
+  const [auditDesc, setAuditDesc] = usePersistentState("security-management.security-audit", "Security Audit", "auditDesc", 
     "Internal audit to assess information security controls, data protection, access management and compliance with ISO 27001."
   );
 
@@ -143,14 +151,16 @@ function SecurityAuditPage() {
   const [showNewAuditModal, setShowNewAuditModal] = useState(false);
   const [newAuditTitle, setNewAuditTitle] = useState("");
   const [newAuditArea, setNewAuditArea] = useState("Access Control");
+  const [scheduledAudits, setScheduledAudits] = usePersistentState<Submission[]>("security-management.security-audit", "Security Audit", "scheduledAudits", []);
 
 
   const handleSaveDraft = () => {
-    toast.success("Audit Workspace saved as Draft (AUD-2026-021).");
+    toast.success(`Audit workspace ${auditRef} saved.`);
   };
 
   const handleSubmitForReview = () => {
-    toast.success("Audit AUD-2026-021 submitted for Lead Auditor & CISO Review.");
+    setStatus("Under Review");
+    toast.success(`Audit ${auditRef} submitted for Lead Auditor & CISO review.`);
   };
 
   const handleAskAI = (e: React.FormEvent) => {
@@ -160,9 +170,7 @@ function SecurityAuditPage() {
     setAiQuestion("");
   };
 
-  const handleGenerateFinding = () => {
-    toast.success("AI Draft Finding generated: Access Review Overdue (ISO 27001 A.9.2.5). Added to Findings ledger.");
-  };
+  const handleGenerateFinding = () => { void logPageAction("AI draft finding requested: Access Review Overdue (ISO 27001 A.9.2.5)"); };
 
   const handleCreateAudit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,7 +178,9 @@ function SecurityAuditPage() {
       toast.error("Please enter an audit title.");
       return;
     }
-    toast.success(`Audit ${newAuditTitle} (${newAuditArea}) scheduled in Master Program.`);
+    const sub = makeSubmission(scheduledAudits, "AUD", { Title: newAuditTitle.trim(), Area: newAuditArea }, "Title");
+    setScheduledAudits((prev) => [{ ...sub, status: "Scheduled" }, ...prev]);
+    toast.success(`Audit ${sub.code} "${newAuditTitle.trim()}" (${newAuditArea}) scheduled in the Master Program.`);
     setShowNewAuditModal(false);
     setNewAuditTitle("");
   };
@@ -194,9 +204,11 @@ function SecurityAuditPage() {
           bannerQuote="Rigorous compliance, evidence-backed control assessments, and closed-loop corrective actions across all physical, digital, and cloud assets."
           primaryActionLabel="+ New Audit Program"
           onPrimaryAction={() => setShowNewAuditModal(true)}
-          onGenerateReport={() => toast.success("Exporting Master Security Audit Dossier (PDF)...")}
+          onGenerateReport={() => exportRecords("Security Audit Dossier", [...recordToRows({ auditRef, auditType, auditArea, facility, leadAuditor, classification, riskLevel, status, description: auditDesc }), ...scheduledAudits.map((a) => ({ field: `Scheduled audit ${a.code}`, value: `${a.title} · ${a.details.Area ?? ""}` }))], "pdf")}
           onMoreActions={(act) => toast.info(`Action: ${act}`)}
         />
+
+        <SubmissionsPanel title="Scheduled Audits" items={scheduledAudits} />
 
         {/* Executive 7-Gauge Circular Score Banner matching Screenshot */}
         <ProductScoreBanner submoduleKey="security-audit" />
@@ -536,7 +548,7 @@ function SecurityAuditPage() {
                 Submit for Review
               </button>
               <button
-                onClick={() => toast.info("Audit Actions: Export Dossier, Transfer Lead, Request Extension")}
+                onClick={(e) => openQuickActions(e)}
                 className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-white"
               >
                 More Actions ▾
@@ -778,7 +790,7 @@ function SecurityAuditPage() {
                     </div>
                   </div>
                   <button
-                    onClick={() => toast.info("Opening Add Scope Item dialog...")}
+                    onClick={() => openPageForm("Add Scope Item", "scopeItem", "Add")}
                     className="text-xs font-bold text-blue-600 hover:underline"
                   >
                     + Add Scope Item
@@ -824,7 +836,7 @@ function SecurityAuditPage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-bold text-slate-900">Audit Team Assignments</h3>
                   <button
-                    onClick={() => toast.info("Assigning team auditor...")}
+                    onClick={() => openPageForm("Assign Team Auditor")}
                     className="text-xs font-bold text-blue-600 hover:underline"
                   >
                     + Add Team Member

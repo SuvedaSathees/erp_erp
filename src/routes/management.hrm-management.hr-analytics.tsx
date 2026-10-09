@@ -128,6 +128,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
+import { refreshPageData, openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/hr-analytics")({
   head: () => ({
@@ -209,7 +211,7 @@ const KPI_ROWS = [
   { kpi: "Engagement Score", actual: "82%", target: "> 80%", variance: "+2%", status: "green" },
 ];
 
-export function HrAnalyticsPage() {
+function HrAnalyticsPage() {
   const [activeTab, setActiveTab] = useState<string>("workforce");
 
   return (
@@ -240,7 +242,7 @@ export function HrAnalyticsPage() {
 
               <button
                 type="button"
-                onClick={() => toast.success("HR data refreshed across all modules.")}
+                onClick={() => void refreshPageData("HR data")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <RefreshCw className="h-3.5 w-3.5 text-slate-600" />
@@ -249,7 +251,7 @@ export function HrAnalyticsPage() {
 
               <button
                 type="button"
-                onClick={() => toast.info("Exporting HR Analytics packet...")}
+                onClick={() => void exportPageReport("HR Analytics Packet", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Download className="h-3.5 w-3.5 text-slate-600" />
@@ -259,7 +261,7 @@ export function HrAnalyticsPage() {
 
               <button
                 type="button"
-                onClick={() => toast.info("Filters opened")}
+                onClick={(e) => openPageViewer("Filters opened", e.currentTarget)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Filter className="h-3.5 w-3.5 text-slate-600" />
@@ -269,7 +271,7 @@ export function HrAnalyticsPage() {
 
               <button
                 type="button"
-                onClick={() => toast.info("Customizing analytical dashboard widgets")}
+                onClick={(e) => openPageViewer("Customizing analytical dashboard widgets", e.currentTarget)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" />
@@ -851,5 +853,4 @@ export function HrAnalyticsPage() {
   );
 }
 
-export default HrAnalyticsPage;
 

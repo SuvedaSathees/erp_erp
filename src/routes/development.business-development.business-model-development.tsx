@@ -184,7 +184,7 @@ function Sparkline({ data, color = "#2563eb" }: { data: number[]; color?: string
   );
 }
 
-export function BusinessModelDevelopmentPage() {
+function BusinessModelDevelopmentPage() {
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["business-model"],
     queryFn: businessModelService.fetchRecord,
@@ -1772,4 +1772,3 @@ function BusinessModelDevelopmentPageForm() {
   );
 }
 
-export default BusinessModelDevelopmentPage;

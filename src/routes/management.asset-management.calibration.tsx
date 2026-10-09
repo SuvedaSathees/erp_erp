@@ -56,6 +56,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { openPageViewer } from "@/lib/pageActions";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/asset-management/calibration")({
   head: () => ({
@@ -152,7 +154,7 @@ const INITIAL_CALIBRATIONS: CalibrationItem[] = Array.from({ length: 86 }, (_, i
   };
 });
 
-export function CalibrationFormPage() {
+function CalibrationFormPage() {
   const [calibrations, setCalibrations] = useState<CalibrationItem[]>(INITIAL_CALIBRATIONS);
   const [activeCalib, setActiveCalib] = useState<CalibrationItem>(INITIAL_CALIBRATIONS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -333,13 +335,13 @@ export function CalibrationFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Opening Calibration Compliance Audit...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Calibration Compliance Audit", "pdf", "page")}>
                     Calibration Compliance
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Overdue Instrument Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Overdue Instrument Report", "pdf", "page")}>
                     Overdue Instrument List
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Reference Standards Traceability...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Reference Standards Traceability", "pdf", "page")}>
                     Reference Standards Traceability
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -370,7 +372,7 @@ export function CalibrationFormPage() {
                   <DropdownMenuItem onClick={() => setIsCertOpen(true)}>
                     View Certificate
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Out-of-Tolerance Quarantine Log opened")}>
+                  <DropdownMenuItem onClick={(e) => openPageViewer("Out-of-Tolerance Quarantine Log opened", e.currentTarget)}>
                     Quarantine Instruments
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => { window.print(); }}>
@@ -650,7 +652,7 @@ export function CalibrationFormPage() {
 
               <button
                 type="button"
-                onClick={() => toast.info("Opening master calibration schedule calendar")}
+                onClick={(e) => openPageViewer("Opening master calibration schedule calendar", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer block pt-1 text-center w-full"
               >
                 View Full Schedule &rarr;
@@ -699,7 +701,7 @@ export function CalibrationFormPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Displaying all 10 calibration columns")}
+                    onClick={(e) => openPageViewer("Displaying all 10 calibration columns", e.currentTarget)}
                     className="h-8 text-xs gap-1 cursor-pointer"
                   >
                     <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -901,7 +903,7 @@ export function CalibrationFormPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info(`Calibration QR Tag: ${activeCalib.id}`)}
+                onClick={(e) => openPageViewer(`Calibration QR Tag: ${activeCalib.id}`, e.currentTarget)}
                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
                 title="QR Tag"
               >
@@ -1273,7 +1275,7 @@ export function CalibrationFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Viewing all AI Calibration Intelligence alerts")}
+                onClick={(e) => openPageViewer("Viewing all AI Calibration Intelligence alerts", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1553,4 +1555,3 @@ export function CalibrationFormPage() {
   );
 }
 
-export default CalibrationFormPage;

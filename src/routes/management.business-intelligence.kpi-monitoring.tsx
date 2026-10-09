@@ -2,7 +2,7 @@
 // Management → Business Intelligence Management → KPI Monitoring
 // KPI Monitoring Form — MAICW Classification & Active Workspace
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   TrendingUp,
@@ -58,6 +58,8 @@ import {
 } from "@/services/businessIntelligenceService";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
 export const Route = createFileRoute(
   "/management/business-intelligence/kpi-monitoring"
 )({
@@ -88,14 +90,76 @@ const WORKSPACE_TABS = [
   "History & Audit Trail",
 ] as const;
 
+const statusDistribution = [
+  { name: "On Target", value: 142, color: "#10B981" },
+  { name: "Warning", value: 24, color: "#F59E0B" },
+  { name: "Critical", value: 8, color: "#EF4444" },
+  { name: "Not Started", value: 6, color: "#64748B" },
+  { name: "Under Review", value: 4, color: "#3B82F6" },
+  { name: "Closed", value: 2, color: "#94A3B8" },
+];
+
+const categoryData = [
+  { name: "Financial", count: 28, color: "#3B82F6" },
+  { name: "Commercial", count: 26, color: "#06B6D4" },
+  { name: "Operational", count: 32, color: "#10B981" },
+  { name: "Quality", count: 18, color: "#F59E0B" },
+  { name: "People", count: 18, color: "#EC4899" },
+  { name: "Compliance", count: 14, color: "#8B5CF6" },
+  { name: "Sustainability", count: 8, color: "#14B8A6" },
+  { name: "Innovation", count: 16, color: "#6366F1" },
+];
+
+const trendData = [
+  { month: "Oct", actual: 8.8, target: 8.5, forecast: 8.7 },
+  { month: "Nov", actual: 9.2, target: 9.0, forecast: 9.1 },
+  { month: "Dec", actual: 9.6, target: 9.5, forecast: 9.6 },
+  { month: "Jan", actual: 10.1, target: 10.0, forecast: 10.0 },
+  { month: "Feb", actual: 10.4, target: 10.2, forecast: 10.3 },
+  { month: "Mar", actual: 10.8, target: 10.5, forecast: 10.7 },
+  { month: "Apr", actual: 11.2, target: 11.0, forecast: 11.1 },
+  { month: "May", actual: 11.6, target: 11.2, forecast: 11.4 },
+  { month: "Jun", actual: 12.0, target: 11.5, forecast: 11.8 },
+  { month: "Jul", actual: 12.2, target: 11.8, forecast: 12.0 },
+  { month: "Aug", actual: 12.5, target: 12.0, forecast: 12.3 },
+  { month: "Sep", actual: 12.8, target: 12.0, forecast: 12.6 },
+];
+
+const topPerforming = [
+  { id: 1, name: "Revenue (₹ Cr)", category: "Financial", actual: 12.8, target: 12.0, ach: "107%", trend: "up" },
+  { id: 2, name: "Gross Margin (%)", category: "Financial", actual: 32.6, target: 30.0, ach: "109%", trend: "up" },
+  { id: 3, name: "Customer Acquisition", category: "Commercial", actual: 146, target: 120, ach: "122%", trend: "up" },
+  { id: 4, name: "Production OEE (%)", category: "Operational", actual: 82.7, target: 80.0, ach: "103%", trend: "up" },
+  { id: 5, name: "On-Time Delivery (%)", category: "Operational", actual: 94.2, target: 90.0, ach: "105%", trend: "up" },
+];
+
+const kpisAtRisk = [
+  { id: 1, name: "Cash Balance (₹ Cr)", category: "Financial", actual: 4.2, target: 6.0, status: "Critical" },
+  { id: 2, name: "Material Shortage (Days)", category: "Supply Chain", actual: 7, target: 3, status: "Critical" },
+  { id: 3, name: "Security Incidents", category: "Security", actual: 4, target: 1, status: "Critical" },
+  { id: 4, name: "Projects Delayed", category: "Project", actual: 6, target: 2, status: "Warning" },
+  { id: 5, name: "Quality NCR (Nos)", category: "Quality", actual: 12, target: 8, status: "Warning" },
+];
+
+const recentAlerts = [
+  { time: "10:15 AM", kpi: "Cash Balance", msg: "Below critical threshold", sev: "Critical" },
+  { time: "09:42 AM", kpi: "Material Shortage", msg: "Exceeded threshold", sev: "Critical" },
+  { time: "08:30 AM", kpi: "OEE", msg: "Dropped by 5%", sev: "Warning" },
+  { time: "07:15 AM", kpi: "Delivery Delay", msg: "Below target", sev: "Warning" },
+  { time: "06:50 AM", kpi: "Revenue", msg: "12% above target", sev: "Info" },
+];
+
+const PAGE_DATASET = { BI_KPI_MONITORING_RECORDS, statusDistribution, categoryData, trendData, topPerforming, kpisAtRisk, recentAlerts };
+
 function KpiMonitoringPage() {
+  const { BI_KPI_MONITORING_RECORDS, statusDistribution, categoryData, trendData, topPerforming, kpisAtRisk, recentAlerts } = useModuleDataset("business-intelligence.kpi-monitoring", "KPI Monitoring", PAGE_DATASET);
   const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<string>("Basic Details");
   const [selectedBu, setSelectedBu] = useState("All Business Units");
   const [dateRange, setDateRange] = useState("01 Sep 2026 - 30 Sep 2026");
   const [selectedKpi, setSelectedKpi] = useState<BiKpiMonitoringRecord>(
     BI_KPI_MONITORING_RECORDS[0]
   );
-  const [kpiList, setKpiList] = useState<BiKpiMonitoringRecord[]>(BI_KPI_MONITORING_RECORDS);
+  const [kpiList, setKpiList] = usePersistentState<BiKpiMonitoringRecord[]>("business-intelligence.kpi-monitoring", "KPI Monitoring", "BI_KPI_MONITORING_RECORDS", BI_KPI_MONITORING_RECORDS);
   const [showAddModal, setShowAddModal] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
@@ -144,69 +208,16 @@ function KpiMonitoringPage() {
   };
 
   // Status Distribution Data
-  const statusDistribution = [
-    { name: "On Target", value: 142, color: "#10B981" },
-    { name: "Warning", value: 24, color: "#F59E0B" },
-    { name: "Critical", value: 8, color: "#EF4444" },
-    { name: "Not Started", value: 6, color: "#64748B" },
-    { name: "Under Review", value: 4, color: "#3B82F6" },
-    { name: "Closed", value: 2, color: "#94A3B8" },
-  ];
 
   // Category Breakdown Data
-  const categoryData = [
-    { name: "Financial", count: 28, color: "#3B82F6" },
-    { name: "Commercial", count: 26, color: "#06B6D4" },
-    { name: "Operational", count: 32, color: "#10B981" },
-    { name: "Quality", count: 18, color: "#F59E0B" },
-    { name: "People", count: 18, color: "#EC4899" },
-    { name: "Compliance", count: 14, color: "#8B5CF6" },
-    { name: "Sustainability", count: 8, color: "#14B8A6" },
-    { name: "Innovation", count: 16, color: "#6366F1" },
-  ];
 
   // 12-Month Performance Trend for active KPI
-  const trendData = [
-    { month: "Oct", actual: 8.8, target: 8.5, forecast: 8.7 },
-    { month: "Nov", actual: 9.2, target: 9.0, forecast: 9.1 },
-    { month: "Dec", actual: 9.6, target: 9.5, forecast: 9.6 },
-    { month: "Jan", actual: 10.1, target: 10.0, forecast: 10.0 },
-    { month: "Feb", actual: 10.4, target: 10.2, forecast: 10.3 },
-    { month: "Mar", actual: 10.8, target: 10.5, forecast: 10.7 },
-    { month: "Apr", actual: 11.2, target: 11.0, forecast: 11.1 },
-    { month: "May", actual: 11.6, target: 11.2, forecast: 11.4 },
-    { month: "Jun", actual: 12.0, target: 11.5, forecast: 11.8 },
-    { month: "Jul", actual: 12.2, target: 11.8, forecast: 12.0 },
-    { month: "Aug", actual: 12.5, target: 12.0, forecast: 12.3 },
-    { month: "Sep", actual: 12.8, target: 12.0, forecast: 12.6 },
-  ];
 
   // Top Performing KPIs
-  const topPerforming = [
-    { id: 1, name: "Revenue (₹ Cr)", category: "Financial", actual: 12.8, target: 12.0, ach: "107%", trend: "up" },
-    { id: 2, name: "Gross Margin (%)", category: "Financial", actual: 32.6, target: 30.0, ach: "109%", trend: "up" },
-    { id: 3, name: "Customer Acquisition", category: "Commercial", actual: 146, target: 120, ach: "122%", trend: "up" },
-    { id: 4, name: "Production OEE (%)", category: "Operational", actual: 82.7, target: 80.0, ach: "103%", trend: "up" },
-    { id: 5, name: "On-Time Delivery (%)", category: "Operational", actual: 94.2, target: 90.0, ach: "105%", trend: "up" },
-  ];
 
   // KPIs at Risk (Warning + Critical)
-  const kpisAtRisk = [
-    { id: 1, name: "Cash Balance (₹ Cr)", category: "Financial", actual: 4.2, target: 6.0, status: "Critical" },
-    { id: 2, name: "Material Shortage (Days)", category: "Supply Chain", actual: 7, target: 3, status: "Critical" },
-    { id: 3, name: "Security Incidents", category: "Security", actual: 4, target: 1, status: "Critical" },
-    { id: 4, name: "Projects Delayed", category: "Project", actual: 6, target: 2, status: "Warning" },
-    { id: 5, name: "Quality NCR (Nos)", category: "Quality", actual: 12, target: 8, status: "Warning" },
-  ];
 
   // Recent KPI Alerts
-  const recentAlerts = [
-    { time: "10:15 AM", kpi: "Cash Balance", msg: "Below critical threshold", sev: "Critical" },
-    { time: "09:42 AM", kpi: "Material Shortage", msg: "Exceeded threshold", sev: "Critical" },
-    { time: "08:30 AM", kpi: "OEE", msg: "Dropped by 5%", sev: "Warning" },
-    { time: "07:15 AM", kpi: "Delivery Delay", msg: "Below target", sev: "Warning" },
-    { time: "06:50 AM", kpi: "Revenue", msg: "12% above target", sev: "Info" },
-  ];
 
   return (
     <AppShell
@@ -237,10 +248,9 @@ function KpiMonitoringPage() {
             setDateRange(r);
             showToast(`KPI date window updated: ${r}`);
           }}
-          onRefresh={() => showToast("KPI telemetry and threshold feeds refreshed.")}
-          onExportCsv={() => showToast("KPIs exported to CSV (.csv)")}
-          onExportExcel={() => showToast("KPI register exported to Excel (.xlsx)")}
-          onExportPdf={() => showToast("Generated official KPI performance dossier (.pdf)")}
+          onExportCsv={() => exportRecords("KPI Register", kpiList, "csv")}
+          onExportExcel={() => exportRecords("KPI Register", kpiList, "xlsx")}
+          onExportPdf={() => exportRecords("KPI Register", kpiList, "pdf")}
         />
 
         {/* 7-Gauge Circular Score Banner matching Image 3 */}

@@ -147,6 +147,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { discardPageChanges, savePageForm, openPageForm, openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/supply-chain-management/reverse-logistics")({
   head: () => ({
@@ -352,7 +354,7 @@ function ReverseLogisticsPage() {
               variant="outline"
               size="sm"
               className="h-8 text-xs font-medium"
-              onClick={() => toast.info("Return draft reset")}
+              onClick={() => discardPageChanges()}
             >
               Cancel
             </Button>
@@ -360,7 +362,7 @@ function ReverseLogisticsPage() {
               variant="outline"
               size="sm"
               className="h-8 text-xs font-medium"
-              onClick={() => toast.success("Draft saved to reverse logistics registry")}
+              onClick={(e) => savePageForm("Draft saved", e.currentTarget)}
             >
               <Download className="h-3.5 w-3.5 mr-1" />
               Save Draft
@@ -368,7 +370,7 @@ function ReverseLogisticsPage() {
             <Button
               size="sm"
               className="h-8 text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
-              onClick={() => toast.success("Reverse logistics report authorized & disposition released")}
+              onClick={(e) => savePageForm("Reverse logistics report authorized & disposition released", e.currentTarget)}
             >
               <Send className="h-3.5 w-3.5 mr-1" />
               Submit
@@ -408,7 +410,7 @@ function ReverseLogisticsPage() {
                   <Printer className="h-3.5 w-3.5 mr-2" />
                   Print RMA Summary
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.success("Audit export generated")}>
+                <DropdownMenuItem onClick={() => void exportPageReport("Reverse Logistics Audit", "pdf")}>
                   <FileDown className="h-3.5 w-3.5 mr-2" />
                   Export Traceability Package
                 </DropdownMenuItem>
@@ -433,7 +435,7 @@ function ReverseLogisticsPage() {
                   variant="ghost"
                   size="icon"
                   className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                  onClick={() => toast.info("Reverse Logistics Header edit mode active")}
+                  onClick={() => openPageForm("Edit Reverse Logistics Header")}
                 >
                   <Edit className="h-3.5 w-3.5" />
                 </Button>
@@ -827,7 +829,7 @@ function ReverseLogisticsPage() {
                         Return Item Summary
                       </h3>
                     </div>
-                    <Button variant="ghost" size="sm" className="h-6 text-[10px] px-1.5" onClick={() => toast.info("Displaying all 5 return items")}>
+                    <Button variant="ghost" size="sm" className="h-6 text-[10px] px-1.5" onClick={(e) => openPageViewer("Displaying all 5 return items", e.currentTarget)}>
                       View All (5)
                     </Button>
                   </div>
@@ -1397,7 +1399,7 @@ function ReverseLogisticsPage() {
                               variant="ghost"
                               size="icon"
                               className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                              onClick={() => toast.success(`Downloading ${doc.id}`)}
+                              onClick={() => void downloadAttachment(doc)}
                             >
                               <Download className="h-3.5 w-3.5" />
                             </Button>
@@ -1411,7 +1413,7 @@ function ReverseLogisticsPage() {
                     <Button
                       variant="link"
                       className="text-xs text-blue-600 h-auto p-0 font-medium"
-                      onClick={() => toast.info("Viewing all return documents")}
+                      onClick={(e) => openPageViewer("Viewing all return documents", e.currentTarget)}
                     >
                       View All Documents →
                     </Button>
@@ -1708,4 +1710,3 @@ function ReverseLogisticsPage() {
   );
 }
 
-export default ReverseLogisticsPage;

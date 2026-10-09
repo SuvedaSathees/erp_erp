@@ -66,6 +66,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { openPageFiles, openPageViewer } from "@/lib/pageActions";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/asset-management/equipment")({
   head: () => ({
@@ -165,7 +167,7 @@ const INITIAL_EQUIPMENT: EquipmentItem[] = Array.from({ length: 186 }, (_, i) =>
   };
 });
 
-export function EquipmentFormPage() {
+function EquipmentFormPage() {
   const navigate = useNavigate();
   const [equipmentList, setEquipmentList] = useState<EquipmentItem[]>(INITIAL_EQUIPMENT);
   const [activeItem, setActiveItem] = useState<EquipmentItem>(INITIAL_EQUIPMENT[0]);
@@ -402,13 +404,13 @@ export function EquipmentFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Opening OEE & Equipment Utilization Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("OEE & Equipment Utilization Report", "pdf", "page")}>
                     OEE & Utilization Report
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Maintenance Work Order Log...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Maintenance Work Order Log", "pdf", "page")}>
                     Maintenance Work Orders
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Calibration Due Schedule...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Calibration Due Schedule", "pdf", "page")}>
                     Calibration Due Schedule
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -433,7 +435,7 @@ export function EquipmentFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Import Equipment: Select CSV / Excel file")}>
+                  <DropdownMenuItem onClick={() => openPageFiles("Import Equipment", ".csv,.xlsx,.xls")}>
                     Import Equipment
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsSpecsOpen(true)}>
@@ -853,7 +855,7 @@ export function EquipmentFormPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Displaying all 10 register columns")}
+                    onClick={(e) => openPageViewer("Displaying all 10 register columns", e.currentTarget)}
                     className="h-8 text-xs gap-1 cursor-pointer"
                   >
                     <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -1051,7 +1053,7 @@ export function EquipmentFormPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info(`Scanned Barcode Tag: ${activeItem.id}`)}
+                onClick={(e) => openPageViewer(`Scanned Barcode Tag: ${activeItem.id}`, e.currentTarget)}
                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
                 title="Tag QR Barcode"
               >
@@ -1337,7 +1339,7 @@ export function EquipmentFormPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.info("Viewing equipment replacement plan")}
+                onClick={(e) => openPageViewer("Viewing equipment replacement plan", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View Details &rarr;
@@ -1354,7 +1356,7 @@ export function EquipmentFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Viewing all AI Equipment Insights")}
+                onClick={(e) => openPageViewer("Viewing all AI Equipment Insights", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1770,4 +1772,3 @@ export function EquipmentFormPage() {
   );
 }
 
-export default EquipmentFormPage;

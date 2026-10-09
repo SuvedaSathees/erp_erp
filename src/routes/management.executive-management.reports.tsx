@@ -18,6 +18,10 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { fetchModuleDataset, useModuleDataset } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
+import { EXEC_ACTIONS, EXEC_DECISIONS } from "@/services/executiveManagementService";
+import { TOP_OKRS } from "@/services/strategyManagementService";
 export const Route = createFileRoute("/management/executive-management/reports")({
   head: () => ({
     meta: [
@@ -41,13 +45,77 @@ const REPORT_TEMPLATES = [
   { id: 6, title: "AI Executive Briefing & Variance Narrative", type: "Decision Intelligence", period: "Real-Time", format: "PDF", status: "Ready" },
 ];
 
-export function ExecutiveReportsPage() {
+const PAGE_DATASET = { REPORT_TEMPLATES };
+
+type ReportSource = { key: string; fields: string[]; section?: Record<string, string>; defaults?: Record<string, unknown> };
+
+// Where each report's rows come from (module datasets stored in Postgres).
+const REPORT_SOURCES: Record<number, ReportSource> = {
+  1: { key: "executive-management.executive-review", fields: ["decisions", "actions"], section: { decisions: "Decision", actions: "Action" }, defaults: { decisions: EXEC_DECISIONS, actions: EXEC_ACTIONS } },
+  2: { key: "executive-management.executive-review", fields: ["FINANCIAL_QUARTERLY_DATA"] },
+  3: { key: "strategy-management.okr-management", fields: ["okrs"], defaults: { okrs: TOP_OKRS } },
+  4: { key: "security-management.security-audit", fields: ["FINDINGS_SEVERITY_DATA", "AUDIT_STATUS_BY_TYPE"], section: { FINDINGS_SEVERITY_DATA: "Findings by severity", AUDIT_STATUS_BY_TYPE: "Audits by type" } },
+  5: { key: "business-intelligence.executive-dashboard", fields: ["BI_OVERVIEW_DATA.manufacturingMetrics"] },
+  6: { key: "digital-development.ai-insights", fields: ["AI_TOP_INSIGHTS"] },
+};
+
+function toRows(value: unknown): Record<string, unknown>[] {
+  if (Array.isArray(value)) return value.filter((v) => v && typeof v === "object") as Record<string, unknown>[];
+  if (value && typeof value === "object") {
+    return Object.entries(value as Record<string, unknown>).map(([metric, v]) => ({
+      metric: metric.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/^\w/, (c) => c.toUpperCase()),
+      value: v && typeof v === "object" ? Object.values(v as Record<string, unknown>).filter((x) => typeof x !== "object").join(" · ") : v,
+    }));
+  }
+  return [];
+}
+
+async function loadReportRows(source: ReportSource): Promise<Record<string, unknown>[]> {
+  const data = (await fetchModuleDataset(source.key)) ?? {};
+  return source.fields.flatMap((field) => {
+    const stored = field.split(".").reduce<unknown>((o, k) => (o && typeof o === "object" ? (o as Record<string, unknown>)[k] : undefined), data);
+    const value = stored ?? source.defaults?.[field];
+    const rows = toRows(value);
+    return source.section ? rows.map((r) => ({ section: source.section![field], ...r })) : rows;
+  });
+}
+
+function ExecutiveReportsPage() {
+  const { REPORT_TEMPLATES } = useModuleDataset("executive-management.reports", "Strategy Reports", PAGE_DATASET);
   const [selectedFormat, setSelectedFormat] = useState("All Formats");
 
-  const handleDownload = (title: string) => {
-    toast.success(`Generating report: ${title}`, {
-      description: "Document rendered and download initiated.",
-    });
+  const [busy, setBusy] = useState<number | null>(null);
+
+  const handleDownload = async (rep: (typeof REPORT_TEMPLATES)[number]) => {
+    const source = REPORT_SOURCES[rep.id];
+    if (!source) return;
+    setBusy(rep.id);
+    try {
+      const rows = await loadReportRows(source);
+      await exportRecords(rep.title, rows, /excel/i.test(rep.format.split("/")[0]) ? "xlsx" : "pdf");
+    } catch {
+      toast.error(`Couldn't generate ${rep.title}. Please try again.`);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const handleFullPack = async () => {
+    setBusy(0);
+    try {
+      const sections = await Promise.all(
+        REPORT_TEMPLATES.map(async (rep) => {
+          const source = REPORT_SOURCES[rep.id];
+          const rows = source ? await loadReportRows(source) : [];
+          return rows.map((r) => ({ report: rep.title, ...r }));
+        }),
+      );
+      await exportRecords("Executive Review Pack", sections.flat(), "pdf");
+    } catch {
+      toast.error("Couldn't generate the review pack. Please try again.");
+    } finally {
+      setBusy(null);
+    }
   };
 
   return (
@@ -78,11 +146,12 @@ export function ExecutiveReportsPage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => toast.success("Generating complete Executive Review Pack")}
+              onClick={handleFullPack}
+              disabled={busy !== null}
               className="h-9 px-4 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
             >
               <Download className="h-4 w-4" />
-              <span>Export Full Review Pack</span>
+              <span>{busy === 0 ? "Preparing pack…" : "Export Full Review Pack"}</span>
             </button>
           </div>
         </div>
@@ -112,10 +181,11 @@ export function ExecutiveReportsPage() {
                   <span className="text-[11px] text-muted-foreground">Auto-generated</span>
                   <button
                     type="button"
-                    onClick={() => handleDownload(rep.title)}
+                    onClick={() => handleDownload(rep)}
+                    disabled={busy !== null}
                     className="text-xs font-semibold px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1 cursor-pointer"
                   >
-                    <Download className="h-3 w-3" /> Download
+                    <Download className="h-3 w-3" /> {busy === rep.id ? "Preparing…" : "Download"}
                   </button>
                 </div>
               </div>

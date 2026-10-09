@@ -71,6 +71,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { openPageViewer, emailPageReport, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/project-management/project-analytics")({
   head: () => ({
@@ -85,7 +86,7 @@ export const Route = createFileRoute("/management/project-management/project-ana
   component: ProjectAnalyticsFormPage,
 });
 
-export function ProjectAnalyticsFormPage() {
+function ProjectAnalyticsFormPage() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeKpi, setActiveKpi] = useState<string | null>(null);
@@ -245,9 +246,7 @@ Generated: ${new Date().toLocaleString()}
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Analytics executive report emailed to directors.");
-                  }}
+                  onClick={() => { void emailPageReport("Analytics Executive Report"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -278,9 +277,7 @@ Generated: ${new Date().toLocaleString()}
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Analytics baseline saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("Analytics baseline saved", { message: "Analytics baseline saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />
@@ -1084,7 +1081,7 @@ Generated: ${new Date().toLocaleString()}
                   </p>
                 </div>
                 <div
-                  onClick={() => toast.info("Opening unbilled milestone certification list")}
+                  onClick={(e) => openPageViewer("Opening unbilled milestone certification list", e.currentTarget)}
                   className="flex items-start gap-1.5 p-1 rounded hover:bg-amber-50/50 dark:hover:bg-amber-950/20 cursor-pointer transition-colors"
                 >
                   <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0 mt-0.5" />
@@ -1093,7 +1090,7 @@ Generated: ${new Date().toLocaleString()}
                   </p>
                 </div>
                 <div
-                  onClick={() => toast.info("Opening cost variance breakdown")}
+                  onClick={(e) => openPageViewer("Opening cost variance breakdown", e.currentTarget)}
                   className="flex items-start gap-1.5 p-1 rounded hover:bg-amber-50/50 dark:hover:bg-amber-950/20 cursor-pointer transition-colors"
                 >
                   <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0 mt-0.5" />
@@ -1512,4 +1509,3 @@ Generated: ${new Date().toLocaleString()}
   );
 }
 
-export default ProjectAnalyticsFormPage;

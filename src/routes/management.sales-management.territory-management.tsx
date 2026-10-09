@@ -38,6 +38,7 @@ import {
 import { AppShell } from "@/components/erp/AppShell";
 import { SalesManagementTabBar } from "@/components/erp/SalesManagementTabBar";
 import { cn } from "@/lib/utils";
+import { logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/sales-management/territory-management"
@@ -289,7 +290,7 @@ const initialTerritoriesData: Record<string, {
   },
 };
 
-export default function TerritoryManagementComponent() {
+function TerritoryManagementComponent() {
   const [selectedSubTerritory, setSelectedSubTerritory] = useState("TN");
   const [territories, setTerritories] = useState(initialTerritoriesData);
   const [stepperStages, setStepperStages] = useState(initialStepperStages);
@@ -911,7 +912,7 @@ export default function TerritoryManagementComponent() {
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button
-                  onClick={() => toast.success(`Annual quota rebalanced across ${currentTerritory.name} clusters based on active pipeline.`)}
+                  onClick={() => void logPageAction(`Annual quota rebalanced across ${currentTerritory.name} clusters based on active pipeline`)}
                   className="w-full flex items-center justify-between p-2.5 rounded-lg border border-slate-200 hover:border-emerald-600 hover:bg-slate-50 transition text-xs font-semibold text-slate-800 cursor-pointer"
                 >
                   <span className="flex items-center gap-2">

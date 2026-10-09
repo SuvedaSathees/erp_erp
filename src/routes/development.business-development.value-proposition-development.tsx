@@ -150,7 +150,7 @@ function ScoreGauge({
   );
 }
 
-export function ValuePropositionDevelopmentPage() {
+function ValuePropositionDevelopmentPage() {
   const { data: loadedRecord, isLoading: isRecordLoading } = useQuery({
     queryKey: ["value-proposition"],
     queryFn: valuePropositionService.fetchRecord,

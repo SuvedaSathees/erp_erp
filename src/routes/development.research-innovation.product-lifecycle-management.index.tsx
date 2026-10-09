@@ -6,7 +6,7 @@ export const Route = createFileRoute(
   component: () => <Navigate to="/development/research-innovation/overview" replace />,
 });
 
-export default function PlmIndexPage() {
+function PlmIndexPage() {
   return <Navigate to="/development/research-innovation/overview" replace />;
 }
 

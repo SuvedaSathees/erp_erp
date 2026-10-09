@@ -34,6 +34,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/strategy-management/corporate-governance")({
   head: () => ({
     meta: [
@@ -62,10 +63,21 @@ const SHAREHOLDING_DATA = [
   { name: "Employees / ESOP", value: 8, color: "#8b5cf6" },
 ];
 
-export function CorporateGovernancePage() {
+const GOVERNANCE_RESOLUTIONS = [
+    { id: "BR-2026-011", subject: "Approve Q2 Budget", date: "01 Jul 2026", status: "Completed" },
+    { id: "BR-2026-012", subject: "Approve New Product Launch", date: "15 Jul 2026", status: "In Progress" },
+    { id: "BR-2026-013", subject: "Re-appoint Independent Director", date: "30 Jul 2026", status: "Approved" },
+    { id: "BR-2026-014", subject: "Change in Banking Authority", date: "12 Aug 2026", status: "Pending" },
+    { id: "BR-2026-015", subject: "ESG Sustainability Initiative", date: "25 Aug 2026", status: "Approved" },
+  ];
+
+const PAGE_DATASET = { BOARD_COMPOSITION, SHAREHOLDING_DATA, resolutions: GOVERNANCE_RESOLUTIONS };
+
+function CorporateGovernancePage() {
+  const { BOARD_COMPOSITION, SHAREHOLDING_DATA } = useModuleDataset("strategy-management.corporate-governance", "Corporate Governance", PAGE_DATASET);
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [entity, setEntity] = useState("Magnertia Private Limited");
-  const [currentMaturityStage, setCurrentMaturityStage] = useState(3); // Independent Directors
+  const [currentMaturityStage, setCurrentMaturityStage] = usePersistentState("strategy-management.corporate-governance", "Corporate Governance", "currentMaturityStage", 3); // Independent Directors
 
   // Modal
   const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
@@ -73,13 +85,7 @@ export function CorporateGovernancePage() {
   const [recordSubject, setRecordSubject] = useState("");
 
   // Live Resolutions
-  const [resolutions, setResolutions] = useState([
-    { id: "BR-2026-011", subject: "Approve Q2 Budget", date: "01 Jul 2026", status: "Completed" },
-    { id: "BR-2026-012", subject: "Approve New Product Launch", date: "15 Jul 2026", status: "In Progress" },
-    { id: "BR-2026-013", subject: "Re-appoint Independent Director", date: "30 Jul 2026", status: "Approved" },
-    { id: "BR-2026-014", subject: "Change in Banking Authority", date: "12 Aug 2026", status: "Pending" },
-    { id: "BR-2026-015", subject: "ESG Sustainability Initiative", date: "25 Aug 2026", status: "Approved" },
-  ]);
+  const [resolutions, setResolutions] = usePersistentState("strategy-management.corporate-governance", "Corporate Governance", "resolutions", GOVERNANCE_RESOLUTIONS);
 
   // AI Chat
   const [aiChatMessages, setAiChatMessages] = useState<Array<{ sender: "user" | "ai"; text: string }>>([

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BrandingManagementPage } from "./management.marketing-management.brand-management";
+import { BrandingManagementPage } from "@/pages/management.marketing-management.brand-management";
 
 export const Route = createFileRoute(
   "/management/marketing-management/branding"

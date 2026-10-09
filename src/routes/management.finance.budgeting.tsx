@@ -71,6 +71,7 @@ import type {
   BudgetVersion,
   DashboardQuery,
 } from "@/services/types";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/finance/budgeting")({
   head: () => ({
@@ -390,7 +391,7 @@ function BudgetingPage() {
                   <ErpButton
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Exporting budget data...")}
+                    onClick={() => void exportPageReport("Budget Report", "pdf")}
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Export</span>

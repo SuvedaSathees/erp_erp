@@ -53,6 +53,11 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
+import { usePersistentState } from "@/services/moduleDatasetService";
+import { SubmissionsPanel, makeSubmission, type Submission } from "@/components/erp/SubmissionsPanel";
+import { readFieldsNear } from "@/lib/formCapture";
+import { exportRecords, recordToRows } from "@/lib/recordExport";
 export const Route = createFileRoute("/management/security-management/identity-management")({
   head: () => ({
     meta: [
@@ -87,8 +92,12 @@ const IDENTITY_STATUS_BARS = [
   { status: "Deactivated", count: 7, color: "#EF4444" },
 ];
 
+const PAGE_DATASET = { IDENTITY_TYPES_PIE, IDENTITY_STATUS_BARS };
+
 function IdentityManagementPage() {
-  const [profile, setProfile] = useState<IdentityProfile>(mockIdentityProfile);
+  const { IDENTITY_TYPES_PIE, IDENTITY_STATUS_BARS } = useModuleDataset("security-management.identity-management", "Identity Management", PAGE_DATASET);
+  const [profile, setProfile] = usePersistentState<IdentityProfile>("security-management.identity-management", "Identity Management", "profile", mockIdentityProfile);
+  const [submissions, setSubmissions] = usePersistentState<Submission[]>("security-management.identity-management", "Identity Management", "submissions", []);
   const [showNewIdentityModal, setShowNewIdentityModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [requestTab, setRequestTab] = useState<"pending" | "approved" | "rejected" | "all">("pending");
@@ -111,8 +120,10 @@ function IdentityManagementPage() {
           bannerQuote="Right Identity. Right Access. A Safer Tomorrow."
           primaryActionLabel="+ New Identity"
           onPrimaryAction={() => setShowNewIdentityModal(true)}
-          onGenerateReport={() => toast.success("Identity Management Master Report exported")}
+          onGenerateReport={() => exportRecords("Identity Management Report", recordToRows(profile), "pdf")}
         />
+
+        <SubmissionsPanel title="Registered Identities" items={submissions} />
 
         {/* Executive 7-Gauge Circular Score Banner matching Screenshot */}
         <ProductScoreBanner submoduleKey="identity-management" />
@@ -747,9 +758,11 @@ function IdentityManagementPage() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
                     setShowNewIdentityModal(false);
-                    toast.success("New Identity registered & queued for HRMS verification");
+                    const sub = makeSubmission(submissions, "IDN", readFieldsNear(e.currentTarget));
+                    setSubmissions((prev) => [sub, ...prev]);
+                    toast.success(`Identity ${sub.code} registered & queued for HRMS verification`);
                   }}
                   className="rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
                 >

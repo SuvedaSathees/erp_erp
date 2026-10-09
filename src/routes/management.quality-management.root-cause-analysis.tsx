@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/quality-management/root-cause-analysis",
@@ -51,7 +52,7 @@ export const Route = createFileRoute(
   component: RootCauseAnalysisPage,
 });
 
-export function RootCauseAnalysisPage() {
+function RootCauseAnalysisPage() {
   const { data: dbRecord } = useQuery({
     queryKey: ["rca", "record"],
     queryFn: () => getRcaRecordFn({ data: {} }),
@@ -127,9 +128,7 @@ export function RootCauseAnalysisPage() {
   };
 
   // Save investigation draft
-  const handleSave = () => {
-    toast.success(`RCA record ${record.rcaNumber} draft saved successfully`);
-  };
+  const handleSave = () => { void savePageState(`RCA record ${record.rcaNumber} draft saved`, { message: `RCA record ${record.rcaNumber} draft saved.` }); };
 
   // Certify root cause
   const handleSubmitVerification = () => {

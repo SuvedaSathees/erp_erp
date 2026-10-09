@@ -74,6 +74,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { savePageState } from "@/lib/pageActions";
 
 // Goods Receipt (GRN) Module · Procurement Management
 export const Route = createFileRoute("/management/procurement-management/goods-receipt")({
@@ -298,7 +299,7 @@ const INITIAL_APPROVALS: GRApprovalStep[] = [
   { level: 3, approver: "Sunil Deshmukh", role: "Procurement Manager", status: "Pending" },
 ];
 
-export function GoodsReceiptPage() {
+function GoodsReceiptPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["procurement", "goodsReceipts"]],
@@ -329,13 +330,9 @@ export function GoodsReceiptPage() {
   });
 
   // Actions
-  const handleSaveDraft = () => {
-    toast.success("Goods receipt draft saved.");
-  };
+  const handleSaveDraft = () => { void savePageState("Goods receipt draft saved", { message: "Goods receipt draft saved." }); };
 
-  const handleReceiveGoods = () => {
-    toast.success("Physical inward verified. Quality inspection initiated.");
-  };
+  const handleReceiveGoods = () => { void savePageState("Goods received — quality inspection requested", { kind: "request", message: "Goods received — quality inspection requested. Recorded in the activity log." }); };
 
   const handleGenerateGrn = () => {
     setShowGrnModal(true);
@@ -1126,4 +1123,3 @@ export function GoodsReceiptPage() {
   );
 }
 
-export default GoodsReceiptPage;

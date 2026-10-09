@@ -135,6 +135,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
+import { discardPageChanges, savePageForm, logPageAction, openPageForm } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/supply-chain-management/fleet-management")({
   head: () => ({
@@ -293,7 +295,7 @@ function FleetPage() {
               variant="outline"
               size="sm"
               className="h-8 text-xs font-medium"
-              onClick={() => toast.info("Changes reset")}
+              onClick={() => discardPageChanges()}
             >
               Cancel
             </Button>
@@ -301,7 +303,7 @@ function FleetPage() {
               variant="outline"
               size="sm"
               className="h-8 text-xs font-medium"
-              onClick={() => toast.success("Draft saved to fleet registry")}
+              onClick={(e) => savePageForm("Draft saved", e.currentTarget)}
             >
               <Download className="h-3.5 w-3.5 mr-1" />
               Save Draft
@@ -309,7 +311,7 @@ function FleetPage() {
             <Button
               size="sm"
               className="h-8 text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
-              onClick={() => toast.success("Fleet Record Verified and Active")}
+              onClick={(e) => savePageForm("Fleet Record Verified and Active", e.currentTarget)}
             >
               <Send className="h-3.5 w-3.5 mr-1" />
               Submit
@@ -336,7 +338,7 @@ function FleetPage() {
                   <CheckSquare className="h-3.5 w-3.5 mr-2 text-emerald-500" />
                   Record Inspection
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.info("Running AI fleet diagnostics...")}>
+                <DropdownMenuItem onClick={() => void logPageAction("AI fleet diagnostics requested")}>
                   <Sparkles className="h-3.5 w-3.5 mr-2 text-indigo-500" />
                   AI Predictive Health
                 </DropdownMenuItem>
@@ -365,7 +367,7 @@ function FleetPage() {
                     variant="ghost"
                     size="icon"
                     className="h-6 w-6"
-                    onClick={() => toast.info("Fleet Header edit mode active")}
+                    onClick={() => openPageForm("Edit Fleet Header")}
                   >
                     <Edit className="h-3 w-3 text-muted-foreground" />
                   </Button>
@@ -1611,15 +1613,15 @@ function FleetPage() {
             <DialogDescription>Export vehicle performance, fuel or utilization report.</DialogDescription>
           </DialogHeader>
           <div className="space-y-2 py-2 text-xs">
-            <div className="p-2.5 rounded border hover:bg-muted/30 cursor-pointer flex justify-between" onClick={() => toast.success("Exporting Vehicle Utilization Report")}>
+            <div className="p-2.5 rounded border hover:bg-muted/30 cursor-pointer flex justify-between" onClick={() => void exportPageReport("Vehicle Utilization Report", "pdf")}>
               <span>Vehicle Utilization & Downtime Report</span>
               <Download className="h-4 w-4 text-primary" />
             </div>
-            <div className="p-2.5 rounded border hover:bg-muted/30 cursor-pointer flex justify-between" onClick={() => toast.success("Exporting Fuel Efficiency Report")}>
+            <div className="p-2.5 rounded border hover:bg-muted/30 cursor-pointer flex justify-between" onClick={() => void exportPageReport("Fuel Efficiency Report", "pdf")}>
               <span>Fuel Efficiency & Mileage Anomaly Log</span>
               <Download className="h-4 w-4 text-primary" />
             </div>
-            <div className="p-2.5 rounded border hover:bg-muted/30 cursor-pointer flex justify-between" onClick={() => toast.success("Exporting Maintenance Cost Register")}>
+            <div className="p-2.5 rounded border hover:bg-muted/30 cursor-pointer flex justify-between" onClick={() => void exportPageReport("Maintenance Cost Register", "pdf")}>
               <span>Maintenance & Repair Ledger (YTD)</span>
               <Download className="h-4 w-4 text-primary" />
             </div>
@@ -1666,4 +1668,3 @@ function FleetPage() {
   );
 }
 
-export default FleetPage;

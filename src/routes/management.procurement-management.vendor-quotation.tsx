@@ -64,6 +64,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { savePageState } from "@/lib/pageActions";
 
 // Vendor Quotation Module · Procurement Management
 export const Route = createFileRoute("/management/procurement-management/vendor-quotation")({
@@ -294,7 +295,7 @@ const INITIAL_CLARIFICATIONS: VendorClarification[] = [
   },
 ];
 
-export function VendorQuotationPage() {
+function VendorQuotationPage() {
   // Navigation & Tabs
   const [activeTab, setActiveTab] = useState<string>("lineItems");
 
@@ -402,9 +403,7 @@ export function VendorQuotationPage() {
   const grandTotal = 676507.0;
 
   // Actions
-  const handleSaveDraft = () => {
-    toast.success("Vendor Quotation saved as draft.");
-  };
+  const handleSaveDraft = () => { void savePageState("Vendor Quotation saved as draft", { message: "Vendor Quotation saved as draft." }); };
 
   const handleValidate = () => {
     setShowValidationModal(true);
@@ -1409,4 +1408,3 @@ export function VendorQuotationPage() {
   );
 }
 
-export default VendorQuotationPage;

@@ -98,6 +98,8 @@ import {
   Cell,
   Tooltip as RechartsTooltip,
 } from "recharts";
+import { exportPageReport, exportRecords, recordToRows } from "@/lib/recordExport";
+import { openPageViewer, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/employee-management")({
   head: () => ({
@@ -202,7 +204,7 @@ const ASSIGNED_ASSETS = [
   { name: "Workstation", type: "Equipment", assetNumber: "AST-WS-045", issuedOn: "01 Aug 2023", status: "Issued" },
 ];
 
-export default function EmployeeManagementPage() {
+function EmployeeManagementPage() {
   const employeesQuery = useQuery({
     queryKey: ["hrm", "employees"],
     queryFn: () => hrmManagementService.fetchEmployees(),
@@ -301,16 +303,10 @@ export default function EmployeeManagementPage() {
   // Edit Profile Form State
   const [editForm, setEditForm] = useState<EmployeeProfile>(INITIAL_PROFILE);
 
-  const handleSave = () => {
-    toast.success(`Employee Record ${profile.employeeNumber} saved successfully`, {
-      description: "Employee details, compensation, organization and records updated.",
-    });
-  };
+  const handleSave = () => { void savePageState(`Employee Record ${profile.employeeNumber} saved`, { message: `Employee Record ${profile.employeeNumber} saved.` }); };
 
   const handleExportData = (type: "excel" | "pdf") => {
-    toast.success(`Employee 360° record exported as ${type.toUpperCase()}`, {
-      description: `Downloaded ${profile.employeeId}_${new Date().toISOString().slice(0, 10)}.${type === "excel" ? "xlsx" : "pdf"}`,
-    });
+    void exportRecords(`Employee 360 Record ${profile.employeeId}`, recordToRows(profile), type === "excel" ? "xlsx" : "pdf");
   };
 
   const handleCreateNewEmployee = (e: React.FormEvent) => {
@@ -779,7 +775,7 @@ export default function EmployeeManagementPage() {
             <div className="bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-2 flex flex-col justify-between">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                 <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">4. Compensation Summary</h4>
-                <button onClick={() => toast.info("Viewing Full Compensation Structure")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
+                <button onClick={(e) => openPageViewer("Viewing Full Compensation Structure", e.currentTarget)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
                   Breakdown
                 </button>
               </div>
@@ -1527,7 +1523,7 @@ export default function EmployeeManagementPage() {
               <button
                 type="button"
                 onClick={() => {
-                  toast.success("Digital ID Badge downloaded as PNG!");
+                  void exportPageReport("Digital ID Badge", "pdf");
                   setIsIdCardModalOpen(false);
                 }}
                 className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 font-semibold cursor-pointer text-xs inline-flex items-center gap-1.5"

@@ -70,6 +70,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { savePageState, emailPageReport } from "@/lib/pageActions";
 
 // Purchase Order Module · Procurement Management
 export const Route = createFileRoute("/management/procurement-management/purchase-order")({
@@ -284,7 +285,7 @@ const INITIAL_PO_DOCUMENTS = [
   { id: 4, name: "Technical_Specifications_SpecSheet.pdf", type: "Technical Spec", size: "820 KB", date: "18 May 2026", user: "Rahul Sharma" },
 ];
 
-export function PurchaseOrderPage() {
+function PurchaseOrderPage() {
   const queryClient = useQueryClient();
   const { data: _dbData, isLoading: _dbLoading } = useQuery({
     queryKey: [["procurement", "purchaseOrders"]],
@@ -331,17 +332,11 @@ export function PurchaseOrderPage() {
   const sgst = 42566.27;
 
   // Handlers
-  const handleSaveDraft = () => {
-    toast.success("Purchase Order draft saved.");
-  };
+  const handleSaveDraft = () => { void savePageState("Purchase Order draft saved", { message: "Purchase Order draft saved." }); };
 
-  const handleSubmitForApproval = () => {
-    toast.success("PO submitted to Workflow Approvers.");
-  };
+  const handleSubmitForApproval = () => { void savePageState("PO submitted to Workflow Approvers", { kind: "request", message: "PO submitted to Workflow Approvers. Recorded in the activity log." }); };
 
-  const handleIssuePo = () => {
-    toast.success("Purchase Order PO-2026-000152 issued to vendor via portal & email!");
-  };
+  const handleIssuePo = () => { void emailPageReport("Purchase Order PO-2026-000152"); };
 
   const handleUploadDocument = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1281,4 +1276,3 @@ export function PurchaseOrderPage() {
   );
 }
 
-export default PurchaseOrderPage;

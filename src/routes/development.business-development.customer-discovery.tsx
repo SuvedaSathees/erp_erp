@@ -43,6 +43,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { downloadAttachment } from "@/lib/recordExport";
 
 export const Route = createFileRoute(
   "/development/business-development/customer-discovery",
@@ -844,7 +845,7 @@ function CustomerDiscoveryPageForm() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => toast.info(`Downloading ${file.name}...`)}
+                      onClick={() => void downloadAttachment(file)}
                       className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"
                       title="Download File"
                     >
@@ -1154,7 +1155,7 @@ function CustomerDiscoveryPageForm() {
             <div className="flex justify-end gap-2 pt-2">
               <button
                 type="button"
-                onClick={() => toast.info(`Downloading ${viewingFile}...`)}
+                onClick={() => void downloadAttachment(viewingFile)}
                 className="flex items-center gap-1 rounded-lg bg-primary px-4 py-2 font-bold text-white hover:bg-primary/90 cursor-pointer"
               >
                 <Download className="h-3.5 w-3.5" /> Download

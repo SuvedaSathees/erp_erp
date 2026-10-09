@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { savePageState, logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/quality-management/calibration",
@@ -54,7 +55,7 @@ export const Route = createFileRoute(
   component: CalibrationPage,
 });
 
-export function CalibrationPage() {
+function CalibrationPage() {
   const { data: dbRecord } = useQuery({
     queryKey: ["calibration", "record"],
     queryFn: () => getCalibrationRecordFn({ data: {} }),
@@ -171,9 +172,7 @@ export function CalibrationPage() {
     toast.success(`Active record switched to ${newPartial.calibrationNumber}`);
   };
 
-  const handleSave = () => {
-    toast.success(`Calibration record ${record.calibrationNumber} draft saved successfully`);
-  };
+  const handleSave = () => { void savePageState(`Calibration record ${record.calibrationNumber} draft saved`, { message: `Calibration record ${record.calibrationNumber} draft saved.` }); };
 
   const handleSubmitForApproval = () => {
     setRecord((prev) => ({ ...prev, calibrationStatus: "Approved" }));
@@ -185,9 +184,7 @@ export function CalibrationPage() {
     window.print();
   };
 
-  const handleScheduleNext = () => {
-    toast.info(`Next calibration interval verified for ${record.nextCalibrationDate}`);
-  };
+  const handleScheduleNext = () => { void logPageAction(`Next calibration interval confirmed for ${record.nextCalibrationDate}`); };
 
   const handleRaiseOot = () => {
     setRecord((prev) => ({

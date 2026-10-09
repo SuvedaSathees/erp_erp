@@ -1,6 +1,7 @@
 import React from "react";
 import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCard";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
 
 interface QualityAnalyticsHeaderProps {
   dateRange: string;
@@ -57,7 +58,7 @@ export function QualityAnalyticsHeader({
       onExportCsv={downloadCsv}
       onExportExcel={() => {
         downloadCsv();
-        toast.success("Generated Excel-compatible Quality Analytics Sheet (.csv)");
+        void exportPageReport("Quality Analytics Sheet", "csv");
       }}
       onExportPdf={() => {
         window.print();

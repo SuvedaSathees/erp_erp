@@ -40,6 +40,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/executive-management/overview")({
   head: () => ({
     meta: [
@@ -71,7 +72,10 @@ const REVENUE_BY_STREAM = [
   { name: "Others", value: 3, color: "#64748b" },
 ];
 
-export function ExecutiveOverviewPage() {
+const PAGE_DATASET = { QUARTERLY_TRENDS, REVENUE_BY_STREAM };
+
+function ExecutiveOverviewPage() {
+  const { QUARTERLY_TRENDS, REVENUE_BY_STREAM } = useModuleDataset("executive-management.overview", "Executive Overview", PAGE_DATASET);
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
 

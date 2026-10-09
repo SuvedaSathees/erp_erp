@@ -94,6 +94,8 @@ import type {
   FirmwareDevelopmentRecord,
   FirmwareDevelopmentStage,
 } from "@/services/types";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
+import { openPageViewer } from "@/lib/pageActions";
 
 export function FirmwareDevelopmentFormPage(props: { breadcrumb?: string; tabs?: ReactNode } = {}) {
   return <FirmwareDevelopmentNewPage {...props} />;
@@ -442,7 +444,7 @@ export function FirmwareDevelopmentNewPage({
             </div>
             <Button
               size="sm"
-              onClick={() => toast.info(`Navigating to System Integration (${record.linkedSystemIntegrationId})...`)}
+              onClick={(e) => openPageViewer(`Navigating to System Integration (${record.linkedSystemIntegrationId})`, e.currentTarget)}
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
             >
               Proceed to System Integration
@@ -942,7 +944,7 @@ export function FirmwareDevelopmentNewPage({
                       <span className="font-bold text-foreground text-sm block">Signed OTA Binary Package</span>
                       <span className="font-mono text-muted-foreground block">{formInput.otaPackageName} • {formInput.otaPackageSize}</span>
                     </div>
-                    <Button size="sm" variant="outline" onClick={() => toast.success(`Downloading ${formInput.otaPackageName}...`)}>
+                    <Button size="sm" variant="outline" onClick={() => void downloadAttachment({ name: formInput.otaPackageName, size: formInput.otaPackageSize, type: "Signed OTA Binary Package" })}>
                       <Download className="h-4 w-4 mr-1.5" /> Download Package
                     </Button>
                   </div>
@@ -1100,7 +1102,7 @@ export function FirmwareDevelopmentNewPage({
                       </div>
                       <button
                         type="button"
-                        onClick={() => toast.info(`Downloading ${att.name}...`)}
+                        onClick={() => void downloadAttachment(att)}
                         className="p-1 text-muted-foreground hover:text-foreground cursor-pointer"
                         title="Download file"
                       >
@@ -1327,7 +1329,7 @@ export function FirmwareDevelopmentNewPage({
               <Button variant="outline" onClick={() => setReportModalOpen(false)}>
                 Close
               </Button>
-              <Button onClick={() => { toast.success("Downloaded Firmware_Executive_Report.pdf"); setReportModalOpen(false); }}>
+              <Button onClick={() => { void exportPageReport("Firmware Executive Report", "pdf"); setReportModalOpen(false); }}>
                 <Download className="h-4 w-4 mr-1.5" /> Download PDF Report
               </Button>
             </DialogFooter>

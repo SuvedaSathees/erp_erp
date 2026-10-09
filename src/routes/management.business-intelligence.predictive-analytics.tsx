@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PredictiveAnalyticsPage } from "@/routes/development.digital-development.predictive-analytics";
+import { PredictiveAnalyticsPage } from "@/pages/development.digital-development.predictive-analytics";
 
 export const Route = createFileRoute(
   "/management/business-intelligence/predictive-analytics"

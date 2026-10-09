@@ -7,6 +7,7 @@ import { Upload, FileText, Download, Eye, Trash2, History, Paperclip, CheckCircl
 import type { JigAttachment } from "@/services/types";
 import { jigDevelopmentService } from "@/services/jigDevelopmentService";
 import { toast } from "sonner";
+import { downloadAttachment } from "@/lib/recordExport";
 
 export function JigAttachmentManager({
   attachments,
@@ -155,7 +156,7 @@ export function JigAttachmentManager({
                     size="icon"
                     className="h-7 w-7"
                     title="Preview"
-                    onClick={() => toast.info(`Previewing ${att.fileName}`)}
+                    onClick={() => void downloadAttachment(att)}
                   >
                     <Eye className="h-3.5 w-3.5 text-slate-500" />
                   </Button>

@@ -41,6 +41,7 @@ import { AutomationReviewTable } from "@/components/automation-development/Autom
 import { AutomationSummaryCard } from "@/components/automation-development/AutomationSummaryCard";
 import { AutomationAttachmentsCard } from "@/components/automation-development/AutomationAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import { openPageFiles, openPageHistory } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/manufacturing-development/automation-development/$id")({
   head: () => ({
@@ -206,7 +207,7 @@ function AutomationDevelopmentDetailPage() {
         <div className="flex items-center justify-between p-2 rounded bg-muted/30 border border-dashed border-border/80">
           <span className="text-[11px] text-muted-foreground">{label} (Not Uploaded)</span>
           <button
-            onClick={() => toast.info(`Upload ${label}...`)}
+            onClick={() => openPageFiles(`Upload ${label}`)}
             className="text-[10px] font-bold text-blue-600 hover:underline cursor-pointer"
           >
             Upload
@@ -794,19 +795,19 @@ AI Health Score: ${record.aiAutomationHealthScore}/100
 
                 {/* History Links Row (4 separate links) */}
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs font-semibold text-muted-foreground border-t border-border">
-                  <button onClick={() => toast.info("Opening Audit Trail drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Audit Trail")} className="hover:text-foreground hover:underline">
                     Audit Trail
                   </button>
                   <span>·</span>
-                  <button onClick={() => toast.info("Opening Activity History drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Activity History")} className="hover:text-foreground hover:underline">
                     Activity History
                   </button>
                   <span>·</span>
-                  <button onClick={() => toast.info("Opening Change History drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Change History")} className="hover:text-foreground hover:underline">
                     Change History
                   </button>
                   <span>·</span>
-                  <button onClick={() => toast.info("Opening Workflow History drawer...")} className="hover:text-foreground hover:underline">
+                  <button onClick={() => openPageHistory("Workflow History")} className="hover:text-foreground hover:underline">
                     Workflow History
                   </button>
                 </div>

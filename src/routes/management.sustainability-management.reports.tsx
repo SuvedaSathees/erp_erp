@@ -67,6 +67,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { exportPageReport, exportRecords, recordToRows, formatFrom } from "@/lib/recordExport";
+import { refreshPageData, logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/sustainability-management/reports"
@@ -395,7 +397,7 @@ const SHARED_LOGS_DATA = [
   },
 ];
 
-export function SustainabilityReportsPage() {
+function SustainabilityReportsPage() {
   const [activeTab, setActiveTab] = useState<
     "reports" | "favorites" | "recent" | "shared" | "scheduled"
   >("reports");
@@ -734,7 +736,7 @@ export function SustainabilityReportsPage() {
                 <ErpButton
                   variant="outline"
                   size="sm"
-                  onClick={() => toast.info("Exporting controlled sustainability reports ledger (.csv)...")}
+                  onClick={() => void exportPageReport("Controlled Sustainability Reports Ledger", "csv")}
                 >
                   <Download className="h-3.5 w-3.5" />
                   <span>Export</span>
@@ -993,7 +995,7 @@ export function SustainabilityReportsPage() {
                                   </DropdownMenuItem>
                                   <DropdownMenuItem
                                     onClick={() =>
-                                      toast.success(`Downloaded ${report.name} as ${report.format}.`)
+                                      void exportRecords(report.name, recordToRows(report), formatFrom(report.format) === "xlsx" ? "xlsx" : "pdf")
                                     }
                                   >
                                     <Download className="mr-2 h-3.5 w-3.5" /> Download File
@@ -1040,7 +1042,7 @@ export function SustainabilityReportsPage() {
                           </ErpButton>
                           <ErpButton
                             size="xs"
-                            onClick={() => toast.success(`Generated ${rep.name}.`)}
+                            onClick={() => void exportRecords(rep.name, recordToRows(rep), "pdf")}
                           >
                             Run Now
                           </ErpButton>
@@ -1066,7 +1068,7 @@ export function SustainabilityReportsPage() {
                     <ErpButton
                       size="xs"
                       variant="outline"
-                      onClick={() => toast.info("Refreshed execution audit logs.")}
+                      onClick={() => void refreshPageData("Execution audit logs")}
                     >
                       <RotateCw className="h-3.5 w-3.5" />
                       <span>Refresh</span>
@@ -1102,7 +1104,7 @@ export function SustainabilityReportsPage() {
                           </td>
                           <td className="py-2.5 text-right">
                             <button
-                              onClick={() => toast.success(`Downloaded ${r.name} artifact.`)}
+                              onClick={() => void exportRecords(r.name, recordToRows(r), "pdf")}
                               className="text-primary hover:underline text-xs font-semibold cursor-pointer"
                             >
                               Get {r.format}
@@ -1156,7 +1158,7 @@ export function SustainabilityReportsPage() {
                           <td className="py-2.5 text-muted-foreground">{s.sharedDate}</td>
                           <td className="py-2.5 text-right">
                             <button
-                              onClick={() => toast.info("Revoked stakeholder access.")}
+                              onClick={() => void logPageAction("Revoked stakeholder access")}
                               className="text-rose-600 hover:underline text-[11px] font-medium cursor-pointer"
                             >
                               Revoke
@@ -1703,7 +1705,7 @@ export function SustainabilityReportsPage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => toast.info("Printing report preview...")}
+                  onClick={() => window.print()}
                 >
                   <Printer className="h-3.5 w-3.5" />
                   <span>Print Document</span>
@@ -1721,7 +1723,7 @@ export function SustainabilityReportsPage() {
                   <ErpButton
                     size="sm"
                     onClick={() => {
-                      toast.success(`Exported ${previewReport.name} as ${previewReport.format}.`);
+                      void exportPageReport(previewReport.name, formatFrom(previewReport.format));
                       setPreviewReport(null);
                     }}
                   >

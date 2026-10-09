@@ -52,6 +52,8 @@ import {
 import { AppShell } from "@/components/erp/AppShell";
 import { SalesManagementTabBar } from "@/components/erp/SalesManagementTabBar";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/sales-management/sales-analytics"
@@ -221,7 +223,7 @@ const topCustomers = [
   { name: "KSRTC Electric Depot Phase-1", segment: "State Transit Undertaking", revenue: "₹28.0 L", units: 18, status: "Pending PO" },
 ];
 
-export default function SalesAnalyticsComponent() {
+function SalesAnalyticsComponent() {
   const [filterPeriod, setFilterPeriod] = useState("FY 2026-27");
   const [stepperStages, setStepperStages] = useState(initialStepperStages);
   const [version, setVersion] = useState("v2.1");
@@ -255,7 +257,7 @@ export default function SalesAnalyticsComponent() {
   };
 
   const handleExport = () => {
-    toast.success(`Exported complete Sales Analytics data (${filterPeriod}) to Excel workbook.`);
+    void exportPageReport(`Sales Analytics (${filterPeriod})`, "xlsx");
   };
 
   const handleGenerateReport = (e: React.FormEvent) => {
@@ -787,7 +789,7 @@ export default function SalesAnalyticsComponent() {
                     <div className="mt-1.5 flex items-center justify-between text-[10px]">
                       <span className="text-emerald-700 font-semibold">+₹38.4L Potential</span>
                       <button
-                        onClick={() => toast.success("Drafted proposal QUO-2026-092 for Apex Logistics Corridors (8x 60kW DC Fleet Dispensers @ ₹38.4L). Redirecting...")}
+                        onClick={() => void logPageAction("Proposal QUO-2026-092 drafted for Apex Logistics Corridors")}
                         className="text-[#0A3C75] font-bold hover:underline cursor-pointer"
                       >
                         Draft Proposal &gt;
@@ -803,7 +805,7 @@ export default function SalesAnalyticsComponent() {
                     <div className="mt-1.5 flex items-center justify-between text-[10px]">
                       <span className="text-amber-700 font-semibold">High Priority</span>
                       <button
-                        onClick={() => toast.success("Opened Pune Warehouse depot buffer inventory dashboard. 40 units assigned.")}
+                        onClick={() => void logPageAction("Buffer stock of 40 units requested at Pune Warehouse depot")}
                         className="text-[#0A3C75] font-bold hover:underline cursor-pointer"
                       >
                         Review Inventory &gt;
@@ -818,7 +820,7 @@ export default function SalesAnalyticsComponent() {
                 <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Related BI Reports</h4>
                 <div className="space-y-1.5 text-xs">
                   <div
-                    onClick={() => toast.success("Downloading Monthly Executive Pack (PDF)...")}
+                    onClick={() => void exportPageReport("Monthly Executive Pack", "pdf")}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 transition border border-transparent hover:border-slate-200 cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
@@ -828,7 +830,7 @@ export default function SalesAnalyticsComponent() {
                     <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                   </div>
                   <div
-                    onClick={() => toast.success("Downloading Territory Quota Scorecard (XLSX)...")}
+                    onClick={() => void exportPageReport("Territory Quota Scorecard", "xlsx")}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 transition border border-transparent hover:border-slate-200 cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
@@ -838,7 +840,7 @@ export default function SalesAnalyticsComponent() {
                     <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                   </div>
                   <div
-                    onClick={() => toast.success("Downloading Gross Margin Leakage Audit Report...")}
+                    onClick={() => void exportPageReport("Gross Margin Leakage Audit Report", "pdf")}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 transition border border-transparent hover:border-slate-200 cursor-pointer"
                   >
                     <div className="flex items-center gap-2">

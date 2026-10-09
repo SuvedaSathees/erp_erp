@@ -111,7 +111,7 @@ export const Route = createFileRoute(
   }),
 });
 
-export function IncidentManagementPage() {
+function IncidentManagementPage() {
   const { toast } = useToast();
 
   const { data: dbRecord } = useQuery({
@@ -2247,5 +2247,4 @@ export function IncidentManagementPage() {
   );
 }
 
-export default IncidentManagementPage;
 

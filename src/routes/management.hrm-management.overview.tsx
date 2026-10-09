@@ -23,7 +23,7 @@ export const Route = createFileRoute("/management/hrm-management/overview")({
  * department headcount breakdown, payroll outlays, and workforce AI
  * intelligence are fully customizable with drag-and-drop and KPI pin keys.
  */
-export function HrmOverview() {
+function HrmOverview() {
   return (
     <AppShell
       title="HRM Overview"
@@ -36,7 +36,6 @@ export function HrmOverview() {
   );
 }
 
-export default HrmOverview;
 
 function OverviewSkeleton() {
   return (

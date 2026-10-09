@@ -55,6 +55,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { openPageForm, logPageAction, savePageState } from "@/lib/pageActions";
 
 // Purchase Requisition Module · Procurement Management
 export const Route = createFileRoute("/management/procurement-management/purchase-requisition")({
@@ -473,7 +474,7 @@ const INITIAL_AMENDMENTS: AmendmentItem[] = [
   },
 ];
 
-export function PurchaseRequisitionPage() {
+function PurchaseRequisitionPage() {
   // Navigation & Sub-tabs
   const [activeTab, setActiveTab] = useState<string>("lineItems");
 
@@ -581,9 +582,7 @@ export function PurchaseRequisitionPage() {
   }, [prMaster.budgetAvailable, calculatedTotalValue]);
 
   // Form handlers
-  const handleSaveDraft = () => {
-    toast.success("Purchase Requisition saved as draft successfully.");
-  };
+  const handleSaveDraft = () => { void savePageState("Purchase Requisition saved as draft", { message: "Purchase Requisition saved as draft." }); };
 
   const handleSubmitForApproval = () => {
     setPrMaster((prev) => ({ ...prev, prStatus: "Submitted" }));
@@ -934,7 +933,7 @@ export function PurchaseRequisitionPage() {
                           <div className="flex items-center justify-end gap-1.5">
                             <button
                               type="button"
-                              onClick={() => toast.info(`Editing line ${item.itemService}`)}
+                              onClick={() => openPageForm(`Edit line ${item.itemService}`)}
                               className="text-muted-foreground hover:text-primary cursor-pointer p-1"
                               title="Edit Item"
                             >
@@ -1061,7 +1060,7 @@ export function PurchaseRequisitionPage() {
                         <td className="py-3 px-3 text-right">
                           <button
                             type="button"
-                            onClick={() => toast.info(`Editing spec ${spec.parameter}`)}
+                            onClick={() => openPageForm(`Edit spec ${spec.parameter}`)}
                             className="text-muted-foreground hover:text-primary cursor-pointer p-1"
                           >
                             <Edit className="h-3.5 w-3.5" />
@@ -1179,7 +1178,7 @@ export function PurchaseRequisitionPage() {
                 <div className="flex flex-col gap-2">
                   <button
                     type="button"
-                    onClick={() => toast.success("Budget re-validation check passed.")}
+                    onClick={() => void logPageAction("Budget re-validation requested")}
                     className="w-full rounded-lg border border-emerald-500/40 bg-emerald-500/10 py-2 text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20 transition-all cursor-pointer flex items-center justify-center gap-1.5"
                   >
                     <RefreshCw className="h-3.5 w-3.5" /> Re-Run Budget Validation

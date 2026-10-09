@@ -40,6 +40,8 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { QuickCreateDialog } from "@/components/erp/QuickCreateDialog";
 export const Route = createFileRoute("/management/strategy-management/strategic-initiatives")({
   head: () => ({
     meta: [
@@ -54,47 +56,67 @@ export const Route = createFileRoute("/management/strategy-management/strategic-
   component: StrategicInitiativesPage,
 });
 
-export function StrategicInitiativesPage() {
+const portfolioDonutData = [
+  { name: "In Progress", value: 16, percentage: 62, color: "#3b82f6" },
+  { name: "At Risk", value: 4, percentage: 15, color: "#f59e0b" },
+  { name: "On Hold", value: 2, percentage: 8, color: "#ef4444" },
+  { name: "Completed", value: 4, percentage: 15, color: "#10b981" },
+];
+
+const themeWiseData = [
+  { name: "Growth & Expansion", count: 7 },
+  { name: "Innovation & Tech", count: 5 },
+  { name: "Operational Excellence", count: 4 },
+  { name: "Customer Experience", count: 3 },
+  { name: "Sustainability & ESG", count: 3 },
+  { name: "Risk & Compliance", count: 2 },
+  { name: "People & Capability", count: 2 },
+];
+
+const budgetVsActualData = [
+  { quarter: "Q1", budget: 8.5, actual: 6.2 },
+  { quarter: "Q2", budget: 12.0, actual: 10.8 },
+  { quarter: "Q3", budget: 15.0, actual: 13.5 },
+  { quarter: "Q4", budget: 13.0, actual: 6.5 },
+];
+
+const benefitsDonutData = [
+  { name: "Revenue Growth", value: 40, color: "#3b82f6" },
+  { name: "Cost Savings", value: 25, color: "#10b981" },
+  { name: "Operational Efficiency", value: 15, color: "#f59e0b" },
+  { name: "Customer Value", value: 10, color: "#06b6d4" },
+  { name: "Sustainability / ESG", value: 10, color: "#14b8a6" },
+];
+
+const INITIATIVE_REGISTER = [
+  { id: 1, code: "SI-2026-001", name: "Expand EV Charging Network", cat: "Growth", obj: "SO-01", owner: "S. Ravi", start: "01 Jul 2026", end: "31 Dec 2027", prog: 75, st: "In Progress" },
+  { id: 2, code: "SI-2026-002", name: "Autonomous W-EVSE R&D", cat: "Innovation", obj: "SO-03", owner: "R. Kumar", start: "15 Jun 2026", end: "30 Jun 2027", prog: 60, st: "In Progress" },
+  { id: 3, code: "SI-2026-003", name: "Manufacturing Scale-up", cat: "Operations", obj: "SO-02", owner: "M. Prakash", start: "01 Aug 2026", end: "31 Dec 2027", prog: 45, st: "At Risk" },
+  { id: 4, code: "SI-2026-004", name: "Strategic Partnership (OEM)", cat: "Partnership", obj: "SO-05", owner: "K. Meena", start: "01 Jul 2026", end: "30 Jun 2027", prog: 30, st: "On Hold" },
+  { id: 5, code: "SI-2026-005", name: "Digital Platform & IoT", cat: "Technology", obj: "SO-04", owner: "A. Khan", start: "01 May 2026", end: "31 Mar 2027", prog: 80, st: "In Progress" },
+  { id: 6, code: "SI-2026-006", name: "Sustainability & ESG Program", cat: "Sustainability", obj: "SO-06", owner: "P. Nithya", start: "01 Jul 2026", end: "31 Dec 2028", prog: 25, st: "Planned" },
+  { id: 7, code: "SI-2026-007", name: "Cost Optimization Program", cat: "Cost Optimization", obj: "SO-05", owner: "V. Suresh", start: "01 Jun 2026", end: "31 Mar 2027", prog: 90, st: "In Progress" },
+];
+
+const PAGE_DATASET = { portfolioDonutData, themeWiseData, budgetVsActualData, benefitsDonutData, initiatives: INITIATIVE_REGISTER };
+
+function StrategicInitiativesPage() {
+  const { portfolioDonutData, themeWiseData, budgetVsActualData, benefitsDonutData } = useModuleDataset("strategy-management.strategic-initiatives", "Strategic Initiatives", PAGE_DATASET);
+  const [initiatives, setInitiatives] = usePersistentState("strategy-management.strategic-initiatives", "Strategic Initiatives", "initiatives", INITIATIVE_REGISTER);
+  const [newInitiativesOpen, setNewInitiativesOpen] = useState(false);
+  const [showAllInitiatives, setShowAllInitiatives] = useState(false);
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [aiQuery, setAiQuery] = useState("");
   const [ganttRange, setGanttRange] = useState("1 Year");
 
   // Portfolio Overview Donut Data
-  const portfolioDonutData = [
-    { name: "In Progress", value: 16, percentage: 62, color: "#3b82f6" },
-    { name: "At Risk", value: 4, percentage: 15, color: "#f59e0b" },
-    { name: "On Hold", value: 2, percentage: 8, color: "#ef4444" },
-    { name: "Completed", value: 4, percentage: 15, color: "#10b981" },
-  ];
 
   // Strategic Theme-wise Initiatives Bar Data
-  const themeWiseData = [
-    { name: "Growth & Expansion", count: 7 },
-    { name: "Innovation & Tech", count: 5 },
-    { name: "Operational Excellence", count: 4 },
-    { name: "Customer Experience", count: 3 },
-    { name: "Sustainability & ESG", count: 3 },
-    { name: "Risk & Compliance", count: 2 },
-    { name: "People & Capability", count: 2 },
-  ];
 
   // Budget vs Actual Bar Data (₹ Cr)
-  const budgetVsActualData = [
-    { quarter: "Q1", budget: 8.5, actual: 6.2 },
-    { quarter: "Q2", budget: 12.0, actual: 10.8 },
-    { quarter: "Q3", budget: 15.0, actual: 13.5 },
-    { quarter: "Q4", budget: 13.0, actual: 6.5 },
-  ];
 
   // Expected Benefits Donut Data (₹72.3 Cr)
-  const benefitsDonutData = [
-    { name: "Revenue Growth", value: 40, color: "#3b82f6" },
-    { name: "Cost Savings", value: 25, color: "#10b981" },
-    { name: "Operational Efficiency", value: 15, color: "#f59e0b" },
-    { name: "Customer Value", value: 10, color: "#06b6d4" },
-    { name: "Sustainability / ESG", value: 10, color: "#14b8a6" },
-  ];
 
   const handleAskAI = (promptText?: string) => {
     const text = promptText || aiQuery;
@@ -159,7 +181,7 @@ export function StrategicInitiativesPage() {
             </div>
 
             <button
-              onClick={() => toast.success("Opening Initiative Charter Creation Form")}
+              onClick={() => setNewInitiativesOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -369,7 +391,7 @@ export function StrategicInitiativesPage() {
         <div className="rounded-xl border bg-card p-4 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-sm text-foreground">Strategic Initiatives Register</h3>
-            <span className="text-xs text-primary font-semibold hover:underline cursor-pointer">View All</span>
+            <button type="button" onClick={() => setShowAllInitiatives((v) => !v)} className="text-xs text-primary font-semibold hover:underline cursor-pointer">{showAllInitiatives ? "Show Less" : `View All (${initiatives.length})`}</button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
@@ -388,15 +410,7 @@ export function StrategicInitiativesPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
-                {[
-                  { id: 1, code: "SI-2026-001", name: "Expand EV Charging Network", cat: "Growth", obj: "SO-01", owner: "S. Ravi", start: "01 Jul 2026", end: "31 Dec 2027", prog: 75, st: "In Progress" },
-                  { id: 2, code: "SI-2026-002", name: "Autonomous W-EVSE R&D", cat: "Innovation", obj: "SO-03", owner: "R. Kumar", start: "15 Jun 2026", end: "30 Jun 2027", prog: 60, st: "In Progress" },
-                  { id: 3, code: "SI-2026-003", name: "Manufacturing Scale-up", cat: "Operations", obj: "SO-02", owner: "M. Prakash", start: "01 Aug 2026", end: "31 Dec 2027", prog: 45, st: "At Risk" },
-                  { id: 4, code: "SI-2026-004", name: "Strategic Partnership (OEM)", cat: "Partnership", obj: "SO-05", owner: "K. Meena", start: "01 Jul 2026", end: "30 Jun 2027", prog: 30, st: "On Hold" },
-                  { id: 5, code: "SI-2026-005", name: "Digital Platform & IoT", cat: "Technology", obj: "SO-04", owner: "A. Khan", start: "01 May 2026", end: "31 Mar 2027", prog: 80, st: "In Progress" },
-                  { id: 6, code: "SI-2026-006", name: "Sustainability & ESG Program", cat: "Sustainability", obj: "SO-06", owner: "P. Nithya", start: "01 Jul 2026", end: "31 Dec 2028", prog: 25, st: "Planned" },
-                  { id: 7, code: "SI-2026-007", name: "Cost Optimization Program", cat: "Cost Optimization", obj: "SO-05", owner: "V. Suresh", start: "01 Jun 2026", end: "31 Mar 2027", prog: 90, st: "In Progress" },
-                ].map((row) => (
+                {(showAllInitiatives ? initiatives : initiatives.slice(0, 7)).map((row) => (
                   <tr key={row.id} className="hover:bg-muted/30 transition-colors">
                     <td className="py-2 px-3 text-muted-foreground">{row.id}</td>
                     <td className="py-2 px-3 font-mono font-medium text-foreground">{row.code}</td>
@@ -685,6 +699,29 @@ export function StrategicInitiativesPage() {
           </div>
         </div>
       </div>
+      <QuickCreateDialog
+        open={newInitiativesOpen}
+        onOpenChange={setNewInitiativesOpen}
+        title="New Initiative"
+        description="Create an initiative charter in the register."
+        submitLabel="Create Initiative"
+        fields={[
+          { name: "name", label: "Initiative name", required: true, placeholder: "e.g. Fleet Charging Partnerships" },
+          { name: "cat", label: "Category", type: "select", options: ["Growth", "Innovation", "Operations", "Partnership", "Technology", "Sustainability", "Cost Optimization"] },
+          { name: "obj", label: "Strategic objective", placeholder: "e.g. SO-01" },
+          { name: "owner", label: "Owner", required: true, placeholder: "e.g. S. Ravi" },
+          { name: "start", label: "Start date", type: "date", required: true },
+          { name: "end", label: "End date", type: "date", required: true },
+          { name: "st", label: "Status", type: "select", options: ["Planned", "In Progress", "At Risk", "On Hold"] },
+        ]}
+        onSubmit={(v) => {
+          setInitiatives((prev) => {
+            const nextId = Math.max(0, ...prev.map((r) => Number(r.id) || 0)) + 1;
+            return [...prev, { id: nextId, code: `SI-2026-${String(nextId).padStart(3, "0")}`, name: String(v.name), cat: String(v.cat), obj: String(v.obj || "—"), owner: String(v.owner), start: new Date(String(v.start)).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }), end: new Date(String(v.end)).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }), prog: 0, st: String(v.st) }];
+          });
+          toast.success(`Initiative "${v.name}" created`);
+        }}
+      />
     </AppShell>
   );
 }

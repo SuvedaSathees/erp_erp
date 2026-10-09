@@ -9,6 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
 
 interface FqcAiInsightsCardProps {
   insights: { id: string; text: string; type: "alert" | "info" | "success" }[];
@@ -114,8 +115,8 @@ export function FqcAiInsightsCard({ insights }: FqcAiInsightsCardProps) {
             <Button
               size="sm"
               onClick={() => {
+                void exportPageReport("FQC AI Quality Diagnostics", "pdf");
                 setIsModalOpen(false);
-                toast.success("AI quality parameters exported to station log");
               }}
               className="text-xs bg-primary hover:bg-primary text-white font-semibold"
             >

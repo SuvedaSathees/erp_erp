@@ -114,6 +114,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
+import { savePageForm, refreshPageData, openQuickActions, openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/supply-chain-management/material-planning")({
   head: () => ({
@@ -262,7 +264,7 @@ const SOURCE_BAR_DATA = [
    Component Definition
    =========================================================================== */
 
-export function MaterialPlanningPage() {
+function MaterialPlanningPage() {
   // Header State
   const [planNumber, setPlanNumber] = useState("MP-2026-000184");
   const [planName, setPlanName] = useState("Monthly Material Plan - Apr 2026");
@@ -341,7 +343,7 @@ export function MaterialPlanningPage() {
             <Button
               size="sm"
               variant="outline"
-              onClick={() => toast.success("Draft saved successfully.")}
+              onClick={(e) => savePageForm("Draft saved", e.currentTarget)}
               className="h-8 gap-1.5 font-medium text-xs"
             >
               <FileText className="h-3.5 w-3.5 text-muted-foreground" />
@@ -350,7 +352,7 @@ export function MaterialPlanningPage() {
 
             <Button
               size="sm"
-              onClick={() => toast.success("Material plan submitted to SCM Director for approval.")}
+              onClick={(e) => savePageForm("Material plan submitted to SCM Director for approval", e.currentTarget)}
               className="h-8 gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm text-xs"
             >
               <Send className="h-3.5 w-3.5" />
@@ -375,14 +377,14 @@ export function MaterialPlanningPage() {
                 <DropdownMenuItem onClick={() => setShowSubstitutionModal(true)} className="gap-2 text-xs cursor-pointer">
                   <Repeat className="h-3.5 w-3.5 text-amber-600" /> Material Substitution
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.success("BOM Explosion refreshed.")} className="gap-2 text-xs cursor-pointer">
+                <DropdownMenuItem onClick={() => void refreshPageData("BOM explosion")} className="gap-2 text-xs cursor-pointer">
                   <Cpu className="h-3.5 w-3.5 text-blue-600" /> Refresh Multi-Level BOM
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => window.print()} className="gap-2 text-xs cursor-pointer">
                   <Printer className="h-3.5 w-3.5 text-muted-foreground" /> Print Material Schedule
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.success("Net Material Requirements exported to Excel")} className="gap-2 text-xs cursor-pointer">
+                <DropdownMenuItem onClick={() => void exportPageReport("Net Material Requirements", "xlsx")} className="gap-2 text-xs cursor-pointer">
                   <Download className="h-3.5 w-3.5 text-muted-foreground" /> Export Requirements (CSV)
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -729,7 +731,7 @@ export function MaterialPlanningPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.info("Displaying top 5 critical materials out of 238 items.")}
+                  onClick={(e) => openPageViewer("Critical Materials", e.currentTarget)}
                   className="text-xs text-primary font-semibold hover:underline inline-flex items-center gap-1"
                 >
                   View All Materials <ArrowRight className="h-3 w-3" />
@@ -1013,7 +1015,7 @@ export function MaterialPlanningPage() {
                               variant="ghost"
                               size="sm"
                               title="Options"
-                              onClick={() => toast.info(`Options for ${row.code}`)}
+                              onClick={(e) => openQuickActions(e)}
                               className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
                             >
                               <MoreVertical className="h-3.5 w-3.5" />
@@ -1266,4 +1268,3 @@ export function MaterialPlanningPage() {
   );
 }
 
-export default MaterialPlanningPage;

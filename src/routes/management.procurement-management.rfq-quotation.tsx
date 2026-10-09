@@ -65,6 +65,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { logPageAction, savePageState, emailPageReport } from "@/lib/pageActions";
 
 // Request for Quotation (RFQ) Module · Procurement Management
 export const Route = createFileRoute("/management/procurement-management/rfq-quotation")({
@@ -956,7 +957,7 @@ const INITIAL_NEGOTIATIONS: RFQNegotiation[] = [
   },
 ];
 
-export function RfqQuotationPage() {
+function RfqQuotationPage() {
   // Navigation & Sub-tabs
   const [activeTab, setActiveTab] = useState<string>("lineItems");
 
@@ -1123,18 +1124,14 @@ export function RfqQuotationPage() {
   }, [suppliers]);
 
   // Actions
-  const handleSaveDraft = () => {
-    toast.success("Request for Quotation saved as draft.");
-  };
+  const handleSaveDraft = () => { void savePageState("Request for Quotation saved as draft", { message: "Request for Quotation saved as draft." }); };
 
   const handleSubmitForApproval = () => {
     setRfqMaster((prev) => ({ ...prev, rfqStatus: "Commercial Evaluation" as any }));
     toast.success("RFQ submitted for Commercial Evaluation & Award Approval!");
   };
 
-  const handleIssueRfq = () => {
-    toast.success("RFQ released and email notifications dispatched to all 5 invited suppliers!");
-  };
+  const handleIssueRfq = () => { void emailPageReport("Request for Quotation"); };
 
   const handleCreatePo = () => {
     toast.success("Purchase Order PO-2026-000412 created successfully from awarded quote!");
@@ -1521,7 +1518,7 @@ export function RfqQuotationPage() {
                         <td className="py-3 px-3 text-right">
                           <button
                             type="button"
-                            onClick={() => toast.info(`Reminder email sent to ${s.supplierName}`)}
+                            onClick={() => void logPageAction(`Reminder requested for ${s.supplierName}`)}
                             className="text-primary hover:underline text-xs font-semibold cursor-pointer"
                           >
                             Send Reminder

@@ -49,6 +49,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { chartColor } from "@/lib/chartColors";
 import type { WidgetContentProps, WidgetDefinition } from "../../types";
+import { logPageAction } from "@/lib/pageActions";
 
 /* ===========================================================================
    1. Plant Production Volume vs First-Pass Yield (2 of 3 cols - size "xl")
@@ -710,7 +711,7 @@ export const MdAiIntelligenceWidget = memo(function MdAiIntelligenceWidget() {
           </strong>
           <button
             type="button"
-            onClick={() => toast.success("Autonomous Line Balancing & Tool Work Orders triggered!")}
+            onClick={() => void logPageAction("Autonomous Line Balancing & Tool Work Orders requested")}
             className="rounded bg-primary px-2.5 py-1 text-[11px] font-bold text-primary-foreground hover:bg-primary/90 transition cursor-pointer"
           >
             Execute Autonomous Factory Optimization

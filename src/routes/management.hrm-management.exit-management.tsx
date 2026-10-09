@@ -113,6 +113,8 @@ import {
   ShieldOff,
 } from "lucide-react";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
+import { openQuickActions, openPageViewer, savePageForm } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/exit-management")({
   head: () => ({
@@ -149,7 +151,7 @@ const CLEARANCE_ITEMS = [
   { name: "Security Clearance", status: "Pending" },
 ];
 
-export function ExitManagementPage() {
+function ExitManagementPage() {
   const [activeTab, setActiveTab] = useState<string>("overview");
 
   // Modals
@@ -199,7 +201,7 @@ export function ExitManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Exit clearance records exported")}
+                onClick={() => void exportPageReport("Exit Clearance Records", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
@@ -208,7 +210,7 @@ export function ExitManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("More exit tools opened")}
+                onClick={(e) => openQuickActions(e)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 More
@@ -385,7 +387,7 @@ export function ExitManagementPage() {
                   <span className="text-slate-500">Supporting Document</span>
                   <button
                     type="button"
-                    onClick={() => toast.success("Downloading Resignation_Letter.pdf")}
+                    onClick={() => void exportPageReport("Resignation Letter", "pdf")}
                     className="inline-flex items-center gap-1 text-[9px] font-bold text-primary hover:underline cursor-pointer"
                   >
                     <Paperclip className="h-3 w-3" /> Resignation_Letter.pdf <Download className="h-2.5 w-2.5" />
@@ -486,7 +488,7 @@ export function ExitManagementPage() {
                 </div>
               </div>
 
-              <button onClick={() => toast.info("Viewing handover transition plan")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
+              <button onClick={(e) => openPageViewer("Viewing handover transition plan", e.currentTarget)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
                 View Handover Plan →
               </button>
             </div>
@@ -583,7 +585,7 @@ export function ExitManagementPage() {
                 </table>
               </div>
 
-              <button onClick={() => toast.info("Complete asset inventory records")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
+              <button onClick={(e) => openPageViewer("Complete asset inventory records", e.currentTarget)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
                 View All Assets →
               </button>
             </div>
@@ -636,7 +638,7 @@ export function ExitManagementPage() {
                 </div>
               </div>
 
-              <button onClick={() => toast.info("Detailed settlement statement")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
+              <button onClick={(e) => openPageViewer("Detailed settlement statement", e.currentTarget)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
                 View Settlement Details →
               </button>
             </div>
@@ -729,7 +731,7 @@ export function ExitManagementPage() {
                 <div className="grid grid-cols-3 gap-1 text-[8.5px]">
                   <button
                     type="button"
-                    onClick={() => toast.info("Handover checklist updated")}
+                    onClick={(e) => savePageForm("Handover checklist updated", e.currentTarget)}
                     className="p-1 rounded-md border border-slate-100 hover:border-primary hover:bg-slate-50 text-slate-700 font-semibold text-center cursor-pointer"
                   >
                     Update Handover
@@ -753,7 +755,7 @@ export function ExitManagementPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.success("Settlement statement computed")}
+                    onClick={() => void exportPageReport("Settlement Statement", "pdf", "page")}
                     className="p-1 rounded-md border border-slate-100 hover:border-emerald-600 hover:bg-emerald-50 text-slate-700 font-semibold text-center cursor-pointer"
                   >
                     Process Settlement
@@ -769,7 +771,7 @@ export function ExitManagementPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.success("Relieving & Experience letters generated")}
+                    onClick={() => void exportPageReport("Relieving & Experience Letters", "pdf", "page")}
                     className="p-1 rounded-md border border-slate-100 hover:border-cyan-600 hover:bg-cyan-50 text-slate-700 font-semibold text-center cursor-pointer"
                   >
                     Generate Docs
@@ -1021,5 +1023,4 @@ export function ExitManagementPage() {
   );
 }
 
-export default ExitManagementPage;
 

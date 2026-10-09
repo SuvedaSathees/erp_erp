@@ -121,6 +121,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
+import { discardPageChanges, savePageForm } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/supply-chain-management/logistics")({
   head: () => ({
@@ -159,7 +161,7 @@ const SHIPMENT_ITEMS: ShipmentItem[] = [
   { code: "MAT-1006", name: "Control Panel", qty: 10, uom: "Nos", weight: 800.0, volume: 3.5, status: "Loaded" },
 ];
 
-export function LogisticsPage() {
+function LogisticsPage() {
   // Shipment Details State
   const [shipmentNumber, setShipmentNumber] = useState("SHP-2026-001248");
   const [logisticsType, setLogisticsType] = useState("Outbound Logistics");
@@ -238,7 +240,7 @@ export function LogisticsPage() {
             <Button
               size="sm"
               variant="outline"
-              onClick={() => toast.info("Shipment editing cancelled")}
+              onClick={() => discardPageChanges()}
               className="h-8 font-medium text-xs"
             >
               Cancel
@@ -247,7 +249,7 @@ export function LogisticsPage() {
             <Button
               size="sm"
               variant="outline"
-              onClick={() => toast.success("Draft saved successfully.")}
+              onClick={(e) => savePageForm("Draft saved", e.currentTarget)}
               className="h-8 gap-1.5 font-medium text-xs"
             >
               <FileText className="h-3.5 w-3.5 text-muted-foreground" />
@@ -256,7 +258,7 @@ export function LogisticsPage() {
 
             <Button
               size="sm"
-              onClick={() => toast.success("Shipment submitted and dispatched to transporter.")}
+              onClick={(e) => savePageForm("Shipment submitted for dispatch", e.currentTarget)}
               className="h-8 gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-sm"
             >
               <Send className="h-3.5 w-3.5" />
@@ -291,7 +293,7 @@ export function LogisticsPage() {
                 <DropdownMenuItem onClick={() => window.print()} className="gap-2 text-xs cursor-pointer">
                   <Printer className="h-3.5 w-3.5 text-muted-foreground" /> Print e-Way Bill & Gate Pass
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.success("Dispatch report exported to CSV")} className="gap-2 text-xs cursor-pointer">
+                <DropdownMenuItem onClick={() => void exportPageReport("Dispatch Report", "csv")} className="gap-2 text-xs cursor-pointer">
                   <Download className="h-3.5 w-3.5 text-muted-foreground" /> Export Shipment Manifest
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -1135,4 +1137,3 @@ export function LogisticsPage() {
   );
 }
 
-export default LogisticsPage;

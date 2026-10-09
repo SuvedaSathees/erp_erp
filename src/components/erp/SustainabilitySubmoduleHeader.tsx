@@ -21,6 +21,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { exportVisibleTables } from "@/lib/recordExport";
+import { logPageAction } from "@/lib/pageActions";
 
 export interface SustainabilityReportItem {
   label: string;
@@ -95,11 +98,13 @@ export function SustainabilitySubmoduleHeader({
     toast.success(`Selected date window: ${label}`);
   };
 
+  const queryClient = useQueryClient();
+
   const handleDefaultRefresh = () => {
     if (onRefresh) {
       onRefresh();
     } else {
-      toast.info(`Refreshed telemetry & reports for ${title}`);
+      void queryClient.invalidateQueries().then(() => toast.success(`${title} data refreshed`));
     }
   };
 
@@ -107,7 +112,7 @@ export function SustainabilitySubmoduleHeader({
     if (onExportCsv) {
       onExportCsv();
     } else {
-      toast.success(`Exported ${title} metrics to CSV (.csv)`);
+      void exportVisibleTables(title, "csv");
     }
   };
 
@@ -115,7 +120,7 @@ export function SustainabilitySubmoduleHeader({
     if (onExportExcel) {
       onExportExcel();
     } else {
-      toast.success(`Exported ${title} disclosure dossier to Excel (.xlsx)`);
+      void exportVisibleTables(title, "xlsx");
     }
   };
 
@@ -123,7 +128,7 @@ export function SustainabilitySubmoduleHeader({
     if (onExportPdf) {
       onExportPdf();
     } else {
-      toast.success(`Generated official ${title} compliance statement (.pdf)`);
+      void exportVisibleTables(title, "pdf");
     }
   };
 
@@ -183,11 +188,11 @@ export function SustainabilitySubmoduleHeader({
           },
           {
             label: "Statutory Auditor Verification Sign-Off",
-            onClick: () => toast.success("Auditor verification ledger signed."),
+            onClick: () => void logPageAction("Auditor verification ledger signed"),
           },
           {
             label: "Trigger Decarbonization Review",
-            onClick: () => toast.info("Review initiated with ESG Board."),
+            onClick: () => void logPageAction("Review requested with ESG Board"),
           },
         ];
 

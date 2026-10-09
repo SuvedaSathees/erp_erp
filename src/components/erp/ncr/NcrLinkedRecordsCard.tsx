@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { NcrRecord } from "@/services/ncrTypes";
 import { toast } from "sonner";
+import { openPageViewer } from "@/lib/pageActions";
 
 interface NcrLinkedRecordsCardProps {
   record: NcrRecord;
@@ -55,7 +56,7 @@ export function NcrLinkedRecordsCard({
           </div>
           <button
             type="button"
-            onClick={() => toast.info(`Opening Work Order ${record.workOrder}`)}
+            onClick={(e) => openPageViewer(`Opening Work Order ${record.workOrder}`, e.currentTarget)}
             className="font-mono font-semibold text-foreground hover:text-emerald-600 transition-colors"
           >
             {record.workOrder}
@@ -110,7 +111,7 @@ export function NcrLinkedRecordsCard({
           </div>
           <button
             type="button"
-            onClick={() => toast.info("Opening Control Plan CP-EVSE-001")}
+            onClick={(e) => openPageViewer("Opening Control Plan CP-EVSE-001", e.currentTarget)}
             className="font-mono font-semibold text-foreground hover:text-amber-600 transition-colors"
           >
             CP-EVSE-001

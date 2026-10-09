@@ -68,6 +68,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { emailPageReport, savePageState } from "@/lib/pageActions";
 
 export interface BillingItem {
   id: string;
@@ -84,7 +85,7 @@ export interface BillingItem {
   receivedAmount: number;
 }
 
-export const INITIAL_BILLINGS: BillingItem[] = [
+const INITIAL_BILLINGS: BillingItem[] = [
   {
     id: "PB-2026-0001",
     code: "PB-001",
@@ -352,7 +353,7 @@ export const Route = createFileRoute("/management/project-management/project-bil
   component: ProjectBillingFormPage,
 });
 
-export function ProjectBillingFormPage() {
+function ProjectBillingFormPage() {
   const [billings, setBillings] = useState<BillingItem[]>(INITIAL_BILLINGS);
   const [selectedBilling, setSelectedBilling] = useState<BillingItem>(INITIAL_BILLINGS[3]);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -604,9 +605,7 @@ ${billings
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Billing statement emailed to client finance.");
-                  }}
+                  onClick={() => { void emailPageReport("Billing Statement"); }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
@@ -637,9 +636,7 @@ ${billings
                 </DropdownMenu>
                 <button
                   type="button"
-                  onClick={() => {
-                    toast.success("Billing milestones saved successfully!");
-                  }}
+                  onClick={() => { void savePageState("Billing milestones saved", { message: "Billing milestones saved." }); }}
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
                 >
                   <Save className="h-3.5 w-3.5" />
@@ -2301,4 +2298,3 @@ ${billings
   );
 }
 
-export default ProjectBillingFormPage;

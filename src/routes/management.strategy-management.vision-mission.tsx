@@ -51,6 +51,8 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { QuickCreateDialog } from "@/components/erp/QuickCreateDialog";
 export const Route = createFileRoute("/management/strategy-management/vision-mission")({
   head: () => ({
     meta: [
@@ -65,42 +67,72 @@ export const Route = createFileRoute("/management/strategy-management/vision-mis
   component: VisionMissionPage,
 });
 
-export function VisionMissionPage() {
+const alignmentData = [
+  { name: "Vision Alignment", value: 85, color: "#3b82f6" },
+  { name: "Mission Alignment", value: 78, color: "#10b981" },
+  { name: "Values Alignment", value: 70, color: "#f59e0b" },
+  { name: "Theme Alignment", value: 68, color: "#ef4444" },
+  { name: "Objective Alignment", value: 62, color: "#8b5cf6" },
+  { name: "Stakeholder Alignment", value: 75, color: "#06b6d4" },
+];
+
+const objectivesProgressData = [
+  { theme: "Growth", target: 80, actual: 65 },
+  { theme: "Innovation", target: 75, actual: 70 },
+  { theme: "Customer", target: 70, actual: 60 },
+  { theme: "Operations", target: 68, actual: 55 },
+  { theme: "Sustainability", target: 70, actual: 60 },
+  { theme: "Digital", target: 75, actual: 70 },
+  { theme: "People", target: 65, actual: 50 },
+];
+
+const stakeholdersData = [
+  { group: "Customers", rate: 88, color: "bg-blue-500" },
+  { group: "Employees", rate: 82, color: "bg-indigo-500" },
+  { group: "Investors", rate: 76, color: "bg-emerald-500" },
+  { group: "Suppliers", rate: 70, color: "bg-amber-500" },
+  { group: "Government", rate: 65, color: "bg-cyan-500" },
+  { group: "Communities", rate: 72, color: "bg-teal-500" },
+  { group: "Environment", rate: 68, color: "bg-green-600" },
+  { group: "Industry", rate: 60, color: "bg-purple-500" },
+];
+
+const VM_DETAILS = {
+  formCode: "VM-2026-001",
+  version: "1.0",
+  organization: "BharatMandeer",
+  businessUnit: "EV Charging Infra",
+  horizon: "10 Years",
+  effectiveDate: "31 Aug 2027",
+  owner: "Sankaranarayanan R",
+  status: "Active",
+  vision: "Deploy intelligent charging stations every 3 km across highways & urban spaces.",
+  mission: "Deliver innovative wireless charging through technology and franchise partnerships.",
+};
+
+const VM_VERSIONS = [
+  { id: 1, version: "1.0", date: "01 Sep 2026", status: "Active", by: "Board of Directors" },
+  { id: 2, version: "0.9", date: "01 Sep 2025", status: "Archived", by: "Board of Directors" },
+  { id: 3, version: "0.8", date: "01 Sep 2024", status: "Archived", by: "Executive Team" },
+];
+
+const PAGE_DATASET = { alignmentData, objectivesProgressData, stakeholdersData, details: VM_DETAILS, versions: VM_VERSIONS };
+
+function VisionMissionPage() {
+  const { alignmentData, objectivesProgressData, stakeholdersData } = useModuleDataset("strategy-management.vision-mission", "Vision & Mission", PAGE_DATASET);
+  const [details, setDetails] = usePersistentState("strategy-management.vision-mission", "Vision & Mission", "details", VM_DETAILS);
+  const [versions, setVersions] = usePersistentState("strategy-management.vision-mission", "Vision & Mission", "versions", VM_VERSIONS);
+  const [editOpen, setEditOpen] = useState(false);
+  const [newVersionOpen, setNewVersionOpen] = useState(false);
+  const [showAllVersions, setShowAllVersions] = useState(false);
   const [selectedBu, setSelectedBu] = useState("All Business Units");
   const [dateRange, setDateRange] = useState("01 Sep 2026 - 30 Sep 2026");
 
   // Alignment Donut Data
-  const alignmentData = [
-    { name: "Vision Alignment", value: 85, color: "#3b82f6" },
-    { name: "Mission Alignment", value: 78, color: "#10b981" },
-    { name: "Values Alignment", value: 70, color: "#f59e0b" },
-    { name: "Theme Alignment", value: 68, color: "#ef4444" },
-    { name: "Objective Alignment", value: 62, color: "#8b5cf6" },
-    { name: "Stakeholder Alignment", value: 75, color: "#06b6d4" },
-  ];
 
   // Strategic Objectives Bar Data
-  const objectivesProgressData = [
-    { theme: "Growth", target: 80, actual: 65 },
-    { theme: "Innovation", target: 75, actual: 70 },
-    { theme: "Customer", target: 70, actual: 60 },
-    { theme: "Operations", target: 68, actual: 55 },
-    { theme: "Sustainability", target: 70, actual: 60 },
-    { theme: "Digital", target: 75, actual: 70 },
-    { theme: "People", target: 65, actual: 50 },
-  ];
 
   // Stakeholders data
-  const stakeholdersData = [
-    { group: "Customers", rate: 88, color: "bg-blue-500" },
-    { group: "Employees", rate: 82, color: "bg-indigo-500" },
-    { group: "Investors", rate: 76, color: "bg-emerald-500" },
-    { group: "Suppliers", rate: 70, color: "bg-amber-500" },
-    { group: "Government", rate: 65, color: "bg-cyan-500" },
-    { group: "Communities", rate: 72, color: "bg-teal-500" },
-    { group: "Environment", rate: 68, color: "bg-green-600" },
-    { group: "Industry", rate: 60, color: "bg-purple-500" },
-  ];
 
   return (
     <AppShell
@@ -155,7 +187,7 @@ export function VisionMissionPage() {
             </div>
 
             <button
-              onClick={() => toast.success("Opening new Vision & Mission draft modal")}
+              onClick={() => setNewVersionOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -353,7 +385,7 @@ export function VisionMissionPage() {
             <div className="flex items-center justify-between border-b pb-2">
               <h3 className="font-bold text-sm text-foreground">Vision & Mission Details</h3>
               <button
-                onClick={() => toast.info("Edit Details")}
+                onClick={() => setEditOpen(true)}
                 className="text-[11px] font-semibold text-primary hover:underline flex items-center gap-1"
               >
                 <Edit3 className="h-3 w-3" /> Edit
@@ -363,36 +395,36 @@ export function VisionMissionPage() {
             <div className="grid grid-cols-2 gap-2 text-[11px]">
               <div>
                 <span className="text-muted-foreground block text-[10px]">Form Code</span>
-                <span className="font-mono font-bold text-foreground">VM-2026-001</span>
+                <span className="font-mono font-bold text-foreground">{details.formCode}</span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px]">Version</span>
-                <span className="font-bold text-foreground">1.0</span>
+                <span className="font-bold text-foreground">{details.version}</span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px]">Organization</span>
-                <span className="font-semibold text-foreground">BharatMandeer</span>
+                <span className="font-semibold text-foreground">{details.organization}</span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px]">Business Unit</span>
-                <span className="font-semibold text-foreground truncate block">EV Charging Infra</span>
+                <span className="font-semibold text-foreground truncate block">{details.businessUnit}</span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px]">Planning Horizon</span>
-                <span className="font-semibold text-foreground">10 Years</span>
+                <span className="font-semibold text-foreground">{details.horizon}</span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px]">Effective Date</span>
-                <span className="font-semibold text-foreground">31 Aug 2027</span>
+                <span className="font-semibold text-foreground">{details.effectiveDate}</span>
               </div>
               <div className="col-span-2">
                 <span className="text-muted-foreground block text-[10px]">Owner</span>
-                <span className="font-semibold text-foreground">Sankaranarayanan R</span>
+                <span className="font-semibold text-foreground">{details.owner}</span>
               </div>
             </div>
 
             <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center justify-between">
-              <span>Status: Active</span>
+              <span>Status: {details.status}</span>
               <CheckCircle2 className="h-4 w-4" />
             </div>
 
@@ -401,13 +433,13 @@ export function VisionMissionPage() {
               <div className="p-2 rounded bg-muted/40 border text-[10px] space-y-1">
                 <span className="font-bold text-foreground block">Vision Statement:</span>
                 <p className="text-muted-foreground leading-snug">
-                  Deploy intelligent charging stations every 3 km across highways & urban spaces.
+                  {details.vision}
                 </p>
               </div>
               <div className="p-2 rounded bg-muted/40 border text-[10px] space-y-1">
                 <span className="font-bold text-foreground block">Mission Statement:</span>
                 <p className="text-muted-foreground leading-snug">
-                  Deliver innovative wireless charging through technology and franchise partnerships.
+                  {details.mission}
                 </p>
               </div>
             </div>
@@ -422,7 +454,7 @@ export function VisionMissionPage() {
             <div className="rounded-xl border bg-card p-4 shadow-sm space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="font-bold text-sm text-foreground">Vision & Mission Versions</h3>
-                <span className="text-xs text-primary font-semibold hover:underline cursor-pointer">View All</span>
+                <button type="button" onClick={() => setShowAllVersions((v) => !v)} className="text-xs text-primary font-semibold hover:underline cursor-pointer">{showAllVersions ? "Show Less" : `View All (${versions.length})`}</button>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left">
@@ -436,39 +468,28 @@ export function VisionMissionPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/60">
-                    <tr>
-                      <td className="py-2 px-2.5 text-muted-foreground">1</td>
-                      <td className="py-2 px-2.5 font-bold text-foreground">1.0</td>
-                      <td className="py-2 px-2.5 text-muted-foreground">01 Sep 2026</td>
-                      <td className="py-2 px-2.5">
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                          Active
-                        </span>
-                      </td>
-                      <td className="py-2 px-2.5 text-foreground font-medium">Board of Directors</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-2.5 text-muted-foreground">2</td>
-                      <td className="py-2 px-2.5 font-bold text-foreground">0.9</td>
-                      <td className="py-2 px-2.5 text-muted-foreground">01 Sep 2025</td>
-                      <td className="py-2 px-2.5">
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-muted text-muted-foreground">
-                          Archived
-                        </span>
-                      </td>
-                      <td className="py-2 px-2.5 text-foreground font-medium">Board of Directors</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-2.5 text-muted-foreground">3</td>
-                      <td className="py-2 px-2.5 font-bold text-foreground">0.8</td>
-                      <td className="py-2 px-2.5 text-muted-foreground">01 Sep 2024</td>
-                      <td className="py-2 px-2.5">
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-muted text-muted-foreground">
-                          Archived
-                        </span>
-                      </td>
-                      <td className="py-2 px-2.5 text-foreground font-medium">Executive Team</td>
-                    </tr>
+                    {(showAllVersions ? versions : versions.slice(0, 3)).map((ver, i) => (
+                      <tr key={ver.id}>
+                        <td className="py-2 px-2.5 text-muted-foreground">{i + 1}</td>
+                        <td className="py-2 px-2.5 font-bold text-foreground tabular">{ver.version}</td>
+                        <td className="py-2 px-2.5 text-muted-foreground tabular">{ver.date}</td>
+                        <td className="py-2 px-2.5">
+                          <span
+                            className={cn(
+                              "px-1.5 py-0.5 rounded text-[10px] font-semibold",
+                              ver.status === "Active"
+                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                                : ver.status === "Draft"
+                                  ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                                  : "bg-muted text-muted-foreground",
+                            )}
+                          >
+                            {ver.status}
+                          </span>
+                        </td>
+                        <td className="py-2 px-2.5 text-foreground font-medium">{ver.by}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -665,6 +686,49 @@ export function VisionMissionPage() {
           </div>
         </div>
       </div>
+      <QuickCreateDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        title="Edit Vision & Mission Details"
+        submitLabel="Save Changes"
+        fields={[
+          { name: "vision", label: "Vision statement", type: "textarea", required: true, defaultValue: details.vision },
+          { name: "mission", label: "Mission statement", type: "textarea", required: true, defaultValue: details.mission },
+          { name: "organization", label: "Organization", required: true, defaultValue: details.organization },
+          { name: "businessUnit", label: "Business unit", required: true, defaultValue: details.businessUnit },
+          { name: "horizon", label: "Planning horizon", defaultValue: details.horizon },
+          { name: "owner", label: "Owner", required: true, defaultValue: details.owner },
+        ]}
+        onSubmit={(v) => {
+          setDetails((prev) => ({ ...prev, ...Object.fromEntries(Object.entries(v).map(([k, val]) => [k, String(val)])) }));
+          toast.success("Vision & Mission details saved");
+        }}
+      />
+      <QuickCreateDialog
+        open={newVersionOpen}
+        onOpenChange={setNewVersionOpen}
+        title="New Vision & Mission Version"
+        description="Creates a draft version for board approval."
+        submitLabel="Create Draft"
+        fields={[
+          { name: "version", label: "Version number", required: true, placeholder: "e.g. 1.1" },
+          { name: "effectiveDate", label: "Effective date", type: "date", required: true },
+          { name: "by", label: "Approving body", type: "select", options: ["Board of Directors", "Executive Team"] },
+        ]}
+        onSubmit={(v) => {
+          setVersions((prev) => [
+            {
+              id: Math.max(0, ...prev.map((r) => r.id)) + 1,
+              version: String(v.version),
+              date: new Date(String(v.effectiveDate)).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+              status: "Draft",
+              by: String(v.by),
+            },
+            ...prev,
+          ]);
+          toast.success(`Draft version ${v.version} created`);
+        }}
+      />
     </AppShell>
   );
 }

@@ -54,6 +54,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { WidgetContentProps, WidgetDefinition } from "../../types";
 import { bdOverviewOptions } from "../../data/bdQueries";
+import { logPageAction } from "@/lib/pageActions";
 
 /* ===========================================================================
    1. Pipeline Trend & Commercial Revenue Horizon (2 of 3 cols - size "xl")
@@ -671,7 +672,7 @@ export const BdAiIntelligenceWidget = memo(function BdAiIntelligenceWidget() {
           </strong>
           <button
             type="button"
-            onClick={() => toast.success("Autonomous Growth Multipliers triggered across pipeline!")}
+            onClick={() => void logPageAction("Autonomous Growth Multipliers requested")}
             className="rounded bg-primary px-2.5 py-1 text-[11px] font-bold text-primary-foreground hover:bg-primary/90 transition cursor-pointer"
           >
             Execute Autonomous Growth Actions

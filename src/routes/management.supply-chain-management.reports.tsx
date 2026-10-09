@@ -30,4 +30,3 @@ function SupplyChainManagementReportPage() {
   );
 }
 
-export default SupplyChainManagementReportPage;

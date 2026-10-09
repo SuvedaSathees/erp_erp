@@ -42,6 +42,7 @@ import {
 import { AppShell } from "@/components/erp/AppShell";
 import { SalesManagementTabBar } from "@/components/erp/SalesManagementTabBar";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute(
   "/management/sales-management/sales-commission"
@@ -127,7 +128,7 @@ const initialStepperStages = [
   { id: 6, title: "Payroll Payout", status: "pending" },
 ];
 
-export default function SalesCommissionComponent() {
+function SalesCommissionComponent() {
   const [transactions, setTransactions] = useState(initialTransactions);
   const [stepperStages, setStepperStages] = useState(initialStepperStages);
   const [version, setVersion] = useState("v1.0");
@@ -675,7 +676,7 @@ export default function SalesCommissionComponent() {
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
                 <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">Commission Actions</h4>
                 <button
-                  onClick={() => toast.success("Exported SCM-2026-09-001 direct credit batch file (CSV) to SAP Payroll disbursement engine.")}
+                  onClick={() => void exportPageReport("SCM-2026-09-001 Direct Credit Batch", "csv")}
                   className="w-full flex items-center justify-between p-2.5 rounded-lg border border-slate-200 hover:border-[#0A3C75] hover:bg-slate-50 transition text-xs font-semibold text-slate-800 cursor-pointer"
                 >
                   <span className="flex items-center gap-2">

@@ -54,6 +54,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords, recordToRows } from "@/lib/recordExport";
 export const Route = createFileRoute(
   "/management/business-intelligence/executive-dashboard"
 )({
@@ -71,7 +73,10 @@ export const Route = createFileRoute(
 });
 
 
+const PAGE_DATASET = { BI_OVERVIEW_DATA };
+
 function ExecutiveDashboardPage() {
+  const { BI_OVERVIEW_DATA } = useModuleDataset("business-intelligence.executive-dashboard", "Executive Dashboard", PAGE_DATASET);
   const [selectedFacility, setSelectedFacility] = useState("All Facilities");
   const [dateRange, setDateRange] = useState("01 Sep 2026 - 30 Sep 2026");
   const [aiTab, setAiTab] = useState<"insights" | "recommendations" | "forecast">("insights");
@@ -114,7 +119,7 @@ function ExecutiveDashboardPage() {
   const project = BI_OVERVIEW_DATA.projectPortfolio;
   const sc = BI_OVERVIEW_DATA.securityCompliance;
   const riskRows = BI_OVERVIEW_DATA.riskHeatmap;
-  const [actionsList, setActionsList] = useState(BI_OVERVIEW_DATA.managementActions);
+  const [actionsList, setActionsList] = usePersistentState("business-intelligence.executive-dashboard", "Executive Dashboard", "actionsList", BI_OVERVIEW_DATA.managementActions);
   const health = BI_OVERVIEW_DATA.enterpriseHealth;
   const meetings = BI_OVERVIEW_DATA.upcomingMeetings;
 
@@ -173,10 +178,9 @@ function ExecutiveDashboardPage() {
             setDateRange(r);
             showToast(`Executive date range updated: ${r}`);
           }}
-          onRefresh={() => showToast("Real-time executive metrics refreshed across all plants.")}
-          onExportCsv={() => showToast("Executive metrics exported to CSV (.csv)")}
-          onExportExcel={() => showToast("Consolidated board pack exported to Excel (.xlsx)")}
-          onExportPdf={() => showToast("Generated official Board of Directors briefing (.pdf)")}
+          onExportCsv={() => exportRecords("Executive Dashboard KPIs", recordToRows(kpis), "csv")}
+          onExportExcel={() => exportRecords("Executive Dashboard KPIs", recordToRows(kpis), "xlsx")}
+          onExportPdf={() => exportRecords("Executive Dashboard KPIs", recordToRows(kpis), "pdf")}
         />
 
         {/* 7-Gauge Circular Score Banner matching Image 3 */}

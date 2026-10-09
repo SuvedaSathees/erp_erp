@@ -59,6 +59,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { openPageFiles, logPageAction, openPageViewer, refreshPageData } from "@/lib/pageActions";
+import { exportPageReport } from "@/lib/recordExport";
 // HMR verified: all Lucide icons defined
 
 export const Route = createFileRoute("/management/asset-management/fixed-assets")({
@@ -191,7 +193,7 @@ const INITIAL_ASSETS: FixedAsset[] = Array.from({ length: 428 }, (_, i) => {
   };
 });
 
-export function FixedAssetsFormPage() {
+function FixedAssetsFormPage() {
   const [assets, setAssets] = useState<FixedAsset[]>(INITIAL_ASSETS);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -435,16 +437,16 @@ export function FixedAssetsFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Opening Asset Capitalization Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Asset Capitalization Report", "pdf", "page")}>
                     Capitalization Report
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Depreciation Schedule Forecast...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Depreciation Schedule Forecast", "pdf", "page")}>
                     Depreciation Schedule
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Physical Verification Variance Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Physical Verification Variance Report", "pdf", "page")}>
                     Verification Variance
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Asset Disposal & Gain/Loss Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Asset Disposal & Gain/Loss Report", "pdf", "page")}>
                     Disposal & Gain/Loss
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -469,13 +471,13 @@ export function FixedAssetsFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Import Assets: Select CSV / Excel file")}>
+                  <DropdownMenuItem onClick={() => openPageFiles("Import Assets", ".csv,.xlsx,.xls")}>
                     Import Assets (CSV)
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsVerifyOpen(true)}>
                     Physical Verification Run
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.success("Depreciation Run for Sep 2026 executed: ₹ 11.80 L posted.")}>
+                  <DropdownMenuItem onClick={() => void logPageAction("Depreciation run for Sep 2026 requested")}>
                     Post Monthly Depreciation
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsTransferOpen(true)}>
@@ -755,7 +757,7 @@ export function FixedAssetsFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Opening Asset Valuation Ledger")}
+                onClick={(e) => openPageViewer("Opening Asset Valuation Ledger", e.currentTarget)}
                 className="text-[9.5px] text-primary font-bold hover:underline cursor-pointer"
               >
                 Ledger &rarr;
@@ -831,7 +833,7 @@ export function FixedAssetsFormPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => toast.info("Syncing Fixed Asset Register...")}
+                  onClick={() => void refreshPageData("Fixed Asset Register")}
                   className="h-8 text-xs gap-1 cursor-pointer"
                   title="Refresh register"
                 >
@@ -840,7 +842,7 @@ export function FixedAssetsFormPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => toast.info("Columns visible: All 9 asset master attributes.")}
+                  onClick={(e) => openPageViewer("Fixed Asset Register — all columns", e.currentTarget)}
                   className="h-8 text-xs gap-1 cursor-pointer"
                 >
                   <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -1786,4 +1788,3 @@ export function FixedAssetsFormPage() {
   );
 }
 
-export default FixedAssetsFormPage;

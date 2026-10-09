@@ -56,6 +56,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { logPageAction, openPageForm, openPageViewer } from "@/lib/pageActions";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/asset-management/maintenance")({
   head: () => ({
@@ -155,7 +157,7 @@ const INITIAL_REQUESTS: MaintenanceRequestItem[] = [
   { id: "REQ-2026-0127", asset: "Chiller Unit", department: "HVAC Facilities", priority: "Low", date: "30 Aug 2026" },
 ];
 
-export function MaintenanceFormPage() {
+function MaintenanceFormPage() {
   const [workOrders, setWorkOrders] = useState<WorkOrderItem[]>(INITIAL_WORK_ORDERS);
   const [activeWO, setActiveWO] = useState<WorkOrderItem>(INITIAL_WORK_ORDERS[0]);
   const [selectedFilter, setSelectedFilter] = useState("All 42");
@@ -333,13 +335,13 @@ export function MaintenanceFormPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52 text-xs">
-                  <DropdownMenuItem onClick={() => toast.info("Opening PM Compliance Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("PM Compliance Report", "pdf", "page")}>
                     PM Compliance Report
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening MTBF & MTTR Reliability Analytics...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("MTBF & MTTR Reliability Analytics", "pdf", "page")}>
                     MTBF / MTTR Analytics
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Opening Spare Parts Consumption Report...")}>
+                  <DropdownMenuItem onClick={() => void exportPageReport("Spare Parts Consumption Report", "pdf", "page")}>
                     Spare Parts Consumption
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -367,10 +369,10 @@ export function MaintenanceFormPage() {
                   <DropdownMenuItem onClick={() => setIsCompleteOpen(true)}>
                     Complete Work Order
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Emergency Breakdown Protocol triggered")}>
+                  <DropdownMenuItem onClick={() => void logPageAction("Emergency Breakdown Protocol triggered")}>
                     Log Emergency Breakdown
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => toast.info("Spare Parts Requisition form opened")}>
+                  <DropdownMenuItem onClick={() => openPageForm("Spare Parts Requisition", "spareParts", "Submit Requisition")}>
                     Issue Spare Parts
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => { window.print(); }}>
@@ -660,7 +662,7 @@ export function MaintenanceFormPage() {
 
               <button
                 type="button"
-                onClick={() => toast.info("Opening Breakdown Incident Dispatch Console")}
+                onClick={(e) => openPageViewer("Opening Breakdown Incident Dispatch Console", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer block pt-1 text-center w-full"
               >
                 Dispatch Console &rarr;
@@ -709,7 +711,7 @@ export function MaintenanceFormPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Displaying all 11 work order columns")}
+                    onClick={(e) => openPageViewer("Displaying all 11 work order columns", e.currentTarget)}
                     className="h-8 text-xs gap-1 cursor-pointer"
                   >
                     <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
@@ -905,7 +907,7 @@ export function MaintenanceFormPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.info("Viewing all maintenance requests")}
+                onClick={(e) => openPageViewer("Viewing all maintenance requests", e.currentTarget)}
                 className="text-xs text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -955,7 +957,7 @@ export function MaintenanceFormPage() {
               </div>
               <button
                 type="button"
-                onClick={() => toast.info("Viewing all maintenance alerts")}
+                onClick={(e) => openPageViewer("Viewing all maintenance alerts", e.currentTarget)}
                 className="text-xs text-primary font-bold hover:underline cursor-pointer"
               >
                 Action Center &rarr;
@@ -1166,7 +1168,7 @@ export function MaintenanceFormPage() {
               </CardTitle>
               <button
                 type="button"
-                onClick={() => toast.info("Viewing all AI Maintenance alerts")}
+                onClick={(e) => openPageViewer("Viewing all AI Maintenance alerts", e.currentTarget)}
                 className="text-[10px] text-primary font-bold hover:underline cursor-pointer"
               >
                 View All &rarr;
@@ -1444,4 +1446,3 @@ export function MaintenanceFormPage() {
   );
 }
 
-export default MaintenanceFormPage;

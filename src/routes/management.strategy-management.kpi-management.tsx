@@ -42,6 +42,8 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { QuickCreateDialog } from "@/components/erp/QuickCreateDialog";
 export const Route = createFileRoute("/management/strategy-management/kpi-management")({
   head: () => ({
     meta: [
@@ -56,46 +58,63 @@ export const Route = createFileRoute("/management/strategy-management/kpi-manage
   component: KpiManagementPage,
 });
 
-export function KpiManagementPage() {
+const performanceTrend = [
+  { month: "Jan", actual: 52, target: 60, prevYear: 45 },
+  { month: "Feb", actual: 58, target: 64, prevYear: 49 },
+  { month: "Mar", actual: 65, target: 70, prevYear: 55 },
+  { month: "Apr", actual: 72, target: 75, prevYear: 60 },
+  { month: "May", actual: 78, target: 80, prevYear: 65 },
+  { month: "Jun", actual: 82, target: 85, prevYear: 70 },
+  { month: "Jul", actual: 85, target: 88, prevYear: 72 },
+  { month: "Aug", actual: 89, target: 92, prevYear: 76 },
+  { month: "Sep", actual: 94, target: 96, prevYear: 80 },
+];
+
+const kpiStatusData = [
+  { name: "On Target", value: 142, percentage: 76, color: "#10b981" },
+  { name: "Warning", value: 24, percentage: 13, color: "#f59e0b" },
+  { name: "Critical", value: 8, percentage: 4, color: "#ef4444" },
+  { name: "Not Started", value: 6, percentage: 3, color: "#3b82f6" },
+  { name: "Data Pending", value: 6, percentage: 4, color: "#8b5cf6" },
+];
+
+const trendBarData = [
+  { month: "Jan", actual: 18, target: 25, forecast: 20 },
+  { month: "Feb", actual: 22, target: 28, forecast: 24 },
+  { month: "Mar", actual: 26, target: 32, forecast: 28 },
+  { month: "Apr", actual: 28, target: 36, forecast: 32 },
+  { month: "May", actual: 30, target: 40, forecast: 36 },
+  { month: "Jun", actual: 31, target: 44, forecast: 40 },
+  { month: "Jul", actual: 32, target: 46, forecast: 42 },
+  { month: "Aug", actual: 33, target: 48, forecast: 45 },
+  { month: "Sep", actual: 32.4, target: 50, forecast: 48 },
+];
+
+const KPI_REGISTER = [
+  { id: 1, name: "Revenue Growth", cat: "Financial", act: "12%", tgt: "20%", var: "-8%", st: "Critical" },
+  { id: 2, name: "Manufacturing OEE", cat: "Operations", act: "68%", tgt: "85%", var: "-17%", st: "At Risk" },
+  { id: 3, name: "Customer Acquisition", cat: "Commercial", act: "450", tgt: "600", var: "-25%", st: "At Risk" },
+  { id: 4, name: "Project Delivery (OTD)", cat: "Projects", act: "72%", tgt: "95%", var: "-23%", st: "Critical" },
+  { id: 5, name: "Energy Consumption", cat: "Sustainability", act: "18%", tgt: "15%", var: "+3%", st: "At Risk" },
+];
+
+const PAGE_DATASET = { performanceTrend, kpiStatusData, trendBarData, kpis: KPI_REGISTER };
+
+function KpiManagementPage() {
+  const { performanceTrend, kpiStatusData, trendBarData } = useModuleDataset("strategy-management.kpi-management", "KPI Management", PAGE_DATASET);
+  const [kpis, setKpis] = usePersistentState("strategy-management.kpi-management", "KPI Management", "kpis", KPI_REGISTER);
+  const [newKpisOpen, setNewKpisOpen] = useState(false);
+  const [showAllKpis, setShowAllKpis] = useState(false);
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [execTab, setExecTab] = useState("Strategic");
   const [aiQuery, setAiQuery] = useState("");
 
   // 1. Line Chart Data: KPI Performance Overview
-  const performanceTrend = [
-    { month: "Jan", actual: 52, target: 60, prevYear: 45 },
-    { month: "Feb", actual: 58, target: 64, prevYear: 49 },
-    { month: "Mar", actual: 65, target: 70, prevYear: 55 },
-    { month: "Apr", actual: 72, target: 75, prevYear: 60 },
-    { month: "May", actual: 78, target: 80, prevYear: 65 },
-    { month: "Jun", actual: 82, target: 85, prevYear: 70 },
-    { month: "Jul", actual: 85, target: 88, prevYear: 72 },
-    { month: "Aug", actual: 89, target: 92, prevYear: 76 },
-    { month: "Sep", actual: 94, target: 96, prevYear: 80 },
-  ];
 
   // 2. Donut Data: KPI Status Distribution (186 KPIs)
-  const kpiStatusData = [
-    { name: "On Target", value: 142, percentage: 76, color: "#10b981" },
-    { name: "Warning", value: 24, percentage: 13, color: "#f59e0b" },
-    { name: "Critical", value: 8, percentage: 4, color: "#ef4444" },
-    { name: "Not Started", value: 6, percentage: 3, color: "#3b82f6" },
-    { name: "Data Pending", value: 6, percentage: 4, color: "#8b5cf6" },
-  ];
 
   // 3. Bar Chart Data: KPI Trend Analysis (Revenue ₹ Cr)
-  const trendBarData = [
-    { month: "Jan", actual: 18, target: 25, forecast: 20 },
-    { month: "Feb", actual: 22, target: 28, forecast: 24 },
-    { month: "Mar", actual: 26, target: 32, forecast: 28 },
-    { month: "Apr", actual: 28, target: 36, forecast: 32 },
-    { month: "May", actual: 30, target: 40, forecast: 36 },
-    { month: "Jun", actual: 31, target: 44, forecast: 40 },
-    { month: "Jul", actual: 32, target: 46, forecast: 42 },
-    { month: "Aug", actual: 33, target: 48, forecast: 45 },
-    { month: "Sep", actual: 32.4, target: 50, forecast: 48 },
-  ];
 
   const handleAskAI = (promptText?: string) => {
     const text = promptText || aiQuery;
@@ -161,7 +180,7 @@ export function KpiManagementPage() {
             </div>
 
             <button
-              onClick={() => toast.success("Opening New KPI Definition Form")}
+              onClick={() => setNewKpisOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -344,7 +363,7 @@ export function KpiManagementPage() {
           <div className="rounded-xl border bg-card p-4 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-sm text-foreground">Top 5 Critical / At-Risk KPIs</h3>
-              <span className="text-xs text-primary font-semibold hover:underline cursor-pointer">View All</span>
+              <button type="button" onClick={() => setShowAllKpis((v) => !v)} className="text-xs text-primary font-semibold hover:underline cursor-pointer">{showAllKpis ? "Show Less" : `View All (${kpis.length})`}</button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
@@ -360,13 +379,7 @@ export function KpiManagementPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
-                  {[
-                    { id: 1, name: "Revenue Growth", cat: "Financial", act: "12%", tgt: "20%", var: "-8%", st: "Critical" },
-                    { id: 2, name: "Manufacturing OEE", cat: "Operations", act: "68%", tgt: "85%", var: "-17%", st: "At Risk" },
-                    { id: 3, name: "Customer Acquisition", cat: "Commercial", act: "450", tgt: "600", var: "-25%", st: "At Risk" },
-                    { id: 4, name: "Project Delivery (OTD)", cat: "Projects", act: "72%", tgt: "95%", var: "-23%", st: "Critical" },
-                    { id: 5, name: "Energy Consumption", cat: "Sustainability", act: "18%", tgt: "15%", var: "+3%", st: "At Risk" },
-                  ].map((row) => (
+                  {(showAllKpis ? kpis : kpis.slice(0, 5)).map((row) => (
                     <tr key={row.id}>
                       <td className="py-2 px-2.5 text-muted-foreground">{row.id}</td>
                       <td className="py-2 px-2.5 font-semibold text-foreground">{row.name}</td>
@@ -608,6 +621,28 @@ export function KpiManagementPage() {
           </div>
         </div>
       </div>
+      <QuickCreateDialog
+        open={newKpisOpen}
+        onOpenChange={setNewKpisOpen}
+        title="New KPI"
+        description="Define a KPI to track against its target."
+        submitLabel="Create KPI"
+        fields={[
+          { name: "name", label: "KPI name", required: true, placeholder: "e.g. Charger Uptime" },
+          { name: "cat", label: "Category", type: "select", options: ["Financial", "Operations", "Commercial", "Projects", "Sustainability", "Strategic"] },
+          { name: "act", label: "Actual", required: true, placeholder: "e.g. 92%" },
+          { name: "tgt", label: "Target", required: true, placeholder: "e.g. 98%" },
+          { name: "var", label: "Variance", placeholder: "e.g. -6%" },
+          { name: "st", label: "Status", type: "select", options: ["At Risk", "Critical", "On Track"] },
+        ]}
+        onSubmit={(v) => {
+          setKpis((prev) => {
+            const nextId = Math.max(0, ...prev.map((r) => Number(r.id) || 0)) + 1;
+            return [...prev, { id: nextId, name: String(v.name), cat: String(v.cat), act: String(v.act), tgt: String(v.tgt), var: String(v.var || "—"), st: String(v.st) }];
+          });
+          toast.success(`KPI "${v.name}" created`);
+        }}
+      />
     </AppShell>
   );
 }

@@ -101,7 +101,7 @@ export const Route = createFileRoute("/management/risk-management/legal-register
   component: LegalRegisterManagementPage,
 });
 
-export default function LegalRegisterManagementPage() {
+function LegalRegisterManagementPage() {
   // Navigation tabs state
   const [activeTab, setActiveTab] = useState<
     | "overview"

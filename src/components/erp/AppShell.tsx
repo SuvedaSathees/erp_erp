@@ -304,6 +304,18 @@ const NAV_GROUPS: GroupItem[] = [
           },
           {
             kind: "leaf",
+            to: "/management/executive-management/overview",
+            matchPrefix: "/management/executive-management",
+            label: "Executive",
+            icon: Briefcase,
+            subItems: [
+              { to: "/management/executive-management/overview", label: "Overview" },
+              { to: "/management/executive-management/executive-review", label: "Executive Review" },
+              { to: "/management/executive-management/reports", label: "Reports" },
+            ],
+          },
+          {
+            kind: "leaf",
             to: "/management/administration-management/overview",
             matchPrefix: "/management/administration-management",
             label: "Organization",

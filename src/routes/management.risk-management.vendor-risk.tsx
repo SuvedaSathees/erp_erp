@@ -116,7 +116,7 @@ export const Route = createFileRoute("/management/risk-management/vendor-risk")(
   component: VendorRiskPage,
 });
 
-export function VendorRiskPage() {
+function VendorRiskPage() {
   // --- Prisma-backed queries with inline fallback ---
   const { data: dbRecord } = useQuery({
     queryKey: ["vendor-risk", "record"],
@@ -2074,4 +2074,3 @@ export function VendorRiskPage() {
   );
 }
 
-export default VendorRiskPage;

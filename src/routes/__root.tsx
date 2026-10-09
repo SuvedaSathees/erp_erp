@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
+import { PageActionsHost } from "@/components/erp/PageActionsHost";
 import { WidgetManager } from "@/widgets/components/WidgetCustomizer";
 import { GlobalFiltersProvider } from "@/hooks/useGlobalFilters";
 import { FavoritesProvider } from "@/hooks/useFavorites";
@@ -153,6 +154,7 @@ function RootComponent() {
           <WidgetManager>
             <Outlet />
             <Toaster />
+            <PageActionsHost />
           </WidgetManager>
         </FavoritesProvider>
       </GlobalFiltersProvider>

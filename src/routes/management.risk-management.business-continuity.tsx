@@ -111,7 +111,7 @@ export const Route = createFileRoute(
   }),
 });
 
-export function BusinessContinuityPage() {
+function BusinessContinuityPage() {
   const { toast } = useToast();
 
   const { data: dbRecord } = useQuery({
@@ -2223,5 +2223,4 @@ export function BusinessContinuityPage() {
   );
 }
 
-export default BusinessContinuityPage;
 

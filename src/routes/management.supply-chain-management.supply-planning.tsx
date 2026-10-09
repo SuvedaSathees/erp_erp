@@ -1310,4 +1310,3 @@ function SupplyPlanningPage() {
   );
 }
 
-export default SupplyPlanningPage;

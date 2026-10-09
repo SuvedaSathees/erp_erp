@@ -109,6 +109,8 @@ import {
   Tooltip as RechartsTooltip,
 } from "recharts";
 import { toast } from "sonner";
+import { exportPageReport, downloadAttachment } from "@/lib/recordExport";
+import { openPageFiles, openQuickActions, openPageViewer, openPageHistory, openPageForm, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/travel-expense")({
   head: () => ({
@@ -149,7 +151,7 @@ const TOP_EXPENSES = [
   { category: "Other", date: "-", amount: "500", status: "Estimated" },
 ];
 
-export function TravelManagementPage() {
+function TravelManagementPage() {
   const [activeTab, setActiveTab] = useState<string>("itinerary");
 
   // Modals
@@ -157,11 +159,7 @@ export function TravelManagementPage() {
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isAdvanceModalOpen, setIsAdvanceModalOpen] = useState(false);
 
-  const handleSubmitForReview = () => {
-    toast.success("Travel Request TRV-2024-00128 submitted for review", {
-      description: "Itinerary and advance request forwarded to Reporting Manager & Finance.",
-    });
-  };
+  const handleSubmitForReview = () => { void savePageState("Travel Request TRV-2024-00128 submitted for review", { kind: "request", message: "Travel Request TRV-2024-00128 submitted for review. Recorded in the activity log." }); };
 
   return (
     <AppShell
@@ -193,7 +191,7 @@ export function TravelManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("Importing travel itinerary...")}
+                onClick={() => openPageFiles("Import travel itinerary", ".csv,.xlsx,.xls")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <Upload className="h-3.5 w-3.5 text-blue-600" />
@@ -201,7 +199,7 @@ export function TravelManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.success("Travel manifest exported")}
+                onClick={() => void exportPageReport("Travel Manifest", "pdf")}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
@@ -210,7 +208,7 @@ export function TravelManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => toast.info("More travel options opened")}
+                onClick={(e) => openQuickActions(e)}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
               >
                 More
@@ -529,7 +527,7 @@ export function TravelManagementPage() {
                   </div>
                 </div>
 
-                <button onClick={() => toast.info("Travel policy details")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
+                <button onClick={(e) => openPageViewer("Travel policy details", e.currentTarget)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer pt-1 text-center border-t border-slate-100">
                   View Policy Details →
                 </button>
               </div>
@@ -598,7 +596,7 @@ export function TravelManagementPage() {
               <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Upcoming Activities</h4>
-                  <button onClick={() => toast.info("Activity calendar")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
+                  <button onClick={() => openPageHistory("Activity Calendar")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
                     Full Schedule →
                   </button>
                 </div>
@@ -699,7 +697,7 @@ export function TravelManagementPage() {
               <div className="lg:col-span-3 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h4 className="text-xs font-bold text-slate-800">Documents</h4>
-                  <button onClick={() => toast.info("Viewing all documents")} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
+                  <button onClick={(e) => openPageViewer("Viewing all documents", e.currentTarget)} className="text-[10px] text-primary font-semibold hover:underline cursor-pointer">
                     View All →
                   </button>
                 </div>
@@ -718,7 +716,7 @@ export function TravelManagementPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => toast.success(`Downloading ${doc.name}`)}
+                        onClick={() => void downloadAttachment(doc)}
                         className="text-primary hover:text-blue-700 p-0.5 cursor-pointer"
                       >
                         <Download className="h-3.5 w-3.5" />
@@ -814,7 +812,7 @@ export function TravelManagementPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.info("Travel policy reference opened")}
+                    onClick={(e) => openPageViewer("Travel policy reference opened", e.currentTarget)}
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-amber-600 hover:bg-amber-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <ShieldCheck className="h-3 w-3 text-amber-600" />
@@ -823,7 +821,7 @@ export function TravelManagementPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.success("Itinerary manifest PDF downloaded")}
+                    onClick={() => void exportPageReport("Itinerary Manifest", "pdf")}
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-cyan-600 hover:bg-cyan-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <Download className="h-3 w-3 text-cyan-600" />
@@ -832,7 +830,7 @@ export function TravelManagementPage() {
 
                   <button
                     type="button"
-                    onClick={() => toast.info("Travel analytics preview")}
+                    onClick={(e) => openPageViewer("Travel analytics preview", e.currentTarget)}
                     className="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-100 hover:border-primary hover:bg-blue-50/40 text-slate-700 font-semibold transition cursor-pointer text-[10px]"
                   >
                     <FileSpreadsheet className="h-3 w-3 text-primary" />
@@ -865,7 +863,7 @@ export function TravelManagementPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.info("Add new flight booking")}
+                  onClick={() => openPageForm("New Flight Booking", "flight", "Add Flight")}
                   className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer flex items-center gap-1.5"
                 >
                   <Plus className="h-3.5 w-3.5" />
@@ -921,7 +919,7 @@ export function TravelManagementPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.info("Add new hotel accommodation")}
+                  onClick={() => openPageForm("New Hotel Accommodation", "hotel", "Add Hotel")}
                   className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer flex items-center gap-1.5"
                 >
                   <Plus className="h-3.5 w-3.5" />
@@ -978,7 +976,7 @@ export function TravelManagementPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.info("Add new cab transfer")}
+                  onClick={() => openPageForm("New Cab Transfer", "cab", "Add Cab")}
                   className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer flex items-center gap-1.5"
                 >
                   <Plus className="h-3.5 w-3.5" />
@@ -1071,7 +1069,7 @@ export function TravelManagementPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => toast.success("Settlement statement exported")}
+                    onClick={() => void exportPageReport("Settlement Statement", "pdf")}
                     className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition cursor-pointer flex items-center gap-1.5"
                   >
                     <Download className="h-3.5 w-3.5" />
@@ -1343,5 +1341,4 @@ export function TravelManagementPage() {
   );
 }
 
-export default TravelManagementPage;
 

@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { FileSpreadsheet, FileText, Download, Printer, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
+import { exportPageReport, formatFrom } from "@/lib/recordExport";
 
 interface ReportsExportModalProps {
   open: boolean;
@@ -18,10 +19,8 @@ export function ReportsExportModal({
   onOpenChange,
 }: ReportsExportModalProps) {
   const handleExport = (format: string, reportName: string) => {
-    toast.success(`Exporting ${reportName} in ${format} format...`);
-    setTimeout(() => {
-      onOpenChange(false);
-    }, 800);
+    void exportPageReport(reportName, formatFrom(format), "page");
+    onOpenChange(false);
   };
 
   const reportsList = [

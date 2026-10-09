@@ -38,6 +38,8 @@ import { MarketingManagementTabBar } from "@/components/erp/MarketingManagementT
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { exportPageReport } from "@/lib/recordExport";
+import { savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/marketing-management/market-research"
@@ -108,20 +110,14 @@ const CUSTOMER_SEGMENTS_DATA = [
   { name: "Others", value: 2, count: 25, color: "#8b5cf6" },
 ];
 
-export function MarketResearchManagementPage() {
+function MarketResearchManagementPage() {
   const [activeTab, setActiveTab] = useState("studies");
   const [showMaicwLegend, setShowMaicwLegend] = useState(false);
 
-  const handleSave = () => {
-    toast.success("Research Study Saved", {
-      description: "MR-2026-001 (EV Charging Market Study) updated successfully.",
-    });
-  };
+  const handleSave = () => { void savePageState("Research Study saved", { message: "Research Study saved." }); };
 
   const handleShare = () => {
-    toast.info("Report Exported & Shared", {
-      description: "Executive brief dispatched to Product Strategy & Leadership.",
-    });
+    void exportPageReport("Market Research Executive Brief MR-2026-001", "pdf");
   };
 
   return (
@@ -565,4 +561,3 @@ export function MarketResearchManagementPage() {
   );
 }
 
-export default MarketResearchManagementPage;

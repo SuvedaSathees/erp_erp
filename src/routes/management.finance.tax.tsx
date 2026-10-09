@@ -73,6 +73,8 @@ import type {
   TaxReconciliation,
   DashboardQuery,
 } from "@/services/types";
+import { exportPageReport } from "@/lib/recordExport";
+import { openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/finance/tax")({
   head: () => ({
@@ -405,7 +407,7 @@ function TaxManagementPage() {
                   <ErpButton
                     variant="outline"
                     size="sm"
-                    onClick={() => toast.info("Exporting tax report files...")}
+                    onClick={() => void exportPageReport("Tax Report", "pdf")}
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Export</span>
@@ -1247,7 +1249,7 @@ function TaxManagementPage() {
                 </div>
 
                 <button
-                  onClick={() => toast.info("Displaying compliance details report...")}
+                  onClick={(e) => openPageViewer("Displaying compliance details report", e.currentTarget)}
                   className="w-full text-center text-xs font-semibold text-primary hover:underline mt-4 block"
                 >
                   View Compliance Report →

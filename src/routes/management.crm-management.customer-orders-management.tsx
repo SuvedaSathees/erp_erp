@@ -279,7 +279,7 @@ const LINKED_DOCUMENTS = [
   { name: "Technical Spec", file: "Tech_Spec_PLCSCADA.pdf" },
 ];
 
-export function CustomerOrdersManagementPage() {
+function CustomerOrdersManagementPage() {
   const [order, setOrder] = useState<CustomerOrderRecord>(INITIAL_ORDER);
   const [items, setItems] = useState<OrderItem[]>(INITIAL_ITEMS);
   const [activeTab, setActiveTab] = useState<string>("details");
@@ -1265,4 +1265,3 @@ export function CustomerOrdersManagementPage() {
   );
 }
 
-export default CustomerOrdersManagementPage;

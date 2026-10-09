@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { LeadGenerationPage } from "./management.marketing-management.leads-management";
+import { LeadGenerationPage } from "@/pages/management.marketing-management.leads-management";
 
 export const Route = createFileRoute(
   "/management/marketing-management/lead-generation"

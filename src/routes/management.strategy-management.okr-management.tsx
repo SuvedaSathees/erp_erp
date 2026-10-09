@@ -41,6 +41,9 @@ import { StrategyManagementTabBar } from "@/components/erp/StrategyManagementTab
 import { StrategyScoreBanner } from "@/components/erp/StrategyScoreBanner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
+import { QuickCreateDialog } from "@/components/erp/QuickCreateDialog";
+import { TOP_OKRS } from "@/services/strategyManagementService";
 export const Route = createFileRoute("/management/strategy-management/okr-management")({
   head: () => ({
     meta: [
@@ -55,43 +58,54 @@ export const Route = createFileRoute("/management/strategy-management/okr-manage
   component: OkrManagementPage,
 });
 
-export function OkrManagementPage() {
+const progressTrend = [
+  { month: "Jan", planned: 20, actual: 18, target: 22 },
+  { month: "Feb", planned: 32, actual: 28, target: 35 },
+  { month: "Mar", planned: 45, actual: 40, target: 48 },
+  { month: "Apr", planned: 55, actual: 52, target: 60 },
+  { month: "May", planned: 68, actual: 64, target: 72 },
+  { month: "Jun", planned: 78, actual: 72, target: 80 },
+  { month: "Jul", planned: 85, actual: 80, target: 88 },
+  { month: "Aug", planned: 92, actual: 84, target: 94 },
+  { month: "Sep", planned: 100, actual: 86, target: 100 },
+];
+
+const statusData = [
+  { name: "On Track", value: 18, percentage: 56, color: "#10b981" },
+  { name: "At Risk", value: 7, percentage: 22, color: "#f59e0b" },
+  { name: "Off Track", value: 5, percentage: 16, color: "#ef4444" },
+  { name: "Completed", value: 2, percentage: 6, color: "#3b82f6" },
+];
+
+const deptPerformanceData = [
+  { dept: "Mgmt", onTrack: 4, atRisk: 1, offTrack: 0, completed: 2 },
+  { dept: "Product", onTrack: 5, atRisk: 2, offTrack: 1, completed: 3 },
+  { dept: "Engg", onTrack: 6, atRisk: 1, offTrack: 1, completed: 4 },
+  { dept: "Mfg", onTrack: 3, atRisk: 3, offTrack: 2, completed: 1 },
+  { dept: "Sales", onTrack: 4, atRisk: 2, offTrack: 1, completed: 2 },
+  { dept: "Finance", onTrack: 3, atRisk: 1, offTrack: 0, completed: 3 },
+  { dept: "HR", onTrack: 4, atRisk: 0, offTrack: 0, completed: 2 },
+  { dept: "Operations", onTrack: 5, atRisk: 2, offTrack: 1, completed: 2 },
+];
+
+
+
+const PAGE_DATASET = { progressTrend, statusData, deptPerformanceData, okrs: TOP_OKRS };
+
+function OkrManagementPage() {
+  const { progressTrend, statusData, deptPerformanceData } = useModuleDataset("strategy-management.okr-management", "OKR Management", PAGE_DATASET);
+  const [okrs, setOkrs] = usePersistentState("strategy-management.okr-management", "OKR Management", "okrs", TOP_OKRS);
+  const [newOkrOpen, setNewOkrOpen] = useState(false);
+  const [showAllOkrs, setShowAllOkrs] = useState(false);
   const [cycle, setCycle] = useState("Q3 2026 (Jul - Sep)");
   const [businessUnit, setBusinessUnit] = useState("All Business Units");
   const [aiQuery, setAiQuery] = useState("");
 
   // OKR Progress Line Chart Data
-  const progressTrend = [
-    { month: "Jan", planned: 20, actual: 18, target: 22 },
-    { month: "Feb", planned: 32, actual: 28, target: 35 },
-    { month: "Mar", planned: 45, actual: 40, target: 48 },
-    { month: "Apr", planned: 55, actual: 52, target: 60 },
-    { month: "May", planned: 68, actual: 64, target: 72 },
-    { month: "Jun", planned: 78, actual: 72, target: 80 },
-    { month: "Jul", planned: 85, actual: 80, target: 88 },
-    { month: "Aug", planned: 92, actual: 84, target: 94 },
-    { month: "Sep", planned: 100, actual: 86, target: 100 },
-  ];
 
   // OKR Status Distribution Donut Data
-  const statusData = [
-    { name: "On Track", value: 18, percentage: 56, color: "#10b981" },
-    { name: "At Risk", value: 7, percentage: 22, color: "#f59e0b" },
-    { name: "Off Track", value: 5, percentage: 16, color: "#ef4444" },
-    { name: "Completed", value: 2, percentage: 6, color: "#3b82f6" },
-  ];
 
   // Department Performance Stacked Bar Data
-  const deptPerformanceData = [
-    { dept: "Mgmt", onTrack: 4, atRisk: 1, offTrack: 0, completed: 2 },
-    { dept: "Product", onTrack: 5, atRisk: 2, offTrack: 1, completed: 3 },
-    { dept: "Engg", onTrack: 6, atRisk: 1, offTrack: 1, completed: 4 },
-    { dept: "Mfg", onTrack: 3, atRisk: 3, offTrack: 2, completed: 1 },
-    { dept: "Sales", onTrack: 4, atRisk: 2, offTrack: 1, completed: 2 },
-    { dept: "Finance", onTrack: 3, atRisk: 1, offTrack: 0, completed: 3 },
-    { dept: "HR", onTrack: 4, atRisk: 0, offTrack: 0, completed: 2 },
-    { dept: "Operations", onTrack: 5, atRisk: 2, offTrack: 1, completed: 2 },
-  ];
 
   const handleAskAI = (promptText?: string) => {
     const text = promptText || aiQuery;
@@ -157,7 +171,7 @@ export function OkrManagementPage() {
             </div>
 
             <button
-              onClick={() => toast.success("Opening Objective Creation Dialog")}
+              onClick={() => setNewOkrOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -344,7 +358,13 @@ export function OkrManagementPage() {
           <div className="rounded-xl border bg-card p-4 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-sm text-foreground">Top OKRs by Progress</h3>
-              <span className="text-xs text-primary font-semibold hover:underline cursor-pointer">View All</span>
+              <button
+                type="button"
+                onClick={() => setShowAllOkrs((v) => !v)}
+                className="text-xs text-primary font-semibold hover:underline cursor-pointer"
+              >
+                {showAllOkrs ? "Show Top 5" : `View All (${okrs.length})`}
+              </button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
@@ -358,13 +378,7 @@ export function OkrManagementPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
-                  {[
-                    { id: 1, title: "Expand EV Charging Network", bu: "Operations", prog: 92, st: "On Track" },
-                    { id: 2, title: "Launch Autonomous W-EVSE", bu: "Product", prog: 78, st: "On Track" },
-                    { id: 3, title: "Achieve ₹50 Cr Revenue", bu: "Finance", prog: 65, st: "At Risk" },
-                    { id: 4, title: "Scale Manufacturing Capacity", bu: "Manufacturing", prog: 52, st: "At Risk" },
-                    { id: 5, title: "Build Strategic Partnerships", bu: "Business Dev", prog: 38, st: "Off Track" },
-                  ].map((row) => (
+                  {(showAllOkrs ? okrs : [...okrs].sort((a, b) => b.prog - a.prog).slice(0, 5)).map((row) => (
                     <tr key={row.id}>
                       <td className="py-2 px-2 text-muted-foreground">{row.id}</td>
                       <td className="py-2 px-2 font-semibold text-foreground">{row.title}</td>
@@ -628,6 +642,32 @@ export function OkrManagementPage() {
           </div>
         </div>
       </div>
+      <QuickCreateDialog
+        open={newOkrOpen}
+        onOpenChange={setNewOkrOpen}
+        title="New OKR"
+        description={`Add an objective to the ${cycle} cycle.`}
+        submitLabel="Create OKR"
+        fields={[
+          { name: "title", label: "Objective title", required: true, type: "textarea", placeholder: "e.g. Expand EV charging in Tier-2 cities" },
+          { name: "bu", label: "Business unit", type: "select", options: ["Operations", "Product", "Finance", "Manufacturing", "Business Dev", "Sales", "HR"] },
+          { name: "prog", label: "Current progress (%)", type: "number", defaultValue: 0 },
+          { name: "st", label: "Status", type: "select", options: ["On Track", "At Risk", "Off Track", "Completed"] },
+        ]}
+        onSubmit={(v) => {
+          setOkrs((prev) => [
+            ...prev,
+            {
+              id: Math.max(0, ...prev.map((o) => o.id)) + 1,
+              title: String(v.title),
+              bu: String(v.bu),
+              prog: Math.min(100, Math.max(0, Number(v.prog))),
+              st: String(v.st),
+            },
+          ]);
+          toast.success(`OKR "${v.title}" created`);
+        }}
+      />
     </AppShell>
   );
 }

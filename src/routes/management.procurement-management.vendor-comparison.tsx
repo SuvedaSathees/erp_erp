@@ -67,6 +67,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { savePageState, logPageAction } from "@/lib/pageActions";
 
 // Vendor Comparison & Multi-Criteria Evaluation Module · Magnertia ERP
 export const Route = createFileRoute("/management/procurement-management/vendor-comparison")({
@@ -253,7 +254,7 @@ const INITIAL_COMPARISON_DOCS = [
   { id: 4, name: "Tender_Committee_Sanction_Minutes.pdf", type: "Approval Sanction", size: "620 KB", uploadedBy: "Vikas Jain", date: "18 May 2026" },
 ];
 
-export function VendorComparisonPage() {
+function VendorComparisonPage() {
   // Navigation & Tabs
   const [activeTab, setActiveTab] = useState<string>("itemComparison");
 
@@ -299,13 +300,9 @@ export function VendorComparisonPage() {
   });
 
   // Actions
-  const handleSaveDraft = () => {
-    toast.success("Vendor Comparison saved as draft.");
-  };
+  const handleSaveDraft = () => { void savePageState("Vendor Comparison saved as draft", { message: "Vendor Comparison saved as draft." }); };
 
-  const handleRecalculateScores = () => {
-    toast.success("Multi-criteria weighted scores recalculated across all 3 vendors!");
-  };
+  const handleRecalculateScores = () => { void logPageAction("Vendor score recalculation requested"); };
 
   const handleRecommend = () => {
     setShowApprovalModal(true);
@@ -1361,4 +1358,3 @@ function CreditCardIcon(props: any) {
   );
 }
 
-export default VendorComparisonPage;

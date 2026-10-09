@@ -70,6 +70,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { openPageViewer, logPageAction, openPageFiles } from "@/lib/pageActions";
+import { downloadAttachment } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/procurement-management/supplier-portal")({
   head: () => ({
@@ -137,7 +139,7 @@ const INITIAL_POS: SupplierPO[] = [
   { poNumber: "PO-2026-00418", poDate: "18 Aug 2026", buyer: "Magnertia Manufacturing Ltd.", totalValue: 1180000.0, deliverBy: "05 Sep 2026", orderStatus: "Accepted" },
 ];
 
-export function SupplierPortalPage() {
+function SupplierPortalPage() {
   // Navigation & Active Sub-Menu
   const [activeTab, setActiveTab] = useState<string>("dashboard");
 
@@ -600,7 +602,7 @@ export function SupplierPortalPage() {
 
                 <button
                   type="button"
-                  onClick={() => toast.info("Viewing all supplier notifications...")}
+                  onClick={(e) => openPageViewer("Viewing all supplier notifications", e.currentTarget)}
                   className="text-primary text-[11px] font-semibold hover:underline pt-1 text-left cursor-pointer"
                 >
                   View All Notifications →
@@ -668,7 +670,7 @@ export function SupplierPortalPage() {
 
                 <button
                   type="button"
-                  onClick={() => toast.info("Viewing all recent logs...")}
+                  onClick={(e) => openPageViewer("Viewing all recent logs", e.currentTarget)}
                   className="text-primary text-[11px] font-semibold hover:underline pt-1 text-left cursor-pointer"
                 >
                   View All Activity →
@@ -713,7 +715,7 @@ export function SupplierPortalPage() {
                         <td className="py-2 px-2 text-right">
                           <button
                             type="button"
-                            onClick={() => toast.info(`Action initiated for ${d.name}`)}
+                            onClick={() => void logPageAction(`Action initiated for ${d.name}`)}
                             className={cn(
                               "rounded px-2 py-0.5 text-[10px] font-semibold cursor-pointer",
                               d.action === "Upload" ? "bg-primary text-primary-foreground hover:bg-primary/90" : "border border-border text-foreground hover:bg-muted"
@@ -1057,7 +1059,7 @@ export function SupplierPortalPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => toast.success("Upload certificate modal...")}
+                  onClick={() => openPageFiles("Supplier Certificate")}
                   className="rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground hover:bg-primary/90 cursor-pointer inline-flex items-center gap-1"
                 >
                   <Upload className="h-3.5 w-3.5" /> Upload Certificate
@@ -1094,7 +1096,7 @@ export function SupplierPortalPage() {
                         <td className="p-2.5 text-right">
                           <button
                             type="button"
-                            onClick={() => toast.info(`Viewing ${d.name}`)}
+                            onClick={() => void downloadAttachment(d)}
                             className="text-primary hover:underline font-semibold cursor-pointer"
                           >
                             View / Renew
@@ -1408,4 +1410,3 @@ export function SupplierPortalPage() {
   );
 }
 
-export default SupplierPortalPage;

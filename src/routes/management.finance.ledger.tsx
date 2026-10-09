@@ -88,6 +88,7 @@ import type {
   TrialBalanceReport,
   AccountSummary,
 } from "@/services/types";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute("/management/finance/ledger")({
   head: () => ({ meta: [{ title: "General Ledger · Magnertia" }] }),
@@ -741,13 +742,13 @@ function GeneralLedgerPage() {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => toast.success("Exported Trial Balance CSV")}>
+              <DropdownMenuItem onClick={() => void exportPageReport("Trial Balance", "csv")}>
                 Export as CSV
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => toast.success("Exported Ledger XLSX")}>
+              <DropdownMenuItem onClick={() => void exportPageReport("General Ledger", "xlsx")}>
                 Export as Excel
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => toast.success("Exported Audit PDF")}>
+              <DropdownMenuItem onClick={() => void exportPageReport("Ledger Audit Report", "pdf")}>
                 Export as PDF
               </DropdownMenuItem>
             </DropdownMenuContent>

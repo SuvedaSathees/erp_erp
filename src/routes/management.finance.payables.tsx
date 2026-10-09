@@ -64,6 +64,8 @@ import type {
   PayableInvoice,
   VendorProfile,
 } from "@/services/types";
+import { exportPageReport } from "@/lib/recordExport";
+import { goToPage, openQuickActions } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/finance/payables")({
   head: () => ({ meta: [{ title: "Accounts Payable · Magnertia" }] }),
@@ -177,7 +179,7 @@ function AccountsPayablePage() {
   const exportMutation = useMutation({
     mutationFn: (format: "csv" | "xlsx" | "pdf") =>
       reportingEngineService.generateAccountsPayableExport(QUERY, format),
-    onSuccess: (result) => toast.success(`Export ready: ${result.fileName}`),
+    onSuccess: (result, format) => void exportPageReport(result.fileName.replace(/\.\w+$/, "").replace(/_/g, " "), format, "page"),
   });
 
   function updateFilters(patch: Partial<InvoiceFilters>) {
@@ -375,7 +377,7 @@ function AccountsPayablePage() {
               </DropdownMenuContent>
             </DropdownMenu>
             <button
-              onClick={() => toast.info("More actions are coming in a future release.")}
+              onClick={(e) => openQuickActions(e)}
               className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-[13px] font-medium text-foreground shadow-sm hover:bg-muted/50"
             >
               More Actions
@@ -494,7 +496,7 @@ function AccountsPayablePage() {
           <QuickActionsCard
             onRecordPayment={() => setPaymentInvoiceNo("")}
             onNewInvoice={() => setCreateOpen(true)}
-            onVendorList={() => toast.info("Vendor list is coming in a future release.")}
+            onVendorList={() => goToPage("/vendors")}
             onApproveInvoices={() => setApproveListOpen(true)}
           />
         </div>

@@ -70,6 +70,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { savePageState } from "@/lib/pageActions";
 
 // Invoice Verification & 3-Way Match Module · Procurement Management
 export const Route = createFileRoute("/management/procurement-management/invoice-verification")({
@@ -212,7 +213,7 @@ const INITIAL_DOCUMENTS: IVDocument[] = [
   { id: 6, name: "Quality Report_QC-000421.pdf", size: "110 KB", date: "05 Jun 2026" },
 ];
 
-export function InvoiceVerificationPage() {
+function InvoiceVerificationPage() {
   // Navigation & Active Tab
   const [activeTab, setActiveTab] = useState<string>("lineMatching");
 
@@ -260,9 +261,7 @@ export function InvoiceVerificationPage() {
   });
 
   // Actions
-  const handleSaveDraft = () => {
-    toast.success("Invoice verification draft saved.");
-  };
+  const handleSaveDraft = () => { void savePageState("Invoice verification draft saved", { message: "Invoice verification draft saved." }); };
 
   const handleRunMatch = () => {
     setShowMatchModal(true);
@@ -1316,4 +1315,3 @@ export function InvoiceVerificationPage() {
   );
 }
 
-export default InvoiceVerificationPage;

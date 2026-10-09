@@ -23,6 +23,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute(
   "/management/quality-management/quality-planning",
@@ -40,7 +41,7 @@ export const Route = createFileRoute(
   component: QualityPlanningPage,
 });
 
-export function QualityPlanningPage() {
+function QualityPlanningPage() {
   const [record, setRecord] = useState<ApqpRecord>(INITIAL_APQP_RECORD);
   const [activeStep, setActiveStep] = useState<number>(3);
   const [viewMode, setViewMode] = useState<"phase" | "all">("phase");
@@ -322,7 +323,7 @@ export function QualityPlanningPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => toast.success("Exported DFMEA & CAD Maturity Report (.csv)")}
+                        onClick={() => void exportPageReport("DFMEA & CAD Maturity Report", "csv")}
                         className="h-7 text-xs border-border cursor-pointer"
                       >
                         Download Design Verification Summary
@@ -442,7 +443,7 @@ export function QualityPlanningPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => toast.success("Exported PPAP Level 3 Dossier (.csv)")}
+                        onClick={() => void exportPageReport("PPAP Level 3 Dossier", "csv")}
                         className="h-7 text-xs border-border cursor-pointer"
                       >
                         Download PPAP Validation Dossier

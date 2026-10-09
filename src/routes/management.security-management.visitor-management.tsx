@@ -57,6 +57,10 @@ import {
 } from "@/services/securityManagementService";
 import { toast } from "sonner";
 
+import { useModuleDataset } from "@/services/moduleDatasetService";
+import { usePersistentState } from "@/services/moduleDatasetService";
+import { exportRecords } from "@/lib/recordExport";
+import { openPageViewer, logPageAction, openPageFiles } from "@/lib/pageActions";
 export const Route = createFileRoute(
   "/management/security-management/visitor-management"
 )({
@@ -133,8 +137,11 @@ const BADGE_DISTRIBUTION = [
   { name: "Others", value: 2 },
 ];
 
+const PAGE_DATASET = { PURPOSE_DATA, FACILITY_VISITOR_DATA, VISITOR_TREND_DATA };
+
 function VisitorManagementPage() {
-  const [visitors, setVisitors] = useState<VisitorRecord[]>(mockTodayVisitors);
+  const { PURPOSE_DATA, FACILITY_VISITOR_DATA, VISITOR_TREND_DATA } = useModuleDataset("security-management.visitor-management", "Visitor Management", PAGE_DATASET);
+  const [visitors, setVisitors] = usePersistentState<VisitorRecord[]>("security-management.visitor-management", "Visitor Management", "visitors", mockTodayVisitors);
   const [visitorFilterTab, setVisitorFilterTab] = useState<
     "All" | "Expected" | "Checked-In" | "On-Site" | "Checked-Out"
   >("All");
@@ -208,7 +215,26 @@ function VisitorManagementPage() {
       setCheckInStep(checkInStep + 1);
       toast.info(`Proceeded to Step ${checkInStep + 1}`);
     } else {
-      toast.success(`Check-In Completed! Badge VIS-084 issued to ${walkinName}.`);
+      const badgeNo = `VIS-${String(visitors.length + 1).padStart(3, "0")}`;
+      setVisitors((prev) => [
+        {
+          ...prev[0],
+          id: `vis-${Date.now()}`,
+          name: walkinName,
+          organization: walkinOrg,
+          purpose: walkinPurpose,
+          host: walkinHost,
+          facility: walkinFacility,
+          visitDate: new Date().toISOString().slice(0, 10),
+          time: new Date().toTimeString().slice(0, 5),
+          status: "Checked-In",
+          badgeNo,
+          idType: selectedIdType,
+          escortRequired,
+        } as VisitorRecord,
+        ...prev,
+      ]);
+      toast.success(`Check-in completed. Badge ${badgeNo} issued to ${walkinName}.`);
       setCheckInStep(1);
     }
   };
@@ -238,7 +264,7 @@ function VisitorManagementPage() {
           bannerQuote="Ensuring seamless hospitality with zero-trust physical security across all Magnertia corporate, factory, and R&D facilities."
           primaryActionLabel="+ New Visitor Request"
           onPrimaryAction={() => setShowNewRequestModal(true)}
-          onGenerateReport={() => toast.success("Exporting Daily Visitor Activity Report...")}
+          onGenerateReport={() => exportRecords("Visitor Activity Report", visitors, "pdf")}
           onMoreActions={(act) => toast.info(`Action: ${act}`)}
         />
 
@@ -310,7 +336,7 @@ function VisitorManagementPage() {
                     Visitor Trend (Last 14 Days)
                   </h3>
                   <button
-                    onClick={() => toast.info("Opening 14-day trend analysis view")}
+                    onClick={(e) => openPageViewer("Opening 14-day trend analysis view", e.currentTarget)}
                     className="text-[11px] text-blue-600 font-semibold hover:underline"
                   >
                     View All
@@ -343,7 +369,7 @@ function VisitorManagementPage() {
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-xs font-bold text-slate-900">Visit by Purpose</h3>
                   <button
-                    onClick={() => toast.info("Filtering visits by purpose categories")}
+                    onClick={(e) => openPageViewer("Filtering visits by purpose categories", e.currentTarget)}
                     className="text-[11px] text-blue-600 font-semibold hover:underline"
                   >
                     View All
@@ -394,7 +420,7 @@ function VisitorManagementPage() {
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-xs font-bold text-slate-900">Facility-wise Visitors</h3>
                   <button
-                    onClick={() => toast.info("Viewing all facility visitor counts")}
+                    onClick={(e) => openPageViewer("Viewing all facility visitor counts", e.currentTarget)}
                     className="text-[11px] text-blue-600 font-semibold hover:underline"
                   >
                     View All
@@ -603,7 +629,7 @@ function VisitorManagementPage() {
                 <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
                   <span className="text-[11px] text-slate-500">Facility Policy: Mandatory Escort</span>
                   <button
-                    onClick={() => toast.success("Verified all open visitor compliance passes.")}
+                    onClick={() => void logPageAction("Visitor compliance pass verification requested")}
                     className="text-xs font-bold text-blue-600 hover:underline"
                   >
                     Audit Check →
@@ -713,7 +739,7 @@ function VisitorManagementPage() {
 
                 <div className="mt-2.5 pt-2 border-t border-slate-200 flex items-center justify-between">
                   <button
-                    onClick={() => toast.success("ID Document scanned & OCR confirmed successfully.")}
+                    onClick={() => openPageFiles("Visitor ID Document", "image/*,.pdf")}
                     className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:underline"
                   >
                     <QrCode className="h-3.5 w-3.5" /> Scan Document / QR

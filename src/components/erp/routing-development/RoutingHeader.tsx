@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { RoutingRecord } from "@/services/types";
 import { toast } from "sonner";
+import { openPageViewer } from "@/lib/pageActions";
 
 interface RoutingHeaderProps {
   record: RoutingRecord;
@@ -71,7 +72,7 @@ export const RoutingHeader: React.FC<RoutingHeaderProps> = ({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => toast.info("Opening full routing workflow preview...")}
+            onClick={(e) => openPageViewer("Opening full routing workflow preview", e.currentTarget)}
             className="gap-1.5 border-border hover:bg-muted text-xs font-semibold"
           >
             <Eye className="h-3.5 w-3.5 text-muted-foreground" />

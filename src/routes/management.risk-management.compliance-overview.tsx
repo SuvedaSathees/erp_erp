@@ -22,7 +22,7 @@ export const Route = createFileRoute("/management/risk-management/compliance-ove
  * Compliance Overview is a full widget surface with drag-and-drop customization,
  * just like Finance Overview and Risk Management Overview.
  */
-export function ComplianceOverviewPage() {
+function ComplianceOverviewPage() {
   return (
     <AppShell
       title="Compliance Overview"
@@ -36,7 +36,6 @@ export function ComplianceOverviewPage() {
   );
 }
 
-export default ComplianceOverviewPage;
 
 function OverviewSkeleton() {
   return (

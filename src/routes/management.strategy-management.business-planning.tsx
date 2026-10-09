@@ -52,6 +52,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import { useModuleDataset, usePersistentState } from "@/services/moduleDatasetService";
 export const Route = createFileRoute("/management/strategy-management/business-planning")({
   head: () => ({
     meta: [
@@ -94,14 +95,25 @@ const BUDGET_VS_ACTUAL_DATA = [
   { category: "Operations", planned: 22, actual: 20 },
 ];
 
-export function BusinessPlanningPage() {
-  const [currentStage, setCurrentStage] = useState(1);
+const PLAN_OBJECTIVES = [
+    { id: 1, name: "Achieve ₹120 Cr Revenue", category: "Financial", target: "120 Cr", progress: 65, status: "On Track" },
+    { id: 2, name: "Achieve 15% EBITDA Margin", category: "Financial", target: "15%", progress: 60, status: "On Track" },
+    { id: 3, name: "Deploy 5,000 Charging Stations", category: "Customer", target: "5,000", progress: 40, status: "At Risk" },
+    { id: 4, name: "Launch 3 New Products", category: "Innovation", target: "3", progress: 33, status: "At Risk" },
+    { id: 5, name: "Achieve 90% Customer Satisfaction", category: "Customer", target: "90%", progress: 75, status: "On Track" },
+  ];
+
+const PAGE_DATASET = { PLANNING_STAGES, FORECAST_DATA, BUDGET_VS_ACTUAL_DATA, objectives: PLAN_OBJECTIVES };
+
+function BusinessPlanningPage() {
+  const { PLANNING_STAGES, FORECAST_DATA, BUDGET_VS_ACTUAL_DATA } = useModuleDataset("strategy-management.business-planning", "Business Planning", PAGE_DATASET);
+  const [currentStage, setCurrentStage] = usePersistentState("strategy-management.business-planning", "Business Planning", "currentStage", 1);
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [businessUnit, setBusinessUnit] = useState("EV Charging Infrastructure");
-  const [planStatus, setPlanStatus] = useState("Draft");
+  const [planStatus, setPlanStatus] = usePersistentState("strategy-management.business-planning", "Business Planning", "planStatus", "Draft");
 
   // Form Fields State
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = usePersistentState("strategy-management.business-planning", "Business Planning", "formData", {
     code: "BP-2026-01",
     name: "BharatMandeer - FY 2026-27 Business Plan",
     planType: "Annual Business Plan",
@@ -118,13 +130,7 @@ export function BusinessPlanningPage() {
   });
 
   // Business Objectives
-  const [objectives, setObjectives] = useState([
-    { id: 1, name: "Achieve ₹120 Cr Revenue", category: "Financial", target: "120 Cr", progress: 65, status: "On Track" },
-    { id: 2, name: "Achieve 15% EBITDA Margin", category: "Financial", target: "15%", progress: 60, status: "On Track" },
-    { id: 3, name: "Deploy 5,000 Charging Stations", category: "Customer", target: "5,000", progress: 40, status: "At Risk" },
-    { id: 4, name: "Launch 3 New Products", category: "Innovation", target: "3", progress: 33, status: "At Risk" },
-    { id: 5, name: "Achieve 90% Customer Satisfaction", category: "Customer", target: "90%", progress: 75, status: "On Track" },
-  ]);
+  const [objectives, setObjectives] = usePersistentState("strategy-management.business-planning", "Business Planning", "objectives", PLAN_OBJECTIVES);
 
   // Strategic Initiatives
   const [initiatives] = useState([

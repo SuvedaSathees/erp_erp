@@ -42,6 +42,7 @@ import {
 } from "recharts";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { openPageForm, savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/hrm-management/performance-management")({
   head: () => ({
@@ -87,7 +88,7 @@ const PERFORMANCE_TREND_DATA = [
   { quarter: "Q4 (Jan-Mar)", goal: 4.4, kpi: 4.0, competency: 4.2, overall: 4.2 },
 ];
 
-export function PerformanceManagementPage() {
+function PerformanceManagementPage() {
   const [currentStage, setCurrentStage] = useState(4); // Manager Review
   const [fiscalYear, setFiscalYear] = useState("FY 2026-27");
   const [reviewType, setReviewType] = useState("Annual Review");
@@ -119,11 +120,7 @@ export function PerformanceManagementPage() {
   const [newActionName, setNewActionName] = useState("");
   const [newActionDate, setNewActionDate] = useState("31 Dec 2026");
 
-  const handleSaveDraft = () => {
-    toast.success("Performance Review Draft Saved", {
-      description: "Employee EMP-000125 performance review evaluation saved.",
-    });
-  };
+  const handleSaveDraft = () => { void savePageState("Performance Review Draft saved", { message: "Performance Review Draft saved." }); };
 
   const handleSubmitForReview = () => {
     setReviewStatus("Calibration");
@@ -539,7 +536,7 @@ export function PerformanceManagementPage() {
                   <h4 className="font-bold text-sm text-foreground">Recognition & Rewards</h4>
                   <button
                     type="button"
-                    onClick={() => toast.success("Opening Recognition Nomination Form")}
+                    onClick={() => openPageForm("Recognition Nomination", "nomination", "Submit Nomination")}
                     className="text-xs text-blue-600 hover:underline font-semibold cursor-pointer"
                   >
                     + Add

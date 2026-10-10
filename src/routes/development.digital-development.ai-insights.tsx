@@ -1,13 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-export { AiInsightsPage } from "@/pages/development.digital-development.ai-insights";
 
-export const Route = createFileRoute(
-  "/development/digital-development/ai-insights"
-)({
+// Digital Development was folded into Business Intelligence; old links land on the same page there.
+export const Route = createFileRoute("/development/digital-development/ai-insights")({
   beforeLoad: () => {
-    throw redirect({
-      to: "/development/business-development/overview",
-      replace: true,
-    });
+    throw redirect({ to: "/management/business-intelligence/ai-insights", replace: true });
   },
 });

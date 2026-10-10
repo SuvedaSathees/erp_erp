@@ -1,5 +1,5 @@
 // Magnertia ERP - Data Visualization
-// Development → Digital Development → Data Platform Development → Analytics Platform Development → Data Visualization
+// Management → Business Intelligence → Data Visualization
 // Data Visualization Form — MAICW Classification & Visualization Studio
 
 import React, { useState, useEffect } from "react";
@@ -48,7 +48,6 @@ import {
   Area,
 } from "recharts";
 import { AppShell } from "@/components/erp/AppShell";
-import { DigitalDevelopmentTabBar } from "@/components/erp/DigitalDevelopmentTabBar";
 import { BusinessIntelligenceTabBar } from "@/components/erp/BusinessIntelligenceTabBar";
 import { BiSubmoduleHeader } from "@/components/erp/BiSubmoduleHeader";
 import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";

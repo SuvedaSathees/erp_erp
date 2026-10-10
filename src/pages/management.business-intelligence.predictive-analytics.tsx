@@ -1,5 +1,5 @@
 // Magnertia ERP - Predictive Analytics
-// Development → Digital Development → Data Platform Development → Analytics Platform Development → Predictive Analytics
+// Management → Business Intelligence → Predictive Analytics
 // Predictive Analytics Form — MAICW Classification & Intelligence Engine
 
 import React, { useState, useEffect } from "react";
@@ -46,7 +46,6 @@ import {
   Bar,
 } from "recharts";
 import { AppShell } from "@/components/erp/AppShell";
-import { DigitalDevelopmentTabBar } from "@/components/erp/DigitalDevelopmentTabBar";
 import { BusinessIntelligenceTabBar } from "@/components/erp/BusinessIntelligenceTabBar";
 import { BiSubmoduleHeader } from "@/components/erp/BiSubmoduleHeader";
 import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";

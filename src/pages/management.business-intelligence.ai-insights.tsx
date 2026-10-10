@@ -1,5 +1,5 @@
 // Magnertia ERP - AI Insights
-// Development → Digital Development → Data Platform Development → Analytics Platform Development → AI Insights
+// Management → Business Intelligence → AI Insights
 // AI Insights Form — MAICW Classification & Cognitive Intelligence Center
 
 import React, { useState, useMemo, useEffect } from "react";
@@ -46,7 +46,6 @@ import {
   Area,
 } from "recharts";
 import { AppShell } from "@/components/erp/AppShell";
-import { DigitalDevelopmentTabBar } from "@/components/erp/DigitalDevelopmentTabBar";
 import { BusinessIntelligenceTabBar } from "@/components/erp/BusinessIntelligenceTabBar";
 import { BiSubmoduleHeader } from "@/components/erp/BiSubmoduleHeader";
 import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";

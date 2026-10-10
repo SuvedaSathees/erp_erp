@@ -1,7 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "./prisma.server";
 
-// Module datasets (dashboards for Strategy, BI, Security, Executive, Digital Development)
+// Module datasets (dashboards for Strategy, BI, Security, Executive; the BI data platform pages keep their
+// original "digital-development.*" keys so saved data stays put)
 // live in DevelopmentRecord rows keyed by recordCode "dataset:<key>". Payloads travel as JSON strings.
 const code = (key: string) => `dataset:${key}`;
 

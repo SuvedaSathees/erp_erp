@@ -1,5 +1,5 @@
 // Magnertia ERP - Data Warehouse Development
-// Development → Digital Development → Data Platform Development → Data Warehouse Development
+// Management → Business Intelligence → Data Warehouse Development
 // Data Warehouse Development Form — MAICW Classification & Platform Studio
 
 import React, { useState, useEffect } from "react";
@@ -45,7 +45,6 @@ import {
   Cell,
 } from "recharts";
 import { AppShell } from "@/components/erp/AppShell";
-import { DigitalDevelopmentTabBar } from "@/components/erp/DigitalDevelopmentTabBar";
 import { BusinessIntelligenceTabBar } from "@/components/erp/BusinessIntelligenceTabBar";
 import { BiSubmoduleHeader } from "@/components/erp/BiSubmoduleHeader";
 import { ProductScoreBanner } from "@/components/erp/ProductScoreBanner";

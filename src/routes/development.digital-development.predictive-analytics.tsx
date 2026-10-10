@@ -1,13 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-export { PredictiveAnalyticsPage } from "@/pages/development.digital-development.predictive-analytics";
 
-export const Route = createFileRoute(
-  "/development/digital-development/predictive-analytics"
-)({
+// Digital Development was folded into Business Intelligence; old links land on the same page there.
+export const Route = createFileRoute("/development/digital-development/predictive-analytics")({
   beforeLoad: () => {
-    throw redirect({
-      to: "/development/business-development/overview",
-      replace: true,
-    });
+    throw redirect({ to: "/management/business-intelligence/predictive-analytics", replace: true });
   },
 });

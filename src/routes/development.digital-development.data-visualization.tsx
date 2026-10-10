@@ -1,13 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-export { DataVisualizationPage } from "@/pages/development.digital-development.data-visualization";
 
-export const Route = createFileRoute(
-  "/development/digital-development/data-visualization"
-)({
+// Digital Development was folded into Business Intelligence; old links land on the same page there.
+export const Route = createFileRoute("/development/digital-development/data-visualization")({
   beforeLoad: () => {
-    throw redirect({
-      to: "/development/business-development/overview",
-      replace: true,
-    });
+    throw redirect({ to: "/management/business-intelligence/data-visualization", replace: true });
   },
 });

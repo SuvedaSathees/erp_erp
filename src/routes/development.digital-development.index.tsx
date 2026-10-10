@@ -1,10 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
+// Digital Development was folded into Business Intelligence; old links land there.
 export const Route = createFileRoute("/development/digital-development/")({
   beforeLoad: () => {
-    throw redirect({
-      to: "/development/business-development/overview",
-      replace: true,
-    });
+    throw redirect({ to: "/management/business-intelligence/data-warehouse-development", replace: true });
   },
 });

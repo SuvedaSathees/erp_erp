@@ -76,8 +76,10 @@ export async function saveDevelopmentDraftFn({ data }: { data: { moduleType: str
       });
     }
     if (!existing && !dbData.recordCode) {
-      // Pages whose form carries no record id or code are editing the module's current record.
-      existing = await prisma.developmentRecord.findFirst({ where: { moduleType }, orderBy: { updatedAt: "desc" } });
+      // Single-record modules whose form carries no record id or code are editing that one record;
+      // modules with several records (lists) create a new one.
+      const rows = await prisma.developmentRecord.findMany({ where: { moduleType }, select: { id: true }, take: 2 });
+      if (rows.length === 1) existing = await prisma.developmentRecord.findUnique({ where: { id: rows[0].id } });
     }
     if (!existing) {
       // New record: the code must be unique across all modules.

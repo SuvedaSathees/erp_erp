@@ -30,6 +30,7 @@ import {
   addFailureMode,
 } from "@/services/pfmeaService";
 import type { PfmeaAttachment, PfmeaRecord } from "@/services/types";
+import { openPageViewer } from "@/lib/pageActions";
 
 export function PfmeaDevelopmentPage({
   breadcrumb,
@@ -265,7 +266,7 @@ ${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.status} (${r.date ||
           <PfmeaFailureAnalysisTable
             failureModes={record.failureModes}
             onAddFailureMode={() => setIsAddFmModalOpen(true)}
-            onViewAll={() => toast.info(`Viewing all ${record.failureModes.length} failure modes`)}
+            onViewAll={() => openPageViewer("All Failure Modes")}
           />
 
           {/* Section 3: Recommended Actions & Validation (2-Column Grid) */}

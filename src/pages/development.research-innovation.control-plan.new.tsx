@@ -30,6 +30,7 @@ import {
   addCharacteristic,
 } from "@/services/controlPlanService";
 import type { ControlPlanAttachment, ControlPlanRecord } from "@/services/types";
+import { openPageViewer } from "@/lib/pageActions";
 
 export function ControlPlanDevelopmentPage({
   breadcrumb,
@@ -224,7 +225,7 @@ ${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.status} (${r.date ||
           <ControlPlanCharacteristicsTable
             characteristics={record.characteristics}
             onAddCharacteristic={() => setIsAddCharModalOpen(true)}
-            onViewAll={() => toast.info(`Displaying all ${record.characteristics.length} process and product characteristics.`)}
+            onViewAll={() => openPageViewer("All Characteristics")}
           />
 
           {/* Section 3: Core Planning & Controls (3-Column Grid) */}

@@ -26,7 +26,7 @@ import { PilotProductionReviewTable } from "@/components/pilot-production/PilotP
 import { PilotProductionSummaryCard } from "@/components/pilot-production/PilotProductionSummaryCard";
 import { PilotProductionAttachmentsCard } from "@/components/pilot-production/PilotProductionAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-import { openPageHistory } from "@/lib/pageActions";
+import { openPageHistory, archiveRecord, copyRecord } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/manufacturing-development/pilot-production/$id")({
   head: () => ({
@@ -152,7 +152,7 @@ function PilotProductionDetailPage() {
             record={record}
             onSaveDraft={handleSaveDraft}
             onSubmitForReview={handleSubmitForReview}
-            onDuplicate={() => toast.info("Record duplicated")}
+            onDuplicate={() => void copyRecord(record, pilotProductionService.saveRecord, "/manufacturing-development/pilot-production")}
             onExportPdf={() => {
               const content = `=====================================================
 PILOT PRODUCTION BATCH SPECIFICATION: ${record.pilotBatchTitle}
@@ -215,7 +215,7 @@ Approval Comments: ${record.reviewComments || "N/A"}
               toast.success("Pilot Production Batch Report exported & downloaded successfully!");
             }}
             onPrint={() => window.print()}
-            onArchive={() => toast.warning("Record archived")}
+            onArchive={() => void archiveRecord(record, pilotProductionService.saveRecord)}
           />
 
           {/* Sticky Tab Bar (10 Tabs) */}

@@ -39,7 +39,7 @@ import { MassProductionSopReleasePanel } from "@/components/mass-production-read
 import { MassProductionSummaryCard } from "@/components/mass-production-readiness/MassProductionSummaryCard";
 import { MassProductionAttachmentsCard } from "@/components/mass-production-readiness/MassProductionAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-import { goToPage, openPageHistory } from "@/lib/pageActions";
+import { goToPage, openPageHistory, archiveRecord, copyRecord } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/manufacturing-development/mass-production-readiness/$id")({
   head: () => ({
@@ -204,7 +204,7 @@ function MassProductionReadinessDetailPage() {
             record={record}
             onSaveDraft={handleSaveDraft}
             onSubmitForApproval={handleSubmitForApproval}
-            onDuplicate={() => toast.info("Record duplicated")}
+            onDuplicate={() => void copyRecord(record, massProductionReadinessService.saveRecord, "/manufacturing-development/mass-production-readiness")}
             onExportPdf={() => {
               const content = `=====================================================
 MASS PRODUCTION READINESS (SOP) SPECIFICATION: ${record.readinessTitle}
@@ -259,7 +259,7 @@ Executive Comments: ${record.executiveComments || "N/A"}
               toast.success("Mass Production Readiness Report exported & downloaded successfully!");
             }}
             onPrint={() => window.print()}
-            onArchive={() => toast.warning("Record archived")}
+            onArchive={() => void archiveRecord(record, massProductionReadinessService.saveRecord)}
             onRevalidate={() => {
               handleDecisionChange("Additional Validation Required", "Triggered manual revalidation cycle.");
             }}

@@ -3,6 +3,7 @@ import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCar
 import type { ApqpRecord } from "@/services/types";
 import { toast } from "sonner";
 import { Award } from "lucide-react";
+import { refreshPageData } from "@/lib/pageActions";
 
 interface ApqpHeaderProps {
   record: ApqpRecord;
@@ -257,7 +258,7 @@ export const ApqpHeader: React.FC<ApqpHeaderProps> = ({
           </span>
         </div>
       }
-      onRefresh={() => toast.success("Refreshed APQP milestone tracker & readiness metrics")}
+      onRefresh={() => void refreshPageData("APQP milestone tracker & readiness metrics")}
       onExportCsv={handleExportCsv}
       onExportExcel={handleExportExcel}
       onExportPdf={() => window.print()}

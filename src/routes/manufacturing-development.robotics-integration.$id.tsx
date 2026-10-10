@@ -43,7 +43,7 @@ import { RoboticsSummaryCard } from "@/components/robotics-integration/RoboticsS
 import { RoboticsAttachmentsCard } from "@/components/robotics-integration/RoboticsAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
-import { openPageFiles, openPageHistory } from "@/lib/pageActions";
+import { openPageFiles, openPageHistory, archiveRecord, copyRecord } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/manufacturing-development/robotics-integration/$id")({
   head: () => ({
@@ -286,11 +286,11 @@ function RoboticsIntegrationDetailPage() {
             record={record}
             onSaveDraft={handleSaveDraft}
             onSubmitForApproval={handleSubmitForApproval}
-            onDuplicate={() => toast.info("Record duplicated")}
+            onDuplicate={() => void copyRecord(record, roboticsIntegrationService.saveRecord, "/manufacturing-development/robotics-integration")}
             onExportPdf={() => void exportPageReport(undefined, "pdf")}
             onPrint={() => window.print()}
-            onArchive={() => toast.warning("Record archived")}
-            onCloneVariant={() => toast.success("Cloned as Variant Robotics Cell!")}
+            onArchive={() => void archiveRecord(record, roboticsIntegrationService.saveRecord)}
+            onCloneVariant={() => void copyRecord(record, roboticsIntegrationService.saveRecord, "/manufacturing-development/robotics-integration", "Variant")}
           />
 
           {/* Sticky 10-Tab Bar (NO Attachments tab) */}

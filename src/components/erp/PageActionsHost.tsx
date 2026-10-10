@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter, useRouterState } from "@tanstack/react-router";
-import { Download, FileSpreadsheet, FileText, History, Link2, Printer, RefreshCw, Trash2, Upload } from "lucide-react";
+import { Download, FileSpreadsheet, FileText, History, Link2, Printer, RefreshCw, Search, Trash2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
@@ -33,6 +33,9 @@ import {
   registerPageNavigate,
   registerPageQueryClient,
   showPageFiles,
+  filterPageTables,
+  isWiredControl,
+  runUnwiredButton,
 } from "@/lib/pageActions";
 
 const DEFAULT_FIELDS: QuickField[] = [
@@ -126,6 +129,31 @@ export function PageActionsHost() {
   }, [queryClient, router]);
 
   useRestoreSavedForm();
+
+  // Buttons with nothing wired to them get the action their label describes.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0) return;
+      const btn = (e.target as Element | null)?.closest?.<HTMLElement>("button, [role=button]");
+      if (!btn || !btn.closest("main") || isWiredControl(btn)) return;
+      runUnwiredButton(btn);
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
+  // Table filter (from unwired "Filters" buttons); cleared when the page changes.
+  const pathname = useRouterState({ select: (st) => st.location.pathname });
+  const [filterText, setFilterText] = useState("");
+  const [filterCount, setFilterCount] = useState<{ shown: number; total: number } | null>(null);
+  useEffect(() => {
+    setFilterText("");
+    setFilterCount(null);
+  }, [pathname]);
+  const applyFilter = (text: string) => {
+    setFilterText(text);
+    setFilterCount(filterPageTables(text));
+  };
 
   const listOpen = event?.kind === "files" || event?.kind === "history";
   const dataset = usePageDataset(listOpen);
@@ -258,6 +286,40 @@ export function PageActionsHost() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Table filter */}
+      {event?.kind === "filter" && (
+        <div
+          className="fixed z-50 w-72 rounded-lg border border-border bg-card p-3 shadow-lg"
+          style={{ left: event.x, top: event.y }}
+          role="search"
+        >
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs font-semibold">Filter table rows</span>
+            <button type="button" aria-label="Close filter" className="text-muted-foreground hover:text-foreground" onClick={close}>
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+          <div className="flex items-center gap-2 rounded-md border border-border px-2">
+            <Search className="h-3.5 w-3.5 text-muted-foreground" />
+            <input
+              autoFocus
+              value={filterText}
+              onChange={(e) => applyFilter(e.target.value)}
+              placeholder="Type to filter…"
+              className="h-8 w-full bg-transparent text-sm outline-none"
+            />
+          </div>
+          <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+            <span className="tabular">{filterCount ? `Showing ${filterCount.shown} of ${filterCount.total} rows` : "Filters every table on this page"}</span>
+            {filterText && (
+              <button type="button" className="font-medium text-primary hover:underline" onClick={() => applyFilter("")}>
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* "More" actions menu, anchored where the button was */}
       <DropdownMenu open={event?.kind === "menu"} onOpenChange={(o) => !o && close()}>

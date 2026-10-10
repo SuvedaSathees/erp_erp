@@ -2,6 +2,7 @@ import React from "react";
 import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCard";
 import { FqcRecord } from "@/services/fqcTypes";
 import { toast } from "sonner";
+import { refreshPageData } from "@/lib/pageActions";
 
 interface FqcHeaderProps {
   record: FqcRecord;
@@ -217,7 +218,7 @@ export function FqcHeader({
           </span>
         </div>
       }
-      onRefresh={() => toast.success("Refreshed end-of-line testing station telemetry")}
+      onRefresh={() => void refreshPageData("End-of-line testing station telemetry")}
       onExportCsv={handleExportCsv}
       onExportExcel={handleExportExcel}
       onExportPdf={onPrint}

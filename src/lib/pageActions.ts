@@ -37,7 +37,8 @@ export type PageActionEvent =
   | { kind: "form"; title: string; fields?: QuickField[]; submitLabel?: string }
   | { kind: "files"; title: string }
   | { kind: "history"; title: string }
-  | { kind: "menu"; x: number; y: number };
+  | { kind: "menu"; x: number; y: number }
+  | { kind: "filter"; x: number; y: number };
 
 const listeners = new Set<(e: PageActionEvent) => void>();
 let queryClient: QueryClient | null = null;
@@ -425,3 +426,111 @@ export const PAGE_FORMS = {
     { name: "due", label: "Needed by", type: "date" },
   ],
 } satisfies Record<string, QuickField[]>;
+
+/* ---------------------------------------------------------------------------------------------
+ * Table filter: filters the rows of the tables currently shown on the page.
+ * ------------------------------------------------------------------------------------------- */
+
+export function openTableFilter(anchor?: Element | null) {
+  const r = anchor?.getBoundingClientRect();
+  emit({ kind: "filter", x: r ? Math.min(r.left, window.innerWidth - 320) : 80, y: r ? r.bottom + 6 : 120 });
+}
+
+/** Show only the table rows that contain the text; returns how many rows are shown. */
+export function filterPageTables(query: string): { shown: number; total: number } {
+  const q = query.trim().toLowerCase();
+  let shown = 0;
+  let total = 0;
+  document.querySelectorAll<HTMLTableRowElement>("main table tbody tr").forEach((tr) => {
+    total++;
+    const match = !q || (tr.textContent ?? "").toLowerCase().includes(q);
+    tr.style.display = match ? "" : "none";
+    if (match) shown++;
+  });
+  return { shown, total };
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Safety net for buttons that have nothing wired to them: give them the action their label
+ * describes. Buttons with any click handler (or menu/popover triggers, links, form submits)
+ * are left alone.
+ * ------------------------------------------------------------------------------------------- */
+
+const HANDLERS = ["onClick", "onMouseDown", "onMouseUp", "onPointerDown", "onPointerUp", "onKeyDown", "onTouchStart", "onSelect"];
+const reactProps = (el: Element): Record<string, unknown> | undefined => {
+  const key = Object.keys(el).find((k) => k.startsWith("__reactProps$"));
+  return key ? (el as unknown as Record<string, Record<string, unknown>>)[key] : undefined;
+};
+
+export function isWiredControl(el: HTMLElement): boolean {
+  if ((el as HTMLButtonElement).disabled || el.getAttribute("aria-disabled") === "true") return true;
+  if (el.closest("a[href], label, summary, [role=dialog], [role=menu], [role=tablist]")) return true;
+  if (el.hasAttribute("aria-haspopup") || el.hasAttribute("aria-expanded") || el.hasAttribute("aria-controls")) return true;
+  if (el instanceof HTMLButtonElement && el.type === "submit" && el.closest("form")) return true;
+  for (let n: Element | null = el; n && n.tagName !== "MAIN" && n !== document.body; n = n.parentElement) {
+    const props = reactProps(n);
+    if (props && HANDLERS.some((h) => typeof props[h] === "function")) return true;
+  }
+  return false;
+}
+
+const clean = (t: string) => t.replace(/[→›»↗]+/g, "").replace(/\s+/g, " ").trim();
+
+/** Run the action an unwired button's label describes. */
+export function runUnwiredButton(el: HTMLElement) {
+  const label = clean(el.innerText || el.getAttribute("aria-label") || el.getAttribute("title") || "");
+  const l = label.toLowerCase();
+  const fmt = /excel|xlsx/.test(l) ? "xlsx" : /csv/.test(l) ? "csv" : "pdf";
+  if (!label || /^(more|options|actions|…|\.\.\.|⋮)$/.test(l)) return openQuickActions({ currentTarget: el });
+  if (/export|download|\bpdf\b|excel|csv|report\b/.test(l))
+    return void exportPageReport(/^(export|download)/.test(l) ? undefined : label, fmt, "page");
+  if (/print/.test(l)) return window.print();
+  if (/share|copy link/.test(l))
+    return void navigator.clipboard
+      ?.writeText(window.location.href)
+      .then(() => toast.success("Page link copied."), () => toast.error("Couldn't copy the link."));
+  if (/^filters?$|more filters|filter by|^search/.test(l)) return openTableFilter(el);
+  if (/upload|attach|import/.test(l)) return openPageFiles(label);
+  if (/history|audit trail|activity|timeline|\blog\b/.test(l)) return openPageHistory(label);
+  if (/refresh|reload|sync/.test(l)) return void refreshPageData(label);
+  if (/^(\+\s*)?(add|new|create|edit|request|schedule|assign|raise|book|invite|nominate|register|compose|plan)\b/.test(l))
+    return openPageForm(label);
+  if (/approve|reject|submit|save|confirm|verify|complete|close|mark|sign|accept|escalate|send|notify|remind|release|publish|launch|start|run|trigger|calculate|recalculate|generate/.test(l))
+    return savePageForm(label, el);
+  return openPageViewer(label, el);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Duplicate / clone / archive for list-based records (e.g. manufacturing development projects).
+ * ------------------------------------------------------------------------------------------- */
+
+type AnyRecord = Record<string, unknown> & { id?: string };
+const TITLE_FIELDS = ["projectTitle", "automationProjectTitle", "title", "projectName", "cellName", "pilotBatchName", "readinessTitle"];
+
+/** Save a copy of the record as a new Draft and open it. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function copyRecord(record: any, save: (r: any) => Promise<any>, basePath: string, suffix = "Copy") {
+  const copy: AnyRecord = { ...record, id: undefined, workflowStatus: "Draft" };
+  for (const k of TITLE_FIELDS) if (typeof copy[k] === "string") copy[k] = `${copy[k]} (${suffix})`;
+  if (typeof copy.projectNumber === "string") copy.projectNumber = `${copy.projectNumber}-${suffix.toUpperCase().replace(/\W+/g, "")}`;
+  try {
+    const saved = (await save(copy)) as AnyRecord | undefined;
+    await queryClient?.invalidateQueries();
+    toast.success(`Saved as a new ${suffix.toLowerCase()} — opening it now.`);
+    if (saved?.id) goToPage(`${basePath}/${saved.id}`);
+  } catch {
+    toast.error("Couldn't create the copy. Please try again.");
+  }
+}
+
+/** Mark the record Archived. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function archiveRecord(record: any, save: (r: any) => Promise<unknown>) {
+  try {
+    await save({ ...record, workflowStatus: "Archived" });
+    await queryClient?.invalidateQueries();
+    toast.success("Record archived.");
+  } catch {
+    toast.error("Couldn't archive the record. Please try again.");
+  }
+}

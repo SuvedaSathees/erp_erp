@@ -2,6 +2,7 @@ import React from "react";
 import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCard";
 import type { IqcRecord } from "@/services/iqcTypes";
 import { toast } from "sonner";
+import { refreshPageData } from "@/lib/pageActions";
 
 interface IqcHeaderProps {
   record: IqcRecord;
@@ -292,7 +293,7 @@ Sign-off Seal   : [VERIFIED DIGITAL CERTIFICATE]
           </span>
         </div>
       }
-      onRefresh={() => toast.success("Refreshed incoming inspection queue & AQL data")}
+      onRefresh={() => void refreshPageData("Incoming inspection queue & AQL data")}
       onExportCsv={handleExportCsv}
       onExportExcel={handleExportExcel}
       onExportPdf={onPrint}

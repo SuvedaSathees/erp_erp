@@ -3,6 +3,7 @@ import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCar
 import { ComplianceRecord } from "@/services/complianceTypes";
 import { toast } from "sonner";
 import { exportPageReport } from "@/lib/recordExport";
+import { refreshPageData } from "@/lib/pageActions";
 
 interface ComplianceHeaderProps {
   record: ComplianceRecord;
@@ -79,7 +80,7 @@ export function ComplianceHeader({
           </span>
         </div>
       }
-      onRefresh={() => toast.success("Refreshed regulatory compliance registry")}
+      onRefresh={() => void refreshPageData("Regulatory compliance registry")}
       onExportCsv={downloadComplianceCsv}
       onExportExcel={() => {
         downloadComplianceCsv();

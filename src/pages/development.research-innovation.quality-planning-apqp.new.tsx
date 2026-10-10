@@ -28,6 +28,7 @@ import {
   submitApqpForReview,
 } from "@/services/apqpService";
 import type { ApqpAttachment, ApqpRecord } from "@/services/types";
+import { openPageViewer } from "@/lib/pageActions";
 
 export function ApqpQualityPlanningPage({
   breadcrumb,
@@ -211,13 +212,13 @@ ${record.reviewers.map((r) => `${r.role}: ${r.person} - ${r.status} (${r.date ||
           {/* Section 3: Phase Deliverables Table */}
           <ApqpDeliverablesTable
             deliverables={record.deliverables}
-            onViewAll={() => toast.info(`Viewing all ${record.deliverables.length} APQP phases`)}
+            onViewAll={() => openPageViewer("All APQP Phases")}
           />
 
           {/* Section 4: Upcoming Milestones */}
           <ApqpMilestonesPanel
             milestones={record.upcomingMilestones}
-            onViewAll={() => toast.info("Viewing all program milestones")}
+            onViewAll={() => openPageViewer("All Program Milestones")}
           />
 
           {/* Section 5: Multi-Level Review & Approval Authorization */}

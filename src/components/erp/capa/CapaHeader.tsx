@@ -2,6 +2,7 @@ import React from "react";
 import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCard";
 import { CapaRecord } from "@/services/capaTypes";
 import { toast } from "sonner";
+import { refreshPageData } from "@/lib/pageActions";
 
 interface CapaHeaderProps {
   record: CapaRecord;
@@ -198,7 +199,7 @@ export function CapaHeader({
           </span>
         </div>
       }
-      onRefresh={() => toast.success("Refreshed CAPA action registry & execution progress")}
+      onRefresh={() => void refreshPageData("CAPA action registry & execution progress")}
       onExportCsv={handleExportCsv}
       onExportExcel={handleExportExcel}
       onExportPdf={onPrint}

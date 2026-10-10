@@ -2,6 +2,7 @@ import React from "react";
 import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCard";
 import { CalibrationRecord } from "@/services/calibrationTypes";
 import { toast } from "sonner";
+import { refreshPageData } from "@/lib/pageActions";
 
 interface CalibrationHeaderProps {
   record: CalibrationRecord;
@@ -158,7 +159,7 @@ export function CalibrationHeader({
           </span>
         </div>
       }
-      onRefresh={() => toast.success("Refreshed calibration schedule & standards")}
+      onRefresh={() => void refreshPageData("Calibration schedule & standards")}
       onExportCsv={handleExportCsv}
       onExportExcel={handleExportExcel}
       onExportPdf={onPrintCertificate || onPrint}

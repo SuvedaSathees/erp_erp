@@ -2,6 +2,7 @@ import React from "react";
 import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCard";
 import { AuditRecord } from "@/services/auditTypes";
 import { toast } from "sonner";
+import { refreshPageData } from "@/lib/pageActions";
 
 interface AuditHeaderProps {
   record: AuditRecord;
@@ -163,7 +164,7 @@ export function AuditHeader({
           </span>
         </div>
       }
-      onRefresh={() => toast.success("Refreshed audit schedule & verification checklists")}
+      onRefresh={() => void refreshPageData("Audit schedule & verification checklists")}
       onExportCsv={handleExportCsv}
       onExportExcel={handleExportExcel}
       onExportPdf={onPrint}

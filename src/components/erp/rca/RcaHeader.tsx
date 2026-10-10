@@ -2,6 +2,7 @@ import React from "react";
 import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCard";
 import { RcaRecord } from "@/services/rcaTypes";
 import { toast } from "sonner";
+import { refreshPageData } from "@/lib/pageActions";
 
 interface RcaHeaderProps {
   record: RcaRecord;
@@ -172,7 +173,7 @@ export function RcaHeader({
           </span>
         </div>
       }
-      onRefresh={() => toast.success("Refreshed RCA investigation matrix")}
+      onRefresh={() => void refreshPageData("RCA investigation matrix")}
       onExportCsv={handleExportCsv}
       onExportExcel={handleExportExcel}
       onExportPdf={onPrint}

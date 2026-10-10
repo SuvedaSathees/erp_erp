@@ -43,7 +43,7 @@ import { LeanReviewTable } from "@/components/lean-manufacturing/LeanReviewTable
 import { LeanSummaryCard } from "@/components/lean-manufacturing/LeanSummaryCard";
 import { LeanAttachmentsCard } from "@/components/lean-manufacturing/LeanAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-import { openPageHistory } from "@/lib/pageActions";
+import { openPageHistory, archiveRecord, copyRecord } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/manufacturing-development/lean-manufacturing/$id")({
   head: () => ({
@@ -221,7 +221,7 @@ function LeanManufacturingDetailPage() {
             record={record}
             onSaveDraft={handleSaveDraft}
             onSubmitForApproval={handleSubmitForApproval}
-            onDuplicate={() => toast.info("Record duplicated")}
+            onDuplicate={() => void copyRecord(record, leanManufacturingService.saveRecord, "/manufacturing-development/lean-manufacturing")}
             onExportPdf={() => {
               const content = `=====================================================
 LEAN MANUFACTURING & CONTINUOUS IMPROVEMENT (CI): ${record.projectTitle}
@@ -257,12 +257,12 @@ Lead Time: ${record.leadTimeHr.toFixed(2)} hr
 Changeover Time: ${record.changeoverTimeMin.toFixed(2)} min
 Value-Added Ratio: ${record.valueAddedRatio}%
 Bottleneck Process: ${record.bottleneckProcess}
-Expected Cost Saving: ₹${record.expectedCostSaving.toLocaleString()}
-Realized Cost Saving: ₹${record.realizedCostSaving.toLocaleString()}
+Expected Cost Saving: ₹${(record.expectedCostSaving ?? 0).toLocaleString()}
+Realized Cost Saving: ₹${(record.realizedCostSaving ?? 0).toLocaleString()}
 
 8 WASTES (DOWNTIME) AUDIT:
 -----------------------------------------------------
-${record.wastes.map((w) => ` - ${w.wasteType} [${w.category}]: Level ${w.severityLevel}/5 (${w.severity}) | Monthly Loss: ₹${w.costImpactInr.toLocaleString()} | Root Cause: ${w.rootCause}`).join("\n")}
+${Object.entries((record.wastes ?? {}) as Record<string, { checked?: boolean; severity?: string }>).map(([waste, w]) => ` - ${waste}: ${w?.checked ? "Identified" : "Not identified"}${w?.severity ? ` (${w.severity})` : ""}`).join("\n")}
 
 APPROVAL MATRIX:
 -----------------------------------------------------
@@ -282,8 +282,8 @@ Review Comments: ${record.reviewComments || "N/A"}
               toast.success("Lean Project Report exported & downloaded successfully!");
             }}
             onPrint={() => window.print()}
-            onArchive={() => toast.warning("Record archived")}
-            onCloneFollowup={() => toast.success("Cloned as Follow-up Kaizen Project!")}
+            onArchive={() => void archiveRecord(record, leanManufacturingService.saveRecord)}
+            onCloneFollowup={() => void copyRecord(record, leanManufacturingService.saveRecord, "/manufacturing-development/lean-manufacturing", "Follow-up")}
           />
 
           {/* Sticky 11-Tab Bar */}

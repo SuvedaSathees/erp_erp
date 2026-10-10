@@ -2,6 +2,7 @@ import React from "react";
 import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCard";
 import { NcrRecord } from "@/services/ncrTypes";
 import { toast } from "sonner";
+import { refreshPageData } from "@/lib/pageActions";
 
 interface NcrHeaderProps {
   record: NcrRecord;
@@ -215,7 +216,7 @@ export function NcrHeader({
           </span>
         </div>
       }
-      onRefresh={() => toast.success("Refreshed NCR registry data")}
+      onRefresh={() => void refreshPageData("NCR registry data")}
       onExportCsv={handleExportCsv}
       onExportExcel={handleExportExcel}
       onExportPdf={onPrint}

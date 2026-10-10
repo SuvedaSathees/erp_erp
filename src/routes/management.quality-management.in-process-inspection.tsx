@@ -42,6 +42,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/quality-management/in-process-inspection",
@@ -496,7 +497,7 @@ function InProcessInspectionPage() {
             {(viewMode === "all" || activeStep === 1 || activeStep === 3) && (
               <IpqcRecentInspectionsCard
                 inspections={record.recentInspections}
-                onViewAll={() => toast.info("Viewing all operation logs")}
+                onViewAll={() => openPageViewer("All Operation Logs")}
               />
             )}
 

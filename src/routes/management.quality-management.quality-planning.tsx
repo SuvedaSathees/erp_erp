@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { exportPageReport } from "@/lib/recordExport";
+import { savePageState } from "@/lib/pageActions";
 
 export const Route = createFileRoute(
   "/management/quality-management/quality-planning",
@@ -121,7 +122,7 @@ function QualityPlanningPage() {
         {/* Top Header Bar with real exports and modal triggers */}
         <ApqpHeader
           record={record}
-          onSaveDraft={() => toast.success(`Saved APQP Draft: ${record.apqpId}`)}
+          onSaveDraft={() => void savePageState(`APQP draft ${record.apqpId} saved`, { message: `APQP draft ${record.apqpId} saved.` })}
           onSubmitForReview={() => {
             setRecord((prev) => ({ ...prev, workflowStatus: "In Review" }));
             toast.success("Submitted APQP Program for Executive Gate Sign-Off");

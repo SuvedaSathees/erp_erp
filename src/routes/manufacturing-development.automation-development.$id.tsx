@@ -41,7 +41,7 @@ import { AutomationReviewTable } from "@/components/automation-development/Autom
 import { AutomationSummaryCard } from "@/components/automation-development/AutomationSummaryCard";
 import { AutomationAttachmentsCard } from "@/components/automation-development/AutomationAttachmentsCard";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-import { openPageFiles, openPageHistory } from "@/lib/pageActions";
+import { openPageFiles, openPageHistory, archiveRecord, copyRecord } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/manufacturing-development/automation-development/$id")({
   head: () => ({
@@ -272,7 +272,7 @@ function AutomationDevelopmentDetailPage() {
             record={record}
             onSaveDraft={handleSaveDraft}
             onSubmitForApproval={handleSubmitForApproval}
-            onDuplicate={() => toast.info("Record duplicated")}
+            onDuplicate={() => void copyRecord(record, automationDevelopmentService.saveRecord, "/manufacturing-development/automation-development")}
             onExportPdf={() => {
               const content = `=====================================================
 AUTOMATION DEVELOPMENT & CELL ENGINEERING: ${record.projectTitle}
@@ -283,7 +283,7 @@ Plant: ${record.plant}
 Production Line: ${record.productionLine}
 Workflow Status: ${record.workflowStatus}
 Automation Category: ${record.automationCategory}
-Estimated ROI: ₹${record.estimatedRoiInr.toLocaleString()}
+Estimated ROI: ₹${(record.estimatedRoiInr ?? 0).toLocaleString()}
 Target Deployment: ${record.targetDeploymentDate}
 
 READINESS & CAPABILITY SCORES:
@@ -307,8 +307,8 @@ AI Health Score: ${record.aiAutomationHealthScore}/100
               toast.success("Automation Project Report exported & downloaded successfully!");
             }}
             onPrint={() => window.print()}
-            onArchive={() => toast.warning("Record archived")}
-            onCloneVariant={() => toast.success("Cloned as Variant Automation Project!")}
+            onArchive={() => void archiveRecord(record, automationDevelopmentService.saveRecord)}
+            onCloneVariant={() => void copyRecord(record, automationDevelopmentService.saveRecord, "/manufacturing-development/automation-development", "Variant")}
           />
 
           <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border px-4 py-2 flex items-center gap-1 overflow-x-auto text-xs font-semibold scrollbar-none">

@@ -2,6 +2,7 @@ import React from "react";
 import { QualityModuleHeaderCard } from "@/components/erp/QualityModuleHeaderCard";
 import type { IpqcRecord } from "@/services/ipqcTypes";
 import { toast } from "sonner";
+import { refreshPageData } from "@/lib/pageActions";
 
 interface IpqcHeaderProps {
   record: IpqcRecord;
@@ -280,7 +281,7 @@ export const IpqcHeader: React.FC<IpqcHeaderProps> = ({
           </span>
         </div>
       }
-      onRefresh={() => toast.success("Refreshed in-line inspection telemetry")}
+      onRefresh={() => void refreshPageData("In-line inspection telemetry")}
       onExportCsv={handleExportCsv}
       onExportExcel={handleExportExcel}
       onExportPdf={onPrint}

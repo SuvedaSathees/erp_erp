@@ -3,6 +3,7 @@ import {
   getDevelopmentRecordFn,
   saveDevelopmentDraftFn,
 } from "./developmentCrud.server";
+import { withDefaults } from "./developmentTransform";
 
 const MODULE_TYPE = "distributor";
 
@@ -116,7 +117,7 @@ const DEFAULT_RECORD: any = {
 
 async function getOrDefault(): Promise<any> {
   const result = await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } });
-  return (result as any) ?? DEFAULT_RECORD;
+  return (withDefaults(DEFAULT_RECORD, result) as any) ?? DEFAULT_RECORD;
 }
 
 async function saveRecord(record: any): Promise<any> {
@@ -126,7 +127,7 @@ async function saveRecord(record: any): Promise<any> {
     ownerName: record.distributorDevelopmentManager ?? "",
     recordCode: record.id ?? record.distributorId ?? "",
   };
-  return (await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: r } })) as any;
+  return withDefaults(DEFAULT_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: r } })) as any;
 }
 
 export const getDistributorFn = createServerFn({ method: "GET" }).handler(

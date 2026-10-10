@@ -55,6 +55,7 @@ import {
   Landmark,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute(
   "/development/business-development/export-development",
@@ -236,7 +237,6 @@ function ExportDevelopmentPageForm() {
     mutationFn: (input: any) => exportDevelopmentService.saveDraft(input, loadedRecord?.id),
     onSuccess: (updated: any) => {
       queryClient.setQueryData(["export-development"], updated);
-      toast.success("Draft saved successfully.");
     },
     onError: () => toast.error("Failed to save draft."),
   });
@@ -327,7 +327,10 @@ function ExportDevelopmentPageForm() {
     };
     setActivityHistory((prev) => [newLog, ...prev]);
 
-    showToast("success", "Draft Saved", "Export Development draft saved successfully.");
+    saveDraftMutation.mutate(
+      { ...formData, lastModifiedDate: formattedDate },
+      { onSuccess: () => showToast("success", "Draft Saved", "Export Development draft saved successfully.") },
+    );
   };
 
   // Submit for Approval Action
@@ -364,7 +367,10 @@ function ExportDevelopmentPageForm() {
     };
     setActivityHistory((prev) => [newLog, ...prev]);
 
-    showToast("success", "Submitted Successfully", "Export Development Strategy submitted for Export Review Committee.");
+    saveDraftMutation.mutate(
+      { ...formData, workflowStatus: "Submitted", workflowStage: "Executive Review", lastModifiedDate: formattedDate },
+      { onSuccess: () => showToast("success", "Submitted Successfully", "Export Development Strategy submitted for Export Review Committee.") },
+    );
   };
 
   // Add Attachment Handler
@@ -511,10 +517,10 @@ function ExportDevelopmentPageForm() {
                   <button type="button" onClick={() => window.print()} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <Printer className="h-3.5 w-3.5 text-muted-foreground" /> Print Report
                   </button>
-                  <button type="button" onClick={() => showToast("info", "Share Link", "Export Strategy link copied to clipboard.")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button type="button" onClick={() => void navigator.clipboard?.writeText(window.location.href).then(() => showToast("success", "Share Link", "Export Strategy link copied to clipboard."), () => showToast("error", "Share Link", "Couldn't copy the link."))} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <Share2 className="h-3.5 w-3.5 text-muted-foreground" /> Share Link
                   </button>
-                  <button type="button" onClick={() => showToast("info", "Export Model", "Exporting Export Development PDF...")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button type="button" onClick={() => void exportPageReport(undefined, "pdf", "page")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <FileText className="h-3.5 w-3.5 text-muted-foreground" /> Export PDF
                   </button>
                 </div>
@@ -1402,7 +1408,7 @@ function ExportDevelopmentPageForm() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => showToast("info", "Download Triggered", `Downloading ${file.name}...`)}
+                        onClick={() => void downloadAttachment(file)}
                         className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted"
                         title="Download File"
                       >
@@ -1744,7 +1750,7 @@ function ExportDevelopmentPageForm() {
               <button
                 type="button"
                 onClick={() => {
-                  showToast("info", "Download Triggered", `Downloading ${viewingFile}...`);
+                  void downloadAttachment(viewingFile ?? "Document");
                   setViewingFile(null);
                 }}
                 className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-xs font-bold text-foreground hover:bg-muted"

@@ -187,16 +187,15 @@ function CustomerDiscoveryPageForm() {
   };
 
   const handleSaveDraft = () => {
-    toast.success(`Customer Discovery Draft Saved!`, {
-      description: `Form ${formData.formCode} (${formData.cdId}) saved successfully.`,
-    });
+    saveDraftMutation.mutate(formData);
   };
 
   const handleSubmitApproval = () => {
     setFormData((prev) => ({ ...prev, workflowStatus: "Submitted" }));
-    toast.success(`Customer Discovery Form Submitted for Review!`, {
-      description: `Workflow stage updated to Submitted. Notification dispatched to VP Strategy.`,
-    });
+    saveDraftMutation.mutate(
+      { ...formData, workflowStatus: "Submitted" },
+      { onSuccess: () => toast.success("Customer Discovery submitted for review.") },
+    );
   };
 
   const handleRemoveAttachment = (id: string, name: string) => {

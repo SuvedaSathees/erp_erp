@@ -42,6 +42,7 @@ import {
   FileCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute(
   "/development/business-development/value-proposition-development",
@@ -196,7 +197,6 @@ function ValuePropositionDevelopmentPageForm() {
     mutationFn: (input: any) => valuePropositionService.saveDraft(input, loadedRecord?.id),
     onSuccess: (updated: any) => {
       queryClient.setQueryData(["value-proposition"], updated);
-      toast.success("Draft saved successfully.");
     },
     onError: () => toast.error("Failed to save draft."),
   });
@@ -250,11 +250,17 @@ function ValuePropositionDevelopmentPageForm() {
     setTimeout(() => setToastMessage(null), 4000);
   };
 
-  const handleSaveDraft = () => showToast("success", "Draft Saved", "Value Proposition draft saved successfully.");
+  const handleSaveDraft = () =>
+    saveDraftMutation.mutate(formData, {
+      onSuccess: () => showToast("success", "Draft Saved", "Value Proposition draft saved successfully."),
+    });
 
   const handleSubmitApproval = () => {
     updateField("workflowStatus", "Submitted");
-    showToast("success", "Submitted Successfully", "Value Proposition submitted for executive review.");
+    saveDraftMutation.mutate(
+      { ...formData, workflowStatus: "Submitted" },
+      { onSuccess: () => showToast("success", "Submitted Successfully", "Value Proposition submitted for executive review.") },
+    );
   };
 
   const toggleCompetitor = (comp: string) => {
@@ -383,10 +389,10 @@ function ValuePropositionDevelopmentPageForm() {
                   <button type="button" onClick={() => window.print()} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <Printer className="h-3.5 w-3.5 text-muted-foreground" /> Print Form
                   </button>
-                  <button type="button" onClick={() => showToast("info", "Share Link", "Value Proposition link copied to clipboard.")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button type="button" onClick={() => void navigator.clipboard?.writeText(window.location.href).then(() => showToast("success", "Share Link", "Value Proposition link copied to clipboard."), () => showToast("error", "Share Link", "Couldn't copy the link."))} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <Share2 className="h-3.5 w-3.5 text-muted-foreground" /> Share Link
                   </button>
-                  <button type="button" onClick={() => showToast("info", "Export Model", "Exporting Value Proposition as PDF...")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button type="button" onClick={() => void exportPageReport(undefined, "pdf", "page")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <FileText className="h-3.5 w-3.5 text-muted-foreground" /> Export PDF
                   </button>
                 </div>
@@ -964,7 +970,7 @@ function ValuePropositionDevelopmentPageForm() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => showToast("info", "Download Triggered", `Downloading ${file.name}...`)}
+                      onClick={() => void downloadAttachment(file)}
                       className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"
                       title="Download File"
                     >
@@ -1307,7 +1313,7 @@ function ValuePropositionDevelopmentPageForm() {
               <button
                 type="button"
                 onClick={() => {
-                  showToast("info", "Download Triggered", `Downloading ${viewingFile}...`);
+                  void downloadAttachment(viewingFile ?? "Document");
                   setViewingFile(null);
                 }}
                 className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-xs font-bold text-foreground hover:bg-muted"

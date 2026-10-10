@@ -51,6 +51,7 @@ import {
   Landmark,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute(
   "/development/business-development/international-expansion-development",
@@ -232,7 +233,6 @@ function InternationalExpansionDevelopmentPageForm() {
     mutationFn: (input: any) => internationalExpansionService.saveDraft(input, loadedRecord?.id),
     onSuccess: (updated: any) => {
       queryClient.setQueryData(["international-expansion"], updated);
-      toast.success("Draft saved successfully.");
     },
     onError: () => toast.error("Failed to save draft."),
   });
@@ -322,7 +322,10 @@ function InternationalExpansionDevelopmentPageForm() {
     };
     setActivityHistory((prev) => [newLog, ...prev]);
 
-    showToast("success", "Draft Saved", "International Expansion draft saved successfully.");
+    saveDraftMutation.mutate(
+      { ...formData, lastModifiedDate: formattedDate },
+      { onSuccess: () => showToast("success", "Draft Saved", "International Expansion draft saved successfully.") },
+    );
   };
 
   // Submit for Approval Action
@@ -358,7 +361,10 @@ function InternationalExpansionDevelopmentPageForm() {
     };
     setActivityHistory((prev) => [newLog, ...prev]);
 
-    showToast("success", "Submitted Successfully", "International Expansion Strategy submitted for Global Expansion Committee review.");
+    saveDraftMutation.mutate(
+      { ...formData, workflowStatus: "Submitted", workflowStage: "Executive Review", lastModifiedDate: formattedDate },
+      { onSuccess: () => showToast("success", "Submitted Successfully", "International Expansion Strategy submitted for Global Expansion Committee review.") },
+    );
   };
 
   // Add Attachment Handler
@@ -505,10 +511,10 @@ function InternationalExpansionDevelopmentPageForm() {
                   <button type="button" onClick={() => window.print()} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <Printer className="h-3.5 w-3.5 text-muted-foreground" /> Print Report
                   </button>
-                  <button type="button" onClick={() => showToast("info", "Share Link", "Expansion Strategy link copied to clipboard.")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button type="button" onClick={() => void navigator.clipboard?.writeText(window.location.href).then(() => showToast("success", "Share Link", "Expansion Strategy link copied to clipboard."), () => showToast("error", "Share Link", "Couldn't copy the link."))} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <Share2 className="h-3.5 w-3.5 text-muted-foreground" /> Share Link
                   </button>
-                  <button type="button" onClick={() => showToast("info", "Export Model", "Exporting International Expansion PDF...")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button type="button" onClick={() => void exportPageReport(undefined, "pdf", "page")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <FileText className="h-3.5 w-3.5 text-muted-foreground" /> Export PDF
                   </button>
                 </div>
@@ -1339,7 +1345,7 @@ function InternationalExpansionDevelopmentPageForm() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => showToast("info", "Download Triggered", `Downloading ${file.name}...`)}
+                        onClick={() => void downloadAttachment(file)}
                         className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted"
                         title="Download File"
                       >
@@ -1682,7 +1688,7 @@ function InternationalExpansionDevelopmentPageForm() {
               <button
                 type="button"
                 onClick={() => {
-                  showToast("info", "Download Triggered", `Downloading ${viewingFile}...`);
+                  void downloadAttachment(viewingFile ?? "Document");
                   setViewingFile(null);
                 }}
                 className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-xs font-bold text-foreground hover:bg-muted"

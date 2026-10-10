@@ -212,7 +212,7 @@ export const saveProductArchitectureDraftFn = createServerFn({ method: "POST" })
       projectName: data.input.architectureName ?? "",
       ownerName: data.input.systemArchitectName ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(currentRecordDefault, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
@@ -226,14 +226,14 @@ export const submitProductArchitectureFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async ({ data }) => {
     const id = data || currentRecordDefault.id;
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    const result = (withDefaults(currentRecordDefault, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } })) as any);
     return { success: true, data: result };
   });
 
 export const reviewProductArchitectureFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: ProductArchitectureApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }) => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(currentRecordDefault, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -241,6 +241,6 @@ export const reviewProductArchitectureFn = createServerFn({ method: "POST" })
         reviewerRole: "Executive Review Board",
         reviewerName: "Executive Review Board",
       },
-    });
+    })) as any);
     return { success: true, data: result };
   });

@@ -43,7 +43,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { downloadAttachment } from "@/lib/recordExport";
+import { downloadAttachment, exportPageReport } from "@/lib/recordExport";
 
 export const Route = createFileRoute(
   "/development/business-development/customer-discovery",
@@ -307,10 +307,10 @@ function CustomerDiscoveryPageForm() {
                   <button type="button" onClick={() => window.print()} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <Printer className="h-3.5 w-3.5 text-muted-foreground" /> Print Record
                   </button>
-                  <button type="button" onClick={() => showToast("info", "Share Link", "Discovery link copied to clipboard.")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button type="button" onClick={() => void navigator.clipboard?.writeText(window.location.href).then(() => toast.success("Discovery link copied to clipboard."), () => toast.error("Couldn't copy the link."))} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <Share2 className="h-3.5 w-3.5 text-muted-foreground" /> Share Link
                   </button>
-                  <button type="button" onClick={() => showToast("info", "Export Model", "Exporting Customer Discovery report as PDF...")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
+                  <button type="button" onClick={() => void exportPageReport("Customer Discovery Report", "pdf", "page")} className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted text-left">
                     <FileText className="h-3.5 w-3.5 text-muted-foreground" /> Export PDF
                   </button>
                 </div>

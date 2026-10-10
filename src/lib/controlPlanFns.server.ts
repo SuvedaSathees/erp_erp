@@ -304,14 +304,14 @@ export const saveControlPlanDraftFn = createServerFn({ method: "POST" })
       ownerName: data.input.processOwner ?? data.input.ownerName ?? "",
       recordCode: data.input.controlPlanId ?? data.input.id ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(INITIAL_CONTROL_PLAN_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
 export const submitControlPlanFn = createServerFn({ method: "POST" }).handler(async () => {
   const current = withDefaults(INITIAL_CONTROL_PLAN_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   if (current?.id) {
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    const result = (withDefaults(INITIAL_CONTROL_PLAN_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
     return { success: true, data: result };
   }
   return { success: true, data: INITIAL_CONTROL_PLAN_RECORD };
@@ -330,6 +330,6 @@ export const addCharacteristicFn = createServerFn({ method: "POST" })
       ...currentData,
       characteristics: [...(currentData.characteristics || []), newChar],
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: updatedRecord } });
+    const result = (withDefaults(INITIAL_CONTROL_PLAN_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: updatedRecord } })) as any);
     return { success: true, data: result };
   });

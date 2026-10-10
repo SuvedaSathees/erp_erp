@@ -222,7 +222,7 @@ export const saveIotDraftFn = createServerFn({ method: "POST" })
       ownerName: (base as any).iotArchitect?.name ?? "Rahul Sharma",
       recordCode: (base as any).id ?? (base as any).iotDevelopmentId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_IOT_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -231,7 +231,7 @@ export const submitIotFn = createServerFn({ method: "POST" })
   .handler(async (): Promise<{ success: boolean; data: IotRecord }> => {
     const current = withDefaults(DEFAULT_IOT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
-      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      const result = (withDefaults(DEFAULT_IOT_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
       return { success: true, data: result as any };
     }
     return { success: true, data: DEFAULT_IOT_RECORD };
@@ -246,7 +246,7 @@ export const reviewIotFn = createServerFn({ method: "POST" })
     }) => data
   )
   .handler(async ({ data }): Promise<{ success: boolean; data: IotRecord }> => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_IOT_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -254,7 +254,7 @@ export const reviewIotFn = createServerFn({ method: "POST" })
         reviewerRole: "IoT Architecture Review Board",
         reviewerName: "Review Board",
       },
-    });
+    })) as any);
     return { success: true, data: result as any };
   });
 
@@ -277,7 +277,7 @@ export const advanceIotStageFn = createServerFn({ method: "POST" })
       ownerName: base.iotArchitect?.name ?? "Rahul Sharma",
       recordCode: base.id ?? base.iotDevelopmentId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_IOT_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -315,6 +315,6 @@ export const toggleIotChecklistFn = createServerFn({ method: "POST" })
       ownerName: base.iotArchitect?.name ?? "Rahul Sharma",
       recordCode: base.id ?? base.iotDevelopmentId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_IOT_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });

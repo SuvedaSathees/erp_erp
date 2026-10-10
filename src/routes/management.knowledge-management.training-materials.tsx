@@ -1212,7 +1212,7 @@ function TrainingMaterialsManagementPage() {
                   <input
                     type="text"
                     value={uploadFileName}
-                    onChange={(e) => setNewFileName(e.target.value)}
+                    onChange={(e) => setUploadFileName(e.target.value)}
                     placeholder="e.g. Lab_Exercise_Workbook.pdf"
                     className="mt-1 w-full border border-slate-200 rounded p-1.5 text-xs"
                   />

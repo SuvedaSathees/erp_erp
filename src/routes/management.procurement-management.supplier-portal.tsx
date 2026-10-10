@@ -732,7 +732,7 @@ function SupplierPortalPage() {
 
               <button
                 type="button"
-                onClick={() => setSelectedMenu("documents")}
+                onClick={() => setActiveTab("documents")}
                 className="text-primary text-[11px] font-semibold hover:underline pt-2 cursor-pointer text-left"
               >
                 Manage All Certificates →

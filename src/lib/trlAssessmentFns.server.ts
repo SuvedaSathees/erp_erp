@@ -238,7 +238,7 @@ async function saveRecord(record: any): Promise<TrlAssessmentRecord> {
     ownerName: record.createdBy ?? "Rohit Verma",
     recordCode: record.id ?? record.trlAssessmentId ?? "",
   };
-  return (await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: r } })) as any;
+  return ((withDefaults(DEFAULT_TRL_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: r } })) as any)) as any;
 }
 
 export const getTrlLookupsFn = createServerFn({ method: "GET" }).handler(async (): Promise<TrlLookups> => {

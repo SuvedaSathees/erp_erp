@@ -16,7 +16,11 @@ function decimalsToNumbers(value: unknown): unknown {
 
 function createClient() {
   // Small pool with short idle timeout: fewer Postgres backends, and no idle traffic so App Sleeping can kick in.
-  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL, max: 5, idleTimeoutMillis: 10_000 });
+  // DATABASE_SCHEMA is only set for local test runs against a copy of the data; production uses "public".
+  const adapter = new PrismaPg(
+    { connectionString: process.env.DATABASE_URL, max: 5, idleTimeoutMillis: 10_000 },
+    process.env.DATABASE_SCHEMA ? { schema: process.env.DATABASE_SCHEMA } : undefined,
+  );
   return new PrismaClient({ adapter }).$extends({
     query: {
       $allModels: {

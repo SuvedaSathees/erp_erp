@@ -185,6 +185,6 @@ export const savePilotProductionDraftFn = createServerFn({ method: "POST" })
       ownerName: data.record.processOwner ?? (data.record as any).ownerName ?? "",
       recordCode: data.record.id ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(MOCK_PILOT_RECORD_78, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });

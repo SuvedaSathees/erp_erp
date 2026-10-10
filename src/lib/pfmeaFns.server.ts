@@ -299,14 +299,14 @@ export const savePfmeaDraftFn = createServerFn({ method: "POST" })
       ownerName: data.input.processOwner ?? data.input.ownerName ?? "",
       recordCode: data.input.pfmeaId ?? data.input.id ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(INITIAL_PFMEA_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
 export const submitPfmeaFn = createServerFn({ method: "POST" }).handler(async () => {
   const current = withDefaults(INITIAL_PFMEA_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   if (current?.id) {
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    const result = (withDefaults(INITIAL_PFMEA_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
     return { success: true, data: result };
   }
   return { success: true, data: INITIAL_PFMEA_RECORD };
@@ -327,6 +327,6 @@ export const addFailureModeFn = createServerFn({ method: "POST" })
       ...currentData,
       failureModes: [...(currentData.failureModes || []), newFm],
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: updatedRecord } });
+    const result = (withDefaults(INITIAL_PFMEA_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: updatedRecord } })) as any);
     return { success: true, data: result };
   });

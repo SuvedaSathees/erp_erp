@@ -253,7 +253,7 @@ async function saveRecord(record: any): Promise<CommercializationRecord> {
     ownerName: record.commercializationManager ?? "Rohit Verma",
     recordCode: record.id ?? record.commercializationPlanId ?? "",
   };
-  return (await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: r } })) as any;
+  return ((withDefaults(DEFAULT_COMMERCIALIZATION_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record: r } })) as any)) as any;
 }
 
 export const getCommercializationLookupsFn = createServerFn({ method: "GET" }).handler(

@@ -177,7 +177,7 @@ export const saveProductStrategyDraftFn = createServerFn({ method: "POST" })
       projectName: data.input.strategyName ?? "",
       ownerName: data.input.productManagerName ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_PRODUCT_STRATEGY_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
@@ -191,14 +191,14 @@ export const submitProductStrategyFn = createServerFn({ method: "POST" })
   .validator((data: string) => data)
   .handler(async ({ data }) => {
     const id = data || DEFAULT_PRODUCT_STRATEGY_RECORD.id;
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    const result = (withDefaults(DEFAULT_PRODUCT_STRATEGY_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } })) as any);
     return { success: true, data: result };
   });
 
 export const reviewProductStrategyFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: ProductStrategyApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }) => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_PRODUCT_STRATEGY_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -206,7 +206,7 @@ export const reviewProductStrategyFn = createServerFn({ method: "POST" })
         reviewerRole: "Product Strategy Committee",
         reviewerName: "Product Strategy Committee",
       },
-    });
+    })) as any);
     return { success: true, data: result };
   });
 

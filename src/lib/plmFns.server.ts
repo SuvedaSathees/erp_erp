@@ -209,7 +209,7 @@ export const savePlmDraftFn = createServerFn({ method: "POST" })
       projectName: (data.input as any).plmProjectName ?? "",
       ownerName: (data.input as any).productOwner?.name ?? (data.input as any).createdBy ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_PLM_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
@@ -217,14 +217,14 @@ export const submitPlmFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async ({ data }) => {
     const id = data || DEFAULT_PLM_RECORD.id;
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    const result = (withDefaults(DEFAULT_PLM_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } })) as any);
     return { success: true, data: result };
   });
 
 export const reviewPlmFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: PlmApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }) => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_PLM_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -232,7 +232,7 @@ export const reviewPlmFn = createServerFn({ method: "POST" })
         reviewerRole: "Executive Board",
         reviewerName: "Sankaran R.",
       },
-    });
+    })) as any);
     return { success: true, data: result };
   });
 

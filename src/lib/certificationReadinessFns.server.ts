@@ -374,7 +374,7 @@ export const saveCertificationReadinessDraftFn = createServerFn({ method: "POST"
       projectName: (data.input as any).certificationProjectName ?? "",
       ownerName: (data.input as any).complianceManagerName ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -382,14 +382,14 @@ export const submitCertificationReadinessFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: CertificationReadinessRecord }> => {
     const id = data || DEFAULT_RECORD.id;
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    const result = (withDefaults(DEFAULT_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } })) as any);
     return { success: true, data: result as any };
   });
 
 export const reviewCertificationReadinessFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: CertificationApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: CertificationReadinessRecord }> => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -397,6 +397,6 @@ export const reviewCertificationReadinessFn = createServerFn({ method: "POST" })
         reviewerRole: "Compliance Board",
         reviewerName: "Rahul Sharma",
       },
-    });
+    })) as any);
     return { success: true, data: result as any };
   });

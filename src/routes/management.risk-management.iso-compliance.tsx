@@ -3,7 +3,7 @@
 // ISO Compliance Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
 import { useState, useMemo, useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getIsoComplianceRecordFn } from "@/lib/isoComplianceFns.server";
 import {
@@ -89,9 +89,11 @@ import {
   ISOObjectiveKPIItem,
   ISODocumentEvidenceItem,
   ControlledISOReport,
+  ISO_RELATED_RECORDS,
 } from "@/services/isoComplianceService";
 import { AppShell } from "@/components/erp/AppShell";
 import { ComplianceTabBar } from "@/components/erp/ComplianceTabBar";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/management/risk-management/iso-compliance")({
   component: ISOComplianceManagementPage,

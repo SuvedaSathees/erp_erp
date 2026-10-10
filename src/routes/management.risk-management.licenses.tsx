@@ -3,7 +3,7 @@
 // Licenses Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
 import { useState, useMemo, useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getLicensesRecordFn } from "@/lib/licensesFns.server";
 import {
@@ -90,6 +90,7 @@ import {
 } from "@/services/licensesService";
 import { AppShell } from "@/components/erp/AppShell";
 import { ComplianceTabBar } from "@/components/erp/ComplianceTabBar";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/management/risk-management/licenses")({
   component: LicensesManagementPage,

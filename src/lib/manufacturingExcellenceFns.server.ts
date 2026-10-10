@@ -255,14 +255,14 @@ export const saveExcellenceDraftFn = createServerFn({ method: "POST" })
       ownerName: data.input.processOwner ?? data.input.ownerName ?? "",
       recordCode: data.input.manufacturingExcellenceId ?? data.input.id ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(INITIAL_MANUFACTURING_EXCELLENCE_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
 export const submitExcellenceReviewFn = createServerFn({ method: "POST" }).handler(async () => {
   const current = withDefaults(INITIAL_MANUFACTURING_EXCELLENCE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   if (current?.id) {
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    const result = (withDefaults(INITIAL_MANUFACTURING_EXCELLENCE_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
     return { success: true, data: result };
   }
   return { success: true, data: INITIAL_MANUFACTURING_EXCELLENCE_RECORD };
@@ -273,7 +273,7 @@ export const updateExcellenceDecisionFn = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const current = withDefaults(INITIAL_MANUFACTURING_EXCELLENCE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
-      const result = await reviewDevelopmentFn({
+      const result = (withDefaults(INITIAL_MANUFACTURING_EXCELLENCE_RECORD, await reviewDevelopmentFn({
         data: {
           id: current.id,
           decision: data.decision,
@@ -281,7 +281,7 @@ export const updateExcellenceDecisionFn = createServerFn({ method: "POST" })
           reviewerRole: "Excellence Manager",
           reviewerName: "Current User",
         },
-      });
+      })) as any);
       return { success: true, data: result };
     }
     return { success: true, data: INITIAL_MANUFACTURING_EXCELLENCE_RECORD };

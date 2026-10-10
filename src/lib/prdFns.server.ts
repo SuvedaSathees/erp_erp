@@ -188,7 +188,7 @@ export const savePrdDraftFn = createServerFn({ method: "POST" })
       projectName: data.input.prdTitle ?? "",
       ownerName: data.input.productOwnerName ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_PRD_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
@@ -202,14 +202,14 @@ export const submitPrdFn = createServerFn({ method: "POST" })
   .validator((data: string) => data)
   .handler(async ({ data }) => {
     const id = data || DEFAULT_PRD_RECORD.id;
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    const result = (withDefaults(DEFAULT_PRD_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } })) as any);
     return { success: true, data: result };
   });
 
 export const reviewPrdFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: PrdApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }) => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_PRD_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -217,6 +217,6 @@ export const reviewPrdFn = createServerFn({ method: "POST" })
         reviewerRole: "PRD Review Committee",
         reviewerName: "PRD Review Committee",
       },
-    });
+    })) as any);
     return { success: true, data: result };
   });

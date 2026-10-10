@@ -432,7 +432,7 @@ export const saveElectricalDesignDraftFn = createServerFn({ method: "POST" })
       ownerName: (base as any).electricalEngineerName ?? "Ananya Iyer",
       recordCode: (base as any).id ?? (base as any).designId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_MOCK_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -461,7 +461,7 @@ export const advanceElectricalDesignStageFn = createServerFn({ method: "POST" })
       ownerName: base.electricalEngineerName ?? "Ananya Iyer",
       recordCode: base.id ?? base.designId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_MOCK_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -470,7 +470,7 @@ export const submitElectricalDesignFn = createServerFn({ method: "POST" })
   .handler(async (): Promise<{ success: boolean; data: ElectricalDesignRecord }> => {
     const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
-      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      const result = (withDefaults(DEFAULT_MOCK_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
       return { success: true, data: result as any };
     }
     return { success: true, data: DEFAULT_MOCK_RECORD };
@@ -479,7 +479,7 @@ export const submitElectricalDesignFn = createServerFn({ method: "POST" })
 export const reviewElectricalDesignFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: ElectricalDesignApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: ElectricalDesignRecord }> => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_MOCK_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -487,6 +487,6 @@ export const reviewElectricalDesignFn = createServerFn({ method: "POST" })
         reviewerRole: "Engineering Review Board",
         reviewerName: "Review Board",
       },
-    });
+    })) as any);
     return { success: true, data: result as any };
   });

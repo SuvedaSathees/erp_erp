@@ -895,3 +895,13 @@ export const SAMPLE_CERTIFICATIONS_INVENTORY = [
     status: "Expired",
   },
 ];
+
+// Related records shown on the "Related Records" tab.
+export const RELATED_RECORDS = [
+  { id: "iso", label: "ISO Compliance Records", count: 4, to: "/management/risk-management/iso-compliance" },
+  { id: "licenses", label: "Licenses & Permits", count: 3, to: "/management/risk-management/licenses" },
+  { id: "audit", label: "Audit & Compliance", count: 2, to: "/management/risk-management/audit-compliance" },
+  { id: "internal", label: "Internal Compliance Requirements", count: 3, to: "/management/risk-management/internal-compliance" },
+  { id: "capa", label: "Corrective Actions (CAPA)", count: 1, to: "/management/quality-management/capa" },
+  { id: "legal", label: "Legal Register", count: 2, to: "/management/risk-management/legal-register" },
+];

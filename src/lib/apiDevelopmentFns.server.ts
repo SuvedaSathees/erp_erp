@@ -309,7 +309,7 @@ export const saveApiDevelopmentDraftFn = createServerFn({ method: "POST" })
       ownerName: (base as any).apiArchitectName ?? "Rahul Sharma",
       recordCode: (base as any).id ?? (base as any).apiDevelopmentId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -318,7 +318,7 @@ export const submitApiDevelopmentFn = createServerFn({ method: "POST" })
   .handler(async (): Promise<{ success: boolean; data: ApiDevelopmentRecord }> => {
     const current = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
-      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      const result = (withDefaults(DEFAULT_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
       return { success: true, data: result as any };
     }
     return { success: true, data: DEFAULT_RECORD };
@@ -333,7 +333,7 @@ export const reviewApiDevelopmentFn = createServerFn({ method: "POST" })
     }) => data
   )
   .handler(async ({ data }): Promise<{ success: boolean; data: ApiDevelopmentRecord }> => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -341,6 +341,6 @@ export const reviewApiDevelopmentFn = createServerFn({ method: "POST" })
         reviewerRole: "API Architecture Review Board",
         reviewerName: "Review Board",
       },
-    });
+    })) as any);
     return { success: true, data: result as any };
   });

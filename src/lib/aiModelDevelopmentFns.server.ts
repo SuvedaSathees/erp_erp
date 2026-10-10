@@ -244,7 +244,7 @@ export const saveAiModelDevelopmentDraftFn = createServerFn({ method: "POST" })
       ownerName: (base as any).aiLeadEngineerName ?? "Rahul Sharma",
       recordCode: (base as any).id ?? (base as any).aiModelDevelopmentId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -253,7 +253,7 @@ export const submitAiModelDevelopmentFn = createServerFn({ method: "POST" })
   .handler(async (): Promise<{ success: boolean; data: AiModelRecord }> => {
     const current = withDefaults(DEFAULT_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
-      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      const result = (withDefaults(DEFAULT_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
       return { success: true, data: result as any };
     }
     return { success: true, data: DEFAULT_RECORD };
@@ -262,7 +262,7 @@ export const submitAiModelDevelopmentFn = createServerFn({ method: "POST" })
 export const reviewAiModelDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: AiModelApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: AiModelRecord }> => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -270,6 +270,6 @@ export const reviewAiModelDevelopmentFn = createServerFn({ method: "POST" })
         reviewerRole: "AI Review Board",
         reviewerName: "Review Board",
       },
-    });
+    })) as any);
     return { success: true, data: result as any };
   });

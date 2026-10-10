@@ -176,6 +176,6 @@ export const saveMassProductionReadinessFn = createServerFn({ method: "POST" })
       ownerName: data.record.processOwner ?? (data.record as any).ownerName ?? "",
       recordCode: data.record.id ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(MOCK_READINESS_RECORD_56, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });

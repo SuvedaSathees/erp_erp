@@ -136,7 +136,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { exportPageReport } from "@/lib/recordExport";
-import { discardPageChanges, savePageForm, logPageAction, openPageForm } from "@/lib/pageActions";
+import { discardPageChanges, savePageForm, logPageAction, openPageForm, openPageViewer } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/supply-chain-management/fleet-management")({
   head: () => ({
@@ -1096,7 +1096,7 @@ function FleetPage() {
 
                   <div className="mt-3 pt-2 border-t border-border/50 flex justify-end">
                     <button
-                      onClick={() => setActiveTab("trips")}
+                      onClick={(e) => openPageViewer("All Trips", e.currentTarget)}
                       className="text-xs text-primary font-medium hover:underline flex items-center gap-1"
                     >
                       View All Trips <ArrowRight className="h-3 w-3" />

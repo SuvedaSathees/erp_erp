@@ -284,6 +284,6 @@ export const saveAutomationDevelopmentFn = createServerFn({ method: "POST" })
       ownerName: data.record.automationEngineer ?? (data.record as any).ownerName ?? "",
       recordCode: data.record.id ?? data.record.projectNumber ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(MOCK_AUTOMATION_RECORD_45, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });

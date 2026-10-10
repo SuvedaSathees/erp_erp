@@ -12,6 +12,7 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 import type { BomItemNode } from "@/services/types";
+import { toast } from "sonner";
 
 interface BomStructureTableProps {
   items: BomItemNode[];

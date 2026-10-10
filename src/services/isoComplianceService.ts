@@ -896,3 +896,13 @@ export const SAMPLE_ISO_PROGRAMS = [
     status: "Partial Compliance",
   },
 ];
+
+// Related records shown on the "Related Records" tab.
+export const ISO_RELATED_RECORDS = [
+  { id: "certs", label: "Certifications", count: 3, to: "/management/risk-management/certifications" },
+  { id: "internal", label: "Internal Compliance Requirements", count: 5, to: "/management/risk-management/internal-compliance" },
+  { id: "audit", label: "Quality Audits", count: 2, to: "/management/quality-management/audit-management" },
+  { id: "capa", label: "Corrective Actions (CAPA)", count: 2, to: "/management/quality-management/capa" },
+  { id: "risk", label: "Compliance Risk", count: 1, to: "/management/risk-management/compliance-risk" },
+  { id: "incidents", label: "Incidents", count: 1, to: "/management/risk-management/incident-management" },
+];

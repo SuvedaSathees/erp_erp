@@ -186,7 +186,7 @@ export const saveProductDocumentationDraftFn = createServerFn({ method: "POST" }
       projectName: (data.input as any).documentationProject ?? "",
       ownerName: (data.input as any).documentOwner?.name ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_PRODUCT_DOCUMENTATION_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
@@ -194,14 +194,14 @@ export const submitProductDocumentationFn = createServerFn({ method: "POST" })
   .validator((data?: string) => data)
   .handler(async ({ data }) => {
     const id = data || DEFAULT_PRODUCT_DOCUMENTATION_RECORD.id;
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    const result = (withDefaults(DEFAULT_PRODUCT_DOCUMENTATION_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } })) as any);
     return { success: true, data: result };
   });
 
 export const reviewProductDocumentationFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: ProductDocumentationApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }) => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_PRODUCT_DOCUMENTATION_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -209,7 +209,7 @@ export const reviewProductDocumentationFn = createServerFn({ method: "POST" })
         reviewerRole: "Documentation Review Board",
         reviewerName: "Ananya Iyer",
       },
-    });
+    })) as any);
     return { success: true, data: result };
   });
 

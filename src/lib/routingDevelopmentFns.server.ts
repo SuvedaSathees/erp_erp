@@ -322,7 +322,7 @@ export const getRoutingRecordFn = createServerFn({ method: "GET" }).handler(asyn
 });
 
 export const saveRoutingDraftFn = createServerFn({ method: "POST" })
-  .validator((data: { record: Partial<RoutingRecord> }) => data)
+  .validator((data: { record?: Partial<RoutingRecord>; input?: Partial<RoutingRecord> }) => ({ record: data.record ?? data.input ?? {} }))
   .handler(async ({ data }) => {
     const current = withDefaults(INITIAL_ROUTING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base = current ?? INITIAL_ROUTING_RECORD;
@@ -333,14 +333,14 @@ export const saveRoutingDraftFn = createServerFn({ method: "POST" })
       ownerName: (data.record as any).processOwner ?? (base as any).processOwner ?? "Rahul Sharma",
       recordCode: (base as any).id ?? (base as any).routingId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(INITIAL_ROUTING_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
 export const submitRoutingFn = createServerFn({ method: "POST" }).handler(async () => {
   const current = withDefaults(INITIAL_ROUTING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   if (current?.id) {
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    const result = (withDefaults(INITIAL_ROUTING_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
     return { success: true, data: result as any };
   }
   return { success: true, data: INITIAL_ROUTING_RECORD };
@@ -360,6 +360,6 @@ export const addRoutingOperationFn = createServerFn({ method: "POST" })
       ownerName: base.processOwner ?? "Rahul Sharma",
       recordCode: base.id ?? base.routingId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(INITIAL_ROUTING_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });

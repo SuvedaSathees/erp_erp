@@ -222,14 +222,14 @@ export const saveApqpDraftFn = createServerFn({ method: "POST" })
       ownerName: data.input.projectManager ?? data.input.ownerName ?? "",
       recordCode: data.input.apqpId ?? data.input.id ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(INITIAL_APQP_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
 export const submitApqpFn = createServerFn({ method: "POST" }).handler(async () => {
   const current = withDefaults(INITIAL_APQP_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   if (current?.id) {
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    const result = (withDefaults(INITIAL_APQP_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
     return { success: true, data: result };
   }
   return { success: true, data: INITIAL_APQP_RECORD };

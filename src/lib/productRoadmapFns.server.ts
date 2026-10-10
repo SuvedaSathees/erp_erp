@@ -192,7 +192,7 @@ export const saveProductRoadmapDraftFn = createServerFn({ method: "POST" })
       projectName: data.input.roadmapName ?? "",
       ownerName: data.input.productManagerName ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_PRODUCT_ROADMAP_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
@@ -206,14 +206,14 @@ export const submitProductRoadmapFn = createServerFn({ method: "POST" })
   .validator((data: string) => data)
   .handler(async ({ data }) => {
     const id = data || DEFAULT_PRODUCT_ROADMAP_RECORD.id;
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } });
+    const result = (withDefaults(DEFAULT_PRODUCT_ROADMAP_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id } })) as any);
     return { success: true, data: result };
   });
 
 export const reviewProductRoadmapFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: ProductRoadmapApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }) => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_PRODUCT_ROADMAP_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -221,6 +221,6 @@ export const reviewProductRoadmapFn = createServerFn({ method: "POST" })
         reviewerRole: "Roadmap Review Committee",
         reviewerName: "Roadmap Review Committee",
       },
-    });
+    })) as any);
     return { success: true, data: result };
   });

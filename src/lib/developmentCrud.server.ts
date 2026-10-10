@@ -8,6 +8,7 @@ export async function getDevelopmentRecordFn({ data }: { data: { moduleType: str
 
     const record = await prisma.developmentRecord.findFirst({
       where,
+      orderBy: { updatedAt: "desc" },
       include: {
         attachments: { orderBy: { createdAt: "desc" } },
         approvals: { orderBy: { sortOrder: "asc" } },
@@ -69,10 +70,20 @@ export async function saveDevelopmentDraftFn({ data }: { data: { moduleType: str
     if (existingId) {
       existing = await prisma.developmentRecord.findUnique({ where: { id: existingId } });
     }
-    if (!existing) {
+    if (!existing && dbData.recordCode) {
       existing = await prisma.developmentRecord.findFirst({
         where: { moduleType, recordCode: dbData.recordCode },
       });
+    }
+    if (!existing && !dbData.recordCode) {
+      // Pages whose form carries no record id or code are editing the module's current record.
+      existing = await prisma.developmentRecord.findFirst({ where: { moduleType }, orderBy: { updatedAt: "desc" } });
+    }
+    if (!existing) {
+      // New record: the code must be unique across all modules.
+      if (!dbData.recordCode) dbData.recordCode = `${moduleType}-${Date.now()}`;
+      else if (await prisma.developmentRecord.findUnique({ where: { recordCode: dbData.recordCode }, select: { id: true } }))
+        dbData.recordCode = `${dbData.recordCode}-${moduleType}-${Date.now()}`;
     }
 
     let saved;

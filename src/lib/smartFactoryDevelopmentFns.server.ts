@@ -239,7 +239,7 @@ export const getSmartFactoryRecordFn = createServerFn({ method: "GET" }).handler
 });
 
 export const saveSmartFactoryDraftFn = createServerFn({ method: "POST" })
-  .validator((data: { record: Partial<SmartFactoryDevelopmentRecord> }) => data)
+  .validator((data: { record?: Partial<SmartFactoryDevelopmentRecord>; input?: Partial<SmartFactoryDevelopmentRecord> }) => ({ record: data.record ?? data.input ?? {} }))
   .handler(async ({ data }) => {
     const current = withDefaults(INITIAL_SMART_FACTORY_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base = current ?? INITIAL_SMART_FACTORY_RECORD;
@@ -250,14 +250,14 @@ export const saveSmartFactoryDraftFn = createServerFn({ method: "POST" })
       ownerName: (data.record as any).projectManager ?? (base as any).projectManager ?? "Vikram Singh",
       recordCode: (base as any).id ?? (base as any).smartFactoryProjectId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(INITIAL_SMART_FACTORY_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
 export const submitSmartFactoryReviewFn = createServerFn({ method: "POST" }).handler(async () => {
   const current = withDefaults(INITIAL_SMART_FACTORY_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   if (current?.id) {
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    const result = (withDefaults(INITIAL_SMART_FACTORY_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
     return { success: true, data: result as any };
   }
   return { success: true, data: INITIAL_SMART_FACTORY_RECORD };
@@ -268,7 +268,7 @@ export const updateSmartFactoryDecisionFn = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const current = withDefaults(INITIAL_SMART_FACTORY_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
-      const result = await reviewDevelopmentFn({
+      const result = (withDefaults(INITIAL_SMART_FACTORY_RECORD, await reviewDevelopmentFn({
         data: {
           id: current.id,
           decision: data.decision,
@@ -276,7 +276,7 @@ export const updateSmartFactoryDecisionFn = createServerFn({ method: "POST" })
           reviewerRole: "Smart Factory Review Board",
           reviewerName: "Review Board",
         },
-      });
+      })) as any);
       return { success: true, data: result as any };
     }
     return { success: true, data: INITIAL_SMART_FACTORY_RECORD };

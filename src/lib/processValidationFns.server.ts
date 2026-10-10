@@ -175,7 +175,7 @@ export const getProcessValidationRecordFn = createServerFn({ method: "GET" }).ha
 });
 
 export const saveProcessValidationDraftFn = createServerFn({ method: "POST" })
-  .validator((data: { record: Partial<ProcessValidationRecord> }) => data)
+  .validator((data: { record?: Partial<ProcessValidationRecord>; input?: Partial<ProcessValidationRecord> }) => ({ record: data.record ?? data.input ?? {} }))
   .handler(async ({ data }) => {
     const current = withDefaults(INITIAL_PROCESS_VALIDATION_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     const base = current ?? INITIAL_PROCESS_VALIDATION_RECORD;
@@ -186,14 +186,14 @@ export const saveProcessValidationDraftFn = createServerFn({ method: "POST" })
       ownerName: (data.record as any).processOwnerName ?? (base as any).processOwnerName ?? "Vikram Singh",
       recordCode: (base as any).id ?? (base as any).validationId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(INITIAL_PROCESS_VALIDATION_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
 export const submitProcessValidationFn = createServerFn({ method: "POST" }).handler(async () => {
   const current = withDefaults(INITIAL_PROCESS_VALIDATION_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
   if (current?.id) {
-    const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+    const result = (withDefaults(INITIAL_PROCESS_VALIDATION_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
     return { success: true, data: result as any };
   }
   return { success: true, data: INITIAL_PROCESS_VALIDATION_RECORD };
@@ -211,6 +211,6 @@ export const updateTrialRunSummaryFn = createServerFn({ method: "POST" })
       ownerName: base.processOwnerName ?? "Vikram Singh",
       recordCode: base.id ?? base.validationId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(INITIAL_PROCESS_VALIDATION_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });

@@ -216,7 +216,7 @@ export const saveToolingDraftFn = createServerFn({ method: "POST" })
       ownerName: (base as any).toolingEngineerName ?? "Vikram Singh",
       recordCode: (base as any).id ?? (base as any).toolingId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_TOOLING_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -225,7 +225,7 @@ export const submitToolingFn = createServerFn({ method: "POST" })
   .handler(async (): Promise<{ success: boolean; data: ToolingRecord }> => {
     const current = withDefaults(DEFAULT_TOOLING_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
-      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      const result = (withDefaults(DEFAULT_TOOLING_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
       return { success: true, data: result as any };
     }
     return { success: true, data: DEFAULT_TOOLING_RECORD };
@@ -240,7 +240,7 @@ export const reviewToolingFn = createServerFn({ method: "POST" })
     }) => data
   )
   .handler(async ({ data }): Promise<{ success: boolean; data: ToolingRecord }> => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_TOOLING_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -248,6 +248,6 @@ export const reviewToolingFn = createServerFn({ method: "POST" })
         reviewerRole: "Tooling Review Board",
         reviewerName: "Review Board",
       },
-    });
+    })) as any);
     return { success: true, data: result as any };
   });

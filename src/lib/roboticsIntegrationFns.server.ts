@@ -224,6 +224,6 @@ export const saveRoboticsIntegrationFn = createServerFn({ method: "POST" })
       ownerName: (data.record as any).roboticsEngineer ?? (base as any).roboticsEngineer ?? "Vikram Singh",
       recordCode: (base as any).id ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(MOCK_ROBOTICS_RECORD_35, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });

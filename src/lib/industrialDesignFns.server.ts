@@ -254,7 +254,7 @@ export const saveIndustrialDesignDraftFn = createServerFn({ method: "POST" })
       ownerName: (base as any).industrialDesignerName ?? "Rohit Verma",
       recordCode: (base as any).id ?? (base as any).designId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_MOCK_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -284,7 +284,7 @@ export const advanceIndustrialDesignStageFn = createServerFn({ method: "POST" })
       ownerName: base.industrialDesignerName ?? "Rohit Verma",
       recordCode: base.id ?? base.designId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_MOCK_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -293,7 +293,7 @@ export const submitIndustrialDesignFn = createServerFn({ method: "POST" })
   .handler(async (): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
     const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
-      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      const result = (withDefaults(DEFAULT_MOCK_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
       return { success: true, data: result as any };
     }
     return { success: true, data: DEFAULT_MOCK_RECORD };
@@ -302,7 +302,7 @@ export const submitIndustrialDesignFn = createServerFn({ method: "POST" })
 export const reviewIndustrialDesignFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: IndustrialDesignApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: IndustrialDesignRecord }> => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_MOCK_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -310,6 +310,6 @@ export const reviewIndustrialDesignFn = createServerFn({ method: "POST" })
         reviewerRole: "Executive Review Board",
         reviewerName: "Review Board",
       },
-    });
+    })) as any);
     return { success: true, data: result as any };
   });

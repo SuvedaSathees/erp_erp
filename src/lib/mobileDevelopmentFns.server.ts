@@ -419,7 +419,7 @@ export const saveMobileDevelopmentDraftFn = createServerFn({ method: "POST" })
       ownerName: (base as any).mobileArchitectName ?? "Rahul Sharma",
       recordCode: (base as any).id ?? (base as any).mobileId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_MOCK_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -448,7 +448,7 @@ export const advanceMobileDevelopmentStageFn = createServerFn({ method: "POST" }
       ownerName: base.mobileArchitectName ?? "Rahul Sharma",
       recordCode: base.id ?? base.mobileId ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_MOCK_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result as any };
   });
 
@@ -457,7 +457,7 @@ export const submitMobileDevelopmentFn = createServerFn({ method: "POST" })
   .handler(async (): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
     const current = withDefaults(DEFAULT_MOCK_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
-      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      const result = (withDefaults(DEFAULT_MOCK_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
       return { success: true, data: result as any };
     }
     return { success: true, data: DEFAULT_MOCK_RECORD };
@@ -466,7 +466,7 @@ export const submitMobileDevelopmentFn = createServerFn({ method: "POST" })
 export const reviewMobileDevelopmentFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: MobileDevelopmentApprovalDecision; comments?: string }) => data)
   .handler(async ({ data }): Promise<{ success: boolean; data: MobileDevelopmentRecord }> => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_MOCK_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -474,6 +474,6 @@ export const reviewMobileDevelopmentFn = createServerFn({ method: "POST" })
         reviewerRole: "Mobile App Review Board",
         reviewerName: "Review Board",
       },
-    });
+    })) as any);
     return { success: true, data: result as any };
   });

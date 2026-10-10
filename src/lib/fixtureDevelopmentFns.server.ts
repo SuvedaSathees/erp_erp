@@ -209,7 +209,7 @@ export const saveFixtureDraftFn = createServerFn({ method: "POST" })
       ownerName: data.input.fixtureDesignEngineer?.name ?? data.input.ownerName ?? "",
       recordCode: data.input.fixtureId ?? data.input.id ?? "",
     };
-    const result = await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } });
+    const result = (withDefaults(DEFAULT_FIXTURE_RECORD, await saveDevelopmentDraftFn({ data: { moduleType: MODULE_TYPE, record } })) as any);
     return { success: true, data: result };
   });
 
@@ -218,7 +218,7 @@ export const submitFixtureFn = createServerFn({ method: "POST" })
   .handler(async () => {
     const current = withDefaults(DEFAULT_FIXTURE_RECORD, await getDevelopmentRecordFn({ data: { moduleType: MODULE_TYPE } }));
     if (current?.id) {
-      const result = await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } });
+      const result = (withDefaults(DEFAULT_FIXTURE_RECORD, await submitDevelopmentFn({ data: { moduleType: MODULE_TYPE, id: current.id } })) as any);
       return { success: true, data: result };
     }
     return { success: true, data: DEFAULT_FIXTURE_RECORD };
@@ -227,7 +227,7 @@ export const submitFixtureFn = createServerFn({ method: "POST" })
 export const reviewFixtureFn = createServerFn({ method: "POST" })
   .validator((data: { id: string; decision: string; comments?: string }) => data)
   .handler(async ({ data }) => {
-    const result = await reviewDevelopmentFn({
+    const result = (withDefaults(DEFAULT_FIXTURE_RECORD, await reviewDevelopmentFn({
       data: {
         id: data.id,
         decision: data.decision,
@@ -235,6 +235,6 @@ export const reviewFixtureFn = createServerFn({ method: "POST" })
         reviewerRole: "Fixture Design Engineer",
         reviewerName: "Current User",
       },
-    });
+    })) as any);
     return { success: true, data: result };
   });

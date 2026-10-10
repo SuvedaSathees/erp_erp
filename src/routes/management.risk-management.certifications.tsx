@@ -3,7 +3,7 @@
 // Certifications Form — MAICW Classification, Overview, Widgets, and Controlled Audit Reports
 
 import { useState, useMemo, useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getCertificationsRecordFn } from "@/lib/certificationsFns.server";
 import {
@@ -90,9 +90,11 @@ import {
   DocumentEvidenceItem,
   RenewalPlanItem,
   ControlledCertReport,
+  RELATED_RECORDS,
 } from "@/services/certificationsService";
 import { AppShell } from "@/components/erp/AppShell";
 import { ComplianceTabBar } from "@/components/erp/ComplianceTabBar";
+import { openPageForm } from "@/lib/pageActions";
 
 export const Route = createFileRoute("/management/risk-management/certifications")({
   component: CertificationsManagementPage,
@@ -2213,7 +2215,15 @@ function CertificationsManagementPage() {
                   </p>
                 </div>
                 <button
-                  onClick={() => setShowNewActionModal(true)}
+                  onClick={() =>
+                    openPageForm("Create Action Item", [
+                    { name: "action", label: "Action", required: true },
+                    { name: "owner", label: "Owner", required: true },
+                    { name: "due", label: "Due date", type: "date" },
+                    { name: "priority", label: "Priority", type: "select", options: ["High", "Medium", "Low"] },
+                    { name: "details", label: "Details", type: "textarea" },
+                  ], "Create Action")
+                  }
                   className="px-4 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
